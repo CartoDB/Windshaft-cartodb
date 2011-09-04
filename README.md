@@ -37,6 +37,7 @@ Args:
 * cache_buster - if needed you can add a cachebuster to make sure you're rendering new
 * geom_type - override the cartodb default
 
+
 **STYLE**
 
 [GET/POST] subdomain.cartodb.com/tiles/:table_name/style
@@ -44,6 +45,7 @@ Args:
 Args:
 
 * style - the style in CartoCSS you want to set
+
 
 **INFOWINDOW**
 
