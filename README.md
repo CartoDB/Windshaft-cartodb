@@ -27,24 +27,30 @@ URLs
 ----
 
 **TILES**
+
 [GET] subdomain.cartodb.com/tiles/:table_name/:z/:x/:y.[png|png8|grid.json]
 
 Args:
+
 * sql - plain SQL arguments
 * interactivity - specify the column to use in UTFGrid
 * cache_buster - if needed you can add a cachebuster to make sure you're rendering new
 * geom_type - override the cartodb default
 
 **STYLE**
+
 [GET/POST] subdomain.cartodb.com/tiles/:table_name/style
 
 Args:
+
 * style - the style in CartoCSS you want to set
 
 **INFOWINDOW**
+
 [GET] subdomain.cartodb.com/tiles/:table_name/infowindow
 
 Args:
+
 * infowindow - returns contents of infowindow from CartoDB.
 
 
