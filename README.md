@@ -14,6 +14,10 @@ npm install
 node app.js [development | production]
 ```
 
+Dependencies
+------------
+Mapnik r
+
 
 Core features
 -------------
