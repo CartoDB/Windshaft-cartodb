@@ -1,4 +1,4 @@
 module.exports.name             = 'production';
-module.exports.postgres               = {user: 'publicuser', host: '10.211.14.63', port: 6543};
-module.exports.redis            = {host: '10.211.14.63', port: 6379};
-module.exports.windshaft_port   = 8080;
+module.exports.postgres         = {user: 'publicuser', host: '127.0.0.1', port: 6432};
+module.exports.redis            = {host: '127.0.0.1', port: 6379};
+module.exports.windshaft_port   = 8181;
