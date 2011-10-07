@@ -16,7 +16,7 @@
     },
     "dependencies": {
         "underscore"  : "1.1.x",
-        "windshaft"  : "0.2.3",
+        "windshaft"  : "0.2.4",
         "step": "0.0.x",
         "generic-pool": "1.0.x",
         "redis": "0.6.7",
