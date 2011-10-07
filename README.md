@@ -3,7 +3,7 @@ Windshaft-CartoDB
 
 This is the CartoDB map tiler.
 
-Look at lob/cartodb/server_options to see how we configure windshaft
+Look at lib/cartodb/server_options to see how we configure windshaft
 
 
 Install
@@ -14,10 +14,6 @@ npm install
 node app.js [development | production]
 ```
 
-Dependencies
-------------
-Mapnik r
-
 
 Core features
 -------------
@@ -25,7 +21,7 @@ Core features
 * configures windshaft to publish cartodb_id as the interactivity layer
 * gets the default geometry type from the cartodb redis store
 * provides an ultra basic infowindow endpoint for windshaft
-
+* provides an ultra basic map_metadata endpoint for windshaft
 
 URLs
 ----
@@ -60,4 +56,4 @@ Args:
 * infowindow - returns contents of infowindow from CartoDB.
 
 
-All GET requests are wrappable with JSONp using callback argument, including the UTFGrid map tile call.
+All GET requests are wrappable with JSONP using callback argument, including the UTFGrid map tile call.
