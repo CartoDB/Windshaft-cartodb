@@ -4,9 +4,9 @@ var _           = require('underscore');
 var querystring = require('querystring');
 require(__dirname + '/../test_helper');
 
-var Windshaft = require(__dirname + '/../../lib/windshaft');
+var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var server = new Windshaft.Server(serverOptions);
+var server = new CartodbWindshaft(serverOptions);
 
 tests['true'] = function() {
     assert.ok(true);
@@ -41,7 +41,7 @@ tests["post'ing no style returns 400 with errors"] = function(){
         method: 'POST'
     },{
         status: 400,
-        body: '{"error":"must sent style information"}'
+        body: '{"error":"must send style information"}'
     });
 };
 
@@ -149,8 +149,6 @@ tests["get'ing completed infowindow with callback returns information with callb
     });
 };
 
-
-
 tests["get'ing a tile with default style should return an image"] = function(){
     assert.response(server, {
         headers: {host: 'vizzuality.localhost.lan'},
@@ -161,6 +159,7 @@ tests["get'ing a tile with default style should return an image"] = function(){
         headers: { 'Content-Type': 'image/png' }
     });
 };
+
 
 tests["get'ing a json with default style should return an grid"] = function(){
     assert.response(server, {
@@ -211,4 +210,4 @@ tests["get'ing a tile with default style and complex sql should return a constra
         status: 200,
         headers: { 'Content-Type': 'image/png' }
     });
-};
+}; 

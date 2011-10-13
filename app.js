@@ -18,7 +18,8 @@ if (ENV != 'development' && ENV != 'production'){
 
 var _ = require('underscore')
     , Step       = require('step')
-    , cartoData  = require('./lib/cartodb/carto_data');
+    , cartoData  = require('./lib/cartodb/carto_data')
+	, CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft');
 
 
 
@@ -29,47 +30,9 @@ _.extend(global.settings, global.environment);
 
 var Windshaft = require('windshaft');
 var serverOptions = require('./lib/cartodb/server_options');
+var Cache       = require('./lib/cartodb/tile_cache');
 
-// boot
-var ws = new Windshaft.Server(serverOptions);
-
-/**
- * Helper to allow access to the layer to be used in the maps infowindow popup.
- */
-ws.get(serverOptions.base_url + '/infowindow', function(req, res){
-    Step(
-        function(){
-            serverOptions.getInfowindow(req, this);
-        },
-        function(err, data){
-            if (err){
-                res.send(err.message, 400);
-            } else {
-                res.send({infowindow: data}, 200);
-            }
-        }
-    );
-});
-
-/**
- * Helper to allow access to metadata to be used in embedded maps.
- */
-ws.get(serverOptions.base_url + '/map_metadata', function(req, res){
-    Step(
-        function(){
-            serverOptions.getMapMetadata(req, this);
-        },
-        function(err, data){
-            if (err){
-                res.send(err.message, 400);
-            } else {
-                res.send({map_metadata: data}, 200);
-            }
-        }
-    );
-});
-
-
+ws = CartodbWindshaft(serverOptions);
 ws.listen(global.environment.windshaft_port);
 console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
 
