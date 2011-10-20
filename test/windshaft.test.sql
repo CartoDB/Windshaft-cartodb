@@ -63,6 +63,7 @@ CREATE INDEX test_table_the_geom_idx ON test_table USING gist (the_geom);
 CREATE INDEX test_table_the_geom_webmercator_idx ON test_table USING gist (the_geom_webmercator);
 
 GRANT ALL ON TABLE test_table TO postgres;
+GRANT ALL ON TABLE test_table TO tileuser;
 
 -- second table
 CREATE TABLE test_table_2 (
@@ -105,7 +106,7 @@ ALTER TABLE ONLY test_table_2 ADD CONSTRAINT test_table_2_pkey PRIMARY KEY (cart
 CREATE INDEX test_table_2_the_geom_idx ON test_table_2 USING gist (the_geom);
 CREATE INDEX test_table_2_the_geom_webmercator_idx ON test_table_2 USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table_2 TO postgres;
+GRANT ALL ON TABLE test_table_2 TO tileuser;
 
 -- third table
 CREATE TABLE test_table_3 (
@@ -149,3 +150,4 @@ CREATE INDEX test_table_3_the_geom_idx ON test_table_3 USING gist (the_geom);
 CREATE INDEX test_table_3_the_geom_webmercator_idx ON test_table_3 USING gist (the_geom_webmercator);
 
 GRANT ALL ON TABLE test_table_3 TO postgres;
+GRANT ALL ON TABLE test_table_3 TO tileuser;

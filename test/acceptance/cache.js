@@ -16,7 +16,7 @@ var cached_server = new CartodbWindshaft(serverOptions);
 
 tests["first time a tile is request should not be cached"] = function() {
     assert.response(cached_server, {
-        url: '/tiles/test_table_2/6/31/24.png?geom_type=polygon',
+        url: '/tiles/test_table_3/6/31/24.png?geom_type=polygon',
         headers: {host: 'vizzuality.localhost.lan'},
         method: 'GET'
     },{
@@ -113,23 +113,25 @@ tests["LRU tile should be removed"] = function() {
 tests["cache should be invalidated"] = function() {
 
    var url = '/tiles/test_table_2/6/29/27.png';
+   var cached_server2 = new CartodbWindshaft(serverOptions);
    var cache = CacheValidator(global.environment.redis);
-   assert.response(cached_server, {
+   assert.response(cached_server2, {
             url: url,
             headers: {host: 'vizzuality.localhost.lan'},
             method: 'GET'
     },{
         status: 200
     }, function(res) {
-        cache.setTimestamp('windshaft_test', 'test_table_2', (new Date().getTime()/1000.0)+100, function() {
-            assert.response(cached_server, {
+        cache.setTimestamp('cartodb_test_user_1_db', 'test_table_2', (new Date().getTime()/1000.0)+100, function() {
+            assert.response(cached_server2, {
                 url: url,
                 headers: {host: 'vizzuality.localhost.lan'},
                 method: 'GET'
             },{
                 status: 200
-            }, function(res) {
-                assert.ok(res.header('X-Cache-hit') === undefined);
+            }, function(r) {
+                console.log('hiy', r.header('X-Cache-hit'));
+                assert.ok(r.header('X-Cache-hit') === undefined);
             });
         });
     });
@@ -138,7 +140,7 @@ tests["cache should be invalidated"] = function() {
 
 tests["Last-Modified header should be sent"] = function() {
    var cached_server2 = new CartodbWindshaft(serverOptions);
-   var url= '/tiles/test_table_2/6/31/24.png';
+   var url= '/tiles/test_table/6/31/22.png';
    assert.response(cached_server2, {
             url: url,
             headers: {host: 'vizzuality.localhost.lan'},
@@ -146,6 +148,26 @@ tests["Last-Modified header should be sent"] = function() {
     },{
         status: 200
     }, function(res) {
-        assert.ok(res.header('Last-Modified') !== undefined);
+        assert.response(cached_server2, {
+            url: url,
+            headers: {host: 'vizzuality.localhost.lan'},
+            method: 'GET'
+        },{
+           status: 200
+        }, function(res) {
+            assert.ok(res.header('X-Cache-hit') !== undefined);
+            var last_modified = res.header('Last-Modified');
+            assert.ok(last_modified !== undefined);
+            assert.response(cached_server2, {
+                    url: url,
+                    headers: {
+                        host: 'vizzuality.localhost.lan',
+                        'if-modified-since': last_modified
+                    },
+                    method: 'GET'
+           }, {
+                status: 304
+           });
+        });
     });
 }
