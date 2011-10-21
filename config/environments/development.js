@@ -8,3 +8,4 @@ module.exports.windshaft_port   = 8181;
 module.exports.lru_cache = true;
 module.exports.lru_cache_size = 10000;
 module.exports.enable_cors = true;
+module.exports.ttl_timeout = 5;
