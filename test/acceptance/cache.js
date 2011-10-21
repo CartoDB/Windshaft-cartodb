@@ -130,7 +130,6 @@ tests["cache should be invalidated"] = function() {
             },{
                 status: 200
             }, function(r) {
-                console.log('hiy', r.header('X-Cache-hit'));
                 assert.ok(r.header('X-Cache-hit') === undefined);
             });
         });
@@ -169,5 +168,47 @@ tests["Last-Modified header should be sent"] = function() {
                 status: 304
            });
         });
+    });
+}
+
+tests["TTL should invalidate a tile"] = function() {
+
+    var url = '/tiles/test_table_2/6/31/24.png';
+    
+    //create another server to not take previos test stats into account
+    var so = _.clone(serverOptions);
+    _(so).extend({ttl_timeout: 1});
+
+    var _cached_server = new CartodbWindshaft(so);
+    // cache it
+    assert.response(_cached_server, {
+            url: url,
+            headers: {host: 'vizzuality.localhost.lan'},
+            method: 'GET'
+    },{
+        status: 200
+    }, function(res) {
+        console.log("WAIT A LITTLE BIT PLEASE");
+
+        // test before invalidating
+        setTimeout(function() {
+            var st = so.cacheStats();
+            assert.eql(st.expired, 0);
+        }, 500);
+
+        // test after invalidation
+        setTimeout(function() {
+            assert.response(_cached_server, {
+                    url: url,
+                    headers: {host: 'vizzuality.localhost.lan'},
+                    method: 'GET'
+            },{
+                status: 200
+            }, function(res) {
+                assert.ok(res.header('X-Cache-hit') === undefined);
+                var st = so.cacheStats();
+                assert.eql(st.expired, 1);
+            });
+        }, 2000);
     });
 }
