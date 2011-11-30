@@ -30,7 +30,6 @@ _.extend(global.settings, global.environment);
 
 var Windshaft = require('windshaft');
 var serverOptions = require('./lib/cartodb/server_options');
-var Cache       = require('./lib/cartodb/tile_cache');
 
 ws = CartodbWindshaft(serverOptions);
 ws.listen(global.environment.windshaft_port);
