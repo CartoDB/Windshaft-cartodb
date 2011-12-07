@@ -131,11 +131,12 @@ tests['should send command'] = function() {
 tests['should send commands on connect'] = function() {
     // first create queue
     var queue = new varnish.VarnishQueue('127.0.0.1', 1234)
-    for(var i = 0; i < 5; ++i) {
+    for(var i = 0; i < 10; ++i) {
         queue.run_cmd('purge simon_is == gay');
     }
     // then server
     var server = VarnishEmu(null, 1234)
-    setTimeout(function() { assert.equal(5, server.commands); }, 1000);
+    //wait 2 seconds because the client tries every second the reconnection
+    setTimeout(function() { assert.equal(10, server.commands); }, 2000);
 }
 
