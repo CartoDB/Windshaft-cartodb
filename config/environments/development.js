@@ -8,4 +8,4 @@ module.exports.windshaft_port   = 8181;
 module.exports.enable_cors = true;
 module.exports.varnish_host = 'localhost';
 module.exports.varnish_port = 6082;
-module.exports.cache_enabled = true; 
+module.exports.cache_enabled = true;
