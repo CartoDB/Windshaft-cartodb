@@ -8,6 +8,8 @@ Look at lib/cartodb/server_options for more on config
 * reads dbname from subdomain and cartodb redis for pretty tile urls
 * configures windshaft to publish cartodb_id as the interactivity layer
 * gets the default geometry type from the cartodb redis store
+* allows tiles to be styled individually
+* provides a link to varnish high speed cache
 * provides a infowindow endpoint for windshaft
 * provides a map_metadata endpoint for windshaft
 
@@ -34,6 +36,7 @@ Args:
 * interactivity - specify the column to use in UTFGrid
 * cache_buster - if needed you can add a cachebuster to make sure you're rendering new
 * geom_type - override the cartodb default
+* style - override the default map style with Carto
 
 
 **STYLE**
