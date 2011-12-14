@@ -20,7 +20,7 @@ var _ = require('underscore')
     , Step       = require('step')
     , cartoData  = require('./lib/cartodb/carto_data')
 	, CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft');
-
+    
 
 
 // set environment specific variables
@@ -34,7 +34,3 @@ var serverOptions = require('./lib/cartodb/server_options');
 ws = CartodbWindshaft(serverOptions);
 ws.listen(global.environment.windshaft_port);
 console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
-
-
-
-
