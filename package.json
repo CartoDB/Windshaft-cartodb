@@ -15,6 +15,7 @@
       "email": "simon@vizzuality.com"
     },
     "dependencies": {
+        "cluster": "0.6.4",
         "node-varnish": "0.1.0",
         "underscore"  : "1.1.x",
         "windshaft"  : "0.4.3",
