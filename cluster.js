@@ -38,7 +38,7 @@ cluster(ws)
   .use(cluster.stats())
   .use(cluster.pidfiles('pids'))
   .set('workers', 1)
-  .listen(global.environment.windshaft_port);
+  .listen(global.environment.windshaft_port, global.environment.windshaft_host);
 
 //ws.listen(global.environment.windshaft_port);
 console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
