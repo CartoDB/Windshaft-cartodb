@@ -1,7 +1,8 @@
 Windshaft-CartoDB
 ==================
 
-This is the CartoDB map tiler. It extends Windshaft with some extra functionality and custom filters for authentication
+This is the CartoDB map tiler. It extends Windshaft with some extra
+functionality and custom filters for authentication
 
 Look at lib/cartodb/server_options for more on config
 
@@ -34,7 +35,8 @@ Args:
 
 * sql - plain SQL arguments
 * interactivity - specify the column to use in UTFGrid
-* cache_buster - if needed you can add a cachebuster to make sure you're rendering new
+* cache_buster - if needed you can add a cachebuster to make sure you're
+  rendering new
 * geom_type - override the cartodb default
 * style - override the default map style with Carto
 
@@ -66,4 +68,5 @@ Args:
 * infowindow - returns contents of infowindow from CartoDB.
 
 
-All GET requests are wrappable with JSONP using callback argument, including the UTFGrid map tile call.
+All GET requests are wrappable with JSONP using callback argument,
+including the UTFGrid map tile call.
