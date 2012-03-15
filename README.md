@@ -4,8 +4,6 @@ Windshaft-CartoDB
 This is the CartoDB map tiler. It extends Windshaft with some extra
 functionality and custom filters for authentication
 
-Look at lib/cartodb/server_options for more on config
-
 * reads dbname from subdomain and cartodb redis for pretty tile urls
 * configures windshaft to publish cartodb_id as the interactivity layer
 * gets the default geometry type from the cartodb redis store
@@ -14,12 +12,25 @@ Look at lib/cartodb/server_options for more on config
 * provides a infowindow endpoint for windshaft
 * provides a map_metadata endpoint for windshaft
 
-
 Install
 -------
+
 ```
 git clone
 npm install
+```
+
+Configure
+---------
+
+Edit config/environments/<env>.js files
+
+Look at lib/cartodb/server_options for more on config
+
+Run
+---
+
+```
 node app.js [development | production]
 ```
 
