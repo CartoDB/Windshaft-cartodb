@@ -1,5 +1,5 @@
 module.exports.name             = 'test';
-module.exports.postgres         = {user: 'tileuser', host: '127.0.0.1', port: 5432};
+module.exports.postgres         = {user: 'tileuser', host: '127.0.0.1', port: 5432, simplify: true};
 module.exports.redis            = {host: '127.0.0.1', 
                                    port: 6379, 
                                    idleTimeoutMillis: 1,
