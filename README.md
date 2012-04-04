@@ -20,6 +20,12 @@ git clone
 npm install
 ```
 
+Note that the ```npm install``` step will populate the node_modules/
+directory with modules, some of which being compiled on demand. If you
+happen to have startup errors you may need to force rebuilding those
+modules. At any time just wipe out the node_modules/ directory and run
+```npm install``` again.
+
 Configure
 ---------
 
