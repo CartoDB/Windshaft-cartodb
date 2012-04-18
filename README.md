@@ -40,6 +40,10 @@ Run
 node app.js [development | production]
 ```
 
+Note that caches are kept in redis. If you're not seeing what
+you expect there may be out-of-sync records in there.
+Take a look: http://redis.io/commands
+
 
 URLs
 ----
