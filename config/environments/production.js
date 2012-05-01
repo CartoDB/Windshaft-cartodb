@@ -1,9 +1,26 @@
-module.exports.name             = 'production';
-module.exports.postgres         = {user: 'tileuser', host: '127.0.0.1', port: 6432, simplify: true};
-module.exports.redis            = {host: '127.0.0.1', port: 6379};
-module.exports.windshaft_port   = 8181;
-module.exports.windshaft_host   = '127.0.0.1';
-module.exports.ttl_timeout      = 600; // 10 minutes
-module.exports.varnish_host     = 'localhost';
-module.exports.varnish_port     = 6082
-module.exports.cache_enabled    = true; 
+var config = {
+     environment: 'production'
+    ,port: 8181
+    ,host: '127.0.0.1'
+    ,enable_cors: true
+    ,postgres: {
+        user: "tileuser",
+        host: '127.0.0.1',
+        port: 6432,
+        simplify: true
+    }
+    ,redis: {
+        host: '127.0.0.1',
+        port: 6379
+    }
+    ,sqlapi: {
+        host: '127.0.0.1',
+        port: 8080
+    }
+    ,varnish: {
+        host: 'localhost',
+        port: 6082
+    }
+};
+
+module.exports = config;

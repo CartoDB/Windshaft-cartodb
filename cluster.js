@@ -23,7 +23,6 @@ var _ = require('underscore')
 	, CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft');
     
 
-
 // set environment specific variables
 global.settings     = require(__dirname + '/config/settings');
 global.environment  = require(__dirname + '/config/environments/' + ENV);
@@ -38,7 +37,6 @@ cluster(ws)
   .use(cluster.stats())
   .use(cluster.pidfiles('pids'))
   .set('workers', 1)
-  .listen(global.environment.windshaft_port, global.environment.windshaft_host);
+  .listen(global.environment.windshaft_port, global.environment.host);
 
-//ws.listen(global.environment.windshaft_port);
-console.log("Windshaft tileserver started on port " + global.environment.windshaft_port);
+console.log("Windshaft tileserver started on port " + global.environment.port);
