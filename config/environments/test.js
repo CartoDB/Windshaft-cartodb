@@ -1,8 +1,9 @@
 var config = {
      environment: 'test'
-    ,port: 8080
+    ,port: 8888
     ,host: '127.0.0.1'
     ,enable_cors: true
+    ,cache_enabled: true
     ,postgres: {
         user: "tileuser",
         host: '127.0.0.1',
