@@ -1,5 +1,5 @@
 var config = {
-     environment: 'production'
+    environment: 'production'
     ,port: 8181
     ,host: '127.0.0.1'
     ,enable_cors: true
@@ -15,8 +15,10 @@ var config = {
         port: 6379
     }
     ,sqlapi: {
-        host: '127.0.0.1',
-        port: 8080
+        protocol: 'https',
+        host: 'cartodb.com',
+        port: 8080,
+        version: 'v2'
     }
     ,varnish: {
         host: 'localhost',

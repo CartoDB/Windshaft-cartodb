@@ -22,8 +22,10 @@ var config = {
         reapIntervalMillis: 1
     }
     ,sqlapi: {
-        host: '127.0.0.1',
-        port: 8080
+        protocol: 'http',
+        host: 'localhost.lan',
+        port: 8080,
+        version: 'v1'
     }
     ,varnish: {
         host: 'localhost',
