@@ -14,7 +14,7 @@ var config = {
         extent: "-180,-90,180,90",
         srid: 4326,
         */
-        max_size: 0,
+        /* max_size: 0, */ /* see https://github.com/Vizzuality/Windshaft-cartodb/issues/16 */
         simplify: true
     }
     ,redis: {
