@@ -9,10 +9,12 @@ var config = {
         user: "tileuser",
         host: '127.0.0.1',
         port: 5432,
+        /* experimental
         geometry_field: "the_geom",
         extent: "-180,-90,180,90",
         srid: 4326,
-        max_size: 0,
+        */
+        /* max_size: 0, */ /* see https://github.com/Vizzuality/Windshaft-cartodb/issues/16 */
         simplify: true
     }
     ,redis: {
