@@ -28,8 +28,8 @@ tests['working'] = function() { assert.ok(true); };
 tests['should call purge on varnish when invalidate database'] = function() {
     var varnish = new VarnishEmu(function(cmds) {
         assert.ok(cmds.length == 1);
-        assert.equal('purge obj.http.X-Cache-Channel == test_cache\n', cmds[0]);
+        assert.equal('purge obj.http.X-Cache-Channel == test_db:test_cache\n', cmds[0]);
     });
     CacheValidator.init('localhost', 1337);
-    CacheValidator.invalidate_db('test_cache');
+    CacheValidator.invalidate_db('test_db', 'test_cache');
 }
