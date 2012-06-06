@@ -10,7 +10,6 @@ var config = {
         port: 5432,
         srid: 4326,
         extent: "-20005048.4188,-20005048.4188,20005048.4188,20005048.4188",
-        max_size: 0,
         simplify: true
     }
     ,redis: {
