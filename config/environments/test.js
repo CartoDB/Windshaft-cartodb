@@ -3,7 +3,7 @@ var config = {
     ,port: 8888
     ,host: '127.0.0.1'
     ,enable_cors: true
-    ,cache_enabled: true
+    ,cache_enabled: false
     ,postgres: {
         user: "tileuser",
         host: '127.0.0.1',

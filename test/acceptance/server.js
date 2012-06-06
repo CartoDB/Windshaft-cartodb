@@ -193,4 +193,8 @@ tests["get'ing a tile with default style and complex sql should return a constra
         status: 200,
         headers: { 'Content-Type': 'image/png' }
     });
-}; 
+};
+
+
+
+
