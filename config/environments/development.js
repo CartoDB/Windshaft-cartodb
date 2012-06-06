@@ -9,6 +9,7 @@ var config = {
         user: "tileuser",
         host: '127.0.0.1',
         port: 5432,
+        extent: "-20005048.4188,-20005048.4188,20005048.4188,20005048.4188",
         /* experimental
         geometry_field: "the_geom",
         extent: "-180,-90,180,90",
