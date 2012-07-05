@@ -4,7 +4,10 @@
     "version": "0.1.0",
     "description": "A map tile server for CartoDB",
     "url": "https://github.com/Vizzuality/Windshaft-cartodb",
-    "licenses": [{ "type": "Copyright Vizzuality" }],
+    "licenses": [{
+        "type": "BSD",
+        "url": "https://github.com/Vizzuality/Windshaft-cartodb/blob/master/LICENCE"
+    }],
     "repositories": [{
         "type": "git",
         "url": "git://github.com/Vizzuality/Windshaft-cartodb.git"
