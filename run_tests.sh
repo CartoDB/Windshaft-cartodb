@@ -27,7 +27,7 @@ echo "port ${REDIS_PORT}" | redis-server - > test.log &
 PID_REDIS=$!
 
 echo "Preparing the database"
-cd test; sh prepare_db.sh >> test.log || die "database preparation failure (see test.log)"; cd -;
+cd test/support; sh prepare_db.sh >> test.log || die "database preparation failure (see test.log)"; cd -;
 
 PATH=node_modules/.bin/:$PATH
 
