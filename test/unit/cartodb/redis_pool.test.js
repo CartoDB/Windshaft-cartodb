@@ -6,11 +6,7 @@ var assert = require('../../support/assert')
 suite('redis_pool', function() {
 
     // configure redis pool instance to use in tests
-    var test_opts = {
-      max: 10, 
-      idleTimeoutMillis: 1, 
-      reapIntervalMillis: 1
-    };
+    var test_opts = require('../../support/config').redis_pool;
     
     var redis_pool = new RedisPool(test_opts);
 

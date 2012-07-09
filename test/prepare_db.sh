@@ -17,16 +17,17 @@ die() {
 }
 
 TEST_DB="cartodb_test_user_1_db"
-
-echo "preparing redis..."
-echo "HSET rails:users:vizzuality id 1" | redis-cli -n 5
-echo "HSET rails:users:vizzuality database_name '${TEST_DB}'" | redis-cli -n 5
-echo 'HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"' | redis-cli -n 0
+REDIS_PORT=6333
 
 echo "preparing postgres..."
 dropdb "${TEST_DB}"
 createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 psql "${TEST_DB}" < ./sql/windshaft.test.sql
 psql "${TEST_DB}" < ./sql/gadm4.sql
+
+echo "preparing redis..."
+echo "HSET rails:users:vizzuality id 1" | redis-cli -p ${REDIS_PORT}  -n 5
+echo "HSET rails:users:vizzuality database_name '${TEST_DB}'" | redis-cli -p ${REDIS_PORT} -n 5
+echo 'HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"' | redis-cli -p ${REDIS_PORT} -n 0
 
 echo "Finished preparing data. Run tests with expresso."

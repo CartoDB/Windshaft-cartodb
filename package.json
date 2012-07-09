@@ -33,6 +33,6 @@
         "mocha": "1.2.1"
     },
     "scripts": {
-        "test": "which expresso | sh"
+        "test": "make check"
     }
 }
