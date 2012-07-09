@@ -7,6 +7,7 @@ require(__dirname + '/../test_helper');
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
+server.setMaxListeners(0);
 
 suite('server', function() {
     
@@ -70,22 +71,25 @@ suite('server', function() {
             url: '/tiles/my_table5/style',
             method: 'POST',
             headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#my_table5{background-color:#fff;}'})
+            data: querystring.stringify({style: 'Map {background-color:#fff;}'})
         },{
-            status: 200
-        }, function() { done(); });
+        }, function(res) {
+            assert.equal(res.statusCode, 200, res.body);
+            done();
+        });
     });
-    
+
     test("post'ing good style returns 200 then getting returns original style", function(done){
-        var style = '#my_table5{background-color:#fff;}';
+        var style = 'Map {background-color:#fff;}';
         assert.response(server, {
             url: '/tiles/my_table5/style',
             method: 'POST',
             headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: style})
         },{
-            status: 200
-        }, function() { 
+        }, function(res) { 
+
+            assert.equal(res.statusCode, 200, res.body);
 
             assert.response(server, {
                 headers: {host: 'vizzuality.localhost.lan'},
