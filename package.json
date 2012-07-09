@@ -18,6 +18,7 @@
       "email": "simon@vizzuality.com"
     },
     "dependencies": {
+        "connect": "1.8.7",
         "cluster": "0.6.4",
         "node-varnish": "0.1.0",
         "underscore"  : "1.1.x",
