@@ -14,7 +14,7 @@ var config = {
     }
     ,redis: {
         host: '127.0.0.1',
-        port: 6379,
+        port: 6333,
         idleTimeoutMillis: 1,
         reapIntervalMillis: 1
     }
