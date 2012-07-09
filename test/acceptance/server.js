@@ -5,7 +5,7 @@ var querystring = require('querystring');
 require(__dirname + '/../test_helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../support/server_options');
+var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 
 suite('server', function() {
