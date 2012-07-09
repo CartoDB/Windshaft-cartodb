@@ -1,6 +1,8 @@
 Windshaft-CartoDB
 ==================
 
+NOTE: requires node-0.4.x
+
 This is the CartoDB map tiler. It extends Windshaft with some extra
 functionality and custom filters for authentication
 
