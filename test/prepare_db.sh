@@ -4,6 +4,11 @@
 #
 # NOTE: assumes existance of a "template_postgis"
 # NOTE2: use PG* environment variables to control who and where
+#
+# NOTE3: a side effect of the db preparation is the persistent creation
+#        of two database roles which will be valid for the whole cluster
+#        TODO: fix that
+#
 
 die() {
         msg=$1
