@@ -23,8 +23,6 @@ function VarnishEmu(on_cmd_recieved) {
     server.listen(1337, "127.0.0.1");
 }
 
-tests['working'] = function() { assert.ok(true); };
-
 tests['should call purge on varnish when invalidate database'] = function() {
     var varnish = new VarnishEmu(function(cmds) {
         assert.ok(cmds.length == 1);        
