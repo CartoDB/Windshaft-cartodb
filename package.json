@@ -30,7 +30,7 @@
         "request": "2.9.202"
     },
     "devDependencies": {
-        "expresso": "0.8.x"
+        "mocha": "1.2.1"
     },
     "scripts": {
         "test": "which expresso | sh"
