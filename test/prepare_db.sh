@@ -26,8 +26,8 @@ psql "${TEST_DB}" < ./sql/windshaft.test.sql
 psql "${TEST_DB}" < ./sql/gadm4.sql
 
 echo "preparing redis..."
-echo "HSET rails:users:vizzuality id 1" | redis-cli -p ${REDIS_PORT}  -n 5
-echo "HSET rails:users:vizzuality database_name '${TEST_DB}'" | redis-cli -p ${REDIS_PORT} -n 5
-echo 'HSET rails:'${TEST_DB}':my_table infowindow "this, that, the other"' | redis-cli -p ${REDIS_PORT} -n 0
+echo "HSET rails:users:vizzuality id 1" | redis-cli -p ${REDIS_PORT} -n 5
+echo 'HSET rails:users:vizzuality database_name "'"${TEST_DB}"'"' | redis-cli -p ${REDIS_PORT} -n 5
+echo 'HSET rails:'"${TEST_DB}"':my_table infowindow "this, that, the other"' | redis-cli -p ${REDIS_PORT} -n 0
 
 echo "Finished preparing data. Run tests with expresso."
