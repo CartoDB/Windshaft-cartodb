@@ -31,13 +31,11 @@ cd test; sh prepare_db.sh >> test.log || die "database preparation failure (see 
 
 PATH=node_modules/.bin/:$PATH
 
-echo "Running unit test"
-mocha -u tdd test/unit/cartodb/redis_pool.test.js
-
-echo "Running acceptance tests"
-# NOTE: leaks detected ! TODO: fix them 
-mocha -u tdd --ignore-leaks test/acceptance/cache_validator.js
-mocha -u tdd --ignore-leaks test/acceptance/server.js
+echo "Running tests"
+mocha -u tdd \
+  test/unit/cartodb/redis_pool.test.js \
+  test/acceptance/cache_validator.js \
+  test/acceptance/server.js
 
 
 cleanup
