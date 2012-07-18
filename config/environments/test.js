@@ -5,7 +5,8 @@ var config = {
     ,enable_cors: true
     ,cache_enabled: false
     ,postgres: {
-        user: "tileuser",
+        user: "publicuser",
+        db_user: 'test_cartodb_user_<%= user_id %>',
         host: '127.0.0.1',
         port: 5432,
         srid: 4326,

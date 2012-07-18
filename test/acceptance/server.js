@@ -2,7 +2,7 @@ var assert      = require('../support/assert');
 var tests       = module.exports = {};
 var _           = require('underscore');
 var querystring = require('querystring');
-require(__dirname + '/../test_helper');
+require(__dirname + '/../support/test_helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
@@ -198,6 +198,33 @@ suite('server', function() {
             headers: { 'Content-Type': 'image/png' }
         }, function() { done(); });
     });
-    
+
+    test("get'ing a tile with data from private table should succeed when authenticated", function(done){
+        // NOTE: may fail if grainstore < 0.3.0 is used by Windshaft
+        var sql = querystring.stringify({sql: "SELECT * FROM test_table_private_1", map_key: 1234})
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/gadm4/6/31/24.png?' + sql,
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function() { done(); });
+    });
+
+    test("get'ing a tile with data from private table should fail when unauthenticated", function(done){
+        var sql = querystring.stringify({
+          sql: "SELECT * FROM test_table_private_1",
+          cache_buster:2 // this is to avoid getting the cached response
+        });
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/gadm4/6/31/24.png?' + sql,
+            method: 'GET'
+        },{
+            status: 500,
+        }, function() { done(); });
+    });
+
 });
 

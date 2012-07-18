@@ -34,6 +34,7 @@ PATH=node_modules/.bin/:$PATH
 echo "Running tests"
 mocha -u tdd \
   test/unit/cartodb/redis_pool.test.js \
+  test/unit/cartodb/req2params.test.js \
   test/acceptance/cache_validator.js \
   test/acceptance/server.js
 

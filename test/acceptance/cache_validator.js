@@ -1,6 +1,6 @@
 var assert      = require('../support/assert');
 var net = require('net');
-require(__dirname + '/../test_helper');
+require(__dirname + '/../support/test_helper');
 var CacheValidator = require(__dirname + '/../../lib/cartodb/cache_validator');
 var tests = module.exports = {};
 

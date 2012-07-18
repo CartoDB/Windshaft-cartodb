@@ -15,8 +15,11 @@ SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
--- tileuser role
-CREATE USER tileuser;
+-- publicuser role
+CREATE USER publicuser;
+
+-- db owner role
+CREATE USER test_cartodb_user_1;
 
 -- first table
 CREATE TABLE test_table (
@@ -59,8 +62,8 @@ ALTER TABLE ONLY test_table ADD CONSTRAINT test_table_pkey PRIMARY KEY (cartodb_
 CREATE INDEX test_table_the_geom_idx ON test_table USING gist (the_geom);
 CREATE INDEX test_table_the_geom_webmercator_idx ON test_table USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table TO postgres;
-GRANT ALL ON TABLE test_table TO tileuser;
+GRANT ALL ON TABLE test_table TO test_cartodb_user_1;
+GRANT SELECT ON TABLE test_table TO publicuser;
 
 -- second table
 CREATE TABLE test_table_2 (
@@ -103,7 +106,8 @@ ALTER TABLE ONLY test_table_2 ADD CONSTRAINT test_table_2_pkey PRIMARY KEY (cart
 CREATE INDEX test_table_2_the_geom_idx ON test_table_2 USING gist (the_geom);
 CREATE INDEX test_table_2_the_geom_webmercator_idx ON test_table_2 USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table_2 TO tileuser;
+GRANT ALL ON TABLE test_table_2 TO test_cartodb_user_1;
+GRANT SELECT ON TABLE test_table_2 TO publicuser;
 
 -- third table
 CREATE TABLE test_table_3 (
@@ -146,5 +150,24 @@ ALTER TABLE ONLY test_table_3 ADD CONSTRAINT test_table_3_pkey PRIMARY KEY (cart
 CREATE INDEX test_table_3_the_geom_idx ON test_table_3 USING gist (the_geom);
 CREATE INDEX test_table_3_the_geom_webmercator_idx ON test_table_3 USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table_3 TO postgres;
-GRANT ALL ON TABLE test_table_3 TO tileuser;
+GRANT ALL ON TABLE test_table_3 TO test_cartodb_user_1;
+GRANT SELECT ON TABLE test_table_3 TO publicuser;
+
+-- private table
+CREATE TABLE test_table_private_1 (
+    updated_at timestamp without time zone DEFAULT now(),
+    created_at timestamp without time zone DEFAULT now(),
+    cartodb_id integer NOT NULL,
+    name character varying,
+    address character varying,
+    the_geom geometry,
+    the_geom_webmercator geometry,
+    CONSTRAINT enforce_dims_the_geom CHECK ((st_ndims(the_geom) = 2)),
+    CONSTRAINT enforce_dims_the_geom_webmercator CHECK ((st_ndims(the_geom_webmercator) = 2)),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'POINT'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom_webmercator CHECK (((geometrytype(the_geom_webmercator) = 'POINT'::text) OR (the_geom_webmercator IS NULL))),
+    CONSTRAINT enforce_srid_the_geom CHECK ((st_srid(the_geom) = 4326)),
+    CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
+);
+
+GRANT ALL ON TABLE test_table_private_1 TO test_cartodb_user_1;
