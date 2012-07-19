@@ -14,13 +14,13 @@ suite('req2params', function() {
     });
 
     test('cleans up request', function(done){
-      opts.req2params({headers: { host:'h1' }, query: {dbuser:'hacker',dbname:'secret'}}, function(err, req) {
+      opts.req2params({headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}}, function(err, req) {
           if ( err ) { console.log(err); throw new Error(err); }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
           assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
-          assert.ok(_.isNull(req.params.dbname), 'could forge dbname');
+          assert.equal(req.params.dbname, 'cartodb_test_user_1_db', 'could forge dbname: '+ req.params.dbname);
           assert.ok(!req.hasOwnProperty('dbuser'), 'could inject dbuser ('+req.params.dbuser+')');
           done();
       });
