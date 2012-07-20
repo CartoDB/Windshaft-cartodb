@@ -31,19 +31,22 @@ modules. At any time just wipe out the node_modules/ directory and run
 Configure
 ---------
 
-Edit config/environments/<env>.js files
+Create a config/environments/<env>.js file (there are .example files
+to start from).
 
-Look at lib/cartodb/server_options for more on config
+Look at lib/cartodb/server_options.js for more on config
 
 Run
 ---
 
 ```
-node app.js [development | staging | production]
+node app.js <env> 
 ```
 
-Note that caches are kept in redis. If you're not seeing what
-you expect there may be out-of-sync records in there.
+Where <env> is the name of a configuration file under config/environments/.
+
+Note that caches are kept in redis. If you're not seeing what you expect
+there may be out-of-sync records in there.
 Take a look: http://redis.io/commands
 
 

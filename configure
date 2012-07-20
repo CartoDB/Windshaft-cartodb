@@ -1,0 +1,38 @@
+#!/bin/sh
+
+usage() {
+  echo "Usage: $0 [OPTION]"
+  echo 
+  echo "Configuration:"
+  echo "  --help                 display this help and exit"
+  echo "  --with-pgport=NUM      access PostgreSQL server on TCP port NUM"
+}
+
+PGPORT=5432
+
+while test -n "$1"; do
+  case "$1" in
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    --with-pgport=*)
+      PGPORT=`echo "$1" | cut -d= -f2`
+      ;;
+    *)
+      echo "Unknown option '$1'" >&2
+      usage >&2
+      exit 1
+  esac
+  shift
+done
+
+echo "PGPORT: $PGPORT"
+
+# TODO: allow specifying configuration settings !
+for f in config/environments/*.example; do
+  o=`dirname "$f"`/`basename "$f" .example`
+  echo "Writing $o"
+  # See http://austinmatzko.com/2008/04/26/sed-multi-line-search-and-replace/
+  sed -n "1h;1!H;\${;g;s/\(,postgres: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$PGPORT\2/;p;}" < "$f" > "$o"
+done
