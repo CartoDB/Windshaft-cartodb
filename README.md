@@ -14,8 +14,19 @@ functionality and custom filters for authentication
 * provides a infowindow endpoint for windshaft
 * provides a ``map_metadata`` endpoint for windshaft
 
-Install
--------
+Configure
+---------
+
+Create the config/environments/<env>.js files (there are .example files
+to start from). You can optionally use the ./configure script for this,
+see ```./configure --help``` to see available options.
+
+Look at lib/cartodb/server_options.js for more on config
+
+Build/install
+-------------
+
+To fetch and build all node-based dependencies, run:
 
 ```
 git clone
@@ -28,13 +39,6 @@ happen to have startup errors you may need to force rebuilding those
 modules. At any time just wipe out the node_modules/ directory and run
 ```npm install``` again.
 
-Configure
----------
-
-Create a config/environments/<env>.js file (there are .example files
-to start from).
-
-Look at lib/cartodb/server_options.js for more on config
 
 Run
 ---
