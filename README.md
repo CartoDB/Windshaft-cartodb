@@ -14,6 +14,18 @@ functionality and custom filters for authentication
 * provides a infowindow endpoint for windshaft
 * provides a ``map_metadata`` endpoint for windshaft
 
+Requirements
+------------
+
+ [core]
+ - node-0.6.x+
+ - PostgreSQL-8.4+
+ - Redis (http://www.redis.io)
+ [for cache control]
+ - CartoDB-SQL-API 1.0.0+
+ - CartoDB 0.9.5+ (for ``CDB_QueryTables``)
+ - Varnish (https://www.varnish-cache.org)
+
 Configure
 ---------
 
