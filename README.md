@@ -19,8 +19,11 @@ Requirements
 
  [core]
  - node-0.6.x+
- - PostgreSQL-8.4+
- - Redis (http://www.redis.io)
+ - PostgreSQL-8.3+
+ - PostGIS-1.5.0+
+ - Redis 2.2.0+ (http://www.redis.io)
+ - Mapnik 2.0 or 2.1 
+
  [for cache control]
  - CartoDB-SQL-API 1.0.0+
  - CartoDB 0.9.5+ (for ``CDB_QueryTables``)
