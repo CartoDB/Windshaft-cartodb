@@ -21,7 +21,7 @@ suite('req2params', function() {
           assert.ok(req.hasOwnProperty('params'), 'request has params');
           assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
           assert.ok(_.isNull(req.params.dbname), 'could forge dbname');
-          assert.ok(!req.params.hasOwnProperty('dbuser'), 'could inject dbuser');
+          assert.ok(!req.params.hasOwnProperty('dbuser'), 'could inject dbuser ('+req.params.dbuser+')');
           done();
       });
     });
@@ -37,7 +37,7 @@ suite('req2params', function() {
           // database_name for user "vizzuality" (see test/support/prepare_db.sh)
           assert.equal(req.params.dbname, 'cartodb_test_user_1_db');
           // unauthenticated request gets no dbuser
-          assert.ok(!req.params.hasOwnProperty('dbuser'), 'could inject dbuser');
+          assert.ok(!req.params.hasOwnProperty('dbuser'), 'could inject dbuser ('+req.params.dbuser+')');
           done();
       });
     });
@@ -57,7 +57,7 @@ suite('req2params', function() {
  
           opts.req2params({headers: { host:'vizzuality' }, query: {map_key: '1235'} }, function(err, req) {
               // wrong key resets params to no user
-              assert.ok(!req.params.hasOwnProperty('dbuser'), 'could inject dbuser');
+              assert.ok(!req.params.hasOwnProperty('dbuser'), 'could inject dbuser ('+req.params.dbuser+')');
               done();
           });
       });
