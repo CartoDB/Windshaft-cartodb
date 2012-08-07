@@ -65,10 +65,10 @@ suite('server', function() {
             body: JSON.stringify([ 'style.mss:1:11 Unrecognized rule: backgxxxxxround-color', 'style.mss:1:38 Unrecognized rule: foo' ])
         }, function() { done(); });
     });
-    
+
     test("post'ing good style returns 200", function(done){
         assert.response(server, {
-            url: '/tiles/my_table5/style',
+            url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
             headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: 'Map {background-color:#fff;}'})
@@ -78,11 +78,25 @@ suite('server', function() {
             done();
         });
     });
+    
+    test("post'ing good style with no authentication returns an error", function(done){
+        assert.response(server, {
+            url: '/tiles/my_table5/style',
+            method: 'POST',
+            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: 'Map {background-color:#fff;}'})
+        },{}, function(res) {
+          // fixme: we should really return a 403 here
+          assert.equal(res.statusCode, 500, res.body);
+          assert.ok(res.body.indexOf('map style cannot be changed by unauthenticated request') != -1, res.body);
+          done();
+        });
+    });
 
     test("post'ing good style returns 200 then getting returns original style", function(done){
         var style = 'Map {background-color:#fff;}';
         assert.response(server, {
-            url: '/tiles/my_table5/style',
+            url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
             headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: style})
@@ -104,8 +118,20 @@ suite('server', function() {
     
     });
 
-    // TODO: test that unauthenticated DELETE should fail
+    // Test that unauthenticated DELETE should fail
     // See https://github.com/Vizzuality/cartodb-management/issues/155
+    test("delete'ing style with no authentication returns an error", function(done){
+        assert.response(server, {
+            url: '/tiles/my_table5/style',
+            method: 'DELETE',
+            headers: {host: 'vizzuality'},
+        },{}, function(res) { 
+          // fixme: we should really return a 403 here
+          assert.equal(res.statusCode, 500, res.body);
+          assert.ok(res.body.indexOf('map style cannot be deleted by unauthenticated request') != -1, res.body);
+          done();
+        });
+    });
 
     test("delete'ing style returns 200 then getting returns default style", function(done){
         // this is the default style
@@ -113,7 +139,7 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'DELETE',
-            headers: {host: 'localhost'},
+            headers: {host: 'vizzuality'},
         },{}, function(res) { 
         assert.equal(res.statusCode, 200, res.body);
 
