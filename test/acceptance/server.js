@@ -103,6 +103,44 @@ suite('server', function() {
         });
     
     });
+
+    // TODO: test that unauthenticated DELETE should fail
+    // See https://github.com/Vizzuality/cartodb-management/issues/155
+
+    test("delete'ing style returns 200 then getting returns default style", function(done){
+        // this is the default style
+        var style = '#my_table5 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}'
+        assert.response(server, {
+            url: '/tiles/my_table5/style?map_key=1234',
+            method: 'DELETE',
+            headers: {host: 'localhost'},
+        },{}, function(res) { 
+        assert.equal(res.statusCode, 200, res.body);
+
+            // Retrive style with authenticated request
+            assert.response(server, {
+                headers: {host: 'localhost'},
+                url: '/tiles/my_table5/style?map_key=1234',
+                method: 'GET'
+            },{}, function(res) {
+            assert.equal(res.statusCode, 200, res.body);
+            assert.deepEqual(JSON.parse(res.body).style, style);
+
+              // Now retrive style with unauthenticated request
+              assert.response(server, {
+                  headers: {host: 'localhost'},
+                  url: '/tiles/my_table5/style',
+                  method: 'GET'
+              }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.deepEqual(JSON.parse(res.body).style, style);
+
+                done();
+              });
+            });
+
+        });
+    });
     
     test("get'ing blank infowindow returns blank", function(done){
         assert.response(server, {
