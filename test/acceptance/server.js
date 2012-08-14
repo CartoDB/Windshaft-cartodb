@@ -279,6 +279,31 @@ suite('server', function() {
         }, function() { done(); });
     });
 
+    test("get'ing infowindow of private table should fail when unauthenticated",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/test_table_private_1/infowindow',
+            method: 'GET'
+        },{}, function(res) {
+          // NOTE: it would be better to get a '403 - forbidden' here...
+          assert.equal(res.statusCode, 500, res.body);
+          done();
+        });
+    });
+
+    test("get'ing infowindow of private table should succeed when authenticated",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/test_table_private_1/infowindow?map_key=1234',
+            method: 'GET'
+        },{}, function(res) {
+          assert.equal(res.statusCode, 200, res.body);
+          done();
+        });
+    });
+
     /////////////////////////////////////////////////////////////////////////////////
     //
     // GET GRID 
