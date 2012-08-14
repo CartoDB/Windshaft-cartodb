@@ -31,5 +31,6 @@ echo 'HSET rails:users:vizzuality database_name "'"${TEST_DB}"'"' | redis-cli -p
 echo "HSET rails:users:vizzuality map_key 1234" | redis-cli -p ${REDIS_PORT} -n 5
 echo "SADD rails:users:vizzuality:map_key 1235" | redis-cli -p ${REDIS_PORT} -n 5
 echo 'HSET rails:'"${TEST_DB}"':my_table infowindow "this, that, the other"' | redis-cli -p ${REDIS_PORT} -n 0
+echo 'HSET rails:'"${TEST_DB}"':test_table_private_1 privacy "0"' | redis-cli -p ${REDIS_PORT} -n 0
 
 echo "Finished preparing data. Run tests with expresso."
