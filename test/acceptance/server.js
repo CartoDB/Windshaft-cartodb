@@ -272,6 +272,31 @@ suite('server', function() {
             headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
         }, function() { done(); });
     });
+
+    test("get'ing the grid of a private table should fail when unauthenticated",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/test_table_private_1/6/31/24.grid.json',
+            method: 'GET'
+        },{}, function(res) {
+          // NOTE: it would be better to get a '403 - forbidden' here...
+          assert.equal(res.statusCode, 500, res.body);
+          done();
+        });
+    });
+
+    test("get'ing the grid of a private table should succeed when authenticated",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/test_table_private_1/6/31/24.grid.json?map_key=1234',
+            method: 'GET'
+        },{}, function(res) {
+          assert.equal(res.statusCode, 200, res.body);
+          done();
+        });
+    });
     
     /////////////////////////////////////////////////////////////////////////////////
     //
@@ -320,6 +345,7 @@ suite('server', function() {
         var sql = querystring.stringify({sql: "SELECT * FROM test_table_private_1", map_key: 1234})
         assert.response(server, {
             headers: {host: 'vizzuality.localhost.lan'},
+            // NOTE: we encode a public table in the URL !
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
         },{
