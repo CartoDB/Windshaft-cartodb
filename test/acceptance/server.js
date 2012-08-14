@@ -44,6 +44,36 @@ suite('server', function() {
         }, function() { done(); });
     });
 
+/* FAILS !
+    test("get'ing style of private table should fail when unauthenticated",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/test_table_private_1/style',
+            method: 'GET'
+        },{
+        }, function(res) {
+          // TODO: should be "403 - forbidden" instead
+          assert.equal(res.statusCode, 500, res.body);
+          done();
+        });
+    });
+*/
+
+    test("get'ing style of private table should succeed when authenticated",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/test_table_private_1/style?map_key=1234',
+            method: 'GET'
+        },{
+        }, function(res) {
+          assert.equal(res.statusCode, 200, res.body);
+          assert.deepEqual(res.body, '{"style":"#test_table_private_1 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}');
+          done();
+        });
+    });
+
     /////////////////////////////////////////////////////////////////////////////////
     //
     // POST STYLE
