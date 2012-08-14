@@ -10,7 +10,14 @@ var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
 suite('server', function() {
+
+    /////////////////////////////////////////////////////////////////////////////////
+    //
+    // GET UNSUPPORTED
+    //
+    /////////////////////////////////////////////////////////////////////////////////
     
+    // TOSO: I guess this should be a 404 instead...
     test("get call to server returns 200", function(done){
         assert.response(server, {
             url: '/',
@@ -19,6 +26,12 @@ suite('server', function() {
             status: 200
         }, function() { done(); });
     });
+
+    /////////////////////////////////////////////////////////////////////////////////
+    //
+    // GET STYLE
+    //
+    /////////////////////////////////////////////////////////////////////////////////
     
     test("get'ing blank style returns default style", function(done){
         assert.response(server, {
@@ -30,6 +43,12 @@ suite('server', function() {
             body: '{"style":"#my_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}'
         }, function() { done(); });
     });
+
+    /////////////////////////////////////////////////////////////////////////////////
+    //
+    // POST STYLE
+    //
+    /////////////////////////////////////////////////////////////////////////////////
     
     test("post'ing no style returns 400 with errors", function(done){
         assert.response(server, {
@@ -118,6 +137,12 @@ suite('server', function() {
     
     });
 
+    /////////////////////////////////////////////////////////////////////////////////
+    //
+    // DELETE STYLE
+    //
+    /////////////////////////////////////////////////////////////////////////////////
+
     // Test that unauthenticated DELETE should fail
     // See https://github.com/Vizzuality/cartodb-management/issues/155
     test("delete'ing style with no authentication returns an error", function(done){
@@ -167,6 +192,12 @@ suite('server', function() {
 
         });
     });
+
+    /////////////////////////////////////////////////////////////////////////////////
+    //
+    // GET INFOWINDOW
+    //
+    /////////////////////////////////////////////////////////////////////////////////
     
     test("get'ing blank infowindow returns blank", function(done){
         assert.response(server, {
@@ -201,18 +232,23 @@ suite('server', function() {
             body: 'simon({"infowindow":"this, that, the other"});'
         }, function() { done(); });
     });
-    
-    test("get'ing a tile with default style should return an image", function(done){
+
+    /////////////////////////////////////////////////////////////////////////////////
+    //
+    // GET GRID 
+    //
+    /////////////////////////////////////////////////////////////////////////////////
+
+    test("get'ing a json with default style should return an grid", function(done){
         assert.response(server, {
             headers: {host: 'vizzuality.localhost.lan'},
-            url: '/tiles/gadm4/6/31/24.png?geom_type=polygon',
+            url: '/tiles/gadm4/6/31/24.grid.json',
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'image/png' }
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
         }, function() { done(); });
     });
-    
     
     test("get'ing a json with default style should return an grid", function(done){
         assert.response(server, {
@@ -237,6 +273,22 @@ suite('server', function() {
         }, function() { done(); });
     });
     
+    /////////////////////////////////////////////////////////////////////////////////
+    //
+    // GET TILE
+    //
+    /////////////////////////////////////////////////////////////////////////////////
+    
+    test("get'ing a tile with default style should return an image", function(done){
+        assert.response(server, {
+            headers: {host: 'vizzuality.localhost.lan'},
+            url: '/tiles/gadm4/6/31/24.png?geom_type=polygon',
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function() { done(); });
+    });
     
     test("get'ing a tile with default style and sql should return a constrained image", function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"});
