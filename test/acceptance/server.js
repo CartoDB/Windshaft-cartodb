@@ -17,7 +17,7 @@ suite('server', function() {
     //
     /////////////////////////////////////////////////////////////////////////////////
     
-    // TOSO: I guess this should be a 404 instead...
+    // TODO: I guess this should be a 404 instead...
     test("get call to server returns 200", function(done){
         assert.response(server, {
             url: '/',
