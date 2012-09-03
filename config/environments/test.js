@@ -27,7 +27,8 @@ var config = {
     }
     ,varnish: {
         host: '',
-        port: null
+        port: null,
+        ttl: 86400
     }
 };
 

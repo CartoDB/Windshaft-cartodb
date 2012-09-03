@@ -32,7 +32,8 @@ var config = {
     }
     ,varnish: {
         host: 'localhost',
-        port: 6082
+        port: 6082,
+        ttl: 86400
     }
 };
 
