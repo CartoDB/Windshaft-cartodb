@@ -39,7 +39,7 @@ Run
 ---
 
 ```
-node app.js [development | production]
+node app.js [development | staging | production]
 ```
 
 Note that caches are kept in redis. If you're not seeing what
