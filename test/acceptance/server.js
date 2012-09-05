@@ -53,7 +53,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          // TODO: should be "403 - forbidden" instead
+          // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 500, res.body);
           done();
         });
@@ -97,7 +97,7 @@ suite('server', function() {
             headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table3{backgxxxxxround-color:#fff;}'})
         },{
-            status: 500,
+            status: 500, // FIXME: should be 400 !
             body: JSON.stringify(['style.mss:1:11 Unrecognized rule: backgxxxxxround-color'])
         }, function() { done(); });
     });
@@ -109,7 +109,7 @@ suite('server', function() {
             headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table4{backgxxxxxround-color:#fff;foo:bar}'})
         },{
-            status: 500,
+            status: 500, // FIXME: should be 400 !
             body: JSON.stringify([ 'style.mss:1:11 Unrecognized rule: backgxxxxxround-color', 'style.mss:1:38 Unrecognized rule: foo' ])
         }, function() { done(); });
     });
@@ -134,7 +134,7 @@ suite('server', function() {
             headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: 'Map {background-color:#aaa;}'})
         },{}, function(res) {
-          // fixme: we should really return a 403 here
+          // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 500, res.body);
           assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
 
@@ -189,7 +189,7 @@ suite('server', function() {
             method: 'DELETE',
             headers: {host: 'vizzuality'},
         },{}, function(res) { 
-          // fixme: we should really return a 403 here
+          // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 500, res.body);
           assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
           // check that the style wasn't really deleted !
@@ -286,7 +286,7 @@ suite('server', function() {
             url: '/tiles/test_table_private_1/infowindow',
             method: 'GET'
         },{}, function(res) {
-          // NOTE: it would be better to get a '403 - forbidden' here...
+          // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 500, res.body);
           done();
         });
@@ -351,8 +351,8 @@ suite('server', function() {
             url: '/tiles/test_table_private_1/6/31/24.grid.json',
             method: 'GET'
         },{}, function(res) {
-          // FIXME: should be 401 Unauthorized
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          // 401 Unauthorized
+          assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
           done();
         });
     });
