@@ -351,8 +351,8 @@ suite('server', function() {
             url: '/tiles/test_table_private_1/6/31/24.grid.json',
             method: 'GET'
         },{}, function(res) {
-          // NOTE: it would be better to get a '403 - forbidden' here...
-          assert.equal(res.statusCode, 500, res.body);
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           done();
         });
     });
@@ -435,8 +435,11 @@ suite('server', function() {
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
         },{
-            status: 500,
-        }, function() { done(); });
+        }, function(res) {
+          // 401 Unauthorized
+          assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          done();
+        });
     });
 
     test("get'ing a tile with data from private table should fail when unauthenticated (uses old redis key)", function(done){
@@ -452,8 +455,11 @@ suite('server', function() {
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
         },{
-            status: 500,
-        }, function() { done(); });
+        }, function(res) {
+          // 401 Unauthorized
+          assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          done();
+        });
     });
 
 });
