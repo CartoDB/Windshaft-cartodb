@@ -571,6 +571,36 @@ suite('server', function() {
 
     /////////////////////////////////////////////////////////////////////////////////
     //
+    // DELETE CACHE 
+    //
+    /////////////////////////////////////////////////////////////////////////////////
+
+    test("forbids flushing cache without specifying table name", function(done) {
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/flush_cache',
+            method: 'DELETE'
+        },{}, function(res) {
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+          done();
+        });
+    });
+
+    test("allows flushing table cache by unauthenticated user", function(done) {
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/gadm4/flush_cache',
+            method: 'DELETE'
+        },{}, function(res) {
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          // TODO: also check that varnish is signalled (using VarnishEmu)
+          // NOTE: requires enable_cache=1 in test.js
+          done();
+        });
+    });
+
+    /////////////////////////////////////////////////////////////////////////////////
+    //
     // Tear down
     //
     /////////////////////////////////////////////////////////////////////////////////
