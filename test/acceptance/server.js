@@ -216,7 +216,7 @@ suite('server', function() {
 
             // Retrive style with authenticated request
             assert.response(server, {
-                headers: {host: 'localhost'},
+                headers: {host: 'vizzuality'},
                 url: '/tiles/my_table5/style?map_key=1234',
                 method: 'GET'
             },{}, function(res) {
@@ -225,7 +225,7 @@ suite('server', function() {
 
               // Now retrive style with unauthenticated request
               assert.response(server, {
-                  headers: {host: 'localhost'},
+                  headers: {host: 'vizzuality'},
                   url: '/tiles/my_table5/style',
                   method: 'GET'
               }, {}, function(res) {
