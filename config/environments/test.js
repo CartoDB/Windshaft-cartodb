@@ -13,6 +13,9 @@ var config = {
         extent: "-20005048.4188,-20005048.4188,20005048.4188,20005048.4188",
         simplify: true
     }
+    ,millstone: {
+        cache_basedir: '/tmp/cdb-tiler-test/millstone'
+    }
     ,redis: {
         host: '127.0.0.1',
         port: 6333,

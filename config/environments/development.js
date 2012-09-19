@@ -18,6 +18,9 @@ var config = {
         */
         simplify: true
     }
+    ,millstone: {
+        cache_basedir: '/tmp/cdb-tiler-dev/millstone-dev'
+    }
     ,redis: {
         host: '127.0.0.1',
         port: 6379,
