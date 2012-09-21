@@ -13,19 +13,23 @@ var client = redis.createClient(REDIS_PORT, 'localhost');
 client.on('connect', function() {
   client.select(dbnum);
   client.keys('map_style|*', function(err, matches) {
-    for (var i=0; i<matches.length; i++) {
-      var k = matches[i];
-      var i0 = i+1;
-      console.log("Resetting style " + i0 + " key: " + k);
+
+    processNext = function() {
+      if ( ! matches.length ) process.exit(0);
+      var k = matches.shift();
+      console.log("Resetting XML in key: " + k);
       client.get(k, function(err, val) {
         if ( err ) throw err;
         val = JSON.parse(val);
         delete val.xml;
         client.set(k, JSON.stringify(val), function() {
-          console.log("done with style " + i0 + " / " + matches.length);
-          if ( i0 == matches.length ) process.exit(0);
+          console.log("done with style " + k);
+          processNext();
         });
       });
     }
+
+    processNext();
+
   });
 });
