@@ -1,9 +1,10 @@
 {
   "name": "windshaft-cartodb",
-  "version": "0.2.0-dev",
+  "version": "1.0.0",
   "dependencies": {
     "cluster2": {
-      "version": "0.3.5",
+      "version": "0.3.5-cdb01",
+      "from": "git://github.com/CartoDB/cluster2.git#28cde11",
       "dependencies": {
         "express": {
           "version": "2.5.11",
@@ -299,9 +300,6 @@
           "version": "0.3.3-dev",
           "from": "git://github.com/Vizzuality/tilelive-mapnik.git#7df70554",
           "dependencies": {
-            "mapnik": {
-              "version": "0.7.14"
-            },
             "eio": {
               "version": "0.1.0"
             },
@@ -326,6 +324,9 @@
     },
     "request": {
       "version": "2.9.202"
+    },
+    "mapnik": {
+      "version": "0.7.14"
     },
     "mocha": {
       "version": "1.2.1",

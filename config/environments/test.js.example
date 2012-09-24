@@ -14,6 +14,7 @@ var config = {
         extent: "-20005048.4188,-20005048.4188,20005048.4188,20005048.4188",
         simplify: true
     }
+    ,mapnik_version: '2.0.2'
     ,millstone: {
         cache_basedir: '/tmp/cdb-tiler-test/millstone'
     }
