@@ -19,6 +19,7 @@ var config = {
         */
         simplify: true
     }
+    ,mapnik_version: '2.0.2'
     ,millstone: {
         cache_basedir: '/tmp/cdb-tiler-dev/millstone-dev'
     }
