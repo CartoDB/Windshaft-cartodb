@@ -40,6 +40,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
+            headers: { 'X-Cache-Channel': 'cartodb_test_user_1_db:my_table' },
             body: '{"style":"#my_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}'
         }, function() { done(); });
     });
@@ -261,6 +262,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
+            headers: { 'X-Cache-Channel': 'cartodb_test_user_1_db:my_tablez' },
             body: '{"infowindow":null}'
         }, function() { done(); });
     });
@@ -326,7 +328,8 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8',
+                       'X-Cache-Channel': 'cartodb_test_user_1_db:gadm4' }
         }, function() { done(); });
     });
     
@@ -391,7 +394,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'image/png' }
+            headers: { 'Content-Type': 'image/png', 'X-Cache-Channel': 'cartodb_test_user_1_db:gadm4' }
         }, function() { done(); });
     });
     
