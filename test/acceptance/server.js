@@ -56,6 +56,8 @@ suite('server', function() {
         }, function(res) {
           // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 500, res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error: 'Sorry, you are unauthorized (permission denied)'});
           done();
         });
     });
