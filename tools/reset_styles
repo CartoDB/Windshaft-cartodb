@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+
+// Reset redis-stored XML styles so that they are regenerated
+// from CartoCSS on next tile request
+
+var redis = require('redis')
+
+var REDIS_PORT = 6379; // TODO: make a parameter
+
+var dbnum = 0;
+
+var client = redis.createClient(REDIS_PORT, 'localhost');
+client.on('connect', function() {
+  client.select(dbnum);
+  client.keys('map_style|*', function(err, matches) {
+
+    processNext = function() {
+      if ( ! matches.length ) process.exit(0);
+      var k = matches.shift();
+      console.log("Resetting XML in key: " + k);
+      client.get(k, function(err, val) {
+        if ( err ) throw err;
+        val = JSON.parse(val);
+        delete val.xml;
+        client.set(k, JSON.stringify(val), function() {
+          console.log("done with style " + k);
+          processNext();
+        });
+      });
+    }
+
+    processNext();
+
+  });
+});

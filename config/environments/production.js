@@ -12,6 +12,9 @@ var config = {
         extent: "-20005048.4188,-20005048.4188,20005048.4188,20005048.4188",
         simplify: true
     }
+    ,millstone: {
+        cache_basedir: '/home/ubuntu/tile_assets/'
+    }
     ,redis: {
         host: '127.0.0.1',
         port: 6379

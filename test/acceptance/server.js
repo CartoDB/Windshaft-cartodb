@@ -40,6 +40,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
+            headers: { 'X-Cache-Channel': 'cartodb_test_user_1_db:my_table' },
             body: '{"style":"#my_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}'
         }, function() { done(); });
     });
@@ -55,6 +56,8 @@ suite('server', function() {
         }, function(res) {
           // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 500, res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error: 'Sorry, you are unauthorized (permission denied)'});
           done();
         });
     });
@@ -129,24 +132,33 @@ suite('server', function() {
     
     test("post'ing good style with no authentication returns an error", function(done){
         assert.response(server, {
-            url: '/tiles/my_table5/style',
+            url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
             headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: 'Map {background-color:#aaa;}'})
-        },{}, function(res) {
-          // FIXME: should be 401 Unauthorized
-          assert.equal(res.statusCode, 500, res.body);
-          assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
-
+            data: querystring.stringify({style: 'Map {background-color:#fff;}'})
+        },{
+        }, function(res) {
+          assert.equal(res.statusCode, 200, res.body);
           assert.response(server, {
-              headers: {host: 'vizzuality.localhost.lan'},
               url: '/tiles/my_table5/style',
-              method: 'GET'
-          },{
-              status: 200,
-              body: JSON.stringify({style: 'Map {background-color:#fff;}'})
-          }, function() { done(); });
+              method: 'POST',
+              headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({style: 'Map {background-color:#aaa;}'})
+          },{}, function(res) {
+            // FIXME: should be 401 Unauthorized
+            assert.equal(res.statusCode, 500, res.body);
+            assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
 
+            assert.response(server, {
+                headers: {host: 'vizzuality.localhost.lan'},
+                url: '/tiles/my_table5/style',
+                method: 'GET'
+            },{
+                status: 200,
+                body: JSON.stringify({style: 'Map {background-color:#fff;}'})
+            }, function() { done(); });
+
+          });
         });
     });
 
@@ -216,7 +228,7 @@ suite('server', function() {
 
             // Retrive style with authenticated request
             assert.response(server, {
-                headers: {host: 'localhost'},
+                headers: {host: 'vizzuality'},
                 url: '/tiles/my_table5/style?map_key=1234',
                 method: 'GET'
             },{}, function(res) {
@@ -225,7 +237,7 @@ suite('server', function() {
 
               // Now retrive style with unauthenticated request
               assert.response(server, {
-                  headers: {host: 'localhost'},
+                  headers: {host: 'vizzuality'},
                   url: '/tiles/my_table5/style',
                   method: 'GET'
               }, {}, function(res) {
@@ -252,6 +264,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
+            headers: { 'X-Cache-Channel': 'cartodb_test_user_1_db:my_tablez' },
             body: '{"infowindow":null}'
         }, function() { done(); });
     });
@@ -317,7 +330,8 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8',
+                       'X-Cache-Channel': 'cartodb_test_user_1_db:gadm4' }
         }, function() { done(); });
     });
     
@@ -382,7 +396,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'image/png' }
+            headers: { 'Content-Type': 'image/png', 'X-Cache-Channel': 'cartodb_test_user_1_db:gadm4' }
         }, function() { done(); });
     });
     
