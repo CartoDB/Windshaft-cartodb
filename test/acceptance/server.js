@@ -104,6 +104,18 @@ suite('server', function() {
             body: JSON.stringify(['style.mss:1:11 Unrecognized rule: backgxxxxxround-color'])
         }, function() { done(); });
     });
+
+    test("post'ing unparseable style returns 400 with error", function(done){
+        assert.response(server, {
+            url: '/tiles/my_table3/style?map_key=1234',
+            method: 'POST',
+            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: '#my_table3{'})
+        },{
+            status: 500, // FIXME: should be 400 !
+            body: /Missing closing/
+        }, function() { done(); });
+    });
     
     test("post'ing multiple bad styles returns 400 with error array", function(done){
         assert.response(server, {
