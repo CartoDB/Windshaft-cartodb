@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "windshaft-cartodb",
-    "version": "0.1.0",
+    "version": "0.2.0-dev",
     "description": "A map tile server for CartoDB",
     "url": "https://github.com/Vizzuality/Windshaft-cartodb",
     "licenses": [{
@@ -18,16 +18,15 @@
       "email": "simon@vizzuality.com"
     },
     "dependencies": {
-        "connect": "1.8.7",
-        "cluster": "0.6.4",
+        "cluster2": "~0.3.1",
         "node-varnish": "0.1.1",
         "underscore"  : "1.1.x",
         "grainstore"  : "~0.6.2",
-        "windshaft"  : "~0.4.16",
+        "windshaft"  : "~0.5.8",
         "step": "0.0.x",
         "generic-pool": "1.0.x",
         "redis": "0.7.2",
-        "hiredis": "~0.1.12",
+        "hiredis": "~0.1.14",
         "request": "2.9.202"
     },
     "devDependencies": {
