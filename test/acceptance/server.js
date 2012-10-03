@@ -101,7 +101,19 @@ suite('server', function() {
             data: querystring.stringify({style: '#my_table3{backgxxxxxround-color:#fff;}'})
         },{
             status: 500, // FIXME: should be 400 !
-            body: JSON.stringify(['style.mss:1:11 Unrecognized rule: backgxxxxxround-color'])
+            body: /Unrecognized rule: backgxxxxxround-color/
+        }, function() { done(); });
+    });
+
+    test("post'ing unparseable style returns 400 with error", function(done){
+        assert.response(server, {
+            url: '/tiles/my_table3/style?map_key=1234',
+            method: 'POST',
+            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: '#my_table3{'})
+        },{
+            status: 500, // FIXME: should be 400 !
+            body: /Missing closing/
         }, function() { done(); });
     });
     
@@ -113,8 +125,13 @@ suite('server', function() {
             data: querystring.stringify({style: '#my_table4{backgxxxxxround-color:#fff;foo:bar}'})
         },{
             status: 500, // FIXME: should be 400 !
-            body: JSON.stringify([ 'style.mss:1:11 Unrecognized rule: backgxxxxxround-color', 'style.mss:1:38 Unrecognized rule: foo' ])
-        }, function() { done(); });
+        }, function(res) {
+          var parsed = JSON.parse(res.body);
+          assert.equal(parsed.length, 2);
+          assert.ok( RegExp(/Unrecognized rule: backgxxxxxround-color/).test(parsed[0]) );
+          assert.ok( RegExp(/Unrecognized rule: foo/).test(parsed[1]) );
+          done();
+        });
     });
 
     test("post'ing good style returns 200", function(done){
