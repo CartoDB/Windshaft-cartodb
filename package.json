@@ -18,7 +18,7 @@
       "email": "simon@vizzuality.com"
     },
     "dependencies": {
-        "cluster2": "~0.3.1",
+        "cluster2": "git://github.com/CartoDB/cluster2.git#28cde11",
         "node-varnish": "0.1.1",
         "underscore"  : "1.1.x",
         "grainstore"  : "~0.6.2",
