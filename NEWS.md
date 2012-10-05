@@ -1,3 +1,9 @@
+1.1.0 (DD/MM/YY)
+-----
+* Configurable logging format (#4)
+* Detailed error on missing user metadata 
+* ./Configure script
+
 1.0.0 (03/10/12)
 -----
 * Migrated to node 0.8.x.
