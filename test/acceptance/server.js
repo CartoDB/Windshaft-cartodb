@@ -35,7 +35,7 @@ suite('server', function() {
     
     test("get'ing blank style returns default style", function(done){
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/my_table/style',
             method: 'GET'
         },{
@@ -49,7 +49,7 @@ suite('server', function() {
     test("get'ing style of private table should fail when unauthenticated",
     function(done) {
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/test_table_private_1/style',
             method: 'GET'
         },{
@@ -65,7 +65,7 @@ suite('server', function() {
     test("get'ing style of private table should succeed when authenticated",
     function(done) {
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/test_table_private_1/style?map_key=1234',
             method: 'GET'
         },{
@@ -84,7 +84,7 @@ suite('server', function() {
     
     test("post'ing no style returns 400 with errors", function(done){
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/my_table/style',
             method: 'POST'
         },{
@@ -97,7 +97,7 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table3/style?map_key=1234',
             method: 'POST',
-            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table3{backgxxxxxround-color:#fff;}'})
         },{
             status: 500, // FIXME: should be 400 !
@@ -109,7 +109,7 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table3/style?map_key=1234',
             method: 'POST',
-            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table3{'})
         },{
             status: 500, // FIXME: should be 400 !
@@ -121,7 +121,7 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table4/style?map_key=1234',
             method: 'POST',
-            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table4{backgxxxxxround-color:#fff;foo:bar}'})
         },{
             status: 500, // FIXME: should be 400 !
@@ -138,7 +138,7 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
-            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: 'Map {background-color:#fff;}'})
         },{
         }, function(res) {
@@ -151,7 +151,7 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
-            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: 'Map {background-color:#fff;}'})
         },{
         }, function(res) {
@@ -159,7 +159,7 @@ suite('server', function() {
           assert.response(server, {
               url: '/tiles/my_table5/style',
               method: 'POST',
-              headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+              headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
               data: querystring.stringify({style: 'Map {background-color:#aaa;}'})
           },{}, function(res) {
             // FIXME: should be 401 Unauthorized
@@ -167,7 +167,7 @@ suite('server', function() {
             assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
 
             assert.response(server, {
-                headers: {host: 'vizzuality.localhost.lan'},
+                headers: {host: 'localhost'},
                 url: '/tiles/my_table5/style',
                 method: 'GET'
             },{
@@ -184,7 +184,7 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
-            headers: {host: 'vizzuality.localhost.lan', 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: style})
         },{
         }, function(res) { 
@@ -192,7 +192,7 @@ suite('server', function() {
             assert.equal(res.statusCode, 200, res.body);
 
             assert.response(server, {
-                headers: {host: 'vizzuality.localhost.lan'},
+                headers: {host: 'localhost'},
                 url: '/tiles/my_table5/style',
                 method: 'GET'
             },{
@@ -216,14 +216,14 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table5/style',
             method: 'DELETE',
-            headers: {host: 'vizzuality'},
+            headers: {host: 'localhost'},
         },{}, function(res) { 
           // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 500, res.body);
           assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
           // check that the style wasn't really deleted !
           assert.response(server, {
-              headers: {host: 'vizzuality'},
+              headers: {host: 'localhost'},
               url: '/tiles/my_table5/style?map_key=1234',
               method: 'GET'
           },{
@@ -239,13 +239,13 @@ suite('server', function() {
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'DELETE',
-            headers: {host: 'vizzuality'},
+            headers: {host: 'localhost'},
         },{}, function(res) { 
         assert.equal(res.statusCode, 200, res.body);
 
             // Retrive style with authenticated request
             assert.response(server, {
-                headers: {host: 'vizzuality'},
+                headers: {host: 'localhost'},
                 url: '/tiles/my_table5/style?map_key=1234',
                 method: 'GET'
             },{}, function(res) {
@@ -254,7 +254,7 @@ suite('server', function() {
 
               // Now retrive style with unauthenticated request
               assert.response(server, {
-                  headers: {host: 'vizzuality'},
+                  headers: {host: 'localhost'},
                   url: '/tiles/my_table5/style',
                   method: 'GET'
               }, {}, function(res) {
@@ -276,7 +276,7 @@ suite('server', function() {
     
     test("get'ing blank infowindow returns blank", function(done){
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/my_tablez/infowindow',
             method: 'GET'
         },{
@@ -288,7 +288,7 @@ suite('server', function() {
     
     test("get'ing blank infowindow with callback returns blank with callback", function(done){
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/my_tablez/infowindow?callback=simon',
             method: 'GET'
         },{
@@ -300,7 +300,7 @@ suite('server', function() {
     
     test("get'ing completed infowindow with callback returns information with callback", function(done){
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/my_table/infowindow?callback=simon',
             method: 'GET'
         },{
@@ -312,7 +312,7 @@ suite('server', function() {
     test("get'ing infowindow of private table should fail when unauthenticated",
     function(done) {
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/test_table_private_1/infowindow',
             method: 'GET'
         },{}, function(res) {
@@ -325,7 +325,7 @@ suite('server', function() {
     test("get'ing infowindow of private table should succeed when authenticated",
     function(done) {
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/test_table_private_1/infowindow?map_key=1234',
             method: 'GET'
         },{}, function(res) {
@@ -342,7 +342,7 @@ suite('server', function() {
 
     test("get'ing a json with default style should return an grid", function(done){
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.grid.json',
             method: 'GET'
         },{
@@ -354,7 +354,7 @@ suite('server', function() {
     
     test("get'ing a json with default style should return an grid", function(done){
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.grid.json',
             method: 'GET'
         },{
@@ -366,7 +366,7 @@ suite('server', function() {
     test("get'ing a json with default style and sql should return a constrained grid", function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"})
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.grid.json?' + sql,
             method: 'GET'
         },{
@@ -378,7 +378,7 @@ suite('server', function() {
     test("get'ing the grid of a private table should fail when unauthenticated",
     function(done) {
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/test_table_private_1/6/31/24.grid.json',
             method: 'GET'
         },{}, function(res) {
@@ -391,7 +391,7 @@ suite('server', function() {
     test("get'ing the grid of a private table should succeed when authenticated",
     function(done) {
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/test_table_private_1/6/31/24.grid.json?map_key=1234',
             method: 'GET'
         },{}, function(res) {
@@ -408,7 +408,7 @@ suite('server', function() {
     
     test("get'ing a tile with default style should return an image", function(done){
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.png?geom_type=polygon',
             method: 'GET'
         },{
@@ -420,7 +420,7 @@ suite('server', function() {
     test("get'ing a tile with default style and sql should return a constrained image", function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"});
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
         },{
@@ -433,7 +433,7 @@ suite('server', function() {
     test("get'ing a tile with default style and complex sql should return a constrained image", function(done){
         var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE  codineprov = '08' AND codccaa > 60"})
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
         },{
@@ -446,7 +446,7 @@ suite('server', function() {
         // NOTE: may fail if grainstore < 0.3.0 is used by Windshaft
         var sql = querystring.stringify({sql: "SELECT * FROM test_table_private_1", map_key: 1234})
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             // NOTE: we encode a public table in the URL !
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
@@ -462,7 +462,7 @@ suite('server', function() {
           cache_buster:2 // this is to avoid getting the cached response
         });
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
         },{
@@ -477,12 +477,12 @@ suite('server', function() {
         var sql = querystring.stringify({
           sql: "SELECT * FROM test_table_private_1",
           cache_buster:3,
-          // 1235 is written in rails:users:vizzuality:map_key SET
+          // 1235 is written in rails:users:localhost:map_key SET
           // See https://github.com/Vizzuality/Windshaft-cartodb/issues/39
           map_key: 1235
         });
         assert.response(server, {
-            headers: {host: 'vizzuality.localhost.lan'},
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
         },{

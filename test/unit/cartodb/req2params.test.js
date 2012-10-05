@@ -27,14 +27,14 @@ suite('req2params', function() {
     });
 
     test('sets dbname from redis metadata', function(done){
-      opts.req2params({headers: { host:'vizzuality' }, query: {} }, function(err, req) {
+      opts.req2params({headers: { host:'localhost' }, query: {} }, function(err, req) {
           if ( err ) { console.log(err); throw new Error(err); }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
           assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
-          // database_name for user "vizzuality" (see test/support/prepare_db.sh)
+          // database_name for user "localhost" (see test/support/prepare_db.sh)
           assert.equal(req.params.dbname, 'cartodb_test_user_1_db');
           // unauthenticated request gets no dbuser
           assert.ok(!req.params.hasOwnProperty('dbuser'), 'could inject dbuser ('+req.params.dbuser+')');
@@ -43,19 +43,19 @@ suite('req2params', function() {
     });
 
     test('sets also dbuser for authenticated requests', function(done){
-      opts.req2params({headers: { host:'vizzuality' }, query: {map_key: '1234'} }, function(err, req) {
+      opts.req2params({headers: { host:'localhost' }, query: {map_key: '1234'} }, function(err, req) {
           if ( err ) { console.log(err); throw new Error(err); }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
           assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
-          // database_name for user "vizzuality" (see test/support/prepare_db.sh)
+          // database_name for user "localhost" (see test/support/prepare_db.sh)
           assert.equal(req.params.dbname, 'cartodb_test_user_1_db');
-          // id for user "vizzuality" (see test/support/prepare_db.sh)
+          // id for user "localhost" (see test/support/prepare_db.sh)
           assert.equal(req.dbuser, 'test_cartodb_user_1');
  
-          opts.req2params({headers: { host:'vizzuality' }, query: {map_key: '1235'} }, function(err, req) {
+          opts.req2params({headers: { host:'localhost' }, query: {map_key: '1235'} }, function(err, req) {
               // wrong key resets params to no user
               assert.ok(!req.hasOwnProperty('dbuser'), 'could inject dbuser ('+req.params.dbuser+')');
               done();
