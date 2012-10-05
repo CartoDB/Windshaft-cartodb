@@ -3,6 +3,8 @@
 * Configurable logging format (#4)
 * Detailed error on missing user metadata 
 * ./Configure script
+* Accept "api_key" in addition to "map_key",
+  both in query_string and POST body (#38)
 
 1.0.0 (03/10/12)
 -----

@@ -146,7 +146,21 @@ suite('server', function() {
             done();
         });
     });
-    
+
+    // See https://github.com/Vizzuality/Windshaft-cartodb/issues/38
+    test("post'ing good style with auth passed as api_key returns 200", function(done){
+        assert.response(server, {
+            url: '/tiles/my_table5/style?api_key=1234',
+            method: 'POST',
+            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: 'Map {background-color:#fff;}'})
+        },{}, function(res) {
+            assert.equal(res.statusCode, 200, res.body);
+            done();
+        });
+    });
+
+    // See https://github.com/Vizzuality/cartodb-management/issues/155
     test("post'ing good style with no authentication returns an error", function(done){
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
@@ -265,6 +279,18 @@ suite('server', function() {
               });
             });
 
+        });
+    });
+
+    // See https://github.com/Vizzuality/Windshaft-cartodb/issues/38
+    test("delete'ing style with api_key is accepted", function(done){
+        assert.response(server, {
+            url: '/tiles/my_table5/style?api_key=1234',
+            method: 'DELETE',
+            headers: {host: 'localhost'},
+        },{}, function(res) { 
+          assert.equal(res.statusCode, 200, res.body);
+          done();
         });
     });
 
@@ -448,6 +474,20 @@ suite('server', function() {
         assert.response(server, {
             headers: {host: 'localhost'},
             // NOTE: we encode a public table in the URL !
+            url: '/tiles/gadm4/6/31/24.png?' + sql,
+            method: 'GET'
+        },{
+            status: 200,
+            headers: { 'Content-Type': 'image/png' }
+        }, function() { done(); });
+    });
+
+    // See https://github.com/Vizzuality/Windshaft-cartodb/issues/38
+    test("get'ing a tile with data from private table should succeed when authenticated with api_key", function(done){
+        // NOTE: may fail if grainstore < 0.3.0 is used by Windshaft
+        var sql = querystring.stringify({sql: "SELECT * FROM test_table_private_1", api_key: 1234})
+        assert.response(server, {
+            headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.png?' + sql,
             method: 'GET'
         },{
