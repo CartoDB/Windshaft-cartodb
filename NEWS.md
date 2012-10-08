@@ -1,5 +1,6 @@
 1.1.0 (DD/MM/YY)
 -----
+* Autodetected (and configurable) target mapnik version
 * Configurable logging format (#4)
 * Detailed error on missing user metadata 
 * Properly handle unauthenticated requests for metadata
