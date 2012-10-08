@@ -5,6 +5,7 @@
  * Include version in GET /style response
  * Support version and convert parameters in POST /style request
  * Autodetect target mapnik version and let config override it
+ * Add tools/reset_styles script to batch-reset (and optionally convert) styles
 * Configurable logging format (#4)
 * Detailed error on missing user metadata 
 * Properly handle unauthenticated requests for metadata
