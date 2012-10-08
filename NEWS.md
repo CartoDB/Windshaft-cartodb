@@ -1,6 +1,10 @@
 1.1.0 (DD/MM/YY)
 -----
-* Autodetected (and configurable) target mapnik version
+* Add /version entry point
+* CartoCSS versioning
+ * Include version in GET /style response
+ * Support version and convert parameters in POST /style request
+ * Autodetect target mapnik version and let config override it
 * Configurable logging format (#4)
 * Detailed error on missing user metadata 
 * Properly handle unauthenticated requests for metadata
