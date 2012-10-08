@@ -192,8 +192,12 @@ suite('server', function() {
                 method: 'GET'
             },{
                 status: 200,
-                body: JSON.stringify({style: 'Map {background-color:#fff;}'})
-            }, function() { done(); });
+            }, function(res) {
+              var parsed = JSON.parse(res.body);
+              assert.equal(parsed.style, 'Map {background-color:#fff;}');
+              //assert.equal(parsed.version, '2.0.0');
+              done();
+            });
 
           });
         });
@@ -217,8 +221,12 @@ suite('server', function() {
                 method: 'GET'
             },{
                 status: 200,
-                body: JSON.stringify({style: style})
-            }, function() { done(); });
+            }, function(res) {
+              var parsed = JSON.parse(res.body);
+              assert.equal(parsed.style, style);
+              //assert.equal(parsed.version, '2.0.0');
+              done();
+            });
 
         });
     
@@ -248,8 +256,12 @@ suite('server', function() {
               method: 'GET'
           },{
               status: 200,
-              body: JSON.stringify({style: 'Map {background-color:#fff;}'})
-          }, function() { done(); });
+          }, function(res) {
+              var parsed = JSON.parse(res.body);
+              assert.equal(parsed.style, 'Map {background-color:#fff;}');
+              //assert.equal(parsed.version, '2.0.0');
+              done();
+          });
         });
     });
 
