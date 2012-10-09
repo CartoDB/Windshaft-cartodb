@@ -4,7 +4,7 @@
   "dependencies": {
     "cluster2": {
       "version": "0.3.5-cdb01",
-      "from": "git://github.com/CartoDB/cluster2.git#28cde11",
+      "from": "git://github.com/CartoDB/cluster2.git#cdb_production",
       "dependencies": {
         "express": {
           "version": "2.5.11",

@@ -41,12 +41,15 @@ var ws = CartodbWindshaft(serverOptions);
 //.use(cluster.pidfiles('pids'))
 var cluster = new Cluster({
   port: global.environment.port,
+  host: global.environment.host,
   monPort: global.environment.port+1,
-  noWorkers: 1 // .set('workers', 1)
+  monHost: global.environment.host,
+  noWorkers: 1 
 });
 
 cluster.listen(function(cb) {
   cb(ws);
+}, function() {
+  console.log("Windshaft tileserver started on port " + global.environment.port);
 });
 
-console.log("Windshaft tileserver started on port " + global.environment.port);
