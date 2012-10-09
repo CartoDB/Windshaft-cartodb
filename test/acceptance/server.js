@@ -47,8 +47,12 @@ suite('server', function() {
         },{
             status: 200,
             headers: { 'X-Cache-Channel': 'cartodb_test_user_1_db:my_table' },
-            body: '{"style":"#my_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}'
-        }, function() { done(); });
+        }, function(res) {
+            var parsed = JSON.parse(res.body);
+            assert.equal(parsed.style, "#my_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}");
+            assert.equal(parsed.version, '2.0.0');
+            done();
+        });
     });
 
     // See https://github.com/Vizzuality/Windshaft-cartodb/issues/43
@@ -77,7 +81,9 @@ suite('server', function() {
         },{
         }, function(res) {
           assert.equal(res.statusCode, 200, res.body);
-          assert.deepEqual(res.body, '{"style":"#test_table_private_1 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}"}');
+          var parsed = JSON.parse(res.body);
+          assert.equal(parsed.style, "#test_table_private_1 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}");
+          assert.equal(parsed.version, '2.0.0');
           done();
         });
     });
