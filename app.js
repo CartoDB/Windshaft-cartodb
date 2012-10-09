@@ -33,5 +33,7 @@ var Windshaft = require('windshaft');
 var serverOptions = require('./lib/cartodb/server_options');
 
 ws = CartodbWindshaft(serverOptions);
-ws.listen(global.environment.port);
-console.log("Windshaft tileserver started on port " + global.environment.port);
+ws.listen(global.environment.port, global.environment.host);
+ws.on('listening', function() {
+  console.log("Windshaft tileserver started on " + global.environment.host + ':' + global.environment.port);
+});
