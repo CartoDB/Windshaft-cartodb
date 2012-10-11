@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "dependencies": {
     "cluster2": {
-      "version": "0.3.5-cdb01",
+      "version": "0.3.5-cdb02",
       "from": "git://github.com/CartoDB/cluster2.git#cdb_production",
       "dependencies": {
         "express": {
@@ -245,7 +245,7 @@
       }
     },
     "windshaft": {
-      "version": "0.6.1",
+      "version": "0.6.2",
       "dependencies": {
         "express": {
           "version": "2.5.11",
@@ -273,7 +273,7 @@
           "version": "4.3.1",
           "dependencies": {
             "optimist": {
-              "version": "0.3.4",
+              "version": "0.3.5",
               "dependencies": {
                 "wordwrap": {
                   "version": "0.0.2"
