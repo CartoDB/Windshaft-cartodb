@@ -2,8 +2,9 @@
 -----
 * Add /version entry point
 * CartoCSS versioning
- * Include version in GET /style response
- * Support version and convert parameters in POST /style request
+ * Include style_version in GET /style response
+ * Support style_version and style_convert parameters in POST /style request
+ * Support style_version in GET /:z/:x/:y request
  * Autodetect target mapnik version and let config override it
  * Add tools/reset_styles script to batch-reset (and optionally convert) styles
 * Configurable logging format (#4)
