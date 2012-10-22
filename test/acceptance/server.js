@@ -101,6 +101,23 @@ suite('server', function() {
         });
     });
 
+    // See http://github.com/Vizzuality/Windshaft-cartodb/issues/55
+    test("get'ing style of private table should fail on unknown username",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'unknown_user'},
+            url: '/tiles/test_table_private_1/style',
+            method: 'GET'
+        },{
+        }, function(res) {
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 500, res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+          done();
+        });
+    });
+
     test("get'ing style of private table should succeed when authenticated",
     function(done) {
         assert.response(server, {
@@ -401,6 +418,23 @@ suite('server', function() {
         });
     });
 
+    // See http://github.com/Vizzuality/Windshaft-cartodb/issues/55
+    test("get'ing infowindow of private table should fail on unknown username",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'unknown_user'},
+            url: '/tiles/test_table_private_1/infowindow',
+            method: 'GET'
+        },{
+        }, function(res) {
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 500, res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+          done();
+        });
+    });
+
     test("get'ing infowindow of private table should succeed when authenticated",
     function(done) {
         assert.response(server, {
@@ -463,6 +497,23 @@ suite('server', function() {
         },{}, function(res) {
           // 401 Unauthorized
           assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          done();
+        });
+    });
+
+    // See http://github.com/Vizzuality/Windshaft-cartodb/issues/55
+    test("get'ing grid of private table should fail on unknown username",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'unknown_user'},
+            url: '/tiles/test_table_private_1/6/31/24.grid.json',
+            method: 'GET'
+        },{
+        }, function(res) {
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
           done();
         });
     });
@@ -562,6 +613,25 @@ suite('server', function() {
         }, function(res) {
           // 401 Unauthorized
           assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          done();
+        });
+    });
+
+    test("get'ing a tile with data from private table should fail on unknown username", function(done){
+        var sql = querystring.stringify({
+          sql: "SELECT * FROM test_table_private_1",
+          cache_buster:2 // this is to avoid getting the cached response
+        });
+        assert.response(server, {
+            headers: {host: 'unknown_user'},
+            url: '/tiles/gadm4/6/31/24.png?' + sql,
+            method: 'GET'
+        },{
+        }, function(res) {
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
           done();
         });
     });

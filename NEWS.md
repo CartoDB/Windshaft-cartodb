@@ -1,5 +1,6 @@
 1.1.0 (DD/MM/YY)
 -----
+* Fix crash on unknown user (#55)
 * Add /version entry point
 * CartoCSS versioning
  * Include style_version in GET /style response
