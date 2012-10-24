@@ -535,7 +535,40 @@ suite('server', function() {
     // GET TILE
     //
     /////////////////////////////////////////////////////////////////////////////////
-    
+
+    test("should send Cache-Control header with short expiration by default", function(done){
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/gadm4/6/31/24.png',
+            method: 'GET'
+        },{
+            status: 200,
+        }, function(res) {
+          var cc = res.headers['cache-control'];
+          assert.ok(cc);
+          //assert.equal(cc, 'public,max-age=31536000');  // 1 year
+          assert.ok(cc.match('no-cache'), cc);
+          assert.ok(cc.match('must-revalidate'), cc);
+          assert.ok(cc.match('public'), cc);
+          done();
+        });
+    });
+
+    test("should send Cache-Control header with long expiration when requested", function(done){
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/gadm4/6/31/24.png?cache_policy=persist',
+            method: 'GET'
+        },{
+            status: 200,
+        }, function(res) {
+          var cc = res.headers['cache-control'];
+          assert.ok(cc);
+          assert.equal(cc, 'public,max-age=31536000');  // 1 year
+          done();
+        });
+    });
+
     test("get'ing a tile with default style should return an image", function(done){
         assert.response(server, {
             headers: {host: 'localhost'},
