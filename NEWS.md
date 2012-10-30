@@ -1,4 +1,4 @@
-1.1.0 (DD/MM/YY)
+1.1.1 (DD//MM//YY)
 -----
 * Fix crash on unknown user (#55)
 * Add /version entry point
@@ -6,6 +6,13 @@
  * Include style_version in GET /style response
  * Support style_version and style_convert parameters in POST /style request
  * Support style_version in GET /:z/:x/:y request
+
+1.1.0 (30/10/12)
+=======
+* Add /version entry point
+* CartoCSS versioning
+ * Include version in GET /style response
+ * Support version and convert parameters in POST /style request
  * Autodetect target mapnik version and let config override it
  * Add tools/reset_styles script to batch-reset (and optionally convert) styles
 * Configurable logging format (#4)
@@ -14,6 +21,9 @@
 * Accept "api_key" in addition to "map_key",
   both in query_string and POST body (#38)
 * Add ./configure script
+* Allow listening on host IP
+* Replaced environment configs by .example ones
+* Fixed some issues with cluster2
 
 1.0.0 (03/10/12)
 -----
