@@ -4,6 +4,7 @@ var config = {
     ,host: '127.0.0.1'
     ,enable_cors: true
     ,cache_enabled: false
+    ,log_format: '[:date] :req[X-Real-IP] \033[90m:method\033[0m \033[36m:req[Host]:url\033[0m \033[90m:status :response-time ms -> :res[Content-Type]\033[0m'
     ,postgres_auth_user: 'development_cartodb_user_<%= user_id %>'
     ,postgres: {
         type: "postgis",
@@ -18,6 +19,7 @@ var config = {
         */
         simplify: true
     }
+    ,mapnik_version: undefined
     ,millstone: {
         cache_basedir: '/tmp/cdb-tiler-dev/millstone-dev'
     }

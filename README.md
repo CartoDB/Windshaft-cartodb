@@ -1,21 +1,47 @@
 Windshaft-CartoDB
 ==================
 
-NOTE: requires node-0.4.x
+NOTE: requires node-0.8.x
 
 This is the CartoDB map tiler. It extends Windshaft with some extra
 functionality and custom filters for authentication
 
 * reads dbname from subdomain and cartodb redis for pretty tile urls
-* configures windshaft to publish cartodb_id as the interactivity layer
+* configures windshaft to publish ``cartodb_id`` as the interactivity layer
 * gets the default geometry type from the cartodb redis store
 * allows tiles to be styled individually
 * provides a link to varnish high speed cache
 * provides a infowindow endpoint for windshaft
-* provides a map_metadata endpoint for windshaft
+* provides a ``map_metadata`` endpoint for windshaft
 
-Install
--------
+Requirements
+------------
+
+ [core]
+ - node-0.6.x+
+ - PostgreSQL-8.3+
+ - PostGIS-1.5.0+
+ - Redis 2.2.0+ (http://www.redis.io)
+ - Mapnik 2.0 or 2.1 
+
+ [for cache control]
+ - CartoDB-SQL-API 1.0.0+
+ - CartoDB 0.9.5+ (for ``CDB_QueryTables``)
+ - Varnish (https://www.varnish-cache.org)
+
+Configure
+---------
+
+Create the config/environments/<env>.js files (there are .example files
+to start from). You can optionally use the ./configure script for this,
+see ```./configure --help``` to see available options.
+
+Look at lib/cartodb/server_options.js for more on config
+
+Build/install
+-------------
+
+To fetch and build all node-based dependencies, run:
 
 ```
 git clone
@@ -28,22 +54,18 @@ happen to have startup errors you may need to force rebuilding those
 modules. At any time just wipe out the node_modules/ directory and run
 ```npm install``` again.
 
-Configure
----------
-
-Edit config/environments/<env>.js files
-
-Look at lib/cartodb/server_options for more on config
 
 Run
 ---
 
 ```
-node app.js [development | staging | production]
+node app.js <env> 
 ```
 
-Note that caches are kept in redis. If you're not seeing what
-you expect there may be out-of-sync records in there.
+Where <env> is the name of a configuration file under config/environments/.
+
+Note that caches are kept in redis. If you're not seeing what you expect
+there may be out-of-sync records in there.
 Take a look: http://redis.io/commands
 
 

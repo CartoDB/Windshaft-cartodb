@@ -26,10 +26,10 @@ psql "${TEST_DB}" < ./sql/windshaft.test.sql
 psql "${TEST_DB}" < ./sql/gadm4.sql
 
 echo "preparing redis..."
-echo "HSET rails:users:vizzuality id 1" | redis-cli -p ${REDIS_PORT} -n 5
-echo 'HSET rails:users:vizzuality database_name "'"${TEST_DB}"'"' | redis-cli -p ${REDIS_PORT} -n 5
-echo "HSET rails:users:vizzuality map_key 1234" | redis-cli -p ${REDIS_PORT} -n 5
-echo "SADD rails:users:vizzuality:map_key 1235" | redis-cli -p ${REDIS_PORT} -n 5
+echo "HSET rails:users:localhost id 1" | redis-cli -p ${REDIS_PORT} -n 5
+echo 'HSET rails:users:localhost database_name "'"${TEST_DB}"'"' | redis-cli -p ${REDIS_PORT} -n 5
+echo "HSET rails:users:localhost map_key 1234" | redis-cli -p ${REDIS_PORT} -n 5
+echo "SADD rails:users:localhost:map_key 1235" | redis-cli -p ${REDIS_PORT} -n 5
 echo 'HSET rails:'"${TEST_DB}"':my_table infowindow "this, that, the other"' | redis-cli -p ${REDIS_PORT} -n 0
 echo 'HSET rails:'"${TEST_DB}"':test_table_private_1 privacy "0"' | redis-cli -p ${REDIS_PORT} -n 0
 

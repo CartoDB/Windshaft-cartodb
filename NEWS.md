@@ -1,3 +1,21 @@
+1.1.0 (30/10/12)
+-----
+* Add /version entry point
+* CartoCSS versioning
+ * Include version in GET /style response
+ * Support version and convert parameters in POST /style request
+ * Autodetect target mapnik version and let config override it
+ * Add tools/reset_styles script to batch-reset (and optionally convert) styles
+* Configurable logging format (#4)
+* Detailed error on missing user metadata 
+* Properly handle unauthenticated requests for metadata
+* Accept "api_key" in addition to "map_key",
+  both in query_string and POST body (#38)
+* Add ./configure script
+* Allow listening on host IP
+* Replaced environment configs by .example ones
+* Fixed some issues with cluster2
+
 1.0.0 (03/10/12)
 -----
 * Migrated to node 0.8.x.
