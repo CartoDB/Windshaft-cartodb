@@ -1,4 +1,4 @@
-1.1.0 (DD/MM/YY)
+1.1.0 (30/10/12)
 -----
 * Add /version entry point
 * CartoCSS versioning
@@ -12,6 +12,9 @@
 * Accept "api_key" in addition to "map_key",
   both in query_string and POST body (#38)
 * Add ./configure script
+* Allow listening on host IP
+* Replaced environment configs by .example ones
+* Fixed some issues with cluster2
 
 1.0.0 (03/10/12)
 -----
