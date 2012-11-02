@@ -1,3 +1,7 @@
+1.1.2 (DD//MM//YY)
+-----
+
+
 1.1.1 (DD//MM//YY)
 -----
 * Add support for persistent client cache headers
