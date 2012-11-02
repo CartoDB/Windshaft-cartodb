@@ -1,5 +1,6 @@
 1.1.1 (DD//MM//YY)
 -----
+* Add support for persistent client cache headers
 * Fix crash on unknown user (#55)
 * Add /version entry point
 * CartoCSS versioning
