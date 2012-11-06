@@ -247,7 +247,7 @@ suite('server', function() {
             }, function(res) {
               var parsed = JSON.parse(res.body);
               assert.equal(parsed.style, 'Map {background-color:#fff;}');
-              //assert.equal(parsed.version, '2.0.0');
+              assert.equal(parsed.style_version, '2.0.0');
               done();
             });
 
@@ -261,7 +261,7 @@ suite('server', function() {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: style})
+            data: querystring.stringify({style: style, style_version: '2.0.2'})
         },{
         }, function(res) { 
 
@@ -276,7 +276,7 @@ suite('server', function() {
             }, function(res) {
               var parsed = JSON.parse(res.body);
               assert.equal(parsed.style, style);
-              //assert.equal(parsed.version, '2.0.0');
+              assert.equal(parsed.style_version, '2.0.2');
               done();
             });
 
@@ -686,6 +686,47 @@ suite('server', function() {
           // 401 Unauthorized
           assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
           done();
+        });
+    });
+
+    var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
+    var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
+
+    test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
+        var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/test_table/15/16046/12354.png?cache_buster=4&' + style, // madrid
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res){
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var ct = res.headers['content-type'];
+          assert.equal(ct, 'image/png');
+          assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',  2,
+            function(err, similarity) {
+              if (err) throw err;
+              done();
+          });
+        });
+    });
+
+    test("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
+        var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/test_table/15/16046/12354.png?cache_buster=4&' + style, // madrid
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res){
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var ct = res.headers['content-type'];
+          assert.equal(ct, 'image/png');
+          assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',  2,
+            function(err, similarity) {
+              if (err) throw err;
+              done();
+          });
         });
     });
 

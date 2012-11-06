@@ -1,5 +1,6 @@
 1.1.2 (DD//MM//YY)
 -----
+* Fix use of "style_version" with GET (inline styles)
 
 
 1.1.1 (DD//MM//YY)
