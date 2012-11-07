@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# TODO: port to node, if you really need it
+
+REDIS_PORT=6379 # default port
+
+
+if -z "$2"; then
+  echo "Usage: $0 <username> <tablename>" >&2
+  exit 1
+fi
+
+username="$1"
+tabname="$2"
+
+dbname=`redis-cli -p ${REDIS_PORT} -n 5 hget "rails:users:${username}" "database_name"`
+redis-cli get "map_style|${dbname}|${tabname}" | sed -e 's/\\n/\n/g' -e 's/\\//g'
