@@ -5,7 +5,7 @@
 REDIS_PORT=6379 # default port
 
 
-if -z "$2"; then
+if test -z "$2"; then
   echo "Usage: $0 <username> <tablename>" >&2
   exit 1
 fi
