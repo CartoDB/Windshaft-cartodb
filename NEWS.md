@@ -1,6 +1,10 @@
 1.1.2 (DD//MM//YY)
 -----
-* Fix use of "style_version" with GET (inline styles)
+* CartoCSS versioning
+ * Fix use of "style_version" with GET (inline styles)
+ * Enhance 2.0 -> 2.1 transforms:
+  * styles with no semicolon
+  * markers shift due to geometry clipping
 
 
 1.1.1 (DD//MM//YY)
