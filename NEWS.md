@@ -1,3 +1,6 @@
+1.1.3 (DD//MM//YY)
+-----
+
 1.1.2 (DD//MM//YY)
 -----
 * CartoCSS versioning
