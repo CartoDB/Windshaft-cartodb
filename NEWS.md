@@ -1,5 +1,6 @@
 1.1.3 (DD//MM//YY)
 -----
+* Mapnik-version dependent default styles
 
 1.1.2 (DD//MM//YY)
 -----

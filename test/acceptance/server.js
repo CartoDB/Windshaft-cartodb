@@ -3,6 +3,9 @@ var tests       = module.exports = {};
 var _           = require('underscore');
 var redis       = require('redis');
 var querystring = require('querystring');
+var semver      = require('semver');
+var mapnik      = require('mapnik');
+
 require(__dirname + '/../support/test_helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
@@ -13,6 +16,15 @@ server.setMaxListeners(0);
 suite('server', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
+
+    var default_style = semver.satisfies(mapnik.versions.mapnik, '<2.1.0')
+    ?
+      // 2.0.0 default
+      '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}'
+    :
+      // 2.1.0 default
+      '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
+
     
     suiteSetup(function(){
     });
@@ -78,8 +90,8 @@ suite('server', function() {
             headers: { 'X-Cache-Channel': 'cartodb_test_user_1_db:my_table' },
         }, function(res) {
             var parsed = JSON.parse(res.body);
-            assert.equal(parsed.style, "#my_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}");
-            assert.equal(parsed.style_version, '2.0.0');
+            assert.equal(parsed.style, _.template(default_style, {table: 'my_table'}));
+            assert.equal(parsed.style_version, mapnik.versions.mapnik);
             done();
         });
     });
@@ -128,8 +140,9 @@ suite('server', function() {
         }, function(res) {
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
-          assert.equal(parsed.style, "#test_table_private_1 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}");
-          assert.equal(parsed.style_version, '2.0.0');
+          var style = _.template(default_style, {table: 'test_table_private_1'});
+          assert.equal(parsed.style, style);
+          assert.equal(parsed.style_version, mapnik.versions.mapnik); 
           done();
         });
     });
@@ -319,7 +332,7 @@ suite('server', function() {
 
     test("delete'ing style returns 200 then getting returns default style", function(done){
         // this is the default style
-        var style = '#my_table5 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}'
+        var style = _.template(default_style, {table: 'my_table5'});
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'DELETE',
