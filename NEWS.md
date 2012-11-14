@@ -1,5 +1,24 @@
-1.1.0 (30/10/12)
+1.1.2 (DD//MM//YY)
 -----
+* CartoCSS versioning
+ * Fix use of "style_version" with GET (inline styles)
+ * Enhance 2.0 -> 2.1 transforms:
+  * styles with no semicolon
+  * markers shift due to geometry clipping
+
+
+1.1.1 (DD//MM//YY)
+-----
+* Add support for persistent client cache headers
+* Fix crash on unknown user (#55)
+* Add /version entry point
+* CartoCSS versioning
+ * Include style_version in GET /style response
+ * Support style_version and style_convert parameters in POST /style request
+ * Support style_version in GET /:z/:x/:y request
+
+1.1.0 (30/10/12)
+=======
 * Add /version entry point
 * CartoCSS versioning
  * Include version in GET /style response

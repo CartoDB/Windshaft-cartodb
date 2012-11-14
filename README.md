@@ -80,8 +80,16 @@ Args:
 
 * sql - plain SQL arguments
 * interactivity - specify the column to use in UTFGrid
-* cache_buster - if needed you can add a cachebuster to make sure you're
-  rendering new
+* cache_buster - Specify an identifier for the internal tile cache.
+                 Requesting tiles with the same cache_buster value may
+                 result in being served a cached version of the tile
+                 (even when requesting a tile for the first time, as tiles
+                 can be prepared in advance)
+* cache_policy - Set to "persist" to have the server send an Cache-Control
+                 header requesting caching devices to keep the response
+                 cached as much as possible. This is best used with a
+                 timestamp value in cache_buster for manual control of
+                 updates.
 * geom_type - override the cartodb default
 * style - override the default map style with Carto
 

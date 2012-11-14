@@ -35,6 +35,35 @@ suite('server', function() {
 
     /////////////////////////////////////////////////////////////////////////////////
     //
+    // GET VERSION
+    //
+    /////////////////////////////////////////////////////////////////////////////////
+
+    test("get call to server returns 200", function(done){
+        assert.response(server, {
+            url: '/version',
+            method: 'GET'
+        },{
+          status: 200
+        }, function(res) {
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('windshaft_cartodb'), "No 'windshaft_cartodb' version in " + parsed);
+          console.log("Windshaft-cartodb: " + parsed.windshaft_cartodb);
+          assert.ok(parsed.hasOwnProperty('windshaft'), "No 'windshaft' version in " + parsed);
+          console.log("Windshaft: " + parsed.windshaft);
+          assert.ok(parsed.hasOwnProperty('grainstore'), "No 'grainstore' version in " + parsed);
+          console.log("Grainstore: " + parsed.grainstore);
+          assert.ok(parsed.hasOwnProperty('node_mapnik'), "No 'node_mapnik' version in " + parsed);
+          console.log("Node-mapnik: " + parsed.node_mapnik);
+          assert.ok(parsed.hasOwnProperty('mapnik'), "No 'mapnik' version in " + parsed);
+          console.log("Mapnik: " + parsed.mapnik);
+          // TODO: check actual versions ?
+          done();
+        });
+    });
+
+    /////////////////////////////////////////////////////////////////////////////////
+    //
     // GET STYLE
     //
     /////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +79,7 @@ suite('server', function() {
         }, function(res) {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, "#my_table {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}");
-            assert.equal(parsed.version, '2.0.0');
+            assert.equal(parsed.style_version, '2.0.0');
             done();
         });
     });
@@ -72,6 +101,23 @@ suite('server', function() {
         });
     });
 
+    // See http://github.com/Vizzuality/Windshaft-cartodb/issues/55
+    test("get'ing style of private table should fail on unknown username",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'unknown_user'},
+            url: '/tiles/test_table_private_1/style',
+            method: 'GET'
+        },{
+        }, function(res) {
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 500, res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+          done();
+        });
+    });
+
     test("get'ing style of private table should succeed when authenticated",
     function(done) {
         assert.response(server, {
@@ -83,7 +129,7 @@ suite('server', function() {
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.equal(parsed.style, "#test_table_private_1 {marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}");
-          assert.equal(parsed.version, '2.0.0');
+          assert.equal(parsed.style_version, '2.0.0');
           done();
         });
     });
@@ -201,7 +247,7 @@ suite('server', function() {
             }, function(res) {
               var parsed = JSON.parse(res.body);
               assert.equal(parsed.style, 'Map {background-color:#fff;}');
-              //assert.equal(parsed.version, '2.0.0');
+              assert.equal(parsed.style_version, '2.0.0');
               done();
             });
 
@@ -215,7 +261,7 @@ suite('server', function() {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: style})
+            data: querystring.stringify({style: style, style_version: '2.0.2'})
         },{
         }, function(res) { 
 
@@ -230,7 +276,7 @@ suite('server', function() {
             }, function(res) {
               var parsed = JSON.parse(res.body);
               assert.equal(parsed.style, style);
-              //assert.equal(parsed.version, '2.0.0');
+              assert.equal(parsed.style_version, '2.0.2');
               done();
             });
 
@@ -372,6 +418,23 @@ suite('server', function() {
         });
     });
 
+    // See http://github.com/Vizzuality/Windshaft-cartodb/issues/55
+    test("get'ing infowindow of private table should fail on unknown username",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'unknown_user'},
+            url: '/tiles/test_table_private_1/infowindow',
+            method: 'GET'
+        },{
+        }, function(res) {
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 500, res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+          done();
+        });
+    });
+
     test("get'ing infowindow of private table should succeed when authenticated",
     function(done) {
         assert.response(server, {
@@ -438,6 +501,23 @@ suite('server', function() {
         });
     });
 
+    // See http://github.com/Vizzuality/Windshaft-cartodb/issues/55
+    test("get'ing grid of private table should fail on unknown username",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'unknown_user'},
+            url: '/tiles/test_table_private_1/6/31/24.grid.json',
+            method: 'GET'
+        },{
+        }, function(res) {
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+          done();
+        });
+    });
+
     test("get'ing the grid of a private table should succeed when authenticated",
     function(done) {
         assert.response(server, {
@@ -455,7 +535,40 @@ suite('server', function() {
     // GET TILE
     //
     /////////////////////////////////////////////////////////////////////////////////
-    
+
+    test("should send Cache-Control header with short expiration by default", function(done){
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/gadm4/6/31/24.png',
+            method: 'GET'
+        },{
+            status: 200,
+        }, function(res) {
+          var cc = res.headers['cache-control'];
+          assert.ok(cc);
+          //assert.equal(cc, 'public,max-age=31536000');  // 1 year
+          assert.ok(cc.match('no-cache'), cc);
+          assert.ok(cc.match('must-revalidate'), cc);
+          assert.ok(cc.match('public'), cc);
+          done();
+        });
+    });
+
+    test("should send Cache-Control header with long expiration when requested", function(done){
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/gadm4/6/31/24.png?cache_policy=persist',
+            method: 'GET'
+        },{
+            status: 200,
+        }, function(res) {
+          var cc = res.headers['cache-control'];
+          assert.ok(cc);
+          assert.equal(cc, 'public,max-age=31536000');  // 1 year
+          done();
+        });
+    });
+
     test("get'ing a tile with default style should return an image", function(done){
         assert.response(server, {
             headers: {host: 'localhost'},
@@ -537,6 +650,25 @@ suite('server', function() {
         });
     });
 
+    test("get'ing a tile with data from private table should fail on unknown username", function(done){
+        var sql = querystring.stringify({
+          sql: "SELECT * FROM test_table_private_1",
+          cache_buster:2 // this is to avoid getting the cached response
+        });
+        assert.response(server, {
+            headers: {host: 'unknown_user'},
+            url: '/tiles/gadm4/6/31/24.png?' + sql,
+            method: 'GET'
+        },{
+        }, function(res) {
+          // FIXME: should be 401 Unauthorized
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          assert.deepEqual(JSON.parse(res.body),
+            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+          done();
+        });
+    });
+
     test("get'ing a tile with data from private table should fail when unauthenticated (uses old redis key)", function(done){
         var sql = querystring.stringify({
           sql: "SELECT * FROM test_table_private_1",
@@ -554,6 +686,47 @@ suite('server', function() {
           // 401 Unauthorized
           assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
           done();
+        });
+    });
+
+    var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
+    var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
+
+    test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
+        var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/test_table/15/16046/12354.png?cache_buster=4&' + style, // madrid
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res){
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var ct = res.headers['content-type'];
+          assert.equal(ct, 'image/png');
+          assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',  2,
+            function(err, similarity) {
+              if (err) throw err;
+              done();
+          });
+        });
+    });
+
+    test("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
+        var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/test_table/15/16046/12354.png?cache_buster=4&' + style, // madrid
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res){
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var ct = res.headers['content-type'];
+          assert.equal(ct, 'image/png');
+          assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',  2,
+            function(err, similarity) {
+              if (err) throw err;
+              done();
+          });
         });
     });
 

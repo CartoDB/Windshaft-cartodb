@@ -44,6 +44,7 @@ var cluster = new Cluster({
   host: global.environment.host,
   monPort: global.environment.port+1,
   monHost: global.environment.host,
+  timeout: 600000,
   noWorkers: 1 
 });
 
