@@ -275,8 +275,7 @@ suite('server', function() {
             method: 'POST',
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: style, style_version: '2.0.2'})
-        },{
-        }, function(res) { 
+        },{}, function(res) { 
 
             assert.equal(res.statusCode, 200, res.body);
 
@@ -284,17 +283,52 @@ suite('server', function() {
                 headers: {host: 'localhost'},
                 url: '/tiles/my_table5/style',
                 method: 'GET'
-            },{
-                status: 200,
-            }, function(res) {
+            },{}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
               var parsed = JSON.parse(res.body);
               assert.equal(parsed.style, style);
               assert.equal(parsed.style_version, '2.0.2');
-              done();
+
+              assert.response(server, {
+                  headers: {host: 'localhost'},
+                  url: '/tiles/my_table5/style?style_convert=true',
+                  method: 'GET'
+              },{}, function(res) {
+                assert.equal(res.statusCode, 200, res.body);
+                var parsed = JSON.parse(res.body);
+                assert.equal(parsed.style, style);
+                assert.equal(parsed.style_version, mapnik.versions.mapnik);
+                done();
+              });
             });
 
         });
     
+    });
+
+    test("post'ing good style with style_convert returns 200 then getting returns converted style", function(done){
+        var style = 'Map {background-color:#fff;}';
+        assert.response(server, {
+            url: '/tiles/my_table5/style?map_key=1234',
+            method: 'POST',
+            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: querystring.stringify({style: style, style_version: '2.0.2', style_convert: true})
+        },{}, function(res) { 
+
+            assert.equal(res.statusCode, 200, res.body);
+            assert.response(server, {
+                headers: {host: 'localhost'},
+                url: '/tiles/my_table5/style',
+                method: 'GET'
+            },{}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              var parsed = JSON.parse(res.body);
+              // NOTE: no transform expected for the specific style
+              assert.equal(parsed.style, style);
+              assert.equal(parsed.style_version, mapnik.versions.mapnik);
+              done();
+            });
+        });
     });
 
     /////////////////////////////////////////////////////////////////////////////////
