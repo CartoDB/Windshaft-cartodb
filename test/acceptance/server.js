@@ -210,7 +210,7 @@ suite('server', function() {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: 'Map {background-color:#fff;}'})
+            data: querystring.stringify({style: 'Map { background-color:#fff; }'})
         },{
         }, function(res) {
             assert.equal(res.statusCode, 200, res.body);
@@ -224,7 +224,7 @@ suite('server', function() {
             url: '/tiles/my_table5/style?api_key=1234',
             method: 'POST',
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: 'Map {background-color:#fff;}'})
+            data: querystring.stringify({style: 'Map { background-color:#fff; }'})
         },{}, function(res) {
             assert.equal(res.statusCode, 200, res.body);
             done();
@@ -237,7 +237,7 @@ suite('server', function() {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: 'Map {background-color:#fff;}'})
+            data: querystring.stringify({style: 'Map { background-color:#fff; }'})
         },{
         }, function(res) {
           assert.equal(res.statusCode, 200, res.body);
@@ -245,7 +245,7 @@ suite('server', function() {
               url: '/tiles/my_table5/style',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-              data: querystring.stringify({style: 'Map {background-color:#aaa;}'})
+              data: querystring.stringify({style: 'Map { background-color:#aaa; }'})
           },{}, function(res) {
             // FIXME: should be 401 Unauthorized
             assert.equal(res.statusCode, 500, res.body);
@@ -259,7 +259,7 @@ suite('server', function() {
                 status: 200,
             }, function(res) {
               var parsed = JSON.parse(res.body);
-              assert.equal(parsed.style, 'Map {background-color:#fff;}');
+              assert.equal(parsed.style, 'Map { background-color:#fff; }');
               assert.equal(parsed.style_version, '2.0.0');
               done();
             });
@@ -269,7 +269,7 @@ suite('server', function() {
     });
 
     test("post'ing good style returns 200 then getting returns original style", function(done){
-        var style = 'Map {background-color:#fff;}';
+        var style = 'Map { background-color:#fff; }';
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
@@ -307,7 +307,7 @@ suite('server', function() {
     });
 
     test("post'ing good style with style_convert returns 200 then getting returns converted style", function(done){
-        var style = 'Map {background-color:#fff;}';
+        var style = 'Map { background-color:#fff; }';
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'POST',
@@ -357,7 +357,7 @@ suite('server', function() {
               status: 200,
           }, function(res) {
               var parsed = JSON.parse(res.body);
-              assert.equal(parsed.style, 'Map {background-color:#fff;}');
+              assert.equal(parsed.style, 'Map { background-color:#fff; }');
               //assert.equal(parsed.version, '2.0.0');
               done();
           });
