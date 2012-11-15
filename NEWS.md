@@ -1,6 +1,9 @@
 1.1.3 (DD//MM//YY)
 -----
-* Mapnik-version dependent default styles
+* CartoCSS versioning
+ * Mapnik-version dependent default styles
+ * Enhance 2.0 -> 2.1 transforms:
+  * styles with conditional markers
 
 1.1.2 (DD//MM//YY)
 -----
