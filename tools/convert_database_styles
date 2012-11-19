@@ -1,0 +1,81 @@
+#!/usr/bin/env node
+
+var path = require('path');
+
+var grainstore = require('grainstore');
+var mapnik = require('mapnik');
+var redis = require('redis');
+
+function usage(me, exitcode) {
+  console.log("Usage: " + me + " <database_name> <table_name> [<target_mapnik_version>]");
+  process.exit(exitcode);
+}
+
+var node_path = process.argv.shift(); 
+var script_path = process.argv.shift(); 
+var me = path.basename(script_path);
+
+var database_name = process.argv.shift()
+var table_name = process.argv.shift()
+var MAPNIK_VERSION = process.argv.shift()
+
+
+if ( ! MAPNIK_VERSION ) {
+  MAPNIK_VERSION = mapnik.versions.mapnik;
+}
+
+if ( ! database_name || ! table_name) {
+  usage(me, 1);
+}
+
+var REDIS_PORT = 6379; // TODO: make a command line parameter
+
+var dbnum = 0;
+
+var mml_store = new grainstore.MMLStore({port:REDIS_PORT}, {mapnik_version:MAPNIK_VERSION});
+
+var failures = [];
+
+var client = redis.createClient(REDIS_PORT, 'localhost');
+client.on('connect', function() {
+  client.select(dbnum);
+  client.keys('map_style|${database_name}|${table_name}', function(err, matches) {
+
+    processNext = function() {
+      if ( ! matches.length ) process.exit(failures.length);
+      var k = matches.shift();
+
+      if ( /map_style\|.*\|.*\|/.test(k) ) {
+        //console.warn("Key " + k + " is EXTENDED, skipping");
+        processNext();
+      } 
+
+      var out = 'map_style|' + database_name + '|' + table_name + ': ';
+
+      var mml_builder = mml_store.mml_builder({
+        dbname:database_name, 
+        table:table_name},
+        function(err, payload) {
+          if ( err ) { 
+            console.warn(out + err.message); 
+            failures.push(k); processNext(); 
+          }
+          else {
+            mml_builder.resetStyle(function(err, data) {
+              if ( err ) { 
+                console.warn(out + err.message); 
+                failures.push(k); 
+              }
+              else console.log(out + 'OK');
+              processNext();
+            }, true);
+          }
+      });
+
+    };
+
+    processNext();
+
+  });
+
+});
