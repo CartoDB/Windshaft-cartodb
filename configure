@@ -17,15 +17,17 @@
 # --strk(2012-07-23)
 #
 
+PGPORT=5432
+MAPNIK_VERSION=
+
 usage() {
   echo "Usage: $0 [OPTION]"
   echo 
   echo "Configuration:"
-  echo "  --help                 display this help and exit"
-  echo "  --with-pgport=NUM      access PostgreSQL server on TCP port NUM"
+  echo "  --help                        display this help and exit"
+  echo "  --with-pgport=NUM             access PostgreSQL server on TCP port NUM [$PGPORT]"
+  echo "  --with-mapnik-version=STRING  set mapnik version string [$MAPNIK_VERSION]"
 }
-
-PGPORT=5432
 
 while test -n "$1"; do
   case "$1" in
@@ -36,6 +38,9 @@ while test -n "$1"; do
     --with-pgport=*)
       PGPORT=`echo "$1" | cut -d= -f2`
       ;;
+    --with-mapnik-version=*)
+      MAPNIK_VERSION=`echo "$1" | cut -d= -f2`
+      ;;
     *)
       echo "Unknown option '$1'" >&2
       usage >&2
@@ -45,11 +50,16 @@ while test -n "$1"; do
 done
 
 echo "PGPORT: $PGPORT"
+echo "MAPNIK_VERSION: $MAPNIK_VERSION"
 
 # TODO: allow specifying configuration settings !
 for f in config/environments/*.example; do
   o=`dirname "$f"`/`basename "$f" .example`
   echo "Writing $o"
+
   # See http://austinmatzko.com/2008/04/26/sed-multi-line-search-and-replace/
-  sed -n "1h;1!H;\${;g;s/\(,postgres: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$PGPORT\2/;p;}" < "$f" > "$o"
+  sed -n "1h;1!H;\${;g;s/\(,postgres: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$PGPORT\2/;p;}" < "$f" \
+  | sed "s/mapnik_version:.*/mapnik_version: '$MAPNIK_VERSION'/" \
+  > "$o"
+
 done
