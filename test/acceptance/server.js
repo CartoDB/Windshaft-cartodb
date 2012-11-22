@@ -894,7 +894,7 @@ suite('server', function() {
           var next = this;
           assert.response(server, {
               headers: {host: 'localhost'},
-              url: '/tiles/test_table/15/16046/12354.png?cache_buster=2314' + cb,
+              url: '/tiles/test_table/15/16046/12354.png?cache_buster=2314',
               method: 'GET',
               encoding: 'binary'
           },{}, function(res){
