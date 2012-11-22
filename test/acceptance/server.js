@@ -5,6 +5,7 @@ var redis       = require('redis');
 var querystring = require('querystring');
 var semver      = require('semver');
 var mapnik      = require('mapnik');
+var Step        = require('step');
 
 require(__dirname + '/../support/test_helper');
 
@@ -25,6 +26,9 @@ suite('server', function() {
       // 2.1.0 default
       '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
 
+    // A couple of styles to use during testing
+    var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
+    var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
     
     suiteSetup(function(){
     });
@@ -736,9 +740,6 @@ suite('server', function() {
         });
     });
 
-    var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
-    var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
-
     test("get'ing a tile with url specified 2.0.0 style should return an expected tile",  function(done){
         var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
         assert.response(server, {
@@ -775,6 +776,144 @@ suite('server', function() {
               done();
           });
         });
+    });
+
+    // See http://github.com/Vizzuality/Windshaft-cartodb/issues/57
+    test("GET'ing a tile as anonymous with style set by POST",  function(done){
+      var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
+      Step (
+        function postStyle1() {
+          var next = this;
+          assert.response(server, {
+              method: 'POST',
+              url: '/tiles/test_table/style',
+              headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({style: 'Map { background-color:#fff; }', map_key: 1234})
+          },{}, function(res) {
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            next();
+          });
+        },
+        // Load the new cache with results from Style1 above
+        function getTileAnon1(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              headers: {host: 'localhost'},
+              url: '/tiles/test_table/15/16046/12354.png', 
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res){
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            assert.imageEqualsFile(res.body, './test/fixtures/blank.png',  0,
+              function(err, similarity) {
+                if (err) next(err); 
+                else next();
+            });
+          });
+        },
+        // Get again with authentication 
+        function getTileAuth1(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              headers: {host: 'localhost'},
+              url: '/tiles/test_table/15/16046/12354.png?map_key=1234', 
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res){
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            assert.imageEqualsFile(res.body, './test/fixtures/blank.png',  0,
+              function(err, similarity) {
+                if (err) next(err); 
+                else next();
+            });
+          });
+        },
+        // Change the style
+        function postStyle2(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              method: 'POST',
+              url: '/tiles/test_table/style',
+              headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
+              data: querystring.stringify({style: test_style_black_200, map_key: 1234})
+          },{}, function(res) {
+            try {
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              next();
+            }
+            catch (err) { next(err); }
+          });
+        },
+        // Verify the Style2 is applied. NOTE: pass the SAME cache_buster as before!
+        function getTileAnon2(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              headers: {host: 'localhost'},
+              url: '/tiles/test_table/15/16046/12354.png', 
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res){
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',  2,
+              function(err, similarity) {
+                // NOTE: we expect them to be EQUAL here
+                if (err) { next(err); return; }
+                next();
+            });
+          });
+        },
+        // Delete the style
+        function delStyle(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              method: 'DELETE',
+              url: '/tiles/test_table/style?map_key=1234',
+              headers: {host: 'localhost'}
+          },{}, function(res) {
+            try {
+              assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+              next();
+            }
+            catch (err) { next(err); }
+          });
+        },
+        // Verify the default style is applied. 
+        function getTileAnon3(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              headers: {host: 'localhost'},
+              url: '/tiles/test_table/15/16046/12354.png?cache_buster=2314' + cb,
+              method: 'GET',
+              encoding: 'binary'
+          },{}, function(res){
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',  2,
+              function(err, similarity) {
+                // NOTE: we expect them to be different here
+                if (err) next(); 
+                else next(new Error('Last posted style still in effect after delete'));
+            });
+          });
+        },
+        function finish(err) {
+          if ( err ) done(err);
+          else done();
+        }
+      );
     });
 
     /////////////////////////////////////////////////////////////////////////////////
