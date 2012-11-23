@@ -182,15 +182,12 @@
       "version": "1.3.3"
     },
     "grainstore": {
-      "version": "0.10.3",
+      "version": "0.10.4",
       "dependencies": {
         "carto": {
-          "version": "0.9.3-cdb1",
+          "version": "0.9.3-cdb2",
           "from": "git://github.com/CartoDB/carto.git#cdb-0.9",
           "dependencies": {
-            "mapnik-reference": {
-              "version": "5.0.0"
-            },
             "xml2js": {
               "version": "0.1.14",
               "dependencies": {
@@ -200,6 +197,10 @@
               }
             }
           }
+        },
+        "mapnik-reference": {
+          "version": "5.0.0-cdb1",
+          "from": "git://github.com/CartoDB/mapnik-reference.git#cdb-5.0"
         },
         "millstone": {
           "version": "0.5.11",
@@ -273,7 +274,7 @@
           }
         },
         "tilelive": {
-          "version": "4.3.1",
+          "version": "4.3.3",
           "dependencies": {
             "optimist": {
               "version": "0.3.5",
