@@ -1,5 +1,6 @@
 1.1.3 (DD//MM//YY)
 -----
+* Fix reset_styles script to really skip extended keys
 * CartoCSS versioning
  * Mapnik-version dependent default styles
  * Enhance 2.0 -> 2.1 transforms:
