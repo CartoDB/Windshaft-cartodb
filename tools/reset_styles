@@ -55,7 +55,10 @@ client.on('connect', function() {
 
       if ( /map_style\|.*\|.*\|/.test(k) ) {
         //console.warn("Key " + k + " is EXTENDED, skipping");
+        // TODO: drop instead ?
+        // See https://github.com/Vizzuality/Windshaft-cartodb/issues/58
         processNext();
+        return;
       } 
 
       var params = RegExp(/map_style\|(.*)\|(.*)/).exec(k);
