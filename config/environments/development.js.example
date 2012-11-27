@@ -17,7 +17,8 @@ var config = {
         extent: "-180,-90,180,90",
         srid: 4326,
         */
-        simplify: true
+        simplify: true,
+        max_size: 500
     }
     ,mapnik_version: undefined
     ,millstone: {

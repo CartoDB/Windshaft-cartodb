@@ -11,7 +11,8 @@ var config = {
         host: '127.0.0.1',
         port: 5432,
         extent: "-20005048.4188,-20005048.4188,20005048.4188,20005048.4188",
-        simplify: true
+        simplify: true,
+        max_size: 500
     }
     ,mapnik_version: '2.0.2'
     ,millstone: {
