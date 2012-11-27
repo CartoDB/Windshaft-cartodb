@@ -5,6 +5,7 @@
  * Mapnik-version dependent default styles
  * Enhance 2.0 -> 2.1 transforms:
   * styles with conditional markers
+  * scale arrow markers by 50%
 
 1.1.2 (DD//MM//YY)
 -----
