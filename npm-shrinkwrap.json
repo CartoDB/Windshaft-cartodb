@@ -182,7 +182,7 @@
       "version": "1.3.3"
     },
     "grainstore": {
-      "version": "0.10.5",
+      "version": "0.10.6",
       "dependencies": {
         "carto": {
           "version": "0.9.3-cdb2",
