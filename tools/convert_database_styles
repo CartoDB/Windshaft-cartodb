@@ -39,7 +39,7 @@ var failures = [];
 var client = redis.createClient(REDIS_PORT, 'localhost');
 client.on('connect', function() {
   client.select(dbnum);
-  client.keys('map_style|${database_name}|${table_name}', function(err, matches) {
+  client.keys('map_style|' + database_name + '|' + table_name, function(err, matches) {
 
     processNext = function() {
       if ( ! matches.length ) process.exit(failures.length);
