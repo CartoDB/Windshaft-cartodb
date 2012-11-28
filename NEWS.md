@@ -1,3 +1,6 @@
+1.1.4 (DD//MM//YY)
+-----
+
 1.1.3 (DD//MM//YY)
 -----
 * Fix reset_styles script to really skip extended keys
