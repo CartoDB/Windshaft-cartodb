@@ -11,7 +11,7 @@ var config = {
         user: "publicuser",
         host: '127.0.0.1',
         port: 5432,
-        extent: "-20037508.5,-20037508.5,20037508.5,20037508.5",
+        extent: "-20037508.3,-20037508.3,20037508.3,20037508.3",
         /* experimental
         geometry_field: "the_geom",
         extent: "-180,-90,180,90",
