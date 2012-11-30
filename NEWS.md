@@ -1,3 +1,12 @@
+1.1.3 (30//11//12)
+-----
+* Fix reset_styles script to really skip extended keys
+* CartoCSS versioning
+ * Mapnik-version dependent default styles
+ * Enhance 2.0 -> 2.1 transforms:
+  * styles with conditional markers
+  * scale arrow markers by 50%
+
 1.1.2 (DD//MM//YY)
 -----
 * CartoCSS versioning

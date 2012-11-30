@@ -101,6 +101,8 @@ Args:
 Args:
 
 * style - the style in CartoCSS you want to set
+* style_version - the version of the style for POST
+* style_convert - request conversion to target version (both POST and GET)
 
 
 **INFOWINDOW**

@@ -11,13 +11,14 @@ var config = {
         user: "publicuser",
         host: '127.0.0.1',
         port: 5432,
-        extent: "-20005048.4188,-20005048.4188,20005048.4188,20005048.4188",
+        extent: "-20037508.5,-20037508.5,20037508.5,20037508.5",
         /* experimental
         geometry_field: "the_geom",
         extent: "-180,-90,180,90",
         srid: 4326,
         */
-        simplify: true
+        simplify: true,
+        max_size: 500
     }
     ,mapnik_version: undefined
     ,millstone: {
