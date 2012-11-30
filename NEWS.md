@@ -2,8 +2,7 @@
 -----
 * Reduce default extent to allow for consistent proj4 round-tripping 
 
-
-1.1.3 (DD//MM//YY)
+1.1.3 (30//11//12)
 -----
 * Fix reset_styles script to really skip extended keys
 * CartoCSS versioning
@@ -19,7 +18,6 @@
  * Enhance 2.0 -> 2.1 transforms:
   * styles with no semicolon
   * markers shift due to geometry clipping
-
 
 1.1.1 (DD//MM//YY)
 -----
