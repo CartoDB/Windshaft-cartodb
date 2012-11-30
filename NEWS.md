@@ -1,4 +1,4 @@
-1.1.3 (DD//MM//YY)
+1.1.3 (30//11//12)
 -----
 * Fix reset_styles script to really skip extended keys
 * CartoCSS versioning
