@@ -2,6 +2,8 @@ var config = {
      environment: 'test'
     ,port: 8888
     ,host: '127.0.0.1'
+    // idle socket timeout, in miliseconds
+    ,socket_timeout: 600000 
     ,enable_cors: true
     ,cache_enabled: false
     ,log_format: '[:date] :req[X-Real-IP] :method :req[Host]:url :status :response-time ms -> :res[Content-Type]'
