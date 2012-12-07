@@ -9,6 +9,8 @@ var config = {
     ,log_format: '[:date] :req[X-Real-IP] \033[90m:method\033[0m \033[36m:req[Host]:url\033[0m \033[90m:status :response-time ms -> :res[Content-Type]\033[0m'
     ,postgres_auth_user: 'development_cartodb_user_<%= user_id %>'
     ,postgres: {
+        // Parameters to pass to datasource plugin of mapnik
+        // See http://github.com/mapnik/mapnik/wiki/PostGIS
         type: "postgis",
         user: "publicuser",
         host: '127.0.0.1',
