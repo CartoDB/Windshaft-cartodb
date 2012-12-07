@@ -15,7 +15,7 @@ var config = {
         host: '127.0.0.1',
         port: 6432,
         extent: "-20037508.3,-20037508.3,20037508.3,20037508.3",
-        simplify: true,
+        simplify_geometries: true,
         max_size: 500
     }
     ,mapnik_version: undefined
