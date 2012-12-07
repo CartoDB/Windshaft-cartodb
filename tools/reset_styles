@@ -1,5 +1,18 @@
 #!/usr/bin/env node
 
+/*
+
+This scripts drops all extended map_style keys in redis and regenerates
+the XML caches in all the base ones to target the configured mapnik_version.
+
+Optionally (with --convert) it also re-writes the CartoCSS if needed
+to target the configured mapnik_version.
+
+It is recommended to make a backup of the redis database before using
+this script.
+
+*/
+
 var path = require('path');
 
 // Reset all styles in the store
@@ -56,10 +69,12 @@ client.on('connect', function() {
       var k = matches.shift();
 
       if ( /map_style\|.*\|.*\|/.test(k) ) {
-        //console.warn("Key " + k + " is EXTENDED, skipping");
-        // TODO: drop instead ?
         // See https://github.com/Vizzuality/Windshaft-cartodb/issues/58
-        processNext();
+        //console.warn("Key " + k + " is EXTENDED, dropping");
+        client.del(k, function(err) {
+          if ( err ) console.warn("Error dropping key " + k);
+          processNext();
+        });
         return;
       } 
 
