@@ -4,6 +4,7 @@
 * Enhance reset_styles script to use full configuration (#62)
 * Have reset_styles script also drop extended keys (#58)
 * Fix example postgis parameter for simplifying input geoms (#63)
+* Add row_limit to example config (#64)
 
 1.1.3 (30//11//12)
 -----

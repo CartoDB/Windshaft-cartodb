@@ -21,6 +21,7 @@ var config = {
         extent: "-180,-90,180,90",
         srid: 4326,
         */
+        row_limit: 65535,
         simplify_geometries: true,
         max_size: 500
     }
