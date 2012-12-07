@@ -1,6 +1,8 @@
 1.1.4 (DD//MM//YY)
 -----
 * Reduce default extent to allow for consistent proj4 round-tripping 
+* Enhance reset_styles script to use full configuration (#62)
+* Fix example postgis parameter for simplifying input geoms (#63)
 
 1.1.3 (30//11//12)
 -----
