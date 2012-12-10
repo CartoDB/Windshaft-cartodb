@@ -1,3 +1,11 @@
+1.1.4 (DD//MM//YY)
+-----
+* Reduce default extent to allow for consistent proj4 round-tripping 
+* Enhance reset_styles script to use full configuration (#62)
+* Have reset_styles script also drop extended keys (#58)
+* Fix example postgis parameter for simplifying input geoms (#63)
+* Add row_limit to example config (#64)
+
 1.1.3 (30//11//12)
 -----
 * Fix reset_styles script to really skip extended keys
@@ -14,7 +22,6 @@
  * Enhance 2.0 -> 2.1 transforms:
   * styles with no semicolon
   * markers shift due to geometry clipping
-
 
 1.1.1 (DD//MM//YY)
 -----

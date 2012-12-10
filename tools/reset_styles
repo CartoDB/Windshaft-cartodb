@@ -1,5 +1,18 @@
 #!/usr/bin/env node
 
+/*
+
+This scripts drops all extended map_style keys in redis and regenerates
+the XML caches in all the base ones to target the configured mapnik_version.
+
+Optionally (with --convert) it also re-writes the CartoCSS if needed
+to target the configured mapnik_version.
+
+It is recommended to make a backup of the redis database before using
+this script.
+
+*/
+
 var path = require('path');
 
 // Reset all styles in the store
@@ -8,43 +21,45 @@ var mapnik = require('mapnik');
 var redis = require('redis');
 
 function usage(me, exitcode) {
-  console.log("Usage: " + me + " [--convert] [<target_mapnik_version>]");
+  console.log("Usage: " + me + " [--convert] <environment>");
   process.exit(exitcode);
 }
 
 var doConvert = false;
-var MAPNIK_VERSION;
 
 var node_path = process.argv.shift(); 
 var script_path = process.argv.shift(); 
 var me = path.basename(script_path);
+var ENV;
 var arg;
 while ( arg = process.argv.shift() ) {
   if ( arg == '--convert' ) {
     doConvert = true;
-  } else if ( ! MAPNIK_VERSION ) {
-    MAPNIK_VERSION = arg;
+  }
+  else if ( ! ENV ) {
+    ENV = arg;
   }
   else {
     usage(me, 1);
   }
 }
 
-if ( ! MAPNIK_VERSION ) {
-  MAPNIK_VERSION = mapnik.versions.mapnik;
-}
+if ( ! ENV ) usage(me, 1);
+
+global.environment = require('../config/environments/' + ENV);
+var serverOptions = require('../lib/cartodb/server_options'); // _after_ setting global.environment
+
+var MAPNIK_VERSION = global.environment.mapnik_version || mapnik.versions.mapnik;
 
 console.log( (doConvert ? "Converting" : "Resetting" ) + ' all styles to target ' + MAPNIK_VERSION);
 
-var REDIS_PORT = 6379; // TODO: make a command line parameter
-
 var dbnum = 0;
 
-var mml_store = new grainstore.MMLStore({port:REDIS_PORT}, {mapnik_version:MAPNIK_VERSION});
+var mml_store = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
 
 var failures = [];
 
-var client = redis.createClient(REDIS_PORT, 'localhost');
+var client = redis.createClient(serverOptions.redis.port, serverOptions.redis.host);
 client.on('connect', function() {
   client.select(dbnum);
   client.keys('map_style|*', function(err, matches) {
@@ -54,10 +69,12 @@ client.on('connect', function() {
       var k = matches.shift();
 
       if ( /map_style\|.*\|.*\|/.test(k) ) {
-        //console.warn("Key " + k + " is EXTENDED, skipping");
-        // TODO: drop instead ?
         // See https://github.com/Vizzuality/Windshaft-cartodb/issues/58
-        processNext();
+        //console.warn("Key " + k + " is EXTENDED, dropping");
+        client.del(k, function(err) {
+          if ( err ) console.warn("Error dropping key " + k);
+          processNext();
+        });
         return;
       } 
 
