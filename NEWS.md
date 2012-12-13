@@ -1,3 +1,6 @@
+1.1.5 (DD//MM//YY)
+-----
+
 1.1.4 (DD//MM//YY)
 -----
 * Reduce default extent to allow for consistent proj4 round-tripping 
