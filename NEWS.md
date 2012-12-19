@@ -1,5 +1,6 @@
 1.1.5 (DD//MM//YY)
 -----
+* Enhance run_tests.sh to allow running single tests and skipping preparation
 
 1.1.4 (DD//MM//YY)
 -----
