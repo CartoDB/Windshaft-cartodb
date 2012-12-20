@@ -1,5 +1,6 @@
 1.1.5 (DD//MM//YY)
 -----
+* Fix bogus cached return of utf grid for fully contained tiles (#67)
 
 1.1.4 (DD//MM//YY)
 -----

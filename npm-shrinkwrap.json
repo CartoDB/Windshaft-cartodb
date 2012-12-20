@@ -254,7 +254,7 @@
       }
     },
     "windshaft": {
-      "version": "0.8.1",
+      "version": "0.8.2",
       "dependencies": {
         "express": {
           "version": "2.5.11",
@@ -295,8 +295,8 @@
           }
         },
         "tilelive-mapnik": {
-          "version": "0.3.3-dev",
-          "from": "git://github.com/Vizzuality/tilelive-mapnik.git#7df70554",
+          "version": "0.3.3-cdb2",
+          "from": "git://github.com/Vizzuality/tilelive-mapnik.git#6061c65a",
           "dependencies": {
             "eio": {
               "version": "0.1.0"
