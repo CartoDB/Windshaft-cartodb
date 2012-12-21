@@ -8,7 +8,11 @@ config/environments/test.js: config/environments/test.js.example
 	./configure
 
 check-local: config/environments/test.js
-	./run_tests.sh
+	./run_tests.sh ${RUNTESTFLAGS} \
+    test/unit/cartodb/redis_pool.test.js \
+    test/unit/cartodb/req2params.test.js \
+    test/acceptance/cache_validator.js \
+    test/acceptance/server.js
 
 check-submodules:
 	for sub in windshaft grainstore mapnik; do \
@@ -18,3 +22,4 @@ check-submodules:
 check-full: check-local check-submodules
 
 check: check-local
+
