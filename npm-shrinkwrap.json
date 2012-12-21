@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.1.3",
+  "version": "1.1.5",
   "dependencies": {
     "cluster2": {
       "version": "0.3.5-cdb02",
@@ -32,10 +32,10 @@
           "version": "0.8.3"
         },
         "npm": {
-          "version": "1.1.65",
+          "version": "1.1.69",
           "dependencies": {
             "semver": {
-              "version": "1.1.0"
+              "version": "1.1.1"
             },
             "ini": {
               "version": "1.0.5"
@@ -50,7 +50,12 @@
               "version": "1.1.14"
             },
             "minimatch": {
-              "version": "0.2.8"
+              "version": "0.2.9",
+              "dependencies": {
+                "sigmund": {
+                  "version": "1.0.0"
+                }
+              }
             },
             "nopt": {
               "version": "2.0.0"
@@ -66,7 +71,7 @@
               "version": "1.0.5"
             },
             "tar": {
-              "version": "0.1.13"
+              "version": "0.1.14"
             },
             "fstream": {
               "version": "0.1.19"
@@ -93,7 +98,7 @@
               "version": "2.0.4"
             },
             "node-gyp": {
-              "version": "0.7.1"
+              "version": "0.7.3"
             },
             "fstream-npm": {
               "version": "0.1.3",
@@ -127,7 +132,7 @@
               }
             },
             "read-package-json": {
-              "version": "0.1.8"
+              "version": "0.1.11"
             },
             "read-installed": {
               "version": "0.0.3"
@@ -159,7 +164,7 @@
               "version": "0.0.16",
               "dependencies": {
                 "config-chain": {
-                  "version": "1.1.2",
+                  "version": "1.1.3",
                   "dependencies": {
                     "proto-list": {
                       "version": "1.2.2"
@@ -203,7 +208,7 @@
           "from": "git://github.com/CartoDB/mapnik-reference.git#cdb-5.0"
         },
         "millstone": {
-          "version": "0.5.11",
+          "version": "0.5.13",
           "dependencies": {
             "request": {
               "version": "2.11.4",
@@ -230,10 +235,10 @@
               }
             },
             "srs": {
-              "version": "0.2.17"
+              "version": "0.2.18"
             },
             "zipfile": {
-              "version": "0.3.2"
+              "version": "0.3.3"
             },
             "sqlite3": {
               "version": "2.1.5"
@@ -249,7 +254,7 @@
       }
     },
     "windshaft": {
-      "version": "0.8.0",
+      "version": "0.8.2",
       "dependencies": {
         "express": {
           "version": "2.5.11",
@@ -290,8 +295,8 @@
           }
         },
         "tilelive-mapnik": {
-          "version": "0.3.3-dev",
-          "from": "git://github.com/Vizzuality/tilelive-mapnik.git#7df70554",
+          "version": "0.3.3-cdb2",
+          "from": "git://github.com/Vizzuality/tilelive-mapnik.git#6061c65a",
           "dependencies": {
             "eio": {
               "version": "0.1.0"
@@ -319,10 +324,10 @@
       "version": "2.9.202"
     },
     "mapnik": {
-      "version": "0.7.16"
+      "version": "0.7.18"
     },
     "semver": {
-      "version": "1.1.0"
+      "version": "1.1.1"
     },
     "mocha": {
       "version": "1.2.1",
