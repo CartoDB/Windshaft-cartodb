@@ -33,7 +33,15 @@ var Windshaft = require('windshaft');
 var serverOptions = require('./lib/cartodb/server_options');
 
 ws = CartodbWindshaft(serverOptions);
+
+// Maximum number of connections for one process
+// 128 is a good number if you have up to 1024 filedescriptors
+// 4 is good if you have max 32 filedescriptors
+// 1 is good if you have max 16 filedescriptors
+ws.maxConnections = global.environment.maxConnections || 128;
+
 ws.listen(global.environment.port, global.environment.host);
+
 ws.on('listening', function() {
   console.log("Windshaft tileserver started on " + global.environment.host + ':' + global.environment.port);
 });

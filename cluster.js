@@ -36,6 +36,9 @@ var serverOptions = require('./lib/cartodb/server_options');
 
 var ws = CartodbWindshaft(serverOptions);
 
+// Maximum number of connections for one process (see apps.js)
+ws.maxConnections = global.environment.maxConnections || 128;
+
 //.use(cluster.logger('logs'))
 //.use(cluster.stats())
 //.use(cluster.pidfiles('pids'))
