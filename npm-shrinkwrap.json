@@ -187,7 +187,7 @@
       "version": "1.3.3"
     },
     "grainstore": {
-      "version": "0.10.9",
+      "version": "0.10.10",
       "dependencies": {
         "carto": {
           "version": "0.9.3-cdb2",
@@ -254,7 +254,7 @@
       }
     },
     "windshaft": {
-      "version": "0.8.2",
+      "version": "0.8.3",
       "dependencies": {
         "express": {
           "version": "2.5.11",

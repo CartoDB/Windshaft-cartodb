@@ -110,7 +110,7 @@ suite('server', function() {
         },{
         }, function(res) {
           // FIXME: should be 401 Unauthorized
-          assert.equal(res.statusCode, 500, res.body);
+          assert.equal(res.statusCode, 400, res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error: 'Sorry, you are unauthorized (permission denied)'});
           done();
@@ -127,7 +127,7 @@ suite('server', function() {
         },{
         }, function(res) {
           // FIXME: should be 401 Unauthorized
-          assert.equal(res.statusCode, 500, res.body);
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
           done();
@@ -175,7 +175,7 @@ suite('server', function() {
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table3{backgxxxxxround-color:#fff;}'})
         },{
-            status: 500, // FIXME: should be 400 !
+            status: 400, 
             body: /Unrecognized rule: backgxxxxxround-color/
         }, function() { done(); });
     });
@@ -187,7 +187,7 @@ suite('server', function() {
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table3{'})
         },{
-            status: 500, // FIXME: should be 400 !
+            status: 400, 
             body: /Missing closing/
         }, function() { done(); });
     });
@@ -199,7 +199,7 @@ suite('server', function() {
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table4{backgxxxxxround-color:#fff;foo:bar}'})
         },{
-            status: 500, // FIXME: should be 400 !
+            status: 400, 
         }, function(res) {
           var parsed = JSON.parse(res.body);
           assert.equal(parsed.length, 2);
@@ -252,7 +252,7 @@ suite('server', function() {
               data: querystring.stringify({style: 'Map { background-color:#aaa; }'})
           },{}, function(res) {
             // FIXME: should be 401 Unauthorized
-            assert.equal(res.statusCode, 500, res.body);
+            assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
             assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
 
             assert.response(server, {
@@ -464,7 +464,7 @@ suite('server', function() {
             method: 'GET'
         },{}, function(res) {
           // FIXME: should be 401 Unauthorized
-          assert.equal(res.statusCode, 500, res.body);
+          assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           done();
         });
     });
@@ -479,7 +479,7 @@ suite('server', function() {
         },{
         }, function(res) {
           // FIXME: should be 401 Unauthorized
-          assert.equal(res.statusCode, 500, res.body);
+          assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
           done();
