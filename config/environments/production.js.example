@@ -25,7 +25,9 @@ var config = {
     }
     ,redis: {
         host: '127.0.0.1',
-        port: 6379
+        port: 6379,
+        idleTimeoutMillis: 30000, // idle time before dropping connection
+        reapIntervalMillis: 1000 // time between cleanups
     }
     ,sqlapi: {
         protocol: 'https',
