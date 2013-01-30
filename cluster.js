@@ -57,3 +57,6 @@ cluster.listen(function(cb) {
   console.log("Windshaft tileserver started on port " + global.environment.port);
 });
 
+process.on('SIGUSR1', function() {
+  ws.dumpCacheStats();
+});

@@ -45,3 +45,7 @@ ws.listen(global.environment.port, global.environment.host);
 ws.on('listening', function() {
   console.log("Windshaft tileserver started on " + global.environment.host + ':' + global.environment.port);
 });
+
+process.on('SIGUSR1', function() {
+  ws.dumpCacheStats();
+});
