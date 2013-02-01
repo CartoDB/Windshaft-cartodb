@@ -51,6 +51,8 @@ var cluster = new Cluster({
   noWorkers: 1 
 });
 
+console.log(new Date().toISOString() + " - " + process.pid + " - Windshaft cluster starting");
+
 cluster.listen(function(cb) {
   cb(ws);
 }, function() {
