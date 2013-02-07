@@ -17,19 +17,24 @@ fi
 echo "Master: $master_pid"
 echo "Workers: $worker_pids"
 
-# TODO: use lsof only once, then grep in the report
 for pid in $(echo $worker_pids | tr ',' ' '); do
+
+        pidrep="/tmp/checkfd.$pid.txt"
+
+        lsof -p $pid > "${pidrep}"
+
         echo -n "worker $pid postgres: "
-        lsof -p $pid | grep ':6432 .EST' | wc -l;
+        cat "${pidrep}" | grep ':6432 .EST' | wc -l;
 
         echo -n "worker $pid redis: "
-        lsof -p $pid | grep ':6379 .EST' | wc -l;
+        cat "${pidrep}" | grep ':6379 .EST' | wc -l;
 
         echo -n "worker $pid incoming http: "
-        lsof -p $pid | grep ':8181' | wc -l;
+        cat "${pidrep}" | grep ':8181' | wc -l;
 
         echo -n "worker $pid total: "
-        lsof -p $pid | wc -l;
+        cat "${pidrep}" | wc -l;
+
 done
 
 
