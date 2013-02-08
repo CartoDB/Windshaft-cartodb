@@ -1,8 +1,10 @@
 #!/bin/sh
 
+envnik=$(basename "${TILER_ENVIRONMENT}" .js)
+
 if test "$1" = "config"; then
-cat <<'EOM'
-graph_title Tiler fd usage
+echo "graph_title Tiler fd usage (${envnik})"
+cat <<"EOM"
 graph_vlabel tiler fds
 procs.label Number of tiler processes
 pgsql.label PostgreSQL connections (max)
