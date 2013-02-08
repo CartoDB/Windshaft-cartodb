@@ -1,42 +1,42 @@
 #!/bin/sh
 
-# Sorry, you must currently manually edit the regexp to make this work
-# on your machine.
+http_port=8181
+db_port=6432
+redis_port=6379
 
-master_pid=$(ps xa | grep windshaft | grep -v local | grep -v grep | awk '{print $1}')
+pids=$(lsof -i :${http_port} | grep LISTEN | awk '{print $2}')
+nworkers=$(echo "${pids}" | wc -l)
+pids=$(echo "${pids}" | paste -sd ' ')
 
-# TODO: use pid files
-worker_pids=$(ps xa | grep windshaft | grep local | awk '{print $1}' |
-  python -c "import sys; print ','.join((x.strip() for x in  sys.stdin.readlines()))")
+tmpreport="/tmp/checkfd.$$.txt"
 
-if test -z "${worker_pids}"; then
-  echo "No workers found"
-  exit 1
-fi
+lsof -p $(echo "${pids}" | tr ' ' ',') > "${tmpreport}"
 
-echo "Master: $master_pid"
-echo "Workers: $worker_pids"
+maxdb=0
+maxredis=0
+maxhttp=0
+maxtot=0
 
-for pid in $(echo $worker_pids | tr ',' ' '); do
+for pid in ${pids}; do
 
-        pidrep="/tmp/checkfd.$pid.txt"
+  cnt=$(grep "${pid}" "${tmpreport}" | grep ":${db_port} " | wc -l);
+  if test $cnt -gt $maxdb; then maxdb=$cnt; fi
+  
+  cnt=$(grep "${pid}" "${tmpreport}" | grep ":${redis_port} " | wc -l);
+  if test $cnt -gt $maxredis; then maxredis=$cnt; fi
 
-        lsof -p $pid > "${pidrep}"
+  cnt=$(grep "${pid}" "${tmpreport}" | grep ":${http_port} " | grep -v "LISTEN" | wc -l);
+  if test $cnt -gt $maxhttp; then maxhttp=$cnt; fi
 
-        echo -n "worker $pid postgres: "
-        cat "${pidrep}" | grep ':6432 .EST' | wc -l;
-
-        echo -n "worker $pid redis: "
-        cat "${pidrep}" | grep ':6379 .EST' | wc -l;
-
-        echo -n "worker $pid incoming http: "
-        cat "${pidrep}" | grep ':8181' | wc -l;
-
-        echo -n "worker $pid total: "
-        cat "${pidrep}" | wc -l;
+  cnt=$(grep "${pid}" "${tmpreport}" | wc -l);
+  if test $cnt -gt $maxtot; then maxtot=$cnt; fi
 
 done
 
+echo "procs.value ${nworkers}"
+echo "pgsql.value ${maxdb}"
+echo "redis.value ${maxredis}"
+echo "http.value ${maxhttp}"
+echo "nfd.value ${maxtot}"
 
-echo -n "master $master_pid total: "
-lsof -p $master_pid | grep node | wc -l;
+rm -f "${tmpreport}"
