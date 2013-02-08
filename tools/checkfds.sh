@@ -1,15 +1,5 @@
 #!/bin/sh
 
-me=$0
-if test -h "$me"; then
-  me=`readlink $me`
-fi
-ENV_DIR=$(cd `dirname "$me"`/../config/environments || exit 1; pwd)
-
-if test -z "$TILER_ENVIRONMENT"; then
-  TILER_ENVIRONMENT=${ENV_DIR}/development.js
-fi
-
 if test "$1" = "config"; then
 cat <<'EOM'
 graph_title Tiler fd usage
@@ -21,9 +11,16 @@ http.label Incoming http requests (max)
 nfd.label Number of open file descriptors (max)
 EOM
 exit 0
-elif test x"$1" != "x"; then
-  # override env file
-  TILER_ENVIRONMENT="${ENV_DIR}/${1}.js"
+fi
+
+if test x"$1" != x; then
+  TILER_ENVIRONMENT=$(cd $(dirname $0); pwd)/../config/environments/${1}.js
+fi
+
+if test -z "$TILER_ENVIRONMENT"; then
+  echo "Usage: $0 [<environment>]" >&2
+  echo "   or: [TILER_ENVIRONMENT=<environment>] $0" >&2
+  exit 1
 fi
 
 http_port=$(echo "console.log(require('${TILER_ENVIRONMENT}').port)" | node) || exit 1
