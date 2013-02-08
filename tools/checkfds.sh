@@ -57,7 +57,7 @@ for pid in ${pids}; do
   cnt=$(grep "${pid}" "${tmpreport}" | grep ":${redis_port} " | wc -l);
   if test $cnt -gt $maxredis; then maxredis=$cnt; fi
 
-  cnt=$(grep "${pid}" "${tmpreport}" | grep ":${http_port} " | grep -v "LISTEN" | wc -l);
+  cnt=$(grep "${pid}" "${tmpreport}" | grep ":${http_port}-" | grep -v "LISTEN" | wc -l);
   if test $cnt -gt $maxhttp; then maxhttp=$cnt; fi
 
   cnt=$(grep "${pid}" "${tmpreport}" | wc -l);
