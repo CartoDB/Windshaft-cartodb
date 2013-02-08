@@ -3,14 +3,15 @@
 envnik=$(basename "${TILER_ENVIRONMENT}" .js)
 
 if test "$1" = "config"; then
-echo "graph_title Tiler fd usage (${envnik})"
+echo "graph_title fd usage (${envnik})"
 cat <<"EOM"
-graph_vlabel tiler fds
+graph_vlabel number of file descriptors
+graph_category windshaft
 procs.label Number of tiler processes
 pgsql.label PostgreSQL connections (max)
 redis.label Redis connections (max)
 http.label Incoming http requests (max)
-nfd.label Number of open file descriptors (max)
+nfd.label Total file descriptors (max)
 EOM
 exit 0
 fi
