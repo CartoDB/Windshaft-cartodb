@@ -2,6 +2,7 @@
 -----
 * Require grainstore 0.10.9, fixing an issue with multi-geom markers
 * Enhance run_tests.sh to allow running single tests and skipping preparation
+* Fix async throws in getGeometryType, getInfoWindow and getMapMetadata
 
 1.1.5 (DD//MM//YY)
 -----
