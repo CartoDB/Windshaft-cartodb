@@ -6,8 +6,6 @@ if test -h "$me"; then
 fi
 ENV_DIR=$(cd `dirname "$me"`/../config/environments || exit 1; pwd)
 
-echo "ENV_DIR: ${ENV_DIR}"
-
 if test -z "$TILER_ENVIRONMENT"; then
   TILER_ENVIRONMENT=${ENV_DIR}/development.js
 fi
