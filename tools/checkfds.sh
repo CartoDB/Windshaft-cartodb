@@ -1,12 +1,45 @@
 #!/bin/sh
 
-http_port=8181
-db_port=6432
-redis_port=6379
+me=$0
+if test -h "$me"; then
+  me=`readlink $me`
+fi
+ENV_DIR=$(cd `dirname "$me"`/../config/environments || exit 1; pwd)
+
+echo "ENV_DIR: ${ENV_DIR}"
+
+if test -z "$TILER_ENVIRONMENT"; then
+  TILER_ENVIRONMENT=${ENV_DIR}/development.js
+fi
+
+if test "$1" = "config"; then
+cat <<'EOM'
+graph_title Tiler fd usage
+graph_vlabel tiler fds
+procs.label Number of tiler processes
+pgsql.label PostgreSQL connections (max)
+redis.label Redis connections (max)
+http.label Incoming http requests (max)
+nfd.label Number of open file descriptors (max)
+EOM
+exit 0
+elif test x"$1" != "x"; then
+  # override env file
+  TILER_ENVIRONMENT="${ENV_DIR}/${1}.js"
+fi
+
+http_port=$(echo "console.log(require('${TILER_ENVIRONMENT}').port)" | node) || exit 1
+pgsql_port=$(echo "console.log(require('${TILER_ENVIRONMENT}').postgres.port)" | node) || exit 1
+redis_port=$(echo "console.log(require('${TILER_ENVIRONMENT}').redis.port)" | node) || exit 1
 
 pids=$(lsof -i :${http_port} | grep LISTEN | awk '{print $2}')
 nworkers=$(echo "${pids}" | wc -l)
 pids=$(echo "${pids}" | paste -sd ' ')
+
+if test -z "${pids}"; then
+  echo "No processes found listening on tcp port '${http_port}'" >&2
+  exit 1
+fi
 
 tmpreport="/tmp/checkfd.$$.txt"
 
@@ -19,7 +52,7 @@ maxtot=0
 
 for pid in ${pids}; do
 
-  cnt=$(grep "${pid}" "${tmpreport}" | grep ":${db_port} " | wc -l);
+  cnt=$(grep "${pid}" "${tmpreport}" | grep ":${pgsql_port} " | wc -l);
   if test $cnt -gt $maxdb; then maxdb=$cnt; fi
   
   cnt=$(grep "${pid}" "${tmpreport}" | grep ":${redis_port} " | wc -l);
