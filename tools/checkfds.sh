@@ -7,6 +7,7 @@ echo "graph_title fd usage (${envnik})"
 cat <<"EOM"
 graph_vlabel number of file descriptors
 graph_category windshaft
+graph_scale no
 procs.label Number of tiler processes
 pgsql.label PostgreSQL connections (max)
 redis.label Redis connections (max)
