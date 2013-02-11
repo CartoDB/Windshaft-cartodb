@@ -12,6 +12,7 @@ procs.label Number of tiler processes
 pgsql.label PostgreSQL connections (max)
 redis.label Redis connections (max)
 http.label Incoming http requests (max)
+caches.label Number of renderer caches (max)
 nfd.label Total file descriptors (max)
 EOM
 exit 0
@@ -48,6 +49,7 @@ maxdb=0
 maxredis=0
 maxhttp=0
 maxtot=0
+maxcache=0
 
 for pid in ${pids}; do
 
@@ -63,12 +65,23 @@ for pid in ${pids}; do
   cnt=$(grep "${pid}" "${tmpreport}" | wc -l);
   if test $cnt -gt $maxtot; then maxtot=$cnt; fi
 
+  log=$(grep "${pid}" "${tmpreport}" | grep -w 1w | awk '{print $9}')
+  if test -e "${log}"; then
+    kill -USR1 "${pid}"
+    cnt=$(tac ${log} | sed -n -e '/ItemKey/p;/^RenderCache/q' | wc -l)
+    if test $cnt -gt $maxcache; then maxcache=$cnt; fi
+  else
+    # report the error...
+    maxcache=-1
+  fi
+
 done
 
 echo "procs.value ${nworkers}"
 echo "pgsql.value ${maxdb}"
 echo "redis.value ${maxredis}"
 echo "http.value ${maxhttp}"
+echo "caches.value ${maxcache}"
 echo "nfd.value ${maxtot}"
 
 rm -f "${tmpreport}"
