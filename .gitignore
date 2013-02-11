@@ -1,4 +1,4 @@
 node_modules
 config/environments/*.js
 .idea
-tools/munin/windshaft_fds.conf
+tools/munin/windshaft.conf

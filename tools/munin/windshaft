@@ -19,7 +19,7 @@ exit 0
 fi
 
 if test x"$1" != x; then
-  TILER_ENVIRONMENT=$(cd $(dirname $0); pwd)/../config/environments/${1}.js
+  TILER_ENVIRONMENT=$(cd $(dirname $0); pwd)/../../config/environments/${1}.js
 fi
 
 if test -z "$TILER_ENVIRONMENT"; then

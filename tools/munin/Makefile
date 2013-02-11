@@ -2,16 +2,18 @@ MUNIN_PLUGINS_DIR=/etc/munin/plugins
 MUNIN_PLUGINS_CONFIG_DIR=/etc/munin/plugin-conf.d
 PWD=$(shell pwd)
 
-all: windshaft_fds.conf
+all: windshaft.conf
 
-windshaft_fds.conf: windshaft_fds.conf.in
+windshaft.conf: windshaft.conf.in
 	sed 's#@PWD@#$(PWD)#' < $< > $@
 
-install-munin-plugin: windshaft_fds.conf
-	install -m 644 windshaft_fds.conf $(MUNIN_PLUGINS_CONFIG_DIR)/windshaft_fds.conf
-	install -m 755 ../checkfds.sh $(MUNIN_PLUGINS_DIR)/windshaft_fds
+install-munin-plugin-conf: windshaft.conf 
+	install -m 644 $< $(MUNIN_PLUGINS_CONFIG_DIR)/windshaft.conf
 
-install: install-munin-plugin
+install-munin-plugin: windshaft
+	install -m 755 $< $(MUNIN_PLUGINS_DIR)/windshaft
+
+install: install-munin-plugin install-munin-plugin-conf
 
 clean:
-	rm -f windshaft_fds.conf
+	rm -f windshaft.conf
