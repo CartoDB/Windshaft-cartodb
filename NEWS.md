@@ -1,5 +1,6 @@
 1.1.6
 -----
+* Require windshaft 0.8.5, fixing some stability issues
 * Require grainstore 0.10.9, fixing an issue with multi-geom markers
 * Enhance run_tests.sh to allow running single tests and skipping preparation
 * Fix async throws in getGeometryType, getInfoWindow and getMapMetadata
