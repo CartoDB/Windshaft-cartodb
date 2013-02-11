@@ -10,9 +10,9 @@
 
 // sanity check
 var ENV = process.argv[2]
-if (ENV != 'development' && ENV != 'production'){
+if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
     console.error("\nnode app.js [environment]");
-    console.error("environments: [development, production]\n");
+    console.error("environments: [development, production, staging]\n");
     process.exit(1);
 }
 
