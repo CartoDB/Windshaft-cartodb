@@ -1,4 +1,7 @@
-1.1.6
+1.1.7 (DD//MM//YY)
+-----
+
+1.1.6 (19//02//13)
 -----
 * Require windshaft 0.8.5, fixing some stability issues
   and providing cache info on request
