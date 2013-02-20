@@ -43,7 +43,7 @@ fi
 
 tmpreport="/tmp/checkfd.$$.txt"
 
-lsof -p $(echo "${pids}" | tr ' ' ',') > "${tmpreport}"
+lsof -Pp $(echo "${pids}" | tr ' ' ',') > "${tmpreport}"
 
 maxdb=0
 maxredis=0
