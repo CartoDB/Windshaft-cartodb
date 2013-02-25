@@ -2,6 +2,7 @@
 -----
 * Do not let /etc/services confuse FD checker (munin plugin)
 * Multilayer support (#72)
+* Expose renderer settings in the environment config files
 
 1.1.6 (19//02//13)
 -----

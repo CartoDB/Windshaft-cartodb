@@ -23,6 +23,12 @@ var config = {
         max_size: 500
     }
     ,mapnik_version: undefined
+    ,renderer: {
+      // Milliseconds since last access before renderer cache item expires
+      cache_ttl: 60000,
+      metatile: 4,
+      bufferSize: 64
+    }
     ,millstone: {
         cache_basedir: '/home/ubuntu/tile_assets/'
     }
