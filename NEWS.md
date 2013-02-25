@@ -1,6 +1,7 @@
 1.1.7 (DD//MM//YY)
 -----
 * Do not let /etc/services confuse FD checker (munin plugin)
+* Multilayer support (#72)
 
 1.1.6 (19//02//13)
 -----
