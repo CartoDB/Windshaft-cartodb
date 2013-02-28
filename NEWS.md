@@ -1,3 +1,6 @@
+1.1.8
+-----
+
 1.1.7 (DD//MM//YY)
 -----
 * Do not let /etc/services confuse FD checker (munin plugin)
