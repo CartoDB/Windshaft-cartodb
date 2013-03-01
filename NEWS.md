@@ -1,5 +1,6 @@
 1.1.8
 -----
+* Require Windshaft-0.9.1, to reduce harmfulness of cache_buster param
 
 1.1.7 (DD//MM//YY)
 -----
