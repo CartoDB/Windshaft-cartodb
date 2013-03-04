@@ -1,3 +1,6 @@
+1.1.9
+-----
+
 1.1.8
 -----
 * Require Windshaft-0.9.1, to reduce harmfulness of cache_buster param
