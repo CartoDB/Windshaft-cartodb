@@ -33,4 +33,5 @@ echo "SADD rails:users:localhost:map_key 1235" | redis-cli -p ${REDIS_PORT} -n 5
 echo 'HSET rails:'"${TEST_DB}"':my_table infowindow "this, that, the other"' | redis-cli -p ${REDIS_PORT} -n 0
 echo 'HSET rails:'"${TEST_DB}"':test_table_private_1 privacy "0"' | redis-cli -p ${REDIS_PORT} -n 0
 
-echo "Finished preparing data. Run tests with expresso."
+echo "Finished preparing data. Ready to run tests"
+

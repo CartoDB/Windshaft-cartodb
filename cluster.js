@@ -36,6 +36,9 @@ var serverOptions = require('./lib/cartodb/server_options');
 
 var ws = CartodbWindshaft(serverOptions);
 
+// Maximum number of connections for one process (see apps.js)
+ws.maxConnections = global.environment.maxConnections || 128;
+
 //.use(cluster.logger('logs'))
 //.use(cluster.stats())
 //.use(cluster.pidfiles('pids'))
@@ -48,9 +51,14 @@ var cluster = new Cluster({
   noWorkers: 1 
 });
 
+console.log(new Date().toISOString() + " - " + process.pid + " - Windshaft cluster starting");
+
 cluster.listen(function(cb) {
   cb(ws);
 }, function() {
   console.log("Windshaft tileserver started on port " + global.environment.port);
 });
 
+process.on('SIGUSR1', function() {
+  ws.dumpCacheStats();
+});

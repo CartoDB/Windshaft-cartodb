@@ -1,6 +1,25 @@
+1.1.8
+-----
+* Require Windshaft-0.9.1, to reduce harmfulness of cache_buster param
+
+1.1.7 (DD//MM//YY)
+-----
+* Do not let /etc/services confuse FD checker (munin plugin)
+* Multilayer support (#72)
+* Expose renderer settings in the environment config files
+
+1.1.6 (19//02//13)
+-----
+* Require windshaft 0.8.5, fixing some stability issues
+  and providing cache info on request
+* Require grainstore 0.10.9, fixing an issue with multi-geom markers
+* Enhance run_tests.sh to allow running single tests and skipping preparation
+* Fix async throws in getGeometryType, getInfoWindow and getMapMetadata
+* Survive connection refusals from redis
+* Add maxConnection environment configuration, default to 128
+
 1.1.5 (DD//MM//YY)
 -----
-* Enhance run_tests.sh to allow running single tests and skipping preparation
 * Fix bogus cached return of utf grid for fully contained tiles (#67)
 
 1.1.4 (DD//MM//YY)

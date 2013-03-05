@@ -1,0 +1,5 @@
+# Configuration file for munin plugin
+
+[windshaft]
+user root
+env.TILER_ENVIRONMENT @PWD@/../../config/environments/production.js

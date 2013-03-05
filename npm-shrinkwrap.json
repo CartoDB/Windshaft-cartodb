@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "dependencies": {
     "cluster2": {
       "version": "0.3.5-cdb02",
@@ -13,7 +13,7 @@
               "version": "1.9.2",
               "dependencies": {
                 "formidable": {
-                  "version": "1.0.11"
+                  "version": "1.0.12"
                 }
               }
             },
@@ -32,22 +32,22 @@
           "version": "0.8.3"
         },
         "npm": {
-          "version": "1.1.69",
+          "version": "1.2.12",
           "dependencies": {
             "semver": {
-              "version": "1.1.1"
+              "version": "1.1.3"
             },
             "ini": {
-              "version": "1.0.5"
+              "version": "1.1.0"
             },
             "slide": {
               "version": "1.1.3"
             },
             "abbrev": {
-              "version": "1.0.3"
+              "version": "1.0.4"
             },
             "graceful-fs": {
-              "version": "1.1.14"
+              "version": "1.2.0"
             },
             "minimatch": {
               "version": "0.2.9",
@@ -58,10 +58,10 @@
               }
             },
             "nopt": {
-              "version": "2.0.0"
+              "version": "2.1.1"
             },
             "rimraf": {
-              "version": "2.0.2"
+              "version": "2.1.4"
             },
             "request": {
               "version": "2.9.203",
@@ -71,10 +71,10 @@
               "version": "1.0.5"
             },
             "tar": {
-              "version": "0.1.14"
+              "version": "0.1.16"
             },
             "fstream": {
-              "version": "0.1.19"
+              "version": "0.1.22"
             },
             "block-stream": {
               "version": "0.0.6"
@@ -98,13 +98,13 @@
               "version": "2.0.4"
             },
             "node-gyp": {
-              "version": "0.7.3"
+              "version": "0.8.4"
             },
             "fstream-npm": {
               "version": "0.1.3",
               "dependencies": {
                 "fstream-ignore": {
-                  "version": "0.0.5"
+                  "version": "0.0.6"
                 }
               }
             },
@@ -124,7 +124,7 @@
               "version": "0.1.2"
             },
             "npm-registry-client": {
-              "version": "0.2.10",
+              "version": "0.2.17",
               "dependencies": {
                 "couch-login": {
                   "version": "0.1.15"
@@ -132,13 +132,13 @@
               }
             },
             "read-package-json": {
-              "version": "0.1.11"
+              "version": "0.2.0"
             },
             "read-installed": {
-              "version": "0.0.3"
+              "version": "0.1.1"
             },
             "glob": {
-              "version": "3.1.14"
+              "version": "3.1.20"
             },
             "init-package-json": {
               "version": "0.0.6",
@@ -152,7 +152,7 @@
               "version": "0.0.3"
             },
             "lockfile": {
-              "version": "0.2.1"
+              "version": "0.3.0"
             },
             "retry": {
               "version": "0.6.0"
@@ -161,10 +161,10 @@
               "version": "1.1.1"
             },
             "npmconf": {
-              "version": "0.0.16",
+              "version": "0.0.23",
               "dependencies": {
                 "config-chain": {
-                  "version": "1.1.3",
+                  "version": "1.1.5",
                   "dependencies": {
                     "proto-list": {
                       "version": "1.2.2"
@@ -187,28 +187,31 @@
       "version": "1.3.3"
     },
     "grainstore": {
-      "version": "0.10.8",
+      "version": "0.11.1",
       "dependencies": {
         "carto": {
           "version": "0.9.3-cdb2",
           "from": "git://github.com/CartoDB/carto.git#cdb-0.9",
           "dependencies": {
+            "mapnik-reference": {
+              "version": "5.0.0-cdb1",
+              "from": "git://github.com/CartoDB/mapnik-reference.git#cdb-5.0"
+            },
             "xml2js": {
               "version": "0.1.14",
               "dependencies": {
                 "sax": {
-                  "version": "0.4.2"
+                  "version": "0.5.2"
                 }
               }
             }
           }
         },
         "mapnik-reference": {
-          "version": "5.0.0-cdb1",
-          "from": "git://github.com/CartoDB/mapnik-reference.git#cdb-5.0"
+          "version": "5.0.4"
         },
         "millstone": {
-          "version": "0.5.13",
+          "version": "0.5.15",
           "dependencies": {
             "request": {
               "version": "2.11.4",
@@ -235,26 +238,26 @@
               }
             },
             "srs": {
-              "version": "0.2.18"
+              "version": "0.2.20"
             },
             "zipfile": {
-              "version": "0.3.3"
+              "version": "0.3.4"
             },
             "sqlite3": {
               "version": "2.1.5"
             },
             "mime": {
-              "version": "1.2.7"
+              "version": "1.2.9"
             },
             "mkdirp": {
-              "version": "0.3.4"
+              "version": "0.3.5"
             }
           }
         }
       }
     },
     "windshaft": {
-      "version": "0.8.2",
+      "version": "0.9.1",
       "dependencies": {
         "express": {
           "version": "2.5.11",
@@ -263,7 +266,7 @@
               "version": "1.9.2",
               "dependencies": {
                 "formidable": {
-                  "version": "1.0.11"
+                  "version": "1.0.12"
                 }
               }
             },
@@ -324,10 +327,10 @@
       "version": "2.9.202"
     },
     "mapnik": {
-      "version": "0.7.18"
+      "version": "0.7.22"
     },
     "semver": {
-      "version": "1.1.1"
+      "version": "1.1.3"
     },
     "mocha": {
       "version": "1.2.1",
@@ -350,7 +353,7 @@
           "version": "1.0.2"
         },
         "debug": {
-          "version": "0.7.0"
+          "version": "0.7.2"
         }
       }
     }

@@ -2,6 +2,9 @@ var config = {
      environment: 'test'
     ,port: 8888
     ,host: '127.0.0.1'
+    // Maximum number of connections for one process
+    // 128 is a good value with a limit of 1024 open file descriptors
+    ,maxConnections:128
     // idle socket timeout, in miliseconds
     ,socket_timeout: 600000 
     ,enable_cors: true
@@ -20,14 +23,28 @@ var config = {
         max_size: 500
     }
     ,mapnik_version: '2.0.2'
+    ,renderer: {
+      // Milliseconds since last access before renderer cache item expires
+      cache_ttl: 60000,
+      metatile: 4,
+      bufferSize: 64
+    }
     ,millstone: {
         cache_basedir: '/tmp/cdb-tiler-test/millstone'
     }
     ,redis: {
         host: '127.0.0.1',
         port: 6333,
-        idleTimeoutMillis: 1,
-        reapIntervalMillis: 1
+        // Max number of connections in each pool.
+        // Users will be put on a queue when the limit is hit.
+        // Set to maxConnection to have no possible queues.
+        // There are currently 3 pools involved in serving
+        // windshaft-cartodb requests so multiply this number
+        // by 3 to know how many possible connections will be
+        // kept open by the server. The default is 50.
+        max: 50,
+        idleTimeoutMillis: 1, // idle time before dropping connection
+        reapIntervalMillis: 1 // time between cleanups
     }
     ,sqlapi: {
         protocol: 'http',
