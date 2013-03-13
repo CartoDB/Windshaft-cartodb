@@ -2,6 +2,7 @@
 -----
 * Handle SQL API errors by requesting no Varnish cache
 * Fix X-Cache-Channel for multilayer (by token) responses
+* Add last_modified field to POST layergroup response (#72)
 
 1.1.8
 -----

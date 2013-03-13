@@ -7,7 +7,7 @@ var semver      = require('semver');
 var mapnik      = require('mapnik');
 var Step        = require('step');
 var http        = require('http');
-var url         = require('url');
+var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 
 require(__dirname + '/../support/test_helper');
 
@@ -34,18 +34,7 @@ suite('server', function() {
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
     
     suiteSetup(function(done){
-      sqlapi_server = http.createServer(function(req,res) {
-        var query = url.parse(req.url, true).query;
-        if ( query.q.match('SQLAPIERROR') ) {
-          res.statusCode = 400;
-          res.write(JSON.stringify({'error':'Some error occurred'}));
-        } else {
-          res.write(JSON.stringify({rows: [ { 'cdb_querytables': '{' +
-            JSON.stringify(query) + '}' } ]}));
-        }
-        res.end();
-      });
-      sqlapi_server.listen(global.environment.sqlapi.port, done);
+      sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
 
     /////////////////////////////////////////////////////////////////////////////////

@@ -6,8 +6,7 @@ var querystring = require('querystring');
 var semver      = require('semver');
 var mapnik      = require('mapnik');
 var Step        = require('step');
-var http        = require('http');
-var url         = require('url');
+var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 
 require(__dirname + '/../support/test_helper');
 
@@ -24,18 +23,7 @@ suite('multilayer', function() {
     var sqlapi_server;
 
     suiteSetup(function(done){
-      sqlapi_server = http.createServer(function(req,res) {
-        var query = url.parse(req.url, true).query;
-        if ( query.q.match('SQLAPIERROR') ) {
-          res.statusCode = 400;
-          res.write(JSON.stringify({'error':'Some error occurred'}));
-        } else {
-          res.write(JSON.stringify({rows: [ { 'cdb_querytables': '{' +
-            JSON.stringify(query) + '}' } ]}));
-        }
-        res.end();
-      });
-      sqlapi_server.listen(global.environment.sqlapi.port, done);
+      sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
 
     test("layergroup with 2 layers, each with its style", function(done) {
@@ -70,9 +58,23 @@ suite('multilayer', function() {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
               var expectedBody = { layergroupid: expected_token };
-              // TODO: check last modified
-              //expectedBody.layercount = 2;
-              if ( expected_token ) assert.deepEqual(parsedBody, expectedBody);
+              // check last modified
+              var qTables = JSON.stringify({
+                'q': 'SELECT CDB_QueryTables($windshaft$'
+                    + layergroup.layers[0].options.sql + ';'
+                    + layergroup.layers[1].options.sql 
+                    + '$windshaft$)'
+              });
+              expectedBody.last_updated = JSON.stringify({
+                'q': 'SELECT EXTRACT(EPOCH FROM max(updated_at)) '
+                    + 'FROM CDB_TableMetadata WHERE m.tabname::name = any ({'
+                    + qTables + '})'
+              });
+              if ( expected_token ) {
+                //assert.equal(parsedBody.layergroupid, expectedBody.layergroupid);
+                //assert.equal(parsedBody.last_updated, expectedBody.last_updated);
+                assert.deepEqual(parsedBody, expectedBody);
+              }
               else expected_token = parsedBody.layergroupid;
               next(null, res);
           });
