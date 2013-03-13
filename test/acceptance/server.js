@@ -986,9 +986,6 @@ suite('server', function() {
             assert.equal(ct, 'image/png');
             // does NOT send an x-cache-channel
             assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-            // attempts to tell varnish NOT to cache
-            assert.equal(res.headers['cache-control'], 'no-cache,no-store,max-age=0,must-revalidate');
-            assert.equal(res.headers['pragma'], 'no-cache');
             done();
           }
         );
