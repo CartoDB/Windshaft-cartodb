@@ -92,18 +92,15 @@ suite('multilayer', function() {
 
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
-              assert.ok(cc);
+              assert.ok(cc); 
               var dbname = 'cartodb_test_user_1_db'
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
-//console.log('jsonquery: '+ jsonquery);
-              // FIXME: this is currently _undefined_ !
-
-/*
               var sentquery = JSON.parse(jsonquery);
-              assert.equal(sentquery.api_key, qo.map_key);
-              assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$' + qo.sql + '$windshaft$)');
-*/
+              assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$'
+                + layergroup.layers[0].options.sql + ';'
+                + layergroup.layers[1].options.sql 
+                + '$windshaft$)');
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png', 2,
                 function(err, similarity) {

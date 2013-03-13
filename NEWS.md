@@ -1,6 +1,7 @@
 1.1.9
 -----
 * Handle SQL API errors by requesting no Varnish cache
+* Fix X-Cache-Channel for multilayer (by token) responses
 
 1.1.8
 -----
