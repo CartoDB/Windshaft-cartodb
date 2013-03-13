@@ -6,6 +6,8 @@ var querystring = require('querystring');
 var semver      = require('semver');
 var mapnik      = require('mapnik');
 var Step        = require('step');
+var http        = require('http');
+var url         = require('url');
 
 require(__dirname + '/../support/test_helper');
 
@@ -19,8 +21,21 @@ server.setMaxListeners(0);
 suite('multilayer', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
+    var sqlapi_server;
 
-    suiteSetup(function(){
+    suiteSetup(function(done){
+      sqlapi_server = http.createServer(function(req,res) {
+        var query = url.parse(req.url, true).query;
+        if ( query.q.match('SQLAPIERROR') ) {
+          res.statusCode = 400;
+          res.write(JSON.stringify({'error':'Some error occurred'}));
+        } else {
+          res.write(JSON.stringify({rows: [ { 'cdb_querytables': '{' +
+            JSON.stringify(query) + '}' } ]}));
+        }
+        res.end();
+      });
+      sqlapi_server.listen(global.environment.sqlapi.port, done);
     });
 
     test("layergroup with 2 layers, each with its style", function(done) {
@@ -74,6 +89,22 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
+
+              // Check X-Cache-Channel
+              var cc = res.headers['x-cache-channel'];
+              assert.ok(cc);
+              var dbname = 'cartodb_test_user_1_db'
+              assert.equal(cc.substring(0, dbname.length), dbname);
+              var jsonquery = cc.substring(dbname.length+1);
+//console.log('jsonquery: '+ jsonquery);
+              // FIXME: this is currently _undefined_ !
+
+/*
+              var sentquery = JSON.parse(jsonquery);
+              assert.equal(sentquery.api_key, qo.map_key);
+              assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$' + qo.sql + '$windshaft$)');
+*/
+
               assert.imageEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png', 2,
                 function(err, similarity) {
                   next(err);
@@ -140,7 +171,7 @@ suite('multilayer', function() {
         // 'map_style|null|publicuser|my_table',
         redis_client.keys("map_style|*", function(err, matches) {
             _.each(matches, function(k) { redis_client.del(k); });
-            done();
+            sqlapi_server.close(done);
         });
     });
     
