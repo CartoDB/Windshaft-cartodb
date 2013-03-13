@@ -6,6 +6,8 @@ var querystring = require('querystring');
 var semver      = require('semver');
 var mapnik      = require('mapnik');
 var Step        = require('step');
+var http        = require('http');
+var url         = require('url');
 
 require(__dirname + '/../support/test_helper');
 
@@ -17,6 +19,7 @@ server.setMaxListeners(0);
 suite('server', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
+    var sqlapi_server;
 
     var default_style = semver.satisfies(mapnik.versions.mapnik, '<2.1.0')
     ?
@@ -30,7 +33,19 @@ suite('server', function() {
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
     
-    suiteSetup(function(){
+    suiteSetup(function(done){
+      sqlapi_server = http.createServer(function(req,res) {
+        var query = url.parse(req.url, true).query;
+        if ( query.q.match('SQLAPIERROR') ) {
+          res.statusCode = 400;
+          res.write(JSON.stringify({'error':'Some error occurred'}));
+        } else {
+          res.write(JSON.stringify({rows: [ { 'cdb_querytables': '{' +
+            JSON.stringify(query) + '}' } ]}));
+        }
+        res.end();
+      });
+      sqlapi_server.listen(global.environment.sqlapi.port, done);
     });
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -916,6 +931,69 @@ suite('server', function() {
       );
     });
 
+    test("uses sqlapi to figure source data of query", function(done){
+        var qo = {
+          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator "
+              + "FROM gadm4 g, test_table t "
+              + "WHERE g.cartodb_id = t.cartodb_id",
+          map_key: 1234
+        };
+        var sqlapi;
+        Step(
+          function sendRequest(err) {
+            assert.response(server, {
+                headers: {host: 'localhost'},
+                url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
+                method: 'GET'
+            },{}, this);
+          },
+          function checkResponse(res) {
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            var cc = res.headers['x-cache-channel'];
+            var dbname = 'cartodb_test_user_1_db'
+            assert.equal(cc.substring(0, dbname.length), dbname);
+            var jsonquery = cc.substring(dbname.length+1);
+            var sentquery = JSON.parse(jsonquery);
+            assert.equal(sentquery.api_key, qo.map_key);
+            assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$' + qo.sql + '$windshaft$)');
+            done();
+          }
+        );
+    });
+
+    test("requests to skip cache on sqlapi error", function(done){
+        var qo = {
+          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator "
+              + ", 'SQLAPIERROR' is not null "
+              + "FROM gadm4 g, test_table t "
+              + "WHERE g.cartodb_id = t.cartodb_id",
+          map_key: 1234
+        };
+        var sqlapi;
+        Step(
+          function sendRequest(err) {
+            assert.response(server, {
+                headers: {host: 'localhost'},
+                url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
+                method: 'GET'
+            },{}, this);
+          },
+          function checkResponse(res) {
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            // does NOT send an x-cache-channel
+            assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+            // attempts to tell varnish NOT to cache
+            assert.equal(res.headers['cache-control'], 'no-cache,no-store,max-age=0,must-revalidate');
+            assert.equal(res.headers['pragma'], 'no-cache');
+            done();
+          }
+        );
+    });
+
     /////////////////////////////////////////////////////////////////////////////////
     //
     // DELETE CACHE 
@@ -1040,7 +1118,7 @@ suite('server', function() {
         // 'map_style|null|publicuser|my_table',
         redis_client.keys("map_style|*", function(err, matches) {
             _.each(matches, function(k) { redis_client.del(k); });
-            done();
+            sqlapi_server.close(done);
         });
     });
     

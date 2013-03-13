@@ -48,8 +48,10 @@ var config = {
     }
     ,sqlapi: {
         protocol: 'http',
-        host: 'localhost.lan',
-        port: 8080,
+        host: '',
+        // This port will be used by "make check" for testing purposes
+        // It must be available
+        port: 1080,
         version: 'v1'
     }
     ,varnish: {
