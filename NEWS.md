@@ -1,5 +1,6 @@
 1.1.9
 -----
+* Handle SQL API errors by requesting no cache
 
 1.1.8
 -----
