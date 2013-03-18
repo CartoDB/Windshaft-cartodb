@@ -67,7 +67,7 @@ for pid in ${pids}; do
 
   log=$(grep "${pid}" "${tmpreport}" | grep -w 1w | awk '{print $9}')
   if test -e "${log}"; then
-    kill -USR1 "${pid}"
+    kill -USR2 "${pid}"
     cnt=$(tac ${log} | sed -n -e '/ItemKey/p;/^RenderCache/q' | wc -l)
     if test $cnt -gt $maxcache; then maxcache=$cnt; fi
   else

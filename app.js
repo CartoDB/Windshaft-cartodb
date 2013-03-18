@@ -46,6 +46,11 @@ ws.on('listening', function() {
   console.log("Windshaft tileserver started on " + global.environment.host + ':' + global.environment.port);
 });
 
+// DEPRECATED, use SIGUSR2
 process.on('SIGUSR1', function() {
+  ws.dumpCacheStats();
+});
+
+process.on('SIGUSR2', function() {
   ws.dumpCacheStats();
 });
