@@ -66,9 +66,9 @@ suite('multilayer', function() {
                     + '$windshaft$)'
               });
               expectedBody.last_updated = JSON.stringify({
-                'q': 'SELECT EXTRACT(EPOCH FROM max(updated_at)) '
-                    + 'FROM CDB_TableMetadata WHERE m.tabname::name = any ({'
-                    + qTables + '})'
+                'q': 'SELECT EXTRACT(EPOCH FROM max(updated_at)) as max '
+                    + 'FROM CDB_TableMetadata m WHERE m.tabname::name = any (\'{'
+                    + qTables + '}\')'
               });
               if ( expected_token ) {
                 //assert.equal(parsedBody.layergroupid, expectedBody.layergroupid);
