@@ -5,6 +5,7 @@
 * Add last_modified field to POST layergroup response (#72)
 * Deprecate signal handler for USR1, add handler for USR2 (#71)
 * Fix support for ampersend characters in CartoCSS
+* Add support for LZMA compressed GET parameters
 
 1.1.8
 -----
