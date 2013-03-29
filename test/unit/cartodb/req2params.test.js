@@ -19,7 +19,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
           assert.equal(req.params.dbname, 'cartodb_test_user_1_db', 'could forge dbname: '+ req.params.dbname);
           assert.ok(!req.hasOwnProperty('dbuser'), 'could inject dbuser ('+req.params.dbuser+')');
           done();
@@ -33,7 +33,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
           // database_name for user "localhost" (see test/support/prepare_db.sh)
           assert.equal(req.params.dbname, 'cartodb_test_user_1_db');
           // unauthenticated request gets no dbuser
@@ -49,7 +49,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
           // database_name for user "localhost" (see test/support/prepare_db.sh)
           assert.equal(req.params.dbname, 'cartodb_test_user_1_db');
           // id for user "localhost" (see test/support/prepare_db.sh)
@@ -60,6 +60,18 @@ suite('req2params', function() {
               assert.ok(!req.hasOwnProperty('dbuser'), 'could inject dbuser ('+req.params.dbuser+')');
               done();
           });
+      });
+    });
+
+    test('retains interactivity', function(done){
+      opts.req2params({headers: { host:'localhost' }, query: {interactivity: 'fld'} }, function(err, req) {
+          if ( err ) { console.log(err); throw new Error(err); }
+          //console.dir(req);
+          assert.ok(_.isObject(req.query), 'request has query');
+          assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
+          assert.ok(req.hasOwnProperty('params'), 'request has params');
+          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params has no interactivity');
+          done();
       });
     });
     
