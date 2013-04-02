@@ -1,9 +1,5 @@
-1.2.0
+1.1.9
 -----
-
-WARNING: starting from this commit the multilayer grid fetching
-         route changed to NOT include layer name nor interactivity
-         (now specified solely as part of layergroup configuration)
 
 * Handle SQL API errors by requesting no Varnish cache
 * Fix X-Cache-Channel for multilayer (by token) responses
@@ -11,8 +7,6 @@ WARNING: starting from this commit the multilayer grid fetching
 * Deprecate signal handler for USR1, add handler for USR2 (#71)
 * Fix support for ampersend characters in CartoCSS
 * Add support for LZMA compressed GET parameters
-* Remove interactivity config from multilayer grid fetching route
-* Require interactivity param in single-layer grid fetching request (#69)
 
 1.1.8
 -----
