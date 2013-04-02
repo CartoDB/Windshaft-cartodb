@@ -3,10 +3,11 @@
 
 * Handle SQL API errors by requesting no Varnish cache
 * Fix X-Cache-Channel for multilayer (by token) responses
-* Add last_modified field to POST layergroup response (#72)
+* Add last_modified field to layergroup creation response (#72)
 * Deprecate signal handler for USR1, add handler for USR2 (#71)
 * Fix support for ampersend characters in CartoCSS
 * Add support for LZMA compressed GET parameters
+* Add support for creating layergroups via GET
 
 1.1.8
 -----
