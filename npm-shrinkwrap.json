@@ -190,7 +190,7 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.11.0",
+      "version": "0.11.1",
       "dependencies": {
         "grainstore": {
           "version": "0.12.0",
