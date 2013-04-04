@@ -12,7 +12,8 @@ check-local: config/environments/test.js
     test/unit/cartodb/redis_pool.test.js \
     test/unit/cartodb/req2params.test.js \
     test/acceptance/cache_validator.js \
-    test/acceptance/server.js
+    test/acceptance/server.js \
+    test/acceptance/multilayer.js
 
 check-submodules:
 	for sub in windshaft grainstore mapnik; do \

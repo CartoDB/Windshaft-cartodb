@@ -6,6 +6,9 @@ var querystring = require('querystring');
 var semver      = require('semver');
 var mapnik      = require('mapnik');
 var Step        = require('step');
+var http        = require('http');
+var LZMA        = require('lzma/lzma_worker.js').LZMA;
+var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 
 require(__dirname + '/../support/test_helper');
 
@@ -14,9 +17,31 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
+// Utility function to compress & encode LZMA
+function lzma_compress_to_hex(payload, mode, callback) {
+  var HEX = [ '0','1','2','3','4','5','6','7',
+              '8','9','a','b','c','d','e','f' ];
+  LZMA.compress(payload, mode, 
+    function(ints) {
+      for (var i=0; i<ints.length; ++i) {
+        if ( ints[i] < 0 ) ints[i] = 127-ints[i];
+        var hi = ints[i] >> 4;
+        var lo = ints[i] & 0x0f;
+        ints[i] = HEX[hi] + HEX[lo];
+      };
+      var hex = ints.join('');
+      callback(null, hex);
+    },
+    function(percent) {
+      //console.log("Compressing: " + percent + "%");
+    }
+  );
+}
+
 suite('server', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
+    var sqlapi_server;
 
     var default_style = semver.satisfies(mapnik.versions.mapnik, '<2.1.0')
     ?
@@ -30,7 +55,8 @@ suite('server', function() {
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
     
-    suiteSetup(function(){
+    suiteSetup(function(done){
+      sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
 
     /////////////////////////////////////////////////////////////////////////////////
@@ -504,10 +530,23 @@ suite('server', function() {
     //
     /////////////////////////////////////////////////////////////////////////////////
 
-    test("get'ing a json with default style should return an grid", function(done){
+    test("get'ing a grid with no interactivity should fail", function(done){
         assert.response(server, {
             headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.grid.json',
+            method: 'GET'
+        },{}, function(res) {
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          assert.deepEqual(JSON.parse(res.body), {"error":"Missing interactivity parameter"});
+          done();
+        });
+    });
+    
+
+    test("get'ing a json with default style should return an grid", function(done){
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/gadm4/6/31/24.grid.json?interactivity=cartodb_id',
             method: 'GET'
         },{
             status: 200,
@@ -519,7 +558,7 @@ suite('server', function() {
     test("get'ing a json with default style should return an grid", function(done){
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/gadm4/6/31/24.grid.json',
+            url: '/tiles/gadm4/6/31/24.grid.json?interactivity=cartodb_id',
             method: 'GET'
         },{
             status: 200,
@@ -528,10 +567,13 @@ suite('server', function() {
     });
     
     test("get'ing a json with default style and sql should return a constrained grid", function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"})
+        var q = querystring.stringify({
+          interactivity: 'cartodb_id',
+          sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"
+        })
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/gadm4/6/31/24.grid.json?' + sql,
+            url: '/tiles/gadm4/6/31/24.grid.json?' + q,
             method: 'GET'
         },{
             status: 200,
@@ -543,7 +585,7 @@ suite('server', function() {
     function(done) {
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/test_table_private_1/6/31/24.grid.json',
+            url: '/tiles/test_table_private_1/6/31/24.grid.json?interactivity=cartodb_id',
             method: 'GET'
         },{}, function(res) {
           // 401 Unauthorized
@@ -557,7 +599,7 @@ suite('server', function() {
     function(done) {
         assert.response(server, {
             headers: {host: 'unknown_user'},
-            url: '/tiles/test_table_private_1/6/31/24.grid.json',
+            url: '/tiles/test_table_private_1/6/31/24.grid.json?interactivity=cartodb_id',
             method: 'GET'
         },{
         }, function(res) {
@@ -573,7 +615,7 @@ suite('server', function() {
     function(done) {
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/test_table_private_1/6/31/24.grid.json?map_key=1234',
+            url: '/tiles/test_table_private_1/6/31/24.grid.json?map_key=1234&interactivity=cartodb_id',
             method: 'GET'
         },{}, function(res) {
           assert.equal(res.statusCode, 200, res.body);
@@ -778,6 +820,41 @@ suite('server', function() {
         });
     });
 
+    test("get'ing a tile with url specified 2.1.0 style (lzma version)",  function(done){
+        var qo = {
+          style: test_style_black_210,
+          style_version: '2.1.0',
+          cache_buster: 5
+        };
+        Step (
+          function compressQuery () {
+            //console.log("Compressing starts");
+            var next = this;
+            lzma_compress_to_hex(JSON.stringify(qo), 1, this);
+            //cosole.log("compress returned " + x );
+          },
+          function sendRequest(err, lzma) {
+            //console.log("Compressing ends: " + typeof(lzma) + " - " + lzma);
+            assert.response(server, {
+                headers: {host: 'localhost'},
+                url: '/tiles/test_table/15/16046/12354.png?lzma=' + lzma,
+                method: 'GET',
+                encoding: 'binary'
+            },{}, this);
+          },
+          function checkResponse(res) {
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',  2,
+              function(err, similarity) {
+                if (err) throw err;
+                done();
+            });
+          }
+        );
+    });
+
     // See http://github.com/Vizzuality/Windshaft-cartodb/issues/57
     test("GET'ing a tile as anonymous with style set by POST",  function(done){
       var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
@@ -916,6 +993,66 @@ suite('server', function() {
       );
     });
 
+    test("uses sqlapi to figure source data of query", function(done){
+        var qo = {
+          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator "
+              + "FROM gadm4 g, test_table t "
+              + "WHERE g.cartodb_id = t.cartodb_id",
+          map_key: 1234
+        };
+        var sqlapi;
+        Step(
+          function sendRequest(err) {
+            assert.response(server, {
+                headers: {host: 'localhost'},
+                url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
+                method: 'GET'
+            },{}, this);
+          },
+          function checkResponse(res) {
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            var cc = res.headers['x-cache-channel'];
+            var dbname = 'cartodb_test_user_1_db'
+            assert.equal(cc.substring(0, dbname.length), dbname);
+            var jsonquery = cc.substring(dbname.length+1);
+            var sentquery = JSON.parse(jsonquery);
+            assert.equal(sentquery.api_key, qo.map_key);
+            assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$' + qo.sql + '$windshaft$)');
+            done();
+          }
+        );
+    });
+
+    test("requests to skip cache on sqlapi error", function(done){
+        var qo = {
+          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator "
+              + ", 'SQLAPIERROR' is not null "
+              + "FROM gadm4 g, test_table t "
+              + "WHERE g.cartodb_id = t.cartodb_id",
+          map_key: 1234
+        };
+        var sqlapi;
+        Step(
+          function sendRequest(err) {
+            assert.response(server, {
+                headers: {host: 'localhost'},
+                url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
+                method: 'GET'
+            },{}, this);
+          },
+          function checkResponse(res) {
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            // does NOT send an x-cache-channel
+            assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+            done();
+          }
+        );
+    });
+
     /////////////////////////////////////////////////////////////////////////////////
     //
     // DELETE CACHE 
@@ -1040,7 +1177,7 @@ suite('server', function() {
         // 'map_style|null|publicuser|my_table',
         redis_client.keys("map_style|*", function(err, matches) {
             _.each(matches, function(k) { redis_client.del(k); });
-            done();
+            sqlapi_server.close(done);
         });
     });
     
