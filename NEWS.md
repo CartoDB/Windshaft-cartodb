@@ -1,17 +1,19 @@
-1.1.11
+1.2.0
 ------
-
+* Multilayer API changes
+  * Layers passed by index in grid fetching url
+  * Interactivity only specified in layergroup config
+  * Embed cache_buster within token 
+  * Use ISO format for last_modified timestamp
 
 1.1.10
 ------
-
 * Fix regression with default interactivity parameter (#74)
 * More verbose logging for SQL api connection errors
 * Write stats for multilayer map token request
 
 1.1.9
 -----
-
 * Handle SQL API errors by requesting no Varnish cache
 * Fix X-Cache-Channel for multilayer (by token) responses
 * Add last_modified field to layergroup creation response (#72)
