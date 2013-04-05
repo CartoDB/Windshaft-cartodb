@@ -1,6 +1,8 @@
 1.1.10
 ------
 
+* Fix regression with default interactivity parameter (#74)
+
 1.1.9
 -----
 
