@@ -2,6 +2,7 @@
 ------
 
 * Fix regression with default interactivity parameter (#74)
+* More verbose logging for SQL api connection errors
 
 1.1.9
 -----
