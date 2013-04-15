@@ -1,3 +1,5 @@
+srcdir=$(shell pwd)
+
 all:
 	npm install
 
@@ -19,6 +21,7 @@ check-local: config/environments/test.js
     test/acceptance/server.js \
 
 check-submodules:
+	PATH="$$PATH:$(srcdir)/node_modules/.bin/"; \
 	for sub in windshaft grainstore mapnik; do \
 		test -e node_modules/$${sub} && make -C node_modules/$${sub} check; \
 	done
