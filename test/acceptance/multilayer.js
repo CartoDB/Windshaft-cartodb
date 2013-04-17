@@ -329,6 +329,87 @@ suite('multilayer', function() {
       );
     });
 
+    test("layergroup creation raises mapviews counter", function(done) {
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select 1 as cartodb_id, '
+                  + 'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
+               cartocss: '#layer { polygon-fill:red; }', 
+               cartocss_version: '2.0.1' 
+             } }
+        ]
+      };
+      var statskey = "tiler:users:localhost";
+      var mapviews_field = 'mapviews';
+      var redis_stats_client = redis.createClient(global.environment.redis.port);
+      var redis_stats_db = 5;
+      var expected_token; // will be set on first post and checked on second
+      Step(
+        function clean_stats()
+        {
+          var next = this;
+          redis_stats_client.select(redis_stats_db, function(err) {
+            if ( err ) next(err);
+            else redis_stats_client.del(statskey, next);
+          });
+        },
+        function do_post_1(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              expected_token = JSON.parse(res.body).layergroupid;
+              redis_stats_client.hget(statskey, mapviews_field, next);
+          });
+        },
+        function check_stats_1_do_post_2(err, val) {
+          if ( err ) throw err;
+          assert.equal(val, 1);
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(JSON.parse(res.body).layergroupid, expected_token);
+              redis_stats_client.hget(statskey, mapviews_field, next);
+          });
+        },
+        function check_stats_2(err, val)
+        {
+          if ( err ) throw err;
+          assert.equal(val, 2);
+          return 1;
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) {
+            errors.push(err.message);
+            console.log("Error: " + err);
+          }
+          redis_client.keys("map_style|cartodb_test_user_1_db|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
     suiteTeardown(function(done) {
         // This test will add map_style records, like
         // 'map_style|null|publicuser|my_table',

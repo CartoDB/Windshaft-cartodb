@@ -1,3 +1,10 @@
+1.1.10
+------
+
+* Fix regression with default interactivity parameter (#74)
+* More verbose logging for SQL api connection errors
+* Write stats for multilayer map token request
+
 1.1.9
 -----
 

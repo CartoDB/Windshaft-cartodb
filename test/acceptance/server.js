@@ -530,23 +530,10 @@ suite('server', function() {
     //
     /////////////////////////////////////////////////////////////////////////////////
 
-    test("get'ing a grid with no interactivity should fail", function(done){
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/gadm4/6/31/24.grid.json',
-            method: 'GET'
-        },{}, function(res) {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          assert.deepEqual(JSON.parse(res.body), {"error":"Missing interactivity parameter"});
-          done();
-        });
-    });
-    
-
     test("get'ing a json with default style should return an grid", function(done){
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/gadm4/6/31/24.grid.json?interactivity=cartodb_id',
+            url: '/tiles/gadm4/6/31/24.grid.json',
             method: 'GET'
         },{
             status: 200,
@@ -558,7 +545,7 @@ suite('server', function() {
     test("get'ing a json with default style should return an grid", function(done){
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/gadm4/6/31/24.grid.json?interactivity=cartodb_id',
+            url: '/tiles/gadm4/6/31/24.grid.json',
             method: 'GET'
         },{
             status: 200,
@@ -567,13 +554,10 @@ suite('server', function() {
     });
     
     test("get'ing a json with default style and sql should return a constrained grid", function(done){
-        var q = querystring.stringify({
-          interactivity: 'cartodb_id',
-          sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"
-        })
+        var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"})
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/gadm4/6/31/24.grid.json?' + q,
+            url: '/tiles/gadm4/6/31/24.grid.json?' + sql,
             method: 'GET'
         },{
             status: 200,
@@ -585,7 +569,7 @@ suite('server', function() {
     function(done) {
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/test_table_private_1/6/31/24.grid.json?interactivity=cartodb_id',
+            url: '/tiles/test_table_private_1/6/31/24.grid.json',
             method: 'GET'
         },{}, function(res) {
           // 401 Unauthorized
@@ -599,7 +583,7 @@ suite('server', function() {
     function(done) {
         assert.response(server, {
             headers: {host: 'unknown_user'},
-            url: '/tiles/test_table_private_1/6/31/24.grid.json?interactivity=cartodb_id',
+            url: '/tiles/test_table_private_1/6/31/24.grid.json',
             method: 'GET'
         },{
         }, function(res) {
@@ -615,7 +599,7 @@ suite('server', function() {
     function(done) {
         assert.response(server, {
             headers: {host: 'localhost'},
-            url: '/tiles/test_table_private_1/6/31/24.grid.json?map_key=1234&interactivity=cartodb_id',
+            url: '/tiles/test_table_private_1/6/31/24.grid.json?map_key=1234',
             method: 'GET'
         },{}, function(res) {
           assert.equal(res.statusCode, 200, res.body);
