@@ -5,6 +5,7 @@
   * Interactivity only specified in layergroup config
   * Embed cache_buster within token 
   * Use ISO format for last_modified timestamp
+* Expected LZMA encoding changed to base64
 
 1.1.10
 ------

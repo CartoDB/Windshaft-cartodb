@@ -18,19 +18,13 @@ var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
 // Utility function to compress & encode LZMA
-function lzma_compress_to_hex(payload, mode, callback) {
+function lzma_compress_to_base64(payload, mode, callback) {
   var HEX = [ '0','1','2','3','4','5','6','7',
               '8','9','a','b','c','d','e','f' ];
   LZMA.compress(payload, mode, 
     function(ints) {
-      for (var i=0; i<ints.length; ++i) {
-        if ( ints[i] < 0 ) ints[i] = 127-ints[i];
-        var hi = ints[i] >> 4;
-        var lo = ints[i] & 0x0f;
-        ints[i] = HEX[hi] + HEX[lo];
-      };
-      var hex = ints.join('');
-      callback(null, hex);
+      var base64 = new Buffer(ints).toString('base64');
+      callback(null, base64);
     },
     function(percent) {
       //console.log("Compressing: " + percent + "%");
@@ -814,14 +808,14 @@ suite('server', function() {
           function compressQuery () {
             //console.log("Compressing starts");
             var next = this;
-            lzma_compress_to_hex(JSON.stringify(qo), 1, this);
+            lzma_compress_to_base64(JSON.stringify(qo), 1, this);
             //cosole.log("compress returned " + x );
           },
           function sendRequest(err, lzma) {
             //console.log("Compressing ends: " + typeof(lzma) + " - " + lzma);
             assert.response(server, {
                 headers: {host: 'localhost'},
-                url: '/tiles/test_table/15/16046/12354.png?lzma=' + lzma,
+                url: '/tiles/test_table/15/16046/12354.png?lzma=' + encodeURIComponent(lzma),
                 method: 'GET',
                 encoding: 'binary'
             },{}, this);
