@@ -229,6 +229,9 @@ suite('multilayer', function() {
               var sentquery = JSON.parse(jsonquery);
               assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$'
                 + layergroup.layers[0].options.sql
+                    .replace(RegExp('!bbox!', 'g'), 'ST_MakeEnvelope(0,0,0,0)')
+                    .replace(RegExp('!pixel_width!', 'g'), '1')
+                    .replace(RegExp('!pixel_height!', 'g'), '1')
                 + '$windshaft$)');
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', 2,
@@ -259,6 +262,9 @@ suite('multilayer', function() {
               var sentquery = JSON.parse(jsonquery);
               assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$'
                 + layergroup.layers[0].options.sql
+                    .replace('!bbox!', 'ST_MakeEnvelope(0,0,0,0)')
+                    .replace('!pixel_width!', '1')
+                    .replace('!pixel_height!', '1')
                 + '$windshaft$)');
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', 2,
@@ -327,7 +333,7 @@ suite('multilayer', function() {
         version: '1.0.0',
         layers: [
            { options: {
-               sql: 'select 1 as cartodb_id, '
+               sql: 'select 1 as cartodb_id, !pixel_height! as h'
                   + 'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
                cartocss: '#layer { polygon-fill:red; }', 
                cartocss_version: '2.0.1' 
