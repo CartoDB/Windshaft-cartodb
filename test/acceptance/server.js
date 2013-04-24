@@ -16,7 +16,6 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-
 suite('server', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
