@@ -62,5 +62,24 @@ suite('req2params', function() {
           });
       });
     });
+
+    test('it should extend params with decoded lzma', function(done) {
+      var qo = {
+        style: 'test',
+        style_version: '2.1.0',
+        cache_buster: 5
+      };
+      test_helper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
+        opts.req2params({ query: { non_included: 'toberemoved', api_key: 'test', style: 'override', lzma: data }}, function(err, req) {
+          var query = req.params
+          assert.equal(qo.style, query.style)
+          assert.equal(qo.style_version, query.style_version)
+          assert.equal(qo.cache_buster, query.cache_buster)
+          assert.equal('test', query.api_key)
+          assert.equal(undefined, query.non_included)
+          done();
+        });
+      });
+    });
     
 });

@@ -7,30 +7,15 @@ var semver      = require('semver');
 var mapnik      = require('mapnik');
 var Step        = require('step');
 var http        = require('http');
-var LZMA        = require('lzma/lzma_worker.js').LZMA;
 var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 
-require(__dirname + '/../support/test_helper');
+var helper = require(__dirname + '/../support/test_helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-// Utility function to compress & encode LZMA
-function lzma_compress_to_base64(payload, mode, callback) {
-  var HEX = [ '0','1','2','3','4','5','6','7',
-              '8','9','a','b','c','d','e','f' ];
-  LZMA.compress(payload, mode, 
-    function(ints) {
-      var base64 = new Buffer(ints).toString('base64');
-      callback(null, base64);
-    },
-    function(percent) {
-      //console.log("Compressing: " + percent + "%");
-    }
-  );
-}
 
 suite('server', function() {
 
@@ -808,7 +793,7 @@ suite('server', function() {
           function compressQuery () {
             //console.log("Compressing starts");
             var next = this;
-            lzma_compress_to_base64(JSON.stringify(qo), 1, this);
+            helper.lzma_compress_to_base64(JSON.stringify(qo), 1, this);
             //cosole.log("compress returned " + x );
           },
           function sendRequest(err, lzma) {
