@@ -19,8 +19,6 @@ server.setMaxListeners(0);
 
 // Utility function to compress & encode LZMA
 function lzma_compress_to_base64(payload, mode, callback) {
-  var HEX = [ '0','1','2','3','4','5','6','7',
-              '8','9','a','b','c','d','e','f' ];
   LZMA.compress(payload, mode, 
     function(ints) {
       var base64 = new Buffer(ints).toString('base64');
