@@ -793,26 +793,31 @@ suite('server', function() {
             //console.log("Compressing starts");
             var next = this;
             helper.lzma_compress_to_base64(JSON.stringify(qo), 1, this);
-            //cosole.log("compress returned " + x );
           },
           function sendRequest(err, lzma) {
+            if ( err ) throw err;
+            var next = this;
             //console.log("Compressing ends: " + typeof(lzma) + " - " + lzma);
             assert.response(server, {
                 headers: {host: 'localhost'},
                 url: '/tiles/test_table/15/16046/12354.png?lzma=' + encodeURIComponent(lzma),
                 method: 'GET',
                 encoding: 'binary'
-            },{}, this);
+            },{}, function(res) { next(null, res); });
           },
-          function checkResponse(res) {
+          function checkResponse(err, res) {
+            if ( err ) throw err;
+            var next = this;
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
             assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',  2,
               function(err, similarity) {
-                if (err) throw err;
-                done();
+                next(err);
             });
+          },
+          function finish(err) {
+            done(err);
           }
         );
     });
