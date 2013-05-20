@@ -16,7 +16,7 @@ this script.
 var path = require('path');
 
 // Reset all styles in the store
-var grainstore = require('../node_modules/grainstore/lib/grainstore');
+var grainstore = require('../node_modules/windshaft/node_modules/grainstore/lib/grainstore');
 var mapnik = require('mapnik');
 var redis = require('redis');
 

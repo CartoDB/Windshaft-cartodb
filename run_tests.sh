@@ -76,7 +76,7 @@ fi
 PATH=node_modules/.bin/:$PATH
 
 echo "Running tests"
-mocha -u tdd ${MOCHA_OPTS} ${TESTS}
+mocha -t 10000 -u tdd ${MOCHA_OPTS} ${TESTS}
 ret=$?
 
 cleanup

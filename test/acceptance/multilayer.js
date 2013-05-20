@@ -21,6 +21,8 @@ suite('multilayer', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
+    var expected_last_updated_epoch = 1234567890123; // this is hard-coded into SQLAPIEmu
+    var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
 
     suiteSetup(function(done){
       sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
@@ -34,17 +36,19 @@ suite('multilayer', function() {
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator from test_table limit 2',
                cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.1' 
+               cartocss_version: '2.0.1',
+               interactivity: 'cartodb_id'
              } },
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, -5e6, 0) as the_geom_webmercator from test_table limit 2 offset 2',
                cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.2' 
+               cartocss_version: '2.0.2',
+               interactivity: 'cartodb_id'
              } }
         ]
       };
 
-      var expected_token = "d55208dccb30b5ff972562f563db0d22";
+      var expected_token = "e34dd7e235138a062f8ba7ad051aa3a7";
       Step(
         function do_post()
         {
@@ -65,15 +69,9 @@ suite('multilayer', function() {
                     + layergroup.layers[1].options.sql 
                     + '$windshaft$)'
               });
-              expectedBody.last_updated = JSON.stringify({
-                'q': 'SELECT EXTRACT(EPOCH FROM max(updated_at)) as max '
-                    + 'FROM CDB_TableMetadata m WHERE m.tabname::name = any (\'{'
-                    + qTables + '}\')'
-              });
+              assert.equal(parsedBody.last_updated, expected_last_updated);
               if ( expected_token ) {
-                //assert.equal(parsedBody.layergroupid, expectedBody.layergroupid);
-                //assert.equal(parsedBody.last_updated, expectedBody.last_updated);
-                assert.deepEqual(parsedBody, expectedBody);
+                assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
               }
               else expected_token = parsedBody.layergroupid;
               next(null, res);
@@ -84,7 +82,7 @@ suite('multilayer', function() {
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + '/0/0/0.png',
+              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -116,7 +114,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/tiles/layergroup/' + expected_token
-                 + '/layer0/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/0/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
           }, {}, function(res) {
@@ -134,7 +132,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/tiles/layergroup/' + expected_token
-                 + '/layer1/0/0/0.grid.json?interactivity=cartodb_id',
+                 + '/1/0/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
           }, {}, function(res) {
@@ -175,12 +173,13 @@ suite('multilayer', function() {
                sql: 'select 1 as cartodb_id, '
                   + 'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
                cartocss: '#layer { polygon-fill:red; }', 
-               cartocss_version: '2.0.1' 
+               cartocss_version: '2.0.1',
+               interactivity: 'cartodb_id'
              } }
         ]
       };
 
-      var expected_token  = "20f5710c00e3a1b0b4950de65ef0d875";
+      var expected_token  = "6d8e4ad5458e2d25cf0eef38e38717a6";
       Step(
         function do_post()
         {
@@ -200,15 +199,9 @@ suite('multilayer', function() {
                     + layergroup.layers[0].options.sql
                     + '$windshaft$)'
               });
-              expectedBody.last_updated = JSON.stringify({
-                'q': 'SELECT EXTRACT(EPOCH FROM max(updated_at)) as max '
-                    + 'FROM CDB_TableMetadata m WHERE m.tabname::name = any (\'{'
-                    + qTables + '}\')'
-              });
+              assert.equal(parsedBody.last_updated, expected_last_updated);
               if ( expected_token ) {
-                //assert.equal(parsedBody.layergroupid, expectedBody.layergroupid);
-                //assert.equal(parsedBody.last_updated, expectedBody.last_updated);
-                assert.deepEqual(parsedBody, expectedBody);
+                assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
               }
               else expected_token = parsedBody.layergroupid;
               next(null, res);
@@ -219,7 +212,7 @@ suite('multilayer', function() {
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + '/1/0/0.png',
+              url: '/tiles/layergroup/' + expected_token + ':cb10/1/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -236,6 +229,9 @@ suite('multilayer', function() {
               var sentquery = JSON.parse(jsonquery);
               assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$'
                 + layergroup.layers[0].options.sql
+                    .replace(RegExp('!bbox!', 'g'), 'ST_MakeEnvelope(0,0,0,0)')
+                    .replace(RegExp('!pixel_width!', 'g'), '1')
+                    .replace(RegExp('!pixel_height!', 'g'), '1')
                 + '$windshaft$)');
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', 2,
@@ -249,7 +245,7 @@ suite('multilayer', function() {
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + '/4/0/0.png',
+              url: '/tiles/layergroup/' + expected_token + ':cb11/4/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -266,6 +262,9 @@ suite('multilayer', function() {
               var sentquery = JSON.parse(jsonquery);
               assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$'
                 + layergroup.layers[0].options.sql
+                    .replace('!bbox!', 'ST_MakeEnvelope(0,0,0,0)')
+                    .replace('!pixel_width!', '1')
+                    .replace('!pixel_height!', '1')
                 + '$windshaft$)');
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', 2,
@@ -280,7 +279,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/tiles/layergroup/' + expected_token
-                 + '/layer0/1/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/1/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
           }, {}, function(res) {
@@ -298,7 +297,7 @@ suite('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/tiles/layergroup/' + expected_token
-                 + '/layer0/4/0/0.grid.json?interactivity=cartodb_id',
+                 + '/0/4/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
           }, {}, function(res) {
@@ -334,7 +333,7 @@ suite('multilayer', function() {
         version: '1.0.0',
         layers: [
            { options: {
-               sql: 'select 1 as cartodb_id, '
+               sql: 'select 1 as cartodb_id, !pixel_height! as h'
                   + 'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
                cartocss: '#layer { polygon-fill:red; }', 
                cartocss_version: '2.0.1' 
@@ -397,6 +396,8 @@ suite('multilayer', function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
+          // trip epoch
+          expected_token = expected_token.split(':')[0];
           redis_client.keys("map_style|cartodb_test_user_1_db|~" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
