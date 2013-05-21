@@ -1,5 +1,6 @@
 1.2.1
 ------
+* Require Windshaft-0.12.1 to fix multilayer post from firefox
 
 1.2.0
 ------
