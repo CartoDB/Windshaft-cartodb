@@ -193,10 +193,10 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.12.1",
+      "version": "0.12.2",
       "dependencies": {
         "grainstore": {
-          "version": "0.13.0",
+          "version": "0.13.1",
           "dependencies": {
             "carto": {
               "version": "0.9.3-cdb3",

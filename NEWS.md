@@ -1,6 +1,7 @@
 1.2.1
 ------
-* Require Windshaft-0.12.1 to fix multilayer post from firefox
+* Fix multilayer post from firefox
+* Fix multilayer cartocss layer name handling
 
 1.2.0
 ------
