@@ -14,7 +14,7 @@ var o = function(port, cb) {
         } else if ( query.q.match('EPOCH.* as max') ) {
           // This is the structure of the known query sent by tiler
           var row = {
-            'max': 1234567890123
+            'max': 1234567890.123
           };
           res.write(JSON.stringify({rows: [ row ]}));
         } else {
