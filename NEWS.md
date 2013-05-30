@@ -1,5 +1,7 @@
 1.2.1
 ------
+* Fix multilayer post from firefox
+* Fix multilayer cartocss layer name handling
 
 1.2.0
 ------
