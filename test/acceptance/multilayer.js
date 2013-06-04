@@ -6,7 +6,9 @@ var querystring = require('querystring');
 var semver      = require('semver');
 var mapnik      = require('mapnik');
 var Step        = require('step');
+var strftime    = require('strftime');
 var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
+var redis_stats_db = 5;
 
 require(__dirname + '/../support/test_helper');
 
@@ -330,6 +332,7 @@ suite('multilayer', function() {
 
     test("layergroup creation raises mapviews counter", function(done) {
       var layergroup =  {
+        stat_tag: 'random_tag',
         version: '1.0.0',
         layers: [
            { options: {
@@ -340,18 +343,18 @@ suite('multilayer', function() {
              } }
         ]
       };
-      var statskey = "tiler:users:localhost";
-      var mapviews_field = 'mapviews';
+      var statskey = "user:localhost:mapviews";
       var redis_stats_client = redis.createClient(global.environment.redis.port);
-      var redis_stats_db = 5;
       var expected_token; // will be set on first post and checked on second
+      var now = strftime("%Y%m%d", new Date());
+      var errors = [];
       Step(
         function clean_stats()
         {
           var next = this;
           redis_stats_client.select(redis_stats_db, function(err) {
             if ( err ) next(err);
-            else redis_stats_client.del(statskey, next);
+            else redis_stats_client.del(statskey+':global', next);
           });
         },
         function do_post_1(err)
@@ -366,12 +369,19 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               expected_token = JSON.parse(res.body).layergroupid;
-              redis_stats_client.hget(statskey, mapviews_field, next);
+              redis_stats_client.zscore(statskey + ":global", now, next);
           });
         },
-        function check_stats_1_do_post_2(err, val) {
+        function check_global_stats_1(err, val) {
           if ( err ) throw err;
-          assert.equal(val, 1);
+          assert.equal(val, 1, "Expected score of " + now + " in "
+              +  statskey + ":global to be 1, got " + val);
+          redis_stats_client.zscore(statskey+':stat_tag:random_tag', now, this);
+        },
+        function check_tag_stats_1_do_post_2(err, val) {
+          if ( err ) throw err;
+          assert.equal(val, 1, "Expected score of " + now + " in "
+              +  statskey + ":stat_tag:" + layergroup.stat_tag + " to be 1, got " + val);
           var next = this;
           assert.response(server, {
               url: '/tiles/layergroup',
@@ -381,44 +391,60 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(JSON.parse(res.body).layergroupid, expected_token);
-              redis_stats_client.hget(statskey, mapviews_field, next);
+              redis_stats_client.zscore(statskey+':global', now, next);
           });
         },
-        function check_stats_2(err, val)
+        function check_global_stats_2(err, val)
         {
           if ( err ) throw err;
-          assert.equal(val, 2);
+          assert.equal(val, 2, "Expected score of " + now + " in "
+              +  statskey + ":global to be 2, got " + val);
+          redis_stats_client.zscore(statskey+':stat_tag:' + layergroup.stat_tag, now, this);
+        },
+        function check_tag_stats_2(err, val)
+        {
+          if ( err ) throw err;
+          assert.equal(val, 2, "Expected score of " + now + " in "
+              +  statskey + ":stat_tag:" + layergroup.stat_tag + " to be 2, got " + val);
           return 1;
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-            errors.push(err.message);
-            console.log("Error: " + err);
-          }
+        function cleanup_map_style(err) {
+          if ( err ) errors.push('' + err);
+          var next = this;
           // trip epoch
           expected_token = expected_token.split(':')[0];
           redis_client.keys("map_style|cartodb_test_user_1_db|~" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
-              redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
-              });
+              redis_client.del(matches, next);
           });
+        },
+        function cleanup_stats(err) {
+          if ( err ) errors.push('' + err);
+          redis_client.del([statskey+':global', statskey+':stat_tag:'+layergroup.stat_tag], this);
+        },
+        function finish(err) {
+          if ( err ) errors.push('' + err);
+          if ( errors.length ) done(new Error(errors.join(',')));
+          else done(null);
         }
       );
     });
 
     suiteTeardown(function(done) {
+
         // This test will add map_style records, like
         // 'map_style|null|publicuser|my_table',
         redis_client.keys("map_style|*", function(err, matches) {
             redis_client.del(matches, function(err) {
-              sqlapi_server.close(done);
+              redis_client.select(5, function(err, matches) {
+                redis_client.keys("user:localhost:mapviews*", function(err, matches) {
+                  redis_client.del(matches, function(err) {
+                    sqlapi_server.close(done);
+                  });
+                });
+              });
             });
         });
+
     });
     
 });
