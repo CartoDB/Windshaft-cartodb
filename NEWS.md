@@ -1,3 +1,6 @@
+1.3.1
+------
+
 1.3.0
 ------
 * Change stats format for multilayer map token request, see
