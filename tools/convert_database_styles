@@ -2,7 +2,7 @@
 
 var path = require('path');
 
-var grainstore = require('grainstore');
+var grainstore = require('../node_modules/windshaft/node_modules/grainstore');
 var mapnik = require('mapnik');
 var redis = require('redis');
 

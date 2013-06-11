@@ -1,3 +1,8 @@
+1.3.0
+------
+* Change stats format for multilayer map token request, see
+  http://github.com/Vizzuality/Windshaft-cartodb/wiki/Redis-stats-format
+
 1.2.1
 ------
 * Fix multilayer post from firefox
