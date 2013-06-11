@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if test -z "$1"; then
+  echo "Usage: $0 <config_file>" >&2
+  exit 1
+fi
+
+cfg=$1
+port=8181
+user=dev
+domain=localhost.lan
+proto=http
+
+curl -k -H Content-Type:application/json --data-binary "@${cfg}" ${proto}://${user}.${domain}:${port}/tiles/layergroup/ 
+
