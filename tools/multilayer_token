@@ -10,6 +10,10 @@ port=8181
 user=dev
 domain=localhost.lan
 proto=http
+path="tiles/layergroup"
 
-curl -k -H Content-Type:application/json --data-binary "@${cfg}" ${proto}://${user}.${domain}:${port}/tiles/layergroup/ 
+# This is for direct windshaft connection
+#port=8083
+#path="database/cartodb_dev_user_1_db/layergroup"
 
+curl -skH Content-Type:application/json --data-binary "@${cfg}" ${proto}://${user}.${domain}:${port}/${path}
