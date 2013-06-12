@@ -1,5 +1,6 @@
 1.3.1
 ------
+* Fix deadlock on new style creation
 
 1.3.0
 ------
