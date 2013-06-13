@@ -1,11 +1,21 @@
 #!/bin/sh
 
-if test -z "$1"; then
-  echo "Usage: $0 <config_file>" >&2
+verbose=no
+
+while test -n "$1"; do
+  if test "$1" = "-v"; then
+    verbose=yes
+  else
+    cfg=$1
+  fi
+  shift
+done
+
+if test -z "$cfg"; then
+  echo "Usage: $0 [-v] <config_file>" >&2
   exit 1
 fi
 
-cfg=$1
 port=8181
 user=dev
 domain=localhost.lan
@@ -16,4 +26,11 @@ path="tiles/layergroup"
 #port=8083
 #path="database/cartodb_dev_user_1_db/layergroup"
 
-curl -skH Content-Type:application/json --data-binary "@${cfg}" ${proto}://${user}.${domain}:${port}/${path}
+res=`curl -skH Content-Type:application/json --data-binary "@${cfg}" ${proto}://${user}.${domain}:${port}/${path}`
+
+if test x${verbose} = xyes; then
+  echo "${res}"
+fi
+
+tok=`echo "$res" | sed 's/.*"layergroupid":"\([^"]*\)".*/\1/'`
+echo $tok
