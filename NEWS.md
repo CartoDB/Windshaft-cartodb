@@ -1,6 +1,7 @@
 1.3.1
 ------
 * Fix deadlock on new style creation
+* Fix database authentication with multi-table layergroups
 
 1.3.0
 ------
