@@ -18,7 +18,6 @@
       "email": "simon@vizzuality.com"
     },
     "dependencies": {
-        "cluster2": "git://github.com/CartoDB/cluster2.git#cdb_production",
         "node-varnish": "0.1.1",
         "underscore"  : "~1.3.3",
         "windshaft"  : "~0.12.5",
