@@ -4,6 +4,7 @@
 * Fix database authentication with multi-table layergroups
 * Add tile and grid fetching checks at layergroup creation time
 * Fix SQL error reporting to NOT split on newline
+* Fix support for CartoCSS attachments
 
 1.3.0
 ------
