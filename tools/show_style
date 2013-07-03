@@ -5,13 +5,25 @@
 REDIS_PORT=6379 # default port
 
 
-if test -z "$2"; then
-  echo "Usage: $0 <username> <tablename>" >&2
+if test -z "$1"; then
+  echo "Usage: $0 <username> [<tablename>|~<token>]" >&2
   exit 1
 fi
 
 username="$1"
-tabname="$2"
+token="$2"
 
 dbname=`redis-cli -p ${REDIS_PORT} -n 5 hget "rails:users:${username}" "database_name"`
-redis-cli get "map_style|${dbname}|${tabname}" | sed -e 's/\\n/\n/g' -e 's/\\//g'
+if test $? -ne 0; then
+  exit 1
+fi
+if test -z "${dbname}"; then
+  echo "Username ${username} unknown by redis (try CARTODB/script/restore_redis?)" >&2
+  exit 1
+fi
+echo "Database name for user ${username}: ${dbname}" # only if verbose?
+if test -n "$token"; then
+  redis-cli get "map_style|${dbname}|${token}" | sed -e 's/\\n/\n/g' -e 's/\\//g'
+else
+  redis-cli keys "map_style|${dbname}|*"
+fi
