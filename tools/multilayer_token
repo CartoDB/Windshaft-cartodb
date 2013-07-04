@@ -26,7 +26,10 @@ path="tiles/layergroup"
 #port=8083
 #path="database/cartodb_dev_user_1_db/layergroup"
 
-cmd="curl -vskH Content-Type:application/json --data-binary @${cfg} ${proto}://${user}.${domain}:${port}/${path}"
+cmd="curl -skH Content-Type:application/json --data-binary @${cfg} ${proto}://${user}.${domain}:${port}/${path}"
+if test x${verbose} = xyes; then
+  cmd="${cmd} -v"
+fi
 res=`${cmd}`
 if test $? -gt 0; then
   echo "curl command failed: ${cmd}"
