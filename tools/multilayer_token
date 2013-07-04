@@ -1,32 +1,29 @@
 #!/bin/sh
 
 verbose=no
+tiler_url=http://dev.localhost.lan:8181/tiles/layergroup
+
+# This is for direct windshaft connection
+#tiler_url=http://dev.localhost.lan:8083/database/cartodb_dev_user_1_db/layergroup
 
 while test -n "$1"; do
   if test "$1" = "-v"; then
     verbose=yes
+  elif test -z "$cfg"; then
+    cfg="$1"
   else
-    cfg=$1
+    tiler_url="$1"
   fi
   shift
 done
 
 if test -z "$cfg"; then
-  echo "Usage: $0 [-v] <config_file>" >&2
+  echo "Usage: $0 [-v] <config_file> [<tiler_url>]" >&2
+  echo "Default <tiler_url> is ${tiler_url}" >&2
   exit 1
 fi
 
-port=8181
-user=dev
-domain=localhost.lan
-proto=http
-path="tiles/layergroup"
-
-# This is for direct windshaft connection
-#port=8083
-#path="database/cartodb_dev_user_1_db/layergroup"
-
-cmd="curl -skH Content-Type:application/json --data-binary @${cfg} ${proto}://${user}.${domain}:${port}/${path}"
+cmd="curl -skH Content-Type:application/json --data-binary @${cfg} ${tiler_url}"
 if test x${verbose} = xyes; then
   cmd="${cmd} -v"
 fi
