@@ -92,8 +92,12 @@ suite('multilayer', function() {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
 
+              // Check Cache-Control
+              var cc = res.headers['cache-control'];
+              assert.equal(cc, 'public,max-age=31536000');  // 1 year
+
               // Check X-Cache-Channel
-              var cc = res.headers['x-cache-channel'];
+              cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
               var dbname = 'cartodb_test_user_1_db'
               assert.equal(cc.substring(0, dbname.length), dbname);
