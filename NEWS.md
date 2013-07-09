@@ -1,3 +1,8 @@
+1.3.2
+------
+* Set default layergroup TTL to 2 hours
+* Server multilayer tiles and grid with persistent cache control
+
 1.3.1
 ------
 * Fix deadlock on new style creation
