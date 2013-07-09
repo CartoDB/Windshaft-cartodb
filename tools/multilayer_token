@@ -1,0 +1,40 @@
+#!/bin/sh
+
+verbose=no
+tiler_url=http://dev.localhost.lan:8181/tiles/layergroup
+
+# This is for direct windshaft connection
+#tiler_url=http://dev.localhost.lan:8083/database/cartodb_dev_user_1_db/layergroup
+
+while test -n "$1"; do
+  if test "$1" = "-v"; then
+    verbose=yes
+  elif test -z "$cfg"; then
+    cfg="$1"
+  else
+    tiler_url="$1"
+  fi
+  shift
+done
+
+if test -z "$cfg"; then
+  echo "Usage: $0 [-v] <config_file> [<tiler_url>]" >&2
+  echo "Default <tiler_url> is ${tiler_url}" >&2
+  exit 1
+fi
+
+cmd="curl -skH Content-Type:application/json --data-binary @${cfg} ${tiler_url}"
+if test x${verbose} = xyes; then
+  cmd="${cmd} -v"
+fi
+res=`${cmd}`
+if test $? -gt 0; then
+  echo "curl command failed: ${cmd}"
+fi
+
+if test x${verbose} = xyes; then
+  echo "${res}"
+fi
+
+tok=`echo "$res" | sed 's/.*"layergroupid":"\([^"]*\)".*/\1/'`
+echo $tok

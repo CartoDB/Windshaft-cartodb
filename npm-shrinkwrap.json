@@ -1,191 +1,7 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "dependencies": {
-    "cluster2": {
-      "version": "0.3.5-cdb02",
-      "from": "git://github.com/CartoDB/cluster2.git#cdb_production",
-      "dependencies": {
-        "express": {
-          "version": "2.5.11",
-          "dependencies": {
-            "connect": {
-              "version": "1.9.2",
-              "dependencies": {
-                "formidable": {
-                  "version": "1.0.13"
-                }
-              }
-            },
-            "mime": {
-              "version": "1.2.4"
-            },
-            "qs": {
-              "version": "0.4.2"
-            },
-            "mkdirp": {
-              "version": "0.3.0"
-            }
-          }
-        },
-        "ejs": {
-          "version": "0.8.3"
-        },
-        "npm": {
-          "version": "1.2.17",
-          "dependencies": {
-            "semver": {
-              "version": "1.1.4"
-            },
-            "ini": {
-              "version": "1.1.0"
-            },
-            "slide": {
-              "version": "1.1.3"
-            },
-            "abbrev": {
-              "version": "1.0.4"
-            },
-            "graceful-fs": {
-              "version": "1.2.0"
-            },
-            "minimatch": {
-              "version": "0.2.11",
-              "dependencies": {
-                "sigmund": {
-                  "version": "1.0.0"
-                }
-              }
-            },
-            "nopt": {
-              "version": "2.1.1"
-            },
-            "rimraf": {
-              "version": "2.1.4"
-            },
-            "request": {
-              "version": "2.9.203",
-              "from": "git://github.com/isaacs/request"
-            },
-            "which": {
-              "version": "1.0.5"
-            },
-            "tar": {
-              "version": "0.1.17"
-            },
-            "fstream": {
-              "version": "0.1.22"
-            },
-            "block-stream": {
-              "version": "0.0.6"
-            },
-            "inherits": {
-              "version": "1.0.0",
-              "from": "git://github.com/isaacs/inherits"
-            },
-            "mkdirp": {
-              "version": "0.3.5"
-            },
-            "read": {
-              "version": "1.0.4",
-              "dependencies": {
-                "mute-stream": {
-                  "version": "0.0.3"
-                }
-              }
-            },
-            "lru-cache": {
-              "version": "2.3.0"
-            },
-            "node-gyp": {
-              "version": "0.9.5"
-            },
-            "fstream-npm": {
-              "version": "0.1.4",
-              "dependencies": {
-                "fstream-ignore": {
-                  "version": "0.0.6"
-                }
-              }
-            },
-            "uid-number": {
-              "version": "0.0.3"
-            },
-            "archy": {
-              "version": "0.0.2"
-            },
-            "chownr": {
-              "version": "0.0.1"
-            },
-            "npmlog": {
-              "version": "0.0.2"
-            },
-            "ansi": {
-              "version": "0.1.2"
-            },
-            "npm-registry-client": {
-              "version": "0.2.18",
-              "dependencies": {
-                "couch-login": {
-                  "version": "0.1.15"
-                }
-              }
-            },
-            "read-package-json": {
-              "version": "0.3.0"
-            },
-            "read-installed": {
-              "version": "0.1.1"
-            },
-            "glob": {
-              "version": "3.1.21"
-            },
-            "init-package-json": {
-              "version": "0.0.6",
-              "dependencies": {
-                "promzard": {
-                  "version": "0.2.0"
-                }
-              }
-            },
-            "osenv": {
-              "version": "0.0.3"
-            },
-            "lockfile": {
-              "version": "0.3.0"
-            },
-            "retry": {
-              "version": "0.6.0"
-            },
-            "once": {
-              "version": "1.1.1"
-            },
-            "npmconf": {
-              "version": "0.0.23",
-              "dependencies": {
-                "config-chain": {
-                  "version": "1.1.5",
-                  "dependencies": {
-                    "proto-list": {
-                      "version": "1.2.2"
-                    }
-                  }
-                }
-              }
-            },
-            "opener": {
-              "version": "1.3.0"
-            },
-            "chmodr": {
-              "version": "0.1.0"
-            },
-            "cmd-shim": {
-              "version": "1.1.0"
-            }
-          }
-        }
-      }
-    },
     "node-varnish": {
       "version": "0.1.1"
     },
@@ -193,10 +9,10 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.12.4",
+      "version": "0.12.9",
       "dependencies": {
         "grainstore": {
-          "version": "0.13.3",
+          "version": "0.13.5",
           "dependencies": {
             "carto": {
               "version": "0.9.3-cdb3",
@@ -256,7 +72,47 @@
                   "version": "0.3.4"
                 },
                 "sqlite3": {
-                  "version": "2.1.7"
+                  "version": "2.1.10",
+                  "dependencies": {
+                    "tar.gz": {
+                      "version": "0.1.1",
+                      "dependencies": {
+                        "fstream": {
+                          "version": "0.1.22",
+                          "dependencies": {
+                            "rimraf": {
+                              "version": "2.2.0"
+                            },
+                            "graceful-fs": {
+                              "version": "1.2.2"
+                            },
+                            "inherits": {
+                              "version": "1.0.0"
+                            }
+                          }
+                        },
+                        "tar": {
+                          "version": "0.1.17",
+                          "dependencies": {
+                            "inherits": {
+                              "version": "1.0.0"
+                            },
+                            "block-stream": {
+                              "version": "0.0.6"
+                            }
+                          }
+                        },
+                        "commander": {
+                          "version": "1.1.1",
+                          "dependencies": {
+                            "keypress": {
+                              "version": "0.1.0"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 },
                 "mime": {
                   "version": "1.2.9"
@@ -320,6 +176,9 @@
               "version": "1.0.2"
             }
           }
+        },
+        "lru-cache": {
+          "version": "2.3.0"
         }
       }
     },
@@ -330,7 +189,7 @@
       "version": "2.0.3"
     },
     "redis": {
-      "version": "0.7.2"
+      "version": "0.8.3"
     },
     "hiredis": {
       "version": "0.1.15",
