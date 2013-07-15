@@ -20,6 +20,7 @@
 PGPORT=5432
 SQLAPI_PORT=8080
 MAPNIK_VERSION=
+ENVIRONMENT=development
 
 usage() {
   echo "Usage: $0 [OPTION]"
@@ -29,6 +30,7 @@ usage() {
   echo "  --with-pgport=NUM             access PostgreSQL server on TCP port NUM [$PGPORT]"
   echo "  --with-sqlapi-port=NUM        access SQL-API server on TCP port NUM [$SQLAPI_PORT]"
   echo "  --with-mapnik-version=STRING  set mapnik version string [$MAPNIK_VERSION]"
+  echo "  --environment=STRING          set output environment name [$ENVIRONMENT]"
 }
 
 while test -n "$1"; do
@@ -46,6 +48,9 @@ while test -n "$1"; do
     --with-mapnik-version=*)
       MAPNIK_VERSION=`echo "$1" | cut -d= -f2`
       ;;
+    --environment=*)
+      ENVIRONMENT=`echo "$1" | cut -d= -f2`
+      ;;
     *)
       echo "Unknown option '$1'" >&2
       usage >&2
@@ -55,10 +60,12 @@ while test -n "$1"; do
 done
 
 echo "PGPORT: $PGPORT"
+echo "SQLAPI_PORT: $SQLAPI_PORT"
 echo "MAPNIK_VERSION: $MAPNIK_VERSION"
+echo "ENVIRONMENT: $ENVIRONMENT"
 
 # TODO: allow specifying configuration settings !
-for f in config/environments/*.example; do
+for f in config/environments/${ENVIRONMENT}.js.example; do
   o=`dirname "$f"`/`basename "$f" .example`
   echo "Writing $o"
 
