@@ -1,5 +1,6 @@
 1.3.3
 ------
+* Set Last-Modified header to allow for 304 responses
 
 1.3.2
 ------
