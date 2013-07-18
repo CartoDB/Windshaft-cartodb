@@ -9,7 +9,7 @@ var config = {
     ,socket_timeout: 600000
     ,enable_cors: true
     ,cache_enabled: false
-    ,log_format: '[:date] :req[X-Real-IP] :method :req[Host]:url :status :response-time ms -> :res[Content-Type]'
+    ,log_format: '[:date] :req[X-Real-IP] :method :req[Host]:url :status :response-time ms -> :res[Content-Type] (:res[X-Tiler-Profiler])'
     ,postgres_auth_user: 'development_cartodb_user_<%= user_id %>'
     ,postgres: {
         // Parameters to pass to datasource plugin of mapnik
