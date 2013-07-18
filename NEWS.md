@@ -3,6 +3,7 @@
 * Set Last-Modified header to allow for 304 responses
 * Add profiling support (needs useProfiler in env config file)
 * Fix double-checking for layergroups with no interactivity
+* Log full layergroup config at creation time (#76)
 
 1.3.2
 ------
