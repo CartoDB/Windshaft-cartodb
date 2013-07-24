@@ -9,7 +9,7 @@ var config = {
     ,socket_timeout: 600000 
     ,enable_cors: true
     ,cache_enabled: true
-    ,log_format: '[:date] :req[X-Real-IP] :method :req[Host]:url :status :response-time ms -> :res[Content-Type]'
+    ,log_format: '[:date] :req[X-Real-IP] :method :req[Host]:url :status :response-time ms (:res[X-Tiler-Profiler]) -> :res[Content-Type]'
     ,postgres_auth_user: 'cartodb_staging_user_<%= user_id %>'
     ,postgres: {
         // Parameters to pass to datasource plugin of mapnik
@@ -57,6 +57,10 @@ var config = {
         port: 6082,
         ttl: 86400
     }
+    // If useProfiler is true every response will be served with an
+    // X-Tiler-Profile header containing elapsed timing for various 
+    // steps taken for producing the response.
+    ,useProfiler:true
 };
 
 module.exports = config;

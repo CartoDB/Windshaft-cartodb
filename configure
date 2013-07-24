@@ -18,7 +18,9 @@
 #
 
 PGPORT=5432
+SQLAPI_PORT=8080
 MAPNIK_VERSION=
+ENVIRONMENT=development
 
 usage() {
   echo "Usage: $0 [OPTION]"
@@ -26,7 +28,9 @@ usage() {
   echo "Configuration:"
   echo "  --help                        display this help and exit"
   echo "  --with-pgport=NUM             access PostgreSQL server on TCP port NUM [$PGPORT]"
+  echo "  --with-sqlapi-port=NUM        access SQL-API server on TCP port NUM [$SQLAPI_PORT]"
   echo "  --with-mapnik-version=STRING  set mapnik version string [$MAPNIK_VERSION]"
+  echo "  --environment=STRING          set output environment name [$ENVIRONMENT]"
 }
 
 while test -n "$1"; do
@@ -38,8 +42,14 @@ while test -n "$1"; do
     --with-pgport=*)
       PGPORT=`echo "$1" | cut -d= -f2`
       ;;
+    --with-sqlapi-port=*)
+      SQLAPI_PORT=`echo "$1" | cut -d= -f2`
+      ;;
     --with-mapnik-version=*)
       MAPNIK_VERSION=`echo "$1" | cut -d= -f2`
+      ;;
+    --environment=*)
+      ENVIRONMENT=`echo "$1" | cut -d= -f2`
       ;;
     *)
       echo "Unknown option '$1'" >&2
@@ -50,16 +60,19 @@ while test -n "$1"; do
 done
 
 echo "PGPORT: $PGPORT"
+echo "SQLAPI_PORT: $SQLAPI_PORT"
 echo "MAPNIK_VERSION: $MAPNIK_VERSION"
+echo "ENVIRONMENT: $ENVIRONMENT"
 
 # TODO: allow specifying configuration settings !
-for f in config/environments/*.example; do
+for f in config/environments/${ENVIRONMENT}.js.example; do
   o=`dirname "$f"`/`basename "$f" .example`
   echo "Writing $o"
 
   # See http://austinmatzko.com/2008/04/26/sed-multi-line-search-and-replace/
   sed -n "1h;1!H;\${;g;s/\(,postgres: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$PGPORT\2/;p;}" < "$f" \
   | sed "s/mapnik_version:.*/mapnik_version: '$MAPNIK_VERSION'/" \
+  | sed -n "1h;1!H;\${;g;s/\(,sqlapi: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$SQLAPI_PORT\2/;p;}" \
   > "$o"
 
 done

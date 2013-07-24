@@ -1,7 +1,14 @@
+1.3.3
+------
+* Set Last-Modified header to allow for 304 responses
+* Add profiling support (needs useProfiler in env config file)
+* Fix double-checking for layergroups with no interactivity
+* Log full layergroup config at creation time (#76)
+
 1.3.2
 ------
 * Set default layergroup TTL to 2 hours
-* Server multilayer tiles and grid with persistent cache control
+* Serve multilayer tiles and grid with persistent cache control
 
 1.3.1
 ------
