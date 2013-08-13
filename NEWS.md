@@ -1,5 +1,7 @@
 1.3.4
 ------
+* Improve empty CartoCSS error message
+* Improve invalid mapnik-geometry-type CSS error message
 
 1.3.3
 ------
