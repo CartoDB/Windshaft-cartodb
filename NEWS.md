@@ -1,5 +1,9 @@
 1.3.4
 ------
+
+NOTE: configuration sqlapi.host renamed to sqlapi.domain
+      (support for "sqlapi.host" is retained for backward compatibility)
+
 * Improve empty CartoCSS error message
 * Improve invalid mapnik-geometry-type CSS error message
 

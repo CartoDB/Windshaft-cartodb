@@ -55,7 +55,7 @@ var config = {
     }
     ,sqlapi: {
         protocol: 'http',
-        host: 'localhost.lan',
+        domain: 'localhost.lan',
         port: 8080,
         version: 'v1'
     }

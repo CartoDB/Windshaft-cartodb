@@ -49,7 +49,7 @@ var config = {
     }
     ,sqlapi: {
         protocol: 'https',
-        host: 'cartodb.com',
+        domain: 'cartodb.com',
         port: 8080,
         version: 'v2'
     }
