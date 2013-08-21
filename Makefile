@@ -6,8 +6,8 @@ all:
 clean:
 	rm -rf node_modules/*
 
-config/environments/test.js: config/environments/test.js.example
-	./configure
+config/environments/test.js: config/environments/test.js.example Makefile
+	./configure --environment=test
 
 check-local: config/environments/test.js
 	./run_tests.sh ${RUNTESTFLAGS} \
