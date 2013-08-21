@@ -36,6 +36,7 @@ var config = {
       bufferSize: 64
     }
     ,millstone: {
+        // Needs to be writable by server user
         cache_basedir: '/tmp/cdb-tiler-dev/millstone-dev'
     }
     ,redis: {
