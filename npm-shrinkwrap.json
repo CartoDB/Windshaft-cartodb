@@ -9,7 +9,7 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.13.2",
+      "version": "0.13.3",
       "dependencies": {
         "grainstore": {
           "version": "0.13.7",
@@ -26,7 +26,7 @@
                   "version": "0.1.14",
                   "dependencies": {
                     "sax": {
-                      "version": "0.5.4"
+                      "version": "0.5.5"
                     }
                   }
                 }
@@ -75,7 +75,7 @@
                   "version": "2.1.15"
                 },
                 "mime": {
-                  "version": "1.2.10"
+                  "version": "1.2.11"
                 },
                 "mkdirp": {
                   "version": "0.3.5"
@@ -124,13 +124,13 @@
         },
         "tilelive-mapnik": {
           "version": "0.5.0",
-          "from": "git://github.com/Vizzuality/tilelive-mapnik.git#6a360ee50",
+          "from": "git://github.com/Vizzuality/tilelive-mapnik.git#5908346",
           "dependencies": {
             "eio": {
-              "version": "0.1.0"
+              "version": "0.2.1"
             },
             "mime": {
-              "version": "1.2.10"
+              "version": "1.2.11"
             },
             "sphericalmercator": {
               "version": "1.0.2"
@@ -138,7 +138,7 @@
           }
         },
         "lru-cache": {
-          "version": "2.3.0"
+          "version": "2.3.1"
         }
       }
     },

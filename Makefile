@@ -20,7 +20,7 @@ check-local: config/environments/test.js
 check-submodules:
 	PATH="$$PATH:$(srcdir)/node_modules/.bin/"; \
 	for sub in windshaft grainstore node-varnish mapnik; do \
-		test -e node_modules/$${sub} && make -C node_modules/$${sub} check; \
+		test -e node_modules/$${sub} && make -C node_modules/$${sub} check || exit 1; \
 	done
 
 check-full: check-local check-submodules
