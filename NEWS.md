@@ -6,6 +6,7 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
 
 * Improve empty CartoCSS error message
 * Improve invalid mapnik-geometry-type CSS error message
+* Fix race condition in localization of network resources
 
 1.3.3
 ------
