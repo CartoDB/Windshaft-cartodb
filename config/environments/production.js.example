@@ -30,6 +30,7 @@ var config = {
       bufferSize: 64
     }
     ,millstone: {
+        // Needs to be writable by server user
         cache_basedir: '/home/ubuntu/tile_assets/'
     }
     ,redis: {
@@ -48,7 +49,7 @@ var config = {
     }
     ,sqlapi: {
         protocol: 'https',
-        host: 'cartodb.com',
+        domain: 'cartodb.com',
         port: 8080,
         version: 'v2'
     }
