@@ -1,6 +1,9 @@
 1.3.5
 ------
 
+* Fix "sql/table must contain zoom variable" error when using
+  "[ zoom > 3]" CartoCSS snippets (note the space)
+
 1.3.4
 ------
 
