@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "dependencies": {
     "node-varnish": {
       "version": "0.1.1"
@@ -9,14 +9,14 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.13.4",
+      "version": "0.13.5",
       "dependencies": {
         "grainstore": {
-          "version": "0.13.8",
+          "version": "0.13.9",
           "dependencies": {
             "carto": {
-              "version": "0.9.3-cdb3",
-              "from": "git://github.com/CartoDB/carto.git#cdb-0.9.3-cdb3",
+              "version": "0.9.3-cdb4",
+              "from": "git://github.com/CartoDB/carto.git#cdb-0.9.3-cdb4",
               "dependencies": {
                 "mapnik-reference": {
                   "version": "5.0.0-cdb1",
@@ -40,7 +40,7 @@
               "from": "git://github.com/CartoDB/millstone.git#cdb-0.6.0-cdb1",
               "dependencies": {
                 "underscore": {
-                  "version": "1.5.1"
+                  "version": "1.5.2"
                 },
                 "request": {
                   "version": "2.26.0",

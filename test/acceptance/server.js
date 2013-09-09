@@ -1020,6 +1020,23 @@ suite('server', function() {
         );
     });
 
+    // Zoom is a special variable
+    test("Specifying zoom level in CartoCSS does not need a 'zoom' variable in SQL output", function(done){
+        // NOTE: may fail if grainstore < 0.3.0 is used by Windshaft
+        var query = querystring.stringify({
+          sql: "SELECT 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator, 1::int as cartodb_id",
+          style: '#gadm4 [ zoom>=3] { marker-fill:red; }'
+        });
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/gadm4/0/0/0.png?' + query,
+            method: 'GET'
+        },{}, function(res) {
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          done();
+        });
+    });
+
     /////////////////////////////////////////////////////////////////////////////////
     //
     // DELETE CACHE 
