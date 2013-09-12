@@ -468,19 +468,19 @@ suite('multilayer', function() {
            { options: {
                sql: 'select * from test_table_private_1 where cartodb_id=1',
                cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
-               cartocss_version: '2.1.1',
+               cartocss_version: '2.1.0',
                interactivity: 'cartodb_id'
              } },
            { options: {
                sql: 'select * from test_table_private_1 where cartodb_id=2',
                cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
-               cartocss_version: '2.1.1',
+               cartocss_version: '2.1.0',
                interactivity: 'cartodb_id'
              } }
         ]
       };
 
-      var expected_token = "50cb56d0ebe9142ca4ed97bc8dac3ee1";
+      var expected_token = "b4ed64d93a411a59f330ab3d798e4009";
       Step(
         function do_post()
         {
@@ -586,7 +586,7 @@ suite('multilayer', function() {
            { options: {
                sql: "select 1 as cartodb_id, 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator",
                cartocss: '#sample { text-name: cartodb_id; text-face-name: "Dejagnu"; }',
-               cartocss_version: '2.1.1',
+               cartocss_version: '2.1.0',
              } }
         ]
       };
