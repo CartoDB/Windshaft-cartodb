@@ -38,6 +38,7 @@ suite('redis_pool', function() {
     
     test('calling aquire returns a redis client object that can get/set', function(done){
       redis_pool.acquire(0, function(err, client){
+        if ( err ) { done(err); return; }
         client.set("key","value");
         client.get("key", function(err,data){      
           assert.equal(data, "value");      
@@ -49,6 +50,7 @@ suite('redis_pool', function() {
     
     test('calling aquire on another DB returns a redis client object that can get/set', function(done){
       redis_pool.acquire(2, function(err, client){
+        if ( err ) { done(err); return; }
         client.set("key","value");
         client.get("key", function(err,data){      
           assert.equal(data, "value");      
