@@ -1,7 +1,7 @@
 Windshaft-CartoDB
 ==================
 
-NOTE: requires node-0.8.x
+[![Build Status](https://travis-ci.org/CartoDB/Windshaft-cartodb.png)](http://travis-ci.org/CartoDB/Windshaft-cartodb)
 
 This is the CartoDB map tiler. It extends Windshaft with some extra
 functionality and custom filters for authentication
@@ -18,7 +18,7 @@ Requirements
 ------------
 
  [core]
- - node-0.6.x+
+ - node-0.8.x+
  - PostgreSQL-8.3+
  - PostGIS-1.5.0+
  - Redis 2.2.0+ (http://www.redis.io)
