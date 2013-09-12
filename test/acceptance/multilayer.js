@@ -578,6 +578,32 @@ suite('multilayer', function() {
       );
     });
 
+    test("ticket #81", function(done) {
+
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: "select 1 as cartodb_id, 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator",
+               cartocss: '#sample { text-name: cartodb_id; text-face-name: "Dejagnu"; }',
+               cartocss_version: '2.1.1',
+             } }
+        ]
+      };
+
+      assert.response(server, {
+          url: '/tiles/layergroup?',
+          method: 'POST',
+          headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.deepEqual(parsed, {"errors":["style0:1:10 Invalid value for text-name, the type expression is expected. cartodb_id (of type keyword)  was given."]});
+          done();
+      });
+    });
+
     suiteTeardown(function(done) {
 
         // This test will add map_style records, like
