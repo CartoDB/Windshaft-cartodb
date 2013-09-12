@@ -1,15 +1,14 @@
 #!/bin/sh
 
-# Must match redis_port in config/environments/test.js
-# TODO: read from there
-REDIS_PORT=6333
-
 OPT_CREATE=yes # create the test environment
 OPT_DROP=yes   # drop the test environment
 
 cd $(dirname $0)
 BASEDIR=$(pwd)
 cd -
+
+REDIS_PORT=`node -e "console.log(require('${BASEDIR}/config/environments/test.js').redis.port)"`
+export REDIS_PORT
 
 cleanup() {
   if test x"$OPT_DROP" = xyes; then

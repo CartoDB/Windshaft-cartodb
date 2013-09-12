@@ -17,7 +17,7 @@ die() {
 }
 
 TEST_DB="cartodb_test_user_1_db"
-REDIS_PORT=6333
+if test -z "$REDIS_PORT"; then REDIS_PORT=6333; fi
 
 echo "preparing postgres..."
 dropdb "${TEST_DB}"
