@@ -23,11 +23,11 @@ if test -z "$cfg"; then
   exit 1
 fi
 
-cmd="curl -skH Content-Type:application/json --data-binary @${cfg} ${tiler_url}"
+cmd="curl -skH Content-Type:application/json --data-binary @- ${tiler_url}"
 if test x${verbose} = xyes; then
   cmd="${cmd} -v"
 fi
-res=`${cmd}`
+res=`cat ${cfg} | tr '\n' ' ' | ${cmd}`
 if test $? -gt 0; then
   echo "curl command failed: ${cmd}"
 fi
