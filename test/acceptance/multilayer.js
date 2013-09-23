@@ -578,7 +578,8 @@ suite('multilayer', function() {
       );
     });
 
-    test("ticket #81", function(done) {
+    // https://github.com/cartodb/Windshaft-cartodb/issues/81
+    test("invalid text-name in CartoCSS", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
