@@ -5,6 +5,7 @@
   "[ zoom > 3]" CartoCSS snippets (note the space)
 * Fix backward compatibility handling of sqlapi.host configuration (#82)
 * Fix error for invalid text-name in CartoCSS (#81)
+* Do not let anonymous requests use authorized renderer caches 
 
 1.3.4
 ------
