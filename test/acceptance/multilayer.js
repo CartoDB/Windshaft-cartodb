@@ -559,6 +559,54 @@ suite('multilayer', function() {
               next(err);
           });
         },
+        function do_get_tile_unauth(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 401);
+              var re = RegExp('permission denied');
+              assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
+              next(err);
+          });
+        },
+        function do_get_grid_layer0_unauth(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup/' + expected_token
+                 + '/0/0/0/0.grid.json',
+              headers: {host: 'localhost' },
+              method: 'GET'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 401);
+              var re = RegExp('permission denied');
+              assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
+              next(err);
+          });
+        },
+        function do_get_grid_layer1_unauth(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup/' + expected_token
+                 + '/1/0/0/0.grid.json',
+              headers: {host: 'localhost' },
+              method: 'GET'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 401);
+              var re = RegExp('permission denied');
+              assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
+              next(err);
+          });
+        },
         function finish(err) {
           var errors = [];
           if ( err ) {
