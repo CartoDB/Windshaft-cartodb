@@ -1,0 +1,11 @@
+1. Ensure proper version in package.json 
+2. Ensure NEWS section exists for the new version, review it, add release date
+3. Drop npm-shrinkwrap.json
+4. Run npm install
+5. Test (make check or npm test), fix if broken before proceeding
+6. Run npm shrinkwrap
+7. Commit package.json, npm-shrinwrap.json, NEWS
+8. Tag Major.Minor.Patch
+9. Announce
+10. Stub NEWS/package for next version
+
