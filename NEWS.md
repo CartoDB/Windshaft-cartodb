@@ -1,5 +1,5 @@
-1.3.5
-------
+1.3.5 -- 2013-10-03
+-------------------
 
 * Fixing apostrophes in CartoCSS
 * Fix "sql/table must contain zoom variable" error when using
