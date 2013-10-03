@@ -1,6 +1,7 @@
 1.3.5
 ------
 
+* Fixing apostrophes in CartoCSS
 * Fix "sql/table must contain zoom variable" error when using
   "[ zoom > 3]" CartoCSS snippets (note the space)
 * Fix backward compatibility handling of sqlapi.host configuration (#82)

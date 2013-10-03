@@ -9,14 +9,14 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.13.6",
+      "version": "0.13.7",
       "dependencies": {
         "grainstore": {
-          "version": "0.13.10",
+          "version": "0.13.11",
           "dependencies": {
             "carto": {
-              "version": "0.9.3-cdb5",
-              "from": "git://github.com/CartoDB/carto.git#cdb-0.9.3-cdb5",
+              "version": "0.9.3-cdb6",
+              "from": "git://github.com/CartoDB/carto.git#0.9.3-cdb6",
               "dependencies": {
                 "mapnik-reference": {
                   "version": "5.0.0-cdb1",
@@ -33,11 +33,10 @@
               }
             },
             "mapnik-reference": {
-              "version": "5.0.4"
+              "version": "5.0.6"
             },
             "millstone": {
-              "version": "0.6.0-cdb1",
-              "from": "git://github.com/CartoDB/millstone.git#cdb-0.6.0-cdb1",
+              "version": "0.6.5",
               "dependencies": {
                 "underscore": {
                   "version": "1.5.2"
@@ -101,7 +100,7 @@
                       "version": "1.4.1"
                     },
                     "form-data": {
-                      "version": "0.1.1",
+                      "version": "0.1.2",
                       "dependencies": {
                         "combined-stream": {
                           "version": "0.0.4",
@@ -119,10 +118,10 @@
                   }
                 },
                 "srs": {
-                  "version": "0.3.2"
+                  "version": "0.3.3"
                 },
                 "zipfile": {
-                  "version": "0.4.0"
+                  "version": "0.4.1"
                 },
                 "sqlite3": {
                   "version": "2.1.17",
@@ -183,7 +182,7 @@
                       "version": "0.0.2"
                     },
                     "minimist": {
-                      "version": "0.0.2"
+                      "version": "0.0.5"
                     }
                   }
                 }
@@ -234,7 +233,7 @@
           "from": "git://github.com/Vizzuality/tilelive-mapnik.git#5908346",
           "dependencies": {
             "eio": {
-              "version": "0.2.1"
+              "version": "0.2.2"
             },
             "mime": {
               "version": "1.2.11"
