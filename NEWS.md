@@ -1,5 +1,8 @@
-1.3.6 -- 2013-MM-DD
+1.3.6 -- 2013-10-11
 -------------------
+
+* Restore support for node-0.8.9 accidentally dropped by 1.3.5
+  NOTE: needs removing node_modules/windshaft and re-running npm install
 
 1.3.5 -- 2013-10-03
 -------------------
