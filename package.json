@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "windshaft-cartodb",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "description": "A map tile server for CartoDB",
     "url": "https://github.com/CartoDB/Windshaft-cartodb",
     "licenses": [{
