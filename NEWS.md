@@ -1,6 +1,8 @@
 1.4.1 -- 2013-MM-DD
 -------------------
 
+* Fix support for exponential notation in CartoCSS filter values (#87)
+
 1.4.0 -- 2013-10-31
 -------------------
 
