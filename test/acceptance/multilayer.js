@@ -682,6 +682,29 @@ suite('multilayer', function() {
       });
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/87
+    test("exponential notation in CartoCSS filter values", function(done) {
+      var layergroup =  {
+        version: '1.0.1',
+        layers: [
+           { options: {
+               sql: "select .4 as n, 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator",
+               cartocss: '#s [n<=.2e-2] { marker-fill:red; }',
+               cartocss_version: '2.1.0',
+             } }
+        ]
+      };
+      assert.response(server, {
+          url: '/tiles/layergroup?',
+          method: 'POST',
+          headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          done();
+      });
+    });
+
     suiteTeardown(function(done) {
 
         // This test will add map_style records, like
