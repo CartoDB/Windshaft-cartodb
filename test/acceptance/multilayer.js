@@ -99,7 +99,7 @@ suite('multilayer', function() {
               // Check X-Cache-Channel
               cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
-              var dbname = 'cartodb_test_user_1_db'
+              var dbname = 'test_cartodb_user_1_db'
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
@@ -156,7 +156,7 @@ suite('multilayer', function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
-          redis_client.keys("map_style|cartodb_test_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
@@ -229,7 +229,7 @@ suite('multilayer', function() {
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
-              var dbname = 'cartodb_test_user_1_db'
+              var dbname = 'test_cartodb_user_1_db'
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
@@ -262,7 +262,7 @@ suite('multilayer', function() {
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
-              var dbname = 'cartodb_test_user_1_db'
+              var dbname = 'test_cartodb_user_1_db'
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
@@ -321,7 +321,7 @@ suite('multilayer', function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
-          redis_client.keys("map_style|cartodb_test_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
@@ -417,7 +417,7 @@ suite('multilayer', function() {
           var next = this;
           // trip epoch
           expected_token = expected_token.split(':')[0];
-          redis_client.keys("map_style|cartodb_test_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
               redis_client.del(matches, next);
           });
         },
@@ -525,7 +525,7 @@ suite('multilayer', function() {
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
-              var dbname = 'cartodb_test_user_1_db'
+              var dbname = 'test_cartodb_user_1_db'
               assert.equal(cc.substring(0, dbname.length), dbname);
               next(err);
           });
@@ -613,7 +613,7 @@ suite('multilayer', function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
-          redis_client.keys("map_style|cartodb_test_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
