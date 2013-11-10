@@ -11,10 +11,12 @@ var config = {
     ,cache_enabled: true
     ,log_format: '[:date] :req[X-Real-IP] :method :req[Host]:url :status :response-time ms (:res[X-Tiler-Profiler]) -> :res[Content-Type]'
     ,postgres_auth_user: 'cartodb_staging_user_<%= user_id %>'
+    ,postgres_auth_pass: 'cartodb_staging_user_<%= user_id %>_pass'
     ,postgres: {
         // Parameters to pass to datasource plugin of mapnik
         // See http://github.com/mapnik/mapnik/wiki/PostGIS
         user: "publicuser",
+        password: "public",
         host: '127.0.0.1',
         port: 6432,
         extent: "-20037508.3,-20037508.3,20037508.3,20037508.3",

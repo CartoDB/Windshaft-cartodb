@@ -1,3 +1,7 @@
+1.5.0 -- 2013-MM-DD
+
+* Add support for specifying database connection passwords
+
 1.4.1 -- 2013-11-08
 -------------------
 

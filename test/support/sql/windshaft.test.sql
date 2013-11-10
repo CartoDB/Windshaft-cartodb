@@ -15,11 +15,13 @@ SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
--- publicuser role
-CREATE USER publicuser;
+-- public user role
+DROP USER IF EXISTS :PUBLICUSER;
+CREATE USER :PUBLICUSER WITH PASSWORD ':PUBLICPASS';
 
 -- db owner role
-CREATE USER test_cartodb_user_1;
+DROP USER IF EXISTS :TESTUSER;
+CREATE USER :TESTUSER WITH PASSWORD ':TESTPASS';
 
 -- first table
 CREATE TABLE test_table (
@@ -63,8 +65,8 @@ ALTER TABLE ONLY test_table ADD CONSTRAINT test_table_pkey PRIMARY KEY (cartodb_
 CREATE INDEX test_table_the_geom_idx ON test_table USING gist (the_geom);
 CREATE INDEX test_table_the_geom_webmercator_idx ON test_table USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table TO test_cartodb_user_1;
-GRANT SELECT ON TABLE test_table TO publicuser;
+GRANT ALL ON TABLE test_table TO :TESTUSER;
+GRANT SELECT ON TABLE test_table TO :PUBLICUSER;
 
 -- second table
 CREATE TABLE test_table_2 (
@@ -108,8 +110,8 @@ ALTER TABLE ONLY test_table_2 ADD CONSTRAINT test_table_2_pkey PRIMARY KEY (cart
 CREATE INDEX test_table_2_the_geom_idx ON test_table_2 USING gist (the_geom);
 CREATE INDEX test_table_2_the_geom_webmercator_idx ON test_table_2 USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table_2 TO test_cartodb_user_1;
-GRANT SELECT ON TABLE test_table_2 TO publicuser;
+GRANT ALL ON TABLE test_table_2 TO :TESTUSER;
+GRANT SELECT ON TABLE test_table_2 TO :PUBLICUSER;
 
 -- third table
 CREATE TABLE test_table_3 (
@@ -153,8 +155,8 @@ ALTER TABLE ONLY test_table_3 ADD CONSTRAINT test_table_3_pkey PRIMARY KEY (cart
 CREATE INDEX test_table_3_the_geom_idx ON test_table_3 USING gist (the_geom);
 CREATE INDEX test_table_3_the_geom_webmercator_idx ON test_table_3 USING gist (the_geom_webmercator);
 
-GRANT ALL ON TABLE test_table_3 TO test_cartodb_user_1;
-GRANT SELECT ON TABLE test_table_3 TO publicuser;
+GRANT ALL ON TABLE test_table_3 TO :TESTUSER;
+GRANT SELECT ON TABLE test_table_3 TO :PUBLICUSER;
 
 -- private table
 CREATE TABLE test_table_private_1 (
@@ -173,4 +175,4 @@ CREATE TABLE test_table_private_1 (
     CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
 );
 
-GRANT ALL ON TABLE test_table_private_1 TO test_cartodb_user_1;
+GRANT ALL ON TABLE test_table_private_1 TO :TESTUSER;
