@@ -140,7 +140,7 @@ suite('server', function() {
           // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
-            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+            {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
           done();
         });
     });
@@ -493,7 +493,7 @@ suite('server', function() {
           // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
-            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+            {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
           done();
         });
     });
@@ -576,7 +576,7 @@ suite('server', function() {
           // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
-            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+            {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
           done();
         });
     });
@@ -727,7 +727,7 @@ suite('server', function() {
           // FIXME: should be 401 Unauthorized
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
-            {error:"missing unknown_user's dbname in redis (try CARTODB/script/restore_redis)"});
+            {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
           done();
         });
     });
