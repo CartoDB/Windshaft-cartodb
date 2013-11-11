@@ -771,6 +771,42 @@ suite('server', function() {
         });
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/88
+    test("get'ing a tile from a user-specific database should return an expected tile",  function(done){
+        var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
+        var backupDBHost = global.environment.postgres.host;
+        global.environment.postgres.host = '6.6.6.6';
+        Step (
+          function() {
+            var next = this;
+            assert.response(server, {
+                headers: {host: 'cartodb250user'},
+                url: '/tiles/test_table/15/16046/12354.png?cache_buster=4&' + style, // madrid
+                method: 'GET',
+                encoding: 'binary'
+            },{}, function(res){
+              next(null, res);
+            });
+          },
+          function checkRes(err, res) {
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var ct = res.headers['content-type'];
+            assert.equal(ct, 'image/png');
+            assert.imageEqualsFile(res.body,
+              './test/fixtures/test_table_15_16046_12354_styled_black.png',
+              2, this);
+          },
+          function checkImage(err, similarity) {
+              if (err) throw err;
+              return null
+          },
+          function finish(err) {
+            global.environment.postgres.host = backupDBHost;
+            done(err);
+          }
+        );
+    });
+
     test("get'ing a tile with url specified 2.1.0 style should return an expected tile",  function(done){
         var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
         assert.response(server, {
