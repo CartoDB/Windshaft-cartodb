@@ -2,6 +2,8 @@
 -------------------
 
 * Add support for specifying database connection passwords
+* Add support for reading user-specific database_host from redis,
+  as per CartoDB-2.5.0 model (#88)
 
 1.4.1 -- 2013-11-08
 -------------------
