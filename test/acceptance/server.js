@@ -998,8 +998,7 @@ suite('server', function() {
           });
         },
         function finish(err) {
-          if ( err ) done(err);
-          else done();
+          done(err);
         }
       );
     });
@@ -1014,24 +1013,30 @@ suite('server', function() {
         var sqlapi;
         Step(
           function sendRequest(err) {
+            var next = this;
             assert.response(server, {
                 headers: {host: 'localhost'},
                 url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
                 method: 'GET'
-            },{}, this);
+            },{}, function(res) { next(null, res); });
           },
-          function checkResponse(res) {
+          function checkResponse(err, res) {
+            if ( err ) throw err;
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
             var cc = res.headers['x-cache-channel'];
+            assert(cc);
             var dbname = 'test_cartodb_user_1_db'
             assert.equal(cc.substring(0, dbname.length), dbname);
             var jsonquery = cc.substring(dbname.length+1);
             var sentquery = JSON.parse(jsonquery);
             assert.equal(sentquery.api_key, qo.map_key);
             assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$' + qo.sql + '$windshaft$)');
-            done();
+            return null;
+          },
+          function finish(err) {
+            done(err);
           }
         );
     });
@@ -1047,19 +1052,24 @@ suite('server', function() {
         var sqlapi;
         Step(
           function sendRequest(err) {
+            var next = this;
             assert.response(server, {
                 headers: {host: 'localhost'},
                 url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
                 method: 'GET'
-            },{}, this);
+            },{}, function(res) { next(null, res); });
           },
-          function checkResponse(res) {
+          function checkResponse(err, res) {
+            if ( err ) throw err;
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
             // does NOT send an x-cache-channel
             assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-            done();
+            return null;
+          },
+          function finish(err) {
+            done(err);
           }
         );
     });

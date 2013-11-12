@@ -40,8 +40,6 @@ if test -z "$TESTPASS"; then
 fi
 TESTPASS=`echo ${TESTPASS} | sed "s/<%= user_id %>/${TESTUSERID}/"`
 
-#TESTUSER="cartodb_test_user_1" # TODO: extract from psotgres_auth_user
-#TESTPASS="cartodb_test_user_1_pass" # TODO: extract from postgres_auth_pass
 TEST_DB="${TESTUSER}_db"
 
 if test -z "$REDIS_PORT"; then REDIS_PORT=6333; fi
@@ -54,6 +52,8 @@ PUBLICUSER=`node -e "console.log(require('${TESTENV}').postgres.user || 'xxx')"`
 PUBLICPASS=`node -e "console.log(require('${TESTENV}').postgres.password || 'xxx')"`
 echo "PUBLICUSER: ${PUBLICUSER}"
 echo "PUBLICPASS: ${PUBLICPASS}"
+echo "TESTUSER: ${TESTUSER}"
+echo "TESTPASS: ${TESTPASS}"
 
 cat sql/windshaft.test.sql sql/gadm4.sql |
   sed "s/:PUBLICUSER/${PUBLICUSER}/" | 
