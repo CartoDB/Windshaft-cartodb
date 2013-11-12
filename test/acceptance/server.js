@@ -781,7 +781,7 @@ suite('server', function() {
             var next = this;
             assert.response(server, {
                 headers: {host: 'cartodb250user'},
-                url: '/tiles/test_table/15/16046/12354.png?cache_buster=4&' + style, // madrid
+                url: '/tiles/test_table/15/16046/12354.png?cache_buster=4.10&' + style, 
                 method: 'GET',
                 encoding: 'binary'
             },{}, function(res){
