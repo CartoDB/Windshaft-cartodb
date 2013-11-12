@@ -11,7 +11,8 @@ var config = {
     ,cache_enabled: true
     ,log_format: '[:date] :req[X-Real-IP] :method :req[Host]:url :status :response-time ms -> :res[Content-Type] (:res[X-Tiler-Profiler])'
     ,postgres_auth_user: 'cartodb_user_<%= user_id %>'
-    ,postgres_auth_pass: 'cartodb_user_<%= user_id %>_pass'
+    // Supported labels: 'user_id', 'user_password' (both read from redis)
+    ,postgres_auth_pass: '<%= user_password %>'
     ,postgres: {
         // Parameters to pass to datasource plugin of mapnik
         // See http://github.com/mapnik/mapnik/wiki/PostGIS
