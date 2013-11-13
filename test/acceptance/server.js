@@ -807,7 +807,7 @@ suite('server', function() {
         );
     });
 
-    // See https://github.com/CartoDB/Windshaft-cartodb/issues/XXX
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/89
     test("get'ing a tile with a user-specific database password",  function(done){
         var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
         var backupDBPass = global.settings.postgres_auth_pass;
