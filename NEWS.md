@@ -1,10 +1,19 @@
 1.5.0 -- 2013-MM-DD
 -------------------
 
+Improvements:
+
 * Add support for configuring database connection passwords
 * Optionally read user-specific database_host and database_password
   from redis as per CartoDB-2.5.0 model (#88, #89)
 * Do not force ending dot in SQL-API hostname, for easier testing
+
+Bug fixes:
+
+* Return CORS headers when creating layergroups via GET (windshaft/#92)
+* Fix http status on database authentication error (windshaft/#94)
+* Fix text-face-name error at layergroup creation (windshaft/#93)
+
 
 1.4.1 -- 2013-11-08
 -------------------
