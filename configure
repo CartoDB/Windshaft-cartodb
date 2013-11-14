@@ -17,10 +17,14 @@
 # --strk(2012-07-23)
 #
 
-PGPORT=5432
-SQLAPI_PORT=8080
+ENVDIR=config/environments
+
+PGPORT=
+SQLAPI_PORT=
 MAPNIK_VERSION=
 ENVIRONMENT=development
+
+STATUS="$0 $*"
 
 usage() {
   echo "Usage: $0 [OPTION]"
@@ -59,20 +63,30 @@ while test -n "$1"; do
   shift
 done
 
+ENVEX=./${ENVDIR}/${ENVIRONMENT}.js.example
+
+if [ -z "$PGPORT" ]; then
+  PGPORT=`node -e "console.log(require('${ENVEX}').postgres.port)"`
+fi
+if [ -z "$SQLAPI_PORT" ]; then
+  SQLAPI_PORT=`node -e "console.log(require('${ENVEX}').sqlapi.port)"`
+fi
+
 echo "PGPORT: $PGPORT"
 echo "SQLAPI_PORT: $SQLAPI_PORT"
 echo "MAPNIK_VERSION: $MAPNIK_VERSION"
 echo "ENVIRONMENT: $ENVIRONMENT"
 
-# TODO: allow specifying configuration settings !
-for f in config/environments/${ENVIRONMENT}.js.example; do
-  o=`dirname "$f"`/`basename "$f" .example`
-  echo "Writing $o"
+o=`dirname "${ENVEX}"`/`basename "${ENVEX}" .example`
+echo "Writing $o"
 
-  # See http://austinmatzko.com/2008/04/26/sed-multi-line-search-and-replace/
-  sed -n "1h;1!H;\${;g;s/\(,postgres: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$PGPORT\2/;p;}" < "$f" \
+# See http://austinmatzko.com/2008/04/26/sed-multi-line-search-and-replace/
+sed -n "1h;1!H;\${;g;s/\(,postgres: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$PGPORT\2/;p;}" < "${ENVEX}" \
   | sed "s/mapnik_version:.*/mapnik_version: '$MAPNIK_VERSION'/" \
   | sed -n "1h;1!H;\${;g;s/\(,sqlapi: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$SQLAPI_PORT\2/;p;}" \
   > "$o"
 
-done
+STATUSFILE=config.status--${ENVIRONMENT}
+echo "Writing ${STATUSFILE}"
+echo ${STATUS} > ${STATUSFILE} && chmod +x ${STATUSFILE}
+

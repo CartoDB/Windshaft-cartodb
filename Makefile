@@ -6,8 +6,14 @@ all:
 clean:
 	rm -rf node_modules/*
 
-config/environments/test.js: config/environments/test.js.example Makefile
+distclean: clean
+	rm config.status*
+
+config.status--test:
 	./configure --environment=test
+
+config/environments/test.js: config.status--test
+	./config.status--test 
 
 check-local: config/environments/test.js
 	./run_tests.sh ${RUNTESTFLAGS} \
