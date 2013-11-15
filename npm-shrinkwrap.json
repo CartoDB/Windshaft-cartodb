@@ -273,7 +273,7 @@
       "version": "2.9.202"
     },
     "cartodb-redis": {
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "generic-pool": {
           "version": "2.0.4"
@@ -286,11 +286,11 @@
     "lzma": {
       "version": "1.2.3"
     },
-    "semver": {
-      "version": "1.1.4"
-    },
     "strftime": {
       "version": "0.6.2"
+    },
+    "semver": {
+      "version": "1.1.4"
     },
     "redis": {
       "version": "0.8.6"
