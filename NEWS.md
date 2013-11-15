@@ -14,6 +14,10 @@ Bug fixes:
 * Fix http status on database authentication error (windshaft/#94)
 * Fix text-face-name error at layergroup creation (windshaft/#93)
 
+Other changes:
+
+* CartoDB redis interaction delegated to "cartodb-redis" module
+
 
 1.4.1 -- 2013-11-08
 -------------------
