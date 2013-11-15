@@ -45,6 +45,14 @@
             "mapnik-reference": {
               "version": "5.0.7"
             },
+            "hiredis": {
+              "version": "0.1.15",
+              "dependencies": {
+                "bindings": {
+                  "version": "1.1.1"
+                }
+              }
+            },
             "millstone": {
               "version": "0.6.8",
               "dependencies": {
@@ -197,6 +205,9 @@
             }
           }
         },
+        "generic-pool": {
+          "version": "2.0.4"
+        },
         "express": {
           "version": "2.5.11",
           "dependencies": {
@@ -258,34 +269,31 @@
     "step": {
       "version": "0.0.5"
     },
-    "generic-pool": {
-      "version": "2.0.4"
-    },
-    "redis": {
-      "version": "0.8.6"
-    },
-    "hiredis": {
-      "version": "0.1.15",
-      "dependencies": {
-        "bindings": {
-          "version": "1.1.1"
-        }
-      }
-    },
     "request": {
       "version": "2.9.202"
     },
+    "cartodb-redis": {
+      "version": "0.0.1",
+      "dependencies": {
+        "generic-pool": {
+          "version": "2.0.4"
+        }
+      }
+    },
     "mapnik": {
       "version": "0.7.25"
-    },
-    "strftime": {
-      "version": "0.6.2"
     },
     "lzma": {
       "version": "1.2.3"
     },
     "semver": {
       "version": "1.1.4"
+    },
+    "strftime": {
+      "version": "0.6.2"
+    },
+    "redis": {
+      "version": "0.8.6"
     },
     "mocha": {
       "version": "1.2.1",
