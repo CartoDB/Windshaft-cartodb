@@ -25,10 +25,6 @@ global.settings     = require(__dirname + '/config/settings');
 global.environment  = require(__dirname + '/config/environments/' + ENV);
 _.extend(global.settings, global.environment);
 
-// Include cart_data.js only _after_ the "global" variable is set
-// See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-var cartoData = require('./lib/cartodb/carto_data');
-
 var Windshaft = require('windshaft');
 var serverOptions = require('./lib/cartodb/server_options');
 
