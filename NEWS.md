@@ -8,6 +8,10 @@ Bug fixes:
 1.5.0 -- 2013-11-19
 -------------------
 
+NOTE: new configuration directives `postgres_auth_pass` and
+      `postgres.password` added; see config/environments/*.example
+      for documentation.
+
 Improvements:
 
 * Add support for configuring database connection passwords
