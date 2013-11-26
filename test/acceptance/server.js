@@ -22,6 +22,7 @@ suite('server', function() {
     var sqlapi_server;
 
     var mapnik_version = global.environment.mapnik_version || mapnik.versions.mapnik;
+    var test_database = 'test_cartodb_user_1_db';
     var default_style;
     if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
       // 2.0.0 default
@@ -102,7 +103,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'X-Cache-Channel': 'test_cartodb_user_1_db:my_table' },
+            headers: { 'X-Cache-Channel': test_database+':my_table' },
         }, function(res) {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, _.template(default_style, {table: 'my_table'}));
@@ -440,7 +441,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'X-Cache-Channel': 'test_cartodb_user_1_db:my_tablez' },
+            headers: { 'X-Cache-Channel': test_database+':my_tablez' },
             body: '{"infowindow":null}'
         }, function() { done(); });
     });
@@ -524,7 +525,7 @@ suite('server', function() {
         },{
             status: 200,
             headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8',
-                       'X-Cache-Channel': 'test_cartodb_user_1_db:gadm4' }
+                       'X-Cache-Channel': test_database+':gadm4' }
         }, function() { done(); });
     });
     
@@ -639,7 +640,7 @@ suite('server', function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'image/png', 'X-Cache-Channel': 'test_cartodb_user_1_db:gadm4' }
+            headers: { 'Content-Type': 'image/png', 'X-Cache-Channel': test_database+':gadm4' }
         }, function() { done(); });
     });
     
