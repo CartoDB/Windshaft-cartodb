@@ -163,6 +163,43 @@ suite('server', function() {
         });
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/94
+    test.skip("get'ing unrenderable style", function(done) {
+      var base_key = 'map_style|'+test_database+'|my_table';
+      var style = '#s{bogus}';
+      Step(
+        function checkRedis() {
+          redis_client.keys(base_key+'*', this);
+        },
+        function setupRedisBase(err, matches) {
+          if ( err ) throw err;
+          assert.equal(matches.length, 0);
+          redis_client.set(base_key, 
+            JSON.stringify({ style: style }),
+          this);
+        },
+        function getStyle(err) {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              headers: {host: 'localhost'},
+              url: '/tiles/my_table/style',
+              method: 'GET'
+              }, {}, function(res) { next(null, res); });
+        },
+        function checkStyle(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.equal(parsed.style, style);
+          return null
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
     /////////////////////////////////////////////////////////////////////////////////
     //
     // POST STYLE
