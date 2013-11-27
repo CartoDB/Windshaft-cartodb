@@ -41,7 +41,7 @@ var config = {
     }
     ,redis: {
         host: '127.0.0.1',
-        port: 6333,
+        port: 6335,
         // Max number of connections in each pool.
         // Users will be put on a queue when the limit is hit.
         // Set to maxConnection to have no possible queues.
