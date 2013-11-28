@@ -3,7 +3,7 @@
 
 Bug fixes:
 
-* ...
+* Survive presence of malformed CartoCSS in redis (#94)
 
 1.5.0 -- 2013-11-19
 -------------------
