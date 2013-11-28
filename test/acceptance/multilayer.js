@@ -707,6 +707,80 @@ suite('multilayer', function() {
       });
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/93
+    test("accepts unused directives", function(done) {
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: "select 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator",
+               cartocss: '#layer { point-transform:"scale(20)"; }', 
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+      var expected_token; // = "e34dd7e235138a062f8ba7ad051aa3a7";
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              var parsedBody = JSON.parse(res.body);
+              var expectedBody = { layergroupid: expected_token };
+              if ( expected_token ) {
+                assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+              }
+              else {
+                var token_components = parsedBody.layergroupid.split(':');
+                expected_token = token_components[0];
+                expected_last_updated_epoch = token_components[1];
+              }
+              next(null, res);
+          });
+        },
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 200, res.body);
+              assert.equal(res.headers['content-type'], "image/png");
+              assert.imageEqualsFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png', 2,
+                function(err, similarity) {
+                  next(err);
+              });
+          });
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) {
+            errors.push(err.message);
+            console.log("Error: " + err);
+          }
+          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
     suiteTeardown(function(done) {
 
         // This test will add map_style records, like
