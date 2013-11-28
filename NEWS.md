@@ -4,6 +4,7 @@
 Bug fixes:
 
 * Survive presence of malformed CartoCSS in redis (#94)
+* Accept useless point-transform:scale directives (#93)
 
 1.5.0 -- 2013-11-19
 -------------------
