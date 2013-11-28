@@ -3,6 +3,9 @@
     "name": "windshaft-cartodb",
     "version": "1.5.1",
     "description": "A map tile server for CartoDB",
+    "keywords": [
+      "cartodb"
+    ],
     "url": "https://github.com/CartoDB/Windshaft-cartodb",
     "licenses": [{
         "type": "BSD",
