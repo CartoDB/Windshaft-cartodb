@@ -648,7 +648,9 @@ suite('multilayer', function() {
       }, {}, function(res) {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.deepEqual(parsed, {"errors":["style0:1:10 Invalid value for text-name, the type expression is expected. cartodb_id (of type keyword)  was given."]});
+          assert.equal(parsed.errors.length, 1);
+          var errmsg = parsed.errors[0];
+          assert.ok(errmsg.match(/text-face-name.*Dejagnu/), parsed.errors.toString());
           done();
       });
     });
