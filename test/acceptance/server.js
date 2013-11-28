@@ -164,8 +164,8 @@ suite('server', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/94
-    test.skip("get'ing unrenderable style", function(done) {
-      var base_key = 'map_style|'+test_database+'|my_table';
+    test("get'ing unrenderable style", function(done) {
+      var base_key = 'map_style|'+test_database+'|issue94';
       var style = '#s{bogus}';
       Step(
         function checkRedis() {
@@ -183,7 +183,7 @@ suite('server', function() {
           var next = this;
           assert.response(server, {
               headers: {host: 'localhost'},
-              url: '/tiles/my_table/style',
+              url: '/tiles/issue94/style',
               method: 'GET'
               }, {}, function(res) { next(null, res); });
         },
