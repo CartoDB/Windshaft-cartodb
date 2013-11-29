@@ -77,7 +77,6 @@ suite('req2params', function() {
           assert.equal(qo.cache_buster, query.cache_buster)
           assert.equal('test', query.api_key)
           assert.equal(undefined, query.non_included)
-          assert.equal(query.map_key, 'test')
           done();
         });
       });
