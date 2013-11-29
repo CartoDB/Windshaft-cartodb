@@ -1,6 +1,10 @@
 1.5.2 -- 2013-MM-DD
 -------------------
 
+Bug fixes:
+
+* Fix configuration-level compatibility with versions prior to 1.5 (#96)
+
 1.5.1 -- 2013-11-28
 -------------------
 
