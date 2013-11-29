@@ -781,6 +781,71 @@ suite('multilayer', function() {
       );
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/91
+    // and https://github.com/CartoDB/Windshaft-cartodb/issues/38
+    test.skip("tiles for private tables can be fetched with api_key", function(done) {
+      var errors = [];
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: "select * from test_table_private_1 LIMIT 0",
+               cartocss: '#layer { marker-fill:red; }', 
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+      var expected_token; // = "e34dd7e235138a062f8ba7ad051aa3a7";
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res) { next(null, res); });
+        },
+        function check_result(err, res) {
+          if ( err ) throw err;
+          var next = this;
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var parsedBody = JSON.parse(res.body);
+          if ( expected_token ) {
+            assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+          }
+          else {
+            var token_components = parsedBody.layergroupid.split(':');
+            expected_token = token_components[0];
+            expected_last_updated_epoch = token_components[1];
+          }
+          next(null, res);
+        },
+        function cleanup(err) {
+          if ( err ) errors.push(err.message);
+          if ( ! expected_token ) return null;
+          var next = this;
+          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                next();
+              });
+          });
+        },
+        function finish(err) {
+          if ( err ) {
+            errors.push(err.message);
+            console.log("Error: " + err);
+          }
+          if ( errors.length ) done(new Error(errors));
+          else done(null);
+        }
+      );
+    });
+
     suiteTeardown(function(done) {
 
         // This test will add map_style records, like
