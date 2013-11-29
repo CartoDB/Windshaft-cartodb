@@ -783,7 +783,7 @@ suite('multilayer', function() {
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/91
     // and https://github.com/CartoDB/Windshaft-cartodb/issues/38
-    test.skip("tiles for private tables can be fetched with api_key", function(done) {
+    test("tiles for private tables can be fetched with api_key", function(done) {
       var errors = [];
       var layergroup =  {
         version: '1.0.0',
@@ -801,7 +801,7 @@ suite('multilayer', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup',
+              url: '/tiles/layergroup?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -821,6 +821,23 @@ suite('multilayer', function() {
             expected_last_updated_epoch = token_components[1];
           }
           next(null, res);
+        },
+        function do_get_tile(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png?api_key=1234',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }, {}, function(res) { next(null, res); });
+        },
+        function check_get_tile(err, res) {
+          if ( err ) throw err;
+          var next = this;
+          assert.equal(res.statusCode, 200, res.body);
+          return null;
         },
         function cleanup(err) {
           if ( err ) errors.push(err.message);
