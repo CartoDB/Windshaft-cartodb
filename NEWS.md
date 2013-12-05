@@ -4,6 +4,7 @@
 Bug fixes:
 
 * Fix configuration-level compatibility with versions prior to 1.5 (#96)
+* Fix use of old layergroups on mapnik upgrade (#97)
 
 1.5.1 -- 2013-11-28
 -------------------
