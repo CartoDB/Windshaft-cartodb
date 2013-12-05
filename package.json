@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "windshaft-cartodb",
-    "version": "1.5.2",
+    "version": "1.6.0",
     "description": "A map tile server for CartoDB",
     "keywords": [
       "cartodb"
