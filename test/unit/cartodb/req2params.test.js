@@ -15,7 +15,7 @@ suite('req2params', function() {
 
     test('cleans up request', function(done){
       opts.req2params({headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}}, function(err, req) {
-          if ( err ) { console.log(err); throw new Error(err); }
+          if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
@@ -28,7 +28,7 @@ suite('req2params', function() {
 
     test('sets dbname from redis metadata', function(done){
       opts.req2params({headers: { host:'localhost' }, query: {} }, function(err, req) {
-          if ( err ) { console.log(err); throw new Error(err); }
+          if ( err ) { done(err); return; }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -44,7 +44,7 @@ suite('req2params', function() {
 
     test('sets also dbuser for authenticated requests', function(done){
       opts.req2params({headers: { host:'localhost' }, query: {map_key: '1234'} }, function(err, req) {
-          if ( err ) { console.log(err); throw new Error(err); }
+          if ( err ) { done(err); return; }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -71,6 +71,7 @@ suite('req2params', function() {
       };
       test_helper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
         opts.req2params({ query: { non_included: 'toberemoved', api_key: 'test', style: 'override', lzma: data }}, function(err, req) {
+          if ( err ) { done(err); return; }
           var query = req.params
           assert.equal(qo.style, query.style)
           assert.equal(qo.style_version, query.style_version)
