@@ -70,7 +70,7 @@ suite('req2params', function() {
         cache_buster: 5
       };
       test_helper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
-        opts.req2params({ query: { non_included: 'toberemoved', api_key: 'test', style: 'override', lzma: data }}, function(err, req) {
+        opts.req2params({ headers: { host:'localhost' }, query: { non_included: 'toberemoved', api_key: 'test', style: 'override', lzma: data }}, function(err, req) {
           if ( err ) { done(err); return; }
           var query = req.params
           assert.equal(qo.style, query.style)
