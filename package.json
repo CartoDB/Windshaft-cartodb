@@ -27,7 +27,7 @@
         "windshaft"  : "~0.14.5",
         "step": "0.0.x",
         "request": "2.9.202",
-        "cartodb-redis": "~0.1.0",
+        "cartodb-redis": "~0.2.0",
         "mapnik": "~0.7.22",
         "lzma": "~1.2.3"
     },
