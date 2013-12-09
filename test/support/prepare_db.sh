@@ -83,20 +83,27 @@ fi
 if test x"$PREPARE_REDIS" = xyes; then
 
   echo "preparing redis..."
-  echo "HSET rails:users:localhost id ${TESTUSERID}" | redis-cli -p ${REDIS_PORT} -n 5
-  echo 'HSET rails:users:localhost database_name "'"${TEST_DB}"'"' | redis-cli -p ${REDIS_PORT} -n 5
-  echo "HSET rails:users:localhost map_key 1234" | redis-cli -p ${REDIS_PORT} -n 5
-  echo "SADD rails:users:localhost:map_key 1235" | redis-cli -p ${REDIS_PORT} -n 5
+
+  cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+HMSET rails:users:localhost id ${TESTUSERID} \
+                            database_name '${TEST_DB}' \
+                            map_key 1234
+SADD rails:users:localhost:map_key 1235
+EOF
 
   # A user configured as with cartodb-2.5.0+ 
-  echo "HSET rails:users:cartodb250user id ${TESTUSERID}" | redis-cli -p ${REDIS_PORT} -n 5
-  echo 'HSET rails:users:cartodb250user database_name "'${TEST_DB}'"' | redis-cli -p ${REDIS_PORT} -n 5
-  echo 'HSET rails:users:cartodb250user database_host "localhost"' | redis-cli -p ${REDIS_PORT} -n 5
-  echo 'HSET rails:users:cartodb250user database_password "'${TESTPASS}'"' | redis-cli -p ${REDIS_PORT} -n 5
-  echo "HSET rails:users:cartodb250user map_key 4321" | redis-cli -p ${REDIS_PORT} -n 5
+  cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+HMSET rails:users:cartodb250user id ${TESTUSERID} \
+                                 database_name "${TEST_DB}" \
+                                 database_host "localhost" \
+                                 database_password "${TESTPASS}" \
+                                 map_key 4321
+EOF
 
-  echo 'HSET rails:'"${TEST_DB}"':my_table infowindow "this, that, the other"' | redis-cli -p ${REDIS_PORT} -n 0
-  echo 'HSET rails:'"${TEST_DB}"':test_table_private_1 privacy "0"' | redis-cli -p ${REDIS_PORT} -n 0
+  cat <<EOF | redis-cli -p ${REDIS_PORT} -n 0
+HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
+HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
+EOF
 
 fi
 
