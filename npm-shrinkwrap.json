@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "dependencies": {
     "node-varnish": {
       "version": "0.1.1"
@@ -264,7 +264,7 @@
       "version": "2.9.202"
     },
     "cartodb-redis": {
-      "version": "0.1.0",
+      "version": "0.2.0",
       "dependencies": {
         "generic-pool": {
           "version": "2.0.4"
