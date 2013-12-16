@@ -2,7 +2,6 @@
 -------------------
 
 * Update cartodb-redis dependency to "~0.2.0"
-* Drop /map_metadata API entry point (#101)
 
 1.5.2 -- 2013-12-05
 -------------------
