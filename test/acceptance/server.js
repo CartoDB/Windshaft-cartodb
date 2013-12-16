@@ -1198,59 +1198,6 @@ suite('server', function() {
 
     /////////////////////////////////////////////////////////////////////////////////
     //
-    // GET METADATA
-    //
-    /////////////////////////////////////////////////////////////////////////////////
-
-    test("does not provide metadata of private table to unauthenticated requests", function(done){
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/test_table_private_1/map_metadata',
-            method: 'GET'
-        },{}, function(res) {
-          // FIXME: should be 401 instead
-          assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
-          done();
-        });
-    });
-
-    test("does provide metadata of private table to authenticated requests", function(done){
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/test_table_private_1/map_metadata?map_key=1234',
-            method: 'GET'
-        },{}, function(res) {
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          done();
-        });
-    });
-
-    test("does provide metadata of public table to unauthenticated requests", function(done){
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/gadm4/map_metadata',
-            method: 'GET'
-        },{}, function(res) {
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          // TODO: show metadata ?
-          done();
-        });
-    });
-
-    test("does provide metadata of public table to authenticated requests", function(done){
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/gadm4/map_metadata?map_key=1234',
-            method: 'GET'
-        },{}, function(res) {
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          // TODO: show metadata ?
-          done();
-        });
-    });
-
-    /////////////////////////////////////////////////////////////////////////////////
-    //
     // DELETE CACHE 
     //
     /////////////////////////////////////////////////////////////////////////////////

@@ -3,16 +3,15 @@ Windshaft-CartoDB
 
 [![Build Status](https://travis-ci.org/CartoDB/Windshaft-cartodb.png)](http://travis-ci.org/CartoDB/Windshaft-cartodb)
 
-This is the CartoDB map tiler. It extends Windshaft with some extra
+This is the CartoDB 2.0+ map tiler. It extends Windshaft with some extra
 functionality and custom filters for authentication
 
-* reads dbname from subdomain and cartodb redis for pretty tile urls
+* reads dbname from hostname and cartodb redis for pretty tile urls
 * configures windshaft to publish ``cartodb_id`` as the interactivity layer
 * gets the default geometry type from the cartodb redis store
-* allows tiles to be styled individually
 * provides a link to varnish high speed cache
 * provides a infowindow endpoint for windshaft
-* provides a ``map_metadata`` endpoint for windshaft
+* provides support for template signed maps
 
 Requirements
 ------------
@@ -26,7 +25,7 @@ Requirements
 
  [for cache control]
  - CartoDB-SQL-API 1.0.0+
- - CartoDB 0.9.5+ (for ``CDB_QueryTables``)
+ - CartoDB 2.0.0+ 
  - Varnish (https://www.varnish-cache.org)
 
 Configure
