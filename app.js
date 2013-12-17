@@ -27,7 +27,6 @@ _.extend(global.settings, global.environment);
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
 var CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft');
-var Windshaft = require('windshaft');
 var serverOptions = require('./lib/cartodb/server_options');
 
 ws = CartodbWindshaft(serverOptions);
