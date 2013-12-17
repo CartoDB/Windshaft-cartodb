@@ -1,8 +1,15 @@
 1.6.0 -- 20YY-MM-DD
 -------------------
 
-* Update cartodb-redis dependency to "~0.3.0"
-* Add 'user_from_host' directive to generalize username extraction (#100)
+New features:
+
+ * Add 'user_from_host' directive to generalize username extraction (#100)
+ * Implement signed template maps (#98)
+
+Other changes:
+
+ * Update cartodb-redis dependency to "~0.3.0"
+ * Update redis-server dependency to "2.4.0+"
 
 1.5.2 -- 2013-12-05
 -------------------

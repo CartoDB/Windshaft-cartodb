@@ -17,10 +17,8 @@ config/environments/test.js: config.status--test
 
 check-local: config/environments/test.js
 	./run_tests.sh ${RUNTESTFLAGS} \
-    test/unit/cartodb/req2params.test.js \
-    test/acceptance/cache_validator.js \
-    test/acceptance/server.js \
-    test/acceptance/multilayer.js
+    test/unit/cartodb/*.js \
+    test/acceptance/*.js 
 
 check-submodules:
 	PATH="$$PATH:$(srcdir)/node_modules/.bin/"; \

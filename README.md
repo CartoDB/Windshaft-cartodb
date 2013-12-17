@@ -21,7 +21,7 @@ Requirements
  - node-0.8.x+
  - PostgreSQL-8.3+
  - PostGIS-1.5.0+
- - Redis 2.2.0+ (http://www.redis.io)
+ - Redis 2.4.0+ (http://www.redis.io)
  - Mapnik 2.0 or 2.1 
 
  [for cache control]

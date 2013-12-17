@@ -18,13 +18,15 @@ if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
 
 var _ = require('underscore')
     , Step       = require('step')
-	, CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft');
-
+    ;
 // set environment specific variables
 global.settings     = require(__dirname + '/config/settings');
 global.environment  = require(__dirname + '/config/environments/' + ENV);
 _.extend(global.settings, global.environment);
 
+// Include cartodb_windshaft only _after_ the "global" variable is set
+// See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
+var CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft');
 var Windshaft = require('windshaft');
 var serverOptions = require('./lib/cartodb/server_options');
 
