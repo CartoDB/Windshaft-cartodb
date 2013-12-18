@@ -27,7 +27,10 @@ Requirements
  [for cache control]
  - CartoDB-SQL-API 1.0.0+
  - CartoDB 0.9.5+ (for ``CDB_QueryTables``)
- - Varnish (https://www.varnish-cache.org)
+ - Varnish (http://www.varnish-cache.org)
+
+ [for running the testsuite]
+ - Imagemagick (http://www.imagemagick.org)
 
 Configure
 ---------
