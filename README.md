@@ -11,8 +11,8 @@ functionality and custom filters for authentication
 * gets the default geometry type from the cartodb redis store
 * allows tiles to be styled individually
 * provides a link to varnish high speed cache
-* provides a infowindow endpoint for windshaft
-* provides a ``map_metadata`` endpoint for windshaft
+* provides a ``infowindow`` endpoint for windshaft (DEPRECATED)
+* provides a ``map_metadata`` endpoint for windshaft (DEPRECATED)
 * provides signed template maps API
   (http://github.com/CartoDB/Windshaft-cartodb/wiki/Template-maps)
 
