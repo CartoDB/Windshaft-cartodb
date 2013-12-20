@@ -41,5 +41,9 @@ if test x${verbose} = xyes; then
   echo "${res}"
 fi
 
+# Successful response contains no space
+echo "$res" | grep " " && { echo $res && exit 1; }
+
 tok=`echo "$res" | sed 's/.*"template_id":"\([^"]*\)".*/\1/'`
 echo $tok
+
