@@ -1,0 +1,45 @@
+#!/bin/sh
+
+verbose=no
+tiler_url=http://dev.localhost.lan:8181/tiles/template
+apikey=${CDB_APIKEY}
+
+while test -n "$1"; do
+  if test "$1" = "-v"; then
+    verbose=yes
+  elif test "$1" = "-k"; then
+    shift
+    apikey="$1"
+  elif test "$1" = "-u"; then
+    shift
+    tiler_url="$1"
+  elif test -z "$cfg"; then
+    cfg="$1"
+  else
+    echo "Unused parameter $1" >&2
+  fi
+  shift
+done
+
+if test -z "$cfg"; then
+  echo "Usage: $0 [-v] [-k <api_key>] [-u <tiler_url>] <template_config>" >&2
+  echo "Default <tiler_url> is ${tiler_url}" >&2
+  echo "Default <api_key> is read from CDB_APIKEY env variable" >&2
+  exit 1
+fi
+
+cmd="curl -skH Content-Type:application/json --data-binary @- ${tiler_url}?api_key=${apikey}"
+if test x${verbose} = xyes; then
+  cmd="${cmd} -v"
+fi
+res=`cat ${cfg} | tr '\n' ' ' | ${cmd}`
+if test $? -gt 0; then
+  echo "curl command failed: ${cmd}"
+fi
+
+if test x${verbose} = xyes; then
+  echo "${res}"
+fi
+
+tok=`echo "$res" | sed 's/.*"template_id":"\([^"]*\)".*/\1/'`
+echo $tok
