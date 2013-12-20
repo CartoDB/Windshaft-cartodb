@@ -31,12 +31,13 @@ export CDB_APIKEY=${apikey}
 max=3000000
 i=0
 while test "$i" -le "$max"; do
-  tpl_id=`${basedir}/create_template -u ${tiler_url} ${tpl}`
+  tpln=`cat ${tpl} | sed "s/\"name\":\"\(.*\)\"/\"name\":\"\1${i}\"/"`
+  tpl_id=`echo ${tpln} | ${basedir}/create_template -u ${tiler_url} /dev/stdin`
   if test $? -ne 0; then
     echo $tpl_id >&2
     break
   fi
-  tpl_id=`${basedir}/update_template -u ${tiler_url} ${tpl_id} ${tpl}`
+  tpl_id=`echo ${tpln} | ${basedir}/update_template -u ${tiler_url} ${tpl_id} /dev/stdin`
   if test $? -ne 0; then
     echo $tpl_id >&2
     break
