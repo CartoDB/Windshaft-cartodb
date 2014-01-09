@@ -1,7 +1,8 @@
 Windshaft-CartoDB
 ==================
 
-[![Build Status](https://travis-ci.org/CartoDB/Windshaft-cartodb.png)](http://travis-ci.org/CartoDB/Windshaft-cartodb)
+[![Build Status](http://travis-ci.org/CartoDB/Windshaft-cartodb.png)]
+(http://travis-ci.org/CartoDB/Windshaft-cartodb)
 
 This is the CartoDB map tiler. It extends Windshaft with some extra
 functionality and custom filters for authentication
