@@ -107,7 +107,7 @@ suite('server', function() {
         }, function(res) {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, _.template(default_style, {table: 'my_table'}));
-            assert.equal(parsed.style_version, mapnik.versions.mapnik);
+            assert.equal(parsed.style_version, mapnik_version);
             done();
         });
     });
@@ -158,7 +158,7 @@ suite('server', function() {
           var parsed = JSON.parse(res.body);
           var style = _.template(default_style, {table: 'test_table_private_1'});
           assert.equal(parsed.style, style);
-          assert.equal(parsed.style_version, mapnik.versions.mapnik); 
+          assert.equal(parsed.style_version, mapnik_version); 
           done();
         });
     });
@@ -351,7 +351,7 @@ suite('server', function() {
                 assert.equal(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.equal(parsed.style, style);
-                assert.equal(parsed.style_version, mapnik.versions.mapnik);
+                assert.equal(parsed.style_version, mapnik_version);
                 done();
               });
             });
@@ -379,7 +379,7 @@ suite('server', function() {
               var parsed = JSON.parse(res.body);
               // NOTE: no transform expected for the specific style
               assert.equal(parsed.style, style);
-              assert.equal(parsed.style_version, mapnik.versions.mapnik);
+              assert.equal(parsed.style_version, mapnik_version);
               done();
             });
         });
