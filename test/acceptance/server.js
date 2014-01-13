@@ -125,6 +125,7 @@ suite('server', function() {
           assert.equal(res.statusCode, 400, res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error: 'Sorry, you are unauthorized (permission denied)'});
+          assert.ok(!res.headers.hasOwnProperty('cache-control'));
           done();
         });
     });
@@ -142,6 +143,7 @@ suite('server', function() {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
+          assert.ok(!res.headers.hasOwnProperty('cache-control'));
           done();
         });
     });
@@ -212,9 +214,12 @@ suite('server', function() {
             url: '/tiles/my_table/style',
             method: 'POST'
         },{
-            status: 400,
             body: '{"error":"must send style information"}'
-        }, function() { done(); });
+        }, function(res) {
+          assert.equal(res.statusCode, 400);
+          assert.ok(!res.headers.hasOwnProperty('cache-control'));
+          done();
+        });
     });
     
     test("post'ing bad style returns 400 with error", function(done){
@@ -766,6 +771,8 @@ suite('server', function() {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
+          assert.ok(!res.headers.hasOwnProperty('cache-control'),
+            "Unexpected Cache-Control: " + res.headers['cache-control']);
           done();
         });
     });
@@ -786,6 +793,9 @@ suite('server', function() {
         }, function(res) {
           // 401 Unauthorized
           assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          // Failed in 1.6.0 of https://github.com/CartoDB/Windshaft-cartodb/issues/107
+          assert.ok(!res.headers.hasOwnProperty('cache-control'),
+            "Unexpected Cache-Control: " + res.headers['cache-control']);
           done();
         });
     });
@@ -1179,6 +1189,7 @@ suite('server', function() {
             method: 'DELETE'
         },{}, function(res) {
           assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+          assert.ok(!res.headers.hasOwnProperty('cache-control'));
           done();
         });
     });
@@ -1210,6 +1221,7 @@ suite('server', function() {
         },{}, function(res) {
           // FIXME: should be 401 instead
           assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
+          assert.ok(!res.headers.hasOwnProperty('cache-control'));
           done();
         });
     });
@@ -1262,6 +1274,7 @@ suite('server', function() {
             method: 'DELETE'
         },{}, function(res) {
           assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+          assert.ok(!res.headers.hasOwnProperty('cache-control'));
           done();
         });
     });

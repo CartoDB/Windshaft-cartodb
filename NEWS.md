@@ -1,6 +1,10 @@
 1.6.1 -- 2014-01-DD
 -------------------
 
+Bug fixes:
+
+* Drop cache headers from error responses (#107)
+
 1.6.0 -- 2014-01-10
 -------------------
 
