@@ -1,3 +1,10 @@
+1.5.3 -- 2014-01-DD
+-------------------
+
+Bug fixes:
+
+* Drop cache headers from error responses (#107)
+
 1.5.2 -- 2013-12-05
 -------------------
 
