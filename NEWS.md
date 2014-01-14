@@ -4,6 +4,7 @@
 Bug fixes:
 
 * Drop cache headers from error responses (#107)
+* Localize external CartoCSS resources at renderer creation time (#108)
 
 1.5.2 -- 2013-12-05
 -------------------
