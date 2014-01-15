@@ -19,6 +19,14 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
+// Check that the response headers do not request caching
+// Throws on failure
+function checkNoCache(res) {
+  assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+  assert.ok(!res.headers.hasOwnProperty('cache-control')); // is this correct ?
+  assert.ok(!res.headers.hasOwnProperty('last-modified')); // is this correct ?
+}
+
 suite('multilayer', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
@@ -456,6 +464,35 @@ suite('multilayer', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors[0].match(/^style0/));
           assert.ok(parsed.errors[0].match(/Unrecognized rule: polygon-fit/));
+          done();
+      });
+    });
+
+    // Also tests that server doesn't crash:
+    // see http://github.com/CartoDB/Windshaft-cartodb/issues/109
+    test("layergroup creation fails if sql is bogus", function(done) {
+      var layergroup =  {
+        stat_tag: 'random_tag',
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select bogus(0,0) as the_geom_webmercator',
+               cartocss: '#layer { polygon-fill:red; }', 
+               cartocss_version: '2.0.1' 
+             } }
+        ]
+      };
+      assert.response(server, {
+          url: '/tiles/layergroup',
+          method: 'POST',
+          headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+          assert.equal(res.statusCode, 400, res.body);
+          var parsed = JSON.parse(res.body);
+          var msg = parsed.errors[0];
+          assert.ok(msg.match(/bogus.*exist/), msg);
+          checkNoCache(res);
           done();
       });
     });
