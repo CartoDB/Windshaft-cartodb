@@ -2,28 +2,78 @@
 
 # TODO: port to node, if you really need it
 
-REDIS_PORT=6379 # default port
-
+ENV='development';
+BASEDIR=`cd $(dirname $0)/../; pwd`
 
 if test -z "$1"; then
-  echo "Usage: $0 <username> [<tablename>|~<token>]" >&2
+  echo "Usage: $0 [--env <environment>] <username> [<tablename>|~<token>]" >&2
+  echo " environment defaults to 'development'"
   exit 1
 fi
 
-username="$1"
-token="$2"
+username=""
+token=""
+
+while test -n "$1"; do
+  if test "$1" = "--env"; then
+    shift; ENV="$1"; shift
+  elif test -z "$username"; then
+    username="$1"; shift
+  elif test -z "$token"; then
+    token="$1"; shift
+  else
+    echo "Unused option $1" >&2
+    shift
+  fi
+done
+
+echo "Using environment '${ENV}'"
+
+CONFIG="${BASEDIR}/config/environments/${ENV}.js"
+REDIS_PORT=`node -e "console.log(require('${CONFIG}').redis.port)"`
+if test $? -ne 0; then
+  exit 1
+fi
+
 
 dbname=`redis-cli -p ${REDIS_PORT} -n 5 hget "rails:users:${username}" "database_name"`
 if test $? -ne 0; then
   exit 1
 fi
 if test -z "${dbname}"; then
-  echo "Username ${username} unknown by redis (try CARTODB/script/restore_redis?)" >&2
+  echo "Username ${username} unknown by redis on port ${REDIS_PORT} (try CARTODB/script/restore_redis?)" >&2
   exit 1
 fi
 echo "Database name for user ${username}: ${dbname}" # only if verbose?
 if test -n "$token"; then
-  redis-cli get "map_style|${dbname}|${token}" | sed -e 's/\\n/\n/g' -e 's/\\//g'
+  rec=`redis-cli get "map_style|${dbname}|${token}"`
+  if test -z "${rec}"; then
+    echo "${token}: no such map style known by redis on port ${REDIS_PORT}" >&2
+    exit 1
+  fi
+  #echo "${rec}" 
+  escrec=`echo "${rec}" | sed -e 's/\\\\/\\\\\\\\/g'`
+  #echo "${escrec}" 
+  node <<EOF
+var x=JSON.parse('${escrec}');
+console.log('style: ' + x.style);
+console.log('version: ' + x.version);
+
+global.environment = require('${CONFIG}');
+var serverOptions = require('${BASEDIR}/lib/cartodb/server_options'); // _after_ setting global.environment
+var grainstore = require('${BASEDIR}/node_modules/windshaft/node_modules/grainstore/lib/grainstore');
+var mml_store = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
+var mml_builder = mml_store.mml_builder({dbname:'${dbname}', table:'${token}'},
+      function(err, payload) {
+        if ( err ) throw err;
+        mml_builder.toXML(function(err, xml) {
+        if ( err ) throw err;
+          console.log('- XML - ');
+          console.log(xml);
+        });
+      });
+EOF
+  #echo "${rec}" | sed -e 's/\\n/\n/g' -e 's/\\//g'
 else
   redis-cli keys "map_style|${dbname}|*"
 fi

@@ -5,6 +5,11 @@ Bug fixes:
 
 * Fix support for long (>64k chars) queries in layergroup creation (#111)
 
+Enhancements:
+
+* Enhance tools/show_style to accept an environment parameter and
+  print XML style now it is not in redis anymore (#110)
+
 1.6.1 -- 2014-01-15
 -------------------
 
