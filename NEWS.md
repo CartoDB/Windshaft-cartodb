@@ -3,6 +3,8 @@
 
 Bug fixes:
 
+* Fix support for long (>64k chars) queries in layergroup creation (#111)
+
 1.6.1 -- 2014-01-15
 -------------------
 
