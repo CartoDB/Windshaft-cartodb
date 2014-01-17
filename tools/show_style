@@ -63,7 +63,13 @@ global.environment = require('${CONFIG}');
 var serverOptions = require('${BASEDIR}/lib/cartodb/server_options'); // _after_ setting global.environment
 var grainstore = require('${BASEDIR}/node_modules/windshaft/node_modules/grainstore/lib/grainstore');
 var mml_store = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
-var mml_builder = mml_store.mml_builder({dbname:'${dbname}', table:'${token}'},
+var builderconfig = {dbname:'${dbname}'};
+if ( '${token}'.match(/^~/) ) {
+  builderconfig.token = '${token}'.substring(1);
+} else {
+  builderconfig.table = '${token}';
+}
+var mml_builder = mml_store.mml_builder(builderconfig,
       function(err, payload) {
         if ( err ) throw err;
         mml_builder.toXML(function(err, xml) {
