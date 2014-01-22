@@ -5,6 +5,8 @@ New features:
 
  * Add 'user_from_host' directive to generalize username extraction (#100)
  * Implement signed template maps (#98)
+ * Support CORS in template instanciation endpoint
+
 
 Other changes:
 

@@ -131,6 +131,32 @@ suite('template_api', function() {
       );
     });
 
+    test("instance endpoint should return CORS headers", function(done){
+      Step(function postTemplate1(err, res) {
+          var next = this;
+          var post_request = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost.localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_acceptance1)
+          };
+          assert.response(server, post_request, {}, function(res) { next(null, res); });
+        },
+        function testCORS() {
+          assert.response(server, {
+              url: '/tiles/template/acceptance1',
+              method: 'OPTIONS'
+          },{
+              status: 200,
+              headers: {
+                'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Content-Type',
+                'Access-Control-Allow-Origin': '*'
+              }
+          }, function() { done(); });
+      });
+    });
+
+
     test("can list templates", function(done) {
 
       var errors = [];
