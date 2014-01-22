@@ -9,6 +9,7 @@ Enhancements:
 
 * Enhance tools/show_style to accept an environment parameter and
   print XML style now it is not in redis anymore (#110)
+* Support CORS in template instanciation endpoint (#113)
 
 1.6.1 -- 2014-01-15
 -------------------
@@ -25,7 +26,6 @@ New features:
 
  * Add 'user_from_host' directive to generalize username extraction (#100)
  * Implement signed template maps (#98)
- * Support CORS in template instanciation endpoint
 
 
 Other changes:
