@@ -1,4 +1,24 @@
-1.6.0 -- 20YY-MM-DD
+1.6.2 -- 2014-MM-DD
+-------------------
+
+Bug fixes:
+
+* Fix support for long (>64k chars) queries in layergroup creation (#111)
+
+Enhancements:
+
+* Enhance tools/show_style to accept an environment parameter and
+  print XML style now it is not in redis anymore (#110)
+
+1.6.1 -- 2014-01-15
+-------------------
+
+Bug fixes:
+
+* Drop cache headers from error responses (#107)
+* Localize external CartoCSS resources at renderer creation time (#108)
+
+1.6.0 -- 2014-01-10
 -------------------
 
 New features:

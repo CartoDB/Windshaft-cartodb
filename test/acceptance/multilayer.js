@@ -19,6 +19,14 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
+// Check that the response headers do not request caching
+// Throws on failure
+function checkNoCache(res) {
+  assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+  assert.ok(!res.headers.hasOwnProperty('cache-control')); // is this correct ?
+  assert.ok(!res.headers.hasOwnProperty('last-modified')); // is this correct ?
+}
+
 suite('multilayer', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
@@ -460,6 +468,35 @@ suite('multilayer', function() {
       });
     });
 
+    // Also tests that server doesn't crash:
+    // see http://github.com/CartoDB/Windshaft-cartodb/issues/109
+    test("layergroup creation fails if sql is bogus", function(done) {
+      var layergroup =  {
+        stat_tag: 'random_tag',
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select bogus(0,0) as the_geom_webmercator',
+               cartocss: '#layer { polygon-fill:red; }', 
+               cartocss_version: '2.0.1' 
+             } }
+        ]
+      };
+      assert.response(server, {
+          url: '/tiles/layergroup',
+          method: 'POST',
+          headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          data: JSON.stringify(layergroup)
+      }, {}, function(res) {
+          assert.equal(res.statusCode, 400, res.body);
+          var parsed = JSON.parse(res.body);
+          var msg = parsed.errors[0];
+          assert.ok(msg.match(/bogus.*exist/), msg);
+          checkNoCache(res);
+          done();
+      });
+    });
+
     test("layergroup with 2 private-table layers", function(done) {
 
       var layergroup =  {
@@ -862,6 +899,71 @@ suite('multilayer', function() {
         }
       );
     });
+
+    // SQL strings can be of arbitrary length, when using POST
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/111
+    test("sql string can be very long", function(done){
+      var long_val = 'pretty';
+      for (var i=0; i<1024; ++i) long_val += ' long'
+      long_val += ' string';
+      var sql = "SELECT ";
+      for (var i=0; i<16; ++i) 
+        sql += "'" + long_val + "'::text as pretty_long_field_name_" + i + ", ";
+      sql += "cartodb_id, the_geom_webmercator FROM gadm4 g";
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: sql,
+               cartocss: '#layer { marker-fill:red; }', 
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+      var errors = [];
+      var expected_token; 
+      Step(
+        function do_post()
+        {
+          var data = JSON.stringify(layergroup);
+          assert.ok(data.length > 1024*64);
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: data
+          }, {}, function(res) { next(null, res); });
+        },
+        function check_result(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          var parsedBody = JSON.parse(res.body);
+          var token_components = parsedBody.layergroupid.split(':');
+          expected_token = token_components[0];
+          return null;
+        },
+        function cleanup(err) {
+          if ( err ) errors.push(err.message);
+          if ( ! expected_token ) return null;
+          var next = this;
+          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                next();
+              });
+          });
+        },
+        function finish(err) {
+          if ( err ) errors.push('' + err);
+          if ( errors.length ) done(new Error(errors.join(',')));
+          else done(null);
+        }
+      );
+    });
+
 
     suiteTeardown(function(done) {
 
