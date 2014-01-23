@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "dependencies": {
     "node-varnish": {
       "version": "0.1.1"
@@ -378,11 +378,11 @@
     "lzma": {
       "version": "1.2.3"
     },
-    "semver": {
-      "version": "1.1.4"
-    },
     "strftime": {
       "version": "0.6.2"
+    },
+    "semver": {
+      "version": "1.1.4"
     },
     "redis": {
       "version": "0.8.6"
