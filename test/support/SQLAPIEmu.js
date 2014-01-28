@@ -1,5 +1,6 @@
 var http        = require('http');
 var url         = require('url');
+var _ = require('underscore');
 
 var o = function(port, cb) {
 
@@ -22,7 +23,6 @@ var o = function(port, cb) {
         req.on('end', function() {
           //console.log("Data is: "); console.dir(data);
           query = JSON.parse(data);
-          //console.log("Parsed is: "); console.dir(query);
           //console.log("handleQuery is " + that.handleQuery);
           that.handleQuery(query, res);
         });
@@ -45,15 +45,20 @@ o.prototype.handleQuery = function(query, res) {
       };
       res.write(JSON.stringify({rows: [ row ]}));
     } else {
-      var qs = JSON.stringify(query);
-      var row = {
-        // This is the structure of the known query sent by tiler
-        'cdb_querytables': '{' + qs + '}',
-        'max': qs
-      };
-      var out_obj = {rows: [ row ]};
-      var out = JSON.stringify(out_obj);
-      res.write(out);
+      if ( query.q.match('_private_') && query.api_key === undefined) {
+        res.statusCode = 403;
+        res.write(JSON.stringify({'error':'forbidden: ' + JSON.stringify(query)}));
+      } else {
+        var qs = JSON.stringify(query);
+        var row = {
+          // This is the structure of the known query sent by tiler
+          'cdb_querytables': '{' + qs + '}',
+          'max': qs
+        };
+        var out_obj = {rows: [ row ]};
+        var out = JSON.stringify(out_obj);
+        res.write(out);
+      }
     }
     res.end();
   };
