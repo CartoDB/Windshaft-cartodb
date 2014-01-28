@@ -1,6 +1,10 @@
 1.6.3 -- 2014-MM-DD
 -------------------
 
+Bug fixes: 
+
+* layergroup accept both map_key and api_key (#91)
+
 1.6.2 -- 2014-01-23
 -------------------
 
