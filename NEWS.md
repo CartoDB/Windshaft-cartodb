@@ -7,7 +7,8 @@ Bug fixes:
 * Fix public instanciation of signed template accessign private data (#114)
 
 Enhancements:
-* added support for instanciation a template map with JSONP (#116)
+
+* Add support for instanciating a template map with JSONP (#116)
 
 1.6.2 -- 2014-01-23
 -------------------
