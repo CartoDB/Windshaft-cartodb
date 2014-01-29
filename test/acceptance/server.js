@@ -1176,6 +1176,20 @@ suite('server', function() {
         });
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/115
+    test.skip("get'ing tile with not-strictly-valid style", function(done) {
+        var style = querystring.stringify({style: '#test_table{line-color:black}}', style_version: '2.0.0'});
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/test_table/0/0/0.png?' + style, // madrid
+            method: 'GET',
+            encoding: 'binary'
+        },{}, function(res){
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          done();
+        });
+    });
+
     /////////////////////////////////////////////////////////////////////////////////
     //
     // DELETE CACHE 
