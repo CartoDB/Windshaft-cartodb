@@ -6,6 +6,9 @@ Bug fixes:
 * layergroup accept both map_key and api_key (#91)
 * Fix public instanciation of signed template accessign private data (#114)
 
+Enhancements:
+* added support for instanciation a template map with JSONP (#116)
+
 1.6.2 -- 2014-01-23
 -------------------
 
