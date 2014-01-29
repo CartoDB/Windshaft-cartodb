@@ -1,85 +1,147 @@
-#!/bin/sh
+#!/usr/bin/env node
 
-# TODO: port to node, if you really need it
-
-ENV='development';
-BASEDIR=`cd $(dirname $0)/../; pwd`
-
-if test -z "$1"; then
-  echo "Usage: $0 [--env <environment>] <username> [<tablename>|~<token>]" >&2
-  echo " environment defaults to 'development'"
-  exit 1
-fi
-
-username=""
-token=""
-
-while test -n "$1"; do
-  if test "$1" = "--env"; then
-    shift; ENV="$1"; shift
-  elif test -z "$username"; then
-    username="$1"; shift
-  elif test -z "$token"; then
-    token="$1"; shift
-  else
-    echo "Unused option $1" >&2
-    shift
-  fi
-done
-
-echo "Using environment '${ENV}'"
-
-CONFIG="${BASEDIR}/config/environments/${ENV}.js"
-REDIS_PORT=`node -e "console.log(require('${CONFIG}').redis.port)"`
-if test $? -ne 0; then
-  exit 1
-fi
+var path = require('path');
+var redis = require('redis');
+var Step = require('step');
 
 
-dbname=`redis-cli -p ${REDIS_PORT} -n 5 hget "rails:users:${username}" "database_name"`
-if test $? -ne 0; then
-  exit 1
-fi
-if test -z "${dbname}"; then
-  echo "Username ${username} unknown by redis on port ${REDIS_PORT} (try CARTODB/script/restore_redis?)" >&2
-  exit 1
-fi
-echo "Database name for user ${username}: ${dbname}" # only if verbose?
-if test -n "$token"; then
-  rec=`redis-cli get "map_style|${dbname}|${token}"`
-  if test -z "${rec}"; then
-    echo "${token}: no such map style known by redis on port ${REDIS_PORT}" >&2
-    exit 1
-  fi
-  #echo "${rec}" 
-  escrec=`echo "${rec}" | sed -e 's/\\\\/\\\\\\\\/g'`
-  #echo "${escrec}" 
-  node <<EOF
-var x=JSON.parse('${escrec}');
-console.log('style: ' + x.style);
-console.log('version: ' + x.version);
-
-global.environment = require('${CONFIG}');
-var serverOptions = require('${BASEDIR}/lib/cartodb/server_options'); // _after_ setting global.environment
-var grainstore = require('${BASEDIR}/node_modules/windshaft/node_modules/grainstore/lib/grainstore');
-var mml_store = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
-var builderconfig = {dbname:'${dbname}'};
-if ( '${token}'.match(/^~/) ) {
-  builderconfig.token = '${token}'.substring(1);
-} else {
-  builderconfig.table = '${token}';
+function usage(me, exitcode) {
+  console.log("Usage: " + me + " [--env <environment>] <username> [<tablename>|~<token>]");
+  process.exit(exitcode);
 }
-var mml_builder = mml_store.mml_builder(builderconfig,
-      function(err, payload) {
+
+var node_path = process.argv.shift(); 
+var script_path = process.argv.shift(); 
+var basedir = path.dirname(script_path);
+var me = path.basename(script_path);
+
+var ENV = 'development.js';
+var username, token;
+var arg;
+while ( arg = process.argv.shift() ) {
+  if ( arg == '--env' ) {
+    ENV = process.argv.shift();
+  }
+  else if ( ! username ) {
+    username = arg;
+  }
+  else if ( ! token ) {
+    token = arg;
+  }
+  else {
+    console.warn("Unused parameter " + arg);
+  }
+}
+
+if ( ! username ) usage(me, 1);
+
+console.log("Using environment " + ENV);
+
+global.environment = require('../config/environments/' + ENV);
+var serverOptions = require('../lib/cartodb/server_options'); // _after_ setting global.environment
+
+var client;
+var dbname;
+Step(
+  function getClient() {
+    client = redis.createClient(serverOptions.redis.port, serverOptions.redis.host);
+    client.on('connect', this);
+  },
+  function getUserMeta(err) {
+    if ( err ) throw err;
+    client.select(5);
+    client.hgetall('rails:users:' + username, this);
+  },
+  function readDB(err, data) {
+    if ( err ) throw err;
+    if ( ! data )
+      throw new Error('Username ' + username + ' unknown by redis on port '
+        + serverOptions.redis.port + ' (try CARTODB/script/restore_redis?)');
+    //console.log("Data:"); console.dir(data);
+    dbname = data['database_name'];
+    console.log("Database name for user " + username + ": " + dbname);
+    client.select(0);
+    return null;
+  },
+  function showTokens(err) {
+    if ( err ) throw err;
+    if ( token ) return null;
+    var next = this;
+    Step(
+      function getTokens() {
+        client.keys('map_style|' + dbname + '|*', this);
+      },
+      function showTokens(err, data) {
+        if (err) throw err;
+        if ( data ) console.log(data.join('\n'));
+        return null;
+      },
+      function showTokensFinish(err) {
+        next(err);
+      }
+    );
+  },
+  function showStyle(err) {
+    if ( err ) throw err;
+    if ( ! token ) return null;
+    var next = this;
+    Step(
+      function getStyle() {
+        client.get('map_style|' + dbname + '|' + token, this);
+      },
+      function showStyle(err, data) {
         if ( err ) throw err;
-        mml_builder.toXML(function(err, xml) {
-        if ( err ) throw err;
-          console.log('- XML - ');
-          console.log(xml);
-        });
-      });
-EOF
-  #echo "${rec}" | sed -e 's/\\n/\n/g' -e 's/\\//g'
-else
-  redis-cli keys "map_style|${dbname}|*"
-fi
+        if ( ! data ) {
+          throw new Error(token + ': no such map style known by redis on port '
+            + serverOptions.redis.port);
+        }
+//console.log("data: " + data);
+        var x=JSON.parse(data);
+        printMapnikStyle(x, this);
+      },
+      function showStyleFinish(err) {
+        next(err);
+      }
+    );
+  },
+  function finish(err) {
+    if ( err ) {
+      console.error(err.message)
+      process.exit(1);
+    }
+    process.exit(0);
+  }
+);
+
+function printMapnikStyle(x, callback) {
+  console.log('style: ' + x.style);
+  console.log('version: ' + x.version);
+  var grainstore = require(basedir + '/../node_modules/windshaft/node_modules/grainstore/lib/grainstore');
+  var mml_store = new grainstore.MMLStore(serverOptions.redis, serverOptions.grainstore);
+  var builderconfig = {dbname:dbname};
+  if ( token.match(/^~/) ) {
+    builderconfig.token = token.substring(1);
+  } else {
+    builderconfig.table = token;
+  }
+  var mml_builder;
+  Step(
+    function getBuilder() {
+      mml_builder = mml_store.mml_builder(builderconfig, this);
+    },
+    function getXML(err, builder) {
+      if ( err ) throw err;
+      mml_builder.toXML(this);
+    },
+    function showXML(err, xml) {
+      if ( err ) throw err;
+      console.log('- XML - ');
+      console.log(xml);
+      return null;
+    },
+    function finish(err) {
+      callback(err);
+    }
+  );
+}
+

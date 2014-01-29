@@ -5,6 +5,7 @@ Bug fixes:
 
 * layergroup accept both map_key and api_key (#91)
 * Fix public instanciation of signed template accessing private data (#114)
+* Fix show_style in presence of complex styles
 
 Enhancements:
 
