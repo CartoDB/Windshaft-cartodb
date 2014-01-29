@@ -871,6 +871,145 @@ suite('template_api', function() {
       );
     });
 
+    test("can instanciate a template using jsonp", function(done) {
+
+      // This map fetches data from a private table
+      var template_acceptance_open =  {
+          version: '0.0.1',
+          name: 'acceptance_open_jsonp',
+          auth: { method: 'open' },
+          layergroup:  {
+            version: '1.0.0',
+            layers: [
+               { options: {
+                   sql: "select * from test_table_private_1 LIMIT 0",
+                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                   cartocss_version: '2.0.2',
+                   interactivity: 'cartodb_id'
+                 } }
+            ]
+          }
+      };
+
+      var template_params = {};
+
+      var errors = [];
+      var expected_failure = false;
+      var tpl_id;
+      var layergroupid;
+      Step(
+        function postTemplate(err, res)
+        {
+          var next = this;
+          var post_request = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_acceptance_open)
+          }
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instanciateNoAuth(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('template_id'),
+            "Missing 'template_id' from response body: " + res.body);
+          tpl_id = parsed.template_id;
+          var post_request = {
+              url: '/tiles/template/' + tpl_id + "/jsonp?callback=test",
+              method: 'GET',
+              headers: {host: 'localhost' }
+          }
+          var next = this;
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instanciateAuth(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200,
+            'Unexpected success instanciating template with no auth: '
+            + res.statusCode + ': ' + res.body);
+          done();
+        }
+      );
+    });
+
+    test("can instanciate a template using jsonp with params", function(done) {
+
+      // This map fetches data from a private table
+      var template_acceptance_open =  {
+          version: '0.0.1',
+          name: 'acceptance_open_jsonp_params',
+          auth: { method: 'open' },
+          /*
+          placeholders: {
+            color: { type: "css_color", default: "red" }
+          },*/
+          layergroup:  {
+            version: '1.0.0',
+            layers: [
+               { options: {
+                   sql: "select * from test_table_private_1 LIMIT 0",
+                   cartocss: '#layer { marker-fill: <%= color %>; marker-allow-overlap:true; }', 
+                   cartocss_version: '2.0.2',
+                   interactivity: 'cartodb_id'
+                 } }
+            ]
+          }
+      };
+
+      var template_params = {};
+
+      var errors = [];
+      var expected_failure = false;
+      var tpl_id;
+      var layergroupid;
+      Step(
+        function postTemplate(err, res)
+        {
+          var next = this;
+          var post_request = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_acceptance_open)
+          }
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instanciateNoAuth(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('template_id'),
+            "Missing 'template_id' from response body: " + res.body);
+          tpl_id = parsed.template_id;
+          var post_request = {
+              url: '/tiles/template/' + tpl_id + "/jsonp?callback=test%config=" + JSON.stringify('{color:blue}'),
+              method: 'GET',
+              headers: {host: 'localhost' }
+          }
+          var next = this;
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instanciateAuth(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200,
+            'Unexpected success instanciating template with no auth: '
+            + res.statusCode + ': ' + res.body);
+          done();
+        }
+      );
+    });
+
+
 
     test("template instantiation raises mapviews counter", function(done) {
       var layergroup =  {
