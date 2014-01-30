@@ -10,6 +10,8 @@ Bug fixes:
 Enhancements:
 
 * Add support for instanciating a template map with JSONP (#116)
+* Stop processing XML on renderer creation, not needed anymore since 1.6.1
+  introduced on-demand XML generation.
 
 1.6.2 -- 2014-01-23
 -------------------
