@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "dependencies": {
     "node-varnish": {
       "version": "0.1.1"
@@ -9,7 +9,7 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.15.0",
+      "version": "0.15.1",
       "dependencies": {
         "grainstore": {
           "version": "0.16.0",
@@ -121,14 +121,14 @@
                           }
                         },
                         "async": {
-                          "version": "0.2.9"
+                          "version": "0.2.10"
                         }
                       }
                     }
                   }
                 },
                 "srs": {
-                  "version": "0.3.8"
+                  "version": "0.3.9"
                 },
                 "zipfile": {
                   "version": "0.4.3"
@@ -137,7 +137,7 @@
                   "version": "2.2.0",
                   "dependencies": {
                     "node-pre-gyp": {
-                      "version": "0.2.5",
+                      "version": "0.2.6",
                       "dependencies": {
                         "nopt": {
                           "version": "2.1.2",
@@ -217,7 +217,12 @@
                               }
                             },
                             "readable-stream": {
-                              "version": "1.0.24"
+                              "version": "1.0.25-1",
+                              "dependencies": {
+                                "string_decoder": {
+                                  "version": "0.10.25"
+                                }
+                              }
                             },
                             "graceful-fs": {
                               "version": "1.2.3"
@@ -225,7 +230,7 @@
                           }
                         },
                         "aws-sdk": {
-                          "version": "2.0.0-rc8",
+                          "version": "2.0.0-rc9",
                           "dependencies": {
                             "xml2js": {
                               "version": "0.2.4",
@@ -241,7 +246,7 @@
                           }
                         },
                         "rc": {
-                          "version": "0.3.2",
+                          "version": "0.3.3",
                           "dependencies": {
                             "optimist": {
                               "version": "0.3.7",
@@ -260,7 +265,7 @@
                           }
                         },
                         "rimraf": {
-                          "version": "2.2.5"
+                          "version": "2.2.6"
                         }
                       }
                     }
@@ -378,14 +383,14 @@
     "lzma": {
       "version": "1.2.3"
     },
-    "strftime": {
-      "version": "0.6.2"
-    },
     "semver": {
       "version": "1.1.4"
     },
     "redis": {
       "version": "0.8.6"
+    },
+    "strftime": {
+      "version": "0.6.2"
     },
     "mocha": {
       "version": "1.14.0",
