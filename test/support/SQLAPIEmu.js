@@ -6,10 +6,14 @@ var o = function(port, cb) {
 
   this.queries = [];
   var that = this;
+  this.requests = [];
 
   this.sqlapi_server = http.createServer(function(req,res) {
       //console.log("server got request with method " + req.method);
       var query;
+
+      that.requests.push(req);
+
       if ( req.method == 'GET' ) {
         query = url.parse(req.url, true).query;
         that.handleQuery(query, res);
@@ -66,6 +70,10 @@ o.prototype.handleQuery = function(query, res) {
 
 o.prototype.close = function(cb) {
   this.sqlapi_server.close(cb);
+};
+
+o.prototype.getLastRequest = function() {
+  return this.requests.pop();
 };
 
 module.exports = o;

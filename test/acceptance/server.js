@@ -1126,6 +1126,37 @@ suite('server', function() {
         );
     });
 
+    test("passes hostname header to sqlapi", function(done){
+        var qo = {
+          sql: "SELECT * from gadm4",
+          map_key: 1234
+        };
+        var sqlapi;
+        Step(
+          function sendRequest(err) {
+            var next = this;
+            assert.response(server, {
+                headers: {host: 'localhost'},
+                url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
+                method: 'GET'
+            },{}, function(res) { next(null, res); });
+          },
+          function checkResponse(err, res) {
+            if ( err ) throw err;
+            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            var last_request = sqlapi_server.getLastRequest();
+            assert.ok(last_request);
+            var host = last_request.headers['host'];
+            assert.ok(host);
+            assert.equal(host, 'localhost.donot_look_this_up');
+            return null;
+          },
+          function finish(err) {
+            done(err);
+          }
+        );
+    });
+
     test("requests to skip cache on sqlapi error", function(done){
         var qo = {
           sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator "
