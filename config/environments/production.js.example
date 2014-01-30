@@ -58,8 +58,15 @@ var config = {
     }
     ,sqlapi: {
         protocol: 'https',
-        domain: 'cartodb.com',
+        // If "host" is given, it will be used
+        // to connect to the SQL-API without a
+        // DNS lookup
+        //host: '127.0.0.1',
         port: 8080,
+        // The "domain" part will be appended to 
+        // the cartodb username and passed to
+        // SQL-API requests in the Host HTTP header
+        domain: 'cartodb.com',
         version: 'v2'
     }
     ,varnish: {

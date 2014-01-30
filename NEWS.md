@@ -1,3 +1,10 @@
+1.6.4 -- 2014-MM-DD
+-------------------
+
+Enhancements:
+
+* Allow specifying fixed sqlapi host address (#117)
+
 1.6.3 -- 2014-01-30
 -------------------
 
