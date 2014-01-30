@@ -72,7 +72,7 @@ var config = {
         // The "domain" part will be appended to 
         // the cartodb username and passed to
         // SQL-API requests in the Host HTTP header
-        domain: '',
+        domain: 'localhost.lan',
         version: 'v1'
     }
     ,varnish: {
