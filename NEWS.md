@@ -1,9 +1,14 @@
-1.6.4 -- 2014-MM-DD
+1.7.0 -- 2014-MM-DD
 -------------------
+
+New features:
+
+ * Add support for torque tiles (#112)
+ * Add attributes service (#118)
 
 Enhancements:
 
-* Allow specifying fixed sqlapi host address (#117)
+ * Allow specifying fixed sqlapi host address (#117)
 
 1.6.3 -- 2014-01-30
 -------------------

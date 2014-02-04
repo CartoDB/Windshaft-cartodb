@@ -58,7 +58,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "e34dd7e235138a062f8ba7ad051aa3a7";
+      var expected_token; // = "e34dd7e235138a062f8ba7ad051aa3a7";
       Step(
         function do_post()
         {
@@ -83,7 +83,7 @@ suite('multilayer', function() {
               if ( expected_token ) {
                 assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
               }
-              else expected_token = parsedBody.layergroupid;
+              else expected_token = parsedBody.layergroupid.split(':')[0];
               next(null, res);
           });
         },
@@ -164,7 +164,7 @@ suite('multilayer', function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
-          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
@@ -193,7 +193,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token  = "6d8e4ad5458e2d25cf0eef38e38717a6";
+      var expected_token; //  = "6d8e4ad5458e2d25cf0eef38e38717a6";
       Step(
         function do_post()
         {
@@ -217,7 +217,7 @@ suite('multilayer', function() {
               if ( expected_token ) {
                 assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
               }
-              else expected_token = parsedBody.layergroupid;
+              else expected_token = parsedBody.layergroupid.split(':')[0];
               next(null, res);
           });
         },
@@ -329,7 +329,7 @@ suite('multilayer', function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
-          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
@@ -425,7 +425,7 @@ suite('multilayer', function() {
           var next = this;
           // trip epoch
           expected_token = expected_token.split(':')[0];
-          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               redis_client.del(matches, next);
           });
         },
@@ -517,7 +517,7 @@ suite('multilayer', function() {
         ]
       };
 
-      var expected_token = "b4ed64d93a411a59f330ab3d798e4009";
+      var expected_token; // = "b4ed64d93a411a59f330ab3d798e4009";
       Step(
         function do_post()
         {
@@ -542,7 +542,7 @@ suite('multilayer', function() {
               if ( expected_token ) {
                 assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
               }
-              else expected_token = parsedBody.layergroupid;
+              else expected_token = parsedBody.layergroupid.split(':')[0];
               next(null, res);
           });
         },
@@ -650,7 +650,7 @@ suite('multilayer', function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
-          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
@@ -805,7 +805,7 @@ suite('multilayer', function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
-          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
@@ -880,7 +880,7 @@ suite('multilayer', function() {
           if ( err ) errors.push(err.message);
           if ( ! expected_token ) return null;
           var next = this;
-          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
@@ -947,7 +947,7 @@ suite('multilayer', function() {
           if ( err ) errors.push(err.message);
           if ( ! expected_token ) return null;
           var next = this;
-          redis_client.keys("map_style|test_cartodb_user_1_db|~" + expected_token, function(err, matches) {
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) errors.push(err.message);
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
