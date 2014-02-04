@@ -5,6 +5,7 @@ New features:
 
  * Add support for torque tiles (#112)
  * Add attributes service (#118)
+ * Implement Unified Map API (#127)
 
 Enhancements:
 
