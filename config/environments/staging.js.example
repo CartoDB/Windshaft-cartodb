@@ -5,6 +5,22 @@ var config = {
     // Regular expression pattern to extract username
     // from hostname. Must have a single grabbing block.
     ,user_from_host: '^(.*)\\.cartodb\\.com$'
+
+    // Base URLs for the APIs
+    //
+    // See http://github.com/CartoDB/Windshaft-cartodb/wiki/Unified-Map-API
+    // 
+    // Base url for the Templated Maps API
+    // "/api/v1/maps/named" is the new API,
+    // "/tiles/template" is for compatibility with versions up to 1.6.x
+    ,base_url_templated: '(?:/api/v1/maps/named|/tiles/template)'
+    // Base url for the Detached Maps API
+    // "/api/v1/maps" is the the new API,
+    // "/tiles/layergroup" is for compatibility with versions up to 1.6.x
+    ,base_url_detached: '(?:/api/v1/maps|/tiles/layergroup)'
+    // Base url for the Inline Maps and Table Maps API
+    ,base_url_legacy: '/tiles/:table'
+
     // Maximum number of connections for one process
     // 128 is a good value with a limit of 1024 open file descriptors
     ,maxConnections:128
