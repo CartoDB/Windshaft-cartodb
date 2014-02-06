@@ -337,6 +337,7 @@ suite('template_maps', function() {
           color: { type: "css_color", default: "#a0fF9A" },
           name: { type: "sql_literal", default: "test" },
           zoom: { type: "number", default: "0" },
+          test_number: { type: "number", default: 23 },
         },
         layergroup: {
           version: '1.0.0',
@@ -344,7 +345,7 @@ suite('template_maps', function() {
           layers: [
              { options: {
                  sql: "select '<%=name %>' || id, g from t",
-                 cartocss: '#layer { marker-fill:<%= fill %>; }'
+                 cartocss: '#layer { marker-fill:<%= fill %>; marker-width: <%=test_number  %>; }'
                } },
              { options: {
                  sql: "select fun('<%=     name%>') g from x",
@@ -362,7 +363,7 @@ suite('template_maps', function() {
 
     var lyr = inst.layers[0].options;
     assert.equal(lyr.sql, "select 'test' || id, g from t");
-    assert.equal(lyr.cartocss, '#layer { marker-fill:red; }');
+    assert.equal(lyr.cartocss, '#layer { marker-fill:red; marker-width: 23; }');
 
     lyr = inst.layers[1].options;
     assert.equal(lyr.sql, "select fun('test') g from x");
@@ -372,7 +373,7 @@ suite('template_maps', function() {
 
     lyr = inst.layers[0].options;
     assert.equal(lyr.sql, "select 'it''s dangerous' || id, g from t");
-    assert.equal(lyr.cartocss, '#layer { marker-fill:red; }');
+    assert.equal(lyr.cartocss, '#layer { marker-fill:red; marker-width: 23; }');
 
     lyr = inst.layers[1].options;
     assert.equal(lyr.sql, "select fun('it''s dangerous') g from x");
