@@ -147,6 +147,28 @@ suite('template_maps', function() {
       });
   });
 
+  // See http://github.com/CartoDB/Windshaft-cartodb/issues/128
+  test('does not accept template with invalid token auth (undefined tokens)',
+  function(done) {
+    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    assert.ok(tmap);
+    var tpl = { version:'0.0.1',
+      name: "invalid_auth1", placeholders: { },
+      auth: { method: 'token' }, layergroup: {} };
+    tmap.addTemplate('me', tpl, function(err) {
+        if ( ! err ) {
+          done(new Error("Unexpected success with invalid token auth (undefined tokens)"));
+        }
+        else if ( ! err.message.match(/invalid 'token' authentication/i) ) {
+          done(new Error("Unexpected error message with invalid token auth (undefined tokens): "
+            + err));
+        }
+        else {
+          done();
+        }
+      });
+  });
+
   test('add, get and delete a valid template', function(done) {
     var tmap = new TemplateMaps(redis_pool, signed_maps);
     assert.ok(tmap);
@@ -271,6 +293,7 @@ suite('template_maps', function() {
         assert.ok(err);
         tpl.name = 'first';
         tpl.auth.method = 'token';
+        tpl.auth.valid_tokens = [ 'tok1' ];
         tmap.updTemplate(owner, tpl_id, tpl, this);
       },
       function updateTemplateWithInvalid(err) {

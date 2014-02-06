@@ -131,6 +131,153 @@ suite('template_api', function() {
       );
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/128
+    test("cannot create template with auth='token' and no valid tokens", function(done) {
+      var tpl_id;
+      Step(
+        function postTemplate1()
+        {
+          // clone the valid one, and give it another name
+          var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
+          broken_template.name = 'broken1';
+          // Set auth='token' and specify no tokens
+          broken_template.auth.method = 'token';
+          delete broken_template.auth.tokens;
+          var post_request_1 = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(broken_template)
+          }
+          var next = this;
+          assert.response(server, post_request_1, {},
+            function(res) { next(null, res); });
+        },
+        function checkFailure1(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.body);
+          var parsedBody = JSON.parse(res.body);
+          assert.ok(parsedBody.hasOwnProperty('error'), res.body);
+          var re = RegExp(/invalid.*authentication.*missing/i);
+          assert.ok(parsedBody.error.match(re),
+            'Error for invalid authentication does not match ' + re + ': ' + parsedBody.error);
+          return null;
+        },
+        function postTemplate2(err)
+        {
+          if ( err ) throw err;
+          // clone the valid one and rename it
+          var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
+          broken_template.name = 'broken1';
+          // Set auth='token' and specify no tokens
+          broken_template.auth.method = 'token';
+          broken_template.auth.tokens = [];
+          var post_request_1 = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(broken_template)
+          }
+          var next = this;
+          assert.response(server, post_request_1, {},
+            function(res) { next(null, res); });
+        },
+        function checkFailure2(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.body);
+          var parsedBody = JSON.parse(res.body);
+          assert.ok(parsedBody.hasOwnProperty('error'), res.body);
+          var re = RegExp(/invalid.*authentication.*missing/i);
+          assert.ok(parsedBody.error.match(re),
+            'Error for invalid authentication does not match ' + re + ': ' + parsedBody.error);
+          return null;
+        },
+        function postTemplateValid(err)
+        {
+          if ( err ) throw err;
+          // clone the valid one and rename it
+          var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
+          broken_template.name = 'broken1';
+          var post_request_1 = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(broken_template)
+          }
+          var next = this;
+          assert.response(server, post_request_1, {},
+            function(res) { next(null, res); });
+        },
+        function putTemplateInvalid(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('template_id'),
+            "Missing 'template_id' from response body: " + res.body);
+          tpl_id = parsed.template_id;
+          // clone the valid one and rename it
+          var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
+          broken_template.name = 'broken1';
+          // Set auth='token' and specify no tokens
+          broken_template.auth.method = 'token';
+          broken_template.auth.tokens = [];
+          var put_request_1 = {
+              url: '/tiles/template/' + tpl_id + '/?api_key=1234',
+              method: 'PUT',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(broken_template)
+          }
+          var next = this;
+          assert.response(server, put_request_1, {},
+            function(res) { next(null, res); });
+        },
+        function deleteTemplate(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('error'),
+            "Missing 'error' from response body: " + res.body);
+          var re = RegExp(/invalid.*authentication.*missing/i);
+          assert.ok(parsed.error.match(re),
+            'Error for invalid authentication on PUT does not match ' +
+            re + ': ' + parsed.error);
+          var del_request = {
+              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              method: 'DELETE',
+              headers: {host: 'localhost'}
+          }
+          var next = this;
+          assert.response(server, del_request, {},
+            function(res, err) { next(err, res); });
+        },
+        function checkDelete(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
+          assert.ok(!res.body, 'Unexpected body in DELETE /template response');
+          return null;
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) errors.push(err);
+          redis_client.keys("map_*|localhost", function(err, keys) {
+              if ( err ) errors.push(err.message);
+              var todrop = _.map(keys, function(m) {
+                if ( m.match(/^map_(tpl|crt)|/) )
+                  return m;
+              });
+              if ( todrop.length )
+                errors.push(new Error("Unexpected keys in redis: " + todrop));
+              if ( errors.length ) done(new Error(errors.join(',')));
+              else done();
+          });
+        }
+      );
+    });
+
     test("instance endpoint should return CORS headers", function(done){
       Step(function postTemplate1(err, res) {
           var next = this;
@@ -1008,8 +1155,6 @@ suite('template_api', function() {
         }
       );
     });
-
-
 
     test("template instantiation raises mapviews counter", function(done) {
       var layergroup =  {
