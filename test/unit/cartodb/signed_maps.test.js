@@ -81,5 +81,29 @@ suite('signed_maps', function() {
       );
     });
 
+    test('can validate certificates', function(done) {
+      var smap = new SignedMaps(redis_pool);
+      assert.ok(smap);
+      Step(
+        function invalidVersion() {
+          var cert = { version: '-1' };
+          var err = smap.checkInvalidCertificate(cert);
+          assert.ok(err);
+          assert.equal(err.message, "Unsupported certificate version -1");
+          return null;
+        },
+        function invalidTokenAuth() {
+          var cert = { version: '0.0.1', auth: { method:'token', valid_token:[] } };
+          var err = smap.checkInvalidCertificate(cert);
+          assert.ok(err);
+          assert.equal(err.message, "Invalid 'token' authentication: missing valid_tokens");
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
     
 });
