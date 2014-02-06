@@ -343,11 +343,11 @@ suite('template_maps', function() {
           global_cartocss_version: '2.0.2',
           layers: [
              { options: {
-                 sql: "select '<%= name %>' || id, g from t",
+                 sql: "select '<%=name %>' || id, g from t",
                  cartocss: '#layer { marker-fill:<%= fill %>; }'
                } },
              { options: {
-                 sql: "select fun('<%= name %>') g from x",
+                 sql: "select fun('<%=     name%>') g from x",
                  cartocss: '#layer { line-color:<%= color %>; marker-fill:<%= color %>; }'
                } },
              { options: {

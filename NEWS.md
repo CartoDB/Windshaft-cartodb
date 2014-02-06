@@ -12,6 +12,10 @@ Enhancements:
 
  * Allow specifying fixed sqlapi host address (#117)
 
+Bug fixes: 
+ * Template variables with spaces are not replaced correctly (#129)
+
+
 1.6.3 -- 2014-01-30
 -------------------
 
