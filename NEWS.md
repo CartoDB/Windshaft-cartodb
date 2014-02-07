@@ -13,8 +13,9 @@ Enhancements:
  * Allow specifying fixed sqlapi host address (#117)
 
 Bug fixes:
- * Template variables with spaces are not replaced correctly (#129)
- * Template variables with type number and default value being a number type (#130)
+
+ * Allow space padding in template variables usage (#129)
+ * Allow passing numbers as values for numeric template variables (#130)
 
 
 1.6.3 -- 2014-01-30
