@@ -1144,6 +1144,202 @@ suite('template_api', function() {
       );
     });
 
+    test("can instanciate a template with attribute service by id", function(done) {
+
+      // This map fetches data from a private table
+      var template =  {
+          version: '0.0.1',
+          name: 'acceptance1',
+          auth: { method: 'token', valid_tokens: ['valid1','valid2'] },
+          layergroup:  {
+            version: '1.1.0',
+            layers: [
+               { options: {
+                   sql: "select * from test_table_private_1 where cartodb_id in ( 5,6 )",
+                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                   cartocss_version: '2.0.2',
+                   attributes: { id:'cartodb_id', columns: ['name', 'address'] }
+                 } }
+            ]
+          }
+      };
+
+      var template_params = {};
+
+      var errors = [];
+      var expected_failure = false;
+      var tpl_id;
+      var layergroupid;
+      Step(
+        function postTemplate(err, res)
+        {
+          var next = this;
+          var post_request = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template)
+          }
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instanciateNoAuth(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('template_id'),
+            "Missing 'template_id' from response body: " + res.body);
+          tpl_id = parsed.template_id;
+          var post_request = {
+              url: '/tiles/template/' + tpl_id,
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_params)
+          }
+          var next = this;
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instanciateAuth(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 401,
+            'Unexpected success instanciating template with no auth: '
+            + res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('error'),
+            "Missing 'error' from response body: " + res.body);
+          assert.ok(parsed.error.match(/unauthorized/i),
+            'Unexpected error for unauthorized instance : ' + parsed.error);
+          var post_request = {
+              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_params)
+          }
+          var next = this;
+          assert.response(server, post_request, {},
+            function(res, err) { next(null, res); });
+        },
+        function fetchAttributeNoAuth(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200,
+            'Instantiating template: ' + res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('layergroupid'),
+            "Missing 'layergroupid' from response body: " + res.body);
+          layergroupid = parsed.layergroupid;
+          assert.ok(layergroupid.match(/^localhost@/),
+            "Returned layergroupid does not start with signer name: "
+            + layergroupid);
+          assert.ok(parsed.hasOwnProperty('last_updated'),
+            "Missing 'last_updated' from response body: " + res.body);
+          // TODO: check value of last_updated ?
+          var get_request = {
+              url: '/tiles/layergroup/' + layergroupid + ':cb0/0/attributes/5',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }
+          var next = this;
+          assert.response(server, get_request, {},
+            function(res) { next(null, res); });
+        },
+        function fetchAttributeAuth(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 401,
+            'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('error'),
+            "Missing 'error' from response body: " + res.body);
+          assert.ok(parsed.error.match(/permission denied/i),
+            'Unexpected error for unauthorized getAttributes '
+            + '(expected /permission denied/): ' + parsed.error);
+          var get_request = {
+              url: '/tiles/layergroup/' + layergroupid + ':cb1/0/attributes/5?auth_token=valid2',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }
+          var next = this;
+          assert.response(server, get_request, {},
+            function(res) { next(null, res); });
+        },
+        function checkAttribute(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, 
+            'Unexpected error for authorized getAttributes: '
+            + res.statusCode + ' -- ' + res.body);
+          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
+          return null;
+        },
+        function deleteTemplate(err)
+        {
+          if ( err ) throw err;
+          var del_request = {
+              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              method: 'DELETE',
+              headers: {host: 'localhost'}
+          }
+          var next = this;
+          assert.response(server, del_request, {},
+            function(res) { next(null, res); });
+        },
+        function fetchAttrDeleted(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 204,
+            'Deleting template: ' + res.statusCode + ':' + res.body);
+          var get_request = {
+              url: '/tiles/layergroup/' + layergroupid + ':cb2/0/attributes/5?auth_token=valid2',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }
+          var next = this;
+          assert.response(server, get_request, {},
+            function(res) { next(null, res); });
+        },
+        function checkTileDeleted(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 401, 
+            'Unexpected statusCode fetch tile after signature revokal: '
+            + res.statusCode + ':' + res.body); 
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('error'),
+            "Missing 'error' from response body: " + res.body);
+          assert.ok(parsed.error.match(/permission denied/i),
+            'Unexpected error for unauthorized access : ' + parsed.error);
+          return null;
+        },
+        function finish(err) {
+          if ( err ) errors.push(err);
+          redis_client.keys("map_*|localhost", function(err, keys) {
+              if ( err ) errors.push(err.message);
+              var todrop = _.map(keys, function(m) {
+                if ( m.match(/^map_(tpl|crt)|/) )
+                  return m;
+              });
+              if ( todrop.length ) {
+                errors.push(new Error("Unexpected keys in redis: " + todrop));
+                redis_client.del(todrop, function(err) {
+                  if ( err ) errors.push(err.message);
+                  if ( errors.length ) {
+                    done(new Error(errors));
+                  }
+                  else done(null);
+                });
+              } else {
+                  if ( errors.length ) {
+                    done(new Error(errors));
+                  }
+                  else done(null);
+              }
+          });
+        }
+      );
+    });
+
     test("can instanciate a template by id with open auth", function(done) {
 
       // This map fetches data from a private table
