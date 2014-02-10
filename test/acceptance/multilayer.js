@@ -964,6 +964,46 @@ suite('multilayer', function() {
       );
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/133
+    test("MapConfig with mapnik layer and no cartocss", function(done) {
+
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator from test_table limit 2',
+               interactivity: 'cartodb_id'
+             } }
+        ]
+      };
+
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function check_post(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.errors, 'Missing "errors" in response: ' + JSON.stringify(parsed));
+          assert.equal(parsed.errors.length, 1);
+          var msg = parsed.errors[0];
+          assert.equal(msg, 'Missing cartocss for layer 0 options');
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
+    });
+
 
     suiteTeardown(function(done) {
 
