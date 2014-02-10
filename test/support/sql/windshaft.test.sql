@@ -174,5 +174,6 @@ CREATE TABLE test_table_private_1 (
     CONSTRAINT enforce_srid_the_geom CHECK ((st_srid(the_geom) = 4326)),
     CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
 );
+INSERT INTO test_table_private_1 SELECT * from test_table;
 
 GRANT ALL ON TABLE test_table_private_1 TO :TESTUSER;
