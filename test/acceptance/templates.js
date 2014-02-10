@@ -1541,7 +1541,10 @@ suite('template_api', function() {
           assert.equal(res.statusCode, 200,
             'Unexpected success instanciating template with no auth: '
             + res.statusCode + ': ' + res.body);
-          done();
+          return null;
+        },
+        function finish(err) {
+          done(err);
         }
       );
     });
@@ -1650,6 +1653,147 @@ suite('template_api', function() {
           if ( err ) errors.push('' + err);
           if ( errors.length ) done(new Error(errors.join(',')));
           else done(null);
+        }
+      );
+    });
+
+    test("instance map token changes with templates certificate changes", function(done) {
+
+      // This map fetches data from a private table
+      var template_acceptance2 =  {
+          version: '0.0.1',
+          name: 'acceptance2',
+          auth: { method: 'token', valid_tokens: ['valid1','valid2'] },
+          layergroup:  {
+            version: '1.0.0',
+            layers: [
+               { options: {
+                   sql: "select * from test_table_private_1 LIMIT 0",
+                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                   cartocss_version: '2.0.2',
+                   interactivity: 'cartodb_id'
+                 } }
+            ]
+          }
+      };
+
+      var template_params = {};
+
+      var errors = [];
+      var expected_failure = false;
+      var tpl_id;
+      var layergroupid;
+      Step(
+        function postTemplate(err, res)
+        {
+          var next = this;
+          var post_request = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_acceptance2)
+          }
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instance1(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('template_id'),
+            "Missing 'template_id' from response body: " + res.body);
+          tpl_id = parsed.template_id;
+          var post_request = {
+              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_params)
+          }
+          var next = this;
+          assert.response(server, post_request, {},
+            function(res, err) { next(err, res); });
+        },
+        function checkInstance1(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200,
+            'Instantiating template: ' + res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('layergroupid'),
+            "Missing 'layergroupid' from response body: " + res.body);
+          layergroupid = parsed.layergroupid;
+          return null;
+        },
+        function updateTemplate(err, res)
+        {
+          if ( err ) throw err;
+          // clone the valid one and rename it
+          var changedTemplate = JSON.parse(JSON.stringify(template_acceptance2));
+          changedTemplate.auth.method = 'open';
+          var post_request = {
+              url: '/tiles/template/' + tpl_id + '/?api_key=1234',
+              method: 'PUT',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(changedTemplate)
+          }
+          var next = this;
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instance2(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('template_id'),
+            "Missing 'template_id' from response body: " + res.body);
+          assert.equal(tpl_id, parsed.template_id);
+          var post_request = {
+              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_params)
+          }
+          var next = this;
+          assert.response(server, post_request, {},
+            function(res, err) { next(err, res); });
+        },
+        function checkInstance2(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200,
+            'Instantiating template: ' + res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('layergroupid'),
+            "Missing 'layergroupid' from response body: " + res.body);
+          assert.ok(layergroupid != parsed.layergroupid);
+          return null;
+        },
+        function finish(err) {
+          if ( err ) errors.push(err);
+          redis_client.keys("map_*|localhost", function(err, keys) {
+              if ( err ) errors.push(err.message);
+              var todrop = _.map(keys, function(m) {
+                if ( m.match(/^map_(tpl|crt)|/) )
+                  return m;
+              });
+              if ( todrop.length != 2 ) {
+                errors.push(new Error("Unexpected keys in redis: " + todrop));
+              } else {
+                if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
+                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
+                }
+                if ( todrop.indexOf('map_crt|localhost') == -1 ) {
+                  errors.push(new Error("Missing 'map_crt|localhost' key in redis"));
+                }
+              }
+              redis_client.del(todrop, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) {
+                  done(new Error(errors));
+                }
+                else done(null);
+              });
+          });
         }
       );
     });
