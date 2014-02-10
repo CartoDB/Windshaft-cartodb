@@ -11,6 +11,8 @@ New features:
 Enhancements:
 
  * Allow specifying fixed sqlapi host address (#117)
+ * Include template hash in template instance response, to keep caches
+   of different instances separated (#105)
 
 Bug fixes:
 
