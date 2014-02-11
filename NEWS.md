@@ -1,3 +1,10 @@
+1.7.1 -- 2014-02-DD
+-------------------
+
+Enhancements:
+
+ * Disable debug logging unless "debug" config param evaluates to true (#137)
+
 1.7.0 -- 2014-02-11
 -------------------
 
