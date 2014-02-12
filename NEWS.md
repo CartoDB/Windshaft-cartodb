@@ -1,9 +1,10 @@
-1.7.2 -- 2014-02-DD
+1.8.0 -- 2014-02-DD
 -------------------
 
 Enhancements:
 
  * Add script to flush caches (#140)
+ * Add statsd support (#139)
 
 1.7.1 -- 2014-02-11
 -------------------
