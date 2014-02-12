@@ -13,6 +13,9 @@
       "version": "0.17.2",
       "from": "http://github.com/CartoDB/Windshaft/tarball/0.17.2",
       "dependencies": {
+        "node-statsd": {
+          "version": "0.0.7"
+        },
         "grainstore": {
           "version": "0.17.1",
           "dependencies": {
