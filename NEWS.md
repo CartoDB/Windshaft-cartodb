@@ -8,6 +8,7 @@ Enhancements:
  * Add support for specifying a varnish password
  * Avoid sending multiple varnish invalidation at once (#135)
  * Tested with node-0.10
+ * Use single redis pooler for torque and grainstore
 
 1.7.1 -- 2014-02-11
 -------------------
