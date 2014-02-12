@@ -4,8 +4,10 @@
 4. Run npm install
 5. Test (make check or npm test), fix if broken before proceeding
 6. Run npm shrinkwrap
-7. Commit package.json, npm-shrinwrap.json, NEWS
-8. Tag Major.Minor.Patch
-9. Announce
-10. Stub NEWS/package for next version
+7. Set "windshaft"."from" in npm-shrinkwrap.json to
+   "http://github.com/CartoDB/Windshaft/tarball/<version>"
+8. Commit package.json, npm-shrinwrap.json, NEWS
+9. git tag -a Major.Minor.Patch # use NEWS section as content
+10. Announce
+11. Stub NEWS/package for next version
 
