@@ -48,6 +48,11 @@ var config = {
         max_size: 500
     }
     ,mapnik_version: undefined
+    ,statsd: {
+        host: 'localhost',
+        port: 8125
+        // support all allowed node-statsd options
+    }
     ,renderer: {
       // Milliseconds since last access before renderer cache item expires
       cache_ttl: 60000,
