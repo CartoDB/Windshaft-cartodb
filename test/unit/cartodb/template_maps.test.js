@@ -420,5 +420,87 @@ suite('template_maps', function() {
     catch (e) { err = e; }
     assert.ok(!err);
   });
+
+  // Can set a limit on the number of user templates
+  test('can limit number of user templates', function(done) {
+    var tmap = new TemplateMaps(redis_pool, signed_maps, {
+      max_user_templates: 2
+    });
+    assert.ok(tmap);
+    var tpl = { version:'0.0.1', auth: {}, layergroup: {} };
+    var expectErr = false;
+    var idMe = [];
+    var idYou = [];
+    Step(
+      function oneForMe() {
+        tpl.name = 'oneForMe';
+        tmap.addTemplate('me', tpl, this);
+      },
+      function twoForMe(err, id) {
+        if ( err ) throw err;
+        assert.ok(id);
+        idMe.push(id);
+        tpl.name = 'twoForMe';
+        tmap.addTemplate('me', tpl, this);
+      },
+      function threeForMe(err, id) {
+        if ( err ) throw err;
+        assert.ok(id);
+        idMe.push(id);
+        tpl.name = 'threeForMe';
+        expectErr = true;
+        tmap.addTemplate('me', tpl, this);
+      },
+      function errForMe(err, id) {
+        if ( err && ! expectErr ) throw err;
+        expectErr = false;
+        assert.ok(err);
+        assert.ok(err.message.match(/limit.*template/), err);
+        return null;
+      },
+      function delOneMe(err) {
+        if ( err ) throw err;
+        tmap.delTemplate('me', idMe.shift(), this);
+      },
+      function threeForMeRetry(err) {
+        if ( err ) throw err;
+        tpl.name = 'threeForMe';
+        tmap.addTemplate('me', tpl, this);
+      },
+      function oneForYou(err, id) {
+        if ( err ) throw err;
+        assert.ok(id);
+        idMe.push(id);
+        tpl.name = 'oneForYou';
+        tmap.addTemplate('you', tpl, this);
+      },
+      function twoForYou(err, id) {
+        if ( err ) throw err;
+        assert.ok(id);
+        idYou.push(id);
+        tpl.name = 'twoForYou';
+        tmap.addTemplate('you', tpl, this);
+      },
+      function threeForYou(err, id) {
+        if ( err ) throw err;
+        assert.ok(id);
+        idYou.push(id);
+        tpl.name = 'threeForYou';
+        expectErr = true;
+        tmap.addTemplate('you', tpl, this);
+      },
+      function errForYou(err, id) {
+        if ( err && ! expectErr ) throw err;
+        expectErr = false;
+        assert.ok(err);
+        assert.ok(err.message.match(/limit.*template/), err);
+        return null;
+      },
+      function finish(err) {
+        // TODO: delete all templates
+        done(err);
+      }
+    );
+  });
     
 });

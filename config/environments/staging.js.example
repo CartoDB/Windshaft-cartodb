@@ -24,6 +24,8 @@ var config = {
     // Maximum number of connections for one process
     // 128 is a good value with a limit of 1024 open file descriptors
     ,maxConnections:128
+    // Maximum number of templates per user. Unlimited by default.
+    ,maxUserTemplates:1024
     // idle socket timeout, in miliseconds
     ,socket_timeout: 600000 
     ,enable_cors: true
