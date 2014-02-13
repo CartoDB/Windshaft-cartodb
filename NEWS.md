@@ -4,6 +4,7 @@
 Enhancements:
 
  * Add script to flush caches (#140)
+ * Add script to list templates
  * Add statsd support (#139)
  * Add support for specifying a varnish password
  * Avoid sending multiple varnish invalidation at once (#135)
