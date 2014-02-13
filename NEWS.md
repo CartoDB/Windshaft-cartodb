@@ -12,6 +12,7 @@ Enhancements:
  * Use single redis pooler for torque and grainstore
  * Reduce cost of garbage collection for localized resources
  * Allow limiting number of templates for each user (#136)
+ * Allow configuring TTL of mapConfigs via "mapConfigTTL"
 
 1.7.1 -- 2014-02-11
 -------------------
