@@ -30,7 +30,7 @@ var config = {
     // or template instance map expires. Or: how long do you want
     // to be able to navigate the map without a reload ?
     // Defaults to 7200 (2 hours)
-    ,mapConfigTTL: 7200,
+    ,mapConfigTTL: 7200
     // idle socket timeout, in miliseconds 
     ,socket_timeout: 600000
     ,enable_cors: true
