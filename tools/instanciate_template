@@ -49,5 +49,5 @@ if test x${verbose} = xyes; then
   echo "${res}"
 fi
 
-tok=`echo "$res" | sed 's/.*"template_id":"\([^"]*\)".*/\1/'`
+tok=`echo "$res" | sed 's/.*"layergroupid":"\([^"]*\)".*/\1/'`
 echo $tok
