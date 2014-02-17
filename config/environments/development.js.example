@@ -11,13 +11,13 @@ var config = {
     // See http://github.com/CartoDB/Windshaft-cartodb/wiki/Unified-Map-API
     // 
     // Base url for the Templated Maps API
-    // "/maps/named" is the new API,
+    // "/api/v1/map/named" is the new API,
     // "/tiles/template" is for compatibility with versions up to 1.6.x
-    ,base_url_templated: '(?:/maps/named|/tiles/template)'
+    ,base_url_templated: '(?:/api/v1/map/named|/tiles/template)'
     // Base url for the Detached Maps API
     // "maps" is the the new API,
     // "tiles/layergroup" is for compatibility with versions up to 1.6.x
-    ,base_url_detached: '(?:/maps|/tiles/layergroup)'
+    ,base_url_detached: '(?:/api/v1/map|/tiles/layergroup)'
     // Base url for the Inline Maps and Table Maps API
     ,base_url_legacy: '/tiles/:table'
 
