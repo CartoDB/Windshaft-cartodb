@@ -54,7 +54,7 @@ var config = {
         simplify_geometries: true,
         max_size: 500
     }
-    ,mapnik_version: '2.0.2'
+    ,mapnik_version: ''
     ,statsd: {
         host: 'localhost',
         port: 8125
