@@ -57,7 +57,8 @@ var config = {
     ,mapnik_version: undefined
     ,statsd: {
         host: 'localhost',
-        port: 8125
+        port: 8125,
+        prefix: 'stage.'
         // support all allowed node-statsd options
     }
     ,renderer: {
