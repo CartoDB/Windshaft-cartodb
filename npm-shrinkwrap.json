@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "dependencies": {
     "node-varnish": {
       "version": "0.2.0",
@@ -413,11 +413,27 @@
     "lzma": {
       "version": "1.2.3"
     },
-    "redis": {
-      "version": "0.8.6"
+    "log4js": {
+      "version": "0.6.10",
+      "dependencies": {
+        "async": {
+          "version": "0.1.15"
+        },
+        "readable-stream": {
+          "version": "1.0.25-1",
+          "dependencies": {
+            "string_decoder": {
+              "version": "0.10.25-1"
+            }
+          }
+        }
+      }
     },
     "strftime": {
       "version": "0.6.2"
+    },
+    "redis": {
+      "version": "0.8.6"
     },
     "semver": {
       "version": "1.1.4"

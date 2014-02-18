@@ -24,6 +24,15 @@ global.settings     = require(__dirname + '/config/settings');
 global.environment  = require(__dirname + '/config/environments/' + ENV);
 _.extend(global.settings, global.environment);
 
+global.log4js = require('log4js')
+log4js.configure({
+  appenders: [
+    { type: "console", layout: { type:'basic' } }
+  ],
+  replaceConsole:true
+});
+
+
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
 var CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft');
@@ -52,3 +61,4 @@ process.on('SIGUSR1', function() {
 process.on('SIGUSR2', function() {
   ws.dumpCacheStats();
 });
+
