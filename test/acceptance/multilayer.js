@@ -663,6 +663,123 @@ suite('multilayer', function() {
       );
     });
 
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/152
+    test.skip("x-cache-channel still works for GETs after tiler restart", function(done) {
+
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select * from test_table where cartodb_id=1',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss_version: '2.1.0',
+               interactivity: 'cartodb_id'
+             } }
+        ]
+      };
+
+      var expected_token; // = "b4ed64d93a411a59f330ab3d798e4009";
+      Step(
+        function do_post()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup?map_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(layergroup)
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function check_post(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          var parsedBody = JSON.parse(res.body);
+          var expectedBody = { layergroupid: expected_token };
+          // check last modified
+          var qTables = JSON.stringify({
+            'q': 'SELECT CDB_QueryTables($windshaft$'
+                + layergroup.layers[0].options.sql
+                + '$windshaft$)'
+          });
+          assert.equal(parsedBody.last_updated, expected_last_updated);
+          if ( expected_token ) {
+            assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+          }
+          else expected_token = parsedBody.layergroupid.split(':')[0];
+          return null;
+        },
+        function do_get0(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png?map_key=1234',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function do_check0(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          assert.equal(res.headers['content-type'], "image/png");
+
+          // Check X-Cache-Channel
+          var cc = res.headers['x-cache-channel'];
+          assert.ok(cc); 
+          var dbname = 'test_cartodb_user_1_db'
+          assert.equal(cc.substring(0, dbname.length), dbname);
+          return null;
+        },
+        function do_restart_server(err, res) {
+          if ( err ) throw err;
+          // hack simulating restart...
+          assert.equal(typeof(serverOptions.channelCache), 'object');
+          serverOptions.channelCache = [];
+          return null;
+        },
+        function do_get1(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png?map_key=1234',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function do_check1(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          assert.equal(res.headers['content-type'], "image/png");
+
+          // Check X-Cache-Channel
+          var cc = res.headers['x-cache-channel'];
+          assert.ok(cc); 
+          var dbname = 'test_cartodb_user_1_db'
+          assert.equal(cc.substring(0, dbname.length), dbname);
+          return null;
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) {
+            errors.push(err.message);
+            console.log("Error: " + err);
+          }
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors.join(',')));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
     // https://github.com/cartodb/Windshaft-cartodb/issues/81
     test("invalid text-name in CartoCSS", function(done) {
 
