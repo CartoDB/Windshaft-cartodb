@@ -1,6 +1,10 @@
 1.8.2 -- 2014-MM-DD
 -------------------
 
+Enhancements:
+
+ * Allow using ":host" as part of statsd.prefix (#153)
+
 1.8.1 -- 2014-02-19
 -------------------
 
