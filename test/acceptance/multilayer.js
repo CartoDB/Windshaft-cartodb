@@ -665,7 +665,7 @@ suite('multilayer', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/152
-    test.skip("x-cache-channel still works for GETs after tiler restart", function(done) {
+    test("x-cache-channel still works for GETs after tiler restart", function(done) {
 
       var layergroup =  {
         version: '1.0.0',

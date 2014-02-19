@@ -5,6 +5,10 @@ Enhancements:
 
  * Use log4js logger (#138)
 
+Bug fixes:
+
+ * Always generate X-Cache-Channel for token-based tile responses (#152)
+
 1.8.0 -- 2014-02-18
 -------------------
 
