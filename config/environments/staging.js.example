@@ -35,7 +35,7 @@ var config = {
     ,socket_timeout: 600000 
     ,enable_cors: true
     ,cache_enabled: true
-    ,log_format: '[:date] :req[X-Real-IP] :method :req[Host]:url :status :response-time ms (:res[X-Tiler-Profiler]) -> :res[Content-Type]'
+    ,log_format: ':req[X-Real-IP] :method :req[Host]:url :status :response-time ms (:res[X-Tiler-Profiler]) -> :res[Content-Type]'
     // Templated database username for authorized user
     // Supported labels: 'user_id' (read from redis)
     ,postgres_auth_user: 'cartodb_staging_user_<%= user_id %>'
