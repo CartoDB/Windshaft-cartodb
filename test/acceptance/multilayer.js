@@ -15,7 +15,8 @@ require(__dirname + '/../support/test_helper');
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
+var ServerOptions = require(__dirname + '/../../lib/cartodb/server_options');
+serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
@@ -726,7 +727,7 @@ suite('multilayer', function() {
 
           // Check X-Cache-Channel
           var cc = res.headers['x-cache-channel'];
-          assert.ok(cc); 
+          assert.ok(cc, "Missing X-Cache-Channel"); 
           var dbname = 'test_cartodb_user_1_db'
           assert.equal(cc.substring(0, dbname.length), dbname);
           return null;
@@ -734,8 +735,8 @@ suite('multilayer', function() {
         function do_restart_server(err, res) {
           if ( err ) throw err;
           // hack simulating restart...
-          assert.equal(typeof(serverOptions.channelCache), 'object');
-          serverOptions.channelCache = [];
+          serverOptions = ServerOptions();
+          server = new CartodbWindshaft(serverOptions);
           return null;
         },
         function do_get1(err)
@@ -756,7 +757,7 @@ suite('multilayer', function() {
 
           // Check X-Cache-Channel
           var cc = res.headers['x-cache-channel'];
-          assert.ok(cc); 
+          assert.ok(cc, "Missing X-Cache-Channel on restart");
           var dbname = 'test_cartodb_user_1_db'
           assert.equal(cc.substring(0, dbname.length), dbname);
           return null;

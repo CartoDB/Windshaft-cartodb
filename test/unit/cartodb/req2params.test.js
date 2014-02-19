@@ -7,7 +7,7 @@ var assert = require('assert')
 suite('req2params', function() {
 
     // configure redis pool instance to use in tests
-    var opts = require('../../../lib/cartodb/server_options');
+    var opts = require('../../../lib/cartodb/server_options')();
     
     test('can be found in server_options', function(){
       assert.ok(_.isFunction(opts.req2params));

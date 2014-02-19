@@ -15,7 +15,7 @@ require(__dirname + '/../support/test_helper');
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
+var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
