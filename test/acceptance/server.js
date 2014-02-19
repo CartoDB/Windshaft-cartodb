@@ -1111,7 +1111,7 @@ suite('server', function() {
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
             var cc = res.headers['x-cache-channel'];
-            assert(cc);
+            assert(cc, 'Missing X-Cache-Channel');
             var dbname = 'test_cartodb_user_1_db'
             assert.equal(cc.substring(0, dbname.length), dbname);
             var jsonquery = cc.substring(dbname.length+1);
