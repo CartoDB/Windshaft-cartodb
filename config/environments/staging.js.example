@@ -58,7 +58,7 @@ var config = {
     ,statsd: {
         host: 'localhost',
         port: 8125,
-        prefix: 'stage.'
+        prefix: 'stage.:host.'
         // support all allowed node-statsd options
     }
     ,renderer: {

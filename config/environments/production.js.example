@@ -58,7 +58,7 @@ var config = {
     ,statsd: {
         host: 'localhost',
         port: 8125,
-        prefix: '', // could be hostname, better not containing dots
+        prefix: ':host.', // could be hostname, better not containing dots
         // support all allowed node-statsd options
     }
     ,renderer: {
