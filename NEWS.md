@@ -5,6 +5,10 @@ Enhancements:
 
  * Allow using ":host" as part of statsd.prefix (#153)
 
+Bug fixes:
+
+ * Fix munin plugin after log format changes (#154)
+
 1.8.1 -- 2014-02-19
 -------------------
 
