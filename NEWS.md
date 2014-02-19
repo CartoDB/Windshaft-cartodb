@@ -4,6 +4,7 @@
 Enhancements:
 
  * Allow using ":host" as part of statsd.prefix (#153)
+ * Expand "addCacheChannel" stats
 
 Bug fixes:
 
