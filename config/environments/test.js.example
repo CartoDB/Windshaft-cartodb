@@ -98,7 +98,11 @@ var config = {
         domain: 'donot_look_this_up',
         // This port will be used by "make check" for testing purposes
         // It must be available
-        version: 'v1'
+        version: 'v1',
+        // Maximum lenght of SQL query for GET
+        // requests. Longer queries will be sent
+        // using POST. Defaults to 2048
+        max_get_sql_length: 2048
     }
     ,varnish: {
         host: '',

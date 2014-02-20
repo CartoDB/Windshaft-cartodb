@@ -1148,6 +1148,7 @@ suite('server', function() {
             assert.ok(last_request);
             var host = last_request.headers['host'];
             assert.ok(host);
+            assert.equal(last_request.method, 'GET');
             assert.equal(host, 'localhost.donot_look_this_up');
             return null;
           },

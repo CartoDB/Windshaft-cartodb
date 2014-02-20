@@ -5,6 +5,8 @@ Enhancements:
 
  * Allow using ":host" as part of statsd.prefix (#153)
  * Expand "addCacheChannel" stats
+ * Allow using GET with sql-api for queries shorter than configured len (#155)
+   [ new sqlapi.max_get_sql_length directive, defaults to 2048 ]
 
 Bug fixes:
 

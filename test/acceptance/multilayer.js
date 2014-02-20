@@ -1059,10 +1059,12 @@ suite('multilayer', function() {
           var parsedBody = JSON.parse(res.body);
           var token_components = parsedBody.layergroupid.split(':');
           expected_token = token_components[0];
+          var last_request = sqlapi_server.getLastRequest();
+          assert.equal(last_request.method, 'POST');
           return null;
         },
         function cleanup(err) {
-          if ( err ) errors.push(err.message);
+          if ( err ) errors.push('' + err);
           if ( ! expected_token ) return null;
           var next = this;
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {

@@ -102,7 +102,11 @@ var config = {
         // the cartodb username and passed to
         // SQL-API requests in the Host HTTP header
         domain: 'localhost.lan',
-        version: 'v1'
+        version: 'v1',
+        // Maximum lenght of SQL query for GET
+        // requests. Longer queries will be sent
+        // using POST. Defaults to 2048
+        max_get_sql_length: 2048
     }
     ,varnish: {
         host: 'localhost',
