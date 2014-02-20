@@ -35,6 +35,10 @@ suite('multilayer', function() {
     var expected_last_updated_epoch = 1234567890123; // this is hard-coded into SQLAPIEmu
     var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
 
+    var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
+    var test_pubuser = global.environment.postgres.user;
+    var test_database = test_user + '_db';
+
     suiteSetup(function(done){
       sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
@@ -108,7 +112,7 @@ suite('multilayer', function() {
               // Check X-Cache-Channel
               cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
-              var dbname = 'test_cartodb_user_1_db'
+              var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
@@ -238,7 +242,7 @@ suite('multilayer', function() {
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
-              var dbname = 'test_cartodb_user_1_db'
+              var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
@@ -271,7 +275,7 @@ suite('multilayer', function() {
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
-              var dbname = 'test_cartodb_user_1_db'
+              var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
@@ -563,7 +567,7 @@ suite('multilayer', function() {
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
               assert.ok(cc); 
-              var dbname = 'test_cartodb_user_1_db'
+              var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
               next(err);
           });
@@ -728,7 +732,7 @@ suite('multilayer', function() {
           // Check X-Cache-Channel
           var cc = res.headers['x-cache-channel'];
           assert.ok(cc, "Missing X-Cache-Channel"); 
-          var dbname = 'test_cartodb_user_1_db'
+          var dbname = test_database;
           assert.equal(cc.substring(0, dbname.length), dbname);
           return null;
         },
@@ -758,7 +762,7 @@ suite('multilayer', function() {
           // Check X-Cache-Channel
           var cc = res.headers['x-cache-channel'];
           assert.ok(cc, "Missing X-Cache-Channel on restart");
-          var dbname = 'test_cartodb_user_1_db'
+          var dbname = test_database;
           assert.equal(cc.substring(0, dbname.length), dbname);
           return null;
         },

@@ -8,6 +8,11 @@ suite('req2params', function() {
 
     // configure redis pool instance to use in tests
     var opts = require('../../../lib/cartodb/server_options')();
+
+    var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
+    var test_pubuser = global.environment.postgres.user;
+    var test_database = test_user + '_db';
+
     
     test('can be found in server_options', function(){
       assert.ok(_.isFunction(opts.req2params));
@@ -20,8 +25,8 @@ suite('req2params', function() {
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
           assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
-          assert.equal(req.params.dbname, 'test_cartodb_user_1_db', 'could forge dbname: '+ req.params.dbname);
-          assert.ok(req.params.dbuser === 'testpublicuser', 'could inject dbuser ('+req.params.dbuser+')');
+          assert.equal(req.params.dbname, test_database, 'could forge dbname: '+ req.params.dbname);
+          assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
           done();
       });
     });
@@ -34,10 +39,8 @@ suite('req2params', function() {
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
           assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
-          // database_name for user "localhost" (see test/support/prepare_db.sh)
-          assert.equal(req.params.dbname, 'test_cartodb_user_1_db');
-          // unauthenticated request gets no dbuser
-          assert.ok(req.params.dbuser === 'testpublicuser', 'could inject dbuser ('+req.params.dbuser+')');
+          assert.equal(req.params.dbname, test_database);
+          assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
           done();
       });
     });
@@ -50,14 +53,12 @@ suite('req2params', function() {
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
           assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
-          // database_name for user "localhost" (see test/support/prepare_db.sh)
-          assert.equal(req.params.dbname, 'test_cartodb_user_1_db');
-          // id for user "localhost" (see test/support/prepare_db.sh)
-          assert.equal(req.params.dbuser, 'test_cartodb_user_1');
+          assert.equal(req.params.dbname, test_database);
+          assert.equal(req.params.dbuser, test_user);
  
           opts.req2params({headers: { host:'localhost' }, query: {map_key: '1235'} }, function(err, req) {
               // wrong key resets params to no user
-              assert.ok(req.params.dbuser === 'testpublicuser', 'could inject dbuser ('+req.params.dbuser+')');
+              assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
               done();
           });
       });

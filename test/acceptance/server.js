@@ -22,7 +22,7 @@ suite('server', function() {
     var sqlapi_server;
 
     var mapnik_version = global.environment.mapnik_version || mapnik.versions.mapnik;
-    var test_database = 'test_cartodb_user_1_db';
+    var test_database = _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db';
     var default_style;
     if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
       // 2.0.0 default
@@ -1112,7 +1112,7 @@ suite('server', function() {
             assert.equal(ct, 'image/png');
             var cc = res.headers['x-cache-channel'];
             assert(cc, 'Missing X-Cache-Channel');
-            var dbname = 'test_cartodb_user_1_db'
+            var dbname = test_database;
             assert.equal(cc.substring(0, dbname.length), dbname);
             var jsonquery = cc.substring(dbname.length+1);
             var sentquery = JSON.parse(jsonquery);
