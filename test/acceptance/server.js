@@ -175,7 +175,8 @@ suite('server', function() {
         },
         function setupRedisBase(err, matches) {
           if ( err ) throw err;
-          assert.equal(matches.length, 0);
+          assert.equal(matches.length, 0,
+            'Unexpected redis keys at test start: ' + matches.join("\n"));
           redis_client.set(base_key, 
             JSON.stringify({ style: style }),
           this);
