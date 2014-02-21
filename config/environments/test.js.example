@@ -113,7 +113,7 @@ var config = {
     // If useProfiler is true every response will be served with an
     // X-Tiler-Profile header containing elapsed timing for various 
     // steps taken for producing the response.
-    ,useProfiler:false
+    ,useProfiler:true
 };
 
 module.exports = config;
