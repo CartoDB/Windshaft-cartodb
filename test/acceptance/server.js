@@ -53,12 +53,25 @@ suite('server', function() {
     
     // TODO: I guess this should be a 404 instead...
     test("get call to server returns 200", function(done){
-        assert.response(server, {
-            url: '/',
-            method: 'GET'
-        },{
-            status: 200
-        }, function() { done(); });
+      Step(
+        function doGet() {
+          var next = this;
+          assert.response(server, {
+              url: '/',
+              method: 'GET'
+          },{}, function(res, err) { next(err,res); });
+        },
+        function doCheck(err, res) {
+          if ( err ) throw err;
+          assert.ok(res.statusCode, 200);
+          var cc = res.headers['x-cache-channel'];
+          assert.ok(!cc);
+          return null;
+        },
+        function finish(err) {
+          done(err);
+        }
+      );
     });
 
     /////////////////////////////////////////////////////////////////////////////////
