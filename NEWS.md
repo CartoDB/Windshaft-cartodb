@@ -7,6 +7,7 @@ Enhancements:
  * Expand "addCacheChannel" stats
  * Allow using GET with sql-api for queries shorter than configured len (#155)
    [ new sqlapi.max_get_sql_length directive, defaults to 2048 ]
+ * Do not log an error for a legit request requiring no X-Cache-Channel
 
 Bug fixes:
 
