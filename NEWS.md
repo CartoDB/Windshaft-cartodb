@@ -1,7 +1,13 @@
 1.8.3 -- 2014-MM-DD
 -------------------
 
-Bug fixes:
+Enhancements:
+
+ - Upgrades windshaft to 0.19.1 with many performance improvements,
+   See node_modules/windshaft/NEWS 
+ - Improve speed of instanciating a map (#147, #159, #165)
+ - Give meaningful error on attempts to use map tokens
+   with attribute service (#156)
 
 1.8.2 -- 2014-02-25
 -------------------
