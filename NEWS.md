@@ -1,6 +1,10 @@
 1.8.4 -- 2014-03-DD
 -------------------
 
+Enhancements:
+
+ - Really skip CDB_TableMetadata lookup for sql affected by no tables (#169)
+
 1.8.3 -- 2014-02-27
 -------------------
 
