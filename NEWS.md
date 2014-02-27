@@ -13,7 +13,7 @@ Enhancements:
    with attribute service (#156)
  - Reduce sql-api communication timeout, and allow overriding (#167)
    [ new sqlapi.timeout directive, defaults to 100 ms ]
- - Do not query CDB_TableMetadata for queries affected by no tables (#16)
+ - Do not query CDB_TableMetadata for queries affected by no tables (#168)
 
 1.8.2 -- 2014-02-25
 -------------------
