@@ -42,6 +42,9 @@ o.prototype.handleQuery = function(query, res) {
     if ( query.q.match('SQLAPIERROR') ) {
       res.statusCode = 400;
       res.write(JSON.stringify({'error':'Some error occurred'}));
+    } else if ( query.q.match('SQLAPINOANSWER') ) {
+      console.log("SQLAPIEmulator will never respond, on request");
+      return;
     } else if ( query.q.match('EPOCH.* as max') ) {
       // This is the structure of the known query sent by tiler
       var row = {

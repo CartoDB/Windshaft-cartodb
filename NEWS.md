@@ -8,6 +8,8 @@ Enhancements:
  - Improve speed of instanciating a map (#147, #159, #165)
  - Give meaningful error on attempts to use map tokens
    with attribute service (#156)
+ - Reduce sql-api communication timeout, and allow overriding (#167)
+   [ new sqlapi.timeout directive, defaults to 100 ms ]
 
 1.8.2 -- 2014-02-25
 -------------------

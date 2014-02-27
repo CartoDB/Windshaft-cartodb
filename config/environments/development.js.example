@@ -106,7 +106,10 @@ var config = {
         // Maximum lenght of SQL query for GET
         // requests. Longer queries will be sent
         // using POST. Defaults to 2048
-        max_get_sql_length: 2048
+        max_get_sql_length: 2048,
+        // Maximum time to wait for a response,
+        // in milliseconds. Defaults to 100.
+        timeout: 100
     }
     ,varnish: {
         host: 'localhost',
