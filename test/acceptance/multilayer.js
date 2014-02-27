@@ -1160,7 +1160,7 @@ suite('multilayer', function() {
           assert.ok(parsed.errors, 'Missing "errors" in response: ' + JSON.stringify(parsed));
           assert.equal(parsed.errors.length, 1);
           var msg = parsed.errors[0];
-          assert.equal(msg, 'Error: could not fetch source tables: ETIMEDOUT');
+          assert.ok(msg, /could not fetch source tables/, msg);
           return null;
         },
         function finish(err) {
