@@ -8,6 +8,7 @@ Enhancements:
  - Clarify obscure "ECONNREFUSED" error message (#171)
  - Change some http status responses to be more appropriate to the case
  - Forbid using map signatures of foreign users (#172)
+ - Forbid instanciating templates of foreign users (#173)
 
 Bug fixes:
 

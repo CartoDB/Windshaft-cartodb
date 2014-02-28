@@ -817,8 +817,8 @@ suite('template_api', function() {
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
-        function instanciateAuth(err, res)
-        {
+        // See https://github.com/CartoDB/Windshaft-cartodb/issues/173
+        function instanciateForeignDB(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 401,
             'Unexpected success instanciating template with no auth: '
@@ -828,6 +828,25 @@ suite('template_api', function() {
             "Missing 'error' from response body: " + res.body);
           assert.ok(parsed.error.match(/unauthorized/i),
             'Unexpected error for unauthorized instance : ' + parsed.error);
+          var post_request = {
+              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              method: 'POST',
+              headers: {host: 'foreign', 'Content-Type': 'application/json' },
+              data: JSON.stringify(template_params)
+          }
+          var next = this;
+          assert.response(server, post_request, {},
+            function(res) { next(null, res); });
+        },
+        function instanciateAuth(err, res)
+        {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('error'),
+            "Missing 'error' from response body: " + res.body);
+          assert.ok(parsed.error.match(/cannot instanciate/i),
+            'Unexpected error for forbidden instance : ' + parsed.error);
           var post_request = {
               url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
