@@ -10,6 +10,12 @@ var strftime    = require('strftime');
 var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 var redis_stats_db = 5;
 
+// Pollute the PG environment to make sure
+// configuration settings are always enforced
+// See https://github.com/CartoDB/Windshaft-cartodb/issues/174
+process.env['PGPORT'] = '666';
+process.env['PGHOST'] = 'fake';
+
 require(__dirname + '/../support/test_helper');
 
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';

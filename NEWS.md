@@ -9,6 +9,10 @@ Enhancements:
  - Change some http status responses to be more appropriate to the case
  - Forbid using map signatures of foreign users (#172)
 
+Bug fixes:
+
+ - Fix database connection settings on template instanciation (#174)
+
 1.8.3 -- 2014-02-27
 -------------------
 
