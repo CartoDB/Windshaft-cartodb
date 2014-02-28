@@ -7,6 +7,7 @@ Enhancements:
  - Upgrade windshaft to 0.19.2, see node_modules/windshaft/NEWS
  - Clarify obscure "ECONNREFUSED" error message (#171)
  - Change some http status responses to be more appropriate to the case
+ - Forbid using map signatures of foreign users (#173)
 
 1.8.3 -- 2014-02-27
 -------------------

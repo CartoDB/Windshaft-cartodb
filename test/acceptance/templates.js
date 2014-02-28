@@ -865,7 +865,7 @@ suite('template_api', function() {
             "Missing 'error' from response body: " + res.body);
           assert.ok(parsed.error.match(/permission denied/i),
             'Unexpected error for unauthorized instance '
-            + '(expected /permission denied): ' + parsed.error);
+            + '(expected /permission denied/): ' + parsed.error);
           var get_request = {
               url: '/tiles/layergroup/' + layergroupid + '/0/0/0.png?auth_token=valid1',
               method: 'GET',
@@ -882,6 +882,33 @@ suite('template_api', function() {
             'Unexpected error for authorized instance: '
             + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "image/png");
+          return null;
+        },
+        // See https://github.com/CartoDB/Windshaft-cartodb/issues/172
+        function fetchTileForeignSignature(err, res) {
+          if ( err ) throw err;
+          var foreignsigned = layergroupid.replace(/[^@]*@/, 'foreign@');
+          var get_request = {
+              url: '/tiles/layergroup/' + foreignsigned + '/0/0/0.png?auth_token=valid1',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }
+          var next = this;
+          assert.response(server, get_request, {},
+            function(res) { next(null, res); });
+        },
+        function checkForeignSignerError(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 403, 
+            'Unexpected error for authorized instance: '
+            + res.statusCode + ' -- ' + res.body);
+          var parsed = JSON.parse(res.body);
+          assert.ok(parsed.hasOwnProperty('error'),
+            "Missing 'error' from response body: " + res.body);
+          assert.ok(parsed.error.match(/cannot use/i),
+            'Unexpected error for unauthorized instance '
+            + '(expected /cannot use/): ' + parsed.error);
           return null;
         },
         function deleteTemplate(err)
