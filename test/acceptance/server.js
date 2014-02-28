@@ -134,8 +134,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          // FIXME: should be 401 Unauthorized
-          assert.equal(res.statusCode, 400, res.body);
+          assert.equal(res.statusCode, 401, res.statusCode + ':' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error: 'Sorry, you are unauthorized (permission denied)'});
           assert.ok(!res.headers.hasOwnProperty('cache-control'));
@@ -419,7 +418,7 @@ suite('server', function() {
             headers: {host: 'localhost'},
         },{}, function(res) { 
           // FIXME: should be 401 Unauthorized
-          assert.equal(res.statusCode, 500, res.body);
+          assert.equal(res.statusCode, 400, res.body);
           assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
           // check that the style wasn't really deleted !
           assert.response(server, {

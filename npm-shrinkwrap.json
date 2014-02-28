@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "dependencies": {
     "node-varnish": {
       "version": "0.2.0",
@@ -11,7 +11,7 @@
     },
     "windshaft": {
       "version": "0.19.1",
-      "from": "http://github.com/CartoDB/Windshaft/tarball/0.19.1",
+      "from": "http://github.com/CartoDB/Windshaft/tarball/0.19.2",
       "dependencies": {
         "grainstore": {
           "version": "0.18.0",

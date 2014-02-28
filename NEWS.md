@@ -4,6 +4,9 @@
 Enhancements:
 
  - Really skip CDB_TableMetadata lookup for sql affected by no tables (#169)
+ - Upgrade windshaft to 0.19.2, see node_modules/windshaft/NEWS
+ - Clarify obscure "ECONNREFUSED" error message (#171)
+ - Change some http status responses to be more appropriate to the case
 
 1.8.3 -- 2014-02-27
 -------------------

@@ -493,7 +493,7 @@ suite('multilayer', function() {
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
-          assert.equal(res.statusCode, 400, res.body);
+          assert.equal(res.statusCode, 404, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           var msg = parsed.errors[0];
           assert.ok(msg.match(/bogus.*exist/), msg);
