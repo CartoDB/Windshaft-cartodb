@@ -9,6 +9,8 @@ Enhancements:
  - Change some http status responses to be more appropriate to the case
  - Forbid using map signatures of foreign users (#172)
  - Forbid instanciating templates of foreign users (#173)
+ - Allow passing environment configuration name via NODE_ENV to app.js
+ - Print environment configuration name on app start
 
 Bug fixes:
 

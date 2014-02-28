@@ -8,11 +8,16 @@
  */
 
 
+if ( process.argv[2] ) ENV = process.argv[2];
+else if ( process.env['NODE_ENV'] ) ENV = process.env['NODE_ENV'];
+else ENV = 'development';
+
+process.env['NODE_ENV'] = ENV;
+
 // sanity check
-var ENV = process.argv[2]
 if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
     console.error("\nnode app.js [environment]");
-    console.error("environments: [development, production, staging]\n");
+    console.error("environments: development, production, staging\n");
     process.exit(1);
 }
 
@@ -49,7 +54,9 @@ ws.maxConnections = global.environment.maxConnections || 128;
 ws.listen(global.environment.port, global.environment.host);
 
 ws.on('listening', function() {
-  console.log("Windshaft tileserver started on " + global.environment.host + ':' + global.environment.port);
+  console.log("Windshaft tileserver started on "
+              + global.environment.host + ':' + global.environment.port
+              + " (" + ENV + ")");
 });
 
 // DEPRECATED, use SIGUSR2
