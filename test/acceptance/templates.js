@@ -74,7 +74,7 @@ suite('template_api', function() {
         function postTemplate(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401);
+          assert.equal(res.statusCode, 403);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'), res.body);
           err = parsed.error;
@@ -369,7 +369,7 @@ suite('template_api', function() {
         function litsTemplates(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
             'Missing error from response: ' + res.body);
@@ -582,7 +582,7 @@ suite('template_api', function() {
         function getTemplate(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401, res.statusCode + ": " + res.body);
+          assert.equal(res.statusCode, 403, res.statusCode + ": " + res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('error'), res.body);
           assert.ok(parsedBody.error.match(/only.*authenticated.*user/i),
@@ -691,7 +691,7 @@ suite('template_api', function() {
         function deleteTemplate(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401, res.statusCode + ": " + res.body);
+          assert.equal(res.statusCode, 403, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
@@ -819,7 +819,7 @@ suite('template_api', function() {
         // See https://github.com/CartoDB/Windshaft-cartodb/issues/173
         function instanciateForeignDB(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401,
+          assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: '
             + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -882,7 +882,7 @@ suite('template_api', function() {
         },
         function fetchTileAuth(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401,
+          assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
@@ -963,7 +963,7 @@ suite('template_api', function() {
         },
         function checkTileDeleted(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401, 
+          assert.equal(res.statusCode, 403,
             'Unexpected statusCode fetch tile after signature revokal: '
             + res.statusCode + ':' + res.body); 
           var parsed = JSON.parse(res.body);
@@ -1059,7 +1059,7 @@ suite('template_api', function() {
         function instanciateAuth(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401,
+          assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: '
             + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1103,7 +1103,7 @@ suite('template_api', function() {
         },
         function fetchTileAuth(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401,
+          assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
@@ -1157,7 +1157,7 @@ suite('template_api', function() {
         },
         function checkTileDeleted(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401, 
+          assert.equal(res.statusCode, 403,
             'Unexpected statusCode fetch tile after signature revokal: '
             + res.statusCode + ':' + res.body); 
           var parsed = JSON.parse(res.body);
@@ -1255,7 +1255,7 @@ suite('template_api', function() {
         function instanciateAuth(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401,
+          assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: '
             + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1299,7 +1299,7 @@ suite('template_api', function() {
         },
         function fetchAttributeAuth(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401,
+          assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
@@ -1353,7 +1353,7 @@ suite('template_api', function() {
         },
         function checkTileDeleted(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 401, 
+          assert.equal(res.statusCode, 403, 
             'Unexpected statusCode fetch tile after signature revokal: '
             + res.statusCode + ':' + res.body); 
           var parsed = JSON.parse(res.body);

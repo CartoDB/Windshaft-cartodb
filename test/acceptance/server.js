@@ -134,7 +134,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          assert.equal(res.statusCode, 401, res.statusCode + ':' + res.body);
+          assert.equal(res.statusCode, 403, res.statusCode + ':' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error: 'Sorry, you are unauthorized (permission denied)'});
           assert.ok(!res.headers.hasOwnProperty('cache-control'));
@@ -151,7 +151,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          // FIXME: should be 401 Unauthorized
+          // FIXME: should be 403 Forbidden or 404 User Not Found
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
@@ -319,7 +319,7 @@ suite('server', function() {
               headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
               data: querystring.stringify({style: 'Map { background-color:#aaa; }'})
           },{}, function(res) {
-            // FIXME: should be 401 Unauthorized
+            // FIXME: should be 403 Forbidden
             assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
             assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
 
@@ -417,7 +417,7 @@ suite('server', function() {
             method: 'DELETE',
             headers: {host: 'localhost'},
         },{}, function(res) { 
-          // FIXME: should be 401 Unauthorized
+          // FIXME: should be 403 Forbidden
           assert.equal(res.statusCode, 400, res.body);
           assert.ok(res.body.indexOf('map state cannot be changed by unauthenticated request') != -1, res.body);
           // check that the style wasn't really deleted !
@@ -531,7 +531,7 @@ suite('server', function() {
             url: '/tiles/test_table_private_1/infowindow',
             method: 'GET'
         },{}, function(res) {
-          // FIXME: should be 401 Unauthorized
+          // FIXME: should be 403 Forbidden
           assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           done();
         });
@@ -546,7 +546,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          // FIXME: should be 401 Unauthorized
+          // FIXME: should be 403 Forbidden
           assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
@@ -614,8 +614,8 @@ suite('server', function() {
             url: '/tiles/test_table_private_1/6/31/24.grid.json',
             method: 'GET'
         },{}, function(res) {
-          // 401 Unauthorized
-          assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          // 403 Forbidden
+          assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
           done();
         });
     });
@@ -629,7 +629,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          // FIXME: should be 401 Unauthorized
+          // FIXME: should be 403 Forbidden
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
@@ -763,8 +763,8 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          // 401 Unauthorized
-          assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          // 403 Forbidden
+          assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
           done();
         });
     });
@@ -780,7 +780,7 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          // FIXME: should be 401 Unauthorized
+          // FIXME: should be 403 Forbidden
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           assert.deepEqual(JSON.parse(res.body),
             {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
@@ -804,8 +804,8 @@ suite('server', function() {
             method: 'GET'
         },{
         }, function(res) {
-          // 401 Unauthorized
-          assert.equal(res.statusCode, 401, res.statusCode + ': ' + res.body);
+          // 403 Forbidden
+          assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
           // Failed in 1.6.0 of https://github.com/CartoDB/Windshaft-cartodb/issues/107
           assert.ok(!res.headers.hasOwnProperty('cache-control'),
             "Unexpected Cache-Control: " + res.headers['cache-control']);
@@ -1278,7 +1278,7 @@ suite('server', function() {
             url: '/tiles/test_table_private_1/map_metadata',
             method: 'GET'
         },{}, function(res) {
-          // FIXME: should be 401 instead
+          // FIXME: should be 403 instead
           assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           assert.ok(!res.headers.hasOwnProperty('cache-control'));
           done();

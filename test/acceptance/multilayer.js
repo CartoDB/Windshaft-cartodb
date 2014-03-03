@@ -130,7 +130,7 @@ suite('multilayer', function() {
               headers: {host: 'localhost' },
               encoding: 'binary'
           }, {}, function(res) {
-              assert.equal(res.statusCode, 401, res.statusCode + ':' + res.body);
+              assert.equal(res.statusCode, 403, res.statusCode + ':' + res.body);
               var parsed = JSON.parse(res.body);
               var msg = parsed.error; // TODO: should it be "errors" ?
               assert.ok(msg.match(/permission denied/i), msg);
@@ -674,7 +674,7 @@ suite('multilayer', function() {
               headers: {host: 'localhost' },
               encoding: 'binary'
           }, {}, function(res) {
-              assert.equal(res.statusCode, 401);
+              assert.equal(res.statusCode, 403);
               var re = RegExp('permission denied');
               assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
               next(err);
@@ -690,7 +690,7 @@ suite('multilayer', function() {
               headers: {host: 'localhost' },
               method: 'GET'
           }, {}, function(res) {
-              assert.equal(res.statusCode, 401);
+              assert.equal(res.statusCode, 403);
               var re = RegExp('permission denied');
               assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
               next(err);
@@ -706,7 +706,7 @@ suite('multilayer', function() {
               headers: {host: 'localhost' },
               method: 'GET'
           }, {}, function(res) {
-              assert.equal(res.statusCode, 401);
+              assert.equal(res.statusCode, 403);
               var re = RegExp('permission denied');
               assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
               next(err);
