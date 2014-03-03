@@ -138,10 +138,10 @@ suite('multilayer', function() {
               headers: {host: 'localhost' },
               encoding: 'binary'
           }, {}, function(res) {
-              assert.equal(res.statusCode, 403, res.statusCode + ':' + res.body);
+              assert.equal(res.statusCode, 401, res.statusCode + ':' + res.body);
               var parsed = JSON.parse(res.body);
               var msg = parsed.error; // TODO: should it be "errors" ?
-              assert.ok(msg.match(/no authorization left/i), msg);
+              assert.ok(msg.match(/permission denied/i), msg);
               next(err);
           });
         },

@@ -4,7 +4,7 @@
 Enhancements:
 
  - Set statsd prefix for all endpoints 
- - Raise 403 forbidden on attempt to access map tiles waiving
+ - Respond with a permission denied on attempt to access map tiles waiving
    signature of someone who had not left any (#170)
 
 1.8.4 -- 2014-03-03
