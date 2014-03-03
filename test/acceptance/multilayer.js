@@ -127,6 +127,24 @@ suite('multilayer', function() {
               });
           });
         },
+        // See https://github.com/CartoDB/Windshaft-cartodb/issues/170
+        function do_get_tile_nosignature(err)
+        {
+          if ( err ) throw err;
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup/localhost@' + expected_token + ':cb0/0/0/0.png',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }, {}, function(res) {
+              assert.equal(res.statusCode, 403, res.statusCode + ':' + res.body);
+              var parsed = JSON.parse(res.body);
+              var msg = parsed.error; // TODO: should it be "errors" ?
+              assert.ok(msg.match(/no authorization left/i), msg);
+              next(err);
+          });
+        },
         function do_get_grid_layer0(err)
         {
           if ( err ) throw err;
