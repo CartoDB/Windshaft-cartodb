@@ -6,6 +6,7 @@ Enhancements:
  - Set statsd prefix for all endpoints 
  - Respond with a permission denied on attempt to access map tiles waiving
    signature of someone who had not left any (#170)
+ - Do not log an error on GET / (#177)
 
 Bug fixes:
 
