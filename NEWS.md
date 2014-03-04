@@ -10,6 +10,7 @@ Enhancements:
  - Do not UNWATCH on every redis client release (#161)
  - Include API docs (#164)
  - Add "cacheDns" statsd setting in the example configs
+ - Do not send duplicated stats on template instanciation
 
 Bug fixes:
 
