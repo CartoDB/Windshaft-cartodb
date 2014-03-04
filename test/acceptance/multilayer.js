@@ -10,7 +10,7 @@ var strftime    = require('strftime');
 var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 var redis_stats_db = 5;
 
-require(__dirname + '/../support/test_helper');
+var helper = require(__dirname + '/../support/test_helper');
 
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 
@@ -19,14 +19,6 @@ var ServerOptions = require(__dirname + '/../../lib/cartodb/server_options');
 serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
-
-// Check that the response headers do not request caching
-// Throws on failure
-function checkNoCache(res) {
-  assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-  assert.ok(!res.headers.hasOwnProperty('cache-control')); // is this correct ?
-  assert.ok(!res.headers.hasOwnProperty('last-modified')); // is this correct ?
-}
 
 suite('multilayer', function() {
 
@@ -180,6 +172,59 @@ suite('multilayer', function() {
                   next(err);
               });
           });
+        },
+        function finish(err) {
+          var errors = [];
+          if ( err ) {
+            errors.push(err.message);
+            console.log("Error: " + err);
+          }
+          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
+              if ( err ) errors.push(err.message);
+              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
+              redis_client.del(matches, function(err) {
+                if ( err ) errors.push(err.message);
+                if ( errors.length ) done(new Error(errors));
+                else done(null);
+              });
+          });
+        }
+      );
+    });
+
+    // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
+    // NOTE: another test like this is in templates.js
+    test("get creation requests no cache", function(done) {
+
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator from test_table limit 2',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+
+      var expected_token; 
+      Step(
+        function do_create_get()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+              method: 'GET',
+              headers: {host: 'localhost'} 
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function do_check_create(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, res.body);
+          var parsedBody = JSON.parse(res.body);
+          expected_token = parsedBody.layergroupid.split(':')[0];
+          helper.checkNoCache(res);
+          return null;
         },
         function finish(err) {
           var errors = [];
@@ -515,7 +560,7 @@ suite('multilayer', function() {
           var parsed = JSON.parse(res.body);
           var msg = parsed.errors[0];
           assert.ok(msg.match(/bogus.*exist/), msg);
-          checkNoCache(res);
+          helper.checkNoCache(res);
           done();
       });
     });

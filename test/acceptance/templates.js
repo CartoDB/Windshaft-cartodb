@@ -1,5 +1,4 @@
 var assert      = require('../support/assert');
-var tests       = module.exports = {};
 var _           = require('underscore');
 var redis       = require('redis');
 var querystring = require('querystring');
@@ -16,7 +15,7 @@ var redis_stats_db = 5;
 process.env['PGPORT'] = '666';
 process.env['PGHOST'] = 'fake';
 
-require(__dirname + '/../support/test_helper');
+var helper = require(__dirname + '/../support/test_helper');
 
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 
@@ -1445,6 +1444,7 @@ suite('template_api', function() {
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
           }
+          helper.checkNoCache(res);
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1516,13 +1516,16 @@ suite('template_api', function() {
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
-        function instanciateAuth(err, res)
+        function checkInstanciation(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 200,
-            'Unexpected success instanciating template with no auth: '
-            + res.statusCode + ': ' + res.body);
-          done();
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
+          helper.checkNoCache(res);
+          return null;
+        },
+        function finish(err) {
+          done(err);
         }
       );
     });
@@ -1587,12 +1590,12 @@ suite('template_api', function() {
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
-        function instanciateAuth(err, res)
+        function checkInstanciation(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 200,
-            'Unexpected success instanciating template with no auth: '
-            + res.statusCode + ': ' + res.body);
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
+          helper.checkNoCache(res);
           return null;
         },
         function finish(err) {

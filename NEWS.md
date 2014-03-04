@@ -7,6 +7,10 @@ Enhancements:
  - Respond with a permission denied on attempt to access map tiles waiving
    signature of someone who had not left any (#170)
 
+Bug fixes:
+
+ - Do not cache map creation responses (#176)
+
 1.8.4 -- 2014-03-03
 -------------------
 

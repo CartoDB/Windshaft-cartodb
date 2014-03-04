@@ -6,6 +6,7 @@
  */
 
 var _ = require('underscore');
+var assert = require('assert');
 var LZMA  = require('lzma/lzma_worker.js').LZMA;
 
 // set environment specific variables
@@ -29,7 +30,17 @@ function lzma_compress_to_base64(payload, mode, callback) {
   );
 }
 
+// Check that the response headers do not request caching
+// Throws on failure
+function checkNoCache(res) {
+  assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+  assert.ok(!res.headers.hasOwnProperty('cache-control')); // is this correct ?
+  assert.ok(!res.headers.hasOwnProperty('last-modified')); // is this correct ?
+}
+
+
 module.exports = {
-  lzma_compress_to_base64: lzma_compress_to_base64
+  lzma_compress_to_base64: lzma_compress_to_base64,
+  checkNoCache: checkNoCache
 }
 
