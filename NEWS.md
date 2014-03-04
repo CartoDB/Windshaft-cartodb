@@ -9,6 +9,7 @@ Enhancements:
  - Do not log an error on GET / (#177)
  - Do not UNWATCH on every redis client release (#161)
  - Include API docs (#164)
+ - Add "dnsCache" statsd setting in the example configs
 
 Bug fixes:
 

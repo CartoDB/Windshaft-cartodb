@@ -58,7 +58,8 @@ var config = {
     ,statsd: {
         host: 'localhost',
         port: 8125,
-        prefix: 'test.:host.'
+        prefix: 'test.:host.',
+        dnsCache: true
         // support all allowed node-statsd options
     }
     ,renderer: {
