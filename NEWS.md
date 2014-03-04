@@ -8,6 +8,7 @@ Enhancements:
    signature of someone who had not left any (#170)
  - Do not log an error on GET / (#177)
  - Do not UNWATCH on every redis client release (#161)
+ - Include API docs (#164)
 
 Bug fixes:
 
