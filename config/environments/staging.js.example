@@ -59,7 +59,7 @@ var config = {
         host: 'localhost',
         port: 8125,
         prefix: 'stage.:host.',
-        dnsCache: true
+        cacheDns: true
         // support all allowed node-statsd options
     }
     ,renderer: {
