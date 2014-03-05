@@ -11,7 +11,7 @@ Enhancements:
  - Include API docs (#164)
  - Add "cacheDns" statsd setting in the example configs
  - Do not send duplicated stats on template instanciation
- - Cleanly catch exceptions from sendResponse (#178)
+ - Do not die on dns resolution errors (#178, #180)
 
 Bug fixes:
 
