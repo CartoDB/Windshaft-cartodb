@@ -1,3 +1,10 @@
+1.9.0 -- 2014-03-DD
+-------------------
+
+New features:
+
+ - Allow to set server related configuration in serverMetadata (#182)
+
 1.8.5 -- 2014-03-DD
 -------------------
 
@@ -12,7 +19,6 @@ Enhancements:
  - Add "cacheDns" statsd setting in the example configs
  - Do not send duplicated stats on template instanciation
  - Do not die on dns resolution errors (#178, #180)
- - Allow to set server related configuration in serverMetadata (#182)
 
 Bug fixes:
 
