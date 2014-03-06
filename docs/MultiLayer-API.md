@@ -8,7 +8,16 @@ It accepts tokens with encoded timestamp from the client considering the token s
 Clients don't need to be aware of the extension but rather use the API as they would use the base one.
 The only difference will be that the _same_ layergroup configuration may result in different tokens if source data was modified between the mapview requests. 
 
-Also Windshaft-CartoDB adds a ``last_update`` field with ISO format (2013-11-30T12:23:10).
+Windshaft-CartoDB adds the following attributes:
+- ``last_update`` field with ISO format (2013-11-30T12:23:10).
+- ``cdn_url`` object containing CDN url client should use (not mandatory) to access the tiles. It's in the form:
+   ```json
+   {
+     http: 'http://cdn_url.com/'
+     https: 'https://secure.cdn_url.com/'
+   }
+   ```
+
 
 ## Stats tag
 
