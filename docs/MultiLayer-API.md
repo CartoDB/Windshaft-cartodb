@@ -11,6 +11,7 @@ The only difference will be that the _same_ layergroup configuration may result 
 Windshaft-CartoDB adds the following attributes:
 - ``last_update`` field with ISO format (2013-11-30T12:23:10).
 - ``cdn_url`` object containing CDN url client should use (not mandatory) to access the tiles. It's in the form:
+
    ```json
    {
      http: 'http://cdn_url.com/'
