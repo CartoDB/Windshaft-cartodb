@@ -308,6 +308,52 @@ suite('template_api', function() {
       });
     });
 
+    test("instance endpoint should return server metadata", function(done){
+      global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } }
+      var tmpl = _.clone(template_acceptance1)
+      tmpl.name = "rambotemplate2"
+
+      Step(function postTemplate1(err, res) {
+          var next = this;
+          var post_request = {
+              url: '/tiles/template?api_key=1234',
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              data: JSON.stringify(tmpl)
+          };
+          assert.response(server, post_request, {}, function(res) { 
+            next(null, res); 
+          });
+        },
+        function testCORS() {
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/template/' + tmpl.name,
+              method: 'POST',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          },{
+              status: 200
+          }, function(res) { 
+            var parsed = JSON.parse(res.body);
+            assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
+            next(null); 
+          });
+        },
+        function deleteTemplate(err) {
+          if ( err ) throw err;
+          var del_request = {
+              url: '/tiles/template/' + tmpl.name + '?api_key=1234', 
+              method: 'DELETE',
+              headers: {host: 'localhost', 'Content-Type': 'application/json' }
+          }
+          var next = this;
+          assert.response(server, del_request, {},
+            function(res) { done(); });
+        }
+      );
+    });
+
+
 
     test("can list templates", function(done) {
 

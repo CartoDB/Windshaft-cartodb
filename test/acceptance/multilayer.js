@@ -192,6 +192,40 @@ suite('multilayer', function() {
       );
     });
 
+
+    test("should include serverMedata in the response", function(done) {
+      global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } }
+      var layergroup =  {
+        version: '1.0.0',
+        layers: [
+           { options: {
+               sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator from test_table limit 2',
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss_version: '2.0.1'
+             } }
+        ]
+      };
+
+      var expected_token; 
+      Step(
+        function do_create_get()
+        {
+          var next = this;
+          assert.response(server, {
+              url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+              method: 'GET',
+              headers: {host: 'localhost'} 
+          }, {}, function(res, err) { next(err, res); });
+        },
+        function do_check_create(err, res) {
+          var parsed = JSON.parse(res.body);
+          assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
+          done();
+        }
+      )
+    });
+
+
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
     // NOTE: another test like this is in templates.js
     test("get creation requests no cache", function(done) {
