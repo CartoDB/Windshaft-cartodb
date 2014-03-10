@@ -5,7 +5,7 @@ New features:
 
  - Allow to set server related configuration in serverMetadata (#182)
 
-1.8.5 -- 2014-03-DD
+1.8.5 -- 2014-03-10
 -------------------
 
 Enhancements:
