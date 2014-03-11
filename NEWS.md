@@ -1,6 +1,10 @@
 1.9.1 -- 2014-MM-DD
 -------------------
 
+Enhancements:
+
+ - Include tiler version in startup log
+
 1.9.0 -- 2014-03-10
 -------------------
 

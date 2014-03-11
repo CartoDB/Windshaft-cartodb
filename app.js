@@ -53,8 +53,10 @@ ws.maxConnections = global.environment.maxConnections || 128;
 
 ws.listen(global.environment.port, global.environment.host);
 
+var version = require("./package").version;
+
 ws.on('listening', function() {
-  console.log("Windshaft tileserver started on "
+  console.log("Windshaft tileserver " + version + " started on "
               + global.environment.host + ':' + global.environment.port
               + " (" + ENV + ")");
 });
