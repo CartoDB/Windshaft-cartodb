@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "dependencies": {
     "node-varnish": {
       "version": "0.2.0",
@@ -422,6 +422,17 @@
               "version": "0.10.25-1"
             }
           }
+        }
+      }
+    },
+    "rollbar": {
+      "version": "0.3.1",
+      "dependencies": {
+        "node-uuid": {
+          "version": "1.4.1"
+        },
+        "lru-cache": {
+          "version": "2.2.4"
         }
       }
     },

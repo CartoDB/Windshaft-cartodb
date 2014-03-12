@@ -30,13 +30,22 @@ global.environment  = require(__dirname + '/config/environments/' + ENV);
 _.extend(global.settings, global.environment);
 
 global.log4js = require('log4js')
-log4js.configure({
+log4js_config = {
   appenders: [
     { type: "console", layout: { type:'basic' } }
   ],
   replaceConsole:true
-});
+};
 
+if ( global.environment.rollbar ) {
+  log4js_config.appenders.push({
+    type: __dirname + "/lib/cartodb/log4js_rollbar.js",
+    options: global.environment.rollbar
+  });
+}
+
+log4js.configure(log4js_config);
+global.logger = log4js.getLogger();
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
@@ -71,3 +80,6 @@ process.on('SIGUSR2', function() {
   ws.dumpCacheStats();
 });
 
+process.on('uncaughtException', function(err) {
+  logger.error('Caught exception: ' + err);
+});

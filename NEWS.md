@@ -1,9 +1,14 @@
-1.9.1 -- 2014-MM-DD
+1.10.0 -- 2014-MM-DD
 -------------------
+
+New features:
+
+ - Add optional support for rollbar (#150)
 
 Enhancements:
 
  - Include tiler version in startup log
+ - Install an uncaught exception handler
 
 1.9.0 -- 2014-03-10
 -------------------
