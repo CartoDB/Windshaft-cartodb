@@ -7,6 +7,7 @@ New features:
 
 Enhancements:
 
+ - Upgrade node-varnish to 0.3.0
  - Include tiler version in startup log
  - Install an uncaught exception handler
 
