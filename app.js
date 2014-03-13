@@ -81,5 +81,5 @@ process.on('SIGUSR2', function() {
 });
 
 process.on('uncaughtException', function(err) {
-  logger.error('Caught exception: ' + err);
+  logger.error('Uncaught exception: ' + err.stack); 
 });
