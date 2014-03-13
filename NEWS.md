@@ -10,6 +10,8 @@ Enhancements:
  - Upgrade node-varnish to 0.3.0
  - Include tiler version in startup log
  - Install an uncaught exception handler
+ - Require own fork of node-mapnik, with temptative fix
+   for libxml usage (glibc detected corruptions)
 
 1.9.0 -- 2014-03-10
 -------------------

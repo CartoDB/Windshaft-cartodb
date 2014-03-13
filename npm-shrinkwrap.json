@@ -404,7 +404,8 @@
       }
     },
     "mapnik": {
-      "version": "0.7.26"
+      "version": "0.7.26-cdb1",
+      "from": "http://github.com/Vizzuality/node-mapnik/tarball/0.7.26-cdb1"
     },
     "lzma": {
       "version": "1.2.3"
@@ -436,11 +437,11 @@
         }
       }
     },
-    "strftime": {
-      "version": "0.6.2"
-    },
     "semver": {
       "version": "1.1.4"
+    },
+    "strftime": {
+      "version": "0.6.2"
     },
     "redis": {
       "version": "0.8.6"
