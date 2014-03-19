@@ -76,7 +76,7 @@ if test x"$PREPARE_PGSQL" = xyes; then
     sed "s/:PUBLICPASS/${PUBLICPASS}/" | 
     sed "s/:TESTUSER/${TESTUSER}/" | 
     sed "s/:TESTPASS/${TESTPASS}/" | 
-    psql ${TEST_DB}
+    psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
 
 fi
 
