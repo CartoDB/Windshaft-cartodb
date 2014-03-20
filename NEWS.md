@@ -7,6 +7,7 @@ New features:
 
 Enhancements:
 
+ - Do not send connection details to client (#183)
  - Upgrade node-varnish to 0.3.0
  - Upgrade Windshaft to 0.20.0, see
    http://github.com/CartoDB/Windshaft/blob/0.20.0/NEWS
