@@ -15,6 +15,10 @@ Enhancements:
  - Require own fork of node-mapnik, with temptative fix
    for libxml usage (glibc detected corruptions)
 
+Other changes:
+
+ - Switch to 3-clause BSD license (#184)
+
 1.9.0 -- 2014-03-10
 -------------------
 
