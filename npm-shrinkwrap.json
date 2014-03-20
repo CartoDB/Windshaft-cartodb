@@ -10,12 +10,40 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.19.4",
-      "from": "http://github.com/CartoDB/Windshaft/tarball/0.19.4",
+      "version": "0.20.0",
+      "from": "http://github.com/CartoDB/Windshaft/tarball/0.20.0",
       "dependencies": {
         "grainstore": {
           "version": "0.18.1",
           "dependencies": {
+            "carto": {
+              "version": "0.9.5-cdb2",
+              "from": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb2",
+              "dependencies": {
+                "underscore": {
+                  "version": "1.4.4"
+                },
+                "xml2js": {
+                  "version": "0.2.8",
+                  "dependencies": {
+                    "sax": {
+                      "version": "0.5.8"
+                    }
+                  }
+                },
+                "optimist": {
+                  "version": "0.6.1",
+                  "dependencies": {
+                    "wordwrap": {
+                      "version": "0.0.2"
+                    },
+                    "minimist": {
+                      "version": "0.0.8"
+                    }
+                  }
+                }
+              }
+            },
             "mapnik-reference": {
               "version": "5.0.7"
             },
@@ -102,7 +130,7 @@
                   }
                 },
                 "srs": {
-                  "version": "0.3.10"
+                  "version": "0.3.11"
                 },
                 "zipfile": {
                   "version": "0.4.3"
@@ -145,7 +173,7 @@
                               "version": "0.1.25",
                               "dependencies": {
                                 "graceful-fs": {
-                                  "version": "2.0.2"
+                                  "version": "2.0.3"
                                 }
                               }
                             }
@@ -167,7 +195,7 @@
                               "version": "0.1.25",
                               "dependencies": {
                                 "graceful-fs": {
-                                  "version": "2.0.2"
+                                  "version": "2.0.3"
                                 },
                                 "inherits": {
                                   "version": "2.0.1"
@@ -303,7 +331,7 @@
           }
         },
         "tilelive-mapnik": {
-          "version": "0.6.7",
+          "version": "0.6.8",
           "dependencies": {
             "eio": {
               "version": "0.2.2"
@@ -320,8 +348,8 @@
           "version": "2.3.1"
         },
         "carto": {
-          "version": "0.9.5-cdb2",
-          "from": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb2",
+          "version": "0.9.5-cdb3",
+          "from": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
           "dependencies": {
             "underscore": {
               "version": "1.4.4"
@@ -349,6 +377,10 @@
               }
             }
           }
+        },
+        "step-profiler": {
+          "version": "0.0.1",
+          "from": "git://github.com/CartoDB/node-step-profiler.git#0.0.1"
         },
         "underscore.string": {
           "version": "1.1.6",
@@ -437,11 +469,11 @@
         }
       }
     },
-    "semver": {
-      "version": "1.1.4"
-    },
     "strftime": {
       "version": "0.6.2"
+    },
+    "semver": {
+      "version": "1.1.4"
     },
     "redis": {
       "version": "0.8.6"

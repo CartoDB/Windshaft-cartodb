@@ -8,6 +8,8 @@ New features:
 Enhancements:
 
  - Upgrade node-varnish to 0.3.0
+ - Upgrade Windshaft to 0.20.0, see
+   http://github.com/CartoDB/Windshaft/blob/0.20.0/NEWS
  - Include tiler version in startup log
  - Install an uncaught exception handler
  - Require own fork of node-mapnik, with temptative fix
