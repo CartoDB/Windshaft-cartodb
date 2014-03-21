@@ -1,6 +1,10 @@
 1.10.1 -- 2014-MM-DD
 -------------------
 
+Bug fixes:
+
+ - Do not cache non-success jsonp responses (#186)
+
 1.10.0 -- 2014-03-20
 -------------------
 
