@@ -620,6 +620,24 @@ suite('server', function() {
         });
     });
 
+    // See http://github.com/CartoDB/Windshaft-cartodb/issues/186
+    test("get'ing the grid of a private table should fail when unauthenticated (jsonp)",
+    function(done) {
+        assert.response(server, {
+            headers: {host: 'localhost'},
+            url: '/tiles/test_table_private_1/6/31/24.grid.json?callback=x',
+            method: 'GET'
+        },{}, function(res) {
+          // It's forbidden, but jsonp calls for status = 200
+          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+          // Still, we do NOT want to add caching headers here
+          // See https://github.com/CartoDB/Windshaft-cartodb/issues/186
+          assert.ok(!res.headers.hasOwnProperty('cache-control'),
+            "Unexpected Cache-Control: " + res.headers['cache-control']);
+          done();
+        });
+    });
+
     // See http://github.com/Vizzuality/Windshaft-cartodb/issues/55
     test("get'ing grid of private table should fail on unknown username",
     function(done) {
