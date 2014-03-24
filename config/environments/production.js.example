@@ -51,6 +51,14 @@ var config = {
         port: 6432,
         extent: "-20037508.3,-20037508.3,20037508.3,20037508.3",
         row_limit: 65535,
+        /*
+         * Set persist_connection to false if you want
+         * database connections to be closed on renderer
+         * expiration (1 minute after last use).
+         * Setting to true (the default) would never
+         * close any connection for the server's lifetime
+         */
+        persist_connection: false,
         simplify_geometries: true,
         max_size: 500
     }
