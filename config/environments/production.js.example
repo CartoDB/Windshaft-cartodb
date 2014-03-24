@@ -31,7 +31,7 @@ var config = {
     // to be able to navigate the map without a reload ?
     // Defaults to 7200 (2 hours)
     ,mapConfigTTL: 7200
-    // idle socket timeout, in miliseconds
+    // idle socket timeout, in milliseconds
     ,socket_timeout: 600000 
     ,enable_cors: true
     ,cache_enabled: true
