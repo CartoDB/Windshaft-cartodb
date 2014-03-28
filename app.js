@@ -24,10 +24,9 @@ if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
 var _ = require('underscore')
     , Step       = require('step')
     ;
+
 // set environment specific variables
-global.settings     = require(__dirname + '/config/settings');
 global.environment  = require(__dirname + '/config/environments/' + ENV);
-_.extend(global.settings, global.environment);
 
 global.log4js = require('log4js')
 log4js_config = {

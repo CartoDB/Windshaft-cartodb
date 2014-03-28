@@ -10,9 +10,7 @@ var assert = require('assert');
 var LZMA  = require('lzma/lzma_worker.js').LZMA;
 
 // set environment specific variables
-global.settings     = require(__dirname + '/../../config/settings');
 global.environment  = require(__dirname + '/../../config/environments/test');
-_.extend(global.settings, global.environment);
 process.env.NODE_ENV = 'test';
 
 
