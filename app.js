@@ -78,6 +78,8 @@ process.on('SIGUSR1', function() {
 
 process.on('SIGUSR2', function() {
   ws.dumpCacheStats();
+  log4js.configure(log4js_config);
+  console.log('Log files reloaded');
 });
 
 process.on('uncaughtException', function(err) {
