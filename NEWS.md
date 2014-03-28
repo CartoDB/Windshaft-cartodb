@@ -3,7 +3,8 @@
 
 New features:
 
- - Reload log files on SIGUSR2
+ - Add support for log_filename directive
+ - Reopen log file on SIGHUP, for better logrotate integration
 
 1.10.1 -- 2014-03-21
 -------------------

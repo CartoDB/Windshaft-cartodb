@@ -31,11 +31,20 @@ _.extend(global.settings, global.environment);
 
 global.log4js = require('log4js')
 log4js_config = {
-  appenders: [
-    { type: "console", layout: { type:'basic' } }
-  ],
+  appenders: [],
   replaceConsole:true
 };
+
+if ( global.environment.log_filename ) {
+  console.log("Logs will be written to " + global.environment.log_filename);
+  log4js_config.appenders.push(
+    { type: "file", filename: global.environment.log_filename }
+  );
+} else {
+  log4js_config.appenders.push(
+    { type: "console", layout: { type:'basic' } }
+  );
+}
 
 if ( global.environment.rollbar ) {
   log4js_config.appenders.push({
@@ -78,6 +87,9 @@ process.on('SIGUSR1', function() {
 
 process.on('SIGUSR2', function() {
   ws.dumpCacheStats();
+});
+
+process.on('SIGHUP', function() {
   log4js.configure(log4js_config);
   console.log('Log files reloaded');
 });

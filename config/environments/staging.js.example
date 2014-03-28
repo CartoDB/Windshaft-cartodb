@@ -36,6 +36,10 @@ var config = {
     ,enable_cors: true
     ,cache_enabled: true
     ,log_format: ':req[X-Real-IP] :method :req[Host]:url :status :response-time ms (:res[X-Tiler-Profiler]) -> :res[Content-Type]'
+    // If log_filename is given logs will be written
+    // there, in append mode. Otherwise stdout is used (default).
+    // Log file will be re-opened on receiving the HUP signal
+    ,log_filename: 'logs/node-windshaft.log'
     // Templated database username for authorized user
     // Supported labels: 'user_id' (read from redis)
     ,postgres_auth_user: 'cartodb_staging_user_<%= user_id %>'
