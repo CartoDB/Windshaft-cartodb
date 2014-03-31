@@ -38,7 +38,8 @@ if ( ! username ) usage(me, 1);
 console.log("Using environment " + ENV);
 
 global.environment = require('../config/environments/' + ENV);
-var serverOptions = require('../lib/cartodb/server_options'); // _after_ setting global.environment
+// _after_ setting global.environment
+var serverOptions = require('../lib/cartodb/server_options')();
 
 var client;
 var dbname;
