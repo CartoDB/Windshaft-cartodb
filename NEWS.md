@@ -4,6 +4,7 @@
 Bug fixes:
  
  - Fix show_style tool broken since 1.8.1
+ - Fix X-Cache-Channel of tiles accessed via signed token (#188)
 
 1.10.1 -- 2014-03-21
 --------------------
