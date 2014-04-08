@@ -20,7 +20,8 @@ var helper = require(__dirname + '/../support/test_helper');
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
+var ServerOptions = require(__dirname + '/../../lib/cartodb/server_options');
+var serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
@@ -1167,12 +1168,37 @@ suite('template_api', function() {
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
         },
-        function checkTile(err, res) {
+        function checkTile_fetchOnRestart(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, 
             'Unexpected error for authorized instance: '
             + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
+          var cc = res.headers['x-cache-channel'];
+          assert.ok(cc);
+          assert.ok(cc.match, /ciao/, cc);
+          // hack simulating restart...
+          serverOptions = ServerOptions(); // need to clean channel cache
+          server = new CartodbWindshaft(serverOptions);
+          var get_request = {
+              url: '/tiles/layergroup/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
+              method: 'GET',
+              headers: {host: 'localhost' },
+              encoding: 'binary'
+          }
+          var next = this;
+          assert.response(server, get_request, {},
+            function(res) { next(null, res); });
+        },
+        function checkCacheChannel(err, res) {
+          if ( err ) throw err;
+          assert.equal(res.statusCode, 200, 
+            'Unexpected error for authorized instance: '
+            + res.statusCode + ' -- ' + res.body);
+          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
+          var cc = res.headers['x-cache-channel'];
+          assert.ok(cc, "Missing X-Cache-Channel on fetch-after-restart");
+          assert.ok(cc.match, /ciao/, cc);
           return null;
         },
         function deleteTemplate(err)
