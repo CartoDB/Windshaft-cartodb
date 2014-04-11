@@ -21,9 +21,7 @@ if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
     process.exit(1);
 }
 
-var _ = require('underscore')
-    , Step       = require('step')
-    ;
+var _ = require('underscore');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/config/environments/' + ENV);
