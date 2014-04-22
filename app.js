@@ -52,7 +52,7 @@ if ( global.environment.rollbar ) {
   });
 }
 
-log4js.configure(log4js_config);
+log4js.configure(log4js_config, { cwd: __dirname });
 global.logger = log4js.getLogger();
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
