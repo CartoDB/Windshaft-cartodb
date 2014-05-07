@@ -7,6 +7,10 @@
  * environments: [development, production]
  */
 
+var path = require('path'),
+    fs = require('fs')
+;
+
 
 if ( process.argv[2] ) ENV = process.argv[2];
 else if ( process.env['NODE_ENV'] ) ENV = process.env['NODE_ENV'];
@@ -33,6 +37,13 @@ log4js_config = {
 };
 
 if ( global.environment.log_filename ) {
+  var logdir = path.dirname(global.environment.log_filename);
+  // See cwd inlog4js.configure call below
+  logdir = path.resolve(__dirname, logdir);
+  if ( ! fs.existsSync(logdir) ) {
+    console.error("Log filename directory does not exist: " + logdir);
+    process.exit(1);
+  }
   console.log("Logs will be written to " + global.environment.log_filename);
   log4js_config.appenders.push(
     { type: "file", filename: global.environment.log_filename }
