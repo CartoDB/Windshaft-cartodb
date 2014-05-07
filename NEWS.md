@@ -1,5 +1,10 @@
-1.10.3 -- 2014-MM-DD
+1.10.3 -- 2014-05-07
 --------------------
+
+Enhancements:
+
+ - Upgrade Windshaft to 0.21.0, see
+ http://github.com/CartoDB/Windshaft/blob/0.21.0/NEWS
 
 1.10.2 -- 2014-04-08
 --------------------
