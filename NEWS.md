@@ -1,4 +1,12 @@
-1.11.0 -- 2014-MM-DD
+1.11.1 -- 2014-05-07
+--------------------
+
+Enhancements:
+
+ - Upgrade Windshaft to 0.21.0, see
+ http://github.com/CartoDB/Windshaft/blob/0.21.0/NEWS
+
+1.11.0 -- 2014-04-28
 --------------------
 
 New features:
@@ -19,7 +27,7 @@ Bug fixes:
  - Fix X-Cache-Channel of tiles accessed via signed token (#188)
 
 1.10.1 -- 2014-03-21
--------------------
+--------------------
 
 Bug fixes:
 
