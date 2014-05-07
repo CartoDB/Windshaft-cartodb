@@ -6,6 +6,10 @@ New features:
  - Add support for log_filename directive
  - Reopen log file on SIGHUP, for better logrotate integration
 
+Enhancements:
+
+ - Set default PostgreSQL application name to "cartodb_tiler"
+
 1.10.2 -- 2014-04-08
 --------------------
 

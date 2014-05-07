@@ -5,6 +5,8 @@ OPT_CREATE_PGSQL=yes # create the PostgreSQL test environment
 OPT_DROP_REDIS=yes   # drop the redis test environment
 OPT_DROP_PGSQL=yes   # drop the PostgreSQL test environment
 
+export PGAPPNAME=cartodb_tiler_tester
+
 cd $(dirname $0)
 BASEDIR=$(pwd)
 cd -
