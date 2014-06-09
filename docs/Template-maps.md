@@ -49,16 +49,17 @@ certificate that would be used to sign any instance of the template.
 ```js
 // template.json 
 {
-  version: '0.0.1',
+  version: "0.0.1",
   // there can be at most 1 template with the same name for any user 
   // valid names start with a letter and only contains letter, numbers
   // or underscores
-  name: 'template_name', 
+  name: "template_name", 
   // embedded authorization certificate
   auth: {
    // See https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps
-   method: 'token', // or "open" (the default if no "method" is given)
-   valid_tokens: ['auth_token1','auth_token2'] // only (required and non empty) for 'token' method
+   method: "token", // or "open" (the default if no "method" is given)
+   // only (required and non empty) for "token" method
+   valid_tokens: ["auth_token1","auth_token2"]
   },
   // Variables not listed here are not substituted
   // Variable not provided at instantiation time trigger an error
@@ -66,11 +67,11 @@ certificate that would be used to sign any instance of the template.
   // Type specification is used for quoting, to avoid injections
   placeholders: {
       color: {
-        type:'css_color',
-        default:'red'
+        type:"css_color",
+        default:"red"
       },
       cartodb_id: {
-        type:'number',
+        type:"number",
         default: 1
       }
   },
