@@ -64,7 +64,9 @@ var config = {
          */
         persist_connection: false,
         simplify_geometries: true,
-        max_size: 500
+        max_size: 500,
+        /* sets if database slaves are to be used - requires getDBSlaves on node-cartodb-redis */
+        use_slaves: false
     }
     ,mapnik_version: undefined
     ,statsd: {

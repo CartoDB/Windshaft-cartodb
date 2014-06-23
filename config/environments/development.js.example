@@ -70,7 +70,9 @@ var config = {
          * close any connection for the server's lifetime
          */
         persist_connection: false,
-        max_size: 500
+        max_size: 500,
+        /* sets if database slaves are to be used - requires getDBSlaves on node-cartodb-redis */
+        use_slaves: false
     }
     ,mapnik_version: undefined
     ,statsd: {

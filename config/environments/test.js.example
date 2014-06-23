@@ -64,7 +64,8 @@ var config = {
          * close any connection for the server's lifetime
          */
         persist_connection: false,
-        max_size: 500
+        max_size: 500,
+        use_slaves: true
     }
     ,mapnik_version: ''
     ,statsd: {
