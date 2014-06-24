@@ -37,8 +37,21 @@ function checkNoCache(res) {
 }
 
 
+/**
+ * Check that the response headers do not request caching
+ * @see checkNoCache
+ * @param res
+ */
+function checkCache(res) {
+    assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
+    assert.ok(res.headers.hasOwnProperty('cache-control'));
+    assert.ok(res.headers.hasOwnProperty('last-modified'));
+}
+
+
 module.exports = {
   lzma_compress_to_base64: lzma_compress_to_base64,
-  checkNoCache: checkNoCache
-}
+  checkNoCache: checkNoCache,
+  checkCache: checkCache
+};
 

@@ -226,9 +226,7 @@ suite('multilayer', function() {
     });
 
 
-    // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
-    // NOTE: another test like this is in templates.js
-    test("get creation requests no cache", function(done) {
+    test("get creation requests has cache", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
@@ -257,7 +255,7 @@ suite('multilayer', function() {
           assert.equal(res.statusCode, 200, res.body);
           var parsedBody = JSON.parse(res.body);
           expected_token = parsedBody.layergroupid.split(':')[0];
-          helper.checkNoCache(res);
+          helper.checkCache(res);
           return null;
         },
         function finish(err) {
@@ -279,6 +277,49 @@ suite('multilayer', function() {
       );
     });
 
+    test("get creation has no cache if sql is bogus", function(done) {
+        var layergroup =  {
+            version: '1.0.0',
+            layers: [
+                { options: {
+                    sql: 'select bogus(0,0) as the_geom_webmercator',
+                    cartocss: '#layer { polygon-fill: red; }',
+                    cartocss_version: '2.0.1'
+                } }
+            ]
+        };
+        assert.response(server, {
+            url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+            method: 'GET',
+            headers: {host: 'localhost'}
+        }, {}, function(res) {
+            assert.notEqual(res.statusCode, 200);
+            helper.checkNoCache(res);
+            done();
+        });
+    });
+
+    test("get creation has no cache if cartocss is not valid", function(done) {
+        var layergroup =  {
+            version: '1.0.0',
+            layers: [
+                { options: {
+                    sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator from test_table limit 2',
+                    cartocss: '#layer { invalid-rule:red; }',
+                    cartocss_version: '2.0.1'
+                } }
+            ]
+        };
+        assert.response(server, {
+            url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+            method: 'GET',
+            headers: {host: 'localhost'}
+        }, {}, function(res) {
+            assert.notEqual(res.statusCode, 200);
+            helper.checkNoCache(res);
+            done();
+        });
+    });
 
     test("layergroup can hold substitution tokens", function(done) {
 
