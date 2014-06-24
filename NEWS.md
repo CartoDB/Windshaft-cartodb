@@ -1,3 +1,9 @@
+1.12.0 -- 2014-06-24
+--------------------
+
+New features:
+ - Caches layergroup and sets X-Cache-Channel in GET requests
+
 1.11.1 -- 2014-05-07
 --------------------
 
