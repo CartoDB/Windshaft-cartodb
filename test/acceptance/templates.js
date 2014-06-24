@@ -1593,7 +1593,7 @@ suite('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
-          helper.checkNoCache(res);
+          helper.checkCache(res);
           return null;
         },
         function finish(err) {
