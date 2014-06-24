@@ -1,3 +1,9 @@
+1.12.1 -- 2014-06-24
+--------------------
+
+Enhancements:
+ - Caches layergroup and sets X-Cache-Channel in GET requests also in named maps
+
 1.12.0 -- 2014-06-24
 --------------------
 
