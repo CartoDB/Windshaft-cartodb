@@ -9,7 +9,7 @@ suite('server_options', function(){
     
     it('uses db slaves if there are any', function(done){
       var params_array = [];
-      var servers = ['127.0.0.1','127.0.0.2','localhost'];
+      var servers = ['127.0.0.1','localhost'];
       var counter = 15*servers.length;
       var callback = function(err, options) {
         counter = counter-1;

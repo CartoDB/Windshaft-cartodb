@@ -102,10 +102,12 @@ EOF
 cat <<EOF | redis-cli -p ${REDIS_PORT} -n 0
 HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
+EOF
 # Add some DB slaves
-  cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
-SADD db:localhost:sync_slaves 127.0.0.1 127.0.0.2
-SADD db:localhost:async_slaves 127.0.0.3 127.0.0.4
+
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+SADD db:localhost:sync_slaves 127.0.0.1
+SADD db:localhost:async_slaves 127.0.0.1
 EOF
 
 fi
