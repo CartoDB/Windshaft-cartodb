@@ -99,7 +99,9 @@ HMSET rails:users:cartodb250user id ${TESTUSERID} \
                                  database_password "${TESTPASS}" \
                                  map_key 4321
 EOF
-
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 0
+HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
+HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
 # Add some DB slaves
   cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
 SADD db:localhost:sync_slaves 127.0.0.1 127.0.0.2
