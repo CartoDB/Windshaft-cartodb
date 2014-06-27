@@ -11,7 +11,7 @@
     },
     "windshaft": {
       "version": "0.21.0",
-      "from": "http://github.com/CartoDB/Windshaft/tarball/0.21.0",
+      "from": "http://github.com/CartoDB/Windshaft/tarball/CDB-2891-search_path",
       "dependencies": {
         "grainstore": {
           "version": "0.18.1",
