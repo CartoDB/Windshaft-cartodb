@@ -14,7 +14,7 @@
       "from": "http://github.com/CartoDB/Windshaft/tarball/CDB-2891-search_path",
       "dependencies": {
         "grainstore": {
-          "version": "0.18.1",
+          "version": "0.18.2",
           "dependencies": {
             "carto": {
               "version": "0.9.5-cdb2",
