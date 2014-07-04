@@ -87,6 +87,7 @@ if test x"$PREPARE_REDIS" = xyes; then
   cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
 HMSET rails:users:localhost id ${TESTUSERID} \
                             database_name '${TEST_DB}' \
+                            database_host localhost \
                             map_key 1234
 SADD rails:users:localhost:map_key 1235
 EOF
