@@ -371,7 +371,7 @@ When using templates, be very careful about your selections as they can give bro
 curl -X POST \
    -H 'Content-Type: application/json' \
    -d @template.json \
-   'https://docs.cartodb.com/api/v1/named?api_key=APIKEY'
+   'https://docs.cartodb.com/api/v1/map/named?api_key=APIKEY'
 {% endhighlight %}
 
 <div class="code-title">RESPONSE</div>
@@ -389,7 +389,7 @@ Instantiating a map allows you to get the information needed to fetch tiles. Tha
 
 <div class="code-title notitle code-request"></div>
 {% highlight html %}
-POST /api/v1/named/:template_name
+POST /api/v1/map/named/:template_name
 {% endhighlight %}
 
 #### Param
@@ -408,7 +408,7 @@ The fields you pass as `params.json` depend on the variables allowed by the name
 
 #### Example
 
-You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/named/:template_name`.
+You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/map/named/:template_name`.
 
 Valid credentials will be needed if required by the template.
 
@@ -445,7 +445,7 @@ There is also a special endpoint to be able to initialize a map using JSONP (for
 
 <div class="code-title notitle code-request"></div>
 {% highlight bash %}
-GET /api/v1/named/:template_name/jsonp
+GET /api/v1/map/named/:template_name/jsonp
 {% endhighlight %}
 
 #### Params
@@ -457,7 +457,7 @@ GET /api/v1/named/:template_name/jsonp
 
 <div class="code-title code-request with-result">REQUEST</div>
 {% highlight bash %}
-curl 'https://docs.cartodb.com/api/v1/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=function_name&config=template_params_json'
+curl 'https://docs.cartodb.com/api/v1/map/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=function_name&config=template_params_json'
 {% endhighlight %}
 
 <div class="code-title">RESPONSE</div>
