@@ -29,6 +29,7 @@ var _ = require('underscore');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/config/environments/' + ENV);
+global.environment.api_hostname = require('os').hostname().split('.')[0];
 
 global.log4js = require('log4js')
 log4js_config = {
