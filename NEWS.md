@@ -1,3 +1,15 @@
+1.13.1 -- 2014-mm-dd
+--------------------
+
+
+1.13.0 -- 2014-07-30
+--------------------
+
+New features:
+ - Support for postgresql schemas
+ - Use public user from redis
+ - Support for several auth tokens
+
 1.12.1 -- 2014-06-24
 --------------------
 
