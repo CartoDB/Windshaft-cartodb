@@ -108,10 +108,14 @@ suite('multilayer', function() {
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
+              var expectedQuery = [layergroup.layers[0].options.sql, ';', layergroup.layers[1].options.sql].join('');
               assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$'
-                + layergroup.layers[0].options.sql + ';'
-                + layergroup.layers[1].options.sql 
-                + '$windshaft$)');
+                + expectedQuery
+                + '$windshaft$) as tablenames, EXTRACT(EPOCH FROM max(updated_at)) as max'
+                + ' FROM CDB_TableMetadata m'
+                + ' WHERE m.tabname = any (CDB_QueryTables($windshaft$'
+                + expectedQuery
+                + '$windshaft$)::regclass[])');
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png', 2,
                 function(err, similarity) {
@@ -384,12 +388,17 @@ suite('multilayer', function() {
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
+              var expectedQuery = layergroup.layers[0].options.sql
+                  .replace(/!bbox!/g, 'ST_MakeEnvelope(0,0,0,0)')
+                  .replace(/!pixel_width!/g, '1')
+                  .replace(/!pixel_height!/g, '1');
               assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$'
-                + layergroup.layers[0].options.sql
-                    .replace(RegExp('!bbox!', 'g'), 'ST_MakeEnvelope(0,0,0,0)')
-                    .replace(RegExp('!pixel_width!', 'g'), '1')
-                    .replace(RegExp('!pixel_height!', 'g'), '1')
-                + '$windshaft$)');
+                  + expectedQuery
+                  + '$windshaft$) as tablenames, EXTRACT(EPOCH FROM max(updated_at)) as max'
+                  + ' FROM CDB_TableMetadata m'
+                  + ' WHERE m.tabname = any (CDB_QueryTables($windshaft$'
+                  + expectedQuery
+                  + '$windshaft$)::regclass[])');
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', 2,
                 function(err, similarity) {
@@ -417,12 +426,17 @@ suite('multilayer', function() {
               assert.equal(cc.substring(0, dbname.length), dbname);
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
+              var expectedQuery = layergroup.layers[0].options.sql
+                  .replace('!bbox!', 'ST_MakeEnvelope(0,0,0,0)')
+                  .replace('!pixel_width!', '1')
+                  .replace('!pixel_height!', '1');
               assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$'
-                + layergroup.layers[0].options.sql
-                    .replace('!bbox!', 'ST_MakeEnvelope(0,0,0,0)')
-                    .replace('!pixel_width!', '1')
-                    .replace('!pixel_height!', '1')
-                + '$windshaft$)');
+                + expectedQuery
+                + '$windshaft$) as tablenames, EXTRACT(EPOCH FROM max(updated_at)) as max'
+                  + ' FROM CDB_TableMetadata m'
+                  + ' WHERE m.tabname = any (CDB_QueryTables($windshaft$'
+                  + expectedQuery
+                  + '$windshaft$)::regclass[])');
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', 2,
                 function(err, similarity) {
