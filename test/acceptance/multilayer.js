@@ -14,6 +14,9 @@ var helper = require(__dirname + '/../support/test_helper');
 
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 
+var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
+var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
+
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
 var ServerOptions = require(__dirname + '/../../lib/cartodb/server_options');
 serverOptions = ServerOptions();
@@ -117,7 +120,7 @@ suite('multilayer', function() {
                 + expectedQuery
                 + '$windshaft$)::regclass[])');
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png', 2,
+              assert.imageEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png', IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL,
                 function(err, similarity) {
                   next(err);
               });
@@ -400,7 +403,7 @@ suite('multilayer', function() {
                   + expectedQuery
                   + '$windshaft$)::regclass[])');
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', 2,
+              assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err, similarity) {
                   next(err);
               });
@@ -438,7 +441,7 @@ suite('multilayer', function() {
                   + expectedQuery
                   + '$windshaft$)::regclass[])');
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', 2,
+              assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err, similarity) {
                   next(err);
               });
@@ -1067,7 +1070,7 @@ suite('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png', 2,
+              assert.imageEqualsFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err, similarity) {
                   next(err);
               });
