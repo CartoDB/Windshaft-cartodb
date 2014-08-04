@@ -1,6 +1,13 @@
 1.13.2 -- 2014-mm-dd
 --------------------
 
+Enhancements:
+ - SQL API requests moved to its own entity
+
+New features:
+ - Affected tables and last updated time for a query are performed in a single request to the SQL API
+
+
 1.13.1 -- 2014-08-04
 --------------------
 
