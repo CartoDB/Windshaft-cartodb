@@ -23,7 +23,11 @@ serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-suite('multilayer', function() {
+[true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
+
+global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue};
+
+suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
@@ -1342,3 +1346,4 @@ suite('multilayer', function() {
     
 });
 
+});
