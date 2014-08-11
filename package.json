@@ -28,7 +28,7 @@
         "step": "0.0.x",
         "request": "2.9.202",
         "cartodb-redis": "git://github.com/CartoDB/node-cartodb-redis.git#0.5.0",
-        "cartodb-psql": "git://github.com/CartoDB/node-cartodb-psql.git#0.2.0",
+        "cartodb-psql": "git://github.com/CartoDB/node-cartodb-psql.git#0.3.1",
         "redis-mpool": "http://github.com/CartoDB/node-redis-mpool/tarball/0.0.4",
         "mapnik": "http://github.com/Vizzuality/node-mapnik/tarball/0.7.26-cdb1",
         "lzma": "~1.2.3",
