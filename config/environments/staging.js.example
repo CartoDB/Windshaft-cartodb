@@ -67,6 +67,7 @@ var config = {
         max_size: 500
     }
     ,mapnik_version: undefined
+    ,mapnik_tile_format: 'png8:m=h'
     ,statsd: {
         host: 'localhost',
         port: 8125,
