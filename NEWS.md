@@ -1,4 +1,4 @@
-1.14.1 -- 2014-mm-dd
+1.15.0 -- 2014-08-13
 --------------------
 Enhancements:
  - Upgrades dependencies:
