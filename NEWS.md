@@ -1,3 +1,13 @@
+1.15.0 -- 2014-08-13
+--------------------
+Enhancements:
+ - Upgrades dependencies:
+    - redis-mpool
+    - cartodb-redis
+    - windshaft
+ - Specifies name in the redis pool
+ - Slow pool configuration in example configurations
+
 1.14.0 -- 2014-08-07
 --------------------
 
