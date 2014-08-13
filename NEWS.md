@@ -1,5 +1,10 @@
 1.14.1 -- 2014-mm-dd
 --------------------
+Enhancements:
+ - Upgrades dependencies:
+    - redis-mpool
+    - cartodb-redis
+    - windshaft
 
 1.14.0 -- 2014-08-07
 --------------------
