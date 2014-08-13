@@ -103,7 +103,11 @@ var config = {
         // kept open by the server. The default is 50.
         max: 50,
         idleTimeoutMillis: 1, // idle time before dropping connection
-        reapIntervalMillis: 1 // time between cleanups
+        reapIntervalMillis: 1, // time between cleanups
+        slowPool: {
+            log: true, // whether a slow acquire must be logged or not
+            elapsedThreshold: 25 // the threshold to determine an slow acquire must be reported or not
+        }
     }
     ,sqlapi: {
         protocol: 'http',
