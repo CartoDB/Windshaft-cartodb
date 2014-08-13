@@ -5,6 +5,7 @@ Enhancements:
     - redis-mpool
     - cartodb-redis
     - windshaft
+ - Specifies name in the redis pool
 
 1.14.0 -- 2014-08-07
 --------------------
