@@ -18,8 +18,10 @@ Enhancements:
  - SQL API requests moved to its own entity
 
 New features:
- - Affected tables and last updated time for a query are performed in a single request to the SQL API
- - Allow specifying the tile format, upgrades windshaft and grainstore dependencies for this matter
+ - Affected tables and last updated time for a query are performed in a single
+   request to the SQL API
+ - Allow specifying the tile format, upgrades windshaft and grainstore
+   dependencies for this matter
 
 
 1.13.1 -- 2014-08-04
