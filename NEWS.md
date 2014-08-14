@@ -1,6 +1,10 @@
 1.15.1 -- 2014-mm-dd
 --------------------
 
+New features:
+ - Configurable QueryTablesAPI to call directly postgresql using cartodb-psql
+   or to keep using a request to the SQL API
+
 1.15.0 -- 2014-08-13
 --------------------
 Enhancements:
@@ -18,8 +22,10 @@ Enhancements:
  - SQL API requests moved to its own entity
 
 New features:
- - Affected tables and last updated time for a query are performed in a single request to the SQL API
- - Allow specifying the tile format, upgrades windshaft and grainstore dependencies for this matter
+ - Affected tables and last updated time for a query are performed in a single
+   request to the SQL API
+ - Allow specifying the tile format, upgrades windshaft and grainstore
+   dependencies for this matter
 
 
 1.13.1 -- 2014-08-04

@@ -937,6 +937,29 @@
       "version": "0.9.0",
       "from": "git://github.com/CartoDB/node-cartodb-redis.git#0.9.0"
     },
+    "cartodb-psql": {
+      "version": "0.3.1",
+      "from": "git://github.com/CartoDB/node-cartodb-psql.git#0.3.1",
+      "dependencies": {
+          "pg": {
+              "version": "2.6.2",
+              "dependencies": {
+                  "generic-pool": {
+                      "version": "2.0.3"
+                  },
+                  "buffer-writer": {
+                      "version": "1.0.0"
+                  }
+              }
+          },
+          "step": {
+              "version": "0.0.5"
+          },
+          "underscore": {
+              "version": "1.6.0"
+          }
+      }
+    },
     "redis-mpool": {
       "version": "0.1.0",
       "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.1.0",
