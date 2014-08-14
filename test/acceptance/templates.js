@@ -3,7 +3,6 @@ var _           = require('underscore');
 var redis       = require('redis');
 var querystring = require('querystring');
 var semver      = require('semver');
-var mapnik      = require('mapnik');
 var Step        = require('step');
 var strftime    = require('strftime');
 var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');

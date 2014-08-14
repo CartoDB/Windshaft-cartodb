@@ -1,6 +1,10 @@
 1.15.1 -- 2014-mm-dd
 --------------------
 
+Enhancements:
+ - Removes mapnik dependency as it now relies on Windshaft to check mapnik version
+
+
 1.15.0 -- 2014-08-13
 --------------------
 Enhancements:
@@ -10,6 +14,7 @@ Enhancements:
     - windshaft
  - Specifies name in the redis pool
  - Slow pool configuration in example configurations
+
 
 1.14.0 -- 2014-08-07
 --------------------
