@@ -1,6 +1,10 @@
 1.15.1 -- 2014-mm-dd
 --------------------
 
+New features:
+ - Configurable QueryTablesAPI to call directly postgresql using cartodb-psql
+   or to keep using a request to the SQL API
+
 1.15.0 -- 2014-08-13
 --------------------
 Enhancements:
