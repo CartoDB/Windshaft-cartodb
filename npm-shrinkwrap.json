@@ -4,10 +4,10 @@
   "dependencies": {
     "node-varnish": {
       "version": "0.3.0",
-      "from": "http://github.com/Vizzuality/node-varnish/tarball/0.3.0"
+      "from": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0"
     },
     "underscore": {
-      "version": "1.3.3"
+      "version": "1.6.0"
     },
     "windshaft": {
       "version": "0.24.1",
@@ -939,11 +939,11 @@
     },
     "cartodb-redis": {
       "version": "0.9.0",
-      "from": "git://github.com/CartoDB/node-cartodb-redis.git#0.9.0"
+      "from": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.9.0"
     },
     "cartodb-psql": {
-      "version": "0.3.1",
-      "from": "git://github.com/CartoDB/node-cartodb-psql.git#0.3.1",
+      "version": "0.4.0",
+      "from": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
       "dependencies": {
           "pg": {
               "version": "2.6.2",
@@ -985,10 +985,10 @@
       }
     },
     "lzma": {
-      "version": "1.2.3"
+      "version": "1.3.7"
     },
     "log4js": {
-      "version": "0.6.14",
+      "version": "0.6.16",
       "dependencies": {
         "async": {
           "version": "0.1.15"
@@ -1013,7 +1013,7 @@
       }
     },
     "rollbar": {
-      "version": "0.3.8",
+      "version": "0.3.12",
       "dependencies": {
         "node-uuid": {
           "version": "1.4.1"
@@ -1033,7 +1033,7 @@
       "version": "1.1.4"
     },
     "strftime": {
-      "version": "0.6.2"
+      "version": "0.8.2"
     },
     "mocha": {
       "version": "1.14.0",

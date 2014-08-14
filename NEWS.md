@@ -7,6 +7,11 @@ New features:
 
 Enhancements:
  - Removes mapnik dependency as it now relies on Windshaft to check mapnik version
+ - Upgrades dependencies:
+    - underscore
+    - lzma
+    - log4js
+    - rollbar
 
 1.15.0 -- 2014-08-13
 --------------------
