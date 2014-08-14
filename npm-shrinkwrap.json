@@ -10,9 +10,13 @@
       "version": "1.3.3"
     },
     "windshaft": {
-      "version": "0.24.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.24.0",
+      "version": "0.24.1",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.24.1",
       "dependencies": {
+        "mapnik": {
+            "version": "0.7.26",
+            "from": "http://github.com/Vizzuality/node-mapnik/tarball/0.7.26-cdb1"
+        },
         "grainstore": {
           "version": "0.20.0",
           "from": "git://github.com/CartoDB/grainstore.git#0.20.0",
@@ -979,10 +983,6 @@
           }
         }
       }
-    },
-    "mapnik": {
-      "version": "0.7.26-cdb1",
-      "from": "http://github.com/Vizzuality/node-mapnik/tarball/0.7.26-cdb1"
     },
     "lzma": {
       "version": "1.2.3"
