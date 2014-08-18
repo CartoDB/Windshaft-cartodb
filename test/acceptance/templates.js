@@ -3,7 +3,6 @@ var _           = require('underscore');
 var redis       = require('redis');
 var querystring = require('querystring');
 var semver      = require('semver');
-var mapnik      = require('mapnik');
 var Step        = require('step');
 var strftime    = require('strftime');
 var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
@@ -25,7 +24,11 @@ var serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-suite('template_api', function() {
+[true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
+
+global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue};
+
+suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
@@ -1948,3 +1951,4 @@ suite('template_api', function() {
     
 });
 
+});

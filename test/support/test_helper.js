@@ -7,7 +7,9 @@
 
 var _ = require('underscore');
 var assert = require('assert');
-var LZMA  = require('lzma/lzma_worker.js').LZMA;
+var LZMA  = require('lzma').LZMA;
+
+var lzmaWorker = new LZMA();
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
@@ -16,7 +18,7 @@ process.env.NODE_ENV = 'test';
 
 // Utility function to compress & encode LZMA
 function lzma_compress_to_base64(payload, mode, callback) {
-  LZMA.compress(payload, mode, 
+  lzmaWorker.compress(payload, mode,
     function(ints) {
       ints = ints.map(function(c) { return String.fromCharCode(c + 128) }).join('')
       var base64 = new Buffer(ints, 'binary').toString('base64');
