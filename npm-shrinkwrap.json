@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.15.1",
+  "version": "1.16.0",
   "dependencies": {
     "node-varnish": {
       "version": "0.3.0",
