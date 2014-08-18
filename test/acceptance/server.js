@@ -28,7 +28,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
 
-    var mapnik_version = server.getVersion().mapnik;
+    var mapnik_version = global.environment.mapnik_version || server.getVersion().mapnik;
     var test_database = _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db';
     var default_style;
     if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
