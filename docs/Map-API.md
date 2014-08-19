@@ -51,7 +51,7 @@ The following API call creates a map of European countries that have a white fil
 {% highlight javascript %}
 // mapconfig.json
 {
-  "version": "0.0.1"
+  "version": "0.0.1",
   "name": "test",
   "auth": {
     "method": "open"
