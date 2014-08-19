@@ -10,8 +10,8 @@
       "version": "1.6.0"
     },
     "windshaft": {
-      "version": "0.25.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.25.0",
+      "version": "0.25.1",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.25.1",
       "dependencies": {
         "grainstore": {
           "version": "0.20.0",
