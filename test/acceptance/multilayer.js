@@ -115,9 +115,9 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               var jsonquery = cc.substring(dbname.length+1);
               var sentquery = JSON.parse(jsonquery);
               var expectedQuery = [layergroup.layers[0].options.sql, ';', layergroup.layers[1].options.sql].join('');
-              assert.equal(sentquery.q, 'WITH querytables AS (SELECT * FROM CDB_QueryTables($windshaft$'
+              assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
                 + expectedQuery
-                + '$windshaft$) as tablenames)'
+                + '$windshaft$) as tablenames )'
                 + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
                 + ' FROM CDB_TableMetadata m'
                 + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
@@ -397,9 +397,9 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
                   .replace(/!bbox!/g, 'ST_MakeEnvelope(0,0,0,0)')
                   .replace(/!pixel_width!/g, '1')
                   .replace(/!pixel_height!/g, '1');
-              assert.equal(sentquery.q, 'WITH querytables AS (SELECT * FROM CDB_QueryTables($windshaft$'
+              assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
                   + expectedQuery
-                  + '$windshaft$) as tablenames)'
+                  + '$windshaft$) as tablenames )'
                   + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
                   + ' FROM CDB_TableMetadata m'
                   + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
@@ -434,9 +434,9 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
                   .replace('!bbox!', 'ST_MakeEnvelope(0,0,0,0)')
                   .replace('!pixel_width!', '1')
                   .replace('!pixel_height!', '1');
-              assert.equal(sentquery.q, 'WITH querytables AS (SELECT * FROM CDB_QueryTables($windshaft$'
+              assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
                   + expectedQuery
-                  + '$windshaft$) as tablenames)'
+                  + '$windshaft$) as tablenames )'
                   + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
                   + ' FROM CDB_TableMetadata m'
                   + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
