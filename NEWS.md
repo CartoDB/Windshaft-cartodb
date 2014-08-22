@@ -3,6 +3,7 @@
 
 Enhancements:
  - Upgrades windshaft
+ - Supports `!scale_denominator!` dynamic param in SQL queries
 
 1.16.1 -- 2014-08-19
 --------------------
