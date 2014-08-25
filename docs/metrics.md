@@ -30,7 +30,6 @@ Again, each inner timer may have several inner timers.
 - **authorizedByAPIKey**: time to authorize using an API KEY
 - **authorizedByCert**: time to authorize a request by a cert, see [signed map](https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps)
 - **authorizedBySigner**: time to authorize a request for a [signed map](https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps)
-- **cartoData.getTableGeometryType**: time to retrieve from redis the geom type for a given table
 - **cors**: time to set the CORS headers
 - **findLastUpdated**: time to retrieve the last update time for a list of tables, see *affectedTables*
 - **fingerPrint**: time to create a fingerprint for a signed map
