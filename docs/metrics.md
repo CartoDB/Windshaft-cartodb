@@ -4,8 +4,6 @@ See [Windshaft metrics documentation](https://github.com/CartoDB/Windshaft/blob/
 
 The next list includes the API endpoints, each endpoint may have several inner timers, some of them are displayed within this list as subitems. Find the description for them in the Inner timers section.
 ## Timers
-- **windshaft-cartodb.get_infowindow**: time to retrieve an infowindow popup
-- **windshaft-cartodb.get_map_metadata**: time to retrieve metadata for embedded maps
 - **windshaft-cartodb.flush_cache**: time to flush the tile and sql cache
 - **windshaft-cartodb.get_template**: time to retrieve an specific template
 - **windshaft-cartodb.delete_template**: time to delete an specific template
