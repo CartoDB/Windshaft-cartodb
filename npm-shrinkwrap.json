@@ -928,8 +928,7 @@
           }
         },
         "mapnik": {
-          "version": "0.7.26-cdb1",
-          "from": "http://github.com/Vizzuality/node-mapnik/tarball/0.7.26-cdb1"
+          "version": "1.4.13"
         },
         "carto": {
           "version": "0.9.5-cdb3",
