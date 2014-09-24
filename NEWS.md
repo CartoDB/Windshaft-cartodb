@@ -1,6 +1,9 @@
 1.16.2 -- 2014-mm-dd
 --------------------
 
+New features:
+ - Starts using mapnik 2.3.x
+
 Enhancements:
  - Upgrades windshaft and cartodb-redis
  - Supports `!scale_denominator!` dynamic param in SQL queries

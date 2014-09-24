@@ -157,7 +157,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -175,7 +175,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -458,7 +458,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -476,7 +476,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               assert.utfgridEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.grid.json', 2,
                 function(err, similarity) {
                   next(err);
@@ -752,7 +752,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               method: 'GET'
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "text/javascript; charset=utf-8; charset=utf-8");
+              assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
               next(err);
           });
         },
