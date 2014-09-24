@@ -2,9 +2,10 @@
 --------------------
 
 Enhancements:
- - Upgrades windshaft
+ - Upgrades windshaft and cartodb-redis
  - Supports `!scale_denominator!` dynamic param in SQL queries
  - Metrics revamp: removes and adds some metrics
+ - Adds poolSize configuration for mapnik
 
 1.16.1 -- 2014-08-19
 --------------------

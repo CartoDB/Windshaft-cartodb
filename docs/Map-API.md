@@ -292,52 +292,51 @@ POST /api/v1/map/named
 
 #### Params
 
+<div class="code-title">template.json</div>
 {% highlight javascript %}
-// template.json 
 {
-  version: '0.0.1',
-  // there can be at most 1 template with the same name for any user 
-  // valid names start with a letter and only contains letter, numbers
-  // or underscores
-  name: 'template_name', 
-
-  auth: {
-   method: 'token', // or "open" (the default if no "method" is given)
-   valid_tokens: ['auth_token1','auth_token2'] // only (required and non empty) for 'token' method
+  "version": "0.0.1",
+  "name": "template_name",
+  "auth": {
+    "method": "token",
+    "valid_tokens": [
+      "auth_token1",
+      "auth_token2"
+    ]
   },
-
-  // Variables not listed here are not substituted
-  // Variable not provided at instantiation time trigger an error
-  // A default is required for optional variables
-  // Type specification is used for quoting, to avoid injections
-  // see template format section below
-  placeholders: {
-    color: {
-      type:'css_color',
-      default:'red'
+  "placeholders": {
+    "color": {
+      "type": "css_color",
+      "default": "red"
     },
-    cartodb_id: {
-      type:'number',
-      default: 1
+    "cartodb_id": {
+      "type": "number",
+      "default": 1
     }
   },
-
-  // the layer list definition
-  layergroup: {
-    // this is the MapConfig explained in anonymous maps
-    // see https://github.com/CartoDB/Windshaft/blob/0.19.1/doc/MapConfig-1.1.0.md)
+  "layergroup": {
     "version": "1.0.1",
-    "layers": [{
-      "type": "cartodb",
-      "options": {
-        "cartocss_version": "2.1.1", 
-        "cartocss": "#layer { polygon-fill: <%= color %>; }",
-        "sql": "select * from european_countries_e WHERE cartodb_id = <%= cartodb_id %>"
+    "layers": [
+      {
+        "type": "cartodb",
+        "options": {
+          "cartocss_version": "2.1.1",
+          "cartocss": "#layer { polygon-fill: <%= color %>; }",
+          "sql": "select * from european_countries_e WHERE cartodb_id = <%= cartodb_id %>"
+        }
       }
-    }]
+    ]
   }
 }
 {% endhighlight %}
+
+##### Arguments
+
+- **name**: there can be at most 1 template with the same name for any user valid names start with a letter and only contains letter, numbers or underscores
+- **auth**:
+  - **method** `"token"` or `"open"` (the default if no `"method"` is given)
+- **placeholders**: Variables not listed here are not substituted. Variable not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
+- **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps see https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.1.0.md
 
 #### Template Format
 
