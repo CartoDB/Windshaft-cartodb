@@ -586,7 +586,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8',
+            headers: { 'Content-Type': 'application/json; charset=utf-8',
                        'X-Cache-Channel': test_database+':gadm4' }
         }, function() { done(); });
     });
@@ -598,7 +598,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function() { done(); });
     });
     
@@ -610,7 +610,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
             method: 'GET'
         },{
             status: 200,
-            headers: { 'Content-Type': 'text/javascript; charset=utf-8; charset=utf-8' }
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
         }, function() { done(); });
     });
 
