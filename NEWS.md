@@ -2,6 +2,7 @@
 --------------------
 
 Enhancements:
+ - Share one redis-mpool across the application
  - Upgrades windshaft and cartodb-redis
  - Supports `!scale_denominator!` dynamic param in SQL queries
  - Metrics revamp: removes and adds some metrics
