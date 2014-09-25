@@ -12,6 +12,14 @@ suite('template_maps', function() {
   // configure redis pool instance to use in tests
   var redis_pool = RedisPool(global.environment.redis);
   var signed_maps = new SignedMaps(redis_pool);
+
+    var validTemplate = {
+        version:'0.0.1',
+        name: 'first',
+        auth: {},
+        layergroup: {}
+    };
+    var owner = 'me';
     
   test('does not accept template with unsupported version', function(done) {
     var tmap = new TemplateMaps(redis_pool, signed_maps);
@@ -502,5 +510,89 @@ suite('template_maps', function() {
       }
     );
   });
-    
+
+    var redisCmdFunc = TemplateMaps.prototype._redisCmd;
+
+    function runWithRedisStubbed(stubbedCommands, func) {
+        TemplateMaps.prototype._redisCmd = function(redisFunc, redisArgs, callback) {
+            redisFunc = redisFunc.toLowerCase();
+            if (stubbedCommands.hasOwnProperty(redisFunc)) {
+                callback(null, stubbedCommands[redisFunc]);
+            } else {
+                throw 'Unknown command';
+            }
+        };
+
+        func();
+
+        TemplateMaps.prototype._redisCmd = redisCmdFunc;
+    }
+
+    test('_obtainTemplateLock with no previous value, happy case', function(done) {
+        runWithRedisStubbed({hget: null, hset: 1}, function() {
+            var templateMaps = new TemplateMaps(redis_pool, signed_maps);
+
+            templateMaps._obtainTemplateLock(owner, validTemplate.name, function(err, gotLock) {
+                assert.ok(!err);
+                assert.ok(gotLock);
+                done();
+            });
+        });
+    });
+
+    test('_obtainTemplateLock no lock for non expired ttl, simulates obtaining two locks at same time', function(done) {
+        runWithRedisStubbed({hget: Date.now()}, function() {
+            var templateMaps = new TemplateMaps(redis_pool, signed_maps);
+
+            templateMaps._obtainTemplateLock(owner, validTemplate.name, function(err, gotLock) {
+                assert.ok(!!err);
+                assert.equal(gotLock, false);
+                done();
+            });
+        });
+    });
+
+
+    test('_obtainTemplateLock no lock for non expired ttl, last millisecond of valid ttl', function(done) {
+        var nowValue = Date.now(),
+            nowFunc = Date.now;
+        Date.now = function() {
+            return nowValue;
+        };
+        var lockTtl = 1000;
+        runWithRedisStubbed({hget: Date.now() - lockTtl, hset: true}, function() {
+            var templateMaps = new TemplateMaps(redis_pool, signed_maps, {lock_ttl: lockTtl});
+
+            templateMaps._obtainTemplateLock(owner, validTemplate.name, function(err, gotLock) {
+                assert.ok(!!err);
+                assert.equal(gotLock, false);
+
+                Date.now = nowFunc;
+
+                done();
+            });
+        });
+    });
+
+    test('_obtainTemplateLock gets lock for expired ttl, first millisecond of invalid ttl', function(done) {
+        var nowValue = Date.now(),
+            nowFunc = Date.now;
+        Date.now = function() {
+            return nowValue;
+        };
+        var lockTtl = 1000;
+        runWithRedisStubbed({hget: Date.now() - lockTtl - 1, hset: true}, function() {
+            var templateMaps = new TemplateMaps(redis_pool, signed_maps, {lock_ttl: lockTtl});
+
+            templateMaps._obtainTemplateLock(owner, validTemplate.name, function(err, gotLock) {
+                assert.ok(!err);
+                assert.ok(gotLock);
+
+                Date.now = nowFunc;
+
+                done();
+            });
+        });
+    });
+
 });
