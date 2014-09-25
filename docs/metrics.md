@@ -4,8 +4,6 @@ See [Windshaft metrics documentation](https://github.com/CartoDB/Windshaft/blob/
 
 The next list includes the API endpoints, each endpoint may have several inner timers, some of them are displayed within this list as subitems. Find the description for them in the Inner timers section.
 ## Timers
-- **windshaft-cartodb.get_infowindow**: time to retrieve an infowindow popup
-- **windshaft-cartodb.get_map_metadata**: time to retrieve metadata for embedded maps
 - **windshaft-cartodb.flush_cache**: time to flush the tile and sql cache
 - **windshaft-cartodb.get_template**: time to retrieve an specific template
 - **windshaft-cartodb.delete_template**: time to delete an specific template
@@ -30,8 +28,6 @@ Again, each inner timer may have several inner timers.
 - **authorizedByAPIKey**: time to authorize using an API KEY
 - **authorizedByCert**: time to authorize a request by a cert, see [signed map](https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps)
 - **authorizedBySigner**: time to authorize a request for a [signed map](https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps)
-- **cartoData.getTableGeometryType**: time to retrieve from redis the geom type for a given table
-- **cors**: time to set the CORS headers
 - **findLastUpdated**: time to retrieve the last update time for a list of tables, see *affectedTables*
 - **fingerPrint**: time to create a fingerprint for a signed map
 - **generateCacheChannel**: time to generate the headers for the cache channel based on the request, see *addCacheChannel*
