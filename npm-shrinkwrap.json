@@ -9,6 +9,9 @@
     "underscore": {
       "version": "1.6.0"
     },
+    "dot": {
+      "version": "1.0.2"
+    },
     "windshaft": {
       "version": "0.27.0",
       "from": "https://github.com/CartoDB/Windshaft/tarball/0.27.0",
@@ -1230,12 +1233,7 @@
     },
     "cartodb-redis": {
       "version": "0.11.0",
-      "from": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0",
-      "dependencies": {
-        "dot": {
-          "version": "1.0.2"
-        }
-      }
+      "from": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0"
     },
     "cartodb-psql": {
       "version": "0.4.0",
