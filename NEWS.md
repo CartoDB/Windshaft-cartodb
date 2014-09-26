@@ -1,6 +1,9 @@
 1.17.1 -- 2014-mm-dd
 --------------------
 
+Enhancements:
+ - TTL for template locks so they are not kept forever
+
 
 1.17.0 -- 2014-09-25
 --------------------
