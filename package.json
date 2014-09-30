@@ -36,7 +36,7 @@
         "rollbar": "~0.3.13"
     },
     "devDependencies": {
-        "mocha": "1.14.0",
+        "mocha": "~1.21.4",
         "redis": "~0.8.6",
         "strftime": "~0.8.2",
         "semver": "~1.1.4"

@@ -6,6 +6,7 @@ Announcements:
 
 Enhancements:
  - TTL for template locks so they are not kept forever
+ - Upgrades mocha
 
 
 1.17.0 -- 2014-09-25
