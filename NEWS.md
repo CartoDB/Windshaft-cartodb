@@ -1,3 +1,14 @@
+1.17.1 -- 2014-09-30
+--------------------
+
+Announcements:
+ - Upgrades windshaft to 0.27.1 which downgrades node-mapnik to 1.4.10
+
+Enhancements:
+ - TTL for template locks so they are not kept forever
+ - Upgrades mocha
+
+
 1.17.0 -- 2014-09-25
 --------------------
 
