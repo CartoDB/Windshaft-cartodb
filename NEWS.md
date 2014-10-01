@@ -1,5 +1,8 @@
-1.17.2 -- 2014-mm-dd
+1.17.2 -- 2014-10-01
 --------------------
+
+Announcements:
+ - Upgrades windshaft to 0.27.2 which downgrades node-mapnik to 0.7.26-cdb1
 
 
 1.17.1 -- 2014-09-30
