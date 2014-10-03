@@ -1,6 +1,9 @@
 1.17.3 -- 2014-mm-dd
 --------------------
 
+Announcements:
+ - Comes back to use mapnik 2.3.x based on cartodb/node-mapnik@1.4.15-cdb from windshaft@0.28.0
+
 
 1.17.2 -- 2014-10-01
 --------------------
