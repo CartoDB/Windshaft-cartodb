@@ -1,5 +1,37 @@
-1.16.2 -- 2014-mm-dd
+1.18.1 -- 2014-mm-dd
 --------------------
+
+
+1.18.0 -- 2014-10-03
+--------------------
+
+Announcements:
+ - Comes back to use mapnik 2.3.x based on cartodb/node-mapnik@1.4.15-cdb from windshaft@0.28.0
+
+
+1.17.2 -- 2014-10-01
+--------------------
+
+Announcements:
+ - Upgrades windshaft to 0.27.2 which downgrades node-mapnik to 0.7.26-cdb1
+
+
+1.17.1 -- 2014-09-30
+--------------------
+
+Announcements:
+ - Upgrades windshaft to 0.27.1 which downgrades node-mapnik to 1.4.10
+
+Enhancements:
+ - TTL for template locks so they are not kept forever
+ - Upgrades mocha
+
+
+1.17.0 -- 2014-09-25
+--------------------
+
+New features:
+ - Starts using mapnik 2.3.x
 
 Enhancements:
  - Share one redis-mpool across the application
