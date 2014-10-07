@@ -32,6 +32,7 @@ usage() {
   echo "Configuration:"
   echo "  --help                        display this help and exit"
   echo "  --with-pgport=NUM             access PostgreSQL server on TCP port NUM [$PGPORT]"
+  echo "  --with-pguser=STRING          access PostgreSQL as user STRING [$PGUSER]"
   echo "  --with-sqlapi-port=NUM        access SQL-API server on TCP port NUM [$SQLAPI_PORT]"
   echo "  --with-mapnik-version=STRING  set mapnik version string [$MAPNIK_VERSION]"
   echo "  --environment=STRING          set output environment name [$ENVIRONMENT]"
@@ -46,6 +47,9 @@ while test -n "$1"; do
     --with-pgport=*)
       PGPORT=`echo "$1" | cut -d= -f2`
       ;;
+    --with-pguser=*)
+      PGUSER=`echo "$1" | cut -d= -f2`
+      ;;
     --with-sqlapi-port=*)
       SQLAPI_PORT=`echo "$1" | cut -d= -f2`
       ;;
@@ -56,9 +60,8 @@ while test -n "$1"; do
       ENVIRONMENT=`echo "$1" | cut -d= -f2`
       ;;
     *)
-      echo "Unknown option '$1'" >&2
-      usage >&2
-      exit 1
+      echo "Unused option '$1'" >&2
+      ;;
   esac
   shift
 done
@@ -68,11 +71,15 @@ ENVEX=./${ENVDIR}/${ENVIRONMENT}.js.example
 if [ -z "$PGPORT" ]; then
   PGPORT=`node -e "console.log(require('${ENVEX}').postgres.port)"`
 fi
+if [ -z "$PGUSER" ]; then
+  PGUSER=`node -e "console.log(require('${ENVEX}').postgres.user)"`
+fi
 if [ -z "$SQLAPI_PORT" ]; then
   SQLAPI_PORT=`node -e "console.log(require('${ENVEX}').sqlapi.port)"`
 fi
 
 echo "PGPORT: $PGPORT"
+echo "PGUSER: $PGUSER"
 echo "SQLAPI_PORT: $SQLAPI_PORT"
 echo "MAPNIK_VERSION: $MAPNIK_VERSION"
 echo "ENVIRONMENT: $ENVIRONMENT"
@@ -84,6 +91,7 @@ echo "Writing $o"
 sed -n "1h;1!H;\${;g;s/\(,postgres: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$PGPORT\2/;p;}" < "${ENVEX}" \
   | sed "s/mapnik_version:.*/mapnik_version: '$MAPNIK_VERSION'/" \
   | sed -n "1h;1!H;\${;g;s/\(,sqlapi: {[^}]*port: *'\?\)[^',]*\('\?,\)/\1$SQLAPI_PORT\2/;p;}" \
+  | sed -n "1h;1!H;\${;g;s/\(,postgres: {[^}]*user: *'\?\)[^',]*\('\?,\)/\1'$PGUSER'\2/;p;}" \
   > "$o"
 
 STATUSFILE=config.status--${ENVIRONMENT}
