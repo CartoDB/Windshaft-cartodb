@@ -5,3 +5,5 @@ config/environments/*.js
 tools/munin/windshaft.conf
 logs/
 pids/
+redis.pid
+test.log
