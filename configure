@@ -56,9 +56,8 @@ while test -n "$1"; do
       ENVIRONMENT=`echo "$1" | cut -d= -f2`
       ;;
     *)
-      echo "Unknown option '$1'" >&2
-      usage >&2
-      exit 1
+      echo "Unused option '$1'" >&2
+      ;;
   esac
   shift
 done
