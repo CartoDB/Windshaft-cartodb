@@ -37,6 +37,10 @@ log4js_config = {
   replaceConsole:true
 };
 
+if (global.environment.uv_threadpool_size) {
+    process.env.UV_THREADPOOL_SIZE = global.environment.uv_threadpool_size;
+}
+
 if ( global.environment.log_filename ) {
   var logdir = path.dirname(global.environment.log_filename);
   // See cwd inlog4js.configure call below

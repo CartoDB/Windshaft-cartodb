@@ -1,3 +1,10 @@
+1.18.1 -- 2014-10-13
+--------------------
+
+New features:
+ - Allow to add more node.js' threadpool workers via process.env.UV_THREADPOOL_SIZE
+
+
 1.18.0 -- 2014-10-03
 --------------------
 
