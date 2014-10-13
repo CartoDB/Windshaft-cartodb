@@ -1,6 +1,9 @@
 1.18.2 -- 2014-mm-dd
 --------------------
 
+Bug fixes:
+ - Defaults resultSet to object if undefined in QueryTablesApi
+
 1.18.1 -- 2014-10-13
 --------------------
 
