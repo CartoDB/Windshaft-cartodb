@@ -1,3 +1,13 @@
+1.18.2 -- 2014-10-13
+--------------------
+
+Bug fixes:
+ - Defaults resultSet to object if undefined in QueryTablesApi
+
+Announcements:
+ - Upgrades windshaft to 0.28.1
+
+
 1.18.1 -- 2014-10-13
 --------------------
 

@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.18.1",
+  "version": "1.18.2",
   "dependencies": {
     "node-varnish": {
       "version": "0.3.0",
@@ -14,7 +14,7 @@
     },
     "windshaft": {
       "version": "0.28.1",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.28.0",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.28.1",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -1286,7 +1286,7 @@
           "version": "0.2.10"
         },
         "readable-stream": {
-          "version": "1.0.32",
+          "version": "1.0.33-1",
           "dependencies": {
             "core-util-is": {
               "version": "1.0.1"
@@ -1328,27 +1328,10 @@
       "version": "0.8.2"
     },
     "mocha": {
-      "version": "1.21.4",
+      "version": "1.21.5",
       "dependencies": {
         "commander": {
-          "version": "2.0.0"
-        },
-        "growl": {
-          "version": "1.8.1"
-        },
-        "jade": {
-          "version": "0.26.3",
-          "dependencies": {
-            "commander": {
-              "version": "0.6.1"
-            },
-            "mkdirp": {
-              "version": "0.3.0"
-            }
-          }
-        },
-        "diff": {
-          "version": "1.0.7"
+          "version": "2.3.0"
         },
         "debug": {
           "version": "2.0.0",
@@ -1358,8 +1341,11 @@
             }
           }
         },
-        "mkdirp": {
-          "version": "0.3.5"
+        "diff": {
+          "version": "1.0.8"
+        },
+        "escape-string-regexp": {
+          "version": "1.0.2"
         },
         "glob": {
           "version": "3.2.3",
@@ -1380,6 +1366,28 @@
             },
             "inherits": {
               "version": "2.0.1"
+            }
+          }
+        },
+        "growl": {
+          "version": "1.8.1"
+        },
+        "jade": {
+          "version": "0.26.3",
+          "dependencies": {
+            "commander": {
+              "version": "0.6.1"
+            },
+            "mkdirp": {
+              "version": "0.3.0"
+            }
+          }
+        },
+        "mkdirp": {
+          "version": "0.5.0",
+          "dependencies": {
+            "minimist": {
+              "version": "0.0.8"
             }
           }
         }
