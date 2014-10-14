@@ -1,6 +1,9 @@
 1.19.1 -- 2014-mm-dd
 --------------------
 
+New features:
+ - Report to statsd the status of redis pools
+
 Enhancements:
  - Share one redis-mpool across the application
 

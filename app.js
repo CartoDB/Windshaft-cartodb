@@ -70,10 +70,7 @@ if ( global.environment.rollbar ) {
 log4js.configure(log4js_config, { cwd: __dirname });
 global.logger = log4js.getLogger();
 
-var redisOpts = _.extend(global.environment.redis, {
-        name: 'windshaft_cartodb',
-        reportInterval: 5000
-    }),
+var redisOpts = _.extend(global.environment.redis, { name: 'windshaft' }),
     redisPool = new RedisPool(redisOpts);
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
@@ -82,6 +79,15 @@ var CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft'),
     serverOptions = require('./lib/cartodb/server_options')(redisPool);
 
 ws = CartodbWindshaft(serverOptions);
+
+if (global.statsClient) {
+    redisPool.on('status', function(status) {
+        var keyPrefix = status.name + '.db' + status.db + '.';
+        global.statsClient.gauge(keyPrefix + 'count', status.count);
+        global.statsClient.gauge(keyPrefix + 'unused', status.unused);
+        global.statsClient.gauge(keyPrefix + 'waiting', status.waiting);
+    });
+}
 
 // Maximum number of connections for one process
 // 128 is a good number if you have up to 1024 filedescriptors

@@ -108,6 +108,9 @@ var config = {
         slowPool: {
             log: true, // whether a slow acquire must be logged or not
             elapsedThreshold: 25 // the threshold to determine an slow acquire must be reported or not
+        },
+        emitter: {
+            statusInterval: 5000
         }
     }
     ,sqlapi: {
