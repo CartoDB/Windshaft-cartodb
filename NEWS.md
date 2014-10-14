@@ -1,6 +1,9 @@
 1.19.1 -- 2014-mm-dd
 --------------------
 
+Enhancements:
+ - Share one redis-mpool across the application
+
 
 1.19.0 -- 2014-10-14
 --------------------
@@ -61,7 +64,6 @@ New features:
  - Starts using mapnik 2.3.x
 
 Enhancements:
- - Share one redis-mpool across the application
  - Upgrades windshaft and cartodb-redis
  - Supports `!scale_denominator!` dynamic param in SQL queries
  - Metrics revamp: removes and adds some metrics

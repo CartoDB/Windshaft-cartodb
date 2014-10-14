@@ -70,7 +70,8 @@
       "dependencies": {
         "async": {
           "version": "0.2.10",
-          "from": "async@~0.2.0"
+          "from": "async@~0.2.0",
+          "resolved": "https://registry.npmjs.org/async/-/async-0.2.10.tgz"
         },
         "readable-stream": {
           "version": "1.0.33-1",
@@ -90,7 +91,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2"
+              "from": "inherits@~2.0.1"
             }
           }
         }
@@ -106,9 +107,9 @@
       "resolved": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0"
     },
     "redis-mpool": {
-      "version": "0.1.0",
-      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.1.0",
-      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.1.0",
+      "version": "0.2.0",
+      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/master",
+      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/master",
       "dependencies": {
         "generic-pool": {
           "version": "2.1.1",
@@ -162,12 +163,13 @@
     },
     "underscore": {
       "version": "1.6.0",
-      "from": "underscore@~1.6.0"
+      "from": "underscore@~1.6.0",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.28.2",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.28.2",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.28.2",
+      "version": "0.28.3",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/master",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/master",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
