@@ -1,5 +1,32 @@
-1.18.1 -- 2014-mm-dd
+1.19.1 -- 2014-mm-dd
 --------------------
+
+
+1.19.0 -- 2014-10-14
+--------------------
+
+Announcements:
+ - Dropping support for npm <1.2.1
+   npm-shrinkwrap.json is incompatible when generated with npm >=1.2.1 and consumed by npm <1.2.1
+ - Upgrades windshaft to 0.28.2
+ - Generates npm-shrinkwrap.json with npm >1.2.0
+
+
+1.18.2 -- 2014-10-13
+--------------------
+
+Bug fixes:
+ - Defaults resultSet to object if undefined in QueryTablesApi
+
+Announcements:
+ - Upgrades windshaft to 0.28.1
+
+
+1.18.1 -- 2014-10-13
+--------------------
+
+New features:
+ - Allow to add more node.js' threadpool workers via process.env.UV_THREADPOOL_SIZE
 
 
 1.18.0 -- 2014-10-03
