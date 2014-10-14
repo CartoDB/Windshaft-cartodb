@@ -3,6 +3,7 @@
 
 Announcements:
  - Upgrades windshaft to 0.28.2
+ - Generates npm-shrinkwrap.json with npm >1.2.0
 
 
 1.18.2 -- 2014-10-13
