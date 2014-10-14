@@ -1,7 +1,9 @@
-1.18.3 -- 2014-mm-dd
+1.19.0 -- 2014-10-14
 --------------------
 
 Announcements:
+ - Dropping support for npm <1.2.1
+   npm-shrinkwrap.json is incompatible when generated with npm >=1.2.1 and consumed by npm <1.2.1
  - Upgrades windshaft to 0.28.2
  - Generates npm-shrinkwrap.json with npm >1.2.0
 
