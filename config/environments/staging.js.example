@@ -99,6 +99,10 @@ var config = {
         max: 50,
         idleTimeoutMillis: 30000, // idle time before dropping connection
         reapIntervalMillis: 1000, // time between cleanups
+        slowQueries: {
+            log: true,
+            elapsedThreshold: 200
+        },
         slowPool: {
             log: true, // whether a slow acquire must be logged or not
             elapsedThreshold: 25 // the threshold to determine an slow acquire must be reported or not
