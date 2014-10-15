@@ -5,11 +5,6 @@ before_install:
   - createdb template_postgis
   - psql -c "CREATE EXTENSION postgis" template_postgis
 
-before_script:
-  # Tell npm to use known registrars:
-  # see http://blog.npmjs.org/post/78085451721/npms-self-signed-certificate-is-no-more
-  - npm config set ca ""
-
 env:
   - NPROCS=1 JOBS=1 PGUSER=postgres
 
