@@ -108,8 +108,8 @@
     },
     "redis-mpool": {
       "version": "0.2.0",
-      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/master",
-      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/master",
+      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.2.0",
+      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.2.0",
       "dependencies": {
         "generic-pool": {
           "version": "2.1.1",
@@ -167,9 +167,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.28.3",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/master",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/master",
+      "version": "0.29.0",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.29.0",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.29.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -274,7 +274,8 @@
                         },
                         "async": {
                           "version": "0.9.0",
-                          "from": "async@~0.9.0"
+                          "from": "async@~0.9.0",
+                          "resolved": "https://registry.npmjs.org/async/-/async-0.9.0.tgz"
                         }
                       }
                     },
@@ -1464,6 +1465,7 @@
         "express": {
           "version": "2.5.11",
           "from": "express@~2.5.11",
+          "resolved": "https://registry.npmjs.org/express/-/express-2.5.11.tgz",
           "dependencies": {
             "connect": {
               "version": "1.9.2",
@@ -1471,7 +1473,8 @@
               "dependencies": {
                 "formidable": {
                   "version": "1.0.15",
-                  "from": "formidable@1.0.x"
+                  "from": "formidable@1.0.x",
+                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.15.tgz"
                 }
               }
             },
