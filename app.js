@@ -82,7 +82,7 @@ ws = CartodbWindshaft(serverOptions);
 
 if (global.statsClient) {
     redisPool.on('status', function(status) {
-        var keyPrefix = 'redis-pool.' + status.name + '.db' + status.db + '.';
+        var keyPrefix = 'windshaft.redis-pool.' + status.name + '.db' + status.db + '.';
         global.statsClient.gauge(keyPrefix + 'count', status.count);
         global.statsClient.gauge(keyPrefix + 'unused', status.unused);
         global.statsClient.gauge(keyPrefix + 'waiting', status.waiting);
