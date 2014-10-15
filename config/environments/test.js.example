@@ -80,7 +80,8 @@ var config = {
       // Milliseconds since last access before renderer cache item expires
       cache_ttl: 60000,
       metatile: 4,
-      bufferSize: 64
+      bufferSize: 64,
+      statsInterval: 5000 // milliseconds between each report to statsd about number of renderers and mapnik pool status
     }
     ,millstone: {
         // Needs to be writable by server user
