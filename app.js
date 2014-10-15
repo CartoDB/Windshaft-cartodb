@@ -8,7 +8,8 @@
  */
 
 var path = require('path'),
-    fs = require('fs')
+    fs = require('fs'),
+    RedisPool = require('redis-mpool')
 ;
 
 
@@ -31,7 +32,7 @@ var _ = require('underscore');
 global.environment  = require(__dirname + '/config/environments/' + ENV);
 global.environment.api_hostname = require('os').hostname().split('.')[0];
 
-global.log4js = require('log4js')
+global.log4js = require('log4js');
 log4js_config = {
   appenders: [],
   replaceConsole:true
@@ -69,12 +70,24 @@ if ( global.environment.rollbar ) {
 log4js.configure(log4js_config, { cwd: __dirname });
 global.logger = log4js.getLogger();
 
+var redisOpts = _.extend(global.environment.redis, { name: 'windshaft' }),
+    redisPool = new RedisPool(redisOpts);
+
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-var CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft');
-var serverOptions = require('./lib/cartodb/server_options')();
+var CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft'),
+    serverOptions = require('./lib/cartodb/server_options')(redisPool);
 
 ws = CartodbWindshaft(serverOptions);
+
+if (global.statsClient) {
+    redisPool.on('status', function(status) {
+        var keyPrefix = status.name + '.db' + status.db + '.';
+        global.statsClient.gauge(keyPrefix + 'count', status.count);
+        global.statsClient.gauge(keyPrefix + 'unused', status.unused);
+        global.statsClient.gauge(keyPrefix + 'waiting', status.waiting);
+    });
+}
 
 // Maximum number of connections for one process
 // 128 is a good number if you have up to 1024 filedescriptors
