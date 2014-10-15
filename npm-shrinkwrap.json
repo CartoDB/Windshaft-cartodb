@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -70,7 +70,8 @@
       "dependencies": {
         "async": {
           "version": "0.2.10",
-          "from": "async@~0.2.0"
+          "from": "async@~0.2.0",
+          "resolved": "https://registry.npmjs.org/async/-/async-0.2.10.tgz"
         },
         "readable-stream": {
           "version": "1.0.33-1",
@@ -90,7 +91,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2"
+              "from": "inherits@~2.0.1"
             }
           }
         }
@@ -106,9 +107,9 @@
       "resolved": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0"
     },
     "redis-mpool": {
-      "version": "0.1.0",
-      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.1.0",
-      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.1.0",
+      "version": "0.2.0",
+      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.2.0",
+      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.2.0",
       "dependencies": {
         "generic-pool": {
           "version": "2.1.1",
@@ -162,12 +163,13 @@
     },
     "underscore": {
       "version": "1.6.0",
-      "from": "underscore@~1.6.0"
+      "from": "underscore@~1.6.0",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.28.2",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.28.2",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.28.2",
+      "version": "0.30.0",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.30.0",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.30.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -272,7 +274,8 @@
                         },
                         "async": {
                           "version": "0.9.0",
-                          "from": "async@~0.9.0"
+                          "from": "async@~0.9.0",
+                          "resolved": "https://registry.npmjs.org/async/-/async-0.9.0.tgz"
                         }
                       }
                     },
@@ -1462,6 +1465,7 @@
         "express": {
           "version": "2.5.11",
           "from": "express@~2.5.11",
+          "resolved": "https://registry.npmjs.org/express/-/express-2.5.11.tgz",
           "dependencies": {
             "connect": {
               "version": "1.9.2",
@@ -1469,7 +1473,8 @@
               "dependencies": {
                 "formidable": {
                   "version": "1.0.15",
-                  "from": "formidable@1.0.x"
+                  "from": "formidable@1.0.x",
+                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.15.tgz"
                 }
               }
             },

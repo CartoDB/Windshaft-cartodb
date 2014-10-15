@@ -80,7 +80,8 @@ var config = {
       // Milliseconds since last access before renderer cache item expires
       cache_ttl: 60000,
       metatile: 4,
-      bufferSize: 64
+      bufferSize: 64,
+      statsInterval: 5000 // milliseconds between each report to statsd about number of renderers and mapnik pool status
     }
     ,millstone: {
         // Needs to be writable by server user
@@ -99,9 +100,16 @@ var config = {
         max: 50,
         idleTimeoutMillis: 30000, // idle time before dropping connection
         reapIntervalMillis: 1000, // time between cleanups
+        slowQueries: {
+            log: true,
+            elapsedThreshold: 200
+        },
         slowPool: {
             log: true, // whether a slow acquire must be logged or not
             elapsedThreshold: 25 // the threshold to determine an slow acquire must be reported or not
+        },
+        emitter: {
+            statusInterval: 5000 // time, in ms, between each status report is emitted from the pool, status is sent to statsd
         }
     }
     ,sqlapi: {

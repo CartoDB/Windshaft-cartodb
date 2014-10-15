@@ -1,3 +1,14 @@
+1.20.0 -- 2014-10-15
+--------------------
+
+New features:
+ - Report to statsd the status of redis pools
+ - Upgrades Windshaft to start reporting redis/renderers/mapnik pool metrics
+
+Enhancements:
+ - Share one redis-mpool across the application
+
+
 1.19.0 -- 2014-10-14
 --------------------
 
