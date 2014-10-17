@@ -30,7 +30,7 @@
         "request": "~2.9.203",
         "cartodb-redis": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0",
         "cartodb-psql": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
-        "redis-mpool": "https://github.com/CartoDB/node-redis-mpool/tarball/0.2.0",
+        "redis-mpool": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
         "lzma": "~1.3.7",
         "log4js": "~0.6.17",
         "rollbar": "~0.3.13"

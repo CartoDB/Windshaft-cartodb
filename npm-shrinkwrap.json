@@ -107,9 +107,9 @@
       "resolved": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0"
     },
     "redis-mpool": {
-      "version": "0.2.0",
-      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.2.0",
-      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.2.0",
+      "version": "0.3.0",
+      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
+      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
       "dependencies": {
         "generic-pool": {
           "version": "2.1.1",
@@ -1508,6 +1508,7 @@
             "node-pre-gyp": {
               "version": "0.5.25",
               "from": "node-pre-gyp@0.5.25",
+              "resolved": "https://registry.npmjs.org/node-pre-gyp/-/node-pre-gyp-0.5.25.tgz",
               "dependencies": {
                 "nopt": {
                   "version": "3.0.1",
