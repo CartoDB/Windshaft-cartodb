@@ -98,6 +98,7 @@ var config = {
         // by 2 to know how many possible connections will be
         // kept open by the server. The default is 50.
         max: 50,
+        returnToHead: true, // defines the behaviour of the pool: false => queue, true => stack
         idleTimeoutMillis: 30000, // idle time before dropping connection
         reapIntervalMillis: 1000, // time between cleanups
         slowQueries: {
