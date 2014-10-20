@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.20.2",
+  "version": "1.20.3",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
