@@ -92,7 +92,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2"
+              "from": "inherits@~2.0.1"
             }
           }
         }
@@ -169,9 +169,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.31.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.31.0",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.31.0",
+      "version": "0.31.1",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/pgraster",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/pgraster",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -1499,6 +1499,49 @@
             }
           }
         },
+        "tilelive": {
+          "version": "4.5.3",
+          "from": "tilelive@~4.5.3",
+          "dependencies": {
+            "optimist": {
+              "version": "0.6.1",
+              "from": "optimist@~0.6.0",
+              "dependencies": {
+                "wordwrap": {
+                  "version": "0.0.2",
+                  "from": "wordwrap@~0.0.2"
+                },
+                "minimist": {
+                  "version": "0.0.10",
+                  "from": "minimist@~0.0.1"
+                }
+              }
+            },
+            "sphericalmercator": {
+              "version": "1.0.2",
+              "from": "sphericalmercator@~1.0.1"
+            }
+          }
+        },
+        "tilelive-mapnik": {
+          "version": "0.6.12",
+          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+          "dependencies": {
+            "generic-pool": {
+              "version": "2.1.1",
+              "from": "generic-pool@~2.1.1"
+            },
+            "mime": {
+              "version": "1.2.11",
+              "from": "mime@~1.2.11"
+            },
+            "sphericalmercator": {
+              "version": "1.0.2",
+              "from": "sphericalmercator@~1.0.2"
+            }
+          }
+        },
         "mapnik": {
           "version": "1.4.15",
           "from": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb",
@@ -1879,49 +1922,6 @@
                   "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.2.8.tgz"
                 }
               }
-            }
-          }
-        },
-        "tilelive": {
-          "version": "4.5.3",
-          "from": "tilelive@~4.5.3",
-          "dependencies": {
-            "optimist": {
-              "version": "0.6.1",
-              "from": "optimist@~0.6.0",
-              "dependencies": {
-                "wordwrap": {
-                  "version": "0.0.2",
-                  "from": "wordwrap@~0.0.2"
-                },
-                "minimist": {
-                  "version": "0.0.10",
-                  "from": "minimist@~0.0.1"
-                }
-              }
-            },
-            "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.2"
-            }
-          }
-        },
-        "tilelive-mapnik": {
-          "version": "0.6.12",
-          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
-          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
-          "dependencies": {
-            "generic-pool": {
-              "version": "2.1.1",
-              "from": "generic-pool@~2.1.1"
-            },
-            "mime": {
-              "version": "1.2.11",
-              "from": "mime@~1.2.11"
-            },
-            "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.2"
             }
           }
         },
