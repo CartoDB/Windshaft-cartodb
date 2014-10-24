@@ -1,6 +1,9 @@
 1.20.3 -- 2014-mm-dd
 --------------------
 
+New features:
+ - Allow a different cache-control max-age for layergroup responses
+
 
 1.20.2 -- 2014-10-20
 --------------------

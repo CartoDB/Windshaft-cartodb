@@ -1324,6 +1324,49 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
       );
     });
 
+    var layergroupTtlRequest = {
+        url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify({
+            version: '1.0.0',
+            layers: [
+                { options: {
+                    sql: 'select * from test_table limit 2',
+                    cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                    cartocss_version: '2.0.1'
+                } }
+            ]
+        })),
+        method: 'GET',
+        headers: {host: 'localhost'}
+    };
+    var layergroupTtlResponseExpectation = {
+        status: 200
+    };
+
+    test("cache control for layergroup default value", function(done) {
+        global.environment.varnish.layergroupTtl = null;
+
+        assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
+            function(res) {
+                assert.equal(res.headers['cache-control'], 'public,max-age=86400,must-revalidate');
+
+                done();
+            }
+        );
+    });
+
+    test("cache control for layergroup uses configuration for max-age", function(done) {
+        var layergroupTtl = 300;
+        global.environment.varnish.layergroupTtl = layergroupTtl;
+
+        assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
+            function(res) {
+                assert.equal(res.headers['cache-control'], 'public,max-age=' + layergroupTtl + ',must-revalidate');
+
+                done();
+            }
+        );
+    });
+
 
     suiteTeardown(function(done) {
 
