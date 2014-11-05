@@ -52,7 +52,8 @@
                 },
                 "nan": {
                   "version": "1.1.2",
-                  "from": "nan@~1.1.0"
+                  "from": "nan@~1.1.0",
+                  "resolved": "https://registry.npmjs.org/nan/-/nan-1.1.2.tgz"
                 }
               }
             }
@@ -75,8 +76,9 @@
           "resolved": "https://registry.npmjs.org/async/-/async-0.2.10.tgz"
         },
         "readable-stream": {
-          "version": "1.0.33-1",
+          "version": "1.0.33",
           "from": "readable-stream@~1.0.2",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
           "dependencies": {
             "core-util-is": {
               "version": "1.0.1",
@@ -92,7 +94,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1"
+              "from": "inherits@2"
             }
           }
         }
@@ -130,7 +132,8 @@
             },
             "nan": {
               "version": "1.1.2",
-              "from": "nan@~1.1.0"
+              "from": "nan@~1.1.0",
+              "resolved": "https://registry.npmjs.org/nan/-/nan-1.1.2.tgz"
             }
           }
         }
@@ -170,9 +173,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.31.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.31.0",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.31.0",
+      "version": "0.32.0",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.32.0",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.32.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -269,8 +272,9 @@
                       "from": "form-data@~0.1.0",
                       "dependencies": {
                         "combined-stream": {
-                          "version": "0.0.5",
+                          "version": "0.0.7",
                           "from": "combined-stream@~0.0.4",
+                          "resolved": "https://registry.npmjs.org/combined-stream/-/combined-stream-0.0.7.tgz",
                           "dependencies": {
                             "delayed-stream": {
                               "version": "0.0.5",
@@ -1067,7 +1071,8 @@
                   "dependencies": {
                     "nan": {
                       "version": "1.1.2",
-                      "from": "nan@1.1.2"
+                      "from": "nan@1.1.2",
+                      "resolved": "https://registry.npmjs.org/nan/-/nan-1.1.2.tgz"
                     },
                     "node-pre-gyp": {
                       "version": "0.5.22",
@@ -1445,7 +1450,8 @@
                 },
                 "mime": {
                   "version": "1.2.11",
-                  "from": "mime@~1.2.9"
+                  "from": "mime@~1.2.9",
+                  "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
                 },
                 "mkdirp": {
                   "version": "0.3.5",
@@ -1499,6 +1505,50 @@
             "mkdirp": {
               "version": "0.3.0",
               "from": "mkdirp@0.3.0"
+            }
+          }
+        },
+        "tilelive": {
+          "version": "4.5.3",
+          "from": "tilelive@~4.5.3",
+          "dependencies": {
+            "optimist": {
+              "version": "0.6.1",
+              "from": "optimist@~0.6.0",
+              "dependencies": {
+                "wordwrap": {
+                  "version": "0.0.2",
+                  "from": "wordwrap@~0.0.2"
+                },
+                "minimist": {
+                  "version": "0.0.10",
+                  "from": "minimist@~0.0.1"
+                }
+              }
+            },
+            "sphericalmercator": {
+              "version": "1.0.2",
+              "from": "sphericalmercator@~1.0.2"
+            }
+          }
+        },
+        "tilelive-mapnik": {
+          "version": "0.6.12",
+          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+          "dependencies": {
+            "generic-pool": {
+              "version": "2.1.1",
+              "from": "generic-pool@~2.1.1"
+            },
+            "mime": {
+              "version": "1.2.11",
+              "from": "mime@~1.2.11",
+              "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
+            },
+            "sphericalmercator": {
+              "version": "1.0.2",
+              "from": "sphericalmercator@~1.0.2"
             }
           }
         },
@@ -1886,49 +1936,6 @@
             }
           }
         },
-        "tilelive": {
-          "version": "4.5.3",
-          "from": "tilelive@~4.5.3",
-          "dependencies": {
-            "optimist": {
-              "version": "0.6.1",
-              "from": "optimist@~0.6.0",
-              "dependencies": {
-                "wordwrap": {
-                  "version": "0.0.2",
-                  "from": "wordwrap@~0.0.2"
-                },
-                "minimist": {
-                  "version": "0.0.10",
-                  "from": "minimist@~0.0.1"
-                }
-              }
-            },
-            "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.1"
-            }
-          }
-        },
-        "tilelive-mapnik": {
-          "version": "0.6.12",
-          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
-          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
-          "dependencies": {
-            "generic-pool": {
-              "version": "2.1.1",
-              "from": "generic-pool@~2.1.1"
-            },
-            "mime": {
-              "version": "1.2.11",
-              "from": "mime@~1.2.11"
-            },
-            "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.2"
-            }
-          }
-        },
         "redis-mpool": {
           "version": "0.1.0",
           "from": "redis-mpool@git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
@@ -1952,7 +1959,8 @@
                 },
                 "nan": {
                   "version": "1.1.2",
-                  "from": "nan@~1.1.0"
+                  "from": "nan@~1.1.0",
+                  "resolved": "https://registry.npmjs.org/nan/-/nan-1.1.2.tgz"
                 }
               }
             }
