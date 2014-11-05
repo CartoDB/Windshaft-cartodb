@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE Map[]>
+<Map srs="+init=epsg:3857" buffer-size="128" maximum-extent="-20037508.34,-20037508.34,20037508.34,20037508.34">
+
+    <Parameters>
+        <Parameter name="format">png8:m=h</Parameter>
+        <Parameter name="interactivity_layer">layer0</Parameter>
+        <Parameter name="interactivity_fields">interactivity_id</Parameter>
+    </Parameters>
+
+
+    <Style name="layer0-labels" filter-mode="first">
+        <Rule>
+            <TextSymbolizer face-name="DejaVu Sans Book" size="18" label-position-tolerance="10" fill="#000000" halo-fill="#ffffff" halo-radius="1" dy="-10" allow-overlap="true" placement="point" placement-type="simple" ><![CDATA[[label]]]></TextSymbolizer>
+        </Rule>
+    </Style>
+    <Style name="layer0" filter-mode="first">
+        <Rule>
+            <MarkersSymbolizer fill-opacity="0.9" stroke="#ffffff" stroke-width="2" stroke-opacity="1" placement="point" marker-type="ellipse" width="16" fill="#cc3333" allow-overlap="true" />
+        </Rule>
+    </Style>
+    <Layer name="layer0"
+           srs="+init=epsg:{{=it.srid}}">
+        <StyleName>layer0</StyleName>
+        <StyleName>layer0-labels</StyleName>
+        <Datasource>
+            <Parameter name="type"><![CDATA[postgis]]></Parameter>
+            <Parameter name="user"><![CDATA[{{=it.dbuser}}]]></Parameter>
+            <Parameter name="password"><![CDATA[]]></Parameter>
+            <Parameter name="host"><![CDATA[{{=it.dbhost}}]]></Parameter>
+            <Parameter name="port"><![CDATA[{{=it.dbport}}]]></Parameter>
+            <Parameter name="dbname"><![CDATA[{{=it.dbname}}]]></Parameter>
+            <Parameter name="extent"><![CDATA[-20037508.3,-20037508.3,20037508.3,20037508.3]]></Parameter>
+            <Parameter name="row_limit"><![CDATA[0]]></Parameter>
+            <Parameter name="simplify_geometries"><![CDATA[true]]></Parameter>
+            <Parameter name="persist_connection"><![CDATA[false]]></Parameter>
+            <Parameter name="asynchronous_request"><![CDATA[false]]></Parameter>
+            <Parameter name="max_size"><![CDATA[500]]></Parameter>
+            <Parameter name="geometry_field"><![CDATA[{{=it.geometry_field}}]]></Parameter>
+            <Parameter name="srid"><![CDATA[{{=it.srid}}]]></Parameter>
+            <Parameter name="table"><![CDATA[({{=it.query}}) as cdbq]]></Parameter>
+        </Datasource>
+    </Layer>
+
+</Map>

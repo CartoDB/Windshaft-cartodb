@@ -1,8 +1,11 @@
-1.21.1 -- 2014-mm-dd
+1.22.0 -- 2014-mm-dd
 --------------------
 
 Announcements:
  - Upgrades windshaft to 0.32.0
+
+New features:
+ - Health check endpoint
 
 
 1.21.0 -- 2014-10-24
