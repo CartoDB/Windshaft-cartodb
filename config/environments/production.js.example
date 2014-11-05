@@ -65,6 +65,7 @@ var config = {
          */
         persist_connection: false,
         simplify_geometries: true,
+        use_overviews: true, // use overviews to retrieve raster
         max_size: 500
     }
     ,mapnik_version: undefined
