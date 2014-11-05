@@ -1,5 +1,15 @@
-1.20.3 -- 2014-mm-dd
+1.21.1 -- 2014-mm-dd
 --------------------
+
+Announcements:
+ - Upgrades windshaft to 0.32.0
+
+
+1.21.0 -- 2014-10-24
+--------------------
+
+New features:
+ - Allow a different cache-control max-age for layergroup responses
 
 
 1.20.2 -- 2014-10-20

@@ -97,7 +97,7 @@ Here is an example response:
 You can use the `layergroupid` to instantiate a URL template for accessing tiles on the client. Here we use the `layergroupid` from the example response above in this URL template:
 
 {% highlight bash %}
-http://documentation.cartodb.com/tiles/layergroup/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
+http://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
 {% endhighlight %}
 
 ## General Concepts
@@ -370,7 +370,7 @@ When using templates, be very careful about your selections as they can give bro
 curl -X POST \
    -H 'Content-Type: application/json' \
    -d @template.json \
-   'https://docs.cartodb.com/api/v1/map/named?api_key=APIKEY'
+   'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 {% endhighlight %}
 
 <div class="code-title">RESPONSE</div>
@@ -416,7 +416,7 @@ Valid credentials will be needed if required by the template.
 curl -X POST \
   -H 'Content-Type: application/json' \
   -d @params.json \
-  'https://docs.cartodb.com/api/v1/template/@template_name?auth_token=AUTH_TOKEN'
+  'https://documentation.cartodb.com/api/v1/map/named/@template_name?auth_token=AUTH_TOKEN'
 {% endhighlight %}
 
 <div class="code-title">Response</div>
@@ -456,19 +456,19 @@ GET /api/v1/map/named/:template_name/jsonp
 
 <div class="code-title code-request with-result">REQUEST</div>
 {% highlight bash %}
-curl 'https://docs.cartodb.com/api/v1/map/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=function_name&config=template_params_json'
+curl 'https://documentation.cartodb.com/api/v1/map/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=callback&config=template_params_json'
 {% endhighlight %}
 
 <div class="code-title">RESPONSE</div>
 {% highlight javascript %}
-callback(
+callback({
   "layergroupid":"c01a54877c62831bb51720263f91fb33:0",
   "last_updated":"1970-01-01T00:00:00.000Z"
   "cdn_url": {
     "http": "http://cdb.com",
     "https": "https://cdb.com"
   }
-)
+})
 {% endhighlight %}
 
 This takes the `callback` function (required), `auth_token` if the template needs auth, and `config` which is the variable for the template (in cases where it has variables). 
@@ -481,7 +481,7 @@ JSON.stringify({ color: 'red' });
 The response is in this format:
 
 {% highlight javascript %}
-jQuery17205720721024554223_1390996319118({
+callback({
   layergroupid: "dev@744bd0ed9b047f953fae673d56a47b4d:1390844463021.1401",
   last_updated: "2014-01-27T17:41:03.021Z"
 })
@@ -493,7 +493,7 @@ jQuery17205720721024554223_1390996319118({
 
 <div class="code-title notitle code-request"></div>
 {% highlight bash %}
-PUT /api/v1/map/:map_name
+PUT /api/v1/map/named/:template_name
 {% endhighlight %}
 
 #### Params
@@ -515,7 +515,7 @@ Updating a named map removes all the named map instances so they need to be init
 curl -X PUT \
   -H 'Content-Type: application/json' \
   -d @template.json \
-  'https://docs.cartodb.com/tiles/template/:template_name?api_key=APIKEY'
+  'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 {% endhighlight %}
 
 <div class="code-title">RESPONSE</div>
@@ -545,14 +545,14 @@ Delete the specified template map from the server and disables any previously in
 
 <div class="code-title notitle code-request"></div>
 {% highlight bash %}
-DELETE /template/:template_name
+DELETE /api/v1/map/named/:template_name
 {% endhighlight %}
 
 #### Example
 
 <div class="code-title code-request">REQUEST</div>
 {% highlight bash %}
-curl -X DELETE 'https://docs.cartodb.com/tiles/template/@template_name?auth_token=AUTH_TOKEN'
+curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_name?auth_token=AUTH_TOKEN'
 {% endhighlight %}
 
 <div class="code-title">RESPONSE</div>
@@ -583,7 +583,7 @@ GET /api/v1/map/named/
 
 <div class="code-title code-request with-result">REQUEST</div>
 {% highlight bash %}
-curl -X GET 'https://docs.cartodb.com/tiles/template?api_key=APIKEY'
+curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 {% endhighlight %}
 
 <div class="code-title with-result">RESPONSE</div>
@@ -619,7 +619,7 @@ GET /api/v1/map/named/:template_name
 
 <div class="code-title code-request with-result">REQUEST</div>
 {% highlight bash %}
-curl -X GET 'https://docs.cartodb.com/tiles/template/@template_name?auth_token=AUTH_TOKEN'
+curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?auth_token=AUTH_TOKEN'
 {% endhighlight %}
 
 <div class="code-title with-result">RESPONSE</div>

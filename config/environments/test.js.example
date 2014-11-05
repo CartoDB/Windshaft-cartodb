@@ -140,7 +140,8 @@ var config = {
         host: '',
         port: null,
         secret: 'xxx',
-        ttl: 86400
+        ttl: 86400,
+        layergroupTtl: 86400 // the max-age for cache-control header in layergroup responses
     }
     // If useProfiler is true every response will be served with an
     // X-Tiler-Profile header containing elapsed timing for various 
