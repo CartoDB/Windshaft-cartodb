@@ -76,11 +76,11 @@ The map config needs to be sent to CartoDB's Map API using an authenticated call
 curl 'https://{account}.cartodb.com/api/v1/map/named?api_key=APIKEY' -H 'Content-Type: application/json' -d @mapconfig.json
 {% endhighlight %}
 
-To get the `URL` to fetch the tiles you need to instantiate the map.
+To get the `URL` to fetch the tiles you need to instantiate the map, where `template_id` is the template name from the previous response.
 
 <div class="code-title notitle code-request"></div>
 {% highlight bash %}
-curl 'http://{account}.cartodb.com/api/v1/map/named/test' -H 'Content-Type: application/json'
+curl -X POST 'http://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
 {% endhighlight %}
 
 The response will return JSON with properties for the `layergroupid` and the timestamp (`last_updated`) of the last data modification. 
