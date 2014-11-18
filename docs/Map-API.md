@@ -396,8 +396,8 @@ POST /api/v1/map/named/:template_name
 ```javascript
 // params.json
 {
- color: "#ff0000",
- cartodb_id: 3
+ "color": "#ff0000",
+ "cartodb_id": 3
 }
 ```
 
