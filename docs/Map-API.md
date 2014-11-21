@@ -267,6 +267,7 @@ curl http://...
 
 Anonymous maps cannot be removed by an API call. They will expire after about five minutes but sometimes longer. If an anonymous map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time returns to the map an attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.
 
+
 ## Named Maps
 
 Named maps are essentially the same as anonymous maps but the mapconfig is stored in the server and given a unique name. Two other big differences are that you can created named maps from private data and that users without an API Key can see them even though they are from that private data. 
@@ -291,6 +292,8 @@ POST /api/v1/map/named
 ```
 
 #### Params
+
+- **api_key** is required
 
 <div class="code-title">template.json</div>
 ```javascript
@@ -335,6 +338,7 @@ POST /api/v1/map/named
 - **name**: there can be at most 1 template with the same name for any user valid names start with a letter and only contains letter, numbers or underscores
 - **auth**:
   - **method** `"token"` or `"open"` (the default if no `"method"` is given)
+  - **valid_tokens** when `"method"` is set to `"token"` these tokens will allow to instantiate the named map
 - **placeholders**: Variables not listed here are not substituted. Variable not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
 - **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps see https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.1.0.md
 
@@ -393,6 +397,8 @@ POST /api/v1/map/named/:template_name
 
 #### Param
 
+- **auth_token** optional, but required when when `"method"` is set to `"token"`
+
 ```javascript
 // params.json
 {
@@ -449,7 +455,7 @@ GET /api/v1/map/named/:template_name/jsonp
 
 #### Params
 
-- **auth_token** *(optional)* If the named map needs auth
+- **auth_token** optional, but required when when `"method"` is set to `"token"`
 - **config** Encoded JSON with the params for creating named maps (the variables defined in the template)
 - **lmza** This attribute contains the same as config but LZMA compressed. It cannot be used at the same time than `config`.
 - **callback:** JSON callback name
@@ -498,7 +504,7 @@ PUT /api/v1/map/named/:template_name
 
 #### Params
 
-Same params used to create a map.
+- **api_key** is required
 
 #### Response
 
@@ -548,11 +554,15 @@ Delete the specified template map from the server and disables any previously in
 DELETE /api/v1/map/named/:template_name
 ```
 
+#### Params
+
+- **api_key** is required
+
 #### Example
 
 <div class="code-title code-request">REQUEST</div>
 ```bash
-curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_name?auth_token=AUTH_TOKEN'
+curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 ```
 
 <div class="code-title">RESPONSE</div>
@@ -562,7 +572,7 @@ curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_nam
 }
 ```
 
-On success, a 204 (No Content) response would be issued. Otherwise a 4xx response with with an error will be returned:
+On success, a 204 (No Content) response would be issued. Otherwise a 4xx response with with an error will be returned.
 
 ### Listing Available Templates
 
@@ -619,7 +629,7 @@ GET /api/v1/map/named/:template_name
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
-curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?auth_token=AUTH_TOKEN'
+curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 ```
 
 <div class="code-title with-result">RESPONSE</div>
