@@ -95,7 +95,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1"
+              "from": "inherits@2"
             }
           }
         }
@@ -2254,6 +2254,18 @@
             "sphericalmercator": {
               "version": "1.0.2",
               "from": "sphericalmercator@~1.0.2"
+            }
+          }
+        },
+        "proj4": {
+          "version": "2.3.3",
+          "from": "proj4@2.3.3",
+          "resolved": "https://registry.npmjs.org/proj4/-/proj4-2.3.3.tgz",
+          "dependencies": {
+            "mgrs": {
+              "version": "0.0.0",
+              "from": "mgrs@0.0.0",
+              "resolved": "https://registry.npmjs.org/mgrs/-/mgrs-0.0.0.tgz"
             }
           }
         },
