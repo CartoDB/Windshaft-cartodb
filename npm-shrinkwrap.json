@@ -95,7 +95,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2"
+              "from": "inherits@~2.0.1"
             }
           }
         }
@@ -1585,10 +1585,6 @@
                   "from": "minimist@~0.0.1"
                 }
               }
-            },
-            "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.2"
             }
           }
         },
@@ -1605,10 +1601,6 @@
               "version": "1.2.11",
               "from": "mime@~1.2.11",
               "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
-            },
-            "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.2"
             }
           }
         },
@@ -2250,24 +2242,12 @@
               "version": "1.0.7",
               "from": "queue-async@1.0.7",
               "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
-            },
-            "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.2"
             }
           }
         },
-        "proj4": {
-          "version": "2.3.3",
-          "from": "proj4@2.3.3",
-          "resolved": "https://registry.npmjs.org/proj4/-/proj4-2.3.3.tgz",
-          "dependencies": {
-            "mgrs": {
-              "version": "0.0.0",
-              "from": "mgrs@0.0.0",
-              "resolved": "https://registry.npmjs.org/mgrs/-/mgrs-0.0.0.tgz"
-            }
-          }
+        "sphericalmercator": {
+          "version": "1.0.2",
+          "from": "sphericalmercator@1.0.2"
         },
         "node-statsd": {
           "version": "0.0.7",
