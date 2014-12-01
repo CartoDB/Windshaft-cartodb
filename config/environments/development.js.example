@@ -88,7 +88,14 @@ var config = {
       cache_ttl: 60000,
       metatile: 4,
       bufferSize: 64,
-      statsInterval: 5000 // milliseconds between each report to statsd about number of renderers and mapnik pool status
+      statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
+      http: {
+          timeout: 2000, // the timeout in ms for a http tile request
+          proxy: undefined, // the url for a proxy server
+          whitelist: [ // the whitelist of urlTemplates that can be used
+              'http://{s}.example.com/{z}/{x}/{y}.png'
+          ]
+      }
     }
     ,millstone: {
         // Needs to be writable by server user
