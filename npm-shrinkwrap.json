@@ -67,7 +67,7 @@
     },
     "log4js": {
       "version": "0.6.21",
-      "from": "log4js@~0.6.17",
+      "from": "https://github.com/CartoDB/log4js-node/tarball/cdb",
       "resolved": "https://github.com/CartoDB/log4js-node/tarball/cdb",
       "dependencies": {
         "async": {
@@ -95,7 +95,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1"
+              "from": "inherits@2"
             }
           }
         }
