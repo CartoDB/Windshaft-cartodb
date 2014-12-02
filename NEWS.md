@@ -2,7 +2,7 @@
 --------------------
 
 Announcements:
- - Upgrades windshaft to 0.32.0
+ - Upgrades windshaft to 0.32.1
 
 
 1.21.0 -- 2014-10-24
