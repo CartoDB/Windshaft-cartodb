@@ -397,7 +397,7 @@ POST /api/v1/map/named/:template_name
 
 #### Param
 
-- **auth_token** optional, but required when when `"method"` is set to `"token"`
+- **auth_token** optional, but required when `"method"` is set to `"token"`
 
 ```javascript
 // params.json
@@ -455,7 +455,7 @@ GET /api/v1/map/named/:template_name/jsonp
 
 #### Params
 
-- **auth_token** optional, but required when when `"method"` is set to `"token"`
+- **auth_token** optional, but required when `"method"` is set to `"token"`
 - **config** Encoded JSON with the params for creating named maps (the variables defined in the template)
 - **lmza** This attribute contains the same as config but LZMA compressed. It cannot be used at the same time than `config`.
 - **callback:** JSON callback name
