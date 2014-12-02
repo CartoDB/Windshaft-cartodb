@@ -4,6 +4,9 @@
 Announcements:
  - Upgrades windshaft to 0.32.0
 
+Bugfixes:
+ - Closes fd for log files on `kill -HUP` (#230)
+
 
 1.21.0 -- 2014-10-24
 --------------------
