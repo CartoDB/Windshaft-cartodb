@@ -2,7 +2,7 @@
 --------------------
 
 Announcements:
- - Upgrades windshaft to 0.32.1
+ - Upgrades windshaft to upgrade-mapnik branch
 
 Bugfixes:
  - Closes fd for log files on `kill -HUP` (#230)
