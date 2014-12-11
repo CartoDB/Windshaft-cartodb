@@ -2,7 +2,7 @@
 --------------------
 
 Announcements:
- - Upgrades windshaft to 0.32.1
+ - Upgrades windshaft to 0.32.2
 
 Bugfixes:
  - Closes fd for log files on `kill -HUP` (#230)
