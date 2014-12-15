@@ -96,7 +96,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1"
+              "from": "inherits@2"
             }
           }
         }
@@ -175,9 +175,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.32.2",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.32.2",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.32.2",
+      "version": "0.32.4",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.32.4",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.32.4",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -315,7 +315,8 @@
                         },
                         "ctype": {
                           "version": "0.5.2",
-                          "from": "ctype@0.5.2"
+                          "from": "ctype@0.5.2",
+                          "resolved": "https://registry.npmjs.org/ctype/-/ctype-0.5.2.tgz"
                         }
                       }
                     },
@@ -1658,8 +1659,9 @@
               }
             },
             "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.1"
+              "version": "1.0.3",
+              "from": "sphericalmercator@~1.0.1",
+              "resolved": "https://registry.npmjs.org/sphericalmercator/-/sphericalmercator-1.0.3.tgz"
             }
           }
         },
@@ -1678,8 +1680,9 @@
               "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
             },
             "sphericalmercator": {
-              "version": "1.0.2",
-              "from": "sphericalmercator@~1.0.1"
+              "version": "1.0.3",
+              "from": "sphericalmercator@~1.0.1",
+              "resolved": "https://registry.npmjs.org/sphericalmercator/-/sphericalmercator-1.0.3.tgz"
             }
           }
         },
