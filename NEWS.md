@@ -1,3 +1,20 @@
+1.21.2 -- 2014-12-15
+--------------------
+
+Announcements:
+ - Upgrades windshaft to 0.32.4
+
+
+1.21.1 -- 2014-12-11
+--------------------
+
+Announcements:
+ - Upgrades windshaft to 0.32.2
+
+Bugfixes:
+ - Closes fd for log files on `kill -HUP` (#230)
+
+
 1.21.0 -- 2014-10-24
 --------------------
 
