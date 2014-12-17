@@ -270,7 +270,7 @@ Anonymous maps cannot be removed by an API call. They will expire after about fi
 
 ## Named Maps
 
-Named maps are essentially the same as anonymous maps but the mapconfig is stored in the server and given a unique name. Two other big differences are that you can created named maps from private data and that users without an API Key can see them even though they are from that private data. 
+Named maps are essentially the same as anonymous maps but the mapconfig is stored in the server and given a unique name. Two other big differences are that you can create named maps from private data and that users without an API Key can see them even though they are from that private data. 
 
 The main two differences compared to anonymous maps are:
 
