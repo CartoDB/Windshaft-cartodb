@@ -1,6 +1,6 @@
 ## Maps API
 
-The CartoDB Maps API allows you to generate maps based on data hosted in your CartoDB account and style them using CartoCSS. The API generates a XYZ based URL to fetch Web Mercator projected tiles using web clients like Leaflet, Google Maps, OpenLayers.
+The CartoDB Maps API allows you to generate maps based on data hosted in your CartoDB account, and you can apply custom SQL and CartoCSS to the data. The API generates a XYZ-based URL to fetch Web Mercator projected tiles using web clients such as [Leaflet](http://leafletjs.com), [Google Maps](https://developers.google.com/maps/), or [OpenLayers](http://openlayers.org/).
 
 You can create two types of maps with the Maps API:
 
@@ -8,7 +8,7 @@ You can create two types of maps with the Maps API:
   Maps that can be created using your CartoDB public data. Any client can change the read-only SQL and CartoCSS parameters that generate the map tiles. These maps can be created from a JavaScript application alone and no authenticated calls are needed. See [this CartoDB.js example]({{ '/cartodb-platform/cartodb-js.html' | prepend: site.baseurl }}).
 
 - **Named maps**  
-  Maps that access to your private data. These maps require an owner to setup and modify any SQL and CartoCSS parameters and are not modifiable without new setup calls. 
+  Maps that have access to your private data. These maps require an owner to setup and modify any SQL and CartoCSS parameters and are not modifiable without new setup calls. 
 
 ## Quickstart
 
@@ -37,7 +37,7 @@ $.ajax({
   url: 'http://documentation.cartodb.com/api/v1/map',
   data: JSON.stringify(mapconfig),
   success: function(data) {
-    var templateUrl = 'http://documentation.cartodb.com/api/v1/map/' + data.layergroupid + '{z}/{x}/{y}.png'
+    var templateUrl = 'http://documentation.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
     console.log(templateUrl);
   }
 })
@@ -46,10 +46,9 @@ $.ajax({
 ### Named maps
 
 Let's create a named map using some private tables in a CartoDB account.
-The following API call creates a map of European countries that have a white fill color:
+The following map config sets up a map of European countries that have a white fill color:
 
 ```javascript
-// mapconfig.json
 {
   "version": "0.0.1",
   "name": "test",
@@ -69,7 +68,7 @@ The following API call creates a map of European countries that have a white fil
 }
 ```
 
-The map config needs to be sent to CartoDB's Map API using an authenticated call. Here we use a command line tool called `curl`. For more info about this tool see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl) or type ``man curl`` in bash. Using `curl` the call would look like:
+The map config needs to be sent to CartoDB's Map API using an authenticated call. Here we will use a command line tool called `curl`. For more info about this tool, see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl), or type ``man curl`` in bash. Using `curl`, and storing the config from above in a file `mapconfig.json`, the call would look like:
 
 <div class="code-title notitle code-request"></div>
 ```bash
@@ -106,7 +105,7 @@ The following concepts are the same for every endpoint in the API except when it
 
 ### Auth
 
-By default, users do not have access to private tables in CartoDB. In order to instantiate a map from private table data an API Key is required. Additionally, to include some endpoints an API Key must be included (e.g. creating a named map).
+By default, users do not have access to private tables in CartoDB. In order to instantiate a map from private table data, an API Key is required. Additionally, to include some endpoints, an API Key must be included (e.g. creating a named map).
 
 To execute an authorized request, api_key=YOURAPIKEY should be added to the request URL. The param can be also passed as POST param. We **strongly advise** using HTTPS when you are performing requests that include your `api_key`.
 
@@ -270,7 +269,7 @@ Anonymous maps cannot be removed by an API call. They will expire after about fi
 
 ## Named Maps
 
-Named maps are essentially the same as anonymous maps but the mapconfig is stored in the server and given a unique name. Two other big differences are that you can created named maps from private data and that users without an API Key can see them even though they are from that private data. 
+Named maps are essentially the same as anonymous maps except the mapconfig is stored on the server and the map is given a unique name. Two other big differences are that you can create named maps from private data, and that users without an API Key can see them even though they are from that private data.
 
 The main two differences compared to anonymous maps are:
 
@@ -278,7 +277,7 @@ The main two differences compared to anonymous maps are:
   This allows you to control who is able to see the map based on a token auth
 
 - **templates**  
-  Since the mapconfig is static it can contain some variables so the client con modify the map appearance using those variables.
+  Since the mapconfig is static it can contain some variables so the client can modify the map's appearance using those variables
 
 Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
 
@@ -335,18 +334,18 @@ POST /api/v1/map/named
 
 ##### Arguments
 
-- **name**: there can be at most 1 template with the same name for any user valid names start with a letter and only contains letter, numbers or underscores
+- **name**: There can be at most _one_ template with the same name for any user. Valid names start with a letter, and only contain letters, numbers, or underscores (_).
 - **auth**:
-  - **method** `"token"` or `"open"` (the default if no `"method"` is given)
-  - **valid_tokens** when `"method"` is set to `"token"` these tokens will allow to instantiate the named map
+  - **method** `"token"` or `"open"` (the default if no `"method"` is given).
+  - **valid_tokens** when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
 - **placeholders**: Variables not listed here are not substituted. Variable not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
-- **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps see https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.1.0.md
+- **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.1.0.md) for more info.
 
 #### Template Format
 
-A templated `layergroup` allows using placeholders in the "cartocss" and "sql" elements of the "option" object in any "layer" of a layergroup configuration
+A templated `layergroup` allows the use of placeholders in the "cartocss" and "sql" elements of the "option" object in any "layer" of a `layergroup` configuration
 
-Valid placeholder names start with a letter and can only contain letters, numbers or underscores. They have to be written between `<%=` and `%>` strings in order to be replaced.
+Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced.
 
 ##### Example
 
