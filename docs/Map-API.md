@@ -379,7 +379,7 @@ curl -X POST \
 <div class="code-title">RESPONSE</div>
 ```javascript
 {
-  "templateid":"name",
+  "template_id":"name",
 }
 ```
 
