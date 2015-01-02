@@ -149,6 +149,7 @@
     "rollbar": {
       "version": "0.3.13",
       "from": "rollbar@~0.3.13",
+      "resolved": "https://registry.npmjs.org/rollbar/-/rollbar-0.3.13.tgz",
       "dependencies": {
         "node-uuid": {
           "version": "1.4.2",
@@ -183,6 +184,11 @@
           "version": "0.1.0",
           "from": "chronograph@git://github.com/CartoDB/chronographjs.git#0.1.0",
           "resolved": "git://github.com/CartoDB/chronographjs.git#0b8c35eee510cfa14a16be24d70533b38ecc1d2d"
+        },
+        "queue-async": {
+          "version": "1.0.7",
+          "from": "queue-async@~1.0.7",
+          "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
         },
         "grainstore": {
           "version": "0.22.1",
@@ -1615,9 +1621,9 @@
               "resolved": "https://registry.npmjs.org/connect/-/connect-1.9.2.tgz",
               "dependencies": {
                 "formidable": {
-                  "version": "1.0.15",
+                  "version": "1.0.16",
                   "from": "formidable@1.0.x",
-                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.15.tgz"
+                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.16.tgz"
                 }
               }
             },
@@ -2060,6 +2066,17 @@
             }
           }
         },
+        "canvas": {
+          "version": "1.1.6",
+          "from": "canvas@1.1.6",
+          "resolved": "https://registry.npmjs.org/canvas/-/canvas-1.1.6.tgz",
+          "dependencies": {
+            "nan": {
+              "version": "1.2.0",
+              "from": "nan@~1.2.0"
+            }
+          }
+        },
         "redis-mpool": {
           "version": "0.1.0",
           "from": "redis-mpool@git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
@@ -2091,30 +2108,14 @@
           }
         },
         "carto": {
-          "version": "0.9.5-cdb3",
-          "from": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
-          "resolved": "http://github.com/CartoDB/carto/tarball/0.9.5-cdb3",
+          "version": "0.14.0",
+          "from": "https://github.com/CartoDB/carto/tarball/update_to_master",
+          "resolved": "https://github.com/CartoDB/carto/tarball/update_to_master",
           "dependencies": {
-            "underscore": {
-              "version": "1.4.4",
-              "from": "underscore@~1.4.3",
-              "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.4.4.tgz"
-            },
             "mapnik-reference": {
-              "version": "5.0.9",
-              "from": "mapnik-reference@~5.0.7",
-              "resolved": "https://registry.npmjs.org/mapnik-reference/-/mapnik-reference-5.0.9.tgz"
-            },
-            "xml2js": {
-              "version": "0.2.8",
-              "from": "xml2js@~0.2.4",
-              "resolved": "https://registry.npmjs.org/xml2js/-/xml2js-0.2.8.tgz",
-              "dependencies": {
-                "sax": {
-                  "version": "0.5.8",
-                  "from": "sax@0.5.x"
-                }
-              }
+              "version": "6.0.5",
+              "from": "mapnik-reference@~6.0.2",
+              "resolved": "https://registry.npmjs.org/mapnik-reference/-/mapnik-reference-6.0.5.tgz"
             },
             "optimist": {
               "version": "0.6.1",
@@ -2139,9 +2140,9 @@
           "resolved": "git://github.com/CartoDB/node-step-profiler.git#9b97881e450445bd8a307a9cc372b5129cb4529a"
         },
         "torque.js": {
-          "version": "2.2.0",
-          "from": "torque.js@~2.2.0",
-          "resolved": "https://registry.npmjs.org/torque.js/-/torque.js-2.2.00.tgz"
+          "version": "2.7.1",
+          "from": "https://github.com/CartoDB/torque/tarball/master",
+          "resolved": "https://github.com/CartoDB/torque/tarball/master"
         },
         "request": {
           "version": "2.48.0",
@@ -2210,7 +2211,8 @@
             },
             "mime-types": {
               "version": "1.0.2",
-              "from": "mime-types@~1.0.1"
+              "from": "mime-types@~1.0.1",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-1.0.2.tgz"
             },
             "node-uuid": {
               "version": "1.4.2",
@@ -2311,11 +2313,6 @@
           "from": "https://github.com/CartoDB/abaculus/tarball/cdb",
           "resolved": "https://github.com/CartoDB/abaculus/tarball/cdb",
           "dependencies": {
-            "queue-async": {
-              "version": "1.0.7",
-              "from": "queue-async@1.0.7",
-              "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
-            },
             "mapnik": {
               "version": "1.4.15",
               "from": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb",
