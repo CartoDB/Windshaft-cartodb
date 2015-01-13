@@ -25,4 +25,4 @@ Windshaft-CartoDB adds the following attributes in the response object
 
 ## Stats tag
 
-Windshaft-CartoDB adds support for a ``stat_tag`` element in the multilayer configuration to help [stats](Redis-stats-format) gathering.
+Windshaft-CartoDB adds support for a ``stat_tag`` element in the multilayer configuration to help [stats](https://github.com/CartoDB/Windshaft-cartodb/wiki/Redis-stats-format) gathering.
