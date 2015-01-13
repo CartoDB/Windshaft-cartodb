@@ -5,72 +5,68 @@ var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 
-var SQLAPIEmu  = require(__dirname + '/../support/SQLAPIEmu.js');
+suite('health checks', function () {
 
-
-
-    suite('health checks', function () {
-        beforeEach(function (done) {
-            global.environment.health = {
-                enabled: true,
-                username: 'localhost',
-                z: 0,
-                x: 0,
-                y: 0
-            };
-            done();
-        });
-
-        var healthCheckRequest = {
-            url: '/health',
-            method: 'GET',
-            headers: {
-                host: 'localhost'
-            }
+    beforeEach(function (done) {
+        global.environment.health = {
+            enabled: true,
+            username: 'localhost',
+            z: 0,
+            x: 0,
+            y: 0
         };
+        done();
+    });
 
-        test('returns 200 and ok=true with enabled configuration', function (done) {
-            assert.response(server,
-                healthCheckRequest,
-                {
-                    status: 200
-                },
-                function (res, err) {
-                  console.log(res.body);
-                    assert.ok(!err);
+    var healthCheckRequest = {
+        url: '/health',
+        method: 'GET',
+        headers: {
+            host: 'localhost'
+        }
+    };
 
-                    var parsed = JSON.parse(res.body);
+    test('returns 200 and ok=true with enabled configuration', function (done) {
+        assert.response(server,
+            healthCheckRequest,
+            {
+                status: 200
+            },
+            function (res, err) {
+              console.log(res.body);
+                assert.ok(!err);
 
-                    assert.ok(parsed.enabled);
-                    assert.ok(parsed.ok);
+                var parsed = JSON.parse(res.body);
 
-                    done();
-                }
-            );
-        });
+                assert.ok(parsed.enabled);
+                assert.ok(parsed.ok);
 
-        test('fails for invalid user because it is not in redis', function (done) {
-            global.environment.health.username = 'invalid';
+                done();
+            }
+        );
+    });
 
-            assert.response(server,
-                healthCheckRequest,
-                {
-                    status: 503
-                },
-                function (res, err) {
-                    assert.ok(!err);
+    test('fails for invalid user because it is not in redis', function (done) {
+        global.environment.health.username = 'invalid';
 
-                    var parsed = JSON.parse(res.body);
+        assert.response(server,
+            healthCheckRequest,
+            {
+                status: 503
+            },
+            function (res, err) {
+                assert.ok(!err);
 
-                    assert.equal(parsed.enabled, true);
-                    assert.equal(parsed.ok, false);
+                var parsed = JSON.parse(res.body);
 
-                    assert.equal(parsed.result.redis.ok, false);
+                assert.equal(parsed.enabled, true);
+                assert.equal(parsed.ok, false);
 
-                    done();
-                }
-            );
-        });
+                assert.equal(parsed.result.redis.ok, false);
 
+                done();
+            }
+        );
+    });
 
 });
