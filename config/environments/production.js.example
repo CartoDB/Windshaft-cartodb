@@ -163,9 +163,6 @@ var config = {
     ,health: {
       enabled: true,
       username: 'localhost',
-      query: "SELECT 1::int as interactivity_id, '0101000020110F0000EE866678CE876D41466F35C2EC1150C1'::geometry as geom, 'Lorem ipsum dolor sit amet' as label",
-      srid: 3857,
-      geometry_field: 'geom',
       z: 0,
       x: 0,
       y: 0
