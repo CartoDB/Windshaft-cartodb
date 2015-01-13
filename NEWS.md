@@ -1,5 +1,12 @@
-1.21.3 -- 2014-mm-dd
+1.22.1 -- 2015-mm-dd
 --------------------
+
+
+1.22.0 -- 2015-01-13
+--------------------
+
+New features:
+ - Health check endpoint
 
 
 1.21.2 -- 2014-12-15
@@ -17,6 +24,7 @@ Announcements:
 
 Bugfixes:
  - Closes fd for log files on `kill -HUP` (#230)
+
 
 
 1.21.0 -- 2014-10-24

@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.21.3",
+  "version": "1.22.1",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -308,21 +308,23 @@
                       "from": "tunnel-agent@~0.3.0"
                     },
                     "http-signature": {
-                      "version": "0.10.0",
+                      "version": "0.10.1",
                       "from": "http-signature@~0.10.0",
+                      "resolved": "https://registry.npmjs.org/http-signature/-/http-signature-0.10.1.tgz",
                       "dependencies": {
                         "assert-plus": {
-                          "version": "0.1.2",
-                          "from": "assert-plus@0.1.2"
+                          "version": "0.1.5",
+                          "from": "assert-plus@^0.1.5",
+                          "resolved": "https://registry.npmjs.org/assert-plus/-/assert-plus-0.1.5.tgz"
                         },
                         "asn1": {
                           "version": "0.1.11",
                           "from": "asn1@0.1.11"
                         },
                         "ctype": {
-                          "version": "0.5.2",
-                          "from": "ctype@0.5.2",
-                          "resolved": "https://registry.npmjs.org/ctype/-/ctype-0.5.2.tgz"
+                          "version": "0.5.3",
+                          "from": "ctype@0.5.3",
+                          "resolved": "https://registry.npmjs.org/ctype/-/ctype-0.5.3.tgz"
                         }
                       }
                     },
@@ -2142,7 +2144,36 @@
         "torque.js": {
           "version": "2.7.1",
           "from": "https://github.com/CartoDB/torque/tarball/master",
-          "resolved": "https://github.com/CartoDB/torque/tarball/master"
+          "resolved": "https://github.com/CartoDB/torque/tarball/master",
+          "dependencies": {
+            "carto": {
+              "version": "0.15.1",
+              "from": "https://github.com/CartoDB/carto/archive/master.tar.gz",
+              "resolved": "https://github.com/CartoDB/carto/archive/master.tar.gz",
+              "dependencies": {
+                "mapnik-reference": {
+                  "version": "6.0.5",
+                  "from": "mapnik-reference@~6.0.2",
+                  "resolved": "https://registry.npmjs.org/mapnik-reference/-/mapnik-reference-6.0.5.tgz"
+                },
+                "optimist": {
+                  "version": "0.6.1",
+                  "from": "optimist@~0.6.0",
+                  "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.6.1.tgz",
+                  "dependencies": {
+                    "wordwrap": {
+                      "version": "0.0.2",
+                      "from": "wordwrap@~0.0.2"
+                    },
+                    "minimist": {
+                      "version": "0.0.10",
+                      "from": "minimist@~0.0.1"
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
         "request": {
           "version": "2.48.0",
@@ -2240,21 +2271,23 @@
               }
             },
             "http-signature": {
-              "version": "0.10.0",
+              "version": "0.10.1",
               "from": "http-signature@~0.10.0",
+              "resolved": "https://registry.npmjs.org/http-signature/-/http-signature-0.10.1.tgz",
               "dependencies": {
                 "assert-plus": {
-                  "version": "0.1.2",
-                  "from": "assert-plus@0.1.2"
+                  "version": "0.1.5",
+                  "from": "assert-plus@^0.1.5",
+                  "resolved": "https://registry.npmjs.org/assert-plus/-/assert-plus-0.1.5.tgz"
                 },
                 "asn1": {
                   "version": "0.1.11",
                   "from": "asn1@0.1.11"
                 },
                 "ctype": {
-                  "version": "0.5.2",
-                  "from": "ctype@0.5.2",
-                  "resolved": "https://registry.npmjs.org/ctype/-/ctype-0.5.2.tgz"
+                  "version": "0.5.3",
+                  "from": "ctype@0.5.3",
+                  "resolved": "https://registry.npmjs.org/ctype/-/ctype-0.5.3.tgz"
                 }
               }
             },

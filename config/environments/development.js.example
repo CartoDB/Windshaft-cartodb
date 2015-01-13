@@ -158,6 +158,14 @@ var config = {
     // X-Tiler-Profile header containing elapsed timing for various 
     // steps taken for producing the response.
     ,useProfiler:true
+    // Settings for the health check available at /health
+    ,health: {
+      enabled: false,
+      username: 'localhost',
+      z: 0,
+      x: 0,
+      y: 0
+    }
 };
 
 module.exports = config;
