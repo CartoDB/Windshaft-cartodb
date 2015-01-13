@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.21.2",
+  "version": "1.22.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -96,7 +96,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2"
+              "from": "inherits@~2.0.1"
             }
           }
         }
@@ -149,6 +149,7 @@
     "rollbar": {
       "version": "0.3.13",
       "from": "rollbar@~0.3.13",
+      "resolved": "https://registry.npmjs.org/rollbar/-/rollbar-0.3.13.tgz",
       "dependencies": {
         "node-uuid": {
           "version": "1.4.2",
@@ -302,21 +303,23 @@
                       "from": "tunnel-agent@~0.3.0"
                     },
                     "http-signature": {
-                      "version": "0.10.0",
+                      "version": "0.10.1",
                       "from": "http-signature@~0.10.0",
+                      "resolved": "https://registry.npmjs.org/http-signature/-/http-signature-0.10.1.tgz",
                       "dependencies": {
                         "assert-plus": {
-                          "version": "0.1.2",
-                          "from": "assert-plus@0.1.2"
+                          "version": "0.1.5",
+                          "from": "assert-plus@^0.1.5",
+                          "resolved": "https://registry.npmjs.org/assert-plus/-/assert-plus-0.1.5.tgz"
                         },
                         "asn1": {
                           "version": "0.1.11",
                           "from": "asn1@0.1.11"
                         },
                         "ctype": {
-                          "version": "0.5.2",
-                          "from": "ctype@0.5.2",
-                          "resolved": "https://registry.npmjs.org/ctype/-/ctype-0.5.2.tgz"
+                          "version": "0.5.3",
+                          "from": "ctype@0.5.3",
+                          "resolved": "https://registry.npmjs.org/ctype/-/ctype-0.5.3.tgz"
                         }
                       }
                     },
@@ -1615,9 +1618,9 @@
               "resolved": "https://registry.npmjs.org/connect/-/connect-1.9.2.tgz",
               "dependencies": {
                 "formidable": {
-                  "version": "1.0.15",
+                  "version": "1.0.16",
                   "from": "formidable@1.0.x",
-                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.15.tgz"
+                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.16.tgz"
                 }
               }
             },
@@ -1681,7 +1684,7 @@
             },
             "sphericalmercator": {
               "version": "1.0.3",
-              "from": "sphericalmercator@~1.0.1",
+              "from": "sphericalmercator@~1.0.2",
               "resolved": "https://registry.npmjs.org/sphericalmercator/-/sphericalmercator-1.0.3.tgz"
             }
           }

@@ -160,6 +160,14 @@ var config = {
         handler: 'inline'
       }
     }
+    // Settings for the health check available at /health
+    ,health: {
+      enabled: true,
+      username: 'localhost',
+      z: 0,
+      x: 0,
+      y: 0
+    }
 };
 
 module.exports = config;

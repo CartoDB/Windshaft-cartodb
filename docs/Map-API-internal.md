@@ -1,6 +1,6 @@
 # Kind of maps
 
-Windshaft-CartoDB supports these kind of maps:
+Windshaft-CartoDB supports the following types of maps:
 
  - [Temporary maps](#temporary-maps) (created by anyone)
    - [Detached maps](#detached-maps)
@@ -12,14 +12,14 @@ Windshaft-CartoDB supports these kind of maps:
 ## Temporary maps
 
 Temporary maps have no owners and are anonymous in nature.
-There are two kind of temporary maps:
+There are two kinds of temporary maps:
 
  - Detached maps (aka MultiLayer-API)
  - Inline maps 
 
 ### Detached maps
 
-Detached maps are maps which are configured with a request
+Detached maps are maps that are configured with a request
 obtaining a temporary token and then used by referencing
 the obtained token. The token expires automatically when unused.
 
