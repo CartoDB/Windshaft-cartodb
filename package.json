@@ -25,7 +25,7 @@
         "node-varnish": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0",
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
-        "windshaft": "https://github.com/CartoDB/Windshaft/tarball/0.33.0",
+        "windshaft": "https://github.com/CartoDB/Windshaft/tarball/retina-support",
         "step": "~0.0.5",
         "request": "~2.9.203",
         "cartodb-redis": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0",

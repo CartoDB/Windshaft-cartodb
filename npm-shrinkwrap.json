@@ -176,9 +176,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.33.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.33.0",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.33.0",
+      "version": "0.33.1",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/retina-support",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/retina-support",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
