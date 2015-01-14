@@ -1,5 +1,11 @@
-1.22.1 -- 2015-mm-dd
+1.23.0 -- 2015-mm-dd
 --------------------
+
+Announcements:
+ - Upgrades windshaft to 0.33.0
+
+New features:
+ - Sets HTTP renderer configuration in server_options
 
 
 1.22.0 -- 2015-01-13
