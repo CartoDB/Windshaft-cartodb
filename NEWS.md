@@ -1,5 +1,8 @@
-1.23.1 -- 2015-mm-dd
+1.23.1 -- 2015-01-14
 --------------------
+
+Announcements:
+ - Regenerate npm-shrinkwrap.json
 
 
 1.23.0 -- 2015-01-14
