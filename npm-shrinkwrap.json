@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.22.1",
+  "version": "1.23.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -96,7 +96,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2"
+              "from": "inherits@~2.0.1"
             }
           }
         }
