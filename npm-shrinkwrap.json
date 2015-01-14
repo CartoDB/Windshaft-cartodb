@@ -96,7 +96,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1"
+              "from": "inherits@2"
             }
           }
         }
@@ -176,9 +176,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.32.5",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/static-controller",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/static-controller",
+      "version": "0.33.0",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.33.0",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.33.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -228,7 +228,8 @@
                   "dependencies": {
                     "wordwrap": {
                       "version": "0.0.2",
-                      "from": "wordwrap@~0.0.2"
+                      "from": "wordwrap@~0.0.2",
+                      "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                     },
                     "minimist": {
                       "version": "0.0.10",
@@ -782,9 +783,9 @@
                   }
                 },
                 "zipfile": {
-                  "version": "0.5.4",
+                  "version": "0.5.5",
                   "from": "zipfile@~0.5.2",
-                  "resolved": "https://registry.npmjs.org/zipfile/-/zipfile-0.5.4.tgz",
+                  "resolved": "https://registry.npmjs.org/zipfile/-/zipfile-0.5.5.tgz",
                   "dependencies": {
                     "nan": {
                       "version": "1.4.1",
@@ -1600,7 +1601,8 @@
                   "dependencies": {
                     "wordwrap": {
                       "version": "0.0.2",
-                      "from": "wordwrap@~0.0.2"
+                      "from": "wordwrap@~0.0.2",
+                      "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                     },
                     "minimist": {
                       "version": "0.0.10",
@@ -1658,7 +1660,8 @@
               "dependencies": {
                 "wordwrap": {
                   "version": "0.0.2",
-                  "from": "wordwrap@~0.0.2"
+                  "from": "wordwrap@~0.0.2",
+                  "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                 },
                 "minimist": {
                   "version": "0.0.10",
@@ -2071,7 +2074,6 @@
         "canvas": {
           "version": "1.1.6",
           "from": "canvas@1.1.6",
-          "resolved": "https://registry.npmjs.org/canvas/-/canvas-1.1.6.tgz",
           "dependencies": {
             "nan": {
               "version": "1.2.0",
@@ -2126,7 +2128,8 @@
               "dependencies": {
                 "wordwrap": {
                   "version": "0.0.2",
-                  "from": "wordwrap@~0.0.2"
+                  "from": "wordwrap@~0.0.2",
+                  "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                 },
                 "minimist": {
                   "version": "0.0.10",
@@ -2163,7 +2166,8 @@
                   "dependencies": {
                     "wordwrap": {
                       "version": "0.0.2",
-                      "from": "wordwrap@~0.0.2"
+                      "from": "wordwrap@~0.0.2",
+                      "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
                     },
                     "minimist": {
                       "version": "0.0.10",
