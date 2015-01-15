@@ -1,3 +1,10 @@
+1.24.0 -- 2015-01-15
+--------------------
+
+Announcements:
+ - Upgrades windshaft to 0.34.0 for retina support
+
+
 1.23.1 -- 2015-01-14
 --------------------
 
