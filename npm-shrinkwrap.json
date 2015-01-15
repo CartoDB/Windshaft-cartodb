@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.23.2",
+  "version": "1.24.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -176,9 +176,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.33.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.33.0",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.33.0",
+      "version": "0.34.0",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.34.0",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.34.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -369,9 +369,9 @@
                   "resolved": "https://registry.npmjs.org/srs/-/srs-0.4.6.tgz",
                   "dependencies": {
                     "nan": {
-                      "version": "1.4.1",
+                      "version": "1.4.3",
                       "from": "nan@~1.4.1",
-                      "resolved": "https://registry.npmjs.org/nan/-/nan-1.4.1.tgz"
+                      "resolved": "https://registry.npmjs.org/nan/-/nan-1.4.3.tgz"
                     },
                     "node-pre-gyp": {
                       "version": "0.6.1",
@@ -788,9 +788,9 @@
                   "resolved": "https://registry.npmjs.org/zipfile/-/zipfile-0.5.5.tgz",
                   "dependencies": {
                     "nan": {
-                      "version": "1.4.1",
+                      "version": "1.4.3",
                       "from": "nan@~1.4.1",
-                      "resolved": "https://registry.npmjs.org/nan/-/nan-1.4.1.tgz"
+                      "resolved": "https://registry.npmjs.org/nan/-/nan-1.4.3.tgz"
                     },
                     "node-pre-gyp": {
                       "version": "0.6.1",
