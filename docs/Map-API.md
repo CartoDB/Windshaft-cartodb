@@ -237,10 +237,7 @@ GET /api/v1/map?callback=method
 
 #### Params
 
-- **auth_token** *(optional)*  
-  If the named map needs authorization.
-
-- **config**  
+- **config**
   Encoded JSON with the params for creating named maps (the variables defined in the template).
 
 - **lmza**  
@@ -253,13 +250,19 @@ GET /api/v1/map?callback=method
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
-curl http://...
+https://documentation.cartodb.com/api/v1/map?callback=callback&config=%7B%22version%22%3A%221.0.1%22%2C%22layers%22%3A%5B%7B%22type%22%3A%22cartodb%22%2C%22options%22%3A%7B%22sql%22%3A%22select+%2A+from+european_countries_e%22%2C%22cartocss%22%3A%22%23european_countries_e%7B+polygon-fill%3A+%23FF6600%3B+%7D%22%2C%22cartocss_version%22%3A%222.3.0%22%2C%22interactivity%22%3A%5B%22cartodb_id%22%5D%7D%7D%5D%7D
 ```
 
 <div class="code-title">RESPONSE</div>
 ```javascript
-{
-}
+callback({
+    layergroupid: "d9034c133262dfb90285cea26c5c7ad7:0",
+    cdn_url: {
+        "http": "http://cdb.com",
+        "https": "https://cdb.com"
+    },
+    last_updated: "1970-01-01T00:00:00.000Z"
+})
 ```
 
 ### Remove
