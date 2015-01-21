@@ -615,7 +615,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 
 ### Getting a Specific Template
 
-This gets the definition of a template
+This gets the definition of a template.
 
 #### Definition
 
@@ -648,3 +648,26 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
   "error": "Some error string here"
 }
 ```
+
+### Use with CartoDB.js
+Named maps can be used with CartoDB.js by specifying a named map in a layer source as follows. Named maps are treated almost the same as other layer source types in most other ways.
+
+```js
+var layerSource = {
+  user_name: '{your_user_name}', 
+  type: 'namedmap', 
+  named_map: { 
+    name: '{template_name}', 
+	layers: [{ 
+	  layer_name: "layer1", 
+      interactivity: "column1, column2, ..." 
+	}] 
+  } 
+}
+
+cartodb.createLayer('map_dom_id',layerSource)
+  .addTo(map_object);
+
+```
+
+See [CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js.html) methods [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetparamskey-value) and [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetauthtokenauthtoken).
