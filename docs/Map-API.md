@@ -82,12 +82,16 @@ To get the `URL` to fetch the tiles you need to instantiate the map, where `temp
 curl -X POST 'http://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
 ```
 
-The response will return JSON with properties for the `layergroupid` and the timestamp (`last_updated`) of the last data modification. 
+The response will return JSON with properties for the `layergroupid`, `cdn_url`, and the timestamp (`last_updated`) of the last data modification. 
 
 Here is an example response:
 
 ```javascript
 {
+  "cdn_url": {
+    "http": "ashbu.cartocdn.com",
+    "https": "cartocdn-ashbu.global.ssl.fastly.net"
+  },
   "layergroupid": "c01a54877c62831bb51720263f91fb33:0",
   "last_updated": "1970-01-01T00:00:00.000Z"
 }
@@ -222,7 +226,7 @@ Which returns JSON with the attributes defined, like:
 { c: 1, d: 2 }
 ```
 
-Notice UTF Grid and attributes endpoints need an intenger parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. So in this case 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
+Notice UTF Grid and attributes endpoints need an integer parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. So in this case 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
 
 ### Create JSONP
 
@@ -279,7 +283,7 @@ The main two differences compared to anonymous maps are:
 - **templates**  
   Since the mapconfig is static it can contain some variables so the client can modify the map's appearance using those variables
 
-Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
+Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see [auth section](http://docs.cartodb.com/cartodb-platform/maps-api.html#auth)).
 
 ### Create
 
@@ -406,7 +410,7 @@ POST /api/v1/map/named/:template_name
 }
 ```
 
-The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400)
+The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400).
 
 - **auth_token** *optional* if the named map needs auth
 
