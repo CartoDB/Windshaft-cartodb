@@ -702,6 +702,68 @@ Note: you can see this endpoint as:
 GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
 ```
 
+####Layers
+
+The Static Maps API allows for multiple layers incorporation into the `MapConfig` to allow for maximum versatility in creating a static maps. The examples below were used to generate the static image example in the next section, and appear in the specific order designated.
+
+**Basemaps**
+
+```javascript
+    {
+      "type": "http",
+      "options": {
+        "urlTemplate": "http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+        "subdomains": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+```
+
+by manipulating the `"urlTemplate"` custom basemaps can be used in generating static images.
+
+**Mapnik**
+
+```javascript
+    {
+      "type": "mapnik",
+      "options": {
+        "sql": "select null::geometry the_geom_webmercator",
+        "cartocss": "#layer {\n\tpolygon-fill: #FF3300;\n\tpolygon-opacity: 0;\n\tline-color: #333;\n\tline-width: 0;\n\tline-opacity: 0;\n}",
+        "cartocss_version": "2.2.0"
+      }
+    },
+```
+
+**CartoDB**
+
+```javascript
+    {
+      "type": "cartodb",
+      "options": {
+        "sql": "select * from park",
+        "cartocss": "/** simple visualization */\n\n#park{\n  polygon-fill: #229A00;\n  polygon-opacity: 0.7;\n  line-color: #FFF;\n  line-width: 0;\n  line-opacity: 1;\n}",
+        "cartocss_version": "2.1.1"
+      }
+    },
+```
+
+Additoinally, static images from Torque maps and other map layers can be used together to generate highly customizable and versatile static maps
+
+
+####Caching
+
+It is important to note that generated imaged are cached from the live data referenced with the `layergroupid token` on the specified CartoDB account . This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. to obtain a static snapshot of the map as it is today, and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
+
+####Limits
+
+* While images can encompass an entirety of a map, the default limit for pixel range is 8192 x 8192.
+* Resulution limitations for jpgs are at default a quality of 85. LImitations for quality are restrictewd to a maximum of XXX dpi.
+* Timeout limits for generating static maps are the same across the cartoDB editor and platform. It is important to ensure timely processing of queries.
+
+
 ### Examples
 
 After Instantiating a map from a CartoDB account:
@@ -711,5 +773,60 @@ After Instantiating a map from a CartoDB account:
  GET /api/v1/map/static/center/4b615ff367e498e770e7d05e99181873:1420231989550.8699/14/40.71502926732618/-73.96039009094238/600/400.png
 ```
 
-####Response:
+####Response
 <div clas="wrap"><p class="wrap-border"><img src="https://raw.githubusercontent.com/namessanti/Pictures/master/static_api.png" alt="static-api"/></p>,</div>
+
+####MapConfig
+
+For this map, the multiple layers, order, and stylings are defined by the MapConfig.
+
+```javascript
+{
+  "version": "1.3.0-alpha",
+  "layers": [
+    {
+      "type": "http",
+      "options": {
+        "urlTemplate": "http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+        "subdomains": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "type": "mapnik",
+      "options": {
+        "sql": "select null::geometry the_geom_webmercator",
+        "cartocss": "#layer {\n\tpolygon-fill: #FF3300;\n\tpolygon-opacity: 0;\n\tline-color: #333;\n\tline-width: 0;\n\tline-opacity: 0;\n}",
+        "cartocss_version": "2.2.0"
+      }
+    },
+    {
+      "type": "cartodb",
+      "options": {
+        "sql": "select * from park",
+        "cartocss": "/** simple visualization */\n\n#park{\n  polygon-fill: #229A00;\n  polygon-opacity: 0.7;\n  line-color: #FFF;\n  line-width: 0;\n  line-opacity: 1;\n}",
+        "cartocss_version": "2.1.1"
+      }
+    },
+    {
+      "type": "cartodb",
+      "options": {
+        "sql": "select * from residential_zoning_2009",
+        "cartocss": "/** simple visualization */\n\n#residential_zoning_2009{\n  polygon-fill: #c7eae5;\n  polygon-opacity: 1;\n  line-color: #FFF;\n  line-width: 0.2;\n  line-opacity: 0.5;\n}",
+        "cartocss_version": "2.1.1"
+      }
+    },
+    {
+      "type": "cartodb",
+      "options": {
+        "sql": "select * from nycha_developments_july2011",
+        "cartocss": "/** simple visualization */\n\n#nycha_developments_july2011{\n  polygon-fill: #ef3b2c;\n  polygon-opacity: 0.7;\n  line-color: #FFF;\n  line-width: 0;\n  line-opacity: 1;\n}",
+        "cartocss_version": "2.1.1"
+      }
+    }
+  ]
+}
+```
