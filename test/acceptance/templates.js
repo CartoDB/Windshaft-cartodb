@@ -57,6 +57,29 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         }
     };
 
+    function makeTemplate(templateName) {
+        return {
+            version: '0.0.1',
+            name: templateName || 'acceptance1',
+            auth: { method: 'open' },
+            layergroup:  {
+                version: '1.0.0',
+                    layers: [
+                    { options: {
+                        sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, -5e6, 0) as the_geom_webmercator from test_table limit 2 offset 2',
+                        cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
+                        cartocss_version: '2.0.2',
+                        interactivity: 'cartodb_id'
+                    } }
+                ]
+            }
+        };
+    }
+
+    function extendDefaultsTemplate(template) {
+        return _.extend({}, template, {auth: {method: 'open'}, placeholders: {}});
+    }
+
     test("can add template, returning id", function(done) {
 
       var errors = [];
@@ -118,14 +141,11 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 if ( m.match(/^map_(tpl|crt)|/) )
                   return m;
               });
-              if ( todrop.length != 2 ) {
+              if ( todrop.length !== 1 ) {
                 errors.push(new Error("Unexpected keys in redis: " + todrop));
               } else {
                 if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
                   errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-                if ( todrop.indexOf('map_crt|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_crt|localhost' key in redis"));
                 }
               }
               redis_client.del(todrop, function(err) {
@@ -457,14 +477,11 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 if ( m.match(/^map_(tpl|crt)|/) )
                   return m;
               });
-              if ( todrop.length != 2 ) {
+              if ( todrop.length !== 1 ) {
                 errors.push(new Error("Unexpected keys in redis: " + todrop));
               } else {
                 if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
                   errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-                if ( todrop.indexOf('map_crt|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_crt|localhost' key in redis"));
                 }
               }
               redis_client.del(todrop, function(err) {
@@ -492,7 +509,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
               url: '/tiles/template?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
-              data: JSON.stringify(template_acceptance1)
+              data: JSON.stringify(makeTemplate())
           }
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -530,7 +547,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
               url: '/tiles/template/unexistent/?api_key=1234',
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
-              data: JSON.stringify(template_acceptance1)
+              data: JSON.stringify(makeTemplate())
           }
           var next = this;
           assert.response(server, put_request, {},
@@ -548,7 +565,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
               url: '/tiles/template/' + tpl_id + '/?api_key=1234',
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
-              data: JSON.stringify(template_acceptance1)
+              data: JSON.stringify(makeTemplate())
           }
           var next = this;
           assert.response(server, put_request, {},
@@ -572,14 +589,11 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 if ( m.match(/^map_(tpl|crt)|/) )
                   return m;
               });
-              if ( todrop.length != 2 ) {
+              if ( todrop.length !== 1 ) {
                 errors.push(new Error("Unexpected keys in redis: " + todrop));
               } else {
                 if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
                   errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-                if ( todrop.indexOf('map_crt|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_crt|localhost' key in redis"));
                 }
               }
               redis_client.del(todrop, function(err) {
@@ -607,7 +621,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
               url: '/tiles/template?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
-              data: JSON.stringify(template_acceptance1)
+              data: JSON.stringify(makeTemplate())
           }
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -653,7 +667,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template'),
             "Missing 'template' from response body: " + res.body);
-          assert.deepEqual(template_acceptance1, parsed.template);
+          assert.deepEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
           return null;
         },
         function finish(err) {
@@ -664,14 +678,11 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 if ( m.match(/^map_(tpl|crt)|/) )
                   return m;
               });
-              if ( todrop.length != 2 ) {
+              if ( todrop.length !== 1 ) {
                 errors.push(new Error("Unexpected keys in redis: " + todrop));
               } else {
                 if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
                   errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-                if ( todrop.indexOf('map_crt|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_crt|localhost' key in redis"));
                 }
               }
               redis_client.del(todrop, function(err) {
@@ -699,7 +710,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
               url: '/tiles/template?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
-              data: JSON.stringify(template_acceptance1)
+              data: JSON.stringify(makeTemplate())
           }
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -728,7 +739,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template'),
             "Missing 'template' from response body: " + res.body);
-          assert.deepEqual(template_acceptance1, parsed.template);
+          assert.deepEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
           var del_request = {
               url: '/tiles/template/' + tpl_id,
               method: 'DELETE',
@@ -1011,16 +1022,10 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
         },
-        function checkTileDeleted(err, res) {
+        function checkTileAvailable(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 403,
-            'Unexpected statusCode fetch tile after signature revokal: '
-            + res.statusCode + ':' + res.body); 
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized access : ' + parsed.error);
+          assert.equal(res.statusCode, 200, 'Tile should be accessible');
+          assert.equal(res.headers['content-type'], "image/png");
           return null;
         },
         function finish(err) {
@@ -1230,16 +1235,10 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
         },
-        function checkTileDeleted(err, res) {
+        function checkTorqueTileAvailable(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 403,
-            'Unexpected statusCode fetch tile after signature revokal: '
-            + res.statusCode + ':' + res.body); 
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized access : ' + parsed.error);
+          assert.equal(res.statusCode, 200, 'Torque tile should be accessible');
+          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           return null;
         },
         function finish(err) {
@@ -1426,16 +1425,10 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
         },
-        function checkTileDeleted(err, res) {
+        function checkLayerAttributesAvailable(err, res) {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 403, 
-            'Unexpected statusCode fetch tile after signature revokal: '
-            + res.statusCode + ':' + res.body); 
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized access : ' + parsed.error);
+          assert.equal(res.statusCode, 200, 'Layer attributes should be accessible');
+          assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           return null;
         },
         function finish(err) {
@@ -1906,14 +1899,11 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 if ( m.match(/^map_(tpl|crt)|/) )
                   return m;
               });
-              if ( todrop.length != 2 ) {
+              if ( todrop.length !== 1 ) {
                 errors.push(new Error("Unexpected keys in redis: " + todrop));
               } else {
                 if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
                   errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-                if ( todrop.indexOf('map_crt|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_crt|localhost' key in redis"));
                 }
               }
               redis_client.del(todrop, function(err) {
