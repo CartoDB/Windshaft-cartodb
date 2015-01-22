@@ -82,16 +82,12 @@ To get the `URL` to fetch the tiles you need to instantiate the map, where `temp
 curl -X POST 'http://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
 ```
 
-The response will return JSON with properties for the `layergroupid`, `cdn_url`, and the timestamp (`last_updated`) of the last data modification. 
+The response will return JSON with properties for the `layergroupid` and the timestamp (`last_updated`) of the last data modification. 
 
 Here is an example response:
 
 ```javascript
 {
-  "cdn_url": {
-    "http": "ashbu.cartocdn.com",
-    "https": "cartocdn-ashbu.global.ssl.fastly.net"
-  },
   "layergroupid": "c01a54877c62831bb51720263f91fb33:0",
   "last_updated": "1970-01-01T00:00:00.000Z"
 }
@@ -226,7 +222,7 @@ Which returns JSON with the attributes defined, like:
 { c: 1, d: 2 }
 ```
 
-Notice UTF Grid and attributes endpoints need an integer parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. So in this case 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
+Notice UTF Grid and attributes endpoints need an intenger parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. So in this case 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
 
 ### Create JSONP
 
@@ -286,7 +282,7 @@ The main two differences compared to anonymous maps are:
 - **templates**  
   Since the mapconfig is static it can contain some variables so the client can modify the map's appearance using those variables
 
-Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see [auth section](http://docs.cartodb.com/cartodb-platform/maps-api.html#auth)).
+Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
 
 ### Create
 
@@ -413,7 +409,7 @@ POST /api/v1/map/named/:template_name
 }
 ```
 
-The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400).
+The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400)
 
 - **auth_token** *optional* if the named map needs auth
 
@@ -618,7 +614,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 
 ### Getting a Specific Template
 
-This gets the definition of a template.
+This gets the definition of a template
 
 #### Definition
 
@@ -652,25 +648,68 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 }
 ```
 
-### Use with CartoDB.js
-Named maps can be used with CartoDB.js by specifying a named map in a layer source as follows. Named maps are treated almost the same as other layer source types in most other ways.
+##Static Maps API
 
-```js
-var layerSource = {
-  user_name: '{your_user_name}', 
-  type: 'namedmap', 
-  named_map: { 
-    name: '{template_name}', 
-	layers: [{ 
-	  layer_name: "layer1", 
-      interactivity: "column1, column2, ..." 
-	}] 
-  } 
-}
+THe Static Maps API can be initiated using both named and anonymous maps using the 'layergroupid' token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
 
-cartodb.createLayer('map_dom_id',layerSource)
-  .addTo(map_object);
+### Maps API endpoints
 
+Begin by instantiating either a named or anonymous map using the `layergroupid token` as demonstrated in the  Maps API documentation above. The `layergroupsid token` calls to the map and allows for parameters in the definition to generate static images. 
+
+##### Definition
+
+<div class="code-title notitle code-request"></div>
+```bash
+GET /api/v1/map/static/center/:token/:z/:lat/:lng/:width/:height.:format
 ```
 
-See [CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js.html) methods [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetparamskey-value) and [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetauthtokenauthtoken).
+##### Params
+
+* **:token**: the layergroupid token from the map instantiation
+* **:z**: the zoom level of the map
+* **:lat**: the latitude for the center of the map
+* **:lng**: the longitude for the center of the map
+* **:width**: the width in pixels for the output image
+* **:height**: the height in pixels for the output image
+* **:format**: the format for the image, supported types: `png`, `jpg`
+  * **jpg** will have a default quality of 85.
+
+#### Bounding box
+
+##### Definition
+
+<div class="code-title notitle code-request"></div>
+```bash
+GET /api/v1/map/static/bbox/:token/:bbox/:width/:height.:format`
+```
+
+##### Params
+
+* **:token**: the layergroupid token from the map instantiation
+* **:bbox**: the bounding box in WGS 84 (EPSG:4326), comma separated values for:
+    - LowerCorner longitude, in decimal degrees (aka most western)
+    - LowerCorner latitude, in decimal degrees (aka most southern)
+    - UpperCorner longitude, in decimal degrees (aka most eastern)
+    - UpperCorner latitude, in decimal degrees (aka most northern)
+* **:width**: the width in pixels for the output image
+* **:height**: the height in pixels for the output image
+* **:format**: the format for the image, supported types: `png`, `jpg`
+  * **jpg** will have a default quality of 85.
+
+Note: you can see this endpoint as:
+
+```bash
+GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
+```
+
+### Examples
+
+After Instantiating a map from a CartoDB account:
+
+<div class="code-title code-request with-result">REQUEST</div>
+```bash
+ GET /api/v1/map/static/center/4b615ff367e498e770e7d05e99181873:1420231989550.8699/14/40.71502926732618/-73.96039009094238/600/400.png
+```
+
+####Response:
+<div clas="wrap"><p class="wrap-border"><img src="https://raw.githubusercontent.com/namessanti/Pictures/master/static_api.png" alt="static-api"/></p>,</div>
