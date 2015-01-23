@@ -144,6 +144,7 @@ var config = {
     ,varnish: {
         host: 'localhost',
         port: 6082,
+        http_port: 6081,
         secret: 'xxx',
         ttl: 86400,
         layergroupTtl: 86400 // the max-age for cache-control header in layergroup responses
