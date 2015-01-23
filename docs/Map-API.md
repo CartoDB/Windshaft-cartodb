@@ -547,8 +547,6 @@ If a template with the same name does NOT exist, a 400 HTTP response is generate
 }
 ```
 
-Updating a template map will also remove all signatures from previously initialized maps. 
-
 ### Delete 
 
 Delete the specified template map from the server and disables any previously initialized versions of the map.
