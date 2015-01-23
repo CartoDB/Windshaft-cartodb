@@ -50,10 +50,16 @@ function checkCache(res) {
     assert.ok(res.headers.hasOwnProperty('last-modified'));
 }
 
+function checkSurrogateKey(res, expectedKey) {
+    assert.ok(res.headers.hasOwnProperty('surrogate-key'));
+    assert.equal(res.headers['surrogate-key'], expectedKey);
+}
+
 
 module.exports = {
   lzma_compress_to_base64: lzma_compress_to_base64,
   checkNoCache: checkNoCache,
+  checkSurrogateKey: checkSurrogateKey,
   checkCache: checkCache
 };
 

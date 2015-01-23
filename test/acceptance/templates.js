@@ -5,6 +5,7 @@ var querystring = require('querystring');
 var semver      = require('semver');
 var Step        = require('step');
 var strftime    = require('strftime');
+var NamedMapsCacheEntry = require(__dirname + '/../../lib/cartodb/cache/model/named_maps_entry');
 var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 var redis_stats_db = 5;
 
@@ -1590,6 +1591,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
+          helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key());
           return null;
         },
         function finish(err) {
@@ -1605,10 +1607,9 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           version: '0.0.1',
           name: 'acceptance_open_jsonp_params',
           auth: { method: 'open' },
-          /*
           placeholders: {
             color: { type: "css_color", default: "red" }
-          },*/
+          },
           layergroup:  {
             version: '1.0.0',
             layers: [
@@ -1661,9 +1662,11 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         function checkInstanciation(err, res)
         {
           if ( err ) throw err;
+            console.log(err, res.body, res.headers);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
-          helper.checkNoCache(res);
+          helper.checkCache(res);
+          helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key());
           return null;
         },
         function finish(err) {
@@ -1845,6 +1848,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsed.hasOwnProperty('layergroupid'),
             "Missing 'layergroupid' from response body: " + res.body);
           layergroupid = parsed.layergroupid;
+          helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
           return null;
         },
         function updateTemplate(err, res)
@@ -1889,6 +1893,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsed.hasOwnProperty('layergroupid'),
             "Missing 'layergroupid' from response body: " + res.body);
           assert.ok(layergroupid != parsed.layergroupid);
+          helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
           return null;
         },
         function finish(err) {
