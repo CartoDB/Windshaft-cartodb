@@ -1,17 +1,16 @@
 var assert = require('assert')
   //, _ = require('underscore')
   , RedisPool = require('redis-mpool')
-  , SignedMaps = require('../../../lib/cartodb/signed_maps.js')
   , TemplateMaps = require('../../../lib/cartodb/template_maps.js')
   , test_helper = require('../../support/test_helper')
   , Step = require('step')
+  , _ = require('underscore')
   , tests = module.exports = {};
 
 suite('template_maps', function() {
 
   // configure redis pool instance to use in tests
   var redis_pool = RedisPool(global.environment.redis);
-  var signed_maps = new SignedMaps(redis_pool);
 
     var validTemplate = {
         version:'0.0.1',
@@ -22,7 +21,7 @@ suite('template_maps', function() {
     var owner = 'me';
     
   test('does not accept template with unsupported version', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'6.6.6',
       name:'k', auth: {}, layergroup: {} };
@@ -42,7 +41,7 @@ suite('template_maps', function() {
   });
 
   test('does not accept template with missing name', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       auth: {}, layergroup: {} };
@@ -62,7 +61,7 @@ suite('template_maps', function() {
   });
 
   test('does not accept template with invalid name', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       auth: {}, layergroup: {} };
@@ -88,7 +87,7 @@ suite('template_maps', function() {
   });
 
   test('does not accept template with invalid placeholder name', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       name: "valid", placeholders: {},
@@ -116,7 +115,7 @@ suite('template_maps', function() {
   });
 
   test('does not accept template with missing placeholder default', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       name: "valid", placeholders: { v: {} },
@@ -136,7 +135,7 @@ suite('template_maps', function() {
   });
 
   test('does not accept template with missing placeholder type', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       name: "valid", placeholders: { v: { default:1 } },
@@ -158,7 +157,7 @@ suite('template_maps', function() {
   // See http://github.com/CartoDB/Windshaft-cartodb/issues/128
   test('does not accept template with invalid token auth (undefined tokens)',
   function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       name: "invalid_auth1", placeholders: { },
@@ -178,7 +177,7 @@ suite('template_maps', function() {
   });
 
   test('add, get and delete a valid template', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var expected_failure = false;
     var tpl_id;
@@ -204,7 +203,7 @@ suite('template_maps', function() {
       },
       function delTemplate(err, got_tpl) {
         if ( err ) throw err;
-        assert.deepEqual(got_tpl, tpl);
+        assert.deepEqual(got_tpl, _.extend({}, tpl, {auth: {method: 'open'}, placeholders: {}}));
         tmap.delTemplate('me', tpl_id, this);
       },
       function finish(err) {
@@ -214,7 +213,7 @@ suite('template_maps', function() {
   });
 
   test('add multiple templates, list them', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var expected_failure = false;
     var tpl1 = { version:'0.0.1', name: 'first', auth: {}, layergroup: {} };
@@ -273,7 +272,7 @@ suite('template_maps', function() {
   });
 
   test('update templates', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var expected_failure = false;
     var owner = 'me';
@@ -333,7 +332,7 @@ suite('template_maps', function() {
   });
 
   test('instanciate templates', function() {
-    var tmap = new TemplateMaps(redis_pool, signed_maps);
+    var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
 
     var tpl1 =  {
@@ -431,7 +430,7 @@ suite('template_maps', function() {
 
   // Can set a limit on the number of user templates
   test('can limit number of user templates', function(done) {
-    var tmap = new TemplateMaps(redis_pool, signed_maps, {
+    var tmap = new TemplateMaps(redis_pool, {
       max_user_templates: 2
     });
     assert.ok(tmap);
@@ -510,89 +509,5 @@ suite('template_maps', function() {
       }
     );
   });
-
-    var redisCmdFunc = TemplateMaps.prototype._redisCmd;
-
-    function runWithRedisStubbed(stubbedCommands, func) {
-        TemplateMaps.prototype._redisCmd = function(redisFunc, redisArgs, callback) {
-            redisFunc = redisFunc.toLowerCase();
-            if (stubbedCommands.hasOwnProperty(redisFunc)) {
-                callback(null, stubbedCommands[redisFunc]);
-            } else {
-                throw 'Unknown command';
-            }
-        };
-
-        func();
-
-        TemplateMaps.prototype._redisCmd = redisCmdFunc;
-    }
-
-    test('_obtainTemplateLock with no previous value, happy case', function(done) {
-        runWithRedisStubbed({hget: null, hset: 1}, function() {
-            var templateMaps = new TemplateMaps(redis_pool, signed_maps);
-
-            templateMaps._obtainTemplateLock(owner, validTemplate.name, function(err, gotLock) {
-                assert.ok(!err);
-                assert.ok(gotLock);
-                done();
-            });
-        });
-    });
-
-    test('_obtainTemplateLock no lock for non expired ttl, simulates obtaining two locks at same time', function(done) {
-        runWithRedisStubbed({hget: Date.now()}, function() {
-            var templateMaps = new TemplateMaps(redis_pool, signed_maps);
-
-            templateMaps._obtainTemplateLock(owner, validTemplate.name, function(err, gotLock) {
-                assert.ok(!!err);
-                assert.equal(gotLock, false);
-                done();
-            });
-        });
-    });
-
-
-    test('_obtainTemplateLock no lock for non expired ttl, last millisecond of valid ttl', function(done) {
-        var nowValue = Date.now(),
-            nowFunc = Date.now;
-        Date.now = function() {
-            return nowValue;
-        };
-        var lockTtl = 1000;
-        runWithRedisStubbed({hget: Date.now() - lockTtl, hset: true}, function() {
-            var templateMaps = new TemplateMaps(redis_pool, signed_maps, {lock_ttl: lockTtl});
-
-            templateMaps._obtainTemplateLock(owner, validTemplate.name, function(err, gotLock) {
-                assert.ok(!!err);
-                assert.equal(gotLock, false);
-
-                Date.now = nowFunc;
-
-                done();
-            });
-        });
-    });
-
-    test('_obtainTemplateLock gets lock for expired ttl, first millisecond of invalid ttl', function(done) {
-        var nowValue = Date.now(),
-            nowFunc = Date.now;
-        Date.now = function() {
-            return nowValue;
-        };
-        var lockTtl = 1000;
-        runWithRedisStubbed({hget: Date.now() - lockTtl - 1, hset: true}, function() {
-            var templateMaps = new TemplateMaps(redis_pool, signed_maps, {lock_ttl: lockTtl});
-
-            templateMaps._obtainTemplateLock(owner, validTemplate.name, function(err, gotLock) {
-                assert.ok(!err);
-                assert.ok(gotLock);
-
-                Date.now = nowFunc;
-
-                done();
-            });
-        });
-    });
 
 });

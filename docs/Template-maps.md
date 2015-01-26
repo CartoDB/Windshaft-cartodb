@@ -5,13 +5,6 @@ layergroup configurations (instantiation).
 Template maps are persistent, can only be created and deleted by the
 CartoDB user showing a valid API_KEY.
 
-Instantiating a signed template map would result in a [signed
-map](https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps)
-instance that would be signed with the same signature as the template.
-
-Deleting a signed template results in deletion of all signatures created
-as a result of instantiation.
-
 
 # Template format
 
@@ -43,9 +36,6 @@ Placeholder default value will be used when not provided at
 instantiation time and could be used to test validity of the
 template by creating a default instance.
 
-Additionally you'll be able to embed an authorization
-certificate that would be used to sign any instance of the template.
-
 ```js
 // template.json 
 {
@@ -56,7 +46,6 @@ certificate that would be used to sign any instance of the template.
   name: "template_name", 
   // embedded authorization certificate
   auth: {
-   // See https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps
    method: "token", // or "open" (the default if no "method" is given)
    // only (required and non empty) for "token" method
    valid_tokens: ["auth_token1","auth_token2"]
@@ -92,7 +81,8 @@ certificate that would be used to sign any instance of the template.
 
 # Creating a templated map
 
-You can create a signed template map with a single call (for simplicity).
+You can create a template map with a single call (for simplicity).
+
 You'd use a POST sending JSON data:
 
 ```sh
@@ -121,10 +111,7 @@ Errors are in this form:
 
 # Updating an existing template
 
-Update of a template map implies removal all signatures from previous
-map instances.
-
-You can update a signed template map with a PUT:
+You can update a template map with a PUT:
 
 ```sh
 curl -X PUT \
@@ -243,13 +230,7 @@ or, on error:
 
 You can then use the ``layergroupid`` for fetching tiles and grids as you do
 normally ( see https://github.com/CartoDB/Windshaft/wiki/Multilayer-API).
-But you'll still have to show the ``auth_token``, if required by the template
-(see https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps)
-
-Instances of a signed template map will be signed with the same signature
-certificate associated with the template. Such certificate would contain
-a reference to the template identifier, so that it can be revoked every
-time the template is updated or deleted. 
+But you'll still have to show the ``auth_token``, if required by the template.
 
 ### using JSONP
 There is also a special endpoint to be able to instanciate using JSONP (for old browsers)
@@ -274,8 +255,6 @@ last_updated: "2014-01-27T17:41:03.021Z"
 )
 ```
 # Deleting a template map
-
-Deletion of a template map will imply removal all instance signatures
 
 You can delete a templated map with a DELETE to ``/template/:template_name``:
 
