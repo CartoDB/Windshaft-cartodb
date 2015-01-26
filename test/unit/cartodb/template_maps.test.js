@@ -12,12 +12,22 @@ suite('template_maps', function() {
   // configure redis pool instance to use in tests
   var redis_pool = RedisPool(global.environment.redis);
 
+    var wadusLayer = {
+        options: {
+            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
+            cartocss: '#layer { marker-fill:blue; }',
+            cartocss_version: '2.3.0'
+        }
+    };
+
     var validTemplate = {
         version:'0.0.1',
         name: 'first',
         auth: {},
         layergroup: {
-            layers: []
+            layers: [
+                wadusLayer
+            ]
         }
     };
     var owner = 'me';
@@ -26,7 +36,7 @@ suite('template_maps', function() {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'6.6.6',
-      name:'k', auth: {}, layergroup: {layers:[]} };
+      name:'k', auth: {}, layergroup: {layers:[wadusLayer]} };
     Step(
       function() {
         tmap.addTemplate('me', tpl, this);
@@ -46,7 +56,7 @@ suite('template_maps', function() {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
-      auth: {}, layergroup: {layers:[]} };
+      auth: {}, layergroup: {layers:[wadusLayer]} };
     Step(
       function() {
         tmap.addTemplate('me', tpl, this);
@@ -66,7 +76,7 @@ suite('template_maps', function() {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
-      auth: {}, layergroup: {layers:[]} };
+      auth: {}, layergroup: {layers:[wadusLayer]} };
     var invalidnames = [ "ab|", "a b", "a@b", "1ab", "_x", "", " x", "x " ];
     var testNext = function() {
       if ( ! invalidnames.length ) { done(); return; }
@@ -93,7 +103,7 @@ suite('template_maps', function() {
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       name: "valid", placeholders: {},
-      auth: {}, layergroup: {layers:[]} };
+      auth: {}, layergroup: {layers:[wadusLayer]} };
     var invalidnames = [ "ab|", "a b", "a@b", "1ab", "_x", "", " x", "x " ];
     var testNext = function() {
       if ( ! invalidnames.length ) { done(); return; }
@@ -121,7 +131,7 @@ suite('template_maps', function() {
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       name: "valid", placeholders: { v: {} },
-      auth: {}, layergroup: {layers:[]} };
+      auth: {}, layergroup: {layers:[wadusLayer]} };
     tmap.addTemplate('me', tpl, function(err) {
         if ( ! err ) {
           done(new Error("Unexpected success with missing placeholder default"));
@@ -141,7 +151,7 @@ suite('template_maps', function() {
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       name: "valid", placeholders: { v: { default:1 } },
-      auth: {}, layergroup: {layers:[]} };
+      auth: {}, layergroup: {layers:[wadusLayer]} };
     tmap.addTemplate('me', tpl, function(err) {
         if ( ! err ) {
           done(new Error("Unexpected success with missing placeholder type"));
@@ -163,7 +173,7 @@ suite('template_maps', function() {
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       name: "invalid_auth1", placeholders: { },
-      auth: { method: 'token' }, layergroup: {layers:[]} };
+      auth: { method: 'token' }, layergroup: {layers:[wadusLayer]} };
     tmap.addTemplate('me', tpl, function(err) {
         if ( ! err ) {
           done(new Error("Unexpected success with invalid token auth (undefined tokens)"));
@@ -184,7 +194,7 @@ suite('template_maps', function() {
     var expected_failure = false;
     var tpl_id;
     var tpl = { version:'0.0.1',
-      name: 'first', auth: {}, layergroup: {layers:[]} };
+      name: 'first', auth: {}, layergroup: {layers:[wadusLayer]} };
     Step(
       function() {
         tmap.addTemplate('me', tpl, this);
@@ -218,9 +228,9 @@ suite('template_maps', function() {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var expected_failure = false;
-    var tpl1 = { version:'0.0.1', name: 'first', auth: {}, layergroup: {layers:[]} };
+    var tpl1 = { version:'0.0.1', name: 'first', auth: {}, layergroup: {layers:[wadusLayer]} };
     var tpl1_id;
-    var tpl2 = { version:'0.0.1', name: 'second', auth: {}, layergroup: {layers:[]} };
+    var tpl2 = { version:'0.0.1', name: 'second', auth: {}, layergroup: {layers:[wadusLayer]} };
     var tpl2_id;
     Step(
       function addTemplate1() {
@@ -281,7 +291,7 @@ suite('template_maps', function() {
     var tpl = { version:'0.0.1',
       name: 'first',
       auth: { method: 'open' },
-      layergroup: {layers:[]}
+      layergroup: {layers:[wadusLayer]}
     };
     var tpl_id;
     Step(
@@ -436,7 +446,7 @@ suite('template_maps', function() {
       max_user_templates: 2
     });
     assert.ok(tmap);
-    var tpl = { version:'0.0.1', auth: {}, layergroup: {layers:[]} };
+    var tpl = { version:'0.0.1', auth: {}, layergroup: {layers:[wadusLayer]} };
     var expectErr = false;
     var idMe = [];
     var idYou = [];

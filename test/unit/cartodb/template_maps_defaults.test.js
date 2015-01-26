@@ -17,7 +17,15 @@ suite('template_maps', function() {
         version:'0.0.1',
         name: templateName,
         layergroup: {
-            layers: []
+            layers: [
+                {
+                    options: {
+                        sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
+                        cartocss: '#layer { marker-fill:blue; }',
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
         }
     };
 
