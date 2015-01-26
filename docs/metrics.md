@@ -26,12 +26,11 @@ Again, each inner timer may have several inner timers.
 - **affectedTables**: time to check what are the affected tables for adding the cache channel, see *addCacheChannel*
 - **authorize**: time to authorize a request, see *authorizedByAPIKey*, *authorizedByCert*, *authorizedBySigner*
 - **authorizedByAPIKey**: time to authorize using an API KEY
-- **authorizedByCert**: time to authorize a request by a cert, see [signed map](https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps)
-- **authorizedBySigner**: time to authorize a request for a [signed map](https://github.com/CartoDB/Windshaft-cartodb/wiki/Signed-maps)
+- **authorizedByCert**: time to authorize a template instantiation
+- **authorizedBySigner**: time to authorize a request with auth_token
 - **findLastUpdated**: time to retrieve the last update time for a list of tables, see *affectedTables*
-- **fingerPrint**: time to create a fingerprint for a signed map
 - **generateCacheChannel**: time to generate the headers for the cache channel based on the request, see *addCacheChannel*
-- **getSignerMapKey**: time to retrieve from redis the authorized key for a signed map
+- **getSignerMapKey**: time to retrieve from redis the authorized user for a template map
 - **getTablePrivacy**: time to retrieve from redis the privacy of a table
 - **getTemplate**: time to retrieve from redis the template for a map
 - **getUserMapKey**: time to retrieve from redis the user key for a map
@@ -41,6 +40,5 @@ Again, each inner timer may have several inner timers.
 - **setDBAuth**: time to retrieve from redis and set db user and db password from a user
 - **setDBConn**: time to retrieve from redis and set db host and db name from a user
 - **setDBParams**: time to prepare all db params to be able to connect/query a database, see *setDBAuth* and *setDBConn*
-- **signMap**: time to sign in redis layergroup for a map, see signed maps
 - **tablePrivacy_getUserDBName**: time to retrieve from redis the database for a user
 

@@ -82,12 +82,16 @@ To get the `URL` to fetch the tiles you need to instantiate the map, where `temp
 curl -X POST 'http://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
 ```
 
-The response will return JSON with properties for the `layergroupid` and the timestamp (`last_updated`) of the last data modification. 
+The response will return JSON with properties for the `layergroupid`, `cdn_url`, and the timestamp (`last_updated`) of the last data modification. 
 
 Here is an example response:
 
 ```javascript
 {
+  "cdn_url": {
+    "http": "ashbu.cartocdn.com",
+    "https": "cartocdn-ashbu.global.ssl.fastly.net"
+  },
   "layergroupid": "c01a54877c62831bb51720263f91fb33:0",
   "last_updated": "1970-01-01T00:00:00.000Z"
 }
@@ -222,7 +226,7 @@ Which returns JSON with the attributes defined, like:
 { c: 1, d: 2 }
 ```
 
-Notice UTF Grid and attributes endpoints need an intenger parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. So in this case 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
+Notice UTF Grid and attributes endpoints need an integer parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. So in this case 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
 
 ### Create JSONP
 
@@ -237,10 +241,7 @@ GET /api/v1/map?callback=method
 
 #### Params
 
-- **auth_token** *(optional)*  
-  If the named map needs authorization.
-
-- **config**  
+- **config**
   Encoded JSON with the params for creating named maps (the variables defined in the template).
 
 - **lmza**  
@@ -253,13 +254,19 @@ GET /api/v1/map?callback=method
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
-curl http://...
+curl "https://documentation.cartodb.com/api/v1/map?callback=callback&config=%7B%22version%22%3A%221.0.1%22%2C%22layers%22%3A%5B%7B%22type%22%3A%22cartodb%22%2C%22options%22%3A%7B%22sql%22%3A%22select+%2A+from+european_countries_e%22%2C%22cartocss%22%3A%22%23european_countries_e%7B+polygon-fill%3A+%23FF6600%3B+%7D%22%2C%22cartocss_version%22%3A%222.3.0%22%2C%22interactivity%22%3A%5B%22cartodb_id%22%5D%7D%7D%5D%7D"
 ```
 
 <div class="code-title">RESPONSE</div>
 ```javascript
-{
-}
+callback({
+    layergroupid: "d9034c133262dfb90285cea26c5c7ad7:0",
+    cdn_url: {
+        "http": "http://cdb.com",
+        "https": "https://cdb.com"
+    },
+    last_updated: "1970-01-01T00:00:00.000Z"
+})
 ```
 
 ### Remove
@@ -279,7 +286,7 @@ The main two differences compared to anonymous maps are:
 - **templates**  
   Since the mapconfig is static it can contain some variables so the client can modify the map's appearance using those variables
 
-Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
+Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see [auth section](http://docs.cartodb.com/cartodb-platform/maps-api.html#auth)).
 
 ### Create
 
@@ -406,7 +413,7 @@ POST /api/v1/map/named/:template_name
 }
 ```
 
-The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400)
+The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400).
 
 - **auth_token** *optional* if the named map needs auth
 
@@ -540,8 +547,6 @@ If a template with the same name does NOT exist, a 400 HTTP response is generate
 }
 ```
 
-Updating a template map will also remove all signatures from previously initialized maps. 
-
 ### Delete 
 
 Delete the specified template map from the server and disables any previously initialized versions of the map.
@@ -611,7 +616,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 
 ### Getting a Specific Template
 
-This gets the definition of a template
+This gets the definition of a template.
 
 #### Definition
 
@@ -644,3 +649,26 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
   "error": "Some error string here"
 }
 ```
+
+### Use with CartoDB.js
+Named maps can be used with CartoDB.js by specifying a named map in a layer source as follows. Named maps are treated almost the same as other layer source types in most other ways.
+
+```js
+var layerSource = {
+  user_name: '{your_user_name}', 
+  type: 'namedmap', 
+  named_map: { 
+    name: '{template_name}', 
+	layers: [{ 
+	  layer_name: "layer1", 
+      interactivity: "column1, column2, ..." 
+	}] 
+  } 
+}
+
+cartodb.createLayer('map_dom_id',layerSource)
+  .addTo(map_object);
+
+```
+
+See [CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js.html) methods [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetparamskey-value) and [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetauthtokenauthtoken).
