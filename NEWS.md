@@ -1,5 +1,38 @@
-1.24.1 -- 2015-mm-dd
+1.25.0 -- 2015-01-26
 --------------------
+
+Announcements:
+ - No more signed maps (#227 and #238)
+    - Splits template maps endpoint into its own controller
+    - Removes TemplateMaps dependency on SignedMaps
+     - Token validation is done against the template
+     - Template is always extended with default values for auth and placeholders
+     - MapConfig is extended, in order to validate auth_tokens, with template info:
+        - template name
+        - template auth
+     - No more locks to create, update or delete templates
+        - Trusting in redis' hash semantics
+        - Some tradeoffs:
+            * A client having more templates than allowed by a race condition between limit (HLEN) check and creation (HSET)
+            * Updating a template could happen while deleting it, resulting in a new template
+            * Templates already instantiated will be accessible through their layergroup so it is possible to continue requesting tiles/grids/etc.
+     - Authorisation is now handled by template maps
+    - Template instantiation returns new instances with default values if they are missing
+
+
+New features:
+ - Basic layergroup validation on named map creation/update (#196)
+ - Add named maps surrogate keys and call invalidation on template modification/deletion (#247)
+    - Extends TemplateMaps backend with EventEmitter
+        - Emits for create, update and delete templates
+    - VarnishHttpCacheBackend will invalidate a varnish instance via HTTP PURGE method
+        - In the future there could be more backends, for instance to invalidate a CDN.
+    - NamedMapsEntry has the responibility to generate a cache key for a named map
+        - It probably should receive a template/named map instead of owner and template name
+    - SurrogateKeysCache is resposible to tag responses with a header
+        - It also is responsible for invalidations given an Invalidation Backend
+        - In the future it could have several backends so it can invalidates different caches
+    - SurrogateKeysCache is subscribed to TemplateMaps events to do the invalidations
 
 
 1.24.0 -- 2015-01-15
