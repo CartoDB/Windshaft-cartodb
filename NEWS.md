@@ -1,5 +1,8 @@
-1.25.1 -- 2015-mm-dd
+1.26.0 -- 2015-mm-dd
 --------------------
+
+Announcements:
+ - Upgrades windshaft to 0.35.0, supports mapconfig version `1.3.0`
 
 
 1.25.0 -- 2015-01-26
