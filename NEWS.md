@@ -41,9 +41,9 @@ New features:
         - Emits for create, update and delete templates
     - VarnishHttpCacheBackend will invalidate a varnish instance via HTTP PURGE method
         - In the future there could be more backends, for instance to invalidate a CDN.
-    - NamedMapsEntry has the responibility to generate a cache key for a named map
+    - NamedMapsEntry has the responsibility to generate a cache key for a named map
         - It probably should receive a template/named map instead of owner and template name
-    - SurrogateKeysCache is resposible to tag responses with a header
+    - SurrogateKeysCache is responsible to tag responses with a header
         - It also is responsible for invalidations given an Invalidation Backend
         - In the future it could have several backends so it can invalidates different caches
     - SurrogateKeysCache is subscribed to TemplateMaps events to do the invalidations
