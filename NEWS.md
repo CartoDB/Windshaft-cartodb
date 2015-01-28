@@ -1,3 +1,10 @@
+1.26.2 -- 2015-01-28
+--------------------
+
+Bugfixes:
+ - Accept 'open' string in templates' `auth` as authorized.
+
+
 1.26.1 -- 2015-01-28
 --------------------
 
