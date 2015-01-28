@@ -92,4 +92,14 @@ suite('template_maps_auth', function() {
         })
     });
 
+    test("auth as 'open' string is authorized", function(done) {
+        var template = {
+            name: 'wadus_template',
+            auth: 'open'
+        };
+
+        assert.ok(templateMaps.isAuthorized(template));
+        done();
+    });
+
 });
