@@ -1,6 +1,9 @@
 1.26.1 -- 2015-mm-dd
 --------------------
 
+Announcements:
+ - Upgrades windshaft to 0.35.1, see https://github.com/CartoDB/Windshaft/pull/254
+
 
 1.26.0 -- 2015-01-27
 --------------------

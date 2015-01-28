@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.26.1",
+  "version": "1.26.2",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -178,9 +178,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.35.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.35.0",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.35.0",
+      "version": "0.35.1",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/0.35.1",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.35.1",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
