@@ -1,3 +1,17 @@
+1.26.1 -- 2015-01-28
+--------------------
+
+Announcements:
+ - Upgrades windshaft to 0.35.1, see https://github.com/CartoDB/Windshaft/pull/254
+
+
+1.26.0 -- 2015-01-27
+--------------------
+
+Announcements:
+ - Upgrades windshaft to 0.35.0, supports mapconfig version `1.3.0`
+
+
 1.25.0 -- 2015-01-26
 --------------------
 
@@ -27,9 +41,9 @@ New features:
         - Emits for create, update and delete templates
     - VarnishHttpCacheBackend will invalidate a varnish instance via HTTP PURGE method
         - In the future there could be more backends, for instance to invalidate a CDN.
-    - NamedMapsEntry has the responibility to generate a cache key for a named map
+    - NamedMapsEntry has the responsibility to generate a cache key for a named map
         - It probably should receive a template/named map instead of owner and template name
-    - SurrogateKeysCache is resposible to tag responses with a header
+    - SurrogateKeysCache is responsible to tag responses with a header
         - It also is responsible for invalidations given an Invalidation Backend
         - In the future it could have several backends so it can invalidates different caches
     - SurrogateKeysCache is subscribed to TemplateMaps events to do the invalidations
