@@ -2,7 +2,7 @@
 --------------------
 
 Bugfixes:
- - Accept 'open' string in templated `auth` as authorized.
+ - Accept 'open' string in templates' `auth` as authorized.
 
 
 1.26.1 -- 2015-01-28
