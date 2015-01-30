@@ -108,7 +108,7 @@ suite('mapconfig_named_layers_adapter', function() {
         }
     };
 
-    var nestedNamedMapTemplateName = 'auth_valid_template';
+    var nestedNamedMapTemplateName = 'nested_template';
     var nestedNamedMapTemplate = {
         version: '0.0.1',
         name: nestedNamedMapTemplateName,
@@ -140,28 +140,6 @@ suite('mapconfig_named_layers_adapter', function() {
     });
 
     test('should fail for named map layer with missing name', function(done) {
-
-
-        assert.response(server,
-            healthCheckRequest,
-            {
-                status: 200
-            },
-            function (res, err) {
-                assert.ok(!err);
-
-                var parsed = JSON.parse(res.body);
-
-                assert.ok(parsed.enabled);
-                assert.ok(parsed.ok);
-
-                done();
-            }
-        );
-
-
-
-
         var missingNamedMapLayerConfig = makeNamedMapLayerConfig({
             config: {}
         });
