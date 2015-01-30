@@ -17,8 +17,10 @@ config/environments/test.js: config.status--test
 
 check-local: config/environments/test.js
 	./run_tests.sh ${RUNTESTFLAGS} \
-    test/unit/cartodb/*.js \
-    test/acceptance/*.js 
+	test/unit/cartodb/*.js \
+	test/unit/cartodb/cache/model/*.js \
+	test/acceptance/*.js \
+	test/acceptance/cache/*.js
 
 check-submodules:
 	PATH="$$PATH:$(srcdir)/node_modules/.bin/"; \

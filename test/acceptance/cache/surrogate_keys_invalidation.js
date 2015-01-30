@@ -16,9 +16,13 @@ var serverOptions = ServerOptions();
 
 suite('templates surrogate keys', function() {
 
-    var redisClient,
-        sqlApiServer,
-        server;
+    var sqlApiServer;
+    var redisClient = redis.createClient(global.environment.redis.port);
+
+    // Enable Varnish purge for tests
+    serverOptions.varnish_purge_enabled = true;
+
+    var server = new CartodbWindshaft(serverOptions);
 
     var templateOwner = 'localhost',
         templateName = 'acceptance',
@@ -45,19 +49,12 @@ suite('templates surrogate keys', function() {
         expectedBody = { template_id: expectedTemplateId };
 
     suiteSetup(function(done) {
-        // Enable Varnish purge for tests
-        serverOptions.varnish_purge_enabled = true;
-
-        server = new CartodbWindshaft(serverOptions);
-
         sqlApiServer = new SqlApiEmulator(global.environment.sqlapi.port, done);
-
-        redisClient = redis.createClient(global.environment.redis.port);
     });
 
     var surrogateKeysCacheInvalidateFn = SurrogateKeysCache.prototype.invalidate;
 
-    beforeEach(function(done) {
+    function createTemplate(callback) {
         var postTemplateRequest = {
             url: '/tiles/template?api_key=1234',
             method: 'POST',
@@ -90,10 +87,10 @@ suite('templates surrogate keys', function() {
                 return true;
             },
             function finish(err) {
-                done(err);
+                callback(err);
             }
         );
-    });
+    }
 
     test("update template calls surrogate keys invalidation", function(done) {
         var cacheEntryKey;
@@ -104,7 +101,13 @@ suite('templates surrogate keys', function() {
         };
 
         Step(
-            function putValidTemplate() {
+            function createTemplateToUpdate() {
+                createTemplate(this);
+            },
+            function putValidTemplate(err) {
+                if (err) {
+                    throw err;
+                }
                 var updateTemplateRequest = {
                     url: '/tiles/template/' + expectedTemplateId + '/?api_key=1234',
                     method: 'PUT',
@@ -163,7 +166,13 @@ suite('templates surrogate keys', function() {
         };
 
         Step(
-            function putValidTemplate() {
+            function createTemplateToDelete() {
+                createTemplate(this);
+            },
+            function deleteValidTemplate(err) {
+                if (err) {
+                    throw err;
+                }
                 var deleteTemplateRequest = {
                     url: '/tiles/template/' + expectedTemplateId + '/?api_key=1234',
                     method: 'DELETE',
@@ -199,12 +208,10 @@ suite('templates surrogate keys', function() {
         );
     });
 
-    afterEach(function(done) {
-        SurrogateKeysCache.prototype.invalidate = surrogateKeysCacheInvalidateFn;
-        done();
-    });
-
     suiteTeardown(function(done) {
+        SurrogateKeysCache.prototype.invalidate = surrogateKeysCacheInvalidateFn;
+        // Enable Varnish purge for tests
+        serverOptions.varnish_purge_enabled = false;
         sqlApiServer.close(done);
     });
 
