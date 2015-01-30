@@ -178,9 +178,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.35.1",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.35.1",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.35.1",
+      "version": "0.35.2",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/before-layergroup-step",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/before-layergroup-step",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
