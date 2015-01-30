@@ -19,6 +19,7 @@ check-local: config/environments/test.js
 	./run_tests.sh ${RUNTESTFLAGS} \
 	test/unit/cartodb/*.js \
 	test/unit/cartodb/cache/model/*.js \
+	test/integration/*.js \
 	test/acceptance/*.js \
 	test/acceptance/cache/*.js
 
