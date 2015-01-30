@@ -113,6 +113,11 @@
       "from": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0",
       "resolved": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0"
     },
+    "queue-async": {
+      "version": "1.0.7",
+      "from": "queue-async@~1.0.7",
+      "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
+    },
     "redis-mpool": {
       "version": "0.3.0",
       "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
@@ -186,11 +191,6 @@
           "version": "0.1.0",
           "from": "chronograph@git://github.com/CartoDB/chronographjs.git#0.1.0",
           "resolved": "git://github.com/CartoDB/chronographjs.git#0b8c35eee510cfa14a16be24d70533b38ecc1d2d"
-        },
-        "queue-async": {
-          "version": "1.0.7",
-          "from": "queue-async@~1.0.7",
-          "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
         },
         "grainstore": {
           "version": "0.22.1",
