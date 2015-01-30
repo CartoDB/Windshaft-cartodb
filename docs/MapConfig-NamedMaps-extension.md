@@ -46,7 +46,9 @@ This extension introduces a new layer type so it's possible to use a named map b
 
 ## 2.2 Limitations
 
-A `named` map will not allow to have `named` type layers inside their templates layergroup's layers definition.
+1. A Named Map will not allow to have `named` type layers inside their templates layergroup's layers definition.
+2. A `named` layer does not allow Named Maps form other accounts, it's only possible to use Named Maps from the very
+same user account.
 
 
 # History
