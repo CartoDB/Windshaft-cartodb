@@ -408,6 +408,7 @@ suite('template_maps', function() {
                     throw err;
                 }
 
+                var next = this;
                 assert.response(server,
                     {
                         url: '/tiles/layergroup/' + layergroupId + '/0/0/0.png',
