@@ -10,12 +10,11 @@ var SQLAPIEmulator = require('../support/SQLAPIEmu.js');
 
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/template_maps.js');
-var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig_named_layers_adapter');
 
 var Step = require('step');
 var _ = require('underscore');
 
-suite('template_maps', function() {
+suite('named_layers', function() {
     var sqlapiServer;
 
     // configure redis pool instance to use in tests
