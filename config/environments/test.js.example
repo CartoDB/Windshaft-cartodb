@@ -87,7 +87,9 @@ var config = {
           timeout: 2000, // the timeout in ms for a http tile request
           proxy: undefined, // the url for a proxy server
           whitelist: [ // the whitelist of urlTemplates that can be used
-              'http://{s}.example.com/{z}/{x}/{y}.png'
+              'http://{s}.example.com/{z}/{x}/{y}.png',
+              // for testing purposes
+              'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'
           ]
       }
     }
