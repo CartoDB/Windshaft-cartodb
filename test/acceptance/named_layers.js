@@ -109,7 +109,12 @@ suite('named_layers', function() {
                 if (err) {
                     return done(err);
                 }
-                sqlapiServer = new SQLAPIEmulator(global.environment.sqlapi.port, done);
+                templateMaps.addTemplate(username, template, function(err) {
+                    if (err) {
+                        return done(err);
+                    }
+                    sqlapiServer = new SQLAPIEmulator(global.environment.sqlapi.port, done);
+                });
             });
         });
     });
@@ -442,6 +447,66 @@ suite('named_layers', function() {
 
     });
 
+    test('should return 403 when private table is accessed from non named layer', function(done) {
+
+        var layergroup =  {
+            version: '1.3.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                        sql: 'select * from test_table_private_1',
+                        cartocss: '#layer { marker-fill: #cc3300; }',
+                        cartocss_version: '2.3.0'
+                    }
+                },
+                {
+                    type: 'named',
+                    options: {
+                        name: templateName
+                    }
+                }
+            ]
+        };
+
+        Step(
+            function createLayergroup() {
+                var next = this;
+                assert.response(server,
+                    {
+                        url: '/tiles/layergroup',
+                        method: 'POST',
+                        headers: {
+                            host: 'localhost',
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(layergroup)
+                    },
+                    {
+                        status: 403
+                    },
+                    function(res, err) {
+                        next(err, res);
+                    }
+                );
+            },
+            function checkLayergroup(err, response) {
+                if (err) {
+                    throw err;
+                }
+
+                var parsedBody = JSON.parse(response.body);
+                assert.ok(parsedBody.errors[0].match(/permission denied for relation test_table_private_1/));
+
+                return null;
+            },
+            function finish(err) {
+                done(err);
+            }
+        );
+
+    });
+
 
     suiteTeardown(function(done) {
         templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
@@ -452,7 +517,12 @@ suite('named_layers', function() {
                 if (err) {
                     return done(err);
                 }
-                sqlapiServer.close(done);
+                templateMaps.delTemplate(username, templateName, function(err) {
+                    if (err) {
+                        return done(err);
+                    }
+                    sqlapiServer.close(done);
+                });
             });
         });
     });

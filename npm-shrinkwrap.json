@@ -97,7 +97,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1"
+              "from": "inherits@2"
             }
           }
         }
@@ -184,8 +184,8 @@
     },
     "windshaft": {
       "version": "0.35.2",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/before-layergroup-step",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/before-layergroup-step",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/mapconfig-per-layer-datasource",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/mapconfig-per-layer-datasource",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -193,9 +193,9 @@
           "resolved": "git://github.com/CartoDB/chronographjs.git#0b8c35eee510cfa14a16be24d70533b38ecc1d2d"
         },
         "grainstore": {
-          "version": "0.22.1",
-          "from": "https://github.com/CartoDB/grainstore/tarball/0.22.1",
-          "resolved": "https://github.com/CartoDB/grainstore/tarball/0.22.1",
+          "version": "0.22.2",
+          "from": "https://github.com/CartoDB/grainstore/tarball/datasource-extend",
+          "resolved": "https://github.com/CartoDB/grainstore/tarball/datasource-extend",
           "dependencies": {
             "carto": {
               "version": "0.9.5-cdb2",
