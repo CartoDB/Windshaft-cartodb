@@ -5,9 +5,6 @@ var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 
-var SQLAPIEmulator = require('../support/SQLAPIEmu.js');
-
-
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/template_maps.js');
 
@@ -15,8 +12,6 @@ var Step = require('step');
 var _ = require('underscore');
 
 suite('named_layers', function() {
-    var sqlapiServer;
-
     // configure redis pool instance to use in tests
     var redisPool = RedisPool(global.environment.redis);
 
@@ -101,6 +96,7 @@ suite('named_layers', function() {
     };
 
     suiteSetup(function(done) {
+        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: true};
         templateMaps.addTemplate(username, nestedNamedMapTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -110,10 +106,7 @@ suite('named_layers', function() {
                     return done(err);
                 }
                 templateMaps.addTemplate(username, template, function(err) {
-                    if (err) {
-                        return done(err);
-                    }
-                    sqlapiServer = new SQLAPIEmulator(global.environment.sqlapi.port, done);
+                    return done(err);
                 });
             });
         });
@@ -509,6 +502,7 @@ suite('named_layers', function() {
 
 
     suiteTeardown(function(done) {
+        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
         templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
             if (err) {
                 return done(err);
@@ -518,10 +512,7 @@ suite('named_layers', function() {
                     return done(err);
                 }
                 templateMaps.delTemplate(username, templateName, function(err) {
-                    if (err) {
-                        return done(err);
-                    }
-                    sqlapiServer.close(done);
+                    return done(err);
                 });
             });
         });
