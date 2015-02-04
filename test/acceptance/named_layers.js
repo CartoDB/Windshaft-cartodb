@@ -422,9 +422,16 @@ suite('named_layers', function() {
                         }
                     },
                     function(res, err) {
-                        next(err);
+                        next(err, res);
                     }
                 );
+            },
+            function handleTileResponse(err, res) {
+                if (err) {
+                    throw err;
+                }
+                //assert.ok(res.headers['X-Cache-Channel']); -> https://github.com/CartoDB/Windshaft-cartodb/issues/253
+                return true;
             },
             function deleteTemplate(err) {
                 var next = this;
