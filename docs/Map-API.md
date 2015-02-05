@@ -646,6 +646,32 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 }
 ```
 
+### Use with CartoDB.js
+Named maps can be used with CartoDB.js by specifying a named map in a layer source as follows. Named maps are treated almost the same as other layer source types in most other ways.
+
+```js
+var layerSource = {
+  user_name: '{your_user_name}', 
+  type: 'namedmap', 
+  named_map: { 
+    name: '{template_name}', 
+	layers: [{ 
+	  layer_name: "layer1", 
+      interactivity: "column1, column2, ..." 
+	}] 
+  } 
+}
+
+cartodb.createLayer('map_dom_id',layerSource)
+  .addTo(map_object);
+
+```
+
+[CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js.html) has methods for accessing your named maps.
+
+1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript 
+2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
+
 ##Static Maps API
 
 The Static Maps API can be initiated using both named and anonymous maps using the 'layergroupid' token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
