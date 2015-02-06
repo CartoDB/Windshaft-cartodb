@@ -1368,6 +1368,50 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
     });
 
 
+    test("it's not possible to override authorization with a crafted layergroup", function(done) {
+
+        var layergroup =  {
+            version: '1.0.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select * from test_table_private_1',
+                        cartocss: '#layer { marker-fill:red; }',
+                        cartocss_version: '2.3.0',
+                        interactivity: 'cartodb_id'
+                    }
+                }
+            ],
+            template: {
+                auth: {
+                    method: "open"
+                },
+                name: "open"
+            }
+        };
+
+        assert.response(
+            server,
+            {
+                url: '/api/v1/map?signer=localhost',
+                method: 'POST',
+                headers: {
+                    host: 'localhost',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(layergroup)
+            },
+            {
+                status: 403
+            },
+            function(res, err) {
+                assert.ok(res.body.match(/permission denied for relation test_table_private_1/));
+                done();
+            }
+        );
+    });
+
+
     suiteTeardown(function(done) {
 
         // This test will add map_style records, like
