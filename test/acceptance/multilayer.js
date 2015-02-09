@@ -24,8 +24,6 @@ server.setMaxListeners(0);
 
 [true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
 
-global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue};
-
 suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
@@ -38,6 +36,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
     var test_database = test_user + '_db';
 
     suiteSetup(function(done){
+      global.environment.enabledFeatures = { cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue };
       sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
 

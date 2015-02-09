@@ -20,10 +20,7 @@ server.setMaxListeners(0);
 
 [true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
 
-global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue};
-
-suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
-
+suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
@@ -47,8 +44,9 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
     // A couple of styles to use during testing
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
-    
+
     suiteSetup(function(done){
+      global.environment.enabledFeatures = { cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue };
       sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
 
