@@ -1150,10 +1150,12 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             assert(cc, 'Missing X-Cache-Channel');
             var dbname = test_database;
             assert.equal(cc.substring(0, dbname.length), dbname);
-            var jsonquery = cc.substring(dbname.length+1);
-            var sentquery = JSON.parse(jsonquery);
-            assert.equal(sentquery.api_key, qo.map_key);
-            assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$' + qo.sql + '$windshaft$)');
+            if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
+                var jsonquery = cc.substring(dbname.length + 1);
+                var sentquery = JSON.parse(jsonquery);
+                assert.equal(sentquery.api_key, qo.map_key);
+                assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$' + qo.sql + '$windshaft$)');
+            }
             return null;
           },
           function finish(err) {
@@ -1162,6 +1164,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
         );
     });
 
+    if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was a post if it's using the SQL API
     test("passes hostname header to sqlapi", function(done){
         var qo = {
           sql: "SELECT * from gadm4",
@@ -1193,7 +1196,9 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
           }
         );
     });
+    }
 
+    if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
     test("requests to skip cache on sqlapi error", function(done){
         var qo = {
           sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator "
@@ -1226,6 +1231,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
           }
         );
     });
+    }
 
     // Zoom is a special variable
     test("Specifying zoom level in CartoCSS does not need a 'zoom' variable in SQL output", function(done){

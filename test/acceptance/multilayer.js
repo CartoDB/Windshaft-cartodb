@@ -111,15 +111,17 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               assert.ok(cc); 
               var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
-              var jsonquery = cc.substring(dbname.length+1);
-              var sentquery = JSON.parse(jsonquery);
-              var expectedQuery = [layergroup.layers[0].options.sql, ';', layergroup.layers[1].options.sql].join('');
-              assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
-                + expectedQuery
-                + '$windshaft$) as tablenames )'
-                + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
-                + ' FROM CDB_TableMetadata m'
-                + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
+              if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
+                  var jsonquery = cc.substring(dbname.length + 1);
+                  var sentquery = JSON.parse(jsonquery);
+                  var expectedQuery = [layergroup.layers[0].options.sql, ';', layergroup.layers[1].options.sql].join('');
+                  assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
+                      + expectedQuery
+                      + '$windshaft$) as tablenames )'
+                      + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
+                      + ' FROM CDB_TableMetadata m'
+                      + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
+              }
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png', IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL,
                 function(err, similarity) {
@@ -336,7 +338,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         layers: [
            { options: {
                sql: 'select 1 as cartodb_id, '
-                  + 'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
+                  + 'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator from test_table limit 1',
                cartocss: '#layer { polygon-fill:red; }', 
                cartocss_version: '2.0.1',
                interactivity: 'cartodb_id'
@@ -387,21 +389,23 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
 
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
-              assert.ok(cc); 
+              assert.ok(cc);
               var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
-              var jsonquery = cc.substring(dbname.length+1);
-              var sentquery = JSON.parse(jsonquery);
-              var expectedQuery = layergroup.layers[0].options.sql
-                  .replace(/!bbox!/g, 'ST_MakeEnvelope(0,0,0,0)')
-                  .replace(/!pixel_width!/g, '1')
-                  .replace(/!pixel_height!/g, '1');
-              assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
-                  + expectedQuery
-                  + '$windshaft$) as tablenames )'
-                  + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
-                  + ' FROM CDB_TableMetadata m'
-                  + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
+              if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
+                  var jsonquery = cc.substring(dbname.length + 1);
+                  var sentquery = JSON.parse(jsonquery);
+                  var expectedQuery = layergroup.layers[0].options.sql
+                      .replace(/!bbox!/g, 'ST_MakeEnvelope(0,0,0,0)')
+                      .replace(/!pixel_width!/g, '1')
+                      .replace(/!pixel_height!/g, '1');
+                  assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
+                      + expectedQuery
+                      + '$windshaft$) as tablenames )'
+                      + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
+                      + ' FROM CDB_TableMetadata m'
+                      + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
+              }
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err, similarity) {
@@ -427,18 +431,20 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               assert.ok(cc); 
               var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
-              var jsonquery = cc.substring(dbname.length+1);
-              var sentquery = JSON.parse(jsonquery);
-              var expectedQuery = layergroup.layers[0].options.sql
-                  .replace('!bbox!', 'ST_MakeEnvelope(0,0,0,0)')
-                  .replace('!pixel_width!', '1')
-                  .replace('!pixel_height!', '1');
-              assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
-                  + expectedQuery
-                  + '$windshaft$) as tablenames )'
-                  + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
-                  + ' FROM CDB_TableMetadata m'
-                  + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
+              if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
+                  var jsonquery = cc.substring(dbname.length + 1);
+                  var sentquery = JSON.parse(jsonquery);
+                  var expectedQuery = layergroup.layers[0].options.sql
+                      .replace('!bbox!', 'ST_MakeEnvelope(0,0,0,0)')
+                      .replace('!pixel_width!', '1')
+                      .replace('!pixel_height!', '1');
+                  assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$'
+                      + expectedQuery
+                      + '$windshaft$) as tablenames )'
+                      + ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max'
+                      + ' FROM CDB_TableMetadata m'
+                      + ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
+              }
 
               assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err, similarity) {
@@ -1217,8 +1223,10 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           var parsedBody = JSON.parse(res.body);
           var token_components = parsedBody.layergroupid.split(':');
           expected_token = token_components[0];
-          var last_request = sqlapi_server.getLastRequest();
-          assert.equal(last_request.method, 'POST');
+          if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
+              var last_request = sqlapi_server.getLastRequest();
+              assert.equal(last_request.method, 'POST');
+          }
           return null;
         },
         function cleanup(err) {
@@ -1282,6 +1290,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
       );
     });
 
+    if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/167
     test("lack of response from sql-api will result in a timeout", function(done) {
 
@@ -1322,6 +1331,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         }
       );
     });
+    }
 
     var layergroupTtlRequest = {
         url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify({
