@@ -184,8 +184,8 @@
     },
     "windshaft": {
       "version": "0.35.2",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/plain-renderer-plus-http-default-plus-per-layer-datasource",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/plain-renderer-plus-http-default-plus-per-layer-datasource",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/master",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/master",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",

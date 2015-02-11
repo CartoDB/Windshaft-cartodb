@@ -25,7 +25,7 @@
         "node-varnish": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0",
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
-        "windshaft": "https://github.com/CartoDB/Windshaft/tarball/plain-renderer-plus-http-default-plus-per-layer-datasource",
+        "windshaft": "https://github.com/CartoDB/Windshaft/tarball/master",
         "step": "~0.0.5",
         "queue-async": "~1.0.7",
         "request": "~2.9.203",
