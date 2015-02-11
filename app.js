@@ -105,16 +105,6 @@ ws.on('listening', function() {
               + " (" + ENV + ")");
 });
 
-// DEPRECATED, use SIGUSR2
-process.on('SIGUSR1', function() {
-  console.log('WARNING: handling of SIGUSR1 by Windshaft-CartoDB is deprecated, please send SIGUSR2 instead');
-  ws.dumpCacheStats();
-});
-
-process.on('SIGUSR2', function() {
-  ws.dumpCacheStats();
-});
-
 process.on('SIGHUP', function() {
     global.log4js.clearAndShutdownAppenders(function() {
         global.log4js.configure(log4js_config);
