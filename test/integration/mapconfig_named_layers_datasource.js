@@ -3,7 +3,7 @@ var test_helper = require('../support/test_helper');
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/template_maps.js');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
+var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
 var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig_named_layers_adapter');
 
 var Step = require('step');
@@ -11,6 +11,7 @@ var _ = require('underscore');
 
 // configure redis pool instance to use in tests
 var redisPool = RedisPool(global.environment.redis);
+var pgConnection = new PgConnection(require('cartodb-redis')({ pool: redisPool }));
 
 var templateMaps = new TemplateMaps(redisPool, {
     max_user_templates: global.environment.maxUserTemplates
@@ -280,7 +281,7 @@ suite('named_layers datasources', function() {
 
     testScenarios.forEach(function(testScenario) {
         test('should return a list of layers ' + testScenario.desc, function(done) {
-            mapConfigNamedLayersAdapter.getLayers(username, testScenario.config.layers, serverOptions, function(err, layers, datasource) {
+            mapConfigNamedLayersAdapter.getLayers(username, testScenario.config.layers, pgConnection, function(err, layers, datasource) {
                 testScenario.test(err, layers, datasource, done);
             });
         });
