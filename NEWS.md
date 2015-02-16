@@ -1,6 +1,10 @@
 1.27.1 -- 2015-mm-dd
 --------------------
 
+New features:
+ - QueryTablesApi will always use an authenticated query to retrieve last update, this allows to query affected private
+ tables last update (#253)
+
 
 1.27.0 -- 2015-02-16
 --------------------

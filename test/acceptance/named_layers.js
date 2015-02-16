@@ -430,7 +430,7 @@ suite('named_layers', function() {
                 if (err) {
                     throw err;
                 }
-                //assert.ok(res.headers['X-Cache-Channel']); -> https://github.com/CartoDB/Windshaft-cartodb/issues/253
+                test_helper.checkCache(res);
                 return true;
             },
             function deleteTemplate(err) {
