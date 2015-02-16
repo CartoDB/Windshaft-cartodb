@@ -1,4 +1,8 @@
-1.27.0 -- 2015-mm-dd
+1.27.1 -- 2015-mm-dd
+--------------------
+
+
+1.27.0 -- 2015-02-16
 --------------------
 
 Announcements:
@@ -10,6 +14,7 @@ New features:
 
 Bugfixes:
 - Fixes tests with beforeEach and afterEach triggers
+
 
 1.26.2 -- 2015-01-28
 --------------------
