@@ -1,6 +1,9 @@
 1.27.1 -- 2015-mm-dd
 --------------------
 
+Announcements:
+- Upgrades windshaft to [0.37.0](https://github.com/CartoDB/Windshaft/releases/tag/0.37.0)
+
 New features:
  - QueryTablesApi will always use an authenticated query to retrieve last update, this allows to query affected private
  tables last update (#253)
