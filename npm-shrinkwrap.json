@@ -4,7 +4,7 @@
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
-      "from": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
+      "from": "cartodb-psql@~0.4.0",
       "resolved": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
       "dependencies": {
         "pg": {
@@ -27,7 +27,7 @@
     },
     "cartodb-redis": {
       "version": "0.11.0",
-      "from": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0",
+      "from": "cartodb-redis@~0.11.0",
       "resolved": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0",
       "dependencies": {
         "redis-mpool": {
@@ -120,7 +120,7 @@
     },
     "redis-mpool": {
       "version": "0.3.0",
-      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
+      "from": "redis-mpool@~0.3.0",
       "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
       "dependencies": {
         "generic-pool": {
