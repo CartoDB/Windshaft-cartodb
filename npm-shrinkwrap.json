@@ -183,9 +183,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.35.2",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/master",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/master",
+      "version": "0.36.0",
+      "from": "windshaft@~0.36.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -1636,9 +1635,9 @@
               "resolved": "https://registry.npmjs.org/connect/-/connect-1.9.2.tgz",
               "dependencies": {
                 "formidable": {
-                  "version": "1.0.16",
+                  "version": "1.0.17",
                   "from": "formidable@1.0.x",
-                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.16.tgz"
+                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.17.tgz"
                 }
               }
             },
