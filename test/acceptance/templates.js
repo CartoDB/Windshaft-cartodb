@@ -1923,6 +1923,182 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
       );
     });
 
+
+    test("can use an http layer", function(done) {
+
+        var username = 'localhost';
+
+        var httpTemplateName = 'acceptance_http';
+        var httpTemplate =  {
+            version: '0.0.1',
+            name: httpTemplateName,
+            layergroup:  {
+                version: '1.3.0',
+                layers: [
+                    {
+                        type: "http",
+                        options: {
+                            urlTemplate: "http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+                            subdomains: [
+                                "a",
+                                "b",
+                                "c"
+                            ]
+                        }
+                    },
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: "select * from test_table_private_1",
+                            cartocss: '#layer { marker-fill:blue; }',
+                            cartocss_version: '2.0.2',
+                            interactivity: 'cartodb_id'
+                        }
+                    }
+                ]
+            }
+        };
+
+        var template_params = {};
+
+        var errors = [];
+        var expectedTemplateId = username + '@' + httpTemplateName;
+        var layergroupid;
+        Step(
+            function createTemplate()
+            {
+                var next = this;
+                assert.response(
+                    server,
+                    {
+                        url: '/tiles/template?api_key=1234',
+                        method: 'POST',
+                        headers: {
+                            host: username,
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(httpTemplate)
+                    },
+                    {
+                        status: 200
+                    },
+                    function(res, err) {
+                        next(err, res);
+                    }
+                );
+            },
+            function instantiateTemplate(err, res) {
+                if (err) {
+                    throw err;
+                }
+                assert.deepEqual(JSON.parse(res.body), { template_id: expectedTemplateId });
+                var next = this;
+                assert.response(
+                    server,
+                    {
+                        url: '/tiles/template/' + expectedTemplateId,
+                        method: 'POST',
+                        headers: {
+                            host: username,
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(template_params)
+                    },
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        next(null, res);
+                    }
+                );
+            },
+            function fetchTile(err, res) {
+                if (err) {
+                    throw err;
+                }
+
+                var parsed = JSON.parse(res.body);
+                assert.ok(parsed.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from response body: " + res.body);
+                layergroupid = parsed.layergroupid;
+
+                var next = this;
+                assert.response(
+                    server,
+                    {
+                        url: '/tiles/layergroup/' + layergroupid + '/all/0/0/0.png',
+                        method: 'GET',
+                        headers: {
+                            host: username
+                        },
+                        encoding: 'binary'
+                    },
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        next(null, res);
+                    }
+                );
+            },
+            function checkTile(err, res) {
+                if (err) {
+                    throw err;
+                }
+                assert.equal(res.headers['content-type'], "image/png");
+                return null;
+            },
+            function deleteTemplate(err) {
+                if (err) {
+                    throw err;
+                }
+                var next = this;
+                assert.response(
+                    server,
+                    {
+                        url: '/tiles/template/' + expectedTemplateId + '?api_key=1234',
+                        method: 'DELETE',
+                        headers: {
+                            host: username
+                        }
+                    },
+                    {
+                        status: 204
+                    },
+                    function(res, err) {
+                        next(err, res);
+                    }
+                );
+            },
+            function finish(err) {
+                if (err) {
+                    errors.push(err);
+                }
+                redis_client.keys("map_*|localhost", function(err, keys) {
+                    if ( err ) errors.push(err.message);
+                    var todrop = _.map(keys, function(m) {
+                        if ( m.match(/^map_(tpl|crt)|/) )
+                            return m;
+                    });
+                    if ( todrop.length ) {
+                        errors.push(new Error("Unexpected keys in redis: " + todrop));
+                        redis_client.del(todrop, function(err) {
+                            if ( err ) errors.push(err.message);
+                            if ( errors.length ) {
+                                done(new Error(errors));
+                            }
+                            else done(null);
+                        });
+                    } else {
+                        if ( errors.length ) {
+                            done(new Error(errors));
+                        }
+                        else done(null);
+                    }
+                });
+            }
+        );
+    });
+
     suiteTeardown(function(done) {
 
         // This test will add map_style records, like

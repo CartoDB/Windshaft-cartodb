@@ -1,3 +1,17 @@
+1.27.0 -- 2015-02-16
+--------------------
+
+Announcements:
+- Adds default image placeholder for http renderer to use as fallback
+
+New features:
+- `named` layers type, see [MapConfig-NamedMaps-extension](docs/MapConfig-NamedMaps-extension.md)
+  - Starts using datasource per layer feature from Windshaft ([2c7bc6a](https://github.com/CartoDB/Windshaft-cartodb/commit/2c7bc6adde561b20ed955b905e3c7bcd6795d128))
+
+Bugfixes:
+- Fixes tests with beforeEach and afterEach triggers
+
+
 1.26.2 -- 2015-01-28
 --------------------
 

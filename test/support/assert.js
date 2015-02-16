@@ -246,9 +246,10 @@ assert.response = function(server, req, res, msg){
                     assert.equal(
                         response.statusCode,
                         status,
-                        msg + 'Invalid response status code.\n'
+                        msg + colorize('Invalid response status code.\n'
                             + '    Expected: [green]{' + status + '}\n'
-                            + '    Got: [red]{' + response.statusCode + '}'
+                            + '    Got: [red]{' + response.statusCode + '}\n'
+                            + '    Response body: ' + response.body)
                     );
                 }
 
@@ -280,3 +281,16 @@ assert.response = function(server, req, res, msg){
       }
 };
 
+/**
+ * Colorize the given string using ansi-escape sequences.
+ * Disabled when --boring is set.
+ *
+ * @param {String} str
+ * @return {String}
+ */
+function colorize(str) {
+    var colors = { bold: 1, red: 31, green: 32, yellow: 33 };
+    return str.replace(/\[(\w+)\]\{([^]*?)\}/g, function(_, color, str) {
+        return '\x1B[' + colors[color] + 'm' + str + '\x1B[0m';
+    });
+}

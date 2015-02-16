@@ -1,14 +1,14 @@
 ## Maps API
 
-The CartoDB Maps API allows you to generate maps based on data hosted in your CartoDB account, and you can apply custom SQL and CartoCSS to the data. The API generates a XYZ-based URL to fetch Web Mercator projected tiles using web clients such as [Leaflet](http://leafletjs.com), [Google Maps](https://developers.google.com/maps/), or [OpenLayers](http://openlayers.org/).
+The CartoDB Maps API allows you to generate maps based on data hosted in your CartoDB account and you can apply custom SQL and CartoCSS to the data. The API generates a XYZ-based URL to fetch Web Mercator projected tiles using web clients such as [Leaflet](http://leafletjs.com), [Google Maps](https://developers.google.com/maps/), or [OpenLayers](http://openlayers.org/).
 
 You can create two types of maps with the Maps API:
 
 - **Anonymous maps**  
-  Maps that can be created using your CartoDB public data. Any client can change the read-only SQL and CartoCSS parameters that generate the map tiles. These maps can be created from a JavaScript application alone and no authenticated calls are needed. See [this CartoDB.js example]({{ '/cartodb-platform/cartodb-js.html' | prepend: site.baseurl }}).
+  You can create maps using your CartoDB public data. Any client can change the read-only SQL and CartoCSS parameters that generate the map tiles. These maps can be created from a JavaScript application alone and no authenticated calls are needed. See [this CartoDB.js example]({{ '/cartodb-platform/cartodb-js.html' | prepend: site.baseurl }}).
 
 - **Named maps**  
-  Maps that have access to your private data. These maps require an owner to setup and modify any SQL and CartoCSS parameters and are not modifiable without new setup calls. 
+  There are also maps that have access to your private data. These maps require an owner to setup and modify any SQL and CartoCSS parameters and are not modifiable without new setup calls. 
 
 ## Quickstart
 
@@ -82,16 +82,12 @@ To get the `URL` to fetch the tiles you need to instantiate the map, where `temp
 curl -X POST 'http://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
 ```
 
-The response will return JSON with properties for the `layergroupid`, `cdn_url`, and the timestamp (`last_updated`) of the last data modification. 
+The response will return JSON with properties for the `layergroupid` and the timestamp (`last_updated`) of the last data modification. 
 
 Here is an example response:
 
 ```javascript
 {
-  "cdn_url": {
-    "http": "ashbu.cartocdn.com",
-    "https": "cartocdn-ashbu.global.ssl.fastly.net"
-  },
   "layergroupid": "c01a54877c62831bb51720263f91fb33:0",
   "last_updated": "1970-01-01T00:00:00.000Z"
 }
@@ -109,7 +105,7 @@ The following concepts are the same for every endpoint in the API except when it
 
 ### Auth
 
-By default, users do not have access to private tables in CartoDB. In order to instantiate a map from private table data, an API Key is required. Additionally, to include some endpoints, an API Key must be included (e.g. creating a named map).
+By default, users do not have access to private tables in CartoDB. In order to instantiate a map from private table data an API Key is required. Additionally, to include some endpoints, an API Key must be included (e.g. creating a named map).
 
 To execute an authorized request, api_key=YOURAPIKEY should be added to the request URL. The param can be also passed as POST param. We **strongly advise** using HTTPS when you are performing requests that include your `api_key`.
 
@@ -129,7 +125,7 @@ If you use JSONP, the 200 HTTP code is always returned so the JavaScript client 
 
 ### CORS support
 
-All the endpoints which might be accessed using a web browser add CORS headers and allow OPTIONS method.
+All the endpoints, which might be accessed using a web browser, add CORS headers and allow OPTIONS method.
 
 ## Anonymous Maps
 
@@ -226,7 +222,7 @@ Which returns JSON with the attributes defined, like:
 { c: 1, d: 2 }
 ```
 
-Notice UTF Grid and attributes endpoints need an integer parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. So in this case 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
+Notice UTF Grid and attributes endpoints need an integer parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. In this case, 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
 
 ### Create JSONP
 
@@ -271,12 +267,12 @@ callback({
 
 ### Remove
 
-Anonymous maps cannot be removed by an API call. They will expire after about five minutes but sometimes longer. If an anonymous map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time returns to the map an attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.
+Anonymous maps cannot be removed by an API call. They will expire after about five minutes but sometimes longer. If an anonymous map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time, returns to the map and attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.
 
 
 ## Named Maps
 
-Named maps are essentially the same as anonymous maps except the mapconfig is stored on the server and the map is given a unique name. Two other big differences are that you can create named maps from private data, and that users without an API Key can see them even though they are from that private data.
+Named maps are essentially the same as anonymous maps except the mapconfig is stored on the server and the map is given a unique name. Two other big differences are: you can create named maps from private data and that users without an API Key can see them even though they are from that private data.
 
 The main two differences compared to anonymous maps are:
 
@@ -284,9 +280,9 @@ The main two differences compared to anonymous maps are:
   This allows you to control who is able to see the map based on a token auth
 
 - **templates**  
-  Since the mapconfig is static it can contain some variables so the client can modify the map's appearance using those variables
+  Since the mapconfig is static it can contain some variables so the client can modify the map's appearance using those variables.
 
-Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see [auth section](http://docs.cartodb.com/cartodb-platform/maps-api.html#auth)).
+Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
 
 ### Create
 
@@ -345,7 +341,7 @@ POST /api/v1/map/named
 - **auth**:
   - **method** `"token"` or `"open"` (the default if no `"method"` is given).
   - **valid_tokens** when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
-- **placeholders**: Variables not listed here are not substituted. Variable not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
+- **placeholders**: Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
 - **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.1.0.md) for more info.
 
 #### Template Format
@@ -371,7 +367,7 @@ The placeholder type will determine the kind of escaping for the associated valu
 - **number** can only contain numerical representation
 - **css_color** can only contain color names or hex-values
 
-Placeholder default values will be used whenever new values are not provided as options at the time of creation on the client. They can also be used to test the template by creating a default version with now options provided.
+Placeholder default values will be used whenever new values are not provided as options at the time of creation on the client. They can also be used to test the template by creating a default version with new options provided.
 
 When using templates, be very careful about your selections as they can give broad access to your data if they are defined losely.
 
@@ -413,7 +409,7 @@ POST /api/v1/map/named/:template_name
 }
 ```
 
-The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400).
+The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400)
 
 - **auth_token** *optional* if the named map needs auth
 
@@ -446,7 +442,7 @@ curl -X POST \
 }
 ```
 
-You can then use the `layergroupid` for fetching tiles and grids as you would normally (see anonymous map section).  However, you'll need to show the `auth_token`, if required by the template.
+You can then use the `layergroupid` for fetching tiles and grids as you would normally (see anonymous map section).  However you'll need to show the `auth_token`, if required by the template.
 
 ### Using JSONP
 
@@ -549,7 +545,7 @@ If a template with the same name does NOT exist, a 400 HTTP response is generate
 
 ### Delete 
 
-Delete the specified template map from the server and disables any previously initialized versions of the map.
+Delete the specified template map from the server and it disables any previously initialized versions of the map.
 
 #### Definition
 
@@ -576,7 +572,7 @@ curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_nam
 }
 ```
 
-On success, a 204 (No Content) response would be issued. Otherwise a 4xx response with with an error will be returned.
+On success, a 204 (No Content) response will be issued. Otherwise a 4xx response with an error will be returned.
 
 ### Listing Available Templates
 
@@ -671,4 +667,195 @@ cartodb.createLayer('map_dom_id',layerSource)
 
 ```
 
-See [CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js.html) methods [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetparamskey-value) and [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetauthtokenauthtoken).
+[CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js.html) has methods for accessing your named maps.
+
+1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript 
+2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
+
+##Static Maps API
+
+The Static Maps API can be initiated using both named and anonymous maps using the 'layergroupid' token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
+
+### Maps API endpoints
+
+Begin by instantiating either a named or anonymous map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupsid token` calls to the map and allows for parameters in the definition to generate static images. 
+
+##### Definition
+
+<div class="code-title notitle code-request"></div>
+```bash
+GET /api/v1/map/static/center/:token/:z/:lat/:lng/:width/:height.:format
+```
+
+##### Params
+
+* **:token**: the layergroupid token from the map instantiation
+* **:z**: the zoom level of the map
+* **:lat**: the latitude for the center of the map
+* **:lng**: the longitude for the center of the map
+* **:width**: the width in pixels for the output image
+* **:height**: the height in pixels for the output image
+* **:format**: the format for the image, supported types: `png`, `jpg`
+  * **jpg** will have a default quality of 85.
+
+#### Bounding Box
+
+##### Definition
+
+<div class="code-title notitle code-request"></div>
+```bash
+GET /api/v1/map/static/bbox/:token/:bbox/:width/:height.:format`
+```
+
+##### Params
+
+* **:token**: the layergroupid token from the map instantiation
+* **:bbox**: the bounding box in WGS 84 (EPSG:4326), comma separated values for:
+    - LowerCorner longitude, in decimal degrees (aka most western)
+    - LowerCorner latitude, in decimal degrees (aka most southern)
+    - UpperCorner longitude, in decimal degrees (aka most eastern)
+    - UpperCorner latitude, in decimal degrees (aka most northern)
+* **:width**: the width in pixels for the output image
+* **:height**: the height in pixels for the output image
+* **:format**: the format for the image, supported types: `png`, `jpg`
+  * **jpg** will have a default quality of 85.
+
+Note: you can see this endpoint as:
+
+```bash
+GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
+```
+
+####Layers
+
+The Static Maps API allows for multiple layers of incorporation into the `MapConfig` to allow for maximum versatility in creating a static map. The examples below were used to generate the static image example in the next section, and appear in the specific order designated.
+
+**Basemaps**
+
+```javascript
+    {
+      "type": "http",
+      "options": {
+        "urlTemplate": "http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+        "subdomains": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+```
+
+By manipulating the `"urlTemplate"` custom basemaps can be used in generating static images. Supported map types for the Static Maps API are:
+
+          'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+          'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
+          'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+          'http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+
+**Mapnik**
+
+```javascript
+    {
+      "type": "mapnik",
+      "options": {
+        "sql": "select null::geometry the_geom_webmercator",
+        "cartocss": "#layer {\n\tpolygon-fill: #FF3300;\n\tpolygon-opacity: 0;\n\tline-color: #333;\n\tline-width: 0;\n\tline-opacity: 0;\n}",
+        "cartocss_version": "2.2.0"
+      }
+    },
+```
+
+**CartoDB**
+
+```javascript
+    {
+      "type": "cartodb",
+      "options": {
+        "sql": "select * from park",
+        "cartocss": "/** simple visualization */\n\n#park{\n  polygon-fill: #229A00;\n  polygon-opacity: 0.7;\n  line-color: #FFF;\n  line-width: 0;\n  line-opacity: 1;\n}",
+        "cartocss_version": "2.1.1"
+      }
+    },
+```
+
+Additoinally, static images from Torque maps and other map layers can be used together to generate highly customizable and versatile static maps.
+
+
+####Caching
+
+It is important to note that generated images are cached from the live data referenced with the `layergroupid token` on the specified CartoDB account. This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. To obtain a static snapshot of the map as it is today and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
+
+####Limits
+
+* While images can encompass an entirety of a map, the default limit for pixel range is 8192 x 8192.
+* Resolution limitations for jpegs are at default a quality of 85. Limitations for quality are restricted to a maximum of XXX dpi.
+* Timeout limits for generating static maps are the same across the CartoDB Editor and Platform. It is important to ensure timely processing of queries.
+
+
+### Examples
+
+After instantiating a map from a CartoDB account:
+
+<div class="code-title code-request with-result">REQUEST</div>
+```bash
+ GET /api/v1/map/static/center/4b615ff367e498e770e7d05e99181873:1420231989550.8699/14/40.71502926732618/-73.96039009094238/600/400.png
+```
+
+####Response
+<div clas="wrap"><p class="wrap-border"><img src="https://raw.githubusercontent.com/namessanti/Pictures/master/static_api.png" alt="static-api"/></p>,</div>
+
+####MapConfig
+
+For this map, the multiple layers, order, and stylings are defined by the MapConfig.
+
+```javascript
+{
+  "version": "1.3.0-alpha",
+  "layers": [
+    {
+      "type": "http",
+      "options": {
+        "urlTemplate": "http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+        "subdomains": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "type": "mapnik",
+      "options": {
+        "sql": "select null::geometry the_geom_webmercator",
+        "cartocss": "#layer {\n\tpolygon-fill: #FF3300;\n\tpolygon-opacity: 0;\n\tline-color: #333;\n\tline-width: 0;\n\tline-opacity: 0;\n}",
+        "cartocss_version": "2.2.0"
+      }
+    },
+    {
+      "type": "cartodb",
+      "options": {
+        "sql": "select * from park",
+        "cartocss": "/** simple visualization */\n\n#park{\n  polygon-fill: #229A00;\n  polygon-opacity: 0.7;\n  line-color: #FFF;\n  line-width: 0;\n  line-opacity: 1;\n}",
+        "cartocss_version": "2.1.1"
+      }
+    },
+    {
+      "type": "cartodb",
+      "options": {
+        "sql": "select * from residential_zoning_2009",
+        "cartocss": "/** simple visualization */\n\n#residential_zoning_2009{\n  polygon-fill: #c7eae5;\n  polygon-opacity: 1;\n  line-color: #FFF;\n  line-width: 0.2;\n  line-opacity: 0.5;\n}",
+        "cartocss_version": "2.1.1"
+      }
+    },
+    {
+      "type": "cartodb",
+      "options": {
+        "sql": "select * from nycha_developments_july2011",
+        "cartocss": "/** simple visualization */\n\n#nycha_developments_july2011{\n  polygon-fill: #ef3b2c;\n  polygon-opacity: 0.7;\n  line-color: #FFF;\n  line-width: 0;\n  line-opacity: 1;\n}",
+        "cartocss_version": "2.1.1"
+      }
+    }
+  ]
+}
+```

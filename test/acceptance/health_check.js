@@ -7,7 +7,7 @@ var server = new CartodbWindshaft(serverOptions);
 
 suite('health checks', function () {
 
-    beforeEach(function (done) {
+    function resetHealthConfig() {
         global.environment.health = {
             enabled: true,
             username: 'localhost',
@@ -15,8 +15,7 @@ suite('health checks', function () {
             x: 0,
             y: 0
         };
-        done();
-    });
+    }
 
     var healthCheckRequest = {
         url: '/health',
@@ -27,13 +26,14 @@ suite('health checks', function () {
     };
 
     test('returns 200 and ok=true with enabled configuration', function (done) {
+        resetHealthConfig();
+
         assert.response(server,
             healthCheckRequest,
             {
                 status: 200
             },
             function (res, err) {
-              console.log(res.body);
                 assert.ok(!err);
 
                 var parsed = JSON.parse(res.body);
@@ -47,6 +47,8 @@ suite('health checks', function () {
     });
 
     test('fails for invalid user because it is not in redis', function (done) {
+        resetHealthConfig();
+
         global.environment.health.username = 'invalid';
 
         assert.response(server,

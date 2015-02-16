@@ -88,7 +88,13 @@ var config = {
           proxy: undefined, // the url for a proxy server
           whitelist: [ // the whitelist of urlTemplates that can be used
               'http://{s}.example.com/{z}/{x}/{y}.png'
-          ]
+          ],
+          // image to use as placeholder when urlTemplate is not in the whitelist
+          // if provided the http renderer will use it instead of throw an error
+          fallbackImage: {
+              type: 'fs', // 'fs' and 'url' supported
+              src: __dirname + '/../../assets/default-placeholder.png'
+          }
       }
     }
     ,millstone: {

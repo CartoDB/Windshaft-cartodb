@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "windshaft-cartodb",
-    "version": "1.26.2",
+    "version": "1.27.0",
     "description": "A map tile server for CartoDB",
     "keywords": [
       "cartodb"
@@ -25,8 +25,9 @@
         "node-varnish": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0",
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
-        "windshaft": "https://github.com/CartoDB/Windshaft/tarball/0.35.1",
+        "windshaft": "~0.36.0",
         "step": "~0.0.5",
+        "queue-async": "~1.0.7",
         "request": "~2.9.203",
         "cartodb-redis": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0",
         "cartodb-psql": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",

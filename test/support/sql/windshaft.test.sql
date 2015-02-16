@@ -177,3 +177,12 @@ CREATE TABLE test_table_private_1 (
 INSERT INTO test_table_private_1 SELECT * from test_table;
 
 GRANT ALL ON TABLE test_table_private_1 TO :TESTUSER;
+
+CREATE TABLE IF NOT EXISTS
+  CDB_TableMetadata (
+    tabname regclass not null primary key,
+    updated_at timestamp with time zone not null default now()
+  );
+
+GRANT SELECT ON CDB_TableMetadata TO :PUBLICUSER;
+GRANT SELECT ON CDB_TableMetadata TO :TESTUSER;

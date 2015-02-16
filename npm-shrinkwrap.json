@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.26.2",
+  "version": "1.27.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -113,6 +113,11 @@
       "from": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0",
       "resolved": "https://github.com/Vizzuality/node-varnish/tarball/0.3.0"
     },
+    "queue-async": {
+      "version": "1.0.7",
+      "from": "queue-async@~1.0.7",
+      "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
+    },
     "redis-mpool": {
       "version": "0.3.0",
       "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
@@ -178,24 +183,17 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.35.1",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/0.35.1",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/0.35.1",
+      "version": "0.36.0",
+      "from": "windshaft@~0.36.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
           "from": "chronograph@git://github.com/CartoDB/chronographjs.git#0.1.0",
           "resolved": "git://github.com/CartoDB/chronographjs.git#0b8c35eee510cfa14a16be24d70533b38ecc1d2d"
         },
-        "queue-async": {
-          "version": "1.0.7",
-          "from": "queue-async@~1.0.7",
-          "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
-        },
         "grainstore": {
-          "version": "0.22.1",
-          "from": "https://github.com/CartoDB/grainstore/tarball/0.22.1",
-          "resolved": "https://github.com/CartoDB/grainstore/tarball/0.22.1",
+          "version": "0.23.0",
+          "from": "grainstore@~0.23.0",
           "dependencies": {
             "carto": {
               "version": "0.9.5-cdb2",
@@ -1637,9 +1635,9 @@
               "resolved": "https://registry.npmjs.org/connect/-/connect-1.9.2.tgz",
               "dependencies": {
                 "formidable": {
-                  "version": "1.0.16",
+                  "version": "1.0.17",
                   "from": "formidable@1.0.x",
-                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.16.tgz"
+                  "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.17.tgz"
                 }
               }
             },
