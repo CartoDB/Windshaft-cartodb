@@ -1,5 +1,3 @@
-# STATUS: DRAFT
-
 # 1. Purpose
 
 This specification describes an extension for
