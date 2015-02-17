@@ -27,9 +27,8 @@ server.setMaxListeners(0);
 
 [true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
 
-global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue};
-
 suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
+    serverOptions.channelCache = {};
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
@@ -37,6 +36,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
     var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
 
     suiteSetup(function(done){
+      global.environment.enabledFeatures = { cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue };
       sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
       // TODO: check redis is clean ?
     });

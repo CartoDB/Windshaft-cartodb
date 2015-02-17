@@ -50,7 +50,7 @@ var config = {
     ,postgres: {
         // Parameters to pass to datasource plugin of mapnik
         // See http://github.com/mapnik/mapnik/wiki/PostGIS
-        user: "testpublicuser",
+        user: "test_windshaft_publicuser",
         password: "public",
         host: '127.0.0.1',
         port: 5432,

@@ -1,10 +1,10 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.27.0",
+  "version": "1.28.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
-      "from": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
+      "from": "cartodb-psql@~0.4.0",
       "resolved": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
       "dependencies": {
         "pg": {
@@ -18,8 +18,7 @@
             },
             "buffer-writer": {
               "version": "1.0.0",
-              "from": "buffer-writer@1.0.0",
-              "resolved": "https://registry.npmjs.org/buffer-writer/-/buffer-writer-1.0.0.tgz"
+              "from": "buffer-writer@1.0.0"
             }
           }
         }
@@ -27,7 +26,7 @@
     },
     "cartodb-redis": {
       "version": "0.11.0",
-      "from": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0",
+      "from": "cartodb-redis@~0.11.0",
       "resolved": "https://github.com/CartoDB/node-cartodb-redis/tarball/0.11.0",
       "dependencies": {
         "redis-mpool": {
@@ -88,8 +87,7 @@
             },
             "isarray": {
               "version": "0.0.1",
-              "from": "isarray@0.0.1",
-              "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+              "from": "isarray@0.0.1"
             },
             "string_decoder": {
               "version": "0.10.31",
@@ -120,7 +118,7 @@
     },
     "redis-mpool": {
       "version": "0.3.0",
-      "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
+      "from": "redis-mpool@~0.3.0",
       "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
       "dependencies": {
         "generic-pool": {
@@ -183,8 +181,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.36.0",
-      "from": "windshaft@~0.36.0",
+      "version": "0.37.0",
+      "from": "windshaft@~0.37.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -2211,8 +2209,7 @@
                     },
                     "isarray": {
                       "version": "0.0.1",
-                      "from": "isarray@0.0.1",
-                      "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+                      "from": "isarray@0.0.1"
                     },
                     "string_decoder": {
                       "version": "0.10.31",
