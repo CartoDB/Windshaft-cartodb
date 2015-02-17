@@ -447,6 +447,134 @@ suite('named_layers', function() {
 
     });
 
+    test('should return 200 and layergroup with private tables and interactivity', function(done) {
+
+        var privateTableTemplateNameInteractivity = 'private_table_template_interactivity';
+        var privateTableTemplate = {
+            "version": "0.0.1",
+            "auth": {
+                "method": "open"
+            },
+            "name": privateTableTemplateNameInteractivity,
+            "layergroup": {
+                "layers": [
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "attributes": {
+                                "columns": [
+                                    "name"
+                                ],
+                                "id": "cartodb_id"
+                            },
+                            "cartocss": "#layer { marker-fill: #cc3300; }",
+                            "cartocss_version": "2.3.0",
+                            "interactivity": "cartodb_id",
+                            "sql": "select * from test_table_private_1"
+                        }
+                    }
+                ]
+            }
+        };
+
+        var layergroup =  {
+            version: '1.3.0',
+            layers: [
+                {
+                    type: 'named',
+                    options: {
+                        name: privateTableTemplateNameInteractivity
+                    }
+                }
+            ]
+        };
+
+        Step(
+            function createTemplate() {
+                templateMaps.addTemplate(username, privateTableTemplate, this);
+            },
+            function createLayergroup(err) {
+                if (err) {
+                    throw err;
+                }
+
+                var next = this;
+                assert.response(server,
+                    {
+                        url: '/tiles/layergroup',
+                        method: 'POST',
+                        headers: {
+                            host: 'localhost',
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(layergroup)
+                    },
+                    {
+                        status: 200
+                    },
+                    function(res, err) {
+                        next(err, res);
+                    }
+                );
+            },
+            function checkLayergroup(err, response) {
+                if (err) {
+                    throw err;
+                }
+
+                var parsedBody = JSON.parse(response.body);
+                assert.ok(parsedBody.layergroupid);
+                assert.ok(parsedBody.last_updated);
+
+                return parsedBody.layergroupid;
+            },
+            function requestTile(err, layergroupId) {
+                if (err) {
+                    throw err;
+                }
+
+                var next = this;
+                assert.response(server,
+                    {
+                        url: '/tiles/layergroup/' + layergroupId + '/0/0/0.png',
+                        method: 'GET',
+                        headers: {
+                            host: 'localhost'
+                        },
+                        encoding: 'binary'
+                    },
+                    {
+                        status: 200,
+                        headers: {
+                            'content-type': 'image/png'
+                        }
+                    },
+                    function(res, err) {
+                        next(err, res);
+                    }
+                );
+            },
+            function handleTileResponse(err, res) {
+                if (err) {
+                    throw err;
+                }
+                test_helper.checkCache(res);
+                return true;
+            },
+            function deleteTemplate(err) {
+                var next = this;
+                templateMaps.delTemplate(username, privateTableTemplate, function(/*delErr*/) {
+                    // ignore deletion error
+                    next(err);
+                });
+            },
+            function finish(err) {
+                done(err);
+            }
+        );
+
+    });
+
     test('should return 403 when private table is accessed from non named layer', function(done) {
 
         var layergroup =  {
