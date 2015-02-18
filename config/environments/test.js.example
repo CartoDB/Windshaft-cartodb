@@ -50,7 +50,7 @@ var config = {
     ,postgres: {
         // Parameters to pass to datasource plugin of mapnik
         // See http://github.com/mapnik/mapnik/wiki/PostGIS
-        user: "testpublicuser",
+        user: "test_windshaft_publicuser",
         password: "public",
         host: '127.0.0.1',
         port: 5432,
@@ -90,7 +90,13 @@ var config = {
               'http://{s}.example.com/{z}/{x}/{y}.png',
               // for testing purposes
               'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'
-          ]
+          ],
+          // image to use as placeholder when urlTemplate is not in the whitelist
+          // if provided the http renderer will use it instead of throw an error
+          fallbackImage: {
+              type: 'fs', // 'fs' and 'url' supported
+              src: __dirname + '/../../assets/default-placeholder.png'
+          }
       }
     }
     ,millstone: {

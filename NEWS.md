@@ -1,5 +1,58 @@
-1.26.3 -- 2015-mm-dd
+1.28.5 -- 2015-mm-dd
 --------------------
+
+
+1.28.4 -- 2015-02-18
+--------------------
+
+Announcements:
+- Upgrades windshaft to [0.37.4](https://github.com/CartoDB/Windshaft/releases/tag/0.37.4)
+
+
+1.28.3 -- 2015-02-17
+--------------------
+
+Announcements:
+- Upgrades windshaft to [0.37.3](https://github.com/CartoDB/Windshaft/releases/tag/0.37.3)
+
+
+1.28.2 -- 2015-02-17
+--------------------
+
+Announcements:
+- Upgrades windshaft to [0.37.2](https://github.com/CartoDB/Windshaft/releases/tag/0.37.2)
+
+
+1.28.1 -- 2015-02-17
+--------------------
+
+Announcements:
+- Upgrades windshaft to [0.37.1](https://github.com/CartoDB/Windshaft/releases/tag/0.37.1)
+
+
+1.28.0 -- 2015-02-17
+--------------------
+
+Announcements:
+- Upgrades windshaft to [0.37.0](https://github.com/CartoDB/Windshaft/releases/tag/0.37.0)
+
+New features:
+ - QueryTablesApi will always use an authenticated query to retrieve last update, this allows to query affected private
+ tables last update (#253)
+
+
+1.27.0 -- 2015-02-16
+--------------------
+
+Announcements:
+- Adds default image placeholder for http renderer to use as fallback
+
+New features:
+- `named` layers type, see [MapConfig-NamedMaps-extension](docs/MapConfig-NamedMaps-extension.md)
+  - Starts using datasource per layer feature from Windshaft ([2c7bc6a](https://github.com/CartoDB/Windshaft-cartodb/commit/2c7bc6adde561b20ed955b905e3c7bcd6795d128))
+
+Bugfixes:
+- Fixes tests with beforeEach and afterEach triggers
 
 
 1.26.2 -- 2015-01-28
