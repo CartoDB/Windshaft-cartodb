@@ -1,3 +1,10 @@
+1.28.5 -- 2015-02-20
+--------------------
+
+Announcements:
+- Upgrades windshaft to [0.37.5](https://github.com/CartoDB/Windshaft/releases/tag/0.37.5)
+
+
 1.28.4 -- 2015-02-18
 --------------------
 
