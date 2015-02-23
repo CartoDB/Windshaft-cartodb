@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.28.6",
+  "version": "1.29.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -181,8 +181,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.37.5",
-      "from": "windshaft@~0.37.5",
+      "version": "0.38.0",
+      "from": "windshaft@~0.38.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -2121,9 +2121,9 @@
           }
         },
         "carto": {
-          "version": "0.14.0",
-          "from": "https://github.com/CartoDB/carto/tarball/update_to_master",
-          "resolved": "https://github.com/CartoDB/carto/tarball/update_to_master",
+          "version": "0.15.1-cdb1",
+          "from": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
+          "resolved": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
           "dependencies": {
             "mapnik-reference": {
               "version": "6.0.5",
@@ -2154,39 +2154,9 @@
           "resolved": "git://github.com/CartoDB/node-step-profiler.git#9b97881e450445bd8a307a9cc372b5129cb4529a"
         },
         "torque.js": {
-          "version": "2.7.1",
-          "from": "https://github.com/CartoDB/torque/tarball/2.8",
-          "resolved": "https://github.com/CartoDB/torque/tarball/2.8",
-          "dependencies": {
-            "carto": {
-              "version": "0.15.1",
-              "from": "https://github.com/CartoDB/carto/archive/master.tar.gz",
-              "resolved": "https://github.com/CartoDB/carto/archive/master.tar.gz",
-              "dependencies": {
-                "mapnik-reference": {
-                  "version": "6.0.5",
-                  "from": "mapnik-reference@~6.0.2",
-                  "resolved": "https://registry.npmjs.org/mapnik-reference/-/mapnik-reference-6.0.5.tgz"
-                },
-                "optimist": {
-                  "version": "0.6.1",
-                  "from": "optimist@~0.6.0",
-                  "resolved": "https://registry.npmjs.org/optimist/-/optimist-0.6.1.tgz",
-                  "dependencies": {
-                    "wordwrap": {
-                      "version": "0.0.2",
-                      "from": "wordwrap@~0.0.2",
-                      "resolved": "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz"
-                    },
-                    "minimist": {
-                      "version": "0.0.10",
-                      "from": "minimist@~0.0.1"
-                    }
-                  }
-                }
-              }
-            }
-          }
+          "version": "2.10.0",
+          "from": "https://github.com/CartoDB/torque/tarball/2.10.0",
+          "resolved": "https://github.com/CartoDB/torque/tarball/2.10.0"
         },
         "request": {
           "version": "2.48.0",
