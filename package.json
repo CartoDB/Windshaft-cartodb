@@ -43,7 +43,8 @@
         "semver": "~1.1.4"
     },
     "scripts": {
-        "test": "make check"
+        "preinstall": "sh ./scripts/check-node-canvas.sh",
+        "test": "make test"
     },
     "engines": {
         "node": ">=0.8 <0.11",
