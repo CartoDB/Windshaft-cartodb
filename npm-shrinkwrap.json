@@ -181,8 +181,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.38.0",
-      "from": "windshaft@~0.38.0",
+      "version": "0.38.1",
+      "from": "windshaft@~0.38.1",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -193,6 +193,36 @@
           "version": "0.23.0",
           "from": "grainstore@~0.23.0",
           "dependencies": {
+            "redis-mpool": {
+              "version": "0.1.0",
+              "from": "https://github.com/CartoDB/node-redis-mpool/tarball/0.1.0",
+              "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.1.0",
+              "dependencies": {
+                "generic-pool": {
+                  "version": "2.1.1",
+                  "from": "generic-pool@~2.1.1"
+                },
+                "redis": {
+                  "version": "0.12.1",
+                  "from": "redis@~0.12.1"
+                },
+                "hiredis": {
+                  "version": "0.1.17",
+                  "from": "hiredis@~0.1.17",
+                  "dependencies": {
+                    "bindings": {
+                      "version": "1.2.1",
+                      "from": "bindings@*"
+                    },
+                    "nan": {
+                      "version": "1.1.2",
+                      "from": "nan@~1.1.0",
+                      "resolved": "https://registry.npmjs.org/nan/-/nan-1.1.2.tgz"
+                    }
+                  }
+                }
+              }
+            },
             "carto": {
               "version": "0.9.5-cdb2",
               "from": "https://github.com/CartoDB/carto/tarball/0.9.5-cdb2",
@@ -2080,43 +2110,14 @@
           }
         },
         "canvas": {
-          "version": "1.1.6",
-          "from": "canvas@1.1.6",
-          "resolved": "https://registry.npmjs.org/canvas/-/canvas-1.1.6.tgz",
+          "version": "1.2.0",
+          "from": "canvas@1.2.0",
+          "resolved": "https://registry.npmjs.org/canvas/-/canvas-1.2.0.tgz",
           "dependencies": {
             "nan": {
-              "version": "1.2.0",
-              "from": "nan@~1.2.0"
-            }
-          }
-        },
-        "redis-mpool": {
-          "version": "0.1.0",
-          "from": "redis-mpool@git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
-          "resolved": "git://github.com/CartoDB/node-redis-mpool.git#47510b8d4525ee24aa2e5328976372274a1d144e",
-          "dependencies": {
-            "generic-pool": {
-              "version": "2.1.1",
-              "from": "generic-pool@~2.1.1"
-            },
-            "redis": {
-              "version": "0.12.1",
-              "from": "redis@~0.12.1"
-            },
-            "hiredis": {
-              "version": "0.1.17",
-              "from": "hiredis@~0.1.17",
-              "dependencies": {
-                "bindings": {
-                  "version": "1.2.1",
-                  "from": "bindings@*"
-                },
-                "nan": {
-                  "version": "1.1.2",
-                  "from": "nan@~1.1.0",
-                  "resolved": "https://registry.npmjs.org/nan/-/nan-1.1.2.tgz"
-                }
-              }
+              "version": "1.5.3",
+              "from": "nan@~1.5.1",
+              "resolved": "https://registry.npmjs.org/nan/-/nan-1.5.3.tgz"
             }
           }
         },
