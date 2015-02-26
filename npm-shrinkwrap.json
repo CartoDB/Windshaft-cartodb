@@ -95,7 +95,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1"
+              "from": "inherits@2"
             }
           }
         }
@@ -181,8 +181,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.38.1",
-      "from": "windshaft@~0.38.1",
+      "version": "0.38.2",
+      "from": "windshaft@~0.38.2",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -2110,9 +2110,9 @@
           }
         },
         "canvas": {
-          "version": "1.2.0",
-          "from": "canvas@1.2.0",
-          "resolved": "https://registry.npmjs.org/canvas/-/canvas-1.2.0.tgz",
+          "version": "1.2.1",
+          "from": "canvas@1.2.1",
+          "resolved": "https://github.com/Automattic/node-canvas/tarball/master",
           "dependencies": {
             "nan": {
               "version": "1.5.3",
