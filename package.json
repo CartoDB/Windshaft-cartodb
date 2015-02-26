@@ -43,7 +43,7 @@
         "semver": "~1.1.4"
     },
     "scripts": {
-        "preinstall": "sh ./scripts/check-node-canvas.sh",
+        "preinstall": "make pre-install",
         "test": "make test"
     },
     "engines": {
