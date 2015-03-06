@@ -1,6 +1,8 @@
 1.29.0 -- 2015-mm-dd
 --------------------
-- Upgrades windshaft to [0.38.2](https://github.com/CartoDB/Windshaft/releases/tag/0.38.2)
+
+Announcements:
+ - Upgrades windshaft to [0.39.0](https://github.com/CartoDB/Windshaft/releases/tag/0.39.0)
 
 
 1.28.5 -- 2015-02-20
