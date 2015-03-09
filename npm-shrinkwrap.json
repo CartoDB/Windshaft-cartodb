@@ -5,7 +5,7 @@
     "cartodb-psql": {
       "version": "0.4.0",
       "from": "cartodb-psql@~0.4.0",
-      "resolved": "https://github.com/CartoDB/node-cartodb-psql/tarball/0.4.0",
+      "resolved": "https://registry.npmjs.org/cartodb-psql/-/cartodb-psql-0.4.0.tgz",
       "dependencies": {
         "pg": {
           "version": "2.6.2-cdb1",
@@ -87,7 +87,8 @@
             },
             "isarray": {
               "version": "0.0.1",
-              "from": "isarray@0.0.1"
+              "from": "isarray@0.0.1",
+              "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
             },
             "string_decoder": {
               "version": "0.10.31",
@@ -95,7 +96,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2"
+              "from": "inherits@~2.0.1"
             }
           }
         }
@@ -119,7 +120,7 @@
     "redis-mpool": {
       "version": "0.3.0",
       "from": "redis-mpool@~0.3.0",
-      "resolved": "https://github.com/CartoDB/node-redis-mpool/tarball/0.3.0",
+      "resolved": "https://registry.npmjs.org/redis-mpool/-/redis-mpool-0.3.0.tgz",
       "dependencies": {
         "generic-pool": {
           "version": "2.1.1",
@@ -157,9 +158,9 @@
       "resolved": "https://registry.npmjs.org/rollbar/-/rollbar-0.3.13.tgz",
       "dependencies": {
         "node-uuid": {
-          "version": "1.4.2",
+          "version": "1.4.3",
           "from": "node-uuid@1.4.x",
-          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.2.tgz"
+          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
         },
         "lru-cache": {
           "version": "2.2.4",
@@ -181,8 +182,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.38.2",
-      "from": "windshaft@~0.38.2",
+      "version": "0.39.0",
+      "from": "windshaft@~0.39.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -294,9 +295,9 @@
                       "from": "forever-agent@~0.5.0"
                     },
                     "node-uuid": {
-                      "version": "1.4.2",
+                      "version": "1.4.3",
                       "from": "node-uuid@~1.4.0",
-                      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.2.tgz"
+                      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
                     },
                     "tough-cookie": {
                       "version": "0.12.1",
@@ -1710,9 +1711,9 @@
           }
         },
         "tilelive-mapnik": {
-          "version": "0.6.12",
-          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
-          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+          "version": "0.6.15",
+          "from": "tilelive-mapnik@0.6.15",
+          "resolved": "https://registry.npmjs.org/tilelive-mapnik/-/tilelive-mapnik-0.6.15.tgz",
           "dependencies": {
             "generic-pool": {
               "version": "2.1.1",
@@ -2112,7 +2113,7 @@
         "canvas": {
           "version": "1.2.1",
           "from": "canvas@1.2.1",
-          "resolved": "https://github.com/Automattic/node-canvas/tarball/master",
+          "resolved": "https://registry.npmjs.org/canvas/-/canvas-1.2.1.tgz",
           "dependencies": {
             "nan": {
               "version": "1.5.3",
@@ -2155,9 +2156,8 @@
           "resolved": "git://github.com/CartoDB/node-step-profiler.git#9b97881e450445bd8a307a9cc372b5129cb4529a"
         },
         "torque.js": {
-          "version": "2.10.0",
-          "from": "https://github.com/CartoDB/torque/tarball/2.10.0",
-          "resolved": "https://github.com/CartoDB/torque/tarball/2.10.0"
+          "version": "2.11.0",
+          "from": "torque.js@~2.11.0"
         },
         "request": {
           "version": "2.48.0",
@@ -2180,7 +2180,8 @@
                     },
                     "isarray": {
                       "version": "0.0.1",
-                      "from": "isarray@0.0.1"
+                      "from": "isarray@0.0.1",
+                      "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
                     },
                     "string_decoder": {
                       "version": "0.10.31",
@@ -2229,9 +2230,9 @@
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-1.0.2.tgz"
             },
             "node-uuid": {
-              "version": "1.4.2",
+              "version": "1.4.3",
               "from": "node-uuid@~1.4.0",
-              "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.2.tgz"
+              "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
             },
             "qs": {
               "version": "2.3.3",
