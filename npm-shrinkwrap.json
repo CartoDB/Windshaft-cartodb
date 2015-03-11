@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "1.29.1",
+  "version": "1.30.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -96,7 +96,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1"
+              "from": "inherits@2"
             }
           }
         }
@@ -182,8 +182,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.39.0",
-      "from": "windshaft@~0.39.0",
+      "version": "0.40.0",
+      "from": "windshaft@~0.40.0",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -1712,8 +1712,8 @@
         },
         "tilelive-mapnik": {
           "version": "0.6.15",
-          "from": "tilelive-mapnik@0.6.15",
-          "resolved": "https://registry.npmjs.org/tilelive-mapnik/-/tilelive-mapnik-0.6.15.tgz",
+          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
           "dependencies": {
             "generic-pool": {
               "version": "2.1.1",
@@ -2151,9 +2151,8 @@
           }
         },
         "step-profiler": {
-          "version": "0.1.0",
-          "from": "step-profiler@git://github.com/CartoDB/node-step-profiler.git#0.1.0",
-          "resolved": "git://github.com/CartoDB/node-step-profiler.git#9b97881e450445bd8a307a9cc372b5129cb4529a"
+          "version": "0.2.1",
+          "from": "step-profiler@~0.2.1"
         },
         "torque.js": {
           "version": "2.11.0",
