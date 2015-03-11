@@ -24,7 +24,7 @@ Requirements
    - Redis >2.4.0 (http://www.redis.io)
    - Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See Installing Mapnik.
    - Windshaft: check [Windshaft dependencies and installation notes](https://github.com/CartoDB/Windshaft#dependencies)
-   - libcairo2, libpango1.0, libjpeg8 and libgif for server side canvas support
+   - libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 
 - For cache control (optional)
    - CartoDB-SQL-API 1.0.0+
