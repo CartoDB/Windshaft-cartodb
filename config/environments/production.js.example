@@ -183,6 +183,12 @@ var config = {
       x: 0,
       y: 0
     }
+
+    // Use this as a feature flags enabling/disabling mechanism
+    ,enabledFeatures: {
+        // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
+        cdbQueryTablesFromPostgres: true
+    }
 };
 
 module.exports = config;
