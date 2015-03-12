@@ -91,8 +91,8 @@ This document list all routes available in Windshaft-cartodb Maps API server.
 
 ## Optional deprecated routes
 
-[0] `/tiles/layergroup` is deprecated and `/api/v1/map` should be used but we keep it for now.
-[1] `/tiles/template` is deprecated and `/api/v1/map/named` should be used but we keep it for now.
+- [0] `/tiles/layergroup` is deprecated and `/api/v1/map` should be used but we keep it for now.
+- [1] `/tiles/template` is deprecated and `/api/v1/map/named` should be used but we keep it for now.
 
 ## How to generate the list of routes
 
