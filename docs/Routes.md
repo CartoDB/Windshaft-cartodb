@@ -15,7 +15,7 @@ This document list all routes available in Windshaft-cartodb Maps API server.
 <br/>Notes: Map instantiation
 
 1. `GET (?:/api/v1/map|/tiles/layergroup)/:token/:layer/attributes/:fid {:token(f),:layer(f),:fid(f)} (1)`
-<br/>Notes: [DEPRECATED]?
+<br/>Notes: Endpoint for info windows data, alternative for sql api when tables are private
 
 1. `GET (?:/api/v1/map|/tiles/layergroup)/static/center/:token/:z/:lat/:lng/:width/:height.:format {:token(f),:z(f),:lat(f),:lng(f),:width(f),:height(f),:format(f)} (1)`
 <br/>Notes: Static Maps API
