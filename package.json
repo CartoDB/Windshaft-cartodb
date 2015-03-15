@@ -38,13 +38,14 @@
     },
     "devDependencies": {
         "mocha": "~1.21.4",
+        "jshint": "~2.6.0",
         "redis": "~0.8.6",
         "strftime": "~0.8.2",
         "semver": "~1.1.4"
     },
     "scripts": {
         "preinstall": "make pre-install",
-        "test": "make test"
+        "test": "make test-all"
     },
     "engines": {
         "node": ">=0.8 <0.11",

@@ -27,6 +27,12 @@ test: config/environments/test.js
 		test/acceptance/*.js \
 		test/acceptance/cache/*.js
 
+jshint:
+	@echo "***jshint***"
+	@./node_modules/.bin/jshint lib/
+
+test-all: jshint test
+
 check: test
 
 .PHONY: pre-install test
