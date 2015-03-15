@@ -38,6 +38,7 @@
     },
     "devDependencies": {
         "mocha": "~1.21.4",
+        "jshint": "~2.6.0",
         "redis": "~0.8.6",
         "strftime": "~0.8.2",
         "semver": "~1.1.4"
