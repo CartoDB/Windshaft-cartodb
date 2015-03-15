@@ -45,7 +45,7 @@
     },
     "scripts": {
         "preinstall": "make pre-install",
-        "test": "make test"
+        "test": "make test-all"
     },
     "engines": {
         "node": ">=0.8 <0.11",
