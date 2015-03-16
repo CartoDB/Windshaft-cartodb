@@ -34,10 +34,10 @@ $.ajax({
   type: 'POST',
   dataType: 'json',
   contentType: 'application/json',
-  url: 'http://documentation.cartodb.com/api/v1/map',
+  url: 'https://documentation.cartodb.com/api/v1/map',
   data: JSON.stringify(mapconfig),
   success: function(data) {
-    var templateUrl = 'http://documentation.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
+    var templateUrl = 'https://documentation.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
     console.log(templateUrl);
   }
 })
@@ -79,7 +79,7 @@ To get the `URL` to fetch the tiles you need to instantiate the map, where `temp
 
 <div class="code-title notitle code-request"></div>
 ```bash
-curl -X POST 'http://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
+curl -X POST 'https://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
 ```
 
 The response will return JSON with properties for the `layergroupid` and the timestamp (`last_updated`) of the last data modification. 
@@ -96,7 +96,7 @@ Here is an example response:
 You can use the `layergroupid` to instantiate a URL template for accessing tiles on the client. Here we use the `layergroupid` from the example response above in this URL template:
 
 ```bash
-http://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
+https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
 ```
 
 ## General Concepts
@@ -107,7 +107,7 @@ The following concepts are the same for every endpoint in the API except when it
 
 By default, users do not have access to private tables in CartoDB. In order to instantiate a map from private table data an API Key is required. Additionally, to include some endpoints, an API Key must be included (e.g. creating a named map).
 
-To execute an authorized request, api_key=YOURAPIKEY should be added to the request URL. The param can be also passed as POST param. We **strongly advise** using HTTPS when you are performing requests that include your `api_key`.
+To execute an authorized request, `api_key=YOURAPIKEY` should be added to the request URL. The param can be also passed as POST param. Using HTTPS is mandatory when you are performing requests that include your `api_key`.
 
 ### Errors
 
@@ -167,7 +167,7 @@ The response includes:
   The ID for that map, used to compose the URL for the tiles. The final URL is:
 
   ```html
-  http://{account}.cartodb.com/api/v1/map/:layergroupid/{z}/{x}/{y}.png
+  https://{account}.cartodb.com/api/v1/map/:layergroupid/{z}/{x}/{y}.png
   ```
 
 - **updated_at**  
@@ -183,7 +183,7 @@ The response includes:
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
-curl 'http://documentation.cartodb.com/api/v1/map' -H 'Content-Type: application/json' -d @mapconfig.json
+curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: application/json' -d @mapconfig.json
 ```
 
 <div class="code-title">RESPONSE</div>
@@ -201,19 +201,19 @@ curl 'http://documentation.cartodb.com/api/v1/map' -H 'Content-Type: application
 The tiles can be accessed using:
 
 ```bash
-http://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
+https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
 ```
 
 For UTF grid tiles:
 
 ```bash
-http://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer/{z}/{x}/{y}.grid.json
+https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer/{z}/{x}/{y}.grid.json
 ```
 
 For attributes defined in `attributes` section:
 
 ```bash
-http://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer/attributes/:feature_id
+https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer/attributes/:feature_id
 ```
 
 Which returns JSON with the attributes defined, like:
