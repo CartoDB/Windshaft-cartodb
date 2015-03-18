@@ -22,6 +22,7 @@ serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
+['/tiles/layergroup'].forEach(function(layergroup_url) {
 [true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
 
 suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
@@ -66,7 +67,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup',
+              url: layergroup_url,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -94,7 +95,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png',
+              url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -135,7 +136,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/localhost@' + expected_token + ':cb0/0/0/0.png',
+              url: layergroup_url + '/localhost@' + expected_token + ':cb0/0/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -152,7 +153,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token
+              url: layergroup_url + "/" + expected_token
                  + '/0/0/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -170,7 +171,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token
+              url: layergroup_url + "/" + expected_token
                  + '/1/0/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -222,7 +223,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+              url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
               method: 'GET',
               headers: {host: 'localhost'} 
           }, {}, function(res, err) { next(err, res); });
@@ -255,7 +256,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+              url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
               method: 'GET',
               headers: {host: 'localhost'} 
           }, {}, function(res, err) { next(err, res); });
@@ -299,7 +300,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
             ]
         };
         assert.response(server, {
-            url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+            url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
             method: 'GET',
             headers: {host: 'localhost'}
         }, {}, function(res) {
@@ -321,7 +322,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
             ]
         };
         assert.response(server, {
-            url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+            url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
             method: 'GET',
             headers: {host: 'localhost'}
         }, {}, function(res) {
@@ -352,7 +353,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup',
+              url: layergroup_url,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -379,7 +380,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb10/1/0/0.png',
+              url: layergroup_url + "/" + expected_token + ':cb10/1/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -418,7 +419,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb11/4/0/0.png',
+              url: layergroup_url + "/" + expected_token + ':cb11/4/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -457,7 +458,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token
+              url: layergroup_url + "/" + expected_token
                  + '/0/1/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -475,7 +476,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token
+              url: layergroup_url + "/" + expected_token
                  + '/0/4/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -539,7 +540,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup',
+              url: layergroup_url,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -561,7 +562,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
               +  statskey + ":stat_tag:" + layergroup.stat_tag + " to be 1, got " + val);
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup',
+              url: layergroup_url,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -620,7 +621,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         ]
       };
       assert.response(server, {
-          url: '/tiles/layergroup',
+          url: layergroup_url,
           method: 'POST',
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
@@ -648,7 +649,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         ]
       };
       assert.response(server, {
-          url: '/tiles/layergroup',
+          url: layergroup_url,
           method: 'POST',
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
@@ -716,7 +717,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png?map_key=1234',
+              url: layergroup_url + expected_token + ':cb0/0/0/0.png?map_key=1234',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -737,7 +738,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token
+              url: layergroup_url + expected_token
                  + '/0/0/0/0.grid.json?map_key=1234',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -751,7 +752,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token
+              url: layergroup_url + expected_token
                  + '/1/0/0/0.grid.json?map_key=1234',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -766,7 +767,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png',
+              url: layergroup_url + expected_token + ':cb0/0/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -782,7 +783,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token
+              url: layergroup_url + expected_token
                  + '/0/0/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -798,7 +799,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token
+              url: layergroup_url + expected_token
                  + '/1/0/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -878,7 +879,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png?map_key=1234',
+              url: layergroup_url + expected_token + ':cb0/0/0/0.png?map_key=1234',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -908,7 +909,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png?map_key=1234',
+              url: layergroup_url + expected_token + ':cb0/0/0/0.png?map_key=1234',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1044,7 +1045,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup',
+              url: layergroup_url,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -1068,7 +1069,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png',
+              url: layergroup_url + expected_token + ':cb0/0/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1146,7 +1147,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup/' + expected_token + ':cb0/0/0/0.png?api_key=1234',
+              url: layergroup_url + expected_token + ':cb0/0/0/0.png?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1211,7 +1212,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           assert.ok(data.length > 1024*64);
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup?api_key=1234',
+              url: layergroup_url + '?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: data
@@ -1268,7 +1269,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup',
+              url: layergroup_url,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -1310,7 +1311,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup',
+              url: layergroup_url,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -1334,7 +1335,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
     }
 
     var layergroupTtlRequest = {
-        url: '/tiles/layergroup?config=' + encodeURIComponent(JSON.stringify({
+        url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify({
             version: '1.0.0',
             layers: [
                 { options: {
@@ -1441,4 +1442,5 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
     
 });
 
+});
 });
