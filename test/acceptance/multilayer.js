@@ -22,10 +22,10 @@ serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-['/tiles/layergroup'].forEach(function(layergroup_url) {
+['/tiles/layergroup', '/u/rambo/tiles/layergroup'].forEach(function(layergroup_url) {
 [true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
 
-suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
+suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue + "layergroup_url=" + layergroup_url, function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
