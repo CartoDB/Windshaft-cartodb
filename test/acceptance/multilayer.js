@@ -689,7 +689,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup?map_key=1234',
+              url: layergroup_url + '?map_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -850,7 +850,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup?map_key=1234',
+              url: layergroup_url + '?map_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -1069,7 +1069,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token + ':cb0/0/0/0.png',
+              url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1121,7 +1121,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
         {
           var next = this;
           assert.response(server, {
-              url: '/tiles/layergroup?api_key=1234',
+              url: layergroup_url + '?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -1147,7 +1147,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token + ':cb0/0/0/0.png?api_key=1234',
+              url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
