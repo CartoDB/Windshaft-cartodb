@@ -717,7 +717,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token + ':cb0/0/0/0.png?map_key=1234',
+              url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png?map_key=1234',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -738,7 +738,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token
+              url: layergroup_url + "/" + expected_token
                  + '/0/0/0/0.grid.json?map_key=1234',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -752,7 +752,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token
+              url: layergroup_url + "/" + expected_token
                  + '/1/0/0/0.grid.json?map_key=1234',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -767,7 +767,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token + ':cb0/0/0/0.png',
+              url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -783,7 +783,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token
+              url: layergroup_url + "/" + expected_token
                  + '/0/0/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -799,7 +799,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token
+              url: layergroup_url + "/" + expected_token
                  + '/1/0/0/0.grid.json',
               headers: {host: 'localhost' },
               method: 'GET'
@@ -879,7 +879,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token + ':cb0/0/0/0.png?map_key=1234',
+              url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png?map_key=1234',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -909,7 +909,7 @@ suite('multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function(
           if ( err ) throw err;
           var next = this;
           assert.response(server, {
-              url: layergroup_url + expected_token + ':cb0/0/0/0.png?map_key=1234',
+              url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png?map_key=1234',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
