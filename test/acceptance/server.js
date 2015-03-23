@@ -18,7 +18,7 @@ server.setMaxListeners(0);
 
 var cdbQueryTablesFromPostgresEnabledValue = true;
 
-suite('server', function() {
+suite.skip('server', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
