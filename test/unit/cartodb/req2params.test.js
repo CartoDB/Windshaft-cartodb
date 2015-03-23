@@ -64,12 +64,11 @@ suite('req2params', function() {
 
     test('it should extend params with decoded lzma', function(done) {
         var qo = {
-            style: 'test',
-            style_version: '2.1.0',
-            cache_buster: 5
+            config: {
+                version: '1.3.0'
+            }
         };
         test_helper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
-            console.log(data);
             var req = {
                 headers: {
                     host:'localhost'
@@ -86,7 +85,7 @@ suite('req2params', function() {
                     return done(err);
                 }
                 var query = req.params;
-                assert.equal(qo.cache_buster, query.cache_buster);
+                assert.deepEqual(qo.config, query.config);
                 assert.equal('test', query.api_key);
                 assert.equal(undefined, query.non_included);
                 done();
