@@ -18,46 +18,7 @@ server.setMaxListeners(0);
 
 var cdbQueryTablesFromPostgresEnabledValue = true;
 
-suite.skip('server', function() {
-
-    var redis_client = redis.createClient(global.environment.redis.port);
-    var sqlapi_server;
-
-    var mapnik_version = global.environment.mapnik_version || server.getVersion().mapnik;
-    var test_database = _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db';
-    var default_style;
-    if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
-      // 2.0.0 default
-      default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;' +
-          'marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ' +
-          'ellipse;marker-allow-overlap: true;}';
-    }
-    else if ( semver.satisfies(mapnik_version, '<2.2.0') ) {
-      // 2.1.0 default
-      default_style = '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;' +
-          'marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;' +
-          'marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}' +
-          '#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}' +
-          '#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1;' +
-          ' line-color: #FFFFFF;}';
-    }
-    else {
-      // 2.2.0+ default
-      default_style = '#<%= table %>["mapnik::geometry_type"=1] {marker-fill: #FF6600;marker-opacity: 1;' +
-          'marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;' +
-          'marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}' +
-          '#<%= table %>["mapnik::geometry_type"=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}' +
-          '#<%= table %>["mapnik::geometry_type"=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1;' +
-          ' line-color: #FFFFFF;}';
-    }
-
-    // A couple of styles to use during testing
-    var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
-    var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
-
-    suiteSetup(function(done){
-      sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
-    });
+suite('server', function() {
 
     /////////////////////////////////////////////////////////////////////////////////
     //
@@ -115,6 +76,48 @@ suite.skip('server', function() {
           // TODO: check actual versions ?
           done();
         });
+    });
+});
+
+suite.skip('server old_api', function() {
+
+    var redis_client = redis.createClient(global.environment.redis.port);
+    var sqlapi_server;
+
+    var mapnik_version = global.environment.mapnik_version || server.getVersion().mapnik;
+    var test_database = _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db';
+    var default_style;
+    if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
+        // 2.0.0 default
+        default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;' +
+            'marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ' +
+            'ellipse;marker-allow-overlap: true;}';
+    }
+    else if ( semver.satisfies(mapnik_version, '<2.2.0') ) {
+        // 2.1.0 default
+        default_style = '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;' +
+            'marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;' +
+            'marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}' +
+            '#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}' +
+            '#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1;' +
+            ' line-color: #FFFFFF;}';
+    }
+    else {
+        // 2.2.0+ default
+        default_style = '#<%= table %>["mapnik::geometry_type"=1] {marker-fill: #FF6600;marker-opacity: 1;' +
+            'marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;' +
+            'marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}' +
+            '#<%= table %>["mapnik::geometry_type"=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}' +
+            '#<%= table %>["mapnik::geometry_type"=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1;' +
+            ' line-color: #FFFFFF;}';
+    }
+
+    // A couple of styles to use during testing
+    var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
+    var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
+
+    suiteSetup(function(done){
+        sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
 
     /////////////////////////////////////////////////////////////////////////////////
