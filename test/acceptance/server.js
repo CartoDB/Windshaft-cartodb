@@ -16,7 +16,7 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-[true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
+[true].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
 
 suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
 
@@ -116,118 +116,6 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
           // TODO: check actual versions ?
           done();
         });
-    });
-
-    /////////////////////////////////////////////////////////////////////////////////
-    //
-    // GET STYLE
-    //
-    /////////////////////////////////////////////////////////////////////////////////
-    
-    test("get'ing blank style returns default style", function(done){
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/my_table/style',
-            method: 'GET'
-        },{
-            status: 200,
-            headers: { 'X-Cache-Channel': test_database+':my_table' }
-        }, function(res) {
-            var parsed = JSON.parse(res.body);
-            assert.equal(parsed.style, _.template(default_style, {table: 'my_table'}));
-            assert.equal(parsed.style_version, mapnik_version);
-            done();
-        });
-    });
-
-    // See https://github.com/Vizzuality/Windshaft-cartodb/issues/43
-    test("get'ing style of private table should fail when unauthenticated",
-    function(done) {
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/test_table_private_1/style',
-            method: 'GET'
-        },{
-        }, function(res) {
-          assert.equal(res.statusCode, 403, res.statusCode + ':' + res.body);
-          assert.deepEqual(JSON.parse(res.body),
-            {error: 'Sorry, you are unauthorized (permission denied)'});
-          assert.ok(!res.headers.hasOwnProperty('cache-control'));
-          done();
-        });
-    });
-
-    // See http://github.com/Vizzuality/Windshaft-cartodb/issues/55
-    test("get'ing style of private table should fail on unknown username",
-    function(done) {
-        assert.response(server, {
-            headers: {host: 'unknown_user'},
-            url: '/tiles/test_table_private_1/style',
-            method: 'GET'
-        },{
-        }, function(res) {
-          // FIXME: should be 403 Forbidden or 404 User Not Found
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          assert.deepEqual(JSON.parse(res.body),
-            {error:"missing unknown_user's database_name in redis (try CARTODB/script/restore_redis)"});
-          assert.ok(!res.headers.hasOwnProperty('cache-control'));
-          done();
-        });
-    });
-
-    test("get'ing style of private table should succeed when authenticated",
-    function(done) {
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/test_table_private_1/style?map_key=1234',
-            method: 'GET'
-        },{
-        }, function(res) {
-          assert.equal(res.statusCode, 200, res.body);
-          var parsed = JSON.parse(res.body);
-          var style = _.template(default_style, {table: 'test_table_private_1'});
-          assert.equal(parsed.style, style);
-          assert.equal(parsed.style_version, mapnik_version); 
-          done();
-        });
-    });
-
-    // See https://github.com/CartoDB/Windshaft-cartodb/issues/94
-    test("get'ing unrenderable style", function(done) {
-      var base_key = 'map_style|'+test_database+'|issue94';
-      var style = '#s{bogus}';
-      step(
-        function checkRedis() {
-          redis_client.keys(base_key+'*', this);
-        },
-        function setupRedisBase(err, matches) {
-          if ( err ) throw err;
-          assert.equal(matches.length, 0,
-            'Unexpected redis keys at test start: ' + matches.join("\n"));
-          redis_client.set(base_key, 
-            JSON.stringify({ style: style }),
-          this);
-        },
-        function getStyle(err) {
-          if ( err ) throw err;
-          var next = this;
-          assert.response(server, {
-              headers: {host: 'localhost'},
-              url: '/tiles/issue94/style',
-              method: 'GET'
-              }, {}, function(res) { next(null, res); });
-        },
-        function checkStyle(err, res) {
-          if ( err ) throw err;
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          var parsed = JSON.parse(res.body);
-          assert.equal(parsed.style, style);
-          return null;
-        },
-        function finish(err) {
-          done(err);
-        }
-      );
     });
 
     /////////////////////////////////////////////////////////////////////////////////
