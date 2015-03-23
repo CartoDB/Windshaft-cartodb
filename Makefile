@@ -33,6 +33,9 @@ jshint:
 
 test-all: jshint test
 
+coverage:
+	@RUNTESTFLAGS=--with-coverage make test
+
 check: test
 
 .PHONY: pre-install test

@@ -4,6 +4,7 @@ OPT_CREATE_REDIS=yes # create the redis test environment
 OPT_CREATE_PGSQL=yes # create the PostgreSQL test environment
 OPT_DROP_REDIS=yes   # drop the redis test environment
 OPT_DROP_PGSQL=yes   # drop the PostgreSQL test environment
+OPT_COVERAGE=no      # run tests with coverage
 
 export PGAPPNAME=cartodb_tiler_tester
 
@@ -69,6 +70,10 @@ while [ -n "$1" ]; do
                 OPT_CREATE_REDIS=no
                 shift
                 continue
+        elif test "$1" = "--with-coverage"; then
+                OPT_COVERAGE=yes
+                shift
+                continue
         # This is kept for backward compatibility
         elif test "$1" = "--nocreate"; then
                 OPT_CREATE_REDIS=no
@@ -85,6 +90,7 @@ if [ -z "$1" ]; then
         echo "Options:" >&2
         echo " --nocreate   do not create the test environment on start" >&2
         echo " --nodrop     do not drop the test environment on exit" >&2
+        echo " --with-coverage   use istanbul to determine code coverage" >&2
         exit 1
 fi
 
@@ -112,8 +118,13 @@ cd -
 
 PATH=node_modules/.bin/:$PATH
 
-echo "Running tests"
-mocha -t 10000 -u tdd ${MOCHA_OPTS} ${TESTS}
+if test x"$OPT_COVERAGE" = xyes; then
+  echo "Running tests with coverage"
+  ./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u tdd -t 5000 ${TESTS}
+else
+  echo "Running tests"
+  mocha -u tdd -t 5000 ${TESTS}
+fi
 ret=$?
 
 cleanup
