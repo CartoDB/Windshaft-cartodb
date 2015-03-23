@@ -96,7 +96,6 @@ suite('named_layers', function() {
     };
 
     suiteSetup(function(done) {
-        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: true};
         templateMaps.addTemplate(username, nestedNamedMapTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -637,7 +636,6 @@ suite('named_layers', function() {
 
 
     suiteTeardown(function(done) {
-        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
         templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
             if (err) {
                 return done(err);

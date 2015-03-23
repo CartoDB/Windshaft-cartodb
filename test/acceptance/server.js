@@ -16,9 +16,9 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-[true].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
+var cdbQueryTablesFromPostgresEnabledValue = true;
 
-suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
+suite('server', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
@@ -56,7 +56,6 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
 
     suiteSetup(function(done){
-      global.environment.enabledFeatures = { cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue };
       sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
 
@@ -1089,6 +1088,4 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
         });
     });
     
-});
-
 });

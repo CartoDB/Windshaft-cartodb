@@ -23,10 +23,11 @@ var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
 ['/tiles/layergroup', '/u/localhost/tiles/layergroup'].forEach(function(layergroup_url) {
-[true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
 
-var suiteName = 'multilayer:postgres=' + cdbQueryTablesFromPostgresEnabledValue + ";layergroup_url=" + layergroup_url;
+var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
 suite(suiteName, function() {
+
+    var cdbQueryTablesFromPostgresEnabledValue = true
 
     var redis_client = redis.createClient(global.environment.redis.port);
     var sqlapi_server;
@@ -38,7 +39,6 @@ suite(suiteName, function() {
     var test_database = test_user + '_db';
 
     suiteSetup(function(done){
-      global.environment.enabledFeatures = { cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue };
       sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
     });
 
@@ -1443,5 +1443,4 @@ suite(suiteName, function() {
     
 });
 
-});
 });
