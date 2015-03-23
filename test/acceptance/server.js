@@ -1,11 +1,9 @@
 var assert      = require('../support/assert');
-var tests       = module.exports = {};
 var _           = require('underscore');
 var redis       = require('redis');
 var querystring = require('querystring');
 var semver      = require('semver');
-var Step        = require('step');
-var http        = require('http');
+var step        = require('step');
 var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 
 var helper = require(__dirname + '/../support/test_helper');
@@ -30,15 +28,27 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
     var default_style;
     if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
       // 2.0.0 default
-      default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}';
+      default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;' +
+          'marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ' +
+          'ellipse;marker-allow-overlap: true;}';
     }
     else if ( semver.satisfies(mapnik_version, '<2.2.0') ) {
       // 2.1.0 default
-      default_style = '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
+      default_style = '#<%= table %>[mapnik-geometry-type=1] {marker-fill: #FF6600;marker-opacity: 1;' +
+          'marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;' +
+          'marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}' +
+          '#<%= table %>[mapnik-geometry-type=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}' +
+          '#<%= table %>[mapnik-geometry-type=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1;' +
+          ' line-color: #FFFFFF;}';
     }
     else {
       // 2.2.0+ default
-      default_style = '#<%= table %>["mapnik::geometry_type"=1] {marker-fill: #FF6600;marker-opacity: 1;marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}#<%= table %>["mapnik::geometry_type"=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}#<%= table %>["mapnik::geometry_type"=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1; line-color: #FFFFFF;}';
+      default_style = '#<%= table %>["mapnik::geometry_type"=1] {marker-fill: #FF6600;marker-opacity: 1;' +
+          'marker-width: 16;marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;' +
+          'marker-placement: point;marker-type: ellipse;marker-allow-overlap: true;}' +
+          '#<%= table %>["mapnik::geometry_type"=2] {line-color:#FF6600; line-width:1; line-opacity: 0.7;}' +
+          '#<%= table %>["mapnik::geometry_type"=3] {polygon-fill:#FF6600; polygon-opacity: 0.7; line-opacity:1;' +
+          ' line-color: #FFFFFF;}';
     }
 
     // A couple of styles to use during testing
@@ -58,7 +68,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
     
     // TODO: I guess this should be a 404 instead...
     test("get call to server returns 200", function(done){
-      Step(
+      step(
         function doGet() {
           var next = this;
           assert.response(server, {
@@ -121,7 +131,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             method: 'GET'
         },{
             status: 200,
-            headers: { 'X-Cache-Channel': test_database+':my_table' },
+            headers: { 'X-Cache-Channel': test_database+':my_table' }
         }, function(res) {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.style, _.template(default_style, {table: 'my_table'}));
@@ -186,7 +196,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
     test("get'ing unrenderable style", function(done) {
       var base_key = 'map_style|'+test_database+'|issue94';
       var style = '#s{bogus}';
-      Step(
+      step(
         function checkRedis() {
           redis_client.keys(base_key+'*', this);
         },
@@ -212,7 +222,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.equal(parsed.style, style);
-          return null
+          return null;
         },
         function finish(err) {
           done(err);
@@ -260,7 +270,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             data: querystring.stringify({style: '#my_table3{'})
         },{}, function(res) {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          assert.ok( RegExp(/missing closing/i).test(res.body) );
+          assert.ok( new RegExp(/missing closing/i).test(res.body) );
           done();
         });
     });
@@ -272,12 +282,12 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
             data: querystring.stringify({style: '#my_table4{backgxxxxxround-color:#fff;foo:bar}'})
         },{
-            status: 400, 
+            status: 400
         }, function(res) {
           var parsed = JSON.parse(res.body);
           assert.equal(parsed.length, 2);
-          assert.ok( RegExp(/Unrecognized rule: backgxxxxxround-color/).test(parsed[0]) );
-          assert.ok( RegExp(/Unrecognized rule: foo/).test(parsed[1]) );
+          assert.ok( new RegExp(/Unrecognized rule: backgxxxxxround-color/).test(parsed[0]) );
+          assert.ok( new RegExp(/Unrecognized rule: foo/).test(parsed[1]) );
           done();
         });
     });
@@ -333,7 +343,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
                 url: '/tiles/my_table5/style',
                 method: 'GET'
             },{
-                status: 200,
+                status: 200
             }, function(res) {
               var parsed = JSON.parse(res.body);
               assert.equal(parsed.style, 'Map { background-color:#fff; }');
@@ -420,7 +430,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
         assert.response(server, {
             url: '/tiles/my_table5/style',
             method: 'DELETE',
-            headers: {host: 'localhost'},
+            headers: {host: 'localhost'}
         },{}, function(res) { 
           // FIXME: should be 403 Forbidden
           assert.equal(res.statusCode, 400, res.body);
@@ -431,7 +441,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
               url: '/tiles/my_table5/style?map_key=1234',
               method: 'GET'
           },{
-              status: 200,
+              status: 200
           }, function(res) {
               var parsed = JSON.parse(res.body);
               assert.equal(parsed.style, 'Map { background-color:#fff; }');
@@ -447,7 +457,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
         assert.response(server, {
             url: '/tiles/my_table5/style?map_key=1234',
             method: 'DELETE',
-            headers: {host: 'localhost'},
+            headers: {host: 'localhost'}
         },{}, function(res) { 
         assert.equal(res.statusCode, 200, res.body);
 
@@ -481,7 +491,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
         assert.response(server, {
             url: '/tiles/my_table5/style?api_key=1234',
             method: 'DELETE',
-            headers: {host: 'localhost'},
+            headers: {host: 'localhost'}
         },{}, function(res) { 
           assert.equal(res.statusCode, 200, res.body);
           done();
@@ -518,7 +528,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
     });
     
     test("get'ing a json with default style and sql should return a constrained grid", function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"})
+        var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE codineprov = '08'"});
         assert.response(server, {
             headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.grid.json?' + sql,
@@ -601,7 +611,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             url: '/tiles/gadm4/6/31/24.png',
             method: 'GET'
         },{
-            status: 200,
+            status: 200
         }, function(res) {
           var cc = res.headers['cache-control'];
           assert.ok(cc);
@@ -619,7 +629,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             url: '/tiles/gadm4/6/31/24.png?cache_policy=persist',
             method: 'GET'
         },{
-            status: 200,
+            status: 200
         }, function(res) {
           var cc = res.headers['cache-control'];
           assert.ok(cc);
@@ -653,7 +663,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
     
     
     test("get'ing a tile with default style and complex sql should return a constrained image", function(done){
-        var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE  codineprov = '08' AND codccaa > 60"})
+        var sql = querystring.stringify({sql: "SELECT * FROM gadm4 WHERE  codineprov = '08' AND codccaa > 60"});
         assert.response(server, {
             headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.png?' + sql,
@@ -666,7 +676,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
 
     test("get'ing a tile with data from private table should succeed when authenticated", function(done){
         // NOTE: may fail if grainstore < 0.3.0 is used by Windshaft
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table_private_1", map_key: 1234})
+        var sql = querystring.stringify({sql: "SELECT * FROM test_table_private_1", map_key: 1234});
         assert.response(server, {
             headers: {host: 'localhost'},
             // NOTE: we encode a public table in the URL !
@@ -681,7 +691,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
     // See https://github.com/Vizzuality/Windshaft-cartodb/issues/38
     test("get'ing a tile with data from private table should succeed when authenticated with api_key", function(done){
         // NOTE: may fail if grainstore < 0.3.0 is used by Windshaft
-        var sql = querystring.stringify({sql: "SELECT * FROM test_table_private_1", api_key: 1234})
+        var sql = querystring.stringify({sql: "SELECT * FROM test_table_private_1", api_key: 1234});
         assert.response(server, {
             headers: {host: 'localhost'},
             url: '/tiles/gadm4/6/31/24.png?' + sql,
@@ -730,7 +740,8 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
         });
     });
 
-    test("get'ing a tile with data from private table should fail when unauthenticated (uses old redis key)", function(done){
+    test("get'ing a tile with data from private table should fail when unauthenticated (uses old redis key)",
+    function(done) {
         var sql = querystring.stringify({
           sql: "SELECT * FROM test_table_private_1",
           cache_buster:3,
@@ -764,11 +775,11 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var ct = res.headers['content-type'];
           assert.equal(ct, 'image/png');
-          assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
-            function(err, similarity) {
-              if (err) throw err;
-              done();
-          });
+          assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',
+              IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
+                if (err) throw err;
+                done();
+              });
         });
     });
 
@@ -777,7 +788,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
         var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
         var backupDBHost = global.environment.postgres.host;
         global.environment.postgres.host = '6.6.6.6';
-        Step (
+        step (
           function() {
             var next = this;
             assert.response(server, {
@@ -797,9 +808,9 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
               './test/fixtures/test_table_15_16046_12354_styled_black.png',
               IMAGE_EQUALS_TOLERANCE_PER_MIL, this);
           },
-          function checkImage(err, similarity) {
+          function checkImage(err/*, similarity*/) {
               if (err) throw err;
-              return null
+              return null;
           },
           function finish(err) {
             global.environment.postgres.host = backupDBHost;
@@ -813,13 +824,12 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
         var style = querystring.stringify({style: test_style_black_200, style_version: '2.0.0'});
         var backupDBPass = global.environment.postgres_auth_pass;
         global.environment.postgres_auth_pass = '<%= user_password %>';
-        Step (
+        step (
           function() {
             var next = this;
             assert.response(server, {
                 headers: {host: 'cartodb250user'},
-                url: '/tiles/test_table/15/16046/12354.png?'
-                  + 'cache_buster=4.20&api_key=4321&' + style, 
+                url: '/tiles/test_table/15/16046/12354.png?' + 'cache_buster=4.20&api_key=4321&' + style,
                 method: 'GET',
                 encoding: 'binary'
             },{}, function(res){
@@ -834,9 +844,9 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
               './test/fixtures/test_table_15_16046_12354_styled_black.png',
               IMAGE_EQUALS_TOLERANCE_PER_MIL, this);
           },
-          function checkImage(err, similarity) {
+          function checkImage(err/*, similarity*/) {
               if (err) throw err;
-              return null
+              return null;
           },
           function finish(err) {
             global.environment.postgres_auth_pass = backupDBPass;
@@ -856,11 +866,11 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var ct = res.headers['content-type'];
           assert.equal(ct, 'image/png');
-          assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
-            function(err, similarity) {
-              if (err) throw err;
-              done();
-          });
+          assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',
+              IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
+                if (err) throw err;
+                done();
+              });
         });
     });
 
@@ -870,10 +880,9 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
           style_version: '2.1.0',
           cache_buster: 5
         };
-        Step (
+        step (
           function compressQuery () {
             //console.log("Compressing starts");
-            var next = this;
             helper.lzma_compress_to_base64(JSON.stringify(qo), 1, this);
           },
           function sendRequest(err, lzma) {
@@ -893,10 +902,10 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
-              function(err, similarity) {
-                next(err);
-            });
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',
+                IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
+                    next(err);
+                });
           },
           function finish(err) {
             done(err);
@@ -906,8 +915,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
 
     // See http://github.com/Vizzuality/Windshaft-cartodb/issues/57
     test("GET'ing a tile as anonymous with style set by POST",  function(done){
-      var style = querystring.stringify({style: test_style_black_210, style_version: '2.1.0'});
-      Step (
+      step (
         function postStyle1() {
           var next = this;
           assert.response(server, {
@@ -934,7 +942,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
             assert.imageEqualsFile(res.body, './test/fixtures/blank.png', IMAGE_EQUALS_ZERO_TOLERANCE_PER_MIL,
-              function(err, similarity) {
+              function(err/*, similarity*/) {
                 if (err) next(err); 
                 else next();
             });
@@ -954,7 +962,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
             assert.imageEqualsFile(res.body, './test/fixtures/blank.png', IMAGE_EQUALS_ZERO_TOLERANCE_PER_MIL,
-              function(err, similarity) {
+              function(err/*, similarity*/) {
                 if (err) next(err); 
                 else next();
             });
@@ -990,12 +998,12 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
-              function(err, similarity) {
-                // NOTE: we expect them to be EQUAL here
-                if (err) { next(err); return; }
-                next();
-            });
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',
+                IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
+                    // NOTE: we expect them to be EQUAL here
+                    if (err) { next(err); return; }
+                    next();
+                });
           });
         },
         // Delete the style
@@ -1027,12 +1035,13 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var ct = res.headers['content-type'];
             assert.equal(ct, 'image/png');
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
-              function(err, similarity) {
-                // NOTE: we expect them to be different here
-                if (err) next(); 
-                else next(new Error('Last posted style still in effect after delete'));
-            });
+            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',
+                IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
+                    // NOTE: we expect them to be different here
+                    if (err) next();
+                    else next(new Error('Last posted style still in effect after delete'));
+                }
+            );
           });
         },
         function finish(err) {
@@ -1043,14 +1052,13 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
 
     test("uses sqlapi to figure source data of query", function(done){
         var qo = {
-          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator "
-              + "FROM gadm4 g, test_table t "
-              + "WHERE g.cartodb_id = t.cartodb_id",
+          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator" +
+              " FROM gadm4 g, test_table t" +
+              " WHERE g.cartodb_id = t.cartodb_id",
           map_key: 1234
         };
-        var sqlapi;
-        Step(
-          function sendRequest(err) {
+        step(
+          function sendRequest() {
             var next = this;
             assert.response(server, {
                 headers: {host: 'localhost'},
@@ -1087,9 +1095,8 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
           sql: "SELECT * from gadm4",
           map_key: 1234
         };
-        var sqlapi;
-        Step(
-          function sendRequest(err) {
+        step(
+          function sendRequest() {
             var next = this;
             assert.response(server, {
                 headers: {host: 'localhost'},
@@ -1102,7 +1109,7 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
             assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var last_request = sqlapi_server.getLastRequest();
             assert.ok(last_request);
-            var host = last_request.headers['host'];
+            var host = last_request.headers.host;
             assert.ok(host);
             assert.equal(last_request.method, 'GET');
             assert.equal(host, 'localhost.donot_look_this_up');
@@ -1118,15 +1125,13 @@ suite('server:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
     if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
     test("requests to skip cache on sqlapi error", function(done){
         var qo = {
-          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator "
-              + ", 'SQLAPIERROR' is not null "
-              + "FROM gadm4 g, test_table t "
-              + "WHERE g.cartodb_id = t.cartodb_id",
+          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator, 'SQLAPIERROR' is not null" +
+              " FROM gadm4 g, test_table t" +
+              " WHERE g.cartodb_id = t.cartodb_id",
           map_key: 1234
         };
-        var sqlapi;
-        Step(
-          function sendRequest(err) {
+        step(
+          function sendRequest() {
             var next = this;
             assert.response(server, {
                 headers: {host: 'localhost'},
