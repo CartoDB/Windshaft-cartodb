@@ -133,26 +133,6 @@ var config = {
             statusInterval: 5000 // time, in ms, between each status report is emitted from the pool, status is sent to statsd
         }
     }
-    ,sqlapi: {
-        protocol: 'http',
-        // If "host" is given, it will be used
-        // to connect to the SQL-API without a
-        // DNS lookup
-        host: '127.0.0.1',
-        port: 8080,
-        // The "domain" part will be appended to 
-        // the cartodb username and passed to
-        // SQL-API requests in the Host HTTP header
-        domain: 'localhost.lan',
-        version: 'v1',
-        // Maximum lenght of SQL query for GET
-        // requests. Longer queries will be sent
-        // using POST. Defaults to 2048
-        max_get_sql_length: 2048,
-        // Maximum time to wait for a response,
-        // in milliseconds. Defaults to 100.
-        timeout: 100
-    }
     ,varnish: {
         host: 'localhost',
         port: 6082, // the por for the telnet interface where varnish is listening to
