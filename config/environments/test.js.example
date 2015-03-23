@@ -14,11 +14,11 @@ var config = {
     // Base url for the Templated Maps API
     // "/api/v1/map/named" is the new API,
     // "/tiles/template" is for compatibility with versions up to 1.6.x
-    ,base_url_templated: '(?:/api/v1/map/named|/tiles/template)'
+    ,base_url_templated: '(?:/api/v1/map/named|/tiles/template|/u/:user/api/v1/map/named|/u/:user/tiles/template)'
     // Base url for the Detached Maps API
     // "maps" is the the new API,
     // "tiles/layergroup" is for compatibility with versions up to 1.6.x
-    ,base_url_detached: '(?:/api/v1/map|/tiles/layergroup)'
+    ,base_url_detached: '(?:/api/v1/map|/tiles/layergroup|/u/:user/api/v1/map|/u/:user/tiles/layergroup)'
     // Base url for the Inline Maps and Table Maps API
     ,base_url_legacy: '/tiles/:table'
 
@@ -171,6 +171,12 @@ var config = {
       z: 0,
       x: 0,
       y: 0
+    }
+
+    // Use this as a feature flags enabling/disabling mechanism
+    ,enabledFeatures: {
+        // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
+        cdbQueryTablesFromPostgres: true
     }
 };
 
