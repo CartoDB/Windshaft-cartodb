@@ -22,7 +22,7 @@ serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-['/tiles/layergroup', '/u/localhost/tiles/layergroup'].forEach(function(layergroup_url) {
+['/api/v1/map', '/u/localhost/api/v1/map'].forEach(function(layergroup_url) {
 
 var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
 suite(suiteName, function() {
@@ -962,7 +962,7 @@ suite(suiteName, function() {
       };
 
       assert.response(server, {
-          url: '/tiles/layergroup?',
+          url: layergroup_url,
           method: 'POST',
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
@@ -995,7 +995,7 @@ suite(suiteName, function() {
       };
 
       assert.response(server, {
-          url: '/tiles/layergroup?',
+          url: layergroup_url,
           method: 'POST',
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
@@ -1018,7 +1018,7 @@ suite(suiteName, function() {
         ]
       };
       assert.response(server, {
-          url: '/tiles/layergroup?',
+          url: layergroup_url,
           method: 'POST',
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)

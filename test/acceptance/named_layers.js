@@ -96,6 +96,7 @@ suite('named_layers', function() {
     };
 
     suiteSetup(function(done) {
+        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: true};
         templateMaps.addTemplate(username, nestedNamedMapTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -129,7 +130,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -182,7 +183,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -239,7 +240,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -292,7 +293,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -372,7 +373,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -407,7 +408,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup/' + layergroupId + '/0/0/0.png',
+                        url: '/api/v1/map/' + layergroupId + '/0/0/0.png',
                         method: 'GET',
                         headers: {
                             host: 'localhost'
@@ -500,7 +501,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -535,7 +536,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup/' + layergroupId + '/0/0/0.png',
+                        url: '/api/v1/map/' + layergroupId + '/0/0/0.png',
                         method: 'GET',
                         headers: {
                             host: 'localhost'
@@ -601,7 +602,7 @@ suite('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/tiles/layergroup',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -636,6 +637,7 @@ suite('named_layers', function() {
 
 
     suiteTeardown(function(done) {
+        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
         templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
             if (err) {
                 return done(err);

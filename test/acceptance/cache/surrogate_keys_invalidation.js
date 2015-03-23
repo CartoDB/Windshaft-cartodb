@@ -56,7 +56,7 @@ suite('templates surrogate keys', function() {
 
     function createTemplate(callback) {
         var postTemplateRequest = {
-            url: '/tiles/template?api_key=1234',
+            url: '/api/v1/map/named?api_key=1234',
             method: 'POST',
             headers: {
                 host: templateOwner,
@@ -109,7 +109,7 @@ suite('templates surrogate keys', function() {
                     throw err;
                 }
                 var updateTemplateRequest = {
-                    url: '/tiles/template/' + expectedTemplateId + '/?api_key=1234',
+                    url: '/api/v1/map/named/' + expectedTemplateId + '/?api_key=1234',
                     method: 'PUT',
                     headers: {
                         host: templateOwner,
@@ -174,7 +174,7 @@ suite('templates surrogate keys', function() {
                     throw err;
                 }
                 var deleteTemplateRequest = {
-                    url: '/tiles/template/' + expectedTemplateId + '/?api_key=1234',
+                    url: '/api/v1/map/named/' + expectedTemplateId + '/?api_key=1234',
                     method: 'DELETE',
                     headers: {
                         host: templateOwner,
