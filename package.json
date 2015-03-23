@@ -37,6 +37,7 @@
         "rollbar": "~0.3.13"
     },
     "devDependencies": {
+        "istanbul": "~0.3.6",
         "mocha": "~1.21.4",
         "jshint": "~2.6.0",
         "redis": "~0.8.6",
