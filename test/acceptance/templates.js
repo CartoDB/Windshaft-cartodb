@@ -6,7 +6,6 @@ var semver      = require('semver');
 var Step        = require('step');
 var strftime    = require('strftime');
 var NamedMapsCacheEntry = require(__dirname + '/../../lib/cartodb/cache/model/named_maps_entry');
-var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 var redis_stats_db = 5;
 
 // Pollute the PG environment to make sure
@@ -29,14 +28,8 @@ suite('template_api', function() {
     serverOptions.channelCache = {};
 
     var redis_client = redis.createClient(global.environment.redis.port);
-    var sqlapi_server;
     var expected_last_updated_epoch = 1234567890123; // this is hard-coded into SQLAPIEmu
     var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
-
-    suiteSetup(function(done){
-      sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
-      // TODO: check redis is clean ?
-    });
 
     var template_acceptance1 =  {
         version: '0.0.1',
@@ -2108,7 +2101,7 @@ suite('template_api', function() {
               redis_client.select(5, function(err) {
                 redis_client.keys("user:localhost:mapviews*", function(err, keys) {
                   redis_client.del(keys, function(err) {
-                    sqlapi_server.close(done);
+                    done();
                   });
                 });
               });

@@ -1,10 +1,8 @@
+require(__dirname + '/../../support/test_helper');
+
 var assert      = require('../../support/assert');
 var redis       = require('redis');
-var Step        = require('step');
-
-var helper = require(__dirname + '/../../support/test_helper');
-
-var SqlApiEmulator = require(__dirname + '/../../support/SQLAPIEmu.js');
+var step        = require('step');
 
 var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cartodb/cache/model/named_maps_entry');
 var SurrogateKeysCache = require(__dirname + '/../../../lib/cartodb/cache/surrogate_keys_cache');
@@ -16,7 +14,6 @@ var serverOptions = ServerOptions();
 
 suite('templates surrogate keys', function() {
 
-    var sqlApiServer;
     var redisClient = redis.createClient(global.environment.redis.port);
 
     // Enable Varnish purge for tests
@@ -48,10 +45,6 @@ suite('templates surrogate keys', function() {
         },
         expectedBody = { template_id: expectedTemplateId };
 
-    suiteSetup(function(done) {
-        sqlApiServer = new SqlApiEmulator(global.environment.sqlapi.port, done);
-    });
-
     var surrogateKeysCacheInvalidateFn = SurrogateKeysCache.prototype.invalidate;
 
     function createTemplate(callback) {
@@ -65,7 +58,7 @@ suite('templates surrogate keys', function() {
             data: JSON.stringify(template)
         };
 
-        Step(
+        step(
             function postTemplate() {
                 var next = this;
                 assert.response(server,
@@ -100,7 +93,7 @@ suite('templates surrogate keys', function() {
             surrogateKeysCacheInvalidateMethodInvoked = true;
         };
 
-        Step(
+        step(
             function createTemplateToUpdate() {
                 createTemplate(this);
             },
@@ -165,7 +158,7 @@ suite('templates surrogate keys', function() {
             surrogateKeysCacheInvalidateMethodInvoked = true;
         };
 
-        Step(
+        step(
             function createTemplateToDelete() {
                 createTemplate(this);
             },
@@ -212,7 +205,7 @@ suite('templates surrogate keys', function() {
         SurrogateKeysCache.prototype.invalidate = surrogateKeysCacheInvalidateFn;
         // Enable Varnish purge for tests
         serverOptions.varnish_purge_enabled = false;
-        sqlApiServer.close(done);
+        done();
     });
 
 });

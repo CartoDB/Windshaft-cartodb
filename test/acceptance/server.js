@@ -4,7 +4,6 @@ var redis       = require('redis');
 var querystring = require('querystring');
 var semver      = require('semver');
 var step        = require('step');
-var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 
 var helper = require(__dirname + '/../support/test_helper');
 
@@ -115,10 +114,6 @@ suite.skip('server old_api', function() {
     // A couple of styles to use during testing
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
-
-    suiteSetup(function(done){
-        sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
-    });
 
     /////////////////////////////////////////////////////////////////////////////////
     //
@@ -1086,8 +1081,9 @@ suite.skip('server old_api', function() {
         // This test will add map_style records, like
         // 'map_style|null|publicuser|my_table',
         redis_client.keys("map_style|*", function(err, matches) {
-            _.each(matches, function(k) { redis_client.del(k); });
-            sqlapi_server.close(done);
+            redis_client.del(matches, function() {
+                done();
+            });
         });
     });
     

@@ -6,7 +6,6 @@ var querystring = require('querystring');
 var semver      = require('semver');
 var Step        = require('step');
 var strftime    = require('strftime');
-var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 var redis_stats_db = 5;
 
 var helper = require(__dirname + '/../support/test_helper');
@@ -35,12 +34,7 @@ suite(suiteName, function() {
     var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
 
     var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
-    var test_pubuser = global.environment.postgres.user;
     var test_database = test_user + '_db';
-
-    suiteSetup(function(done){
-      sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
-    });
 
     test("layergroup with 2 layers, each with its style", function(done) {
 
@@ -1432,7 +1426,7 @@ suite(suiteName, function() {
               redis_client.select(5, function(err, matches) {
                 redis_client.keys("user:localhost:mapviews*", function(err, matches) {
                   redis_client.del(matches, function(err) {
-                    sqlapi_server.close(done);
+                    done();
                   });
                 });
               });
