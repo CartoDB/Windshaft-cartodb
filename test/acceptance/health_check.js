@@ -79,7 +79,7 @@ suite('health checks', function () {
     test('error if disabled file exists', function(done) {
       var fs = require('fs');
 
-      readFileFn = fs.readFile
+      var readFileFn = fs.readFile
       fs.readFile = function(filename, callback) {
         callback(null, "Maintenance");
       }   
@@ -88,9 +88,9 @@ suite('health checks', function () {
         assert.equal(err.message, "Maintenance");
         assert.equal(err.http_status, 503);
         done();
+        fs.readFile = readFileFn;
       }); 
       
-      fs.readFile = readFileFn;
     }); 
 
     test('not err if disabled file does not exists', function(done) {
