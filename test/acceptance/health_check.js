@@ -5,6 +5,11 @@ var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 
+var metadataBackend = {};
+var tilelive = {};
+var HealthCheck = require('../../lib/cartodb/monitoring/health_check');
+var healthCheck = new HealthCheck(metadataBackend, tilelive);
+
 suite('health checks', function () {
 
     function resetHealthConfig() {
@@ -70,5 +75,45 @@ suite('health checks', function () {
             }
         );
     });
+
+    test('error if disabled file exists', function(done) {
+      var fs = require('fs');
+
+      readFileFn = fs.readFile
+      fs.readFile = function(filename, callback) {
+        callback(null, "Maintenance");
+      }   
+      
+      healthCheck.check(null, function(err, result) {
+        assert.equal(err.message, "Maintenance");
+        assert.equal(err.http_status, 503);
+        done();
+      }); 
+      
+      fs.readFile = readFileFn;
+    }); 
+
+    test('not err if disabled file does not exists', function(done) {
+      resetHealthConfig();
+
+      global.environment.disabled_file = '/tmp/ftreftrgtrccre';
+
+      assert.response(server,
+        healthCheckRequest,
+        {
+          status: 200
+        },
+        function (res, err) {
+          assert.ok(!err);
+
+          var parsed = JSON.parse(res.body);
+
+          assert.equal(parsed.enabled, true);
+          assert.equal(parsed.ok, true);
+
+          done();
+        }
+      );
+    }); 
 
 });
