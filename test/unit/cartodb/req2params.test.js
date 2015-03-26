@@ -22,7 +22,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
           assert.equal(req.params.dbname, test_database, 'could forge dbname: '+ req.params.dbname);
           assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
           done();
@@ -36,7 +36,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
           assert.equal(req.params.dbname, test_database);
           assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
           done();
@@ -50,7 +50,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
           assert.equal(req.params.dbname, test_database);
           assert.equal(req.params.dbuser, test_user);
  
