@@ -25,9 +25,7 @@ Again, each inner timer may have several inner timers.
 - **TemplateMaps_instance**: time to retrieve a map template instance, see *getTemplate* and *authorizedByCert*
 - **affectedTables**: time to check what are the affected tables for adding the cache channel, see *addCacheChannel*
 - **authorize**: time to authorize a request, see *authorizedByAPIKey*, *authorizedByCert*, *authorizedBySigner*
-- **authorizedByAPIKey**: time to authorize using an API KEY
 - **authorizedByCert**: time to authorize a template instantiation
-- **authorizedBySigner**: time to authorize a request with auth_token
 - **findLastUpdated**: time to retrieve the last update time for a list of tables, see *affectedTables*
 - **generateCacheChannel**: time to generate the headers for the cache channel based on the request, see *addCacheChannel*
 - **getSignerMapKey**: time to retrieve from redis the authorized user for a template map
