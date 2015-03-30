@@ -24,7 +24,7 @@ describe('tests from old api translated to multilayer', function() {
         });
     });
 
-    test("layergroup creation fails if CartoCSS is bogus", function(done) {
+    it("layergroup creation fails if CartoCSS is bogus", function(done) {
         var layergroup =  {
             stat_tag: 'random_tag',
             version: '1.0.0',
