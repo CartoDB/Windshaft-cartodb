@@ -88,9 +88,9 @@ suite.skip('server old_api', function() {
     var default_style;
     if ( semver.satisfies(mapnik_version, '<2.1.0') ) {
         // 2.0.0 default
-        default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;marker-line-color: white;' +
-            'marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;marker-type: ' +
-            'ellipse;marker-allow-overlap: true;}';
+        default_style = '#<%= table %>{marker-fill: #FF6600;marker-opacity: 1;marker-width: 8;' +
+            'marker-line-color: white;marker-line-width: 3;marker-line-opacity: 0.9;marker-placement: point;' +
+            'marker-type: ellipse;marker-allow-overlap: true;}';
     }
     else if ( semver.satisfies(mapnik_version, '<2.2.0') ) {
         // 2.1.0 default
