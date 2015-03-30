@@ -121,19 +121,6 @@ suite.skip('server old_api', function() {
     //
     /////////////////////////////////////////////////////////////////////////////////
 
-    test("post'ing unparseable style returns 400 with error", function(done){
-        assert.response(server, {
-            url: '/tiles/my_table3/style?map_key=1234',
-            method: 'POST',
-            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#my_table3{'})
-        },{}, function(res) {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          assert.ok( new RegExp(/missing closing/i).test(res.body) );
-          done();
-        });
-    });
-    
     test("post'ing multiple bad styles returns 400 with error array", function(done){
         assert.response(server, {
             url: '/tiles/my_table4/style?map_key=1234',
