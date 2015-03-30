@@ -64,53 +64,11 @@ suite('server', function() {
     });
 });
 
-suite.skip('server old_api', function() {
+suite('server old_api', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
 
     var test_database = _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db';
-
-    // A couple of styles to use during testing
-    var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
-
-    test("get'ing a tile with url specified 2.1.0 style (lzma version)",  function(done){
-        var qo = {
-          style: test_style_black_210,
-          style_version: '2.1.0',
-          cache_buster: 5
-        };
-        step (
-          function compressQuery () {
-            //console.log("Compressing starts");
-            helper.lzma_compress_to_base64(JSON.stringify(qo), 1, this);
-          },
-          function sendRequest(err, lzma) {
-            if ( err ) throw err;
-            var next = this;
-            //console.log("Compressing ends: " + typeof(lzma) + " - " + lzma);
-            assert.response(server, {
-                headers: {host: 'localhost'},
-                url: '/tiles/test_table/15/16046/12354.png?lzma=' + encodeURIComponent(lzma),
-                method: 'GET',
-                encoding: 'binary'
-            },{}, function(res) { next(null, res); });
-          },
-          function checkResponse(err, res) {
-            if ( err ) throw err;
-            var next = this;
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-            var ct = res.headers['content-type'];
-            assert.equal(ct, 'image/png');
-            assert.imageEqualsFile(res.body, './test/fixtures/test_table_15_16046_12354_styled_black.png',
-                IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
-                    next(err);
-                });
-          },
-          function finish(err) {
-            done(err);
-          }
-        );
-    });
 
     test("uses sqlapi to figure source data of query", function(done){
         var qo = {

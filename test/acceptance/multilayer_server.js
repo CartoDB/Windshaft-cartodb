@@ -1,9 +1,8 @@
-require(__dirname + '/../support/test_helper');
+var testHelper = require(__dirname + '/../support/test_helper');
 
 var assert = require('../support/assert');
 
 var redis = require('redis');
-var _ = require('underscore');
 
 var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require('../../lib/cartodb/server_options')();
@@ -154,6 +153,38 @@ describe('tests from old api translated to multilayer', function() {
                 done();
             }
         );
+    });
+
+    it("creating a layergroup from lzma param",  function(done){
+
+        var params = {
+            config: JSON.stringify(singleLayergroupConfig(pointSql, '#layer { marker-fill:red; }'))
+        };
+
+        testHelper.lzma_compress_to_base64(JSON.stringify(params), 1, function(err, lzma) {
+            if (err) {
+                return done(err);
+            }
+            assert.response(server,
+                {
+                    url: layergroupUrl + '?lzma=' + encodeURIComponent(lzma),
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    },
+                    encoding: 'binary'
+                },
+                {
+                    status: 200
+                },
+                function(res) {
+                    var parsed = JSON.parse(res.body);
+                    assert.ok(parsed.layergroupid);
+
+                    done();
+                }
+            );
+        });
     });
 
 });
