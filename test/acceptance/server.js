@@ -63,47 +63,6 @@ suite('server', function() {
 
 suite.skip('server old_api', function() {
 
-    var test_database = _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db';
-
-    test("uses sqlapi to figure source data of query", function(done){
-        var qo = {
-          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator" +
-              " FROM gadm4 g, test_table t" +
-              " WHERE g.cartodb_id = t.cartodb_id",
-          map_key: 1234
-        };
-        step(
-          function sendRequest() {
-            var next = this;
-            assert.response(server, {
-                headers: {host: 'localhost'},
-                url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
-                method: 'GET'
-            },{}, function(res) { next(null, res); });
-          },
-          function checkResponse(err, res) {
-            if ( err ) throw err;
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-            var ct = res.headers['content-type'];
-            assert.equal(ct, 'image/png');
-            var cc = res.headers['x-cache-channel'];
-            assert(cc, 'Missing X-Cache-Channel');
-            var dbname = test_database;
-            assert.equal(cc.substring(0, dbname.length), dbname);
-            if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
-                var jsonquery = cc.substring(dbname.length + 1);
-                var sentquery = JSON.parse(jsonquery);
-                assert.equal(sentquery.api_key, qo.map_key);
-                assert.equal(sentquery.q, 'SELECT CDB_QueryTables($windshaft$' + qo.sql + '$windshaft$)');
-            }
-            return null;
-          },
-          function finish(err) {
-            done(err);
-          }
-        );
-    });
-
     if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
     test("requests to skip cache on sqlapi error", function(done){
         var qo = {

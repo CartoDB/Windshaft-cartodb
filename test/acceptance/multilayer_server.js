@@ -3,6 +3,7 @@ var testHelper = require(__dirname + '/../support/test_helper');
 var assert = require('../support/assert');
 
 var redis = require('redis');
+var _ = require('underscore');
 
 var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require('../../lib/cartodb/server_options')();
@@ -156,7 +157,6 @@ describe('tests from old api translated to multilayer', function() {
     });
 
     it("creating a layergroup from lzma param",  function(done){
-
         var params = {
             config: JSON.stringify(singleLayergroupConfig(pointSql, '#layer { marker-fill:red; }'))
         };
@@ -187,8 +187,7 @@ describe('tests from old api translated to multilayer', function() {
         });
     });
 
-    it("creating a layergroup from lzma param, invalid json input",  function(done){
-
+    it("creating a layergroup from lzma param, invalid json input",  function(done) {
         var params = {
             config: 'WADUS'
         };
@@ -217,6 +216,38 @@ describe('tests from old api translated to multilayer', function() {
                 }
             );
         });
+    });
+
+    it("uses queries postgresql to figure affected tables in query",  function(done) {
+        var tableName = 'gadm4';
+        var expectedCacheChannel = _.template('<%= databaseName %>:public.<%= tableName %>', {
+            databaseName: _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db',
+            tableName: tableName
+        });
+
+        var layergroup =  singleLayergroupConfig('select * from ' + tableName, '#gadm4 { marker-fill: red; }');
+
+        assert.response(server,
+            {
+                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            },
+            {
+                status: 200
+            },
+            function(res) {
+                var parsed = JSON.parse(res.body);
+                assert.ok(parsed.layergroupid);
+
+                assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
+                assert.equal(res.headers['x-cache-channel'], expectedCacheChannel);
+
+                done();
+            }
+        );
     });
 
 });
