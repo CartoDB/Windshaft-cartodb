@@ -115,28 +115,6 @@ suite.skip('server old_api', function() {
     var test_style_black_200 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:10}";
     var test_style_black_210 = "#test_table{marker-fill:black;marker-line-color:red;marker-width:20}";
 
-    /////////////////////////////////////////////////////////////////////////////////
-    //
-    // POST STYLE
-    //
-    /////////////////////////////////////////////////////////////////////////////////
-
-    test("post'ing multiple bad styles returns 400 with error array", function(done){
-        assert.response(server, {
-            url: '/tiles/my_table4/style?map_key=1234',
-            method: 'POST',
-            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#my_table4{backgxxxxxround-color:#fff;foo:bar}'})
-        },{
-            status: 400
-        }, function(res) {
-          var parsed = JSON.parse(res.body);
-          assert.equal(parsed.length, 2);
-          assert.ok( new RegExp(/Unrecognized rule: backgxxxxxround-color/).test(parsed[0]) );
-          assert.ok( new RegExp(/Unrecognized rule: foo/).test(parsed[1]) );
-          done();
-        });
-    });
 
     test("post'ing good style returns 200", function(done){
         assert.response(server, {
