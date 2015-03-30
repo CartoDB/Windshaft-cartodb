@@ -255,7 +255,7 @@ describe('tests from old api translated to multilayer', function() {
 
         var runQueryFn = QueryTablesApi.prototype.runQuery;
         QueryTablesApi.prototype.runQuery = function(username, query, queryHandler, callback) {
-            return callback(new Error('failed to query database for affected tables'));
+            return queryHandler(new Error('fake error message'), [], callback);
         };
 
         var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
@@ -277,7 +277,9 @@ describe('tests from old api translated to multilayer', function() {
                 assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
 
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed, {"errors":["Error: failed to query database for affected tables"]});
+                assert.deepEqual(parsed, {
+                    errors: ["Error: could not fetch affected tables and last updated time: fake error message"]
+                });
 
                 done();
             }
@@ -300,7 +302,7 @@ describe('tests from old api translated to multilayer', function() {
             function(res) {
                 var runQueryFn = QueryTablesApi.prototype.runQuery;
                 QueryTablesApi.prototype.runQuery = function(username, query, queryHandler, callback) {
-                    return callback(new Error('failed to query database for affected tables'));
+                    return queryHandler(new Error('failed to query database for affected tables'), [], callback);
                 };
 
                 // reset internal cacheChannel cache
