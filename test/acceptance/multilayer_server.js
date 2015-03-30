@@ -187,4 +187,36 @@ describe('tests from old api translated to multilayer', function() {
         });
     });
 
+    it("creating a layergroup from lzma param, invalid json input",  function(done){
+
+        var params = {
+            config: 'WADUS'
+        };
+
+        testHelper.lzma_compress_to_base64(JSON.stringify(params), 1, function(err, lzma) {
+            if (err) {
+                return done(err);
+            }
+            assert.response(server,
+                {
+                    url: layergroupUrl + '?lzma=' + encodeURIComponent(lzma),
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    },
+                    encoding: 'binary'
+                },
+                {
+                    status: 400
+                },
+                function(res) {
+                    var parsed = JSON.parse(res.body);
+                    assert.deepEqual(parsed, { errors: [ 'Unexpected token W' ] });
+
+                    done();
+                }
+            );
+        });
+    });
+
 });

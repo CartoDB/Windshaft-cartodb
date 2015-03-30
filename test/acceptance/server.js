@@ -64,7 +64,7 @@ suite('server', function() {
     });
 });
 
-suite('server old_api', function() {
+suite.skip('server old_api', function() {
 
     var redis_client = redis.createClient(global.environment.redis.port);
 
