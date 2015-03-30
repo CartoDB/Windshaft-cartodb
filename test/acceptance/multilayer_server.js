@@ -90,4 +90,30 @@ describe('tests from old api translated to multilayer', function() {
         );
     });
 
+    // Zoom is a special variable
+    it("Specifying zoom level in CartoCSS does not need a 'zoom' variable in SQL output", function(done){
+        // NOTE: may fail if grainstore < 0.3.0 is used by Windshaft
+        var sql = "SELECT 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator, 1::int as cartodb_id";
+        var cartocss = '#gadm4 [ zoom>=3] { marker-fill:red; }';
+
+        var layergroup = singleLayergroupConfig(sql, cartocss);
+
+        assert.response(server,
+            {
+                url: layergroupUrl,
+                method: 'POST',
+                headers: {host: 'localhost', 'Content-Type': 'application/json' },
+                data: JSON.stringify(layergroup)
+            },
+            {
+                status: 200
+            },
+            function(res) {
+                var parsed = JSON.parse(res.body);
+                assert.ok(parsed.layergroupid);
+                done();
+            }
+        );
+    });
+
 });
