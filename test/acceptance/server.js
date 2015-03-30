@@ -1,7 +1,6 @@
-require(__dirname + '/../support/test_helper');
+require('../support/test_helper');
 
 var assert      = require('../support/assert');
-var _           = require('underscore');
 var querystring = require('querystring');
 var step        = require('step');
 
@@ -10,7 +9,6 @@ var serverOptions = require('../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-var cdbQueryTablesFromPostgresEnabledValue = true;
 
 suite('server', function() {
 
@@ -61,40 +59,7 @@ suite('server', function() {
     });
 });
 
-suite.skip('server old_api', function() {
-
-    if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
-    test("requests to skip cache on sqlapi error", function(done){
-        var qo = {
-          sql: "SELECT g.cartodb_id, g.codineprov, t.the_geom_webmercator, 'SQLAPIERROR' is not null" +
-              " FROM gadm4 g, test_table t" +
-              " WHERE g.cartodb_id = t.cartodb_id",
-          map_key: 1234
-        };
-        step(
-          function sendRequest() {
-            var next = this;
-            assert.response(server, {
-                headers: {host: 'localhost'},
-                url: '/tiles/gadm4/6/31/24.png?' + querystring.stringify(qo),
-                method: 'GET'
-            },{}, function(res) { next(null, res); });
-          },
-          function checkResponse(err, res) {
-            if ( err ) throw err;
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-            var ct = res.headers['content-type'];
-            assert.equal(ct, 'image/png');
-            // does NOT send an x-cache-channel
-            assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-            return null;
-          },
-          function finish(err) {
-            done(err);
-          }
-        );
-    });
-    }
+suite('server old_api', function() {
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/115
     test.skip("get'ing tile with not-strictly-valid style", function(done) {

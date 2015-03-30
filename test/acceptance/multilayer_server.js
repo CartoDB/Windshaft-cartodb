@@ -1,10 +1,12 @@
-var testHelper = require(__dirname + '/../support/test_helper');
+var testHelper = require('../support/test_helper');
 
 var assert = require('../support/assert');
 
 var redis = require('redis');
 var _ = require('underscore');
 
+
+var QueryTablesApi = require('../../lib/cartodb/api/query_tables_api');
 var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require('../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
@@ -30,7 +32,6 @@ describe('tests from old api translated to multilayer', function() {
 
     function singleLayergroupConfig(sql, cartocss) {
         return {
-            stat_tag: 'random_tag',
             version: '1.0.0',
             layers: [
                 {
@@ -246,6 +247,88 @@ describe('tests from old api translated to multilayer', function() {
                 assert.equal(res.headers['x-cache-channel'], expectedCacheChannel);
 
                 done();
+            }
+        );
+    });
+
+    it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
+
+        var runQueryFn = QueryTablesApi.prototype.runQuery;
+        QueryTablesApi.prototype.runQuery = function(username, query, queryHandler, callback) {
+            return callback(new Error('failed to query database for affected tables'));
+        };
+
+        var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
+
+        assert.response(server,
+            {
+                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            },
+            {
+                status: 400
+            },
+            function(res) {
+                QueryTablesApi.prototype.runQuery = runQueryFn;
+
+                assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+
+                var parsed = JSON.parse(res.body);
+                assert.deepEqual(parsed, {"errors":["Error: failed to query database for affected tables"]});
+
+                done();
+            }
+        );
+    });
+
+    it("tile requests works when postgresql queries fail to figure affected tables in query",  function(done) {
+        var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
+        assert.response(server,
+            {
+                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            },
+            {
+                status: 200
+            },
+            function(res) {
+                var runQueryFn = QueryTablesApi.prototype.runQuery;
+                QueryTablesApi.prototype.runQuery = function(username, query, queryHandler, callback) {
+                    return callback(new Error('failed to query database for affected tables'));
+                };
+
+                // reset internal cacheChannel cache
+                serverOptions.channelCache = {};
+
+                assert.response(server,
+                    {
+                        url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
+                            layergroupId: JSON.parse(res.body).layergroupid,
+                            z: 0,
+                            x: 0,
+                            y: 0
+                        }),
+                        method: 'GET',
+                        headers: {
+                            host: 'localhost'
+                        },
+                        encoding: 'binary'
+                    },
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+                        QueryTablesApi.prototype.runQuery = runQueryFn;
+                        done();
+                    }
+                );
             }
         );
     });
