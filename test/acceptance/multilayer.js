@@ -25,7 +25,6 @@ suite(suiteName, function() {
     var cdbQueryTablesFromPostgresEnabledValue = true;
 
     var redis_client = redis.createClient(global.environment.redis.port);
-    var sqlapi_server;
     var expected_last_updated_epoch = 1234567890123; // this is hard-coded into SQLAPIEmu
     var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
 
@@ -1181,10 +1180,6 @@ suite(suiteName, function() {
           var parsedBody = JSON.parse(res.body);
           var token_components = parsedBody.layergroupid.split(':');
           expected_token = token_components[0];
-          if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
-              var last_request = sqlapi_server.getLastRequest();
-              assert.equal(last_request.method, 'POST');
-          }
           return null;
         },
         function cleanup(err) {
