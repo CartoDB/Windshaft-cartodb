@@ -1,27 +1,24 @@
+require(__dirname + '/../../support/test_helper');
+
 var assert      = require('../../support/assert');
 var redis       = require('redis');
-var Step        = require('step');
-
-var helper = require(__dirname + '/../../support/test_helper');
-
-var SqlApiEmulator = require(__dirname + '/../../support/SQLAPIEmu.js');
+var step        = require('step');
 
 var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cartodb/cache/model/named_maps_entry');
-var SurrogateKeysCache = require(__dirname + '/../../../lib/cartodb/cache/surrogate_keys_cache');
-
 var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/cartodb_windshaft');
-var ServerOptions = require(__dirname + '/../../../lib/cartodb/server_options');
-var serverOptions = ServerOptions();
 
 
-suite('templates surrogate keys', function() {
+describe('templates surrogate keys', function() {
 
-    var sqlApiServer;
     var redisClient = redis.createClient(global.environment.redis.port);
 
     // Enable Varnish purge for tests
-    serverOptions.varnish_purge_enabled = true;
+    var varnishHost = global.environment.varnish.host;
+    global.environment.varnish.host = '127.0.0.1';
+    var varnishPurgeEnabled = global.environment.varnish.purge_enabled;
+    global.environment.varnish.purge_enabled = true;
 
+    var serverOptions = require('../../../lib/cartodb/server_options')();
     var server = new CartodbWindshaft(serverOptions);
 
     var templateOwner = 'localhost',
@@ -48,15 +45,28 @@ suite('templates surrogate keys', function() {
         },
         expectedBody = { template_id: expectedTemplateId };
 
-    suiteSetup(function(done) {
-        sqlApiServer = new SqlApiEmulator(global.environment.sqlapi.port, done);
-    });
+    var varnishHttpUrl = [
+        'http://', global.environment.varnish.host, ':', global.environment.varnish.http_port
+    ].join('');
 
-    var surrogateKeysCacheInvalidateFn = SurrogateKeysCache.prototype.invalidate;
+    var cacheEntryKey = new NamedMapsCacheEntry(templateOwner, templateName).key();
+    var invalidationMatchHeader = '\\b' + cacheEntryKey + '\\b';
+
+    var nock = require('nock');
+    nock.enableNetConnect(/(127.0.0.1:5555|cartocdn.com)/);
+
+    after(function(done) {
+        serverOptions.varnish_purge_enabled = false;
+        global.environment.varnish.host = varnishHost;
+        global.environment.varnish.purge_enabled = varnishPurgeEnabled;
+
+        nock.restore();
+        done();
+    });
 
     function createTemplate(callback) {
         var postTemplateRequest = {
-            url: '/tiles/template?api_key=1234',
+            url: '/api/v1/map/named?api_key=1234',
             method: 'POST',
             headers: {
                 host: templateOwner,
@@ -65,7 +75,7 @@ suite('templates surrogate keys', function() {
             data: JSON.stringify(template)
         };
 
-        Step(
+        step(
             function postTemplate() {
                 var next = this;
                 assert.response(server,
@@ -92,15 +102,14 @@ suite('templates surrogate keys', function() {
         );
     }
 
-    test("update template calls surrogate keys invalidation", function(done) {
-        var cacheEntryKey;
-        var surrogateKeysCacheInvalidateMethodInvoked = false;
-        SurrogateKeysCache.prototype.invalidate = function(cacheEntry) {
-            cacheEntryKey = cacheEntry.key();
-            surrogateKeysCacheInvalidateMethodInvoked = true;
-        };
+    it("invalidates surrogate keys on template update", function(done) {
 
-        Step(
+        var scope = nock(varnishHttpUrl)
+            .intercept('/key', 'PURGE')
+            .matchHeader('Invalidation-Match', invalidationMatchHeader)
+            .reply(204, '');
+
+        step(
             function createTemplateToUpdate() {
                 createTemplate(this);
             },
@@ -109,7 +118,7 @@ suite('templates surrogate keys', function() {
                     throw err;
                 }
                 var updateTemplateRequest = {
-                    url: '/tiles/template/' + expectedTemplateId + '/?api_key=1234',
+                    url: '/api/v1/map/named/' + expectedTemplateId + '/?api_key=1234',
                     method: 'PUT',
                     headers: {
                         host: templateOwner,
@@ -135,8 +144,7 @@ suite('templates surrogate keys', function() {
                 var parsedBody = JSON.parse(res.body);
                 assert.deepEqual(parsedBody, expectedBody);
 
-                assert.ok(surrogateKeysCacheInvalidateMethodInvoked);
-                assert.equal(cacheEntryKey, new NamedMapsCacheEntry(templateOwner, templateName).key());
+                assert.equal(scope.pendingMocks().length, 0);
 
                 return null;
             },
@@ -156,16 +164,14 @@ suite('templates surrogate keys', function() {
         );
     });
 
-    test("delete template calls surrogate keys invalidation", function(done) {
+    it("invalidates surrogate on template deletion", function(done) {
 
-        var cacheEntryKey;
-        var surrogateKeysCacheInvalidateMethodInvoked = false;
-        SurrogateKeysCache.prototype.invalidate = function(cacheEntry) {
-            cacheEntryKey = cacheEntry.key();
-            surrogateKeysCacheInvalidateMethodInvoked = true;
-        };
+        var scope = nock(varnishHttpUrl)
+            .intercept('/key', 'PURGE')
+            .matchHeader('Invalidation-Match', invalidationMatchHeader)
+            .reply(204, '');
 
-        Step(
+        step(
             function createTemplateToDelete() {
                 createTemplate(this);
             },
@@ -174,7 +180,7 @@ suite('templates surrogate keys', function() {
                     throw err;
                 }
                 var deleteTemplateRequest = {
-                    url: '/tiles/template/' + expectedTemplateId + '/?api_key=1234',
+                    url: '/api/v1/map/named/' + expectedTemplateId + '/?api_key=1234',
                     method: 'DELETE',
                     headers: {
                         host: templateOwner,
@@ -197,8 +203,7 @@ suite('templates surrogate keys', function() {
                     throw err;
                 }
 
-                assert.ok(surrogateKeysCacheInvalidateMethodInvoked);
-                assert.equal(cacheEntryKey, new NamedMapsCacheEntry(templateOwner, templateName).key());
+                assert.equal(scope.pendingMocks().length, 0);
 
                 return null;
             },
@@ -208,11 +213,66 @@ suite('templates surrogate keys', function() {
         );
     });
 
-    suiteTeardown(function(done) {
-        SurrogateKeysCache.prototype.invalidate = surrogateKeysCacheInvalidateFn;
-        // Enable Varnish purge for tests
-        serverOptions.varnish_purge_enabled = false;
-        sqlApiServer.close(done);
+    it("should update template even if surrogate key invalidation fails", function(done) {
+
+        var scope = nock(varnishHttpUrl)
+            .intercept('/key', 'PURGE')
+            .matchHeader('Invalidation-Match', invalidationMatchHeader)
+            .reply(503, '');
+
+        step(
+            function createTemplateToUpdate() {
+                createTemplate(this);
+            },
+            function putValidTemplate(err) {
+                if (err) {
+                    throw err;
+                }
+                var updateTemplateRequest = {
+                    url: '/api/v1/map/named/' + expectedTemplateId + '/?api_key=1234',
+                    method: 'PUT',
+                    headers: {
+                        host: templateOwner,
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(template)
+                };
+                var next = this;
+                assert.response(server,
+                    updateTemplateRequest,
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        next(null, res);
+                    }
+                );
+            },
+            function checkValidUpdate(err, res) {
+                if (err) {
+                    throw err;
+                }
+                var parsedBody = JSON.parse(res.body);
+                assert.deepEqual(parsedBody, expectedBody);
+
+                assert.equal(scope.pendingMocks().length, 0);
+
+                return null;
+            },
+            function finish(err) {
+                if ( err ) {
+                    return done(err);
+                }
+                redisClient.keys("map_*|localhost", function(err, keys) {
+                    if ( err ) {
+                        return done(err);
+                    }
+                    redisClient.del(keys, function(err) {
+                        return done(err);
+                    });
+                });
+            }
+        );
     });
 
 });

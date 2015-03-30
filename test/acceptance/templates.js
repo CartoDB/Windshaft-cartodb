@@ -6,7 +6,6 @@ var semver      = require('semver');
 var Step        = require('step');
 var strftime    = require('strftime');
 var NamedMapsCacheEntry = require(__dirname + '/../../lib/cartodb/cache/model/named_maps_entry');
-var SQLAPIEmu   = require(__dirname + '/../support/SQLAPIEmu.js');
 var redis_stats_db = 5;
 
 // Pollute the PG environment to make sure
@@ -25,21 +24,12 @@ var serverOptions = ServerOptions();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-[true, false].forEach(function(cdbQueryTablesFromPostgresEnabledValue) {
-
-suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, function() {
+suite('template_api', function() {
     serverOptions.channelCache = {};
 
     var redis_client = redis.createClient(global.environment.redis.port);
-    var sqlapi_server;
     var expected_last_updated_epoch = 1234567890123; // this is hard-coded into SQLAPIEmu
     var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
-
-    suiteSetup(function(done){
-      global.environment.enabledFeatures = { cdbQueryTablesFromPostgres: cdbQueryTablesFromPostgresEnabledValue };
-      sqlapi_server = new SQLAPIEmu(global.environment.sqlapi.port, done);
-      // TODO: check redis is clean ?
-    });
 
     var template_acceptance1 =  {
         version: '0.0.1',
@@ -87,7 +77,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
       var expected_failure = false;
       var expected_tpl_id = "localhost@acceptance1";
       var post_request_1 = {
-          url: '/tiles/template',
+          url: '/api/v1/map/named',
           method: 'POST',
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(template_acceptance1)
@@ -174,7 +164,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           broken_template.auth.method = 'token';
           delete broken_template.auth.tokens;
           var post_request_1 = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(broken_template)
@@ -204,7 +194,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           broken_template.auth.method = 'token';
           broken_template.auth.tokens = [];
           var post_request_1 = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(broken_template)
@@ -231,7 +221,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
           broken_template.name = 'broken1';
           var post_request_1 = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(broken_template)
@@ -255,7 +245,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           broken_template.auth.method = 'token';
           broken_template.auth.tokens = [];
           var put_request_1 = {
-              url: '/tiles/template/' + tpl_id + '/?api_key=1234',
+              url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(broken_template)
@@ -276,7 +266,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             'Error for invalid authentication on PUT does not match ' +
             re + ': ' + parsed.error);
           var del_request = {
-              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
           }
@@ -312,7 +302,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
       Step(function postTemplate1(err, res) {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost.localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance1)
@@ -321,7 +311,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         },
         function testCORS() {
           assert.response(server, {
-              url: '/tiles/template/acceptance1',
+              url: '/api/v1/map/named/acceptance1',
               method: 'OPTIONS'
           },{
               status: 200,
@@ -341,7 +331,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
       Step(function postTemplate1(err, res) {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(tmpl)
@@ -353,7 +343,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         function testCORS() {
           var next = this;
           assert.response(server, {
-              url: '/tiles/template/' + tmpl.name,
+              url: '/api/v1/map/named/' + tmpl.name,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
           },{
@@ -367,7 +357,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         function deleteTemplate(err) {
           if ( err ) throw err;
           var del_request = {
-              url: '/tiles/template/' + tmpl.name + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tmpl.name + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost', 'Content-Type': 'application/json' }
           }
@@ -390,7 +380,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance1)
@@ -411,7 +401,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           var backup_name = template_acceptance1.name;
           template_acceptance1.name += '_new';
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance1)
@@ -430,7 +420,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           tplid2 = parsed.template_id;
           var next = this;
           var get_request = {
-              url: '/tiles/template',
+              url: '/api/v1/map/named',
               method: 'GET',
               headers: {host: 'localhost'}
           }
@@ -448,7 +438,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(err.match(/authenticated user/), err);
           var next = this;
           var get_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost'}
           }
@@ -507,7 +497,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
@@ -526,7 +516,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           var backup_name = template_acceptance1.name;
           template_acceptance1.name = 'changed_name';
           var put_request = {
-              url: '/tiles/template/' + tpl_id + '/?api_key=1234',
+              url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance1)
@@ -545,7 +535,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsedBody.error.match(/cannot update name/i),
             'Unexpected error for invalid update: ' + parsedBody.error);
           var put_request = {
-              url: '/tiles/template/unexistent/?api_key=1234',
+              url: '/api/v1/map/named/unexistent/?api_key=1234',
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
@@ -563,7 +553,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsedBody.error.match(/cannot update name/i),
             'Unexpected error for invalid update: ' + parsedBody.error);
           var put_request = {
-              url: '/tiles/template/' + tpl_id + '/?api_key=1234',
+              url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
@@ -619,7 +609,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
@@ -636,7 +626,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var get_request = {
-              url: '/tiles/template/' + tpl_id, 
+              url: '/api/v1/map/named/' + tpl_id,
               method: 'GET',
               headers: {host: 'localhost'}
           }
@@ -653,7 +643,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsedBody.error.match(/only.*authenticated.*user/i),
             'Unexpected error for unauthenticated template get: ' + parsedBody.error);
           var get_request = {
-              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost'}
           }
@@ -708,7 +698,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
@@ -725,7 +715,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var get_request = {
-              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost'}
           }
@@ -742,7 +732,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template' from response body: " + res.body);
           assert.deepEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
           var del_request = {
-              url: '/tiles/template/' + tpl_id,
+              url: '/api/v1/map/named/' + tpl_id,
               method: 'DELETE',
               headers: {host: 'localhost'}
           }
@@ -760,7 +750,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsed.error.match(/only.*authenticated.*user/i),
             'Unexpected error for unauthenticated template get: ' + parsed.error);
           var del_request = {
-              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
           }
@@ -774,7 +764,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
           assert.ok(!res.body, 'Unexpected body in DELETE /template response');
           var get_request = {
-              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost'}
           }
@@ -852,7 +842,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance2)
@@ -869,7 +859,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/tiles/template/' + tpl_id,
+              url: '/api/v1/map/named/' + tpl_id,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -890,7 +880,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsed.error.match(/unauthorized/i),
             'Unexpected error for unauthorized instance : ' + parsed.error);
           var post_request = {
-              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
               headers: {host: 'foreign', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -909,7 +899,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsed.error.match(/cannot instanciate/i),
             'Unexpected error for forbidden instance : ' + parsed.error);
           var post_request = {
-              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -933,7 +923,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'last_updated' from response body: " + res.body);
           // TODO: check value of last_updated ?
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + ':cb0/0/0/0.png',
+              url: '/api/v1/map/' + layergroupid + ':cb0/0/0/0.png',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -953,7 +943,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             'Unexpected error for unauthorized instance '
             + '(expected /permission denied/): ' + parsed.error);
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + '/0/0/0.png?auth_token=valid1',
+              url: '/api/v1/map/' + layergroupid + '/0/0/0.png?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -975,7 +965,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           if ( err ) throw err;
           var foreignsigned = layergroupid.replace(/[^@]*@/, 'foreign@');
           var get_request = {
-              url: '/tiles/layergroup/' + foreignsigned + '/0/0/0.png?auth_token=valid1',
+              url: '/api/v1/map/' + foreignsigned + '/0/0/0.png?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1001,7 +991,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           if ( err ) throw err;
           var del_request = {
-              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
           }
@@ -1014,7 +1004,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.equal(res.statusCode, 204,
             'Deleting template: ' + res.statusCode + ':' + res.body);
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + '/0/0/0.png?auth_token=valid1',
+              url: '/api/v1/map/' + layergroupid + '/0/0/0.png?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1086,7 +1076,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template)
@@ -1103,7 +1093,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/tiles/template/' + tpl_id,
+              url: '/api/v1/map/named/' + tpl_id,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -1124,7 +1114,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsed.error.match(/unauthorized/i),
             'Unexpected error for unauthorized instance : ' + parsed.error);
           var post_request = {
-              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -1148,7 +1138,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'last_updated' from response body: " + res.body);
           // TODO: check value of last_updated ?
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + ':cb0/0/0/0/0.json.torque',
+              url: '/api/v1/map/' + layergroupid + ':cb0/0/0/0/0.json.torque',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1168,7 +1158,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             'Unexpected error for unauthorized instance '
             + '(expected /permission denied): ' + parsed.error);
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + ':cb1/0/0/0/0.json.torque?auth_token=valid1',
+              url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/0.json.torque?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1190,7 +1180,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           serverOptions = ServerOptions(); // need to clean channel cache
           server = new CartodbWindshaft(serverOptions);
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
+              url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1214,7 +1204,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           if ( err ) throw err;
           var del_request = {
-              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
           }
@@ -1227,7 +1217,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.equal(res.statusCode, 204,
             'Deleting template: ' + res.statusCode + ':' + res.body);
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + ':cb2/0/0/0/0.json.torque?auth_token=valid1',
+              url: '/api/v1/map/' + layergroupid + ':cb2/0/0/0/0.json.torque?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1301,7 +1291,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template)
@@ -1318,7 +1308,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/tiles/template/' + tpl_id,
+              url: '/api/v1/map/named/' + tpl_id,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -1339,7 +1329,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.ok(parsed.error.match(/unauthorized/i),
             'Unexpected error for unauthorized instance : ' + parsed.error);
           var post_request = {
-              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -1363,7 +1353,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'last_updated' from response body: " + res.body);
           // TODO: check value of last_updated ?
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + ':cb0/0/attributes/5',
+              url: '/api/v1/map/' + layergroupid + ':cb0/0/attributes/5',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1383,7 +1373,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             'Unexpected error for unauthorized getAttributes '
             + '(expected /permission denied/): ' + parsed.error);
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + ':cb1/0/attributes/5?auth_token=valid2',
+              url: '/api/v1/map/' + layergroupid + ':cb1/0/attributes/5?auth_token=valid2',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1404,7 +1394,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           if ( err ) throw err;
           var del_request = {
-              url: '/tiles/template/' + tpl_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
           }
@@ -1417,7 +1407,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.equal(res.statusCode, 204,
             'Deleting template: ' + res.statusCode + ':' + res.body);
           var get_request = {
-              url: '/tiles/layergroup/' + layergroupid + ':cb2/0/attributes/5?auth_token=valid2',
+              url: '/api/v1/map/' + layergroupid + ':cb2/0/attributes/5?auth_token=valid2',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
@@ -1491,7 +1481,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance_open)
@@ -1508,7 +1498,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/tiles/template/' + tpl_id,
+              url: '/api/v1/map/named/' + tpl_id,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -1560,7 +1550,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance_open)
@@ -1577,7 +1567,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/tiles/template/' + tpl_id + "/jsonp?callback=test",
+              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=test",
               method: 'GET',
               headers: {host: 'localhost' }
           }
@@ -1634,7 +1624,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance_open)
@@ -1651,7 +1641,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/tiles/template/' + tpl_id + "/jsonp?callback=test%config=" + JSON.stringify('{color:blue}'),
+              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=test%config=" + JSON.stringify('{color:blue}'),
               method: 'GET',
               headers: {host: 'localhost' }
           }
@@ -1712,7 +1702,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           if ( err ) throw err;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template)
@@ -1726,7 +1716,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           assert.equal(res.statusCode, 200, res.body);
           template_id = JSON.parse(res.body).template_id;
           var post_request = {
-              url: '/tiles/template/' + template_id,
+              url: '/api/v1/map/named/' + template_id,
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify({})
@@ -1761,7 +1751,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           if ( err ) throw err;
           var del_request = {
-              url: '/tiles/template/' + template_id + '?api_key=1234', 
+              url: '/api/v1/map/named/' + template_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
           }
@@ -1814,7 +1804,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
         {
           var next = this;
           var post_request = {
-              url: '/tiles/template?api_key=1234',
+              url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance2)
@@ -1831,7 +1821,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -1858,7 +1848,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
           var changedTemplate = JSON.parse(JSON.stringify(template_acceptance2));
           changedTemplate.auth.method = 'open';
           var post_request = {
-              url: '/tiles/template/' + tpl_id + '/?api_key=1234',
+              url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(changedTemplate)
@@ -1876,7 +1866,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
             "Missing 'template_id' from response body: " + res.body);
           assert.equal(tpl_id, parsed.template_id);
           var post_request = {
-              url: '/tiles/template/' + tpl_id + '?auth_token=valid2',
+              url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
@@ -1971,7 +1961,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 assert.response(
                     server,
                     {
-                        url: '/tiles/template?api_key=1234',
+                        url: '/api/v1/map/named?api_key=1234',
                         method: 'POST',
                         headers: {
                             host: username,
@@ -1996,7 +1986,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 assert.response(
                     server,
                     {
-                        url: '/tiles/template/' + expectedTemplateId,
+                        url: '/api/v1/map/named/' + expectedTemplateId,
                         method: 'POST',
                         headers: {
                             host: username,
@@ -2025,7 +2015,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 assert.response(
                     server,
                     {
-                        url: '/tiles/layergroup/' + layergroupid + '/all/0/0/0.png',
+                        url: '/api/v1/map/' + layergroupid + '/all/0/0/0.png',
                         method: 'GET',
                         headers: {
                             host: username
@@ -2055,7 +2045,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
                 assert.response(
                     server,
                     {
-                        url: '/tiles/template/' + expectedTemplateId + '?api_key=1234',
+                        url: '/api/v1/map/named/' + expectedTemplateId + '?api_key=1234',
                         method: 'DELETE',
                         headers: {
                             host: username
@@ -2111,7 +2101,7 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
               redis_client.select(5, function(err) {
                 redis_client.keys("user:localhost:mapviews*", function(err, keys) {
                   redis_client.del(keys, function(err) {
-                    sqlapi_server.close(done);
+                    done();
                   });
                 });
               });
@@ -2120,6 +2110,4 @@ suite('template_api:postgres=' + cdbQueryTablesFromPostgresEnabledValue, functio
 
     });
     
-});
-
 });

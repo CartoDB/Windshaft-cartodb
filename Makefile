@@ -38,4 +38,4 @@ coverage:
 
 check: test
 
-.PHONY: pre-install test
+.PHONY: pre-install test jshint coverage

@@ -14,13 +14,11 @@ var config = {
     // Base url for the Templated Maps API
     // "/api/v1/map/named" is the new API,
     // "/tiles/template" is for compatibility with versions up to 1.6.x
-    ,base_url_templated: '(?:/api/v1/map/named|/tiles/template|/u/:user/api/v1/map/named|/u/:user/tiles/template)'
+    ,base_url_templated: '(?:/api/v1/map/named|/u/:user/api/v1/map/named)'
     // Base url for the Detached Maps API
     // "maps" is the the new API,
     // "tiles/layergroup" is for compatibility with versions up to 1.6.x
-    ,base_url_detached: '(?:/api/v1/map|/tiles/layergroup|/u/:user/api/v1/map|/u/:user/tiles/layergroup)'
-    // Base url for the Inline Maps and Table Maps API
-    ,base_url_legacy: '/tiles/:table'
+    ,base_url_detached: '(?:/api/v1/map|/u/:user/api/v1/map)'
 
     // Maximum number of connections for one process
     // 128 is a good value with a limit of 1024 open file descriptors
@@ -128,28 +126,6 @@ var config = {
         emitter: {
             statusInterval: 5000 // time, in ms, between each status report is emitted from the pool, status is sent to statsd
         }
-    }
-    ,sqlapi: {
-        protocol: 'http',
-        // If "host" is given, it will be used
-        // to connect to the SQL-API without a
-        // DNS lookup
-        host: '127.0.0.1',
-        port: 1080,
-        // The "domain" part will be appended to 
-        // the cartodb username and passed to
-        // SQL-API requests in the Host HTTP header
-        domain: 'donot_look_this_up',
-        // This port will be used by "make check" for testing purposes
-        // It must be available
-        version: 'v1',
-        // Maximum lenght of SQL query for GET
-        // requests. Longer queries will be sent
-        // using POST. Defaults to 2048
-        max_get_sql_length: 2048,
-        // Maximum time to wait for a response,
-        // in milliseconds. Defaults to 100.
-        timeout: 100
     }
     ,varnish: {
         host: '',

@@ -84,6 +84,10 @@
 
     // Custom Globals
     "globals"       : { // additional predefined global variables
+        "describe": true,
+        "before": true,
+        "after": true,
+        "it": true,
         "suite": true,
         "suiteSetup": true,
         "test": true,
