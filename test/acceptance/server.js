@@ -120,18 +120,6 @@ suite.skip('server old_api', function() {
     // POST STYLE
     //
     /////////////////////////////////////////////////////////////////////////////////
-    
-    test("post'ing bad style returns 400 with error", function(done){
-        assert.response(server, {
-            url: '/tiles/my_table3/style?map_key=1234',
-            method: 'POST',
-            headers: {host: 'localhost', 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: querystring.stringify({style: '#my_table3{backgxxxxxround-color:#fff;}'})
-        },{
-            status: 400, 
-            body: /Unrecognized rule: backgxxxxxround-color/
-        }, function() { done(); });
-    });
 
     test("post'ing unparseable style returns 400 with error", function(done){
         assert.response(server, {
