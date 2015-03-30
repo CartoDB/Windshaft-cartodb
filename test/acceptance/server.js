@@ -1,15 +1,12 @@
+require(__dirname + '/../support/test_helper');
+
 var assert      = require('../support/assert');
 var _           = require('underscore');
-var redis       = require('redis');
 var querystring = require('querystring');
 var step        = require('step');
 
-var helper = require(__dirname + '/../support/test_helper');
-
-var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
-
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
+var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
+var serverOptions = require('../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
@@ -65,8 +62,6 @@ suite('server', function() {
 });
 
 suite.skip('server old_api', function() {
-
-    var redis_client = redis.createClient(global.environment.redis.port);
 
     var test_database = _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db';
 
@@ -156,20 +151,4 @@ suite.skip('server old_api', function() {
         });
     });
 
-    /////////////////////////////////////////////////////////////////////////////////
-    //
-    // Tear down
-    //
-    /////////////////////////////////////////////////////////////////////////////////
-
-    suiteTeardown(function(done) {
-        // This test will add map_style records, like
-        // 'map_style|null|publicuser|my_table',
-        redis_client.keys("map_style|*", function(err, matches) {
-            redis_client.del(matches, function() {
-                done();
-            });
-        });
-    });
-    
 });
