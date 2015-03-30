@@ -121,20 +121,6 @@ suite.skip('server old_api', function() {
     //
     /////////////////////////////////////////////////////////////////////////////////
     
-    test("post'ing no style returns 400 with errors", function(done){
-        assert.response(server, {
-            headers: {host: 'localhost'},
-            url: '/tiles/my_table/style',
-            method: 'POST'
-        },{
-            body: '{"error":"must send style information"}'
-        }, function(res) {
-          assert.equal(res.statusCode, 400);
-          assert.ok(!res.headers.hasOwnProperty('cache-control'));
-          done();
-        });
-    });
-    
     test("post'ing bad style returns 400 with error", function(done){
         assert.response(server, {
             url: '/tiles/my_table3/style?map_key=1234',
