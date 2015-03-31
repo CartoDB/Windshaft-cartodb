@@ -60,13 +60,6 @@ if ( global.environment.log_filename ) {
   );
 }
 
-if ( global.environment.rollbar ) {
-  log4js_config.appenders.push({
-    type: __dirname + "/lib/cartodb/log4js_rollbar.js",
-    options: global.environment.rollbar
-  });
-}
-
 log4js.configure(log4js_config, { cwd: __dirname });
 global.logger = log4js.getLogger();
 

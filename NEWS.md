@@ -24,6 +24,7 @@ Announcements:
     - scale_factor
   * Affected tables for x-cache-channel will use direct connection to postgresql
   * Removes some metrics: authorized times ones
+ - Removes rollbar as optional logger
 
 
 ## 1.30.0

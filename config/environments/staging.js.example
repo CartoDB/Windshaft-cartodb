@@ -144,15 +144,6 @@ var config = {
         https: 'cartocdn.global.ssl.fastly.net'
       }
     }
-    // Optional rollbar support
-    ,rollbar: {
-      token: 'secret',
-      // See http://github.com/rollbar/node_rollbar#configuration-reference
-      options: {
-        endpoint: 'https://api.rollbar.com/api/1/',
-        handler: 'inline'
-      }
-    }
     // Settings for the health check available at /health
     ,health: {
       enabled: false,

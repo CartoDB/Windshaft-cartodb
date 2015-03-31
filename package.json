@@ -32,8 +32,7 @@
         "cartodb-psql": "~0.4.0",
         "redis-mpool": "~0.3.0",
         "lzma": "~1.3.7",
-        "log4js": "https://github.com/CartoDB/log4js-node/tarball/cdb",
-        "rollbar": "~0.3.13"
+        "log4js": "https://github.com/CartoDB/log4js-node/tarball/cdb"
     },
     "devDependencies": {
         "istanbul": "~0.3.6",
