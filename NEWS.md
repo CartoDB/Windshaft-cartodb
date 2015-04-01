@@ -24,6 +24,8 @@ Announcements:
     - scale_factor
   * Affected tables for x-cache-channel will use direct connection to postgresql
   * Removes some metrics: authorized times ones
+  * Mapnik renderer configuration not part of the `renderer` root configuration
+    - All configuration must be moved into `renderer.mapnik`, see `config/environments/*.js.example` for reference
  - Removes rollbar as optional logger
 
 
