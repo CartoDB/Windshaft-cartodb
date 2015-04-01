@@ -5,9 +5,7 @@ var _ = require('underscore');
 var redis = require('redis');
 
 var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require('../../lib/cartodb/server_options')();
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
+var serverOptions = require('../../lib/cartodb/server_options');
 
 describe('render limits', function() {
 
@@ -22,6 +20,12 @@ describe('render limits', function() {
         });
     });
 
+    var server;
+    beforeEach(function() {
+        server = new CartodbWindshaft(serverOptions());
+        server.setMaxListeners(0);
+    });
+
     var keysToDelete = [];
     afterEach(function(done) {
         redisClient.DEL(keysToDelete, function() {
@@ -32,10 +36,10 @@ describe('render limits', function() {
 
     var user = 'localhost';
 
-    var pointSleepSql = "SELECT pg_sleep(1)," +
+    var pointSleepSql = "SELECT pg_sleep(0.5)," +
         " 'SRID=3857;POINT(0 0)'::geometry the_geom_webmercator, 1 cartodb_id";
     var pointCartoCss = '#layer { marker-fill:red; }';
-    var polygonSleepSql = "SELECT pg_sleep(1)," +
+    var polygonSleepSql = "SELECT pg_sleep(0.5)," +
         " ST_Buffer('SRID=3857;POINT(0 0)'::geometry, 100000000) the_geom_webmercator, 1 cartodb_id";
     var polygonCartoCss = '#layer { polygon-fill:red; }';
 
@@ -105,6 +109,28 @@ describe('render limits', function() {
         });
     });
 
+    it("layergroup creation does not fail if user limit is high enough even if test tile is slow", function(done) {
+        withRenderLimit(user, 5000, function(err) {
+            if (err) {
+                return done(err);
+            }
+
+            var layergroup = singleLayergroupConfig(polygonSleepSql, polygonCartoCss);
+            assert.response(server,
+                createRequest(layergroup, user),
+                {
+                    status: 200
+                },
+                function(res) {
+                    var parsed = JSON.parse(res.body);
+                    assert.ok(parsed.layergroupid);
+                    done();
+                }
+            );
+        });
+    });
+
+
     it("layergroup creation works if test tile is fast but tile request fails if they are slow",  function(done) {
         withRenderLimit(user, 50, function(err) {
             if (err) {
@@ -139,6 +165,49 @@ describe('render limits', function() {
                             var parsed = JSON.parse(res.body);
                             assert.deepEqual(parsed, { error: 'Render timed out' });
                             done();
+                        }
+                    );
+
+                }
+            );
+        });
+    });
+
+    it("tile request does not fail if user limit is high enough",  function(done) {
+        withRenderLimit(user, 5000, function(err) {
+            if (err) {
+                return done(err);
+            }
+
+            var layergroup = singleLayergroupConfig(pointSleepSql, pointCartoCss);
+            assert.response(server,
+                createRequest(layergroup, user),
+                {
+                    status: 200
+                },
+                function(res) {
+                    assert.response(server,
+                        {
+                            url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
+                                layergroupId: JSON.parse(res.body).layergroupid,
+                                z: 0,
+                                x: 0,
+                                y: 0
+                            }),
+                            method: 'GET',
+                            headers: {
+                                host: 'localhost'
+                            },
+                            encoding: 'binary'
+                        },
+                        {
+                            status: 200,
+                            headers: {
+                                'Content-Type': 'image/png'
+                            }
+                        },
+                        function(res, err) {
+                            done(err);
                         }
                     );
 
