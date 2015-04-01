@@ -87,6 +87,8 @@
         "describe": true,
         "before": true,
         "after": true,
+        "beforeEach": true,
+        "afterEach": true,
         "it": true,
         "suite": true,
         "suiteSetup": true,
