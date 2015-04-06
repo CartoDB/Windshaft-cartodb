@@ -88,132 +88,220 @@ describe('render limits', function() {
 
     }
 
-    it("layergroup creation fails if test tile is slow", function(done) {
-        withRenderLimit(user, 50, function(err) {
-            if (err) {
-                return done(err);
-            }
-
-            var layergroup = singleLayergroupConfig(polygonSleepSql, polygonCartoCss);
-            assert.response(server,
-                createRequest(layergroup, user),
-                {
-                    status: 400
-                },
-                function(res) {
-                    var parsed = JSON.parse(res.body);
-                    assert.deepEqual(parsed, { errors: [ 'Render timed out' ] });
-                    done();
-                }
-            );
+    describe('with onTileErrorStrategy DISABLED', function() {
+        var onTileErrorStrategyEnabled;
+        before(function() {
+            onTileErrorStrategyEnabled = global.environment.enabledFeatures.onTileErrorStrategy;
+            global.environment.enabledFeatures.onTileErrorStrategy = false;
         });
-    });
 
-    it("layergroup creation does not fail if user limit is high enough even if test tile is slow", function(done) {
-        withRenderLimit(user, 5000, function(err) {
-            if (err) {
-                return done(err);
-            }
-
-            var layergroup = singleLayergroupConfig(polygonSleepSql, polygonCartoCss);
-            assert.response(server,
-                createRequest(layergroup, user),
-                {
-                    status: 200
-                },
-                function(res) {
-                    var parsed = JSON.parse(res.body);
-                    assert.ok(parsed.layergroupid);
-                    done();
-                }
-            );
+        after(function() {
+            global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategyEnabled;
         });
-    });
+
+        it("layergroup creation fails if test tile is slow", function(done) {
+            withRenderLimit(user, 50, function(err) {
+                if (err) {
+                    return done(err);
+                }
+
+                var layergroup = singleLayergroupConfig(polygonSleepSql, polygonCartoCss);
+                assert.response(server,
+                    createRequest(layergroup, user),
+                    {
+                        status: 400
+                    },
+                    function(res) {
+                        var parsed = JSON.parse(res.body);
+                        assert.deepEqual(parsed, { errors: [ 'Render timed out' ] });
+                        done();
+                    }
+                );
+            });
+        });
+
+        it("layergroup creation does not fail if user limit is high enough even if test tile is slow", function(done) {
+            withRenderLimit(user, 5000, function(err) {
+                if (err) {
+                    return done(err);
+                }
+
+                var layergroup = singleLayergroupConfig(polygonSleepSql, polygonCartoCss);
+                assert.response(server,
+                    createRequest(layergroup, user),
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        var parsed = JSON.parse(res.body);
+                        assert.ok(parsed.layergroupid);
+                        done();
+                    }
+                );
+            });
+        });
 
 
-    it("layergroup creation works if test tile is fast but tile request fails if they are slow",  function(done) {
-        withRenderLimit(user, 50, function(err) {
-            if (err) {
-                return done(err);
-            }
+        it("layergroup creation works if test tile is fast but tile request fails if they are slow",  function(done) {
+            withRenderLimit(user, 50, function(err) {
+                if (err) {
+                    return done(err);
+                }
 
-            var layergroup = singleLayergroupConfig(pointSleepSql, pointCartoCss);
-            assert.response(server,
-                createRequest(layergroup, user),
-                {
-                    status: 200
-                },
-                function(res) {
-                    assert.response(server,
-                        {
-                            url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
-                                layergroupId: JSON.parse(res.body).layergroupid,
-                                z: 0,
-                                x: 0,
-                                y: 0
-                            }),
-                            method: 'GET',
-                            headers: {
-                                host: 'localhost'
+                var layergroup = singleLayergroupConfig(pointSleepSql, pointCartoCss);
+                assert.response(server,
+                    createRequest(layergroup, user),
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        assert.response(server,
+                            {
+                                url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
+                                    layergroupId: JSON.parse(res.body).layergroupid,
+                                    z: 0,
+                                    x: 0,
+                                    y: 0
+                                }),
+                                method: 'GET',
+                                headers: {
+                                    host: 'localhost'
+                                },
+                                encoding: 'binary'
                             },
-                            encoding: 'binary'
-                        },
-                        {
-                            status: 400
-                        },
-                        function(res) {
-                            var parsed = JSON.parse(res.body);
-                            assert.deepEqual(parsed, { error: 'Render timed out' });
-                            done();
-                        }
-                    );
-
-                }
-            );
-        });
-    });
-
-    it("tile request does not fail if user limit is high enough",  function(done) {
-        withRenderLimit(user, 5000, function(err) {
-            if (err) {
-                return done(err);
-            }
-
-            var layergroup = singleLayergroupConfig(pointSleepSql, pointCartoCss);
-            assert.response(server,
-                createRequest(layergroup, user),
-                {
-                    status: 200
-                },
-                function(res) {
-                    assert.response(server,
-                        {
-                            url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
-                                layergroupId: JSON.parse(res.body).layergroupid,
-                                z: 0,
-                                x: 0,
-                                y: 0
-                            }),
-                            method: 'GET',
-                            headers: {
-                                host: 'localhost'
+                            {
+                                status: 400
                             },
-                            encoding: 'binary'
-                        },
-                        {
-                            status: 200,
-                            headers: {
-                                'Content-Type': 'image/png'
+                            function(res) {
+                                var parsed = JSON.parse(res.body);
+                                assert.deepEqual(parsed, { error: 'Render timed out' });
+                                done();
                             }
-                        },
-                        function(res, err) {
-                            done(err);
-                        }
-                    );
+                        );
 
-                }
-            );
+                    }
+                );
+            });
         });
+
+        it("tile request does not fail if user limit is high enough",  function(done) {
+            withRenderLimit(user, 5000, function(err) {
+                if (err) {
+                    return done(err);
+                }
+
+                var layergroup = singleLayergroupConfig(pointSleepSql, pointCartoCss);
+                assert.response(server,
+                    createRequest(layergroup, user),
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        assert.response(server,
+                            {
+                                url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
+                                    layergroupId: JSON.parse(res.body).layergroupid,
+                                    z: 0,
+                                    x: 0,
+                                    y: 0
+                                }),
+                                method: 'GET',
+                                headers: {
+                                    host: 'localhost'
+                                },
+                                encoding: 'binary'
+                            },
+                            {
+                                status: 200,
+                                headers: {
+                                    'Content-Type': 'image/png'
+                                }
+                            },
+                            function(res, err) {
+                                done(err);
+                            }
+                        );
+
+                    }
+                );
+            });
+        });
+
+    });
+
+    describe('with onTileErrorStrategy', function() {
+
+        it("layergroup creation works even if test tile is slow", function(done) {
+            withRenderLimit(user, 50, function(err) {
+                if (err) {
+                    return done(err);
+                }
+
+                var layergroup = singleLayergroupConfig(polygonSleepSql, polygonCartoCss);
+                assert.response(server,
+                    createRequest(layergroup, user),
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        var parsed = JSON.parse(res.body);
+                        assert.ok(parsed.layergroupid);
+                        done();
+                    }
+                );
+            });
+        });
+
+        it("layergroup creation and tile requests works even if they are slow but returns fallback",  function(done) {
+            withRenderLimit(user, 50, function(err) {
+                if (err) {
+                    return done(err);
+                }
+
+                var layergroup = singleLayergroupConfig(pointSleepSql, pointCartoCss);
+                assert.response(server,
+                    createRequest(layergroup, user),
+                    {
+                        status: 200
+                    },
+                    function(res) {
+                        assert.response(server,
+                            {
+                                url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
+                                    layergroupId: JSON.parse(res.body).layergroupid,
+                                    z: 0,
+                                    x: 0,
+                                    y: 0
+                                }),
+                                method: 'GET',
+                                headers: {
+                                    host: 'localhost'
+                                },
+                                encoding: 'binary'
+                            },
+                            {
+                                status: 200,
+                                headers: {
+                                    'Content-Type': 'image/png'
+                                }
+                            },
+                            function(res, err) {
+                                if (err) {
+                                    done(err);
+                                }
+                                assert.imageEqualsFile(res.body, './test/fixtures/render-timeout-fallback.png', 25,
+                                    function(imgErr/*, similarity*/) {
+                                        done(imgErr);
+                                    }
+                                );
+                            }
+                        );
+
+                    }
+                );
+            });
+        });
+
     });
 
 });
