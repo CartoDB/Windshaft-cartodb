@@ -109,7 +109,7 @@ var config = {
           // Snapping all points of the  geometry to a regular grid
           snapToGrid: false,
 
-          // SQL queries will be wrapeed with ST_ClipByBox2D
+          // SQL queries will be wrapped with ST_ClipByBox2D
           // Returning the portion of a geometry falling within a rectangle
           // It will only work if snapToGrid is enabled
           clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
