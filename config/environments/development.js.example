@@ -196,6 +196,9 @@ var config = {
 
     // Use this as a feature flags enabling/disabling mechanism
     ,enabledFeatures: {
+        // whether a timed out render request should be cached in memory after is computed or not
+        // beware keeping it will grow up the memory usage
+        cacheOnTimeout: false,
         // whether it should intercept tile render errors an act based on them, enabled by default.
         onTileErrorStrategy: true,
         // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
