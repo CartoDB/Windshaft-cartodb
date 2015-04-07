@@ -103,7 +103,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1",
+              "from": "inherits@2",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -171,8 +171,8 @@
     },
     "windshaft": {
       "version": "0.41.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/render-limits",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/render-limits",
+      "from": "windshaft@0.41.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.41.0.tgz",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
