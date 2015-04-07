@@ -29,7 +29,7 @@ test: config/environments/test.js
 
 jshint:
 	@echo "***jshint***"
-	@./node_modules/.bin/jshint lib/
+	@./node_modules/.bin/jshint lib/ app.js
 
 test-all: jshint test
 
