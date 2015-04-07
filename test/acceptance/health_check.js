@@ -51,31 +51,6 @@ suite('health checks', function () {
         );
     });
 
-    test('fails for invalid user because it is not in redis', function (done) {
-        resetHealthConfig();
-
-        global.environment.health.username = 'invalid';
-
-        assert.response(server,
-            healthCheckRequest,
-            {
-                status: 503
-            },
-            function (res, err) {
-                assert.ok(!err);
-
-                var parsed = JSON.parse(res.body);
-
-                assert.equal(parsed.enabled, true);
-                assert.equal(parsed.ok, false);
-
-                assert.equal(parsed.result.redis.ok, false);
-
-                done();
-            }
-        );
-    });
-
     test('error if disabled file exists', function(done) {
       var fs = require('fs');
 
