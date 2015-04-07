@@ -1722,8 +1722,8 @@
         },
         "tilelive-mapnik": {
           "version": "0.6.15",
-          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb-limits",
-          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb-limits",
+          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
+          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/cdb",
           "dependencies": {
             "generic-pool": {
               "version": "2.1.1",
@@ -2356,8 +2356,8 @@
         },
         "abaculus": {
           "version": "1.1.0",
-          "from": "https://github.com/CartoDB/abaculus/tarball/cdb-stats",
-          "resolved": "https://github.com/CartoDB/abaculus/tarball/cdb-stats"
+          "from": "https://github.com/CartoDB/abaculus/tarball/cdb",
+          "resolved": "https://github.com/CartoDB/abaculus/tarball/cdb"
         },
         "sphericalmercator": {
           "version": "1.0.2",
