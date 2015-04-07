@@ -117,7 +117,7 @@ var config = {
           limits: {
               // Time in milliseconds a render request can take before it fails, some notes:
               //  - 0 means no render limit
-              //  - it considers metatiling, it naive implementation: (render timeout) * (number of tiles in metatile)
+              //  - it considers metatiling, naive implementation: (render timeout) * (number of tiles in metatile)
               render: 0,
               // As the render request will finish even if timed out, whether it should be placed in the internal
               // cache or it should be fully discarded. When placed in the internal cache another attempt to retrieve
