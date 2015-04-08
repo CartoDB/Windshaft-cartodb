@@ -7,17 +7,21 @@
  * environments: [development, production]
  */
 
-var path = require('path'),
-    fs = require('fs'),
-    RedisPool = require('redis-mpool')
-;
+var path = require('path');
+var fs = require('fs');
+var RedisPool = require('redis-mpool');
+var _ = require('underscore');
 
+var ENV;
+if ( process.argv[2] ) {
+    ENV = process.argv[2];
+} else if ( process.env.NODE_ENV ) {
+    ENV = process.env.NODE_ENV;
+} else {
+    ENV = 'development';
+}
 
-if ( process.argv[2] ) ENV = process.argv[2];
-else if ( process.env['NODE_ENV'] ) ENV = process.env['NODE_ENV'];
-else ENV = 'development';
-
-process.env['NODE_ENV'] = ENV;
+process.env.NODE_ENV = ENV;
 
 // sanity check
 if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
@@ -26,14 +30,12 @@ if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
     process.exit(1);
 }
 
-var _ = require('underscore');
-
 // set environment specific variables
 global.environment  = require(__dirname + '/config/environments/' + ENV);
 global.environment.api_hostname = require('os').hostname().split('.')[0];
 
 global.log4js = require('log4js');
-log4js_config = {
+var log4js_config = {
   appenders: [],
   replaceConsole:true
 };
@@ -60,25 +62,18 @@ if ( global.environment.log_filename ) {
   );
 }
 
-if ( global.environment.rollbar ) {
-  log4js_config.appenders.push({
-    type: __dirname + "/lib/cartodb/log4js_rollbar.js",
-    options: global.environment.rollbar
-  });
-}
-
-log4js.configure(log4js_config, { cwd: __dirname });
-global.logger = log4js.getLogger();
+global.log4js.configure(log4js_config, { cwd: __dirname });
+global.logger = global.log4js.getLogger();
 
 var redisOpts = _.extend(global.environment.redis, { name: 'windshaft' }),
     redisPool = new RedisPool(redisOpts);
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-var CartodbWindshaft = require('./lib/cartodb/cartodb_windshaft'),
+var cartodbWindshaft = require('./lib/cartodb/cartodb_windshaft'),
     serverOptions = require('./lib/cartodb/server_options')(redisPool);
 
-ws = CartodbWindshaft(serverOptions);
+var ws = cartodbWindshaft(serverOptions);
 
 if (global.statsClient) {
     redisPool.on('status', function(status) {
@@ -100,29 +95,20 @@ ws.listen(global.environment.port, global.environment.host);
 var version = require("./package").version;
 
 ws.on('listening', function() {
-  console.log("Windshaft tileserver " + version + " started on "
-              + global.environment.host + ':' + global.environment.port
-              + " (" + ENV + ")");
-});
-
-// DEPRECATED, use SIGUSR2
-process.on('SIGUSR1', function() {
-  console.log('WARNING: handling of SIGUSR1 by Windshaft-CartoDB is deprecated, please send SIGUSR2 instead');
-  ws.dumpCacheStats();
-});
-
-process.on('SIGUSR2', function() {
-  ws.dumpCacheStats();
+  console.log(
+      "Windshaft tileserver %s started on %s:%s (%s)",
+      version, global.environment.host, global.environment.port, ENV
+  );
 });
 
 process.on('SIGHUP', function() {
     global.log4js.clearAndShutdownAppenders(function() {
         global.log4js.configure(log4js_config);
-        global.logger = log4js.getLogger();
+        global.logger = global.log4js.getLogger();
         console.log('Log files reloaded');
     });
 });
 
 process.on('uncaughtException', function(err) {
-  logger.error('Uncaught exception: ' + err.stack); 
+    global.logger.error('Uncaught exception: ' + err.stack);
 });

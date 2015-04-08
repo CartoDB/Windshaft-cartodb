@@ -1,8 +1,6 @@
-var assert = require('assert')
-  , _ = require('underscore')
-  , redis = require('redis')
-  , test_helper = require('../../support/test_helper')
-  , tests = module.exports = {};
+var assert = require('assert');
+var _ = require('underscore');
+var test_helper = require('../../support/test_helper');
 
 suite('req2params', function() {
 
@@ -24,7 +22,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
           assert.equal(req.params.dbname, test_database, 'could forge dbname: '+ req.params.dbname);
           assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
           done();
@@ -38,7 +36,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
           assert.equal(req.params.dbname, test_database);
           assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
           done();
@@ -52,7 +50,7 @@ suite('req2params', function() {
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(req.params.hasOwnProperty('interactivity'), 'request params have interactivity');
+          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
           assert.equal(req.params.dbname, test_database);
           assert.equal(req.params.dbuser, test_user);
  
@@ -65,23 +63,34 @@ suite('req2params', function() {
     });
 
     test('it should extend params with decoded lzma', function(done) {
-      var qo = {
-        style: 'test',
-        style_version: '2.1.0',
-        cache_buster: 5
-      };
-      test_helper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
-        opts.req2params({ headers: { host:'localhost' }, query: { non_included: 'toberemoved', api_key: 'test', style: 'override', lzma: data }}, function(err, req) {
-          if ( err ) { done(err); return; }
-          var query = req.params
-          assert.equal(qo.style, query.style)
-          assert.equal(qo.style_version, query.style_version)
-          assert.equal(qo.cache_buster, query.cache_buster)
-          assert.equal('test', query.api_key)
-          assert.equal(undefined, query.non_included)
-          done();
+        var qo = {
+            config: {
+                version: '1.3.0'
+            }
+        };
+        test_helper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
+            var req = {
+                headers: {
+                    host:'localhost'
+                },
+                query: {
+                    non_included: 'toberemoved',
+                    api_key: 'test',
+                    style: 'override',
+                    lzma: data
+                }
+            };
+            opts.req2params(req, function(err, req) {
+                if ( err ) {
+                    return done(err);
+                }
+                var query = req.params;
+                assert.deepEqual(qo.config, query.config);
+                assert.equal('test', query.api_key);
+                assert.equal(undefined, query.non_included);
+                done();
+            });
         });
-      });
     });
-    
+
 });

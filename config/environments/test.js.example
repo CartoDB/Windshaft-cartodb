@@ -14,13 +14,11 @@ var config = {
     // Base url for the Templated Maps API
     // "/api/v1/map/named" is the new API,
     // "/tiles/template" is for compatibility with versions up to 1.6.x
-    ,base_url_templated: '(?:/api/v1/map/named|/tiles/template)'
+    ,base_url_templated: '(?:/api/v1/map/named|/u/:user/api/v1/map/named)'
     // Base url for the Detached Maps API
     // "maps" is the the new API,
     // "tiles/layergroup" is for compatibility with versions up to 1.6.x
-    ,base_url_detached: '(?:/api/v1/map|/tiles/layergroup)'
-    // Base url for the Inline Maps and Table Maps API
-    ,base_url_legacy: '/tiles/:table'
+    ,base_url_detached: '(?:/api/v1/map|/u/:user/api/v1/map)'
 
     // Maximum number of connections for one process
     // 128 is a good value with a limit of 1024 open file descriptors
@@ -80,9 +78,49 @@ var config = {
     ,renderer: {
       // Milliseconds since last access before renderer cache item expires
       cache_ttl: 60000,
-      metatile: 4,
-      bufferSize: 64,
       statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
+      mapnik: {
+          // The size of the pool of internal mapnik renderers
+          // Check the configuration of uv_threadpool_size to use suitable value
+          poolSize: 8,
+
+          // Metatile is the number of tiles-per-side that are going
+          // to be rendered at once. If all of them will be requested
+          // we'd have saved time. If only one will be used, we'd have
+          // wasted time.
+          metatile: 2,
+
+          // Buffer size is the tickness in pixel of a buffer
+          // around the rendered (meta?)tile.
+          //
+          // This is important for labels and other marker that overlap tile boundaries.
+          // Setting to 128 ensures no render artifacts.
+          // 64 may have artifacts but is faster.
+          // Less important if we can turn metatiling on.
+          bufferSize: 64,
+
+          // SQL queries will be wrapped with ST_SnapToGrid
+          // Snapping all points of the  geometry to a regular grid
+          snapToGrid: false,
+
+          // SQL queries will be wrapped with ST_ClipByBox2D
+          // Returning the portion of a geometry falling within a rectangle
+          // It will only work if snapToGrid is enabled
+          clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
+
+          limits: {
+              // Time in milliseconds a render request can take before it fails, some notes:
+              //  - 0 means no render limit
+              //  - it considers metatiling, naive implementation: (render timeout) * (number of tiles in metatile)
+              render: 0,
+              // As the render request will finish even if timed out, whether it should be placed in the internal
+              // cache or it should be fully discarded. When placed in the internal cache another attempt to retrieve
+              // the same tile will result in an immediate response, however that will use a lot of more application
+              // memory. If we want to enforce this behaviour we have to implement a cache eviction policy for the
+              // internal cache.
+              cacheOnTimeout: true
+          }
+      },
       http: {
           timeout: 2000, // the timeout in ms for a http tile request
           proxy: undefined, // the url for a proxy server
@@ -129,28 +167,6 @@ var config = {
             statusInterval: 5000 // time, in ms, between each status report is emitted from the pool, status is sent to statsd
         }
     }
-    ,sqlapi: {
-        protocol: 'http',
-        // If "host" is given, it will be used
-        // to connect to the SQL-API without a
-        // DNS lookup
-        host: '127.0.0.1',
-        port: 1080,
-        // The "domain" part will be appended to 
-        // the cartodb username and passed to
-        // SQL-API requests in the Host HTTP header
-        domain: 'donot_look_this_up',
-        // This port will be used by "make check" for testing purposes
-        // It must be available
-        version: 'v1',
-        // Maximum lenght of SQL query for GET
-        // requests. Longer queries will be sent
-        // using POST. Defaults to 2048
-        max_get_sql_length: 2048,
-        // Maximum time to wait for a response,
-        // in milliseconds. Defaults to 100.
-        timeout: 100
-    }
     ,varnish: {
         host: '',
         port: null, // the por for the telnet interface where varnish is listening to
@@ -172,9 +188,12 @@ var config = {
       x: 0,
       y: 0
     }
+    ,disabled_file: 'pids/disabled'
 
     // Use this as a feature flags enabling/disabling mechanism
     ,enabledFeatures: {
+        // whether it should intercept tile render errors an act based on them, enabled by default.
+        onTileErrorStrategy: true,
         // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
         cdbQueryTablesFromPostgres: true
     }

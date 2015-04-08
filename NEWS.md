@@ -1,54 +1,93 @@
-1.30.0 -- 2015-03-11
---------------------
+# Changelog
+
+
+## 2.0.0
+
+Released 2015-04-08
+
+Announcements:
+ - Major release with **BREAKING CHANGES**:
+  * Removes `/:table/infowindow`, `/:table/map_metadata` and `/:table/flush_cache` endpoints
+  * Sample configuration removes `/tiles/template` and `/tiles/layergroup`
+  * URLs to use from now on are: `/api/v1/map/named` and `/api/v1/map`
+  * No more state changes for styles
+  * No more dump stats for renderers: SIGUSR1 and SIGUSR2 signals
+  * Removes query params:
+    - sql
+    - geom_type
+    - cache_buster
+    - cache_policy
+    - interactivity
+    - style
+    - style_version
+    - style_convert
+    - scale_factor
+  * Affected tables for x-cache-channel will use direct connection to postgresql
+  * Removes some metrics: authorized times ones
+  * Mapnik renderer configuration not part of the `renderer` root configuration
+    - All configuration must be moved into `renderer.mapnik`, see `config/environments/*.js.example` for reference
+ - Removes rollbar as optional logger
+
+
+## 1.30.0
+
+Released 2015-03-11
 
 Announcements:
  - Upgrades windshaft to [0.40.0](https://github.com/CartoDB/Windshaft/releases/tag/0.40.0)
 
 
-1.29.0 -- 2015-03-09
---------------------
+## 1.29.0
+
+Released 2015-03-09
 
 Announcements:
  - Upgrades windshaft to [0.39.0](https://github.com/CartoDB/Windshaft/releases/tag/0.39.0)
 
 
-1.28.5 -- 2015-02-20
---------------------
+## 1.28.5
+
+Released 2015-02-20
 
 Announcements:
 - Upgrades windshaft to [0.37.5](https://github.com/CartoDB/Windshaft/releases/tag/0.37.5)
 
 
-1.28.4 -- 2015-02-18
---------------------
+## 1.28.4
+
+Released 2015-02-18
 
 Announcements:
 - Upgrades windshaft to [0.37.4](https://github.com/CartoDB/Windshaft/releases/tag/0.37.4)
 
 
-1.28.3 -- 2015-02-17
---------------------
+## 1.28.3
+
+Released 2015-02-17
 
 Announcements:
 - Upgrades windshaft to [0.37.3](https://github.com/CartoDB/Windshaft/releases/tag/0.37.3)
 
 
-1.28.2 -- 2015-02-17
---------------------
+## 1.28.2
+
+Released 2015-02-17
 
 Announcements:
 - Upgrades windshaft to [0.37.2](https://github.com/CartoDB/Windshaft/releases/tag/0.37.2)
 
 
-1.28.1 -- 2015-02-17
---------------------
+## 1.28.1
+
+Released 2015-02-17
 
 Announcements:
 - Upgrades windshaft to [0.37.1](https://github.com/CartoDB/Windshaft/releases/tag/0.37.1)
 
 
-1.28.0 -- 2015-02-17
---------------------
+## 1.28.0
+
+Released 2015-02-17
 
 Announcements:
 - Upgrades windshaft to [0.37.0](https://github.com/CartoDB/Windshaft/releases/tag/0.37.0)
@@ -58,8 +97,9 @@ New features:
  tables last update (#253)
 
 
-1.27.0 -- 2015-02-16
---------------------
+## 1.27.0
+
+Released 2015-02-16
 
 Announcements:
 - Adds default image placeholder for http renderer to use as fallback
@@ -72,29 +112,33 @@ Bugfixes:
 - Fixes tests with beforeEach and afterEach triggers
 
 
-1.26.2 -- 2015-01-28
---------------------
+## 1.26.2
+
+Released 2015-01-28
 
 Bugfixes:
  - Accept 'open' string in templates' `auth` as authorized.
 
 
-1.26.1 -- 2015-01-28
---------------------
+## 1.26.1
+
+Released 2015-01-28
 
 Announcements:
  - Upgrades windshaft to 0.35.1, see https://github.com/CartoDB/Windshaft/pull/254
 
 
-1.26.0 -- 2015-01-27
---------------------
+## 1.26.0
+
+Released 2015-01-27
 
 Announcements:
  - Upgrades windshaft to 0.35.0, supports mapconfig version `1.3.0`
 
 
-1.25.0 -- 2015-01-26
---------------------
+## 1.25.0
+
+Released 2015-01-26
 
 Announcements:
  - No more signed maps (#227 and #238)
@@ -130,22 +174,25 @@ New features:
     - SurrogateKeysCache is subscribed to TemplateMaps events to do the invalidations
 
 
-1.24.0 -- 2015-01-15
---------------------
+## 1.24.0
+
+Released 2015-01-15
 
 Announcements:
  - Upgrades windshaft to 0.34.0 for retina support
 
 
-1.23.1 -- 2015-01-14
---------------------
+## 1.23.1
+
+Released 2015-01-14
 
 Announcements:
  - Regenerate npm-shrinkwrap.json
 
 
-1.23.0 -- 2015-01-14
---------------------
+## 1.23.0
+
+Released 2015-01-14
 
 Announcements:
  - Upgrades windshaft to 0.33.0
@@ -154,22 +201,25 @@ New features:
  - Sets HTTP renderer configuration in server_options
 
 
-1.22.0 -- 2015-01-13
---------------------
+## 1.22.0
+
+Released 2015-01-13
 
 New features:
  - Health check endpoint
 
 
-1.21.2 -- 2014-12-15
---------------------
+## 1.21.2
+
+Released 2014-12-15
 
 Announcements:
  - Upgrades windshaft to 0.32.4
 
 
-1.21.1 -- 2014-12-11
---------------------
+## 1.21.1
+
+Released 2014-12-11
 
 Announcements:
  - Upgrades windshaft to 0.32.2
@@ -179,29 +229,33 @@ Bugfixes:
 
 
 
-1.21.0 -- 2014-10-24
---------------------
+## 1.21.0
+
+Released 2014-10-24
 
 New features:
  - Allow a different cache-control max-age for layergroup responses
 
 
-1.20.2 -- 2014-10-20
---------------------
+## 1.20.2
+
+Released 2014-10-20
 
 Announcements:
  - Upgrades windshaft to 0.31.0
 
 
-1.20.1 -- 2014-10-17
---------------------
+## 1.20.1
+
+Released 2014-10-17
 
 Announcements:
  - Upgrades redis-mpool to 0.3.0
 
 
-1.20.0 -- 2014-10-15
---------------------
+## 1.20.0
+
+Released 2014-10-15
 
 New features:
  - Report to statsd the status of redis pools
@@ -211,8 +265,9 @@ Enhancements:
  - Share one redis-mpool across the application
 
 
-1.19.0 -- 2014-10-14
---------------------
+## 1.19.0
+
+Released 2014-10-14
 
 Announcements:
  - Dropping support for npm <1.2.1
@@ -221,8 +276,9 @@ Announcements:
  - Generates npm-shrinkwrap.json with npm >1.2.0
 
 
-1.18.2 -- 2014-10-13
---------------------
+## 1.18.2
+
+Released 2014-10-13
 
 Bug fixes:
  - Defaults resultSet to object if undefined in QueryTablesApi
@@ -231,29 +287,33 @@ Announcements:
  - Upgrades windshaft to 0.28.1
 
 
-1.18.1 -- 2014-10-13
---------------------
+## 1.18.1
+
+Released 2014-10-13
 
 New features:
  - Allow to add more node.js' threadpool workers via process.env.UV_THREADPOOL_SIZE
 
 
-1.18.0 -- 2014-10-03
---------------------
+## 1.18.0
+
+Released 2014-10-03
 
 Announcements:
  - Comes back to use mapnik 2.3.x based on cartodb/node-mapnik@1.4.15-cdb from windshaft@0.28.0
 
 
-1.17.2 -- 2014-10-01
---------------------
+## 1.17.2
+
+Released 2014-10-01
 
 Announcements:
  - Upgrades windshaft to 0.27.2 which downgrades node-mapnik to 0.7.26-cdb1
 
 
-1.17.1 -- 2014-09-30
---------------------
+## 1.17.1
+
+Released 2014-09-30
 
 Announcements:
  - Upgrades windshaft to 0.27.1 which downgrades node-mapnik to 1.4.10
@@ -263,8 +323,9 @@ Enhancements:
  - Upgrades mocha
 
 
-1.17.0 -- 2014-09-25
---------------------
+## 1.17.0
+
+Released 2014-09-25
 
 New features:
  - Starts using mapnik 2.3.x
@@ -275,14 +336,16 @@ Enhancements:
  - Metrics revamp: removes and adds some metrics
  - Adds poolSize configuration for mapnik
 
-1.16.1 -- 2014-08-19
---------------------
+## 1.16.1
+
+Released 2014-08-19
 
 Enhancements:
  - Upgrades cartodb-redis
 
-1.16.0 -- 2014-08-18
---------------------
+## 1.16.0
+
+Released 2014-08-18
 
 New features:
  - Configurable QueryTablesAPI to call directly postgresql using cartodb-psql
@@ -298,8 +361,9 @@ Enhancements:
     - windshaft
     - request
 
-1.15.0 -- 2014-08-13
---------------------
+## 1.15.0
+
+Released 2014-08-13
 Enhancements:
  - Upgrades dependencies:
     - redis-mpool
@@ -309,8 +373,9 @@ Enhancements:
  - Slow pool configuration in example configurations
 
 
-1.14.0 -- 2014-08-07
---------------------
+## 1.14.0
+
+Released 2014-08-07
 
 Enhancements:
  - SQL API requests moved to its own entity
@@ -322,43 +387,49 @@ New features:
    dependencies for this matter
 
 
-1.13.1 -- 2014-08-04
---------------------
+## 1.13.1
+
+Released 2014-08-04
 
 Enhancements:
  - Profiler header sent as JSON string
 
 
-1.13.0 -- 2014-07-30
---------------------
+## 1.13.0
+
+Released 2014-07-30
 
 New features:
  - Support for postgresql schemas
  - Use public user from redis
  - Support for several auth tokens
 
-1.12.1 -- 2014-06-24
---------------------
+## 1.12.1
+
+Released 2014-06-24
 
 Enhancements:
  - Caches layergroup and sets X-Cache-Channel in GET requests also in named maps
 
-1.12.0 -- 2014-06-24
---------------------
+## 1.12.0
+
+Released 2014-06-24
 
 New features:
  - Caches layergroup and sets X-Cache-Channel in GET requests
 
-1.11.1 -- 2014-05-07
---------------------
+## 1.11.1
+
+Released 2014-05-07
 
 Enhancements:
 
  - Upgrade Windshaft to 0.21.0, see
  http://github.com/CartoDB/Windshaft/blob/0.21.0/NEWS
 
-1.11.0 -- 2014-04-28
---------------------
+## 1.11.0
+
+Released 2014-04-28
 
 New features:
 
@@ -369,23 +440,26 @@ Enhancements:
 
  - Set default PostgreSQL application name to "cartodb_tiler"
 
-1.10.2 -- 2014-04-08
---------------------
+## 1.10.2
+
+Released 2014-04-08
 
 Bug fixes:
 
  - Fix show_style tool broken since 1.8.1
  - Fix X-Cache-Channel of tiles accessed via signed token (#188)
 
-1.10.1 -- 2014-03-21
---------------------
+## 1.10.1
+
+Released 2014-03-21
 
 Bug fixes:
 
  - Do not cache non-success jsonp responses (#186)
 
-1.10.0 -- 2014-03-20
---------------------
+## 1.10.0
+
+Released 2014-03-20
 
 New features:
 
@@ -406,15 +480,17 @@ Other changes:
 
  - Switch to 3-clause BSD license (#184)
 
-1.9.0 -- 2014-03-10
--------------------
+## 1.9.0
+
+Released 2014-03-10
 
 New features:
 
  - Allow to set server related configuration in serverMetadata (#182)
 
-1.8.5 -- 2014-03-10
--------------------
+## 1.8.5
+
+Released 2014-03-10
 
 Enhancements:
 
@@ -432,8 +508,9 @@ Bug fixes:
 
  - Do not cache map creation responses (#176)
 
-1.8.4 -- 2014-03-03
--------------------
+## 1.8.4
+
+Released 2014-03-03
 
 Enhancements:
 
@@ -450,8 +527,9 @@ Bug fixes:
 
  - Fix database connection settings on template instanciation (#174)
 
-1.8.3 -- 2014-02-27
--------------------
+## 1.8.3
+
+Released 2014-02-27
 
 Enhancements:
 
@@ -464,8 +542,9 @@ Enhancements:
    [ new sqlapi.timeout directive, defaults to 100 ms ]
  - Do not query CDB_TableMetadata for queries affected by no tables (#168)
 
-1.8.2 -- 2014-02-25
--------------------
+## 1.8.2
+
+Released 2014-02-25
 
 Enhancements:
 
@@ -479,8 +558,9 @@ Bug fixes:
 
  * Fix munin plugin after log format changes (#154)
 
-1.8.1 -- 2014-02-19
--------------------
+## 1.8.1
+
+Released 2014-02-19
 
 Enhancements:
 
@@ -490,8 +570,9 @@ Bug fixes:
 
  * Always generate X-Cache-Channel for token-based tile responses (#152)
 
-1.8.0 -- 2014-02-18
--------------------
+## 1.8.0
+
+Released 2014-02-18
 
 Enhancements:
 
@@ -506,16 +587,18 @@ Enhancements:
  * Allow limiting number of templates for each user (#136)
  * Allow configuring TTL of mapConfigs via "mapConfigTTL"
 
-1.7.1 -- 2014-02-11
--------------------
+## 1.7.1
+
+Released 2014-02-11
 
 Enhancements:
 
  * Disable debug logging unless "debug" config param evaluates to true (#137)
  * Require windshaft 0.17.2 for further reducing log noise (#137)
 
-1.7.0 -- 2014-02-11
--------------------
+## 1.7.0
+
+Released 2014-02-11
 
 New features:
 
@@ -536,8 +619,9 @@ Bug fixes:
  * Allow passing numbers as values for numeric template variables (#130)
 
 
-1.6.3 -- 2014-01-30
--------------------
+## 1.6.3
+
+Released 2014-01-30
 
 Bug fixes: 
 
@@ -552,8 +636,9 @@ Enhancements:
 * Stop processing XML on renderer creation, not needed anymore since 1.6.1
   introduced on-demand XML generation.
 
-1.6.2 -- 2014-01-23
--------------------
+## 1.6.2
+
+Released 2014-01-23
 
 Bug fixes:
 
@@ -565,16 +650,18 @@ Enhancements:
   print XML style now it is not in redis anymore (#110)
 * Support CORS in template instanciation endpoint (#113)
 
-1.6.1 -- 2014-01-15
--------------------
+## 1.6.1
+
+Released 2014-01-15
 
 Bug fixes:
 
 * Drop cache headers from error responses (#107)
 * Localize external CartoCSS resources at renderer creation time (#108)
 
-1.6.0 -- 2014-01-10
--------------------
+## 1.6.0
+
+Released 2014-01-10
 
 New features:
 
@@ -587,24 +674,27 @@ Other changes:
  * Update cartodb-redis dependency to "~0.3.0"
  * Update redis-server dependency to "2.4.0+"
 
-1.5.2 -- 2013-12-05
--------------------
+## 1.5.2
+
+Released 2013-12-05
 
 Bug fixes:
 
 * Fix configuration-level compatibility with versions prior to 1.5 (#96)
 * Fix use of old layergroups on mapnik upgrade (#97)
 
-1.5.1 -- 2013-11-28
--------------------
+## 1.5.1
+
+Released 2013-11-28
 
 Bug fixes:
 
 * Survive presence of malformed CartoCSS in redis (#94)
 * Accept useless point-transform:scale directives (#93)
 
-1.5.0 -- 2013-11-19
--------------------
+## 1.5.0
+
+Released 2013-11-19
 
 NOTE: new configuration directives `postgres_auth_pass` and
       `postgres.password` added; see config/environments/*.example
@@ -628,24 +718,28 @@ Other changes:
 * CartoDB redis interaction delegated to "cartodb-redis" module
 
 
-1.4.1 -- 2013-11-08
--------------------
+## 1.4.1
+
+Released 2013-11-08
 
 * Fix support for exponential notation in CartoCSS filter values (#87)
 
-1.4.0 -- 2013-10-31
--------------------
+## 1.4.0
+
+Released 2013-10-31
 
 * Add Support for Mapnik-2.2.0 (#78)
 
-1.3.6 -- 2013-10-11
--------------------
+## 1.3.6
+
+Released 2013-10-11
 
 * Restore support for node-0.8.9 accidentally dropped by 1.3.5
   NOTE: needs removing node_modules/windshaft and re-running npm install
 
-1.3.5 -- 2013-10-03
--------------------
+## 1.3.5
+
+Released 2013-10-03
 
 * Fixing apostrophes in CartoCSS
 * Fix "sql/table must contain zoom variable" error when using
@@ -654,8 +748,8 @@ Other changes:
 * Fix error for invalid text-name in CartoCSS (#81)
 * Do not let anonymous requests use authorized renderer caches 
 
-1.3.4
-------
+## 1.3.4
+
 
 NOTE: configuration sqlapi.host renamed to sqlapi.domain
       (support for "sqlapi.host" is retained for backward compatibility)
@@ -664,38 +758,38 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
 * Improve invalid mapnik-geometry-type CSS error message
 * Fix race condition in localization of network resources
 
-1.3.3
-------
+## 1.3.3
+
 * Set Last-Modified header to allow for 304 responses
 * Add profiling support (needs useProfiler in env config file)
 * Fix double-checking for layergroups with no interactivity
 * Log full layergroup config at creation time (#76)
 
-1.3.2
-------
+## 1.3.2
+
 * Set default layergroup TTL to 2 hours
 * Serve multilayer tiles and grid with persistent cache control
 
-1.3.1
-------
+## 1.3.1
+
 * Fix deadlock on new style creation
 * Fix database authentication with multi-table layergroups
 * Add tile and grid fetching checks at layergroup creation time
 * Fix SQL error reporting to NOT split on newline
 * Fix support for CartoCSS attachments
 
-1.3.0
-------
+## 1.3.0
+
 * Change stats format for multilayer map token request, see
   http://github.com/Vizzuality/Windshaft-cartodb/wiki/Redis-stats-format
 
-1.2.1
-------
+## 1.2.1
+
 * Fix multilayer post from firefox
 * Fix multilayer cartocss layer name handling
 
-1.2.0
-------
+## 1.2.0
+
 * Multilayer API changes
   * Layers passed by index in grid fetching url
   * Interactivity only specified in layergroup config
@@ -703,14 +797,14 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
   * Use ISO format for last_modified timestamp
 * Expected LZMA encoding changed to base64
 
-1.1.10
-------
+## 1.1.10
+
 * Fix regression with default interactivity parameter (#74)
 * More verbose logging for SQL api connection errors
 * Write stats for multilayer map token request
 
-1.1.9
------
+## 1.1.9
+
 * Handle SQL API errors by requesting no Varnish cache
 * Fix X-Cache-Channel for multilayer (by token) responses
 * Add last_modified field to layergroup creation response (#72)
@@ -719,18 +813,22 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
 * Add support for LZMA compressed GET parameters
 * Add support for creating layergroups via GET
 
-1.1.8
------
+## 1.1.8
+
 * Require Windshaft-0.9.1, to reduce harmfulness of cache_buster param
 
-1.1.7 (DD//MM//YY)
------
+## 1.1.7
+
+Released DD//MM//YY
+
 * Do not let /etc/services confuse FD checker (munin plugin)
 * Multilayer support (#72)
 * Expose renderer settings in the environment config files
 
-1.1.6 (19//02//13)
------
+## 1.1.6
+
+Released 19//02//13
+
 * Require windshaft 0.8.5, fixing some stability issues
   and providing cache info on request
 * Require grainstore 0.10.9, fixing an issue with multi-geom markers
@@ -739,20 +837,26 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
 * Survive connection refusals from redis
 * Add maxConnection environment configuration, default to 128
 
-1.1.5 (DD//MM//YY)
------
+## 1.1.5
+
+Released DD//MM//YY
+
 * Fix bogus cached return of utf grid for fully contained tiles (#67)
 
-1.1.4 (DD//MM//YY)
------
+## 1.1.4
+
+Released DD//MM//YY
+
 * Reduce default extent to allow for consistent proj4 round-tripping 
 * Enhance reset_styles script to use full configuration (#62)
 * Have reset_styles script also drop extended keys (#58)
 * Fix example postgis parameter for simplifying input geoms (#63)
 * Add row_limit to example config (#64)
 
-1.1.3 (30//11//12)
------
+## 1.1.3
+
+Released 30//11//12
+
 * Fix reset_styles script to really skip extended keys
 * CartoCSS versioning
  * Mapnik-version dependent default styles
@@ -760,16 +864,20 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
   * styles with conditional markers
   * scale arrow markers by 50%
 
-1.1.2 (DD//MM//YY)
------
+## 1.1.2
+
+Released DD//MM//YY
+
 * CartoCSS versioning
  * Fix use of "style_version" with GET (inline styles)
  * Enhance 2.0 -> 2.1 transforms:
   * styles with no semicolon
   * markers shift due to geometry clipping
 
-1.1.1 (DD//MM//YY)
------
+## 1.1.1
+
+Released DD//MM//YY
+
 * Add support for persistent client cache headers
 * Fix crash on unknown user (#55)
 * Add /version entry point
@@ -778,8 +886,10 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
  * Support style_version and style_convert parameters in POST /style request
  * Support style_version in GET /:z/:x/:y request
 
-1.1.0 (30/10/12)
-=======
+## 1.1.0
+
+Released (30/10/12)
+
 * Add /version entry point
 * CartoCSS versioning
  * Include version in GET /style response
@@ -796,12 +906,16 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
 * Replaced environment configs by .example ones
 * Fixed some issues with cluster2
 
-1.0.0 (03/10/12)
------
+## 1.0.0
+
+Released 03/10/12
+
 * Migrated to node 0.8.x.
 
-0.9.0 (25/09/12)
------
+## 0.9.0
+
+Released 25/09/12
+
 * External resources in CartoCSS
 * Added X-Cache-Channel header in all the tiler GET requests
 * Small fixes

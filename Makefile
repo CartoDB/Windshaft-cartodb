@@ -27,6 +27,15 @@ test: config/environments/test.js
 		test/acceptance/*.js \
 		test/acceptance/cache/*.js
 
+jshint:
+	@echo "***jshint***"
+	@./node_modules/.bin/jshint lib/ app.js
+
+test-all: jshint test
+
+coverage:
+	@RUNTESTFLAGS=--with-coverage make test
+
 check: test
 
-.PHONY: pre-install test
+.PHONY: pre-install test jshint coverage
