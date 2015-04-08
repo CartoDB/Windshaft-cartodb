@@ -78,9 +78,49 @@ var config = {
     ,renderer: {
       // Milliseconds since last access before renderer cache item expires
       cache_ttl: 60000,
-      metatile: 4,
-      bufferSize: 64,
       statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
+      mapnik: {
+          // The size of the pool of internal mapnik renderers
+          // Check the configuration of uv_threadpool_size to use suitable value
+          poolSize: 8,
+
+          // Metatile is the number of tiles-per-side that are going
+          // to be rendered at once. If all of them will be requested
+          // we'd have saved time. If only one will be used, we'd have
+          // wasted time.
+          metatile: 2,
+
+          // Buffer size is the tickness in pixel of a buffer
+          // around the rendered (meta?)tile.
+          //
+          // This is important for labels and other marker that overlap tile boundaries.
+          // Setting to 128 ensures no render artifacts.
+          // 64 may have artifacts but is faster.
+          // Less important if we can turn metatiling on.
+          bufferSize: 64,
+
+          // SQL queries will be wrapped with ST_SnapToGrid
+          // Snapping all points of the  geometry to a regular grid
+          snapToGrid: false,
+
+          // SQL queries will be wrapped with ST_ClipByBox2D
+          // Returning the portion of a geometry falling within a rectangle
+          // It will only work if snapToGrid is enabled
+          clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
+
+          limits: {
+              // Time in milliseconds a render request can take before it fails, some notes:
+              //  - 0 means no render limit
+              //  - it considers metatiling, naive implementation: (render timeout) * (number of tiles in metatile)
+              render: 0,
+              // As the render request will finish even if timed out, whether it should be placed in the internal
+              // cache or it should be fully discarded. When placed in the internal cache another attempt to retrieve
+              // the same tile will result in an immediate response, however that will use a lot of more application
+              // memory. If we want to enforce this behaviour we have to implement a cache eviction policy for the
+              // internal cache.
+              cacheOnTimeout: true
+          }
+      },
       http: {
           timeout: 2000, // the timeout in ms for a http tile request
           proxy: undefined, // the url for a proxy server
@@ -152,6 +192,8 @@ var config = {
 
     // Use this as a feature flags enabling/disabling mechanism
     ,enabledFeatures: {
+        // whether it should intercept tile render errors an act based on them, enabled by default.
+        onTileErrorStrategy: true,
         // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
         cdbQueryTablesFromPostgres: true
     }
