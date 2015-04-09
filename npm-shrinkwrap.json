@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -103,7 +103,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2",
+              "from": "inherits@~2.0.1",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -170,9 +170,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.41.0",
-      "from": "windshaft@0.41.0",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.41.0.tgz",
+      "version": "0.42.0",
+      "from": "windshaft@0.42.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.42.0.tgz",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
