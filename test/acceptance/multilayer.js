@@ -17,7 +17,7 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions());
 server.setMaxListeners(0);
 
-['/api/v1/map', '/u/localhost/api/v1/map'].forEach(function(layergroup_url) {
+['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
 
 var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
 suite(suiteName, function() {
