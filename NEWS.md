@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.1
+
+Released 2015-04-10
+
+Bug fixes:
+ - Do not add x-cache-channel header for GET template routes
+
+
 ## 2.1.0
 
 Released 2015-04-09
