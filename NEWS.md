@@ -2,7 +2,7 @@
 
 ## 2.1.2
 
-Released 2015-mm-dd
+Released 2015-04-15
 
 Bug fixes:
  - Do not check statsd_client in profiler
