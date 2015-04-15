@@ -4,6 +4,12 @@
 
 Released 2015-mm-dd
 
+Bug fixes:
+ - Do not check statsd_client in profiler
+
+Announcements:
+ - Upgrades windshaft to [0.42.1](https://github.com/CartoDB/Windshaft/releases/tag/0.42.1)
+
 
 ## 2.1.1
 
