@@ -2045,6 +2045,68 @@ describe('template_api', function() {
         );
     });
 
+    describe('named map nonexistent tokens', function() {
+        var username = 'localhost';
+        var templateHash = 'deadbeef';
+        var nonexistentToken = 'wadus';
+
+        function request(token) {
+            return {
+                url: '/api/v1/map/' + token + '/all/0/0/0.png',
+                method: 'GET',
+                headers: {
+                    host: username
+                },
+                encoding: 'binary'
+            };
+        }
+
+        var expectedResponse = {
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            status: 400
+        };
+
+        function checkTileFn(done) {
+            return function checkTile(res, err) {
+                if (err) {
+                    return done(err);
+                }
+                assert.deepEqual(JSON.parse(res.body), {
+                    error: "Invalid or nonexistent map configuration token '" + nonexistentToken + "'"
+                });
+
+                done();
+            };
+        }
+
+        it("returns an error for named map nonexistent tokens", function(done) {
+
+            var nonexistentNamedMapToken = username + '@' + templateHash + '@' + nonexistentToken;
+
+            assert.response(
+                server,
+                request(nonexistentNamedMapToken),
+                expectedResponse,
+                checkTileFn(done)
+            );
+        });
+
+        it("returns an error for named map nonexistent tokens without template hash", function(done) {
+
+            var nonexistentNamedMapToken = username + '@' + nonexistentToken;
+
+            assert.response(
+                server,
+                request(nonexistentNamedMapToken),
+                expectedResponse,
+                checkTileFn(done)
+            );
+        });
+
+    });
+
     after(function(done) {
 
         // This test will add map_style records, like
