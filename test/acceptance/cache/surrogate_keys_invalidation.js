@@ -23,7 +23,7 @@ describe('templates surrogate keys', function() {
 
     var templateOwner = 'localhost',
         templateName = 'acceptance',
-        expectedTemplateId = templateOwner + '@' + templateName,
+        expectedTemplateId = templateName,
         template = {
             version: '0.0.1',
             name: templateName,

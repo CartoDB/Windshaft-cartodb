@@ -69,7 +69,7 @@ describe('template_api', function() {
     it("can add template, returning id", function(done) {
 
       var errors = [];
-      var expected_tpl_id = "localhost@acceptance1";
+      var expected_tpl_id = "acceptance1";
       var post_request_1 = {
           url: '/api/v1/map/named',
           method: 'POST',
@@ -801,7 +801,7 @@ describe('template_api', function() {
       );
     });
 
-    it("can instanciate a template by id", function(done) {
+    it("can instanciate a template by id wadus", function(done) {
 
       // This map fetches data from a private table
       var template_acceptance2 =  {
@@ -880,12 +880,10 @@ describe('template_api', function() {
         function instanciateAuth(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/cannot instanciate/i),
-            'Unexpected error for forbidden instance : ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('error'), "Missing 'error' from response body: " + res.body);
+          assert.ok(parsed.error.match(/not found/i), 'Unexpected error for forbidden instance : ' + parsed.error);
           var post_request = {
               url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
@@ -1907,7 +1905,7 @@ describe('template_api', function() {
         var template_params = {};
 
         var errors = [];
-        var expectedTemplateId = username + '@' + httpTemplateName;
+        var expectedTemplateId = httpTemplateName;
         var layergroupid;
         step(
             function createTemplate()
