@@ -812,7 +812,7 @@ For this map, the multiple layers, order, and stylings are defined by the MapCon
 
 ```javascript
 {
-  "version": "1.3.0-alpha",
+  "version": "1.3.0",
   "layers": [
     {
       "type": "http",
