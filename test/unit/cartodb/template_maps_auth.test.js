@@ -1,11 +1,11 @@
+require('../../support/test_helper');
+
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../../lib/cartodb/template_maps');
-var test_helper = require('../../support/test_helper');
-var Step = require('step');
-var tests = module.exports = {};
 
-suite('template_maps_auth', function() {
+var TemplateMaps = require('../../../lib/cartodb/template_maps');
+
+describe('template_maps_auth', function() {
 
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis),
@@ -84,15 +84,15 @@ suite('template_maps_auth', function() {
     ];
 
     authorizationTestScenarios.forEach(function(testScenario) {
-        test(testScenario.desc, function(done) {
+        it(testScenario.desc, function(done) {
             var debugMessage = testScenario.expected ? 'should be authorized' : 'unexpectedly authorized';
             var result = templateMaps.isAuthorized(testScenario.template, testScenario.token);
             assert.equal(result, testScenario.expected, debugMessage);
             done();
-        })
+        });
     });
 
-    test("auth as 'open' string is authorized", function(done) {
+    it("auth as 'open' string is authorized", function(done) {
         var template = {
             name: 'wadus_template',
             auth: 'open'
