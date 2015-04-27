@@ -1,8 +1,12 @@
 # Changelog
 
-## 2.1.4
+## 2.2.0
 
 Released 2015-mm-dd
+
+New features
+ - Fastly surrogate keys invalidation for named maps
+   * **New configuration entry**: `fastly`. Check example configurations for more information.
 
 
 ## 2.1.3
