@@ -1,4 +1,4 @@
-var testHelper = require('../support/test_helper');
+require('../support/test_helper');
 
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
@@ -6,13 +6,10 @@ var TemplateMaps = require('../../lib/cartodb/template_maps.js');
 var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
 var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig_named_layers_adapter');
 
-var Step = require('step');
-var _ = require('underscore');
-
-suite('mapconfig_named_layers_adapter', function() {
+describe('mapconfig_named_layers_adapter', function() {
 
     // configure redis pool instance to use in tests
-    var redisPool = RedisPool(global.environment.redis);
+    var redisPool = new RedisPool(global.environment.redis);
     var pgConnection = new PgConnection(require('cartodb-redis')({ pool: redisPool }));
 
     var templateMaps = new TemplateMaps(redisPool, {
@@ -138,40 +135,46 @@ suite('mapconfig_named_layers_adapter', function() {
     }
 
 
-    suiteSetup(function(done) {
+    before(function(done) {
         templateMaps.addTemplate(username, template, done);
     });
 
-    test('should fail for named map layer with missing name', function(done) {
+    it('should fail for named map layer with missing name', function(done) {
         var missingNamedMapLayerConfig = makeNamedMapLayerConfig({
             config: {}
         });
-        mapConfigNamedLayersAdapter.getLayers(username, missingNamedMapLayerConfig.layers, pgConnection, function(err, layers, datasource) {
-            assert.ok(err);
-            assert.ok(!layers);
-            assert.ok(!datasource);
-            assert.equal(err.message, 'Missing Named Map `name` in layer options');
+        mapConfigNamedLayersAdapter.getLayers(username, missingNamedMapLayerConfig.layers, pgConnection,
+            function(err, layers, datasource) {
+                assert.ok(err);
+                assert.ok(!layers);
+                assert.ok(!datasource);
+                assert.equal(err.message, 'Missing Named Map `name` in layer options');
 
-            done();
-        });
+                done();
+            }
+        );
     });
 
-    test('should fail for non-existing template name', function(done) {
+    it('should fail for non-existing template name', function(done) {
         var missingTemplateName = 'wadus';
         var nonExistentNamedMapLayerConfig = makeNamedMapLayerConfig({
             name: missingTemplateName
         });
-        mapConfigNamedLayersAdapter.getLayers(username, nonExistentNamedMapLayerConfig.layers, pgConnection, function(err, layers, datasource) {
-            assert.ok(err);
-            assert.ok(!layers);
-            assert.ok(!datasource);
-            assert.equal(err.message, "Template '" + missingTemplateName + "' of user '" + username + "' not found");
+        mapConfigNamedLayersAdapter.getLayers(username, nonExistentNamedMapLayerConfig.layers, pgConnection,
+            function(err, layers, datasource) {
+                assert.ok(err);
+                assert.ok(!layers);
+                assert.ok(!datasource);
+                assert.equal(
+                    err.message, "Template '" + missingTemplateName + "' of user '" + username + "' not found"
+                );
 
-            done();
-        });
+                done();
+            }
+        );
     });
 
-    test('should fail if not properly authorized', function(done) {
+    it('should fail if not properly authorized', function(done) {
         templateMaps.addTemplate(username, tokenAuthTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -180,18 +183,20 @@ suite('mapconfig_named_layers_adapter', function() {
             var nonAuthTokensNamedMapLayerConfig = makeNamedMapLayerConfig({
                 name: tokenAuthTemplateName
             });
-            mapConfigNamedLayersAdapter.getLayers(username, nonAuthTokensNamedMapLayerConfig.layers, pgConnection, function(err, layers, datasource) {
-                assert.ok(err);
-                assert.ok(!layers);
-                assert.ok(!datasource);
-                assert.equal(err.message, "Unauthorized '" + tokenAuthTemplateName + "' template instantiation");
+            mapConfigNamedLayersAdapter.getLayers(username, nonAuthTokensNamedMapLayerConfig.layers, pgConnection,
+                function(err, layers, datasource) {
+                    assert.ok(err);
+                    assert.ok(!layers);
+                    assert.ok(!datasource);
+                    assert.equal(err.message, "Unauthorized '" + tokenAuthTemplateName + "' template instantiation");
 
-                templateMaps.delTemplate(username, tokenAuthTemplateName, done);
-            });
+                    templateMaps.delTemplate(username, tokenAuthTemplateName, done);
+                }
+            );
         });
     });
 
-    test('should fail for nested named map layers', function(done) {
+    it('should fail for nested named map layers', function(done) {
         templateMaps.addTemplate(username, nestedNamedMapTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -200,32 +205,36 @@ suite('mapconfig_named_layers_adapter', function() {
             var nestedNamedMapLayerConfig = makeNamedMapLayerConfig({
                 name: nestedNamedMapTemplateName
             });
-            mapConfigNamedLayersAdapter.getLayers(username, nestedNamedMapLayerConfig.layers, pgConnection, function(err, layers, datasource) {
-                assert.ok(err);
-                assert.ok(!layers);
-                assert.ok(!datasource);
-                assert.equal(err.message, 'Nested named layers are not allowed');
+            mapConfigNamedLayersAdapter.getLayers(username, nestedNamedMapLayerConfig.layers, pgConnection,
+                function(err, layers, datasource) {
+                    assert.ok(err);
+                    assert.ok(!layers);
+                    assert.ok(!datasource);
+                    assert.equal(err.message, 'Nested named layers are not allowed');
 
-                templateMaps.delTemplate(username, nestedNamedMapTemplateName, done);
-            });
+                    templateMaps.delTemplate(username, nestedNamedMapTemplateName, done);
+                }
+            );
         });
     });
 
-    test('should return an expanded list of layers for a named map layer', function(done) {
+    it('should return an expanded list of layers for a named map layer', function(done) {
         var validNamedMapMapLayerConfig = makeNamedMapLayerConfig({
             name: templateName
         });
-        mapConfigNamedLayersAdapter.getLayers(username, validNamedMapMapLayerConfig.layers, pgConnection, function(err, layers, datasource) {
-            assert.ok(!err);
-            assert.ok(layers.length, 1);
-            assert.ok(layers[0].type, 'cartodb');
-            assert.notEqual(datasource.getLayerDatasource(0), undefined);
+        mapConfigNamedLayersAdapter.getLayers(username, validNamedMapMapLayerConfig.layers, pgConnection,
+            function(err, layers, datasource) {
+                assert.ok(!err);
+                assert.ok(layers.length, 1);
+                assert.ok(layers[0].type, 'cartodb');
+                assert.notEqual(datasource.getLayerDatasource(0), undefined);
 
-            done();
-        });
+                done();
+            }
+        );
     });
 
-    test('should return on auth=token with valid tokens provided', function(done) {
+    it('should return on auth=token with valid tokens provided', function(done) {
         templateMaps.addTemplate(username, tokenAuthTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -235,17 +244,19 @@ suite('mapconfig_named_layers_adapter', function() {
                 name: tokenAuthTemplateName,
                 auth_tokens: ['valid1']
             });
-            mapConfigNamedLayersAdapter.getLayers(username, validAuthTokensNamedMapLayerConfig.layers, pgConnection, function(err, layers, datasource) {
-                assert.ok(!err);
-                assert.equal(layers.length, 1);
-                assert.notEqual(datasource.getLayerDatasource(0), undefined);
+            mapConfigNamedLayersAdapter.getLayers(username, validAuthTokensNamedMapLayerConfig.layers, pgConnection,
+                function(err, layers, datasource) {
+                    assert.ok(!err);
+                    assert.equal(layers.length, 1);
+                    assert.notEqual(datasource.getLayerDatasource(0), undefined);
 
-                templateMaps.delTemplate(username, tokenAuthTemplateName, done);
-            });
+                    templateMaps.delTemplate(username, tokenAuthTemplateName, done);
+                }
+            );
         });
     });
 
-    test('should return an expanded list of layers for a named map layer, multiple layers version', function(done) {
+    it('should return an expanded list of layers for a named map layer, multiple layers version', function(done) {
         templateMaps.addTemplate(username, multipleLayersTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -255,24 +266,26 @@ suite('mapconfig_named_layers_adapter', function() {
                 name: multipleLayersTemplateName,
                 auth_tokens: ['valid2']
             });
-            mapConfigNamedLayersAdapter.getLayers(username, multipleLayersNamedMapLayerConfig.layers, pgConnection, function(err, layers, datasource) {
-                assert.ok(!err);
-                assert.equal(layers.length, 2);
+            mapConfigNamedLayersAdapter.getLayers(username, multipleLayersNamedMapLayerConfig.layers, pgConnection,
+                function(err, layers, datasource) {
+                    assert.ok(!err);
+                    assert.equal(layers.length, 2);
 
-                assert.equal(layers[0].type, 'mapnik');
-                assert.equal(layers[0].options.cartocss, '#layer { polygon-fill: green; }');
-                assert.notEqual(datasource.getLayerDatasource(0), undefined);
+                    assert.equal(layers[0].type, 'mapnik');
+                    assert.equal(layers[0].options.cartocss, '#layer { polygon-fill: green; }');
+                    assert.notEqual(datasource.getLayerDatasource(0), undefined);
 
-                assert.equal(layers[1].type, 'cartodb');
-                assert.equal(layers[1].options.cartocss, '#layer { marker-fill: red; }');
-                assert.notEqual(datasource.getLayerDatasource(1), undefined);
+                    assert.equal(layers[1].type, 'cartodb');
+                    assert.equal(layers[1].options.cartocss, '#layer { marker-fill: red; }');
+                    assert.notEqual(datasource.getLayerDatasource(1), undefined);
 
-                templateMaps.delTemplate(username, multipleLayersTemplateName, done);
-            });
+                    templateMaps.delTemplate(username, multipleLayersTemplateName, done);
+                }
+            );
         });
     });
 
-    test('should replace template params with the given config', function(done) {
+    it('should replace template params with the given config', function(done) {
         templateMaps.addTemplate(username, multipleLayersTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -289,24 +302,26 @@ suite('mapconfig_named_layers_adapter', function() {
                 },
                 auth_tokens: ['valid2']
             });
-            mapConfigNamedLayersAdapter.getLayers(username, multipleLayersNamedMapLayerConfig.layers, pgConnection, function(err, layers, datasource) {
-                assert.ok(!err);
-                assert.equal(layers.length, 2);
+            mapConfigNamedLayersAdapter.getLayers(username, multipleLayersNamedMapLayerConfig.layers, pgConnection,
+                function(err, layers, datasource) {
+                    assert.ok(!err);
+                    assert.equal(layers.length, 2);
 
-                assert.equal(layers[0].type, 'mapnik');
-                assert.equal(layers[0].options.cartocss, '#layer { polygon-fill: ' + polygonColor + '; }');
-                assert.notEqual(datasource.getLayerDatasource(0), undefined);
+                    assert.equal(layers[0].type, 'mapnik');
+                    assert.equal(layers[0].options.cartocss, '#layer { polygon-fill: ' + polygonColor + '; }');
+                    assert.notEqual(datasource.getLayerDatasource(0), undefined);
 
-                assert.equal(layers[1].type, 'cartodb');
-                assert.equal(layers[1].options.cartocss, '#layer { marker-fill: ' + color + '; }');
-                assert.notEqual(datasource.getLayerDatasource(1), undefined);
+                    assert.equal(layers[1].type, 'cartodb');
+                    assert.equal(layers[1].options.cartocss, '#layer { marker-fill: ' + color + '; }');
+                    assert.notEqual(datasource.getLayerDatasource(1), undefined);
 
-                templateMaps.delTemplate(username, multipleLayersTemplateName, done);
-            });
+                    templateMaps.delTemplate(username, multipleLayersTemplateName, done);
+                }
+            );
         });
     });
 
-    suiteTeardown(function(done) {
+    after(function(done) {
         templateMaps.delTemplate(username, templateName, done);
     });
 });
