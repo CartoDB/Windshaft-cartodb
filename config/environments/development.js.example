@@ -180,7 +180,7 @@ var config = {
         ttl: 86400,
         layergroupTtl: 86400 // the max-age for cache-control header in layergroup responses
     }
-    // this configuration enables invalidating by surrogate key in fastly
+    // this [OPTIONAL] configuration enables invalidating by surrogate key in fastly
     ,fastly: {
         // whether the invalidation is enabled or not
         enabled: false,
