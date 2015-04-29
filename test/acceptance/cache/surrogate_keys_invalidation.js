@@ -3,6 +3,7 @@ require(__dirname + '/../../support/test_helper');
 var assert      = require('../../support/assert');
 var redis       = require('redis');
 var step        = require('step');
+var FastlyPurge = require('fastly-purge');
 
 var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cartodb/cache/model/named_maps_entry');
 var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/cartodb_windshaft');
@@ -18,12 +19,23 @@ describe('templates surrogate keys', function() {
     var varnishPurgeEnabled = global.environment.varnish.purge_enabled;
     global.environment.varnish.purge_enabled = true;
 
+    var fastlyConfig = global.environment.fastly;
+    var FAKE_FASTLY_API_KEY = 'fastly-api-key';
+    var FAKE_FASTLY_SERVICE_ID = 'fake-service-id';
+    global.environment.fastly = {
+        enabled: true,
+        // the fastly api key
+        apiKey: FAKE_FASTLY_API_KEY,
+        // the service that will get surrogate key invalidation
+        serviceId: FAKE_FASTLY_SERVICE_ID
+    };
+
     var serverOptions = require('../../../lib/cartodb/server_options')();
     var server = new CartodbWindshaft(serverOptions);
 
     var templateOwner = 'localhost',
         templateName = 'acceptance',
-        expectedTemplateId = templateOwner + '@' + templateName,
+        expectedTemplateId = templateName,
         template = {
             version: '0.0.1',
             name: templateName,
@@ -51,6 +63,7 @@ describe('templates surrogate keys', function() {
 
     var cacheEntryKey = new NamedMapsCacheEntry(templateOwner, templateName).key();
     var invalidationMatchHeader = '\\b' + cacheEntryKey + '\\b';
+    var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + encodeURIComponent(cacheEntryKey);
 
     var nock = require('nock');
     nock.enableNetConnect(/(127.0.0.1:5555|cartocdn.com)/);
@@ -59,6 +72,8 @@ describe('templates surrogate keys', function() {
         serverOptions.varnish_purge_enabled = false;
         global.environment.varnish.host = varnishHost;
         global.environment.varnish.purge_enabled = varnishPurgeEnabled;
+
+        global.environment.fastly = fastlyConfig;
 
         nock.restore();
         done();
@@ -109,6 +124,15 @@ describe('templates surrogate keys', function() {
             .matchHeader('Invalidation-Match', invalidationMatchHeader)
             .reply(204, '');
 
+        var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
+            .post(fastlyPurgePath)
+            .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
+            .matchHeader('Fastly-Soft-Purge', 1)
+            .matchHeader('Accept', 'application/json')
+            .reply(200, {
+                status:'ok'
+            });
+
         step(
             function createTemplateToUpdate() {
                 createTemplate(this);
@@ -145,6 +169,7 @@ describe('templates surrogate keys', function() {
                 assert.deepEqual(parsedBody, expectedBody);
 
                 assert.equal(scope.pendingMocks().length, 0);
+                assert.equal(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },
@@ -170,6 +195,15 @@ describe('templates surrogate keys', function() {
             .intercept('/key', 'PURGE')
             .matchHeader('Invalidation-Match', invalidationMatchHeader)
             .reply(204, '');
+
+        var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
+            .post(fastlyPurgePath)
+            .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
+            .matchHeader('Fastly-Soft-Purge', 1)
+            .matchHeader('Accept', 'application/json')
+            .reply(200, {
+                status:'ok'
+            });
 
         step(
             function createTemplateToDelete() {
@@ -204,6 +238,7 @@ describe('templates surrogate keys', function() {
                 }
 
                 assert.equal(scope.pendingMocks().length, 0);
+                assert.equal(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },

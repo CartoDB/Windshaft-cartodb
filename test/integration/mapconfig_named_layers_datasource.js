@@ -1,4 +1,4 @@
-var test_helper = require('../support/test_helper');
+require('../support/test_helper');
 
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
@@ -6,11 +6,8 @@ var TemplateMaps = require('../../lib/cartodb/template_maps.js');
 var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
 var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig_named_layers_adapter');
 
-var Step = require('step');
-var _ = require('underscore');
-
 // configure redis pool instance to use in tests
-var redisPool = RedisPool(global.environment.redis);
+var redisPool = new RedisPool(global.environment.redis);
 var pgConnection = new PgConnection(require('cartodb-redis')({ pool: redisPool }));
 
 var templateMaps = new TemplateMaps(redisPool, {
@@ -97,8 +94,8 @@ var multipleLayersTemplate = {
     }
 };
 
-suite('named_layers datasources', function() {
-    suiteSetup(function(done) {
+describe('named_layers datasources', function() {
+    before(function(done) {
         templateMaps.addTemplate(username, template, function(err) {
             if (err) {
                 return done(err);
@@ -224,7 +221,14 @@ suite('named_layers datasources', function() {
 
         {
             desc: 'with a mix of datasource and no datasource depending if layers are named or not',
-            config: makeNamedMapLayerConfig([simpleNamedLayer, multipleLayersNamedLayer, wadusLayer, simpleNamedLayer, wadusLayer, multipleLayersNamedLayer]),
+            config: makeNamedMapLayerConfig([
+                simpleNamedLayer,
+                multipleLayersNamedLayer,
+                wadusLayer,
+                simpleNamedLayer,
+                wadusLayer,
+                multipleLayersNamedLayer
+            ]),
             test: function(err, layers, datasource, done) {
 
                 assert.ok(!err);
@@ -280,14 +284,16 @@ suite('named_layers datasources', function() {
     ];
 
     testScenarios.forEach(function(testScenario) {
-        test('should return a list of layers ' + testScenario.desc, function(done) {
-            mapConfigNamedLayersAdapter.getLayers(username, testScenario.config.layers, pgConnection, function(err, layers, datasource) {
-                testScenario.test(err, layers, datasource, done);
-            });
+        it('should return a list of layers ' + testScenario.desc, function(done) {
+            mapConfigNamedLayersAdapter.getLayers(username, testScenario.config.layers, pgConnection,
+                function(err, layers, datasource) {
+                    testScenario.test(err, layers, datasource, done);
+                }
+            );
         });
     });
 
-    suiteTeardown(function(done) {
+    after(function(done) {
         templateMaps.delTemplate(username, templateName, function(err) {
             if (err) {
                 return done(err);

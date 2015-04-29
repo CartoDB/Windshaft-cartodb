@@ -125,6 +125,7 @@ var config = {
           timeout: 2000, // the timeout in ms for a http tile request
           proxy: undefined, // the url for a proxy server
           whitelist: [ // the whitelist of urlTemplates that can be used
+              '.*', // will enable any URL
               'http://{s}.example.com/{z}/{x}/{y}.png',
               // for testing purposes
               'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png'
@@ -175,6 +176,15 @@ var config = {
         secret: 'xxx',
         ttl: 86400,
         layergroupTtl: 86400 // the max-age for cache-control header in layergroup responses
+    }
+    // this [OPTIONAL] configuration enables invalidating by surrogate key in fastly
+    ,fastly: {
+        // whether the invalidation is enabled or not
+        enabled: false,
+        // the fastly api key
+        apiKey: 'wadus_api_key',
+        // the service that will get surrogate key invalidation
+        serviceId: 'wadus_service_id'
     }
     // If useProfiler is true every response will be served with an
     // X-Tiler-Profile header containing elapsed timing for various 

@@ -1,9 +1,7 @@
 var assert      = require('../support/assert');
 var _           = require('underscore');
 var redis       = require('redis');
-var querystring = require('querystring');
-var semver      = require('semver');
-var Step        = require('step');
+var step        = require('step');
 var strftime    = require('strftime');
 var NamedMapsCacheEntry = require(__dirname + '/../../lib/cartodb/cache/model/named_maps_entry');
 var redis_stats_db = 5;
@@ -11,25 +9,20 @@ var redis_stats_db = 5;
 // Pollute the PG environment to make sure
 // configuration settings are always enforced
 // See https://github.com/CartoDB/Windshaft-cartodb/issues/174
-process.env['PGPORT'] = '666';
-process.env['PGHOST'] = 'fake';
+process.env.PGPORT = '666';
+process.env.PGHOST = 'fake';
 
 var helper = require(__dirname + '/../support/test_helper');
 
-var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
-
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var ServerOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var serverOptions = ServerOptions();
+var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-suite('template_api', function() {
+describe('template_api', function() {
     serverOptions.channelCache = {};
 
     var redis_client = redis.createClient(global.environment.redis.port);
-    var expected_last_updated_epoch = 1234567890123; // this is hard-coded into SQLAPIEmu
-    var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
 
     var template_acceptance1 =  {
         version: '0.0.1',
@@ -39,7 +32,8 @@ suite('template_api', function() {
           version: '1.0.0',
           layers: [
              { options: {
-                 sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, -5e6, 0) as the_geom_webmercator from test_table limit 2 offset 2',
+                 sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, -5e6, 0) as the_geom_webmercator' +
+                     ' from test_table limit 2 offset 2',
                  cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
                  cartocss_version: '2.0.2',
                  interactivity: 'cartodb_id'
@@ -57,7 +51,8 @@ suite('template_api', function() {
                 version: '1.0.0',
                     layers: [
                     { options: {
-                        sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, -5e6, 0) as the_geom_webmercator from test_table limit 2 offset 2',
+                        sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, -5e6, 0) as the_geom_webmercator' +
+                            ' from test_table limit 2 offset 2',
                         cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                         cartocss_version: '2.0.2',
                         interactivity: 'cartodb_id'
@@ -71,18 +66,17 @@ suite('template_api', function() {
         return _.extend({}, template, {auth: {method: 'open'}, placeholders: {}});
     }
 
-    test("can add template, returning id", function(done) {
+    it("can add template, returning id", function(done) {
 
       var errors = [];
-      var expected_failure = false;
-      var expected_tpl_id = "localhost@acceptance1";
+      var expected_tpl_id = "acceptance1";
       var post_request_1 = {
           url: '/api/v1/map/named',
           method: 'POST',
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(template_acceptance1)
-      }
-      Step(
+      };
+      step(
         function postUnauthenticated()
         {
           var next = this;
@@ -152,9 +146,9 @@ suite('template_api', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/128
-    test("cannot create template with auth='token' and no valid tokens", function(done) {
+    it("cannot create template with auth='token' and no valid tokens", function(done) {
       var tpl_id;
-      Step(
+      step(
         function postTemplate1()
         {
           // clone the valid one, and give it another name
@@ -168,7 +162,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(broken_template)
-          }
+          };
           var next = this;
           assert.response(server, post_request_1, {},
             function(res) { next(null, res); });
@@ -179,7 +173,7 @@ suite('template_api', function() {
           assert.equal(res.statusCode, 400, res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('error'), res.body);
-          var re = RegExp(/invalid.*authentication.*missing/i);
+          var re = /invalid.*authentication.*missing/i;
           assert.ok(parsedBody.error.match(re),
             'Error for invalid authentication does not match ' + re + ': ' + parsedBody.error);
           return null;
@@ -198,7 +192,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(broken_template)
-          }
+          };
           var next = this;
           assert.response(server, post_request_1, {},
             function(res) { next(null, res); });
@@ -209,7 +203,7 @@ suite('template_api', function() {
           assert.equal(res.statusCode, 400, res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('error'), res.body);
-          var re = RegExp(/invalid.*authentication.*missing/i);
+          var re = new RegExp(/invalid.*authentication.*missing/i);
           assert.ok(parsedBody.error.match(re),
             'Error for invalid authentication does not match ' + re + ': ' + parsedBody.error);
           return null;
@@ -225,7 +219,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(broken_template)
-          }
+          };
           var next = this;
           assert.response(server, post_request_1, {},
             function(res) { next(null, res); });
@@ -249,7 +243,7 @@ suite('template_api', function() {
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(broken_template)
-          }
+          };
           var next = this;
           assert.response(server, put_request_1, {},
             function(res) { next(null, res); });
@@ -261,7 +255,7 @@ suite('template_api', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
-          var re = RegExp(/invalid.*authentication.*missing/i);
+          var re = /invalid.*authentication.*missing/i;
           assert.ok(parsed.error.match(re),
             'Error for invalid authentication on PUT does not match ' +
             re + ': ' + parsed.error);
@@ -269,7 +263,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, del_request, {},
             function(res, err) { next(err, res); });
@@ -298,8 +292,8 @@ suite('template_api', function() {
       );
     });
 
-    test("instance endpoint should return CORS headers", function(done){
-      Step(function postTemplate1(err, res) {
+    it("instance endpoint should return CORS headers", function(done){
+      step(function postTemplate1() {
           var next = this;
           var post_request = {
               url: '/api/v1/map/named?api_key=1234',
@@ -323,12 +317,12 @@ suite('template_api', function() {
       });
     });
 
-    test("instance endpoint should return server metadata", function(done){
-      global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } }
-      var tmpl = _.clone(template_acceptance1)
-      tmpl.name = "rambotemplate2"
+    it("instance endpoint should return server metadata", function(done){
+      global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } };
+      var tmpl = _.clone(template_acceptance1);
+      tmpl.name = "rambotemplate2";
 
-      Step(function postTemplate1(err, res) {
+      step(function postTemplate1() {
           var next = this;
           var post_request = {
               url: '/api/v1/map/named?api_key=1234',
@@ -345,7 +339,7 @@ suite('template_api', function() {
           assert.response(server, {
               url: '/api/v1/map/named/' + tmpl.name,
               method: 'POST',
-              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              headers: {host: 'localhost', 'Content-Type': 'application/json' }
           },{
               status: 200
           }, function(res) { 
@@ -360,23 +354,22 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tmpl.name + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost', 'Content-Type': 'application/json' }
-          }
-          var next = this;
-          assert.response(server, del_request, {},
-            function(res) { done(); });
+          };
+          assert.response(server, del_request, {}, function() {
+              done();
+          });
         }
       );
     });
 
 
 
-    test("can list templates", function(done) {
+    it("can list templates", function(done) {
 
       var errors = [];
-      var expected_failure = false;
       var tplid1, tplid2;
-      Step(
-        function postTemplate1(err, res)
+      step(
+        function postTemplate1()
         {
           var next = this;
           var post_request = {
@@ -384,7 +377,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance1)
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -405,7 +398,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance1)
-          }
+          };
           template_acceptance1.name = backup_name;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -423,7 +416,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named',
               method: 'GET',
               headers: {host: 'localhost'}
-          }
+          };
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
         },
@@ -441,7 +434,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost'}
-          }
+          };
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
         },
@@ -487,13 +480,12 @@ suite('template_api', function() {
       );
     });
 
-    test("can update template", function(done) {
+    it("can update template", function(done) {
 
       var errors = [];
-      var expected_failure = false;
       var tpl_id;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -501,7 +493,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -520,7 +512,7 @@ suite('template_api', function() {
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance1)
-          }
+          };
           template_acceptance1.name = backup_name;
           var next = this;
           assert.response(server, put_request, {},
@@ -539,7 +531,7 @@ suite('template_api', function() {
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
-          }
+          };
           var next = this;
           assert.response(server, put_request, {},
             function(res) { next(null, res); });
@@ -557,7 +549,7 @@ suite('template_api', function() {
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
-          }
+          };
           var next = this;
           assert.response(server, put_request, {},
             function(res) { next(null, res); });
@@ -599,13 +591,12 @@ suite('template_api', function() {
       );
     });
 
-    test("can get a template by id", function(done) {
+    it("can get a template by id", function(done) {
 
       var errors = [];
-      var expected_failure = false;
       var tpl_id;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -613,7 +604,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -629,7 +620,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id,
               method: 'GET',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -646,7 +637,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -688,13 +679,12 @@ suite('template_api', function() {
       );
     });
 
-    test("can delete a template by id", function(done) {
+    it("can delete a template by id", function(done) {
 
       var errors = [];
-      var expected_failure = false;
       var tpl_id;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -702,7 +692,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(makeTemplate())
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -718,7 +708,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -735,7 +725,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id,
               method: 'DELETE',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, del_request, {},
             function(res) { next(null, res); });
@@ -753,7 +743,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, del_request, {},
             function(res) { next(null, res); });
@@ -767,7 +757,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'GET',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -811,7 +801,7 @@ suite('template_api', function() {
       );
     });
 
-    test("can instanciate a template by id", function(done) {
+    it("can instanciate a template by id wadus", function(done) {
 
       // This map fetches data from a private table
       var template_acceptance2 =  {
@@ -834,11 +824,10 @@ suite('template_api', function() {
       var template_params = {};
 
       var errors = [];
-      var expected_failure = false;
       var tpl_id;
       var layergroupid;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -846,7 +835,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance2)
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -863,7 +852,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -872,8 +861,7 @@ suite('template_api', function() {
         function instanciateForeignDB(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 403,
-            'Unexpected success instanciating template with no auth: '
-            + res.statusCode + ': ' + res.body);
+            'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
@@ -884,7 +872,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'foreign', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -892,18 +880,16 @@ suite('template_api', function() {
         function instanciateAuth(err, res)
         {
           if ( err ) throw err;
-          assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
+          assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/cannot instanciate/i),
-            'Unexpected error for forbidden instance : ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('error'), "Missing 'error' from response body: " + res.body);
+          assert.ok(parsed.error.match(/not found/i), 'Unexpected error for forbidden instance : ' + parsed.error);
           var post_request = {
               url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -917,8 +903,7 @@ suite('template_api', function() {
             "Missing 'layergroupid' from response body: " + res.body);
           layergroupid = parsed.layergroupid;
           assert.ok(layergroupid.match(/^localhost@/),
-            "Returned layergroupid does not start with signer name: "
-            + layergroupid);
+            "Returned layergroupid does not start with signer name: " + layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
           // TODO: check value of last_updated ?
@@ -927,7 +912,7 @@ suite('template_api', function() {
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -940,14 +925,13 @@ suite('template_api', function() {
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
           assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized instance '
-            + '(expected /permission denied/): ' + parsed.error);
+            'Unexpected error for unauthorized instance (expected /permission denied/): ' + parsed.error);
           var get_request = {
               url: '/api/v1/map/' + layergroupid + '/0/0/0.png?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -955,13 +939,12 @@ suite('template_api', function() {
         function checkTile(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, 
-            'Unexpected error for authorized instance: '
-            + res.statusCode + ' -- ' + res.body);
+            'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "image/png");
           return null;
         },
         // See https://github.com/CartoDB/Windshaft-cartodb/issues/172
-        function fetchTileForeignSignature(err, res) {
+        function fetchTileForeignSignature(err) {
           if ( err ) throw err;
           var foreignsigned = layergroupid.replace(/[^@]*@/, 'foreign@');
           var get_request = {
@@ -969,7 +952,7 @@ suite('template_api', function() {
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -977,14 +960,12 @@ suite('template_api', function() {
         function checkForeignSignerError(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 403, 
-            'Unexpected error for authorized instance: '
-            + res.statusCode + ' -- ' + res.body);
+            'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
           assert.ok(parsed.error.match(/cannot use/i),
-            'Unexpected error for unauthorized instance '
-            + '(expected /cannot use/): ' + parsed.error);
+            'Unexpected error for unauthorized instance (expected /cannot use/): ' + parsed.error);
           return null;
         },
         function deleteTemplate(err)
@@ -994,7 +975,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, del_request, {},
             function(res) { next(null, res); });
@@ -1008,7 +989,7 @@ suite('template_api', function() {
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -1047,7 +1028,7 @@ suite('template_api', function() {
       );
     });
 
-    test("can instanciate a template with torque layer by id", function(done) {
+    it("can instanciate a template with torque layer by id", function(done) {
 
       // This map fetches data from a private table
       var template =  {
@@ -1059,7 +1040,8 @@ suite('template_api', function() {
             layers: [
                { type: 'torque', options: {
                    sql: "select * from test_table_private_1 LIMIT 0",
-                   cartocss: "Map { -torque-frame-count:1; -torque-resolution:1; -torque-aggregation-function:'count(*)'; -torque-time-attribute:'updated_at'; }"
+                   cartocss: "Map { -torque-frame-count:1; -torque-resolution:1; " +
+                       "-torque-aggregation-function:'count(*)'; -torque-time-attribute:'updated_at'; }"
                  } }
             ]
           }
@@ -1068,11 +1050,10 @@ suite('template_api', function() {
       var template_params = {};
 
       var errors = [];
-      var expected_failure = false;
       var tpl_id;
       var layergroupid;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -1080,7 +1061,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template)
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -1097,7 +1078,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1106,8 +1087,7 @@ suite('template_api', function() {
         {
           if ( err ) throw err;
           assert.equal(res.statusCode, 403,
-            'Unexpected success instanciating template with no auth: '
-            + res.statusCode + ': ' + res.body);
+            'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
@@ -1118,7 +1098,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1132,8 +1112,7 @@ suite('template_api', function() {
             "Missing 'layergroupid' from response body: " + res.body);
           layergroupid = parsed.layergroupid;
           assert.ok(layergroupid.match(/^localhost@/),
-            "Returned layergroupid does not start with signer name: "
-            + layergroupid);
+            "Returned layergroupid does not start with signer name: " + layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
           // TODO: check value of last_updated ?
@@ -1142,7 +1121,7 @@ suite('template_api', function() {
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -1155,14 +1134,13 @@ suite('template_api', function() {
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
           assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized instance '
-            + '(expected /permission denied): ' + parsed.error);
+            'Unexpected error for unauthorized instance (expected /permission denied): ' + parsed.error);
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/0.json.torque?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -1170,21 +1148,19 @@ suite('template_api', function() {
         function checkTile_fetchOnRestart(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, 
-            'Unexpected error for authorized instance: '
-            + res.statusCode + ' -- ' + res.body);
+            'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           var cc = res.headers['x-cache-channel'];
           assert.ok(cc);
           assert.ok(cc.match, /ciao/, cc);
           // hack simulating restart...
-          serverOptions = ServerOptions(); // need to clean channel cache
-          server = new CartodbWindshaft(serverOptions);
+          serverOptions.channelCache = {}; // need to clean channel cache
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -1192,8 +1168,7 @@ suite('template_api', function() {
         function checkCacheChannel(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, 
-            'Unexpected error for authorized instance: '
-            + res.statusCode + ' -- ' + res.body);
+            'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           var cc = res.headers['x-cache-channel'];
           assert.ok(cc, "Missing X-Cache-Channel on fetch-after-restart");
@@ -1207,7 +1182,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, del_request, {},
             function(res) { next(null, res); });
@@ -1221,7 +1196,7 @@ suite('template_api', function() {
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -1260,7 +1235,7 @@ suite('template_api', function() {
       );
     });
 
-    test("can instanciate a template with attribute service by id", function(done) {
+    it("can instanciate a template with attribute service by id", function(done) {
 
       // This map fetches data from a private table
       var template =  {
@@ -1283,11 +1258,10 @@ suite('template_api', function() {
       var template_params = {};
 
       var errors = [];
-      var expected_failure = false;
       var tpl_id;
       var layergroupid;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -1295,7 +1269,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template)
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -1312,7 +1286,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1321,8 +1295,7 @@ suite('template_api', function() {
         {
           if ( err ) throw err;
           assert.equal(res.statusCode, 403,
-            'Unexpected success instanciating template with no auth: '
-            + res.statusCode + ': ' + res.body);
+            'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
@@ -1333,10 +1306,10 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
-            function(res, err) { next(null, res); });
+            function(res) { next(null, res); });
         },
         function fetchAttributeNoAuth(err, res) {
           if ( err ) throw err;
@@ -1347,8 +1320,7 @@ suite('template_api', function() {
             "Missing 'layergroupid' from response body: " + res.body);
           layergroupid = parsed.layergroupid;
           assert.ok(layergroupid.match(/^localhost@/),
-            "Returned layergroupid does not start with signer name: "
-            + layergroupid);
+            "Returned layergroupid does not start with signer name: " + layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
           // TODO: check value of last_updated ?
@@ -1357,7 +1329,7 @@ suite('template_api', function() {
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -1370,14 +1342,13 @@ suite('template_api', function() {
           assert.ok(parsed.hasOwnProperty('error'),
             "Missing 'error' from response body: " + res.body);
           assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized getAttributes '
-            + '(expected /permission denied/): ' + parsed.error);
+            'Unexpected error for unauthorized getAttributes (expected /permission denied/): ' + parsed.error);
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/attributes/5?auth_token=valid2',
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -1385,8 +1356,7 @@ suite('template_api', function() {
         function checkAttribute(err, res) {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200, 
-            'Unexpected error for authorized getAttributes: '
-            + res.statusCode + ' -- ' + res.body);
+            'Unexpected error for authorized getAttributes: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           return null;
         },
@@ -1397,7 +1367,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, del_request, {},
             function(res) { next(null, res); });
@@ -1411,7 +1381,7 @@ suite('template_api', function() {
               method: 'GET',
               headers: {host: 'localhost' },
               encoding: 'binary'
-          }
+          };
           var next = this;
           assert.response(server, get_request, {},
             function(res) { next(null, res); });
@@ -1450,7 +1420,7 @@ suite('template_api', function() {
       );
     });
 
-    test("can instanciate a template by id with open auth", function(done) {
+    it("can instanciate a template by id with open auth", function(done) {
 
       // This map fetches data from a private table
       var template_acceptance_open =  {
@@ -1472,12 +1442,9 @@ suite('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
-      var expected_failure = false;
       var tpl_id;
-      var layergroupid;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -1485,7 +1452,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance_open)
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -1502,7 +1469,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           helper.checkNoCache(res);
           var next = this;
           assert.response(server, post_request, {},
@@ -1512,14 +1479,13 @@ suite('template_api', function() {
         {
           if ( err ) throw err;
           assert.equal(res.statusCode, 200,
-            'Unexpected success instanciating template with no auth: '
-            + res.statusCode + ': ' + res.body);
+            'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           done();
         }
       );
     });
 
-    test("can instanciate a template using jsonp", function(done) {
+    it("can instanciate a template using jsonp", function(done) {
 
       // This map fetches data from a private table
       var template_acceptance_open =  {
@@ -1539,14 +1505,9 @@ suite('template_api', function() {
           }
       };
 
-      var template_params = {};
-
-      var errors = [];
-      var expected_failure = false;
       var tpl_id;
-      var layergroupid;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -1554,7 +1515,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance_open)
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -1570,7 +1531,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=test",
               method: 'GET',
               headers: {host: 'localhost' }
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1590,7 +1551,7 @@ suite('template_api', function() {
       );
     });
 
-    test("can instanciate a template using jsonp with params", function(done) {
+    it("can instanciate a template using jsonp with params", function(done) {
 
       // This map fetches data from a private table
       var template_acceptance_open =  {
@@ -1613,14 +1574,9 @@ suite('template_api', function() {
           }
       };
 
-      var template_params = {};
-
-      var errors = [];
-      var expected_failure = false;
       var tpl_id;
-      var layergroupid;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -1628,7 +1584,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance_open)
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -1644,7 +1600,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=test%config=" + JSON.stringify('{color:blue}'),
               method: 'GET',
               headers: {host: 'localhost' }
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1665,14 +1621,14 @@ suite('template_api', function() {
       );
     });
 
-    test("template instantiation raises mapviews counter", function(done) {
+    it("template instantiation raises mapviews counter", function(done) {
       var layergroup =  {
         stat_tag: 'random_tag',
         version: '1.0.0',
         layers: [
            { options: {
-               sql: 'select 1 as cartodb_id, !pixel_height! as h, '
-                  + 'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
+               sql: 'select 1 as cartodb_id, !pixel_height! as h,' +
+                   ' ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
                cartocss: '#layer { polygon-fill:red; }', 
                cartocss_version: '2.0.1' 
              } }
@@ -1689,7 +1645,7 @@ suite('template_api', function() {
       var template_id; // will be set on template post 
       var now = strftime("%Y%m%d", new Date());
       var errors = [];
-      Step(
+      step(
         function clean_stats()
         {
           var next = this;
@@ -1706,7 +1662,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1720,7 +1676,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify({})
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1732,19 +1688,17 @@ suite('template_api', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('layergroupid'),
             "Missing 'layergroupid' from response body: " + res.body);
-          layergroupid = parsed.layergroupid;
-          redis_stats_client.zscore(statskey + ":global", now, this);
+          redis_stats_client.ZSCORE(statskey + ":global", now, this);
         },
         function check_tag_stats(err, val) {
           if ( err ) throw err;
-          assert.equal(val, 1, "Expected score of " + now + " in "
-              +  statskey + ":global to be 1, got " + val);
-          redis_stats_client.zscore(statskey+':stat_tag:random_tag', now, this);
+          assert.equal(val, 1, "Expected score of " + now + " in " +  statskey + ":global to be 1, got " + val);
+          redis_stats_client.ZSCORE(statskey+':stat_tag:random_tag', now, this);
         },
         function check_tag_stats_value(err, val) {
           if ( err ) throw err;
-          assert.equal(val, 1, "Expected score of " + now + " in "
-              +  statskey + ":stat_tag:" + layergroup.stat_tag + " to be 1, got " + val);
+          assert.equal(val, 1, "Expected score of " + now + " in " +  statskey + ":stat_tag:" + layergroup.stat_tag +
+              " to be 1, got " + val);
           return null;
         },
         function deleteTemplate(err)
@@ -1754,7 +1708,7 @@ suite('template_api', function() {
               url: '/api/v1/map/named/' + template_id + '?api_key=1234',
               method: 'DELETE',
               headers: {host: 'localhost'}
-          }
+          };
           var next = this;
           assert.response(server, del_request, {},
             function(res) { next(null, res); });
@@ -1773,7 +1727,7 @@ suite('template_api', function() {
       );
     });
 
-    test("instance map token changes with templates certificate changes", function(done) {
+    it("instance map token changes with templates certificate changes", function(done) {
 
       // This map fetches data from a private table
       var template_acceptance2 =  {
@@ -1796,11 +1750,10 @@ suite('template_api', function() {
       var template_params = {};
 
       var errors = [];
-      var expected_failure = false;
       var tpl_id;
       var layergroupid;
-      Step(
-        function postTemplate(err, res)
+      step(
+        function postTemplate()
         {
           var next = this;
           var post_request = {
@@ -1808,7 +1761,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_acceptance2)
-          }
+          };
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
         },
@@ -1825,7 +1778,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res, err) { next(err, res); });
@@ -1841,7 +1794,7 @@ suite('template_api', function() {
           helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
           return null;
         },
-        function updateTemplate(err, res)
+        function updateTemplate(err)
         {
           if ( err ) throw err;
           // clone the valid one and rename it
@@ -1852,7 +1805,7 @@ suite('template_api', function() {
               method: 'PUT',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(changedTemplate)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res) { next(null, res); });
@@ -1870,7 +1823,7 @@ suite('template_api', function() {
               method: 'POST',
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(template_params)
-          }
+          };
           var next = this;
           assert.response(server, post_request, {},
             function(res, err) { next(err, res); });
@@ -1914,7 +1867,7 @@ suite('template_api', function() {
     });
 
 
-    test("can use an http layer", function(done) {
+    it("can use an http layer", function(done) {
 
         var username = 'localhost';
 
@@ -1952,9 +1905,9 @@ suite('template_api', function() {
         var template_params = {};
 
         var errors = [];
-        var expectedTemplateId = username + '@' + httpTemplateName;
+        var expectedTemplateId = httpTemplateName;
         var layergroupid;
-        Step(
+        step(
             function createTemplate()
             {
                 var next = this;
@@ -2008,7 +1961,8 @@ suite('template_api', function() {
                 }
 
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from response body: " + res.body);
+                assert.ok(
+                    parsed.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
 
                 var next = this;
@@ -2089,7 +2043,69 @@ suite('template_api', function() {
         );
     });
 
-    suiteTeardown(function(done) {
+    describe('named map nonexistent tokens', function() {
+        var username = 'localhost';
+        var templateHash = 'deadbeef';
+        var nonexistentToken = 'wadus';
+
+        function request(token) {
+            return {
+                url: '/api/v1/map/' + token + '/all/0/0/0.png',
+                method: 'GET',
+                headers: {
+                    host: username
+                },
+                encoding: 'binary'
+            };
+        }
+
+        var expectedResponse = {
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            status: 400
+        };
+
+        function checkTileFn(done) {
+            return function checkTile(res, err) {
+                if (err) {
+                    return done(err);
+                }
+                assert.deepEqual(JSON.parse(res.body), {
+                    error: "Invalid or nonexistent map configuration token '" + nonexistentToken + "'"
+                });
+
+                done();
+            };
+        }
+
+        it("returns an error for named map nonexistent tokens", function(done) {
+
+            var nonexistentNamedMapToken = username + '@' + templateHash + '@' + nonexistentToken;
+
+            assert.response(
+                server,
+                request(nonexistentNamedMapToken),
+                expectedResponse,
+                checkTileFn(done)
+            );
+        });
+
+        it("returns an error for named map nonexistent tokens without template hash", function(done) {
+
+            var nonexistentNamedMapToken = username + '@' + nonexistentToken;
+
+            assert.response(
+                server,
+                request(nonexistentNamedMapToken),
+                expectedResponse,
+                checkTileFn(done)
+            );
+        });
+
+    });
+
+    after(function(done) {
 
         // This test will add map_style records, like
         // 'map_style|null|publicuser|my_table',
@@ -2097,10 +2113,10 @@ suite('template_api', function() {
             var todrop = _.map(keys, function(m) {
               if ( m.match(/^map_(tpl|crt|sig)|/) ) return m;
             });
-            redis_client.del(todrop, function(err) {
-              redis_client.select(5, function(err) {
+            redis_client.del(todrop, function() {
+              redis_client.select(5, function() {
                 redis_client.keys("user:localhost:mapviews*", function(err, keys) {
-                  redis_client.del(keys, function(err) {
+                  redis_client.del(keys, function() {
                     done();
                   });
                 });

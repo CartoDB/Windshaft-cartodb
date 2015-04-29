@@ -8,12 +8,11 @@ var server = new CartodbWindshaft(serverOptions);
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/template_maps.js');
 
-var Step = require('step');
-var _ = require('underscore');
+var step = require('step');
 
-suite('named_layers', function() {
+describe('named_layers', function() {
     // configure redis pool instance to use in tests
-    var redisPool = RedisPool(global.environment.redis);
+    var redisPool = new RedisPool(global.environment.redis);
 
     var templateMaps = new TemplateMaps(redisPool, {
         max_user_templates: global.environment.maxUserTemplates
@@ -95,7 +94,7 @@ suite('named_layers', function() {
         }
     };
 
-    suiteSetup(function(done) {
+    before(function(done) {
         global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: true};
         templateMaps.addTemplate(username, nestedNamedMapTemplate, function(err) {
             if (err) {
@@ -112,7 +111,7 @@ suite('named_layers', function() {
         });
     });
 
-    test('should fail for non-existing template name', function(done) {
+    it('should fail for non-existing template name', function(done) {
         var layergroup =  {
             version: '1.3.0',
             layers: [
@@ -125,7 +124,7 @@ suite('named_layers', function() {
             ]
         };
 
-        Step(
+        step(
             function createLayergroup() {
                 var next = this;
                 assert.response(server,
@@ -162,7 +161,7 @@ suite('named_layers', function() {
         );
     });
 
-    test('should return 403 if not properly authorized', function(done) {
+    it('should return 403 if not properly authorized', function(done) {
 
         var layergroup =  {
             version: '1.3.0',
@@ -178,7 +177,7 @@ suite('named_layers', function() {
             ]
         };
 
-        Step(
+        step(
             function createLayergroup() {
                 var next = this;
                 assert.response(server,
@@ -219,7 +218,7 @@ suite('named_layers', function() {
 
     });
 
-    test('should return 200 and layergroup if properly authorized', function(done) {
+    it('should return 200 and layergroup if properly authorized', function(done) {
 
         var layergroup =  {
             version: '1.3.0',
@@ -235,7 +234,7 @@ suite('named_layers', function() {
             ]
         };
 
-        Step(
+        step(
             function createLayergroup() {
                 var next = this;
                 assert.response(server,
@@ -274,7 +273,7 @@ suite('named_layers', function() {
 
     });
 
-    test('should return 400 for nested named map layers', function(done) {
+    it('should return 400 for nested named map layers', function(done) {
 
         var layergroup =  {
             version: '1.3.0',
@@ -288,7 +287,7 @@ suite('named_layers', function() {
             ]
         };
 
-        Step(
+        step(
             function createLayergroup() {
                 var next = this;
                 assert.response(server,
@@ -326,7 +325,7 @@ suite('named_layers', function() {
 
     });
 
-    test('should return 200 and layergroup with private tables', function(done) {
+    it('should return 200 and layergroup with private tables', function(done) {
 
         var privateTableTemplateName = 'private_table_template';
         var privateTableTemplate = {
@@ -361,7 +360,7 @@ suite('named_layers', function() {
             ]
         };
 
-        Step(
+        step(
             function createTemplate() {
                 templateMaps.addTemplate(username, privateTableTemplate, this);
             },
@@ -447,7 +446,7 @@ suite('named_layers', function() {
 
     });
 
-    test('should return 200 and layergroup with private tables and interactivity', function(done) {
+    it('should return 200 and layergroup with private tables and interactivity', function(done) {
 
         var privateTableTemplateNameInteractivity = 'private_table_template_interactivity';
         var privateTableTemplate = {
@@ -489,7 +488,7 @@ suite('named_layers', function() {
             ]
         };
 
-        Step(
+        step(
             function createTemplate() {
                 templateMaps.addTemplate(username, privateTableTemplate, this);
             },
@@ -575,7 +574,7 @@ suite('named_layers', function() {
 
     });
 
-    test('should return 403 when private table is accessed from non named layer', function(done) {
+    it('should return 403 when private table is accessed from non named layer', function(done) {
 
         var layergroup =  {
             version: '1.3.0',
@@ -597,7 +596,7 @@ suite('named_layers', function() {
             ]
         };
 
-        Step(
+        step(
             function createLayergroup() {
                 var next = this;
                 assert.response(server,
@@ -636,7 +635,7 @@ suite('named_layers', function() {
     });
 
 
-    suiteTeardown(function(done) {
+    after(function(done) {
         global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
         templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
             if (err) {

@@ -1,10 +1,11 @@
+require('../../support/test_helper');
+
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../../lib/cartodb/template_maps.js');
-var test_helper = require('../../support/test_helper');
 var _ = require('underscore');
 
-suite('template_maps', function() {
+describe('template_maps', function() {
 
     var redisPool = new RedisPool(global.environment.redis),
         templateMaps = new TemplateMaps(redisPool);
@@ -88,7 +89,7 @@ suite('template_maps', function() {
     ];
 
     testScenarios.forEach(function(testScenario) {
-        test('adding template returns a new instance with ' + testScenario.desc, function(done) {
+        it('adding template returns a new instance with ' + testScenario.desc, function(done) {
 
             templateMaps.addTemplate(owner, testScenario.template, function(err, templateId, template) {
                 assert.ok(!err, 'Unexpected error adding template: ' + (err && err.message));
