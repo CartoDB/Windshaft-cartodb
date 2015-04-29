@@ -399,7 +399,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2",
+              "from": "inherits@2.0.1",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -467,8 +467,8 @@
     },
     "windshaft": {
       "version": "0.43.0",
-      "from": "https://github.com/CartoDB/windshaft/tarball/master",
-      "resolved": "https://github.com/CartoDB/windshaft/tarball/master",
+      "from": "windshaft@0.43.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.43.0.tgz",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",

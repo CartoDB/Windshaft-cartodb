@@ -24,7 +24,7 @@
     "dependencies": {
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
-        "windshaft": "https://github.com/CartoDB/windshaft/tarball/master",
+        "windshaft": "0.43.0",
         "step": "~0.0.5",
         "queue-async": "~1.0.7",
         "request": "~2.9.203",
