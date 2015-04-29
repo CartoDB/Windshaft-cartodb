@@ -76,10 +76,10 @@ Something like the following patch should do the trick
 
 ```javascript
 diff --git a/lib/cartodb/cartodb_windshaft.js b/lib/cartodb/cartodb_windshaft.js
-index 477a4c2..f69eebb 100644
+index b9429a2..e6cc5f9 100644
 --- a/lib/cartodb/cartodb_windshaft.js
 +++ b/lib/cartodb/cartodb_windshaft.js
-@@ -242,6 +242,20 @@ var CartodbWindshaft = function(serverOptions) {
+@@ -212,6 +212,20 @@ var CartodbWindshaft = function(serverOptions) {
          }
      });
 
