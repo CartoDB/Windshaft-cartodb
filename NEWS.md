@@ -4,7 +4,11 @@
 
 Released 2015-mm-dd
 
-New features
+Enhancements:
+ - jshint is run against tests
+ - tests moved to mocha's `describe`
+
+New features:
  - Fastly surrogate keys invalidation for named maps
    * **New configuration entry**: `fastly`. Check example configurations for more information.
  - `PgQueryRunner` extracted from `QueryTablesApi` so it can be reused in new `TablesExtentApi`
