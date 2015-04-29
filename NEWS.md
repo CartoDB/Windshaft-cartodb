@@ -2,7 +2,7 @@
 
 ## 2.2.0
 
-Released 2015-mm-dd
+Released 2015-04-29
 
 Enhancements:
  - jshint is run against tests
