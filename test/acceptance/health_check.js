@@ -1,4 +1,4 @@
-var helper = require(__dirname + '/../support/test_helper');
+require(__dirname + '/../support/test_helper');
 
 var assert      = require('../support/assert');
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
@@ -10,7 +10,7 @@ var tilelive = {};
 var HealthCheck = require('../../lib/cartodb/monitoring/health_check');
 var healthCheck = new HealthCheck(metadataBackend, tilelive);
 
-suite('health checks', function () {
+describe('health checks', function () {
 
     function resetHealthConfig() {
         global.environment.health = {
@@ -30,7 +30,7 @@ suite('health checks', function () {
         }
     };
 
-    test('returns 200 and ok=true with enabled configuration', function (done) {
+    it('returns 200 and ok=true with enabled configuration', function (done) {
         resetHealthConfig();
 
         assert.response(server,
@@ -51,15 +51,15 @@ suite('health checks', function () {
         );
     });
 
-    test('error if disabled file exists', function(done) {
+    it('error if disabled file exists', function(done) {
       var fs = require('fs');
 
-      var readFileFn = fs.readFile
+      var readFileFn = fs.readFile;
       fs.readFile = function(filename, callback) {
         callback(null, "Maintenance");
-      }   
+      };
       
-      healthCheck.check(null, function(err, result) {
+      healthCheck.check(null, function(err/*, result*/) {
         assert.equal(err.message, "Maintenance");
         assert.equal(err.http_status, 503);
         done();
@@ -68,7 +68,7 @@ suite('health checks', function () {
       
     }); 
 
-    test('not err if disabled file does not exists', function(done) {
+    it('not err if disabled file does not exists', function(done) {
       resetHealthConfig();
 
       global.environment.disabled_file = '/tmp/ftreftrgtrccre';

@@ -1,16 +1,15 @@
-var assert = require('assert')
-  //, _ = require('underscore')
-  , RedisPool = require('redis-mpool')
-  , TemplateMaps = require('../../../lib/cartodb/template_maps.js')
-  , test_helper = require('../../support/test_helper')
-  , Step = require('step')
-  , _ = require('underscore')
-  , tests = module.exports = {};
+require('../../support/test_helper');
 
-suite('template_maps', function() {
+var assert = require('assert');
+var RedisPool = require('redis-mpool');
+var TemplateMaps = require('../../../lib/cartodb/template_maps.js');
+var step = require('step');
+var _ = require('underscore');
+
+describe('template_maps', function() {
 
   // configure redis pool instance to use in tests
-  var redis_pool = RedisPool(global.environment.redis);
+  var redis_pool = new RedisPool(global.environment.redis);
 
     var wadusLayer = {
         options: {
@@ -20,24 +19,12 @@ suite('template_maps', function() {
         }
     };
 
-    var validTemplate = {
-        version:'0.0.1',
-        name: 'first',
-        auth: {},
-        layergroup: {
-            layers: [
-                wadusLayer
-            ]
-        }
-    };
-    var owner = 'me';
-    
-  test('does not accept template with unsupported version', function(done) {
+  it('does not accept template with unsupported version', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'6.6.6',
       name:'k', auth: {}, layergroup: {layers:[wadusLayer]} };
-    Step(
+    step(
       function() {
         tmap.addTemplate('me', tpl, this);
       },
@@ -52,12 +39,12 @@ suite('template_maps', function() {
     );
   });
 
-  test('does not accept template with missing name', function(done) {
+  it('does not accept template with missing name', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
       auth: {}, layergroup: {layers:[wadusLayer]} };
-    Step(
+    step(
       function() {
         tmap.addTemplate('me', tpl, this);
       },
@@ -72,7 +59,7 @@ suite('template_maps', function() {
     );
   });
 
-  test('does not accept template with invalid name', function(done) {
+  it('does not accept template with invalid name', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
@@ -87,8 +74,7 @@ suite('template_maps', function() {
           done(new Error("Unexpected success with invalid name '" + n + "'"));
         }
         else if ( ! err.message.match(/template.*name/i) ) {
-          done(new Error("Unexpected error message with invalid name '" + n
-            + "': " + err));
+          done(new Error("Unexpected error message with invalid name '" + n + "': " + err));
         }
         else {
           testNext();
@@ -98,7 +84,7 @@ suite('template_maps', function() {
     testNext();
   });
 
-  test('does not accept template with invalid placeholder name', function(done) {
+  it('does not accept template with invalid placeholder name', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
@@ -115,8 +101,7 @@ suite('template_maps', function() {
           done(new Error("Unexpected success with invalid name '" + n + "'"));
         }
         else if ( ! err.message.match(/invalid.*name/i) ) {
-          done(new Error("Unexpected error message with invalid name '" + n
-            + "': " + err));
+          done(new Error("Unexpected error message with invalid name '" + n + "': " + err));
         }
         else {
           testNext();
@@ -126,7 +111,7 @@ suite('template_maps', function() {
     testNext();
   });
 
-  test('does not accept template with missing placeholder default', function(done) {
+  it('does not accept template with missing placeholder default', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
@@ -137,8 +122,7 @@ suite('template_maps', function() {
           done(new Error("Unexpected success with missing placeholder default"));
         }
         else if ( ! err.message.match(/missing default/i) ) {
-          done(new Error("Unexpected error message with missing placeholder default: "
-            + err));
+          done(new Error("Unexpected error message with missing placeholder default: " + err));
         }
         else {
           done();
@@ -146,7 +130,7 @@ suite('template_maps', function() {
       });
   });
 
-  test('does not accept template with missing placeholder type', function(done) {
+  it('does not accept template with missing placeholder type', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var tpl = { version:'0.0.1',
@@ -157,8 +141,7 @@ suite('template_maps', function() {
           done(new Error("Unexpected success with missing placeholder type"));
         }
         else if ( ! err.message.match(/missing type/i) ) {
-          done(new Error("Unexpected error message with missing placeholder default: "
-            + err));
+          done(new Error("Unexpected error message with missing placeholder default: " + err));
         }
         else {
           done();
@@ -167,7 +150,7 @@ suite('template_maps', function() {
   });
 
   // See http://github.com/CartoDB/Windshaft-cartodb/issues/128
-  test('does not accept template with invalid token auth (undefined tokens)',
+  it('does not accept template with invalid token auth (undefined tokens)',
   function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
@@ -179,8 +162,7 @@ suite('template_maps', function() {
           done(new Error("Unexpected success with invalid token auth (undefined tokens)"));
         }
         else if ( ! err.message.match(/invalid 'token' authentication/i) ) {
-          done(new Error("Unexpected error message with invalid token auth (undefined tokens): "
-            + err));
+          done(new Error("Unexpected error message with invalid token auth (undefined tokens): " + err));
         }
         else {
           done();
@@ -188,14 +170,14 @@ suite('template_maps', function() {
       });
   });
 
-  test('add, get and delete a valid template', function(done) {
+  it('add, get and delete a valid template', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var expected_failure = false;
     var tpl_id;
     var tpl = { version:'0.0.1',
       name: 'first', auth: {}, layergroup: {layers:[wadusLayer]} };
-    Step(
+    step(
       function() {
         tmap.addTemplate('me', tpl, this);
       },
@@ -224,15 +206,14 @@ suite('template_maps', function() {
     );
   });
 
-  test('add multiple templates, list them', function(done) {
+  it('add multiple templates, list them', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
-    var expected_failure = false;
     var tpl1 = { version:'0.0.1', name: 'first', auth: {}, layergroup: {layers:[wadusLayer]} };
     var tpl1_id;
     var tpl2 = { version:'0.0.1', name: 'second', auth: {}, layergroup: {layers:[wadusLayer]} };
     var tpl2_id;
-    Step(
+    step(
       function addTemplate1() {
         tmap.addTemplate('me', tpl1, this);
       },
@@ -283,7 +264,7 @@ suite('template_maps', function() {
     );
   });
 
-  test('update templates', function(done) {
+  it('update templates', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
     var expected_failure = false;
@@ -294,7 +275,7 @@ suite('template_maps', function() {
       layergroup: {layers:[wadusLayer]}
     };
     var tpl_id;
-    Step(
+    step(
       function addTemplate() {
         tmap.addTemplate(owner, tpl, this);
       },
@@ -323,7 +304,6 @@ suite('template_maps', function() {
       },
       function updateUnexistentTemplate(err) {
         if ( err && ! expected_failure) throw err;
-        expected_failure = false;
         assert.ok(err);
         assert.ok(err.message.match(/unsupported.*version/i), err);
         tpl.version = '0.0.1';
@@ -343,7 +323,7 @@ suite('template_maps', function() {
     );
   });
 
-  test('instanciate templates', function() {
+  it('instanciate templates', function() {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
 
@@ -356,7 +336,7 @@ suite('template_maps', function() {
           color: { type: "css_color", default: "#a0fF9A" },
           name: { type: "sql_literal", default: "test" },
           zoom: { type: "number", default: "0" },
-          test_number: { type: "number", default: 23 },
+          test_number: { type: "number", default: 23 }
         },
         layergroup: {
           version: '1.0.0',
@@ -400,48 +380,48 @@ suite('template_maps', function() {
 
     // Invalid css_color
     var err = null;
-    try { inst = tmap.instance(tpl1, {color:'##ff00ff'}); }
+    try { tmap.instance(tpl1, {color:'##ff00ff'}); }
     catch (e) { err = e; }
     assert.ok(err);
     assert.ok(err.message.match(/invalid css_color/i), err);
 
     // Invalid css_color 2 (too few digits)
-    var err = null;
-    try { inst = tmap.instance(tpl1, {color:'#ff'}); }
+    err = null;
+    try { tmap.instance(tpl1, {color:'#ff'}); }
     catch (e) { err = e; }
     assert.ok(err);
     assert.ok(err.message.match(/invalid css_color/i), err);
 
     // Invalid css_color 3 (too many digits)
-    var err = null;
-    try { inst = tmap.instance(tpl1, {color:'#1234567'}); }
+    err = null;
+    try { tmap.instance(tpl1, {color:'#1234567'}); }
     catch (e) { err = e; }
     assert.ok(err);
     assert.ok(err.message.match(/invalid css_color/i), err);
 
     // Invalid number
-    var err = null;
-    try { inst = tmap.instance(tpl1, {zoom:'#'}); }
+    err = null;
+    try { tmap.instance(tpl1, {zoom:'#'}); }
     catch (e) { err = e; }
     assert.ok(err);
     assert.ok(err.message.match(/invalid number/i), err);
 
     // Invalid number 2
-    var err = null;
-    try { inst = tmap.instance(tpl1, {zoom:'23e'}); }
+    err = null;
+    try { tmap.instance(tpl1, {zoom:'23e'}); }
     catch (e) { err = e; }
     assert.ok(err);
     assert.ok(err.message.match(/invalid number/i), err);
 
     // Valid number
-    var err = null;
-    try { inst = tmap.instance(tpl1, {zoom:'-.23e10'}); }
+    err = null;
+    try { tmap.instance(tpl1, {zoom:'-.23e10'}); }
     catch (e) { err = e; }
     assert.ok(!err);
   });
 
   // Can set a limit on the number of user templates
-  test('can limit number of user templates', function(done) {
+  it('can limit number of user templates', function(done) {
     var tmap = new TemplateMaps(redis_pool, {
       max_user_templates: 2
     });
@@ -450,7 +430,7 @@ suite('template_maps', function() {
     var expectErr = false;
     var idMe = [];
     var idYou = [];
-    Step(
+    step(
       function oneForMe() {
         tpl.name = 'oneForMe';
         tmap.addTemplate('me', tpl, this);
@@ -470,7 +450,7 @@ suite('template_maps', function() {
         expectErr = true;
         tmap.addTemplate('me', tpl, this);
       },
-      function errForMe(err, id) {
+      function errForMe(err/*, id*/) {
         if ( err && ! expectErr ) throw err;
         expectErr = false;
         assert.ok(err);
@@ -508,7 +488,7 @@ suite('template_maps', function() {
         expectErr = true;
         tmap.addTemplate('you', tpl, this);
       },
-      function errForYou(err, id) {
+      function errForYou(err/*, id*/) {
         if ( err && ! expectErr ) throw err;
         expectErr = false;
         assert.ok(err);

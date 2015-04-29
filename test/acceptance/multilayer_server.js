@@ -6,7 +6,7 @@ var redis = require('redis');
 var _ = require('underscore');
 
 
-var QueryTablesApi = require('../../lib/cartodb/api/query_tables_api');
+var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require('../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
@@ -253,8 +253,8 @@ describe('tests from old api translated to multilayer', function() {
 
     it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
 
-        var runQueryFn = QueryTablesApi.prototype.runQuery;
-        QueryTablesApi.prototype.runQuery = function(username, query, queryHandler, callback) {
+        var runQueryFn = PgQueryRunner.prototype.run;
+        PgQueryRunner.prototype.run = function(username, query, queryHandler, callback) {
             return queryHandler(new Error('fake error message'), [], callback);
         };
 
@@ -272,7 +272,7 @@ describe('tests from old api translated to multilayer', function() {
                 status: 400
             },
             function(res) {
-                QueryTablesApi.prototype.runQuery = runQueryFn;
+                PgQueryRunner.prototype.run = runQueryFn;
 
                 assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
 
@@ -300,8 +300,8 @@ describe('tests from old api translated to multilayer', function() {
                 status: 200
             },
             function(res) {
-                var runQueryFn = QueryTablesApi.prototype.runQuery;
-                QueryTablesApi.prototype.runQuery = function(username, query, queryHandler, callback) {
+                var runQueryFn = PgQueryRunner.prototype.run;
+                PgQueryRunner.prototype.run = function(username, query, queryHandler, callback) {
                     return queryHandler(new Error('failed to query database for affected tables'), [], callback);
                 };
 
@@ -327,7 +327,7 @@ describe('tests from old api translated to multilayer', function() {
                     },
                     function(res) {
                         assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-                        QueryTablesApi.prototype.runQuery = runQueryFn;
+                        PgQueryRunner.prototype.run = runQueryFn;
                         done();
                     }
                 );
