@@ -131,6 +131,7 @@ var config = {
           timeout: 2000, // the timeout in ms for a http tile request
           proxy: undefined, // the url for a proxy server
           whitelist: [ // the whitelist of urlTemplates that can be used
+              '.*', // will enable any URL
               'http://{s}.example.com/{z}/{x}/{y}.png'
           ],
           // image to use as placeholder when urlTemplate is not in the whitelist
