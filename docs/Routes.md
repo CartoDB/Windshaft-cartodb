@@ -38,6 +38,9 @@ This document list all routes available in Windshaft-cartodb Maps API server.
 1. `GET (?:/api/v1/map/named|/user/:user/api/v1/map/named|/tiles/template) {:user(f)} (1)`
 <br/>Notes: List named maps (w/ API KEY) [1]
 
+1. `GET (?:/api/v1/map|/user/:user/api/v1/map|/tiles/layergroup)/static/named/:template_id/:width/:height.:format {:user(f),:template_id(f),:width(f),:height(f),:format(f)} (1)`
+<br/>Notes: Static map for named maps
+
 1. `GET /health {} (1)`
 <br/>Notes: Healt check
 
