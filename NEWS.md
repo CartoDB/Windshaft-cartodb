@@ -7,6 +7,11 @@ Released 2015-mm-dd
 New features
  - Fastly surrogate keys invalidation for named maps
    * **New configuration entry**: `fastly`. Check example configurations for more information.
+ - `PgQueryRunner` extracted from `QueryTablesApi` so it can be reused in new `TablesExtentApi`
+ - New top level element, `view`, in templates that holds attributes to identify the map scene.
+ - Named maps static preview in /api/v1/map/static/named/:name/:width/:height.:format endpoint
+   * It will be invalidated if the named map changes
+   * But have a Cache-Control header with a 2 hours max-age, won't be invalidated on data changes
 
 
 ## 2.1.3
