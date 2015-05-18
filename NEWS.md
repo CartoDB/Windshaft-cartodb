@@ -4,6 +4,9 @@
 
 Released 2015-mm-dd
 
+Announcements:
+ - Upgrades cartodb-redis for `global` map stats
+
 
 ## 2.2.0
 
