@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.2.1
+## 2.3.0
 
-Released 2015-mm-dd
+Released 2015-05-18
 
 Announcements:
  - Upgrades cartodb-redis for `global` map stats
