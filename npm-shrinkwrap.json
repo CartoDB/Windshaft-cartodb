@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -129,26 +129,26 @@
               "resolved": "https://registry.npmjs.org/form-data/-/form-data-0.2.0.tgz",
               "dependencies": {
                 "async": {
-                  "version": "0.9.0",
+                  "version": "0.9.2",
                   "from": "async@~0.9.0",
-                  "resolved": "https://registry.npmjs.org/async/-/async-0.9.0.tgz"
+                  "resolved": "https://registry.npmjs.org/async/-/async-0.9.2.tgz"
                 }
               }
             },
             "json-stringify-safe": {
-              "version": "5.0.0",
+              "version": "5.0.1",
               "from": "json-stringify-safe@~5.0.0",
-              "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.0.tgz"
+              "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
             },
             "mime-types": {
-              "version": "2.0.11",
+              "version": "2.0.12",
               "from": "mime-types@~2.0.1",
-              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.0.11.tgz",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.0.12.tgz",
               "dependencies": {
                 "mime-db": {
-                  "version": "1.9.1",
-                  "from": "mime-db@~1.9.1",
-                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.9.1.tgz"
+                  "version": "1.10.0",
+                  "from": "mime-db@~1.10.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.10.0.tgz"
                 }
               }
             },
@@ -168,9 +168,9 @@
               "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.0.tgz"
             },
             "tough-cookie": {
-              "version": "1.1.0",
+              "version": "1.2.0",
               "from": "tough-cookie@>=0.12.0",
-              "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.1.0.tgz"
+              "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.2.0.tgz"
             },
             "http-signature": {
               "version": "0.10.1",
@@ -205,14 +205,14 @@
               "resolved": "https://registry.npmjs.org/hawk/-/hawk-2.3.1.tgz",
               "dependencies": {
                 "hoek": {
-                  "version": "2.13.0",
+                  "version": "2.14.0",
                   "from": "hoek@2.x.x",
-                  "resolved": "https://registry.npmjs.org/hoek/-/hoek-2.13.0.tgz"
+                  "resolved": "https://registry.npmjs.org/hoek/-/hoek-2.14.0.tgz"
                 },
                 "boom": {
-                  "version": "2.7.1",
+                  "version": "2.7.2",
                   "from": "boom@2.x.x",
-                  "resolved": "https://registry.npmjs.org/boom/-/boom-2.7.1.tgz"
+                  "resolved": "https://registry.npmjs.org/boom/-/boom-2.7.2.tgz"
                 },
                 "cryptiles": {
                   "version": "2.0.4",
@@ -259,9 +259,9 @@
               "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-1.7.0.tgz",
               "dependencies": {
                 "bluebird": {
-                  "version": "2.9.25",
+                  "version": "2.9.26",
                   "from": "bluebird@^2.9.25",
-                  "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.25.tgz"
+                  "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.26.tgz"
                 },
                 "chalk": {
                   "version": "1.0.0",
@@ -464,9 +464,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.43.0",
-      "from": "windshaft@0.43.0",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.43.0.tgz",
+      "version": "0.44.0",
+      "from": "windshaft@0.44.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.44.0.tgz",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -579,9 +579,9 @@
                       "resolved": "https://registry.npmjs.org/qs/-/qs-0.6.6.tgz"
                     },
                     "json-stringify-safe": {
-                      "version": "5.0.0",
+                      "version": "5.0.1",
                       "from": "json-stringify-safe@~5.0.0",
-                      "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.0.tgz"
+                      "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
                     },
                     "forever-agent": {
                       "version": "0.5.2",
@@ -594,9 +594,9 @@
                       "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
                     },
                     "tough-cookie": {
-                      "version": "1.1.0",
+                      "version": "1.2.0",
                       "from": "tough-cookie@>=0.12.0",
-                      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.1.0.tgz"
+                      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.2.0.tgz"
                     },
                     "form-data": {
                       "version": "0.1.4",
@@ -616,9 +616,9 @@
                           }
                         },
                         "async": {
-                          "version": "0.9.0",
+                          "version": "0.9.2",
                           "from": "async@~0.9.0",
-                          "resolved": "https://registry.npmjs.org/async/-/async-0.9.0.tgz"
+                          "resolved": "https://registry.npmjs.org/async/-/async-0.9.2.tgz"
                         }
                       }
                     },
@@ -2817,16 +2817,16 @@
                   "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
                 },
                 "async": {
-                  "version": "0.9.0",
+                  "version": "0.9.2",
                   "from": "async@~0.9.0",
-                  "resolved": "https://registry.npmjs.org/async/-/async-0.9.0.tgz"
+                  "resolved": "https://registry.npmjs.org/async/-/async-0.9.2.tgz"
                 }
               }
             },
             "json-stringify-safe": {
-              "version": "5.0.0",
+              "version": "5.0.1",
               "from": "json-stringify-safe@~5.0.0",
-              "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.0.tgz"
+              "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
             },
             "mime-types": {
               "version": "1.0.2",
@@ -2849,9 +2849,9 @@
               "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.0.tgz"
             },
             "tough-cookie": {
-              "version": "1.1.0",
+              "version": "1.2.0",
               "from": "tough-cookie@>=0.12.0",
-              "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.1.0.tgz"
+              "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.2.0.tgz"
             },
             "http-signature": {
               "version": "0.10.1",
