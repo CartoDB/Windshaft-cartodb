@@ -44,7 +44,6 @@ describe('named_layers', function() {
         },
         layergroup: {
             layers: [
-                wadusLayer,
                 wadusLayer
             ]
         }
@@ -634,88 +633,6 @@ describe('named_layers', function() {
         );
 
     });
-
-    it('should return metadata for named layers', function(done) {
-
-        var layergroup =  {
-            version: '1.3.0',
-            layers: [
-                {
-                    type: 'plain',
-                    options: {
-                        color: '#fabada'
-                    }
-                },
-                {
-                    type: 'cartodb',
-                    options: {
-                        sql: 'select * from test_table',
-                        cartocss: '#layer { marker-fill: #cc3300; }',
-                        cartocss_version: '2.3.0'
-                    }
-                },
-                {
-                    type: 'named',
-                    options: {
-                        name: templateName
-                    }
-                },
-                {
-                    type: 'torque',
-                    options: {
-                        sql: "select * from test_table LIMIT 0",
-                        cartocss: "Map { -torque-frame-count:1; -torque-resolution:1; " +
-                        "-torque-aggregation-function:'count(*)'; -torque-time-attribute:'updated_at'; }"
-                    }
-                }
-            ]
-        };
-
-        step(
-            function createLayergroup() {
-                var next = this;
-                assert.response(server,
-                    {
-                        url: '/api/v1/map',
-                        method: 'POST',
-                        headers: {
-                            host: 'localhost',
-                            'Content-Type': 'application/json'
-                        },
-                        data: JSON.stringify(layergroup)
-                    },
-                    {
-                        status: 200
-                    },
-                    function(res, err) {
-                        next(err, res);
-                    }
-                );
-            },
-            function checkLayergroup(err, response) {
-                if (err) {
-                    throw err;
-                }
-
-                var parsedBody = JSON.parse(response.body);
-                assert.ok(parsedBody.metadata);
-                assert.ok(parsedBody.metadata.layers);
-                assert.equal(parsedBody.metadata.layers.length, 5);
-                assert.equal(parsedBody.metadata.layers[0].type, 'plain');
-                assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[2].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[3].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[4].type, 'torque');
-
-                return null;
-            },
-            function finish(err) {
-                done(err);
-            }
-        );
-
-    });
-
 
 
     after(function(done) {
