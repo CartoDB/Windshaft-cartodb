@@ -220,7 +220,7 @@ curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: applicatio
 
 ###### Mapnik tiles can be accessed using:
 
-This tiles will get just the mapnik layers. To get individual layers see next section.
+These tiles will get just the mapnik layers. To get individual layers see next section.
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
@@ -238,7 +238,7 @@ https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/
 
 In this case, `:layer` as 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example MapConfig.
 
-If the MapConfig had a torque layer at index 1 it could be possible to request it with:
+If the MapConfig had a Torque layer at index 1 it could be possible to request it with:
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/1/{z}/{x}/{y}.torque.json
@@ -264,7 +264,7 @@ https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/
 
 Note: currently format is limited to `png`.
 
-`:layer_filter` can be used to select some layers to be rendered together. :layer_filter supports two formats:
+`:layer_filter` can be used to select some layers to be rendered together. `:layer_filter` supports two formats:
 
 - `all` alias
 
@@ -276,7 +276,7 @@ https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/
 
 - Filter by layer index
 
-A list of comma separated layer indexes can be used to just render a subset of layers. For example `0,3,4` will filter and blend layers with indexes 0, 3 and 4.
+A list of comma separated layer indexes can be used to just render a subset of layers. For example `0,3,4` will filter and blend layers with indexes 0, 3, and 4.
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/0,3,4/{z}/{x}/{y}.png
@@ -284,12 +284,12 @@ https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/
 
 Some notes about filtering:
   * Invalid index values or out of bounds indexes will end in `Invalid layer filtering` errors.
-  * Once a mapnik layer is selected all mapnik layers will get blended. As this may change in the future **it is
+  * Once a mapnik layer is selected, all mapnik layers will get blended. As this may change in the future **it is
   recommended** to always select all mapnik layers if you want to select at least one so you will get a consistent
-  behaviour in the future.
+  behavior in the future.
   * Ordering is not considered. So right now filtering layers 0,3,4 is the very same thing as filtering 3,4,0. As this
   may change in the future **it is recommended** to always select the layers in ascending order so you will get a
-  consistent behaviour in the future.
+  consistent behavior in the future.
 
 ### Create JSONP
 
