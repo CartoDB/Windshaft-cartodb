@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.2
+
+Released 2015-mm-dd
+
+
+
 ## 2.4.1
 
 Released 2015-06-01
