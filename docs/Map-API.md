@@ -871,7 +871,8 @@ After instantiating a map from a CartoDB account:
 ```
 
 #### Response
-<div class="wrap"><p class="wrap-border"><img src="https://raw.githubusercontent.com/namessanti/Pictures/master/static_api.png" alt="static-api"/></p>,</div>
+
+<p class="wrap-border"><img src="https://raw.githubusercontent.com/namessanti/Pictures/master/static_api.png" alt="static-api"/></p>
 
 #### MapConfig
 
