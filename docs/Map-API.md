@@ -166,7 +166,7 @@ POST /api/v1/map
 }
 ```
 
-Should be a [Mapconfig](https://github.com/CartoDB/Windshaft/blob/0.19.1/doc/MapConfig-1.1.0.md).
+Should be a [Mapconfig](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md).
 
 #### Response
 
@@ -409,7 +409,7 @@ POST /api/v1/map/named
   - **method** `"token"` or `"open"` (the default if no `"method"` is given).
   - **valid_tokens** when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
 - **placeholders**: Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
-- **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.1.0.md) for more info.
+- **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md) for more info.
 
 #### Template Format
 
