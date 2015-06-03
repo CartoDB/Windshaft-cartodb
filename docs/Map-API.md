@@ -747,6 +747,8 @@ The Static Maps API can be initiated using both named and anonymous maps using t
 
 Begin by instantiating either a named or anonymous map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
 
+#### Zoom + center
+
 ##### Definition
 
 <div class="code-title notitle code-request"></div>
