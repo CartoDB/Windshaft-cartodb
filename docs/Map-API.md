@@ -818,6 +818,25 @@ Note: you can see this endpoint as:
 GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
 ```
 
+#### Named map
+
+##### Definition
+
+<div class="code-title notitle code-request"></div>
+```bash
+GET /api/v1/map/static/named/:name/:width/:height.:format
+```
+
+##### Params
+
+* **:name**: the name of the named map
+* **:width**: the width in pixels for the output image
+* **:height**: the height in pixels for the output image
+* **:format**: the format for the image, supported types: `png`, `jpg`
+  * **jpg** will have a default quality of 85.
+
+A named maps static image will get its constraints from the [view in the template](#Arguments), if `view` is not present it will estimate the extent based on the involved tables otherwise it fallback to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
+
 ####Layers
 
 The Static Maps API allows for multiple layers of incorporation into the `MapConfig` to allow for maximum versatility in creating a static map. The examples below were used to generate the static image example in the next section, and appear in the specific order designated.
