@@ -59,30 +59,50 @@ describe('template_maps', function() {
     );
   });
 
-  it('does not accept template with invalid name', function(done) {
-    var tmap = new TemplateMaps(redis_pool);
-    assert.ok(tmap);
-    var tpl = { version:'0.0.1',
-      auth: {}, layergroup: {layers:[wadusLayer]} };
-    var invalidnames = [ "ab|", "a b", "a@b", "1ab", "_x", "", " x", "x " ];
-    var testNext = function() {
-      if ( ! invalidnames.length ) { done(); return; }
-      var n = invalidnames.pop();
-      tpl.name = n;
-      tmap.addTemplate('me', tpl, function(err) {
-        if ( ! err ) {
-          done(new Error("Unexpected success with invalid name '" + n + "'"));
+    describe('naming', function() {
+
+        function createTemplate(name) {
+            return {
+                version:'0.0.1',
+                name: name,
+                auth: {},
+                layergroup: {
+                    layers: [
+                        wadusLayer
+                    ]
+                }
+            };
         }
-        else if ( ! err.message.match(/template.*name/i) ) {
-          done(new Error("Unexpected error message with invalid name '" + n + "': " + err));
-        }
-        else {
-          testNext();
-        }
-      });
-    };
-    testNext();
-  });
+        var templateMaps = new TemplateMaps(redis_pool);
+
+        var invalidNames = [ "ab|", "a b", "a@b", "-1ab", "_x", "", " x", "x " ];
+        invalidNames.forEach(function(invalidName) {
+            it('should NOT accept template with invalid name: ' + invalidName, function(done) {
+                templateMaps.addTemplate('me', createTemplate(invalidName), function(err) {
+                    assert.ok(err, "Unexpected success with invalid name '" + invalidName + "'");
+                    assert.ok(
+                        err.message.match(/template.*name/i),
+                        "Unexpected error message with invalid name '" + invalidName + "': " + err.message
+                    );
+                    done();
+                });
+            });
+        });
+
+        var validNames = [
+            "AB", "1ab", "DFD19A1A-0AC6-11E5-B0CA-6476BA93D4F6", "25ad8300-0ac7-11e5-b93f-6476ba93d4f6"
+        ];
+        validNames.forEach(function(validName) {
+            it('should accept template with valid name: ' + validName, function(done) {
+                templateMaps.addTemplate('me', createTemplate(validName), function(err) {
+                    assert.ok(!err, "Unexpected error with valid name '" + validName + "': " + err);
+                    done();
+                });
+            });
+        });
+
+
+    });
 
   it('does not accept template with invalid placeholder name', function(done) {
     var tmap = new TemplateMaps(redis_pool);
