@@ -404,7 +404,7 @@ POST /api/v1/map/named
 
 ##### Arguments
 
-- **name**: There can be at most _one_ template with the same name for any user. Valid names start with a letter, and only contain letters, numbers, or underscores (_).
+- **name**: There can be at most _one_ template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-) or underscores (_).
 - **auth**:
   - **method** `"token"` or `"open"` (the default if no `"method"` is given).
   - **valid_tokens** when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
