@@ -4,6 +4,8 @@
 
 Released 2015-mm-dd
 
+Enhancements:
+ - Named maps names can start with numbers and can contain dashes (-).
 
 
 ## 2.4.1
