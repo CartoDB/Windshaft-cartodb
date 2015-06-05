@@ -4,6 +4,12 @@
 
 Released 2015-mm-dd
 
+Bug fixes:
+ - Named maps error responses with `{ "errors": ["message"] }` format (#305)
+
+Announcements:
+ - Upgrades windshaft
+
 Enhancements:
  - Named maps names can start with numbers and can contain dashes (-).
 
