@@ -429,10 +429,10 @@ POST /api/v1/map/named
     - **lng** The longitude to use for the center
     - **lat** The latitude to use for the center
   - **bounds**
-    - **west**: The western point for the bounding box
-    - **south**: The southern point for the bounding box
-    - **east**: The eastern point for the bounding box
-    - **north**: The northern point for the bounding box
+    - **west**: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
+    - **south**: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
+    - **east**: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
+    - **north**: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
 
 #### Template Format
 
