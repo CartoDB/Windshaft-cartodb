@@ -1131,7 +1131,6 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-            console.log(parsed);
           assert.ok(parsed.hasOwnProperty('errors'),
             "Missing 'errors' from response body: " + res.body);
           assert.ok(parsed.errors[0].match(/permission denied/i),
@@ -1609,7 +1608,6 @@ describe('template_api', function() {
         function checkInstanciation(err, res)
         {
           if ( err ) throw err;
-            console.log(err, res.body, res.headers);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
