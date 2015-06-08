@@ -131,7 +131,7 @@ suite(suiteName, function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 403, res.statusCode + ':' + res.body);
               var parsed = JSON.parse(res.body);
-              var msg = parsed.error; // TODO: should it be "errors" ?
+              var msg = parsed.errors[0];
               assert.ok(msg.match(/permission denied/i), msg);
               next(err);
           });

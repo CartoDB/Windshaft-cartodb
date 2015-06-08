@@ -88,8 +88,8 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 403);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'), res.body);
-          err = parsed.error;
+          assert.ok(parsed.hasOwnProperty('errors'), res.body);
+          err = parsed.errors[0];
           assert.ok(err.match(/only.*authenticated.*user/i),
             'Unexpected error response: ' + err);
           post_request_1.url += '?api_key=1234';
@@ -113,9 +113,9 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 400, res.body);
           var parsedBody = JSON.parse(res.body);
-          assert.ok(parsedBody.hasOwnProperty('error'), res.body);
-          assert.ok(parsedBody.error.match(/already exists/i),
-            'Unexpected error for pre-existing template name: ' + parsedBody.error);
+          assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+          assert.ok(parsedBody.errors[0].match(/already exists/i),
+            'Unexpected error for pre-existing template name: ' + parsedBody.errors);
           return null;
         },
         function finish(err) {
@@ -172,10 +172,10 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 400, res.body);
           var parsedBody = JSON.parse(res.body);
-          assert.ok(parsedBody.hasOwnProperty('error'), res.body);
+          assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
           var re = /invalid.*authentication.*missing/i;
-          assert.ok(parsedBody.error.match(re),
-            'Error for invalid authentication does not match ' + re + ': ' + parsedBody.error);
+          assert.ok(parsedBody.errors[0].match(re),
+            'Error for invalid authentication does not match ' + re + ': ' + parsedBody.errors);
           return null;
         },
         function postTemplate2(err)
@@ -202,10 +202,10 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 400, res.body);
           var parsedBody = JSON.parse(res.body);
-          assert.ok(parsedBody.hasOwnProperty('error'), res.body);
+          assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
           var re = new RegExp(/invalid.*authentication.*missing/i);
-          assert.ok(parsedBody.error.match(re),
-            'Error for invalid authentication does not match ' + re + ': ' + parsedBody.error);
+          assert.ok(parsedBody.errors[0].match(re),
+            'Error for invalid authentication does not match ' + re + ': ' + parsedBody.errors);
           return null;
         },
         function postTemplateValid(err)
@@ -253,12 +253,12 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
           var re = /invalid.*authentication.*missing/i;
-          assert.ok(parsed.error.match(re),
+          assert.ok(parsed.errors[0].match(re),
             'Error for invalid authentication on PUT does not match ' +
-            re + ': ' + parsed.error);
+            re + ': ' + parsed.errors);
           var del_request = {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
@@ -425,9 +425,9 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
+          assert.ok(parsed.hasOwnProperty('errors'),
             'Missing error from response: ' + res.body);
-          err = parsed.error;
+          err = parsed.errors[0];
           assert.ok(err.match(/authenticated user/), err);
           var next = this;
           var get_request = {
@@ -523,9 +523,9 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsedBody = JSON.parse(res.body);
-          assert.ok(parsedBody.hasOwnProperty('error'), res.body);
-          assert.ok(parsedBody.error.match(/cannot update name/i),
-            'Unexpected error for invalid update: ' + parsedBody.error);
+          assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+          assert.ok(parsedBody.errors[0].match(/cannot update name/i),
+            'Unexpected error for invalid update: ' + parsedBody.errors);
           var put_request = {
               url: '/api/v1/map/named/unexistent/?api_key=1234',
               method: 'PUT',
@@ -541,9 +541,9 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsedBody = JSON.parse(res.body);
-          assert.ok(parsedBody.hasOwnProperty('error'), res.body);
-          assert.ok(parsedBody.error.match(/cannot update name/i),
-            'Unexpected error for invalid update: ' + parsedBody.error);
+          assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+          assert.ok(parsedBody.errors[0].match(/cannot update name/i),
+            'Unexpected error for invalid update: ' + parsedBody.errors);
           var put_request = {
               url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
               method: 'PUT',
@@ -630,9 +630,9 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 403, res.statusCode + ": " + res.body);
           var parsedBody = JSON.parse(res.body);
-          assert.ok(parsedBody.hasOwnProperty('error'), res.body);
-          assert.ok(parsedBody.error.match(/only.*authenticated.*user/i),
-            'Unexpected error for unauthenticated template get: ' + parsedBody.error);
+          assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+          assert.ok(parsedBody.errors[0].match(/only.*authenticated.*user/i),
+            'Unexpected error for unauthenticated template get: ' + parsedBody.errors);
           var get_request = {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'GET',
@@ -735,10 +735,10 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 403, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/only.*authenticated.*user/i),
-            'Unexpected error for unauthenticated template get: ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/only.*authenticated.*user/i),
+            'Unexpected error for unauthenticated template get: ' + parsed.errors);
           var del_request = {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
@@ -767,10 +767,10 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/cannot find/i),
-            'Unexpected error for missing template: ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/cannot find/i),
+            'Unexpected error for missing template: ' + parsed.errors);
           return null;
         },
         function finish(err) {
@@ -863,10 +863,10 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/unauthorized/i),
-            'Unexpected error for unauthorized instance : ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/unauthorized/i),
+            'Unexpected error for unauthorized instance : ' + parsed.errors);
           var post_request = {
               url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
@@ -882,8 +882,8 @@ describe('template_api', function() {
           if ( err ) throw err;
           assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'), "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/not found/i), 'Unexpected error for forbidden instance : ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'), "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/not found/i), 'Unexpected error for forbidden instance : ' + parsed.errors);
           var post_request = {
               url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
@@ -922,10 +922,10 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized instance (expected /permission denied/): ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/permission denied/i),
+            'Unexpected error for unauthorized instance (expected /permission denied/): ' + parsed.errors);
           var get_request = {
               url: '/api/v1/map/' + layergroupid + '/0/0/0.png?auth_token=valid1',
               method: 'GET',
@@ -962,10 +962,10 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 403, 
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/cannot use/i),
-            'Unexpected error for unauthorized instance (expected /cannot use/): ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/cannot use/i),
+            'Unexpected error for unauthorized instance (expected /cannot use/): ' + parsed.errors);
           return null;
         },
         function deleteTemplate(err)
@@ -1089,10 +1089,10 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/unauthorized/i),
-            'Unexpected error for unauthorized instance : ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/unauthorized/i),
+            'Unexpected error for unauthorized instance : ' + parsed.errors);
           var post_request = {
               url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
@@ -1131,10 +1131,10 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized instance (expected /permission denied): ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/permission denied/i),
+            'Unexpected error for unauthorized instance (expected /permission denied): ' + parsed.errors);
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/0.json.torque?auth_token=valid1',
               method: 'GET',
@@ -1297,10 +1297,10 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/unauthorized/i),
-            'Unexpected error for unauthorized instance : ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/unauthorized/i),
+            'Unexpected error for unauthorized instance : ' + parsed.errors);
           var post_request = {
               url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
               method: 'POST',
@@ -1339,10 +1339,10 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
-          assert.ok(parsed.hasOwnProperty('error'),
-            "Missing 'error' from response body: " + res.body);
-          assert.ok(parsed.error.match(/permission denied/i),
-            'Unexpected error for unauthorized getAttributes (expected /permission denied/): ' + parsed.error);
+          assert.ok(parsed.hasOwnProperty('errors'),
+            "Missing 'errors' from response body: " + res.body);
+          assert.ok(parsed.errors[0].match(/permission denied/i),
+            'Unexpected error for unauthorized getAttributes (expected /permission denied/): ' + parsed.errors);
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/attributes/5?auth_token=valid2',
               method: 'GET',
@@ -1608,7 +1608,6 @@ describe('template_api', function() {
         function checkInstanciation(err, res)
         {
           if ( err ) throw err;
-            console.log(err, res.body, res.headers);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
@@ -2072,7 +2071,7 @@ describe('template_api', function() {
                     return done(err);
                 }
                 assert.deepEqual(JSON.parse(res.body), {
-                    error: "Invalid or nonexistent map configuration token '" + nonexistentToken + "'"
+                    errors: ["Invalid or nonexistent map configuration token '" + nonexistentToken + "'"]
                 });
 
                 done();

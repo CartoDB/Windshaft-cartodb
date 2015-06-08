@@ -314,7 +314,7 @@
                       "dependencies": {
                         "ansi-regex": {
                           "version": "1.1.1",
-                          "from": "ansi-regex@1.1.1",
+                          "from": "ansi-regex@^1.1.0",
                           "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-1.1.1.tgz"
                         }
                       }
@@ -379,7 +379,7 @@
       }
     },
     "log4js": {
-      "version": "0.6.21",
+      "version": "0.6.25",
       "from": "https://github.com/CartoDB/log4js-node/tarball/cdb",
       "resolved": "https://github.com/CartoDB/log4js-node/tarball/cdb",
       "dependencies": {
@@ -413,6 +413,16 @@
               "from": "inherits@~2.0.1"
             }
           }
+        },
+        "semver": {
+          "version": "4.3.6",
+          "from": "semver@~4.3.3",
+          "resolved": "https://registry.npmjs.org/semver/-/semver-4.3.6.tgz"
+        },
+        "underscore": {
+          "version": "1.8.2",
+          "from": "underscore@1.8.2",
+          "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.2.tgz"
         }
       }
     },
@@ -476,9 +486,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.44.1",
-      "from": "windshaft@0.44.1",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.44.1.tgz",
+      "version": "0.45.0",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/issue-351",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/issue-351",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -2329,7 +2339,7 @@
             },
             "mime": {
               "version": "1.2.11",
-              "from": "mime@~1.2.9",
+              "from": "mime@~1.2.11",
               "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
             }
           }
