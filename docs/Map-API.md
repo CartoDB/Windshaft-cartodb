@@ -398,6 +398,19 @@ POST /api/v1/map/named
         }
       }
     ]
+  },
+  "view": {
+    "zoom": 4,
+    "center": {
+      "lng": 0,
+      "lat": 0
+    },
+    "bounds": {
+      "west": -45,
+      "south": -45,
+      "east": 45,
+      "north": 45
+    }
   }
 }
 ```
@@ -410,6 +423,16 @@ POST /api/v1/map/named
   - **valid_tokens** when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
 - **placeholders**: Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
 - **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md) for more info.
+- **view** (optional): extra keys to specify the compelling area for the map. It can be used to have a static preview of a named map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
+  - **zoom** The zoom level to use
+  - **center**
+    - **lng** The longitude to use for the center
+    - **lat** The latitude to use for the center
+  - **bounds**
+    - **west**: The western point for the bounding box
+    - **south**: The southern point for the bounding box
+    - **east**: The eastern point for the bounding box
+    - **north**: The northern point for the bounding box
 
 #### Template Format
 
@@ -747,6 +770,8 @@ The Static Maps API can be initiated using both named and anonymous maps using t
 
 Begin by instantiating either a named or anonymous map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
 
+#### Zoom + center
+
 ##### Definition
 
 <div class="code-title notitle code-request"></div>
@@ -792,6 +817,25 @@ Note: you can see this endpoint as:
 ```bash
 GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
 ```
+
+#### Named map
+
+##### Definition
+
+<div class="code-title notitle code-request"></div>
+```bash
+GET /api/v1/map/static/named/:name/:width/:height.:format
+```
+
+##### Params
+
+* **:name**: the name of the named map
+* **:width**: the width in pixels for the output image
+* **:height**: the height in pixels for the output image
+* **:format**: the format for the image, supported types: `png`, `jpg`
+  * **jpg** will have a default quality of 85.
+
+A named maps static image will get its constraints from the [view in the template](#Arguments), if `view` is not present it will estimate the extent based on the involved tables otherwise it fallback to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
 
 ####Layers
 

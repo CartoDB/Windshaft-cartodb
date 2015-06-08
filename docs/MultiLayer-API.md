@@ -1,4 +1,4 @@
-The Windshaft-CartoDB MultiLayer API extends the [Windshaft MultiLayer API](https://github.com/Vizzuality/Windshaft/wiki/Multilayer-API) in a few ways.
+The Windshaft-CartoDB MultiLayer API extends the [Windshaft MultiLayer API](https://github.com/CartoDB/Windshaft/blob/master/doc/Multilayer-API.md) in a few ways.
 
 ## Last modification timestamp embedded in the token
 
