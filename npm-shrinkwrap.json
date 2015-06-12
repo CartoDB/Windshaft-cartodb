@@ -153,14 +153,14 @@
               "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
             },
             "mime-types": {
-              "version": "2.0.13",
+              "version": "2.0.14",
               "from": "mime-types@~2.0.1",
-              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.0.13.tgz",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.0.14.tgz",
               "dependencies": {
                 "mime-db": {
-                  "version": "1.11.0",
-                  "from": "mime-db@~1.11.0",
-                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.11.0.tgz"
+                  "version": "1.12.0",
+                  "from": "mime-db@~1.12.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.12.0.tgz"
                 }
               }
             },
@@ -180,9 +180,9 @@
               "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.0.tgz"
             },
             "tough-cookie": {
-              "version": "1.2.0",
+              "version": "2.0.0",
               "from": "tough-cookie@>=0.12.0",
-              "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.2.0.tgz"
+              "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.0.0.tgz"
             },
             "http-signature": {
               "version": "0.11.0",
@@ -297,7 +297,7 @@
                       "dependencies": {
                         "ansi-regex": {
                           "version": "1.1.1",
-                          "from": "ansi-regex@^1.1.0",
+                          "from": "ansi-regex@^1.0.0",
                           "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-1.1.1.tgz"
                         },
                         "get-stdin": {
@@ -314,7 +314,7 @@
                       "dependencies": {
                         "ansi-regex": {
                           "version": "1.1.1",
-                          "from": "ansi-regex@^1.1.0",
+                          "from": "ansi-regex@^1.0.0",
                           "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-1.1.1.tgz"
                         }
                       }
@@ -487,8 +487,8 @@
     },
     "windshaft": {
       "version": "0.45.0",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/issue-351",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/issue-351",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/master",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/master",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -616,9 +616,9 @@
                       "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
                     },
                     "tough-cookie": {
-                      "version": "1.2.0",
+                      "version": "2.0.0",
                       "from": "tough-cookie@>=0.12.0",
-                      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.2.0.tgz"
+                      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.0.0.tgz"
                     },
                     "form-data": {
                       "version": "0.1.4",
@@ -2339,7 +2339,7 @@
             },
             "mime": {
               "version": "1.2.11",
-              "from": "mime@~1.2.11",
+              "from": "mime@~1.2.9",
               "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
             }
           }
@@ -2871,9 +2871,9 @@
               "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.0.tgz"
             },
             "tough-cookie": {
-              "version": "1.2.0",
+              "version": "2.0.0",
               "from": "tough-cookie@>=0.12.0",
-              "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-1.2.0.tgz"
+              "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.0.0.tgz"
             },
             "http-signature": {
               "version": "0.10.1",
