@@ -1321,6 +1321,7 @@ describe('template_api', function() {
           layergroupid = parsed.layergroupid;
           assert.ok(layergroupid.match(/^localhost@/),
             "Returned layergroupid does not start with signer name: " + layergroupid);
+          assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
           // TODO: check value of last_updated ?

@@ -108,6 +108,7 @@ describe('tests from old api translated to multilayer', function() {
             function(res) {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
+                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
                 done();
             }
         );
@@ -128,6 +129,7 @@ describe('tests from old api translated to multilayer', function() {
             function(res) {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
+                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 global.environment.postgres.host = backupDBHost;
                 done();
@@ -150,6 +152,7 @@ describe('tests from old api translated to multilayer', function() {
             function(res) {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
+                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 global.environment.postgres_auth_pass = backupDBPass;
                 done();
@@ -245,6 +248,8 @@ describe('tests from old api translated to multilayer', function() {
 
                 assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
                 assert.equal(res.headers['x-cache-channel'], expectedCacheChannel);
+
+                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 done();
             }
