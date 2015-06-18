@@ -38,6 +38,9 @@ This document list all routes available in Windshaft-cartodb Maps API server.
 1. `GET (?:/api/v1/map/named|/user/:user/api/v1/map/named|/tiles/template) {:user(f)} (1)`
 <br/>Notes: List named maps (w/ API KEY) [1]
 
+1. `GET (?:/api/v1/map|/user/:user/api/v1/map|/tiles/layergroup)/static/named/:template_id/:width/:height.:format {:user(f),:template_id(f),:width(f),:height(f),:format(f)} (1)`
+<br/>Notes: Static map for named maps
+
 1. `GET /health {} (1)`
 <br/>Notes: Healt check
 
@@ -73,10 +76,10 @@ Something like the following patch should do the trick
 
 ```javascript
 diff --git a/lib/cartodb/cartodb_windshaft.js b/lib/cartodb/cartodb_windshaft.js
-index 477a4c2..f69eebb 100644
+index b9429a2..e6cc5f9 100644
 --- a/lib/cartodb/cartodb_windshaft.js
 +++ b/lib/cartodb/cartodb_windshaft.js
-@@ -242,6 +242,20 @@ var CartodbWindshaft = function(serverOptions) {
+@@ -212,6 +212,20 @@ var CartodbWindshaft = function(serverOptions) {
          }
      });
 

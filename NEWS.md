@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.5.0
+
+Released 2015-06-18
+
+New features:
+ - Named maps names can start with numbers and can contain dashes (-).
+ - Adds layergroupid header in map instantiations
+
+Bug fixes:
+ - Named maps error responses with `{ "errors": ["message"] }` format (#305)
+
+Announcements:
+ - Upgrades windshaft to [0.45.0](https://github.com/CartoDB/Windshaft/releases/tag/0.45.0)
+
+Enhancements:
+ - Fix documentation style and error examples
+
+
 ## 2.4.1
 
 Released 2015-06-01

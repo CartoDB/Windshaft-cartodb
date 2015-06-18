@@ -18,7 +18,7 @@ Here is an example of how to create an anonymous map with JavaScript:
 
 ```javascript
 var mapconfig = {
-  "version": "1.0.1",
+  "version": "1.3.1",
   "layers": [{
     "type": "cartodb",
     "options": {
@@ -57,7 +57,7 @@ The following map config sets up a map of European countries that have a white f
   },
   "layergroup": {
     "layers": [{
-      "type": "cartodb",
+      "type": "mapnik",
       "options": {
         "cartocss_version": "2.1.1",
         "cartocss": "#layer { polygon-fill: #FFF; }",
@@ -82,14 +82,23 @@ To get the `URL` to fetch the tiles you need to instantiate the map, where `temp
 curl -X POST 'https://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
 ```
 
-The response will return JSON with properties for the `layergroupid` and the timestamp (`last_updated`) of the last data modification. 
+The response will return JSON with properties for the `layergroupid`, the timestamp (`last_updated`) of the last data modification and some key/value pairs with `metadata` for the `layers`.
+Note: all `layers` in `metadata` will always have a `type` string and a `meta` dictionary with the key/value pairs.
 
 Here is an example response:
 
 ```javascript
 {
   "layergroupid": "c01a54877c62831bb51720263f91fb33:0",
-  "last_updated": "1970-01-01T00:00:00.000Z"
+  "last_updated": "1970-01-01T00:00:00.000Z",
+  "metadata": {
+    "layers": [
+      {
+        "type": "mapnik",
+        "meta": {}
+      }
+    ]
+  }
 }
 ```
 
@@ -144,9 +153,9 @@ POST /api/v1/map
 
 ```javascript
 {
-  "version": "1.0.1",
+  "version": "1.3.0",
   "layers": [{
-    "type": "cartodb",
+    "type": "mapnik",
     "options": {
       "cartocss_version": "2.1.1", 
       "cartocss": "#layer { polygon-fill: #FFF; }",
@@ -157,7 +166,7 @@ POST /api/v1/map
 }
 ```
 
-Should be a [Mapconfig](https://github.com/CartoDB/Windshaft/blob/0.19.1/doc/MapConfig-1.1.0.md).
+Should be a [Mapconfig](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md).
 
 #### Response
 
@@ -173,8 +182,9 @@ The response includes:
 - **updated_at**  
   The ISO date of the last time the data involved in the query was updated.
 
-- **metadata** *(optional)*  
-  Includes information about the layers. Some layers may not have metadata.
+- **metadata**
+  Includes information about the layers.
+  -
 
 - **cdn_url**  
   URLs to fetch the data using the best CDN for your zone.
@@ -189,8 +199,16 @@ curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: applicatio
 <div class="code-title">RESPONSE</div>
 ```javascript
 {
-  "layergroupid":"c01a54877c62831bb51720263f91fb33:0",
-  "last_updated":"1970-01-01T00:00:00.000Z"
+  "layergroupid": "c01a54877c62831bb51720263f91fb33:0",
+  "last_updated": "1970-01-01T00:00:00.000Z",
+  "metadata": {
+    "layers": [
+      {
+        "type": "mapnik",
+        "meta": {}
+      }
+    ]
+  },
   "cdn_url": {
     "http": "http://cdb.com",
     "https": "https://cdb.com"
@@ -198,19 +216,35 @@ curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: applicatio
 }
 ```
 
-The tiles can be accessed using:
+##### Retrieve resources from the layergroup
+
+###### Mapnik tiles can be accessed using:
+
+These tiles will get just the mapnik layers. To get individual layers see next section.
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
 ```
 
-For UTF grid tiles:
+###### Individual layers
+
+The MapConfig specification holds the layers definition in a 0-based index. Layers can be requested individually in different formats depending on the layer type.
+
+Individual layers can be accessed using that 0-based index. For UTF grid tiles:
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer/{z}/{x}/{y}.grid.json
 ```
 
-For attributes defined in `attributes` section:
+In this case, `:layer` as 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example MapConfig.
+
+If the MapConfig had a Torque layer at index 1 it could be possible to request it with:
+
+```bash
+https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/1/{z}/{x}/{y}.torque.json
+```
+
+###### Attributes defined in `attributes` section:
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer/attributes/:feature_id
@@ -219,10 +253,44 @@ https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/
 Which returns JSON with the attributes defined, like:
 
 ```javascript
-{ c: 1, d: 2 }
+{ "c": 1, "d": 2 }
 ```
 
-Notice UTF Grid and attributes endpoints need an integer parameter, ``layer``. That number is the 0-based index of the layer inside the mapconfig. In this case, 0 returns the UTF grid tiles/attributes for layer 0, the only layer in the example mapconfig. If a second layer was available it could be returned with 1, a third layer with 2, etc.
+###### Blending and layer selection
+
+```bash
+https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer_filter/{z}/{x}/{y}.png
+```
+
+Note: currently format is limited to `png`.
+
+`:layer_filter` can be used to select some layers to be rendered together. `:layer_filter` supports two formats:
+
+- `all` alias
+
+Using `all` as `:layer_filter` will blend all layers in the layergroup
+
+```bash
+https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/all/{z}/{x}/{y}.png
+```
+
+- Filter by layer index
+
+A list of comma separated layer indexes can be used to just render a subset of layers. For example `0,3,4` will filter and blend layers with indexes 0, 3, and 4.
+
+```bash
+https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/0,3,4/{z}/{x}/{y}.png
+```
+
+Some notes about filtering:
+
+  - Invalid index values or out of bounds indexes will end in `Invalid layer filtering` errors.
+  - Once a mapnik layer is selected, all mapnik layers will get blended. As this may change in the future **it is
+  recommended** to always select all mapnik layers if you want to select at least one so you will get a consistent
+  behavior in the future.
+  - Ordering is not considered. So right now filtering layers 0,3,4 is the very same thing as filtering 3,4,0. As this
+  may change in the future **it is recommended** to always select the layers in ascending order so you will get a
+  consistent behavior in the future.
 
 ### Create JSONP
 
@@ -272,7 +340,7 @@ Anonymous maps cannot be removed by an API call. They will expire after about fi
 
 ## Named Maps
 
-Named maps are essentially the same as anonymous maps except the mapconfig is stored on the server and the map is given a unique name. Two other big differences are: you can create named maps from private data and that users without an API Key can see them even though they are from that private data.
+Named maps are essentially the same as anonymous maps except the MapConfig is stored on the server and the map is given a unique name. Two other big differences are: you can create named maps from private data and that users without an API Key can see them even though they are from that private data.
 
 The main two differences compared to anonymous maps are:
 
@@ -280,7 +348,7 @@ The main two differences compared to anonymous maps are:
   This allows you to control who is able to see the map based on a token auth
 
 - **templates**  
-  Since the mapconfig is static it can contain some variables so the client can modify the map's appearance using those variables.
+  Since the MapConfig is static it can contain some variables so the client can modify the map's appearance using those variables.
 
 Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
 
@@ -331,18 +399,41 @@ POST /api/v1/map/named
         }
       }
     ]
+  },
+  "view": {
+    "zoom": 4,
+    "center": {
+      "lng": 0,
+      "lat": 0
+    },
+    "bounds": {
+      "west": -45,
+      "south": -45,
+      "east": 45,
+      "north": 45
+    }
   }
 }
 ```
 
 ##### Arguments
 
-- **name**: There can be at most _one_ template with the same name for any user. Valid names start with a letter, and only contain letters, numbers, or underscores (_).
+- **name**: There can be at most _one_ template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-) or underscores (_).
 - **auth**:
   - **method** `"token"` or `"open"` (the default if no `"method"` is given).
   - **valid_tokens** when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
 - **placeholders**: Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
-- **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.1.0.md) for more info.
+- **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md) for more info.
+- **view** (optional): extra keys to specify the compelling area for the map. It can be used to have a static preview of a named map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
+  - **zoom** The zoom level to use
+  - **center**
+    - **lng** The longitude to use for the center
+    - **lat** The latitude to use for the center
+  - **bounds**
+    - **west**: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
+    - **south**: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
+    - **east**: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
+    - **north**: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
 
 #### Template Format
 
@@ -438,7 +529,7 @@ curl -X POST \
 <div class="code-title">Error</div>
 ```javascript
 {
-  "error": "Some error string here"
+  "errors" : ["Some error string here"]
 }
 ```
 
@@ -539,7 +630,7 @@ If a template with the same name does NOT exist, a 400 HTTP response is generate
 
 ```javascript
 {
-  "error": "error string here"
+  "errors" : ["error string here"]
 }
 ```
 
@@ -568,7 +659,7 @@ curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_nam
 <div class="code-title">RESPONSE</div>
 ```javascript
 {
-  "error": "Some error string here"
+  "errors" : ["Some error string here"]
 }
 ```
 
@@ -606,7 +697,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 <div class="code-title">ERROR</div>
 ```javascript
 {
-   "error": "Some error string here"
+   "errors" : ["Some error string here"]
 }
 ```
 
@@ -642,7 +733,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 <div class="code-title">ERROR</div>
 ```javascript
 {
-  "error": "Some error string here"
+  "errors" : ["Some error string here"]
 }
 ```
 
@@ -672,13 +763,15 @@ cartodb.createLayer('map_dom_id',layerSource)
 1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript 
 2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
 
-##Static Maps API
+## Static Maps API
 
 The Static Maps API can be initiated using both named and anonymous maps using the 'layergroupid' token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
 
 ### Maps API endpoints
 
-Begin by instantiating either a named or anonymous map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupsid token` calls to the map and allows for parameters in the definition to generate static images. 
+Begin by instantiating either a named or anonymous map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
+
+#### Zoom + center
 
 ##### Definition
 
@@ -725,6 +818,25 @@ Note: you can see this endpoint as:
 ```bash
 GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
 ```
+
+#### Named map
+
+##### Definition
+
+<div class="code-title notitle code-request"></div>
+```bash
+GET /api/v1/map/static/named/:name/:width/:height.:format
+```
+
+##### Params
+
+* **:name**: the name of the named map
+* **:width**: the width in pixels for the output image
+* **:height**: the height in pixels for the output image
+* **:format**: the format for the image, supported types: `png`, `jpg`
+  * **jpg** will have a default quality of 85.
+
+A named maps static image will get its constraints from the [view in the template](#Arguments), if `view` is not present it will estimate the extent based on the involved tables otherwise it fallback to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
 
 ####Layers
 
@@ -779,14 +891,14 @@ By manipulating the `"urlTemplate"` custom basemaps can be used in generating st
     },
 ```
 
-Additoinally, static images from Torque maps and other map layers can be used together to generate highly customizable and versatile static maps.
+Additionally, static images from Torque maps and other map layers can be used together to generate highly customizable and versatile static maps.
 
 
-####Caching
+#### Caching
 
 It is important to note that generated images are cached from the live data referenced with the `layergroupid token` on the specified CartoDB account. This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. To obtain a static snapshot of the map as it is today and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
 
-####Limits
+#### Limits
 
 * While images can encompass an entirety of a map, the default limit for pixel range is 8192 x 8192.
 * Image resolution by default is set to 72 DPI
@@ -803,10 +915,11 @@ After instantiating a map from a CartoDB account:
  GET /api/v1/map/static/center/4b615ff367e498e770e7d05e99181873:1420231989550.8699/14/40.71502926732618/-73.96039009094238/600/400.png
 ```
 
-####Response
-<div clas="wrap"><p class="wrap-border"><img src="https://raw.githubusercontent.com/namessanti/Pictures/master/static_api.png" alt="static-api"/></p>,</div>
+#### Response
 
-####MapConfig
+<p class="wrap-border"><img src="https://raw.githubusercontent.com/namessanti/Pictures/master/static_api.png" alt="static-api"/></p>
+
+#### MapConfig
 
 For this map, the multiple layers, order, and stylings are defined by the MapConfig.
 

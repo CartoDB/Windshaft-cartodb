@@ -174,7 +174,7 @@ describe('render limits', function() {
                             },
                             function(res) {
                                 var parsed = JSON.parse(res.body);
-                                assert.deepEqual(parsed, { error: 'Render timed out' });
+                                assert.deepEqual(parsed, { errors: ['Render timed out'] });
                                 done();
                             }
                         );

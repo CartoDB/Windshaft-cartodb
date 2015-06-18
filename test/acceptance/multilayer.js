@@ -69,6 +69,7 @@ suite(suiteName, function() {
               assert.equal(parsedBody.last_updated, expected_last_updated);
               if ( expected_token ) {
                 assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
               }
               else expected_token = parsedBody.layergroupid.split(':')[0];
               next(null, res);
@@ -131,7 +132,7 @@ suite(suiteName, function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 403, res.statusCode + ':' + res.body);
               var parsed = JSON.parse(res.body);
-              var msg = parsed.error; // TODO: should it be "errors" ?
+              var msg = parsed.errors[0];
               assert.ok(msg.match(/permission denied/i), msg);
               next(err);
           });
@@ -1011,6 +1012,7 @@ suite(suiteName, function() {
               var parsedBody = JSON.parse(res.body);
               if ( expected_token ) {
                 assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
               }
               else {
                 var token_components = parsedBody.layergroupid.split(':');
@@ -1091,6 +1093,7 @@ suite(suiteName, function() {
           var parsedBody = JSON.parse(res.body);
           if ( expected_token ) {
             assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+            assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
           }
           else {
             var token_components = parsedBody.layergroupid.split(':');
