@@ -528,7 +528,7 @@ curl -X POST \
 <div class="code-title">Error</div>
 ```javascript
 {
-  "error": "Some error string here"
+  "errors" : ["Some error string here"]
 }
 ```
 
@@ -629,7 +629,7 @@ If a template with the same name does NOT exist, a 400 HTTP response is generate
 
 ```javascript
 {
-  "error": "error string here"
+  "errors" : ["error string here"]
 }
 ```
 
@@ -658,7 +658,7 @@ curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_nam
 <div class="code-title">RESPONSE</div>
 ```javascript
 {
-  "error": "Some error string here"
+  "errors" : ["Some error string here"]
 }
 ```
 
@@ -696,7 +696,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 <div class="code-title">ERROR</div>
 ```javascript
 {
-   "error": "Some error string here"
+   "errors" : ["Some error string here"]
 }
 ```
 
@@ -732,7 +732,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 <div class="code-title">ERROR</div>
 ```javascript
 {
-  "error": "Some error string here"
+  "errors" : ["Some error string here"]
 }
 ```
 
