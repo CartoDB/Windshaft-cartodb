@@ -283,11 +283,12 @@ https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/
 ```
 
 Some notes about filtering:
-  * Invalid index values or out of bounds indexes will end in `Invalid layer filtering` errors.
-  * Once a mapnik layer is selected, all mapnik layers will get blended. As this may change in the future **it is
+
+  - Invalid index values or out of bounds indexes will end in `Invalid layer filtering` errors.
+  - Once a mapnik layer is selected, all mapnik layers will get blended. As this may change in the future **it is
   recommended** to always select all mapnik layers if you want to select at least one so you will get a consistent
   behavior in the future.
-  * Ordering is not considered. So right now filtering layers 0,3,4 is the very same thing as filtering 3,4,0. As this
+  - Ordering is not considered. So right now filtering layers 0,3,4 is the very same thing as filtering 3,4,0. As this
   may change in the future **it is recommended** to always select the layers in ascending order so you will get a
   consistent behavior in the future.
 
