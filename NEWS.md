@@ -2,7 +2,7 @@
 
 ## 2.5.0
 
-Released 2015-mm-dd
+Released 2015-06-18
 
 New features:
  - Named maps names can start with numbers and can contain dashes (-).
