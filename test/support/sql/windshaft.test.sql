@@ -189,3 +189,31 @@ INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('test_table_private_
 
 -- GRANT SELECT ON CDB_TableMetadata TO :PUBLICUSER;
 GRANT SELECT ON CDB_TableMetadata TO :TESTUSER;
+
+-- long name table
+CREATE TABLE
+long_table_name_with_enough_chars_to_break_querytables_function
+(
+    updated_at timestamp without time zone DEFAULT now(),
+    created_at timestamp without time zone DEFAULT now(),
+    cartodb_id integer NOT NULL,
+    name character varying,
+    address character varying,
+    the_geom geometry,
+    the_geom_webmercator geometry
+);
+
+INSERT INTO long_table_name_with_enough_chars_to_break_querytables_function SELECT * from test_table;
+
+ALTER TABLE ONLY long_table_name_with_enough_chars_to_break_querytables_function
+    ADD CONSTRAINT long_table_name_with_enough_chars_to_break_querytables_func_pkey PRIMARY KEY (cartodb_id);
+
+CREATE INDEX long_table_name_the_geom_idx
+    ON long_table_name_with_enough_chars_to_break_querytables_function USING gist (the_geom);
+CREATE INDEX long_table_name_the_geom_webmercator_idx
+    ON long_table_name_with_enough_chars_to_break_querytables_function USING gist (the_geom_webmercator);
+
+GRANT ALL ON TABLE long_table_name_with_enough_chars_to_break_querytables_function TO :TESTUSER;
+GRANT SELECT ON TABLE long_table_name_with_enough_chars_to_break_querytables_function TO :PUBLICUSER;
+
+INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('long_table_name_with_enough_chars_to_break_querytables_function'::regclass, '2009-02-13T23:31:30.123Z');
