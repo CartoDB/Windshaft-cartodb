@@ -880,6 +880,8 @@ By manipulating the `"urlTemplate"` custom basemaps can be used in generating st
 
 **CartoDB**
 
+As described in the [Mapconfig documentation](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md), a "cartodb" type layer is now just an alias to a "mapnik" type layer as above, intended for backwards compatibility.
+
 ```javascript
     {
       "type": "cartodb",
