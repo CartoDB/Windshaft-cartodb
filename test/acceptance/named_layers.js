@@ -6,7 +6,7 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
 var server = new CartodbWindshaft(serverOptions);
 
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../lib/cartodb/template_maps.js');
+var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 
 var step = require('step');
 

@@ -2,7 +2,7 @@ require('../../support/test_helper');
 
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../../lib/cartodb/template_maps.js');
+var TemplateMaps = require('../../../lib/cartodb/backends/template_maps.js');
 var _ = require('underscore');
 
 describe('template_maps', function() {

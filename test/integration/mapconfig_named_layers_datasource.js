@@ -2,7 +2,7 @@ require('../support/test_helper');
 
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../lib/cartodb/template_maps.js');
+var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
 var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig_named_layers_adapter');
 
