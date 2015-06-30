@@ -59,6 +59,14 @@ happen to have startup errors you may need to force rebuilding those
 modules. At any time just wipe out the node_modules/ directory and run
 ```npm install``` again.
 
+Upgrading
+---------
+
+Pull master branch and then reinstall dependencies:
+
+```
+make clean all
+```
 
 Run
 ---
