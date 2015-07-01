@@ -62,10 +62,10 @@ modules. At any time just wipe out the node_modules/ directory and run
 Upgrading
 ---------
 
-Pull master branch and then reinstall dependencies:
+Checkout your commit/branch. If you need to reinstall dependencies (you can check [NEWS](NEWS.md)) do the following:
 
 ```
-make clean all
+rm -rf node_modules; npm install
 ```
 
 Run
