@@ -1,8 +1,12 @@
 # Changelog
 
-## 2.5.1
+## 2.6.0
 
 Released 2015-mm-dd
+
+Announcements:
+ - Upgrades windshaft to [0.46.0](https://github.com/CartoDB/Windshaft/releases/tag/0.46.0)
+ - New config to set metatile by format
 
 
 ## 2.5.0
