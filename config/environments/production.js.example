@@ -90,6 +90,12 @@ var config = {
           // wasted time.
           metatile: 2,
 
+          // Override metatile behaviour depending on the format
+          formatMetatile: {
+              png: 2,
+              'grid.json': 1
+          },
+
           // Buffer size is the tickness in pixel of a buffer
           // around the rendered (meta?)tile.
           //

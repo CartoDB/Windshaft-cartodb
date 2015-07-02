@@ -256,6 +256,41 @@ describe('tests from old api translated to multilayer', function() {
         );
     });
 
+    // https://github.com/CartoDB/cartodb-postgresql/issues/86
+    it.skip("should not fail with long table names because table name length limit",  function(done) {
+        var tableName = 'long_table_name_with_enough_chars_to_break_querytables_function';
+        var expectedCacheChannel = _.template('<%= databaseName %>:public.<%= tableName %>', {
+            databaseName: _.template(global.environment.postgres_auth_user, {user_id:1}) + '_db',
+            tableName: tableName
+        });
+
+        var layergroup =  singleLayergroupConfig('select * from ' + tableName, '#layer { marker-fill: red; }');
+
+        assert.response(server,
+            {
+                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            },
+            {
+                status: 200
+            },
+            function(res) {
+                var parsed = JSON.parse(res.body);
+                assert.ok(parsed.layergroupid);
+
+                assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
+                assert.equal(res.headers['x-cache-channel'], expectedCacheChannel);
+
+                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+
+                done();
+            }
+        );
+    });
+
     it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
 
         var runQueryFn = PgQueryRunner.prototype.run;
