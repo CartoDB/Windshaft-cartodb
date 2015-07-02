@@ -7,7 +7,7 @@ var redis = require('redis');
 var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
 var serverOptions = require('../../lib/cartodb/server_options');
 
-describe('render limits', function() {
+describe.skip('render limits', function() {
 
     var layergroupUrl = '/api/v1/map';
 
