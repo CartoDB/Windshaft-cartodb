@@ -3,8 +3,8 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var qs = require('querystring');
 
-var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require('../../lib/cartodb/server_options')();
+var CartodbWindshaft = require('../../lib/cartodb/server');
+var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 

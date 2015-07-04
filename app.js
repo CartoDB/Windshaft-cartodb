@@ -8,6 +8,7 @@
  */
 
 var path = require('path');
+var os = require('os');
 var fs = require('fs');
 var RedisPool = require('redis-mpool');
 var _ = require('underscore');
@@ -68,10 +69,19 @@ global.logger = global.log4js.getLogger();
 var redisOpts = _.extend(global.environment.redis, { name: 'windshaft' }),
     redisPool = new RedisPool(redisOpts);
 
+// Perform keyword substitution in statsd
+// See https://github.com/CartoDB/Windshaft-cartodb/issues/153
+if ( global.environment.statsd ) {
+    if ( global.environment.statsd.prefix ) {
+        var host_token = os.hostname().split('.').reverse().join('.');
+        global.environment.statsd.prefix = global.environment.statsd.prefix.replace(/:host/, host_token);
+    }
+}
+
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-var cartodbWindshaft = require('./lib/cartodb/cartodb_windshaft'),
-    serverOptions = require('./lib/cartodb/server_options')(redisPool);
+var cartodbWindshaft = require('./lib/cartodb/server'),
+    serverOptions = require('./lib/cartodb/server_options');
 
 var ws = cartodbWindshaft(serverOptions);
 

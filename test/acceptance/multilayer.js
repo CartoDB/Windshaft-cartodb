@@ -12,9 +12,9 @@ var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixture
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
 
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions());
+var CartodbWindshaft = require('../../lib/cartodb/server');
+var serverOptions = require('../../lib/cartodb/server_options');
+var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
 ['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
@@ -859,7 +859,7 @@ suite(suiteName, function() {
         function do_restart_server(err/*, res*/) {
           if ( err ) throw err;
           // hack simulating restart...
-          server = new CartodbWindshaft(serverOptions());
+          server = new CartodbWindshaft(serverOptions);
           return null;
         },
         function do_get1(err)

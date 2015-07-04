@@ -14,13 +14,13 @@ process.env.PGHOST = 'fake';
 
 var helper = require(__dirname + '/../support/test_helper');
 
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
+var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
+var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
 describe('template_api', function() {
-    serverOptions.channelCache = {};
+    server.channelCache = {};
 
     var redis_client = redis.createClient(global.environment.redis.port);
 
@@ -1154,7 +1154,7 @@ describe('template_api', function() {
           assert.ok(cc);
           assert.ok(cc.match, /ciao/, cc);
           // hack simulating restart...
-          serverOptions.channelCache = {}; // need to clean channel cache
+          server.channelCache = {}; // need to clean channel cache
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
               method: 'GET',

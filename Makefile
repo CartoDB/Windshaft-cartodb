@@ -27,6 +27,23 @@ test: config/environments/test.js
 		test/acceptance/*.js \
 		test/acceptance/cache/*.js
 
+test-unit: config/environments/test.js
+	@echo "***tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
+		test/unit/cartodb/*.js \
+		test/unit/cartodb/cache/model/*.js
+
+test-integration: config/environments/test.js
+	@echo "***tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
+		test/integration/*.js
+
+test-acceptance: config/environments/test.js
+	@echo "***tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
+		test/acceptance/*.js \
+		test/acceptance/cache/*.js
+
 jshint:
 	@echo "***jshint***"
 	@./node_modules/.bin/jshint lib/ test/ app.js

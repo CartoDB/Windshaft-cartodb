@@ -4,7 +4,7 @@ var assert = require('../support/assert');
 var _ = require('underscore');
 var redis = require('redis');
 
-var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
+var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 
 describe.skip('render limits', function() {
@@ -22,7 +22,7 @@ describe.skip('render limits', function() {
 
     var server;
     beforeEach(function() {
-        server = new CartodbWindshaft(serverOptions());
+        server = new CartodbWindshaft(serverOptions);
         server.setMaxListeners(0);
     });
 

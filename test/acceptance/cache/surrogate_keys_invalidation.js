@@ -6,23 +6,25 @@ var step        = require('step');
 var FastlyPurge = require('fastly-purge');
 
 var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cartodb/cache/model/named_maps_entry');
-var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/cartodb_windshaft');
+var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/server');
 
 
 describe('templates surrogate keys', function() {
 
     var redisClient = redis.createClient(global.environment.redis.port);
 
-    // Enable Varnish purge for tests
-    var varnishHost = global.environment.varnish.host;
-    global.environment.varnish.host = '127.0.0.1';
-    var varnishPurgeEnabled = global.environment.varnish.purge_enabled;
-    global.environment.varnish.purge_enabled = true;
+    var serverOptions = require('../../../lib/cartodb/server_options');
 
-    var fastlyConfig = global.environment.fastly;
+    // Enable Varnish purge for tests
+    var varnishHost = serverOptions.varnish_host;
+    serverOptions.varnish_host = '127.0.0.1';
+    var varnishPurgeEnabled = serverOptions.varnish_purge_enabled;
+    serverOptions.varnish_purge_enabled = true;
+
+    var fastlyConfig = serverOptions.fastly;
     var FAKE_FASTLY_API_KEY = 'fastly-api-key';
     var FAKE_FASTLY_SERVICE_ID = 'fake-service-id';
-    global.environment.fastly = {
+    serverOptions.fastly = {
         enabled: true,
         // the fastly api key
         apiKey: FAKE_FASTLY_API_KEY,
@@ -30,7 +32,6 @@ describe('templates surrogate keys', function() {
         serviceId: FAKE_FASTLY_SERVICE_ID
     };
 
-    var serverOptions = require('../../../lib/cartodb/server_options')();
     var server = new CartodbWindshaft(serverOptions);
 
     var templateOwner = 'localhost',
@@ -58,7 +59,7 @@ describe('templates surrogate keys', function() {
         expectedBody = { template_id: expectedTemplateId };
 
     var varnishHttpUrl = [
-        'http://', global.environment.varnish.host, ':', global.environment.varnish.http_port
+        'http://', serverOptions.varnish_host, ':', serverOptions.varnish_http_port
     ].join('');
 
     var cacheEntryKey = new NamedMapsCacheEntry(templateOwner, templateName).key();
@@ -70,10 +71,10 @@ describe('templates surrogate keys', function() {
 
     after(function(done) {
         serverOptions.varnish_purge_enabled = false;
-        global.environment.varnish.host = varnishHost;
-        global.environment.varnish.purge_enabled = varnishPurgeEnabled;
+        serverOptions.varnish_host = varnishHost;
+        serverOptions.varnish_purge_enabled = varnishPurgeEnabled;
 
-        global.environment.fastly = fastlyConfig;
+        serverOptions.fastly = fastlyConfig;
 
         nock.restore();
         done();

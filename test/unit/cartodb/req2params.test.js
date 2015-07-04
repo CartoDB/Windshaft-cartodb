@@ -5,7 +5,9 @@ var test_helper = require('../../support/test_helper');
 suite('req2params', function() {
 
     // configure redis pool instance to use in tests
-    var opts = require('../../../lib/cartodb/server_options')();
+    var CartodbWindshaft = require('../../../lib/cartodb/server');
+    var serverOptions = require('../../../lib/cartodb/server_options');
+    var server = new CartodbWindshaft(serverOptions);
 
     var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
     var test_pubuser = global.environment.postgres.user;
@@ -13,11 +15,11 @@ suite('req2params', function() {
 
     
     test('can be found in server_options', function(){
-      assert.ok(_.isFunction(opts.req2params));
+      assert.ok(_.isFunction(server.req2params));
     });
 
     test('cleans up request', function(done){
-      opts.req2params({headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}}, function(err, req) {
+      server.req2params({headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}}, function(err, req) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -30,7 +32,7 @@ suite('req2params', function() {
     });
 
     test('sets dbname from redis metadata', function(done){
-      opts.req2params({headers: { host:'localhost' }, query: {} }, function(err, req) {
+      server.req2params({headers: { host:'localhost' }, query: {} }, function(err, req) {
           if ( err ) { done(err); return; }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
@@ -44,7 +46,7 @@ suite('req2params', function() {
     });
 
     test('sets also dbuser for authenticated requests', function(done){
-      opts.req2params({headers: { host:'localhost' }, query: {map_key: '1234'} }, function(err, req) {
+      server.req2params({headers: { host:'localhost' }, query: {map_key: '1234'} }, function(err, req) {
           if ( err ) { done(err); return; }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
@@ -54,7 +56,7 @@ suite('req2params', function() {
           assert.equal(req.params.dbname, test_database);
           assert.equal(req.params.dbuser, test_user);
  
-          opts.req2params({headers: { host:'localhost' }, query: {map_key: '1235'} }, function(err, req) {
+          server.req2params({headers: { host:'localhost' }, query: {map_key: '1235'} }, function(err, req) {
               // wrong key resets params to no user
               assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
               done();
@@ -80,7 +82,7 @@ suite('req2params', function() {
                     lzma: data
                 }
             };
-            opts.req2params(req, function(err, req) {
+            server.req2params(req, function(err, req) {
                 if ( err ) {
                     return done(err);
                 }

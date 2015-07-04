@@ -1,8 +1,8 @@
 var test_helper = require('../support/test_helper');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
+var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
+var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 
 var RedisPool = require('redis-mpool');

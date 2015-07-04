@@ -1,8 +1,8 @@
 require(__dirname + '/../support/test_helper');
 
 var assert      = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
+var CartodbWindshaft = require('../../lib/cartodb/server');
+var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 
 var metadataBackend = {};

@@ -5,7 +5,6 @@
  * Desc: Loads test specific variables
  */
 
-var _ = require('underscore');
 var assert = require('assert');
 var LZMA  = require('lzma').LZMA;
 
@@ -20,11 +19,11 @@ process.env.NODE_ENV = 'test';
 function lzma_compress_to_base64(payload, mode, callback) {
   lzmaWorker.compress(payload, mode,
     function(ints) {
-      ints = ints.map(function(c) { return String.fromCharCode(c + 128) }).join('')
+      ints = ints.map(function(c) { return String.fromCharCode(c + 128); }).join('');
       var base64 = new Buffer(ints, 'binary').toString('base64');
       callback(null, base64);
     },
-    function(percent) {
+    function(/*percent*/) {
       //console.log("Compressing: " + percent + "%");
     }
   );
@@ -54,6 +53,21 @@ function checkSurrogateKey(res, expectedKey) {
     assert.ok(res.headers.hasOwnProperty('surrogate-key'));
     assert.equal(res.headers['surrogate-key'], expectedKey);
 }
+
+//var _ = require('underscore');
+//var redis = require('redis');
+// global afterEach to capture tests that leave keys in redis
+//afterEach(function(done) {
+//    var redisClient = redis.createClient(global.environment.redis.port);
+//    // Check that we start with an empty redis db
+//    redisClient.keys("*", function(err, keys) {
+//        if ( err ) {
+//            return done(err);
+//        }
+//        assert.equal(keys.length, 0, "test left objects in redis:\n" + keys.join("\n"));
+//        redisClient.flushall(done);
+//    });
+//});
 
 
 module.exports = {

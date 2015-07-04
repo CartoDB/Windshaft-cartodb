@@ -3,8 +3,8 @@ var RedisPool = require('redis-mpool');
 var querystring = require('querystring');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
+var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
+var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
