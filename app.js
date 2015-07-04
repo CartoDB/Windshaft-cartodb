@@ -1,44 +1,37 @@
-/*
- * Windshaft-CartoDB
- * ===============
- *
- * ./app.js [environment]
- *
- * environments: [development, production]
- */
-
 var path = require('path');
-var os = require('os');
 var fs = require('fs');
-var RedisPool = require('redis-mpool');
-var _ = require('underscore');
 
-var ENV;
+var ENVIRONMENT;
 if ( process.argv[2] ) {
-    ENV = process.argv[2];
+    ENVIRONMENT = process.argv[2];
 } else if ( process.env.NODE_ENV ) {
-    ENV = process.env.NODE_ENV;
+    ENVIRONMENT = process.env.NODE_ENV;
 } else {
-    ENV = 'development';
+    ENVIRONMENT = 'development';
 }
 
-process.env.NODE_ENV = ENV;
+var availableEnvironments = {
+    production: true,
+    staging: true,
+    development: true
+};
 
 // sanity check
-if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
-    console.error("\nnode app.js [environment]");
-    console.error("environments: development, production, staging\n");
+if (!availableEnvironments[ENVIRONMENT]){
+    console.error('node app.js [environment]');
+    console.error('environments: %s', Object.keys(availableEnvironments).join(', '));
     process.exit(1);
 }
 
+process.env.NODE_ENV = ENVIRONMENT;
+
 // set environment specific variables
-global.environment  = require(__dirname + '/config/environments/' + ENV);
-global.environment.api_hostname = require('os').hostname().split('.')[0];
+global.environment = require('./config/environments/' + ENVIRONMENT);
 
 global.log4js = require('log4js');
 var log4js_config = {
   appenders: [],
-  replaceConsole:true
+  replaceConsole: true
 };
 
 if (global.environment.uv_threadpool_size) {
@@ -66,48 +59,29 @@ if ( global.environment.log_filename ) {
 global.log4js.configure(log4js_config, { cwd: __dirname });
 global.logger = global.log4js.getLogger();
 
-var redisOpts = _.extend(global.environment.redis, { name: 'windshaft' }),
-    redisPool = new RedisPool(redisOpts);
-
-// Perform keyword substitution in statsd
-// See https://github.com/CartoDB/Windshaft-cartodb/issues/153
-if ( global.environment.statsd ) {
-    if ( global.environment.statsd.prefix ) {
-        var host_token = os.hostname().split('.').reverse().join('.');
-        global.environment.statsd.prefix = global.environment.statsd.prefix.replace(/:host/, host_token);
-    }
-}
+global.environment.api_hostname = require('os').hostname().split('.')[0];
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-var cartodbWindshaft = require('./lib/cartodb/server'),
-    serverOptions = require('./lib/cartodb/server_options');
+var cartodbWindshaft = require('./lib/cartodb/server');
+var serverOptions = require('./lib/cartodb/server_options');
 
-var ws = cartodbWindshaft(serverOptions);
-
-if (global.statsClient) {
-    redisPool.on('status', function(status) {
-        var keyPrefix = 'windshaft.redis-pool.' + status.name + '.db' + status.db + '.';
-        global.statsClient.gauge(keyPrefix + 'count', status.count);
-        global.statsClient.gauge(keyPrefix + 'unused', status.unused);
-        global.statsClient.gauge(keyPrefix + 'waiting', status.waiting);
-    });
-}
+var server = cartodbWindshaft(serverOptions);
 
 // Maximum number of connections for one process
 // 128 is a good number if you have up to 1024 filedescriptors
 // 4 is good if you have max 32 filedescriptors
 // 1 is good if you have max 16 filedescriptors
-ws.maxConnections = global.environment.maxConnections || 128;
+server.maxConnections = global.environment.maxConnections || 128;
 
-ws.listen(global.environment.port, global.environment.host);
+server.listen(serverOptions.bind.port, serverOptions.bind.host);
 
 var version = require("./package").version;
 
-ws.on('listening', function() {
+server.on('listening', function() {
   console.log(
       "Windshaft tileserver %s started on %s:%s (%s)",
-      version, global.environment.host, global.environment.port, ENV
+      version, serverOptions.bind.host, serverOptions.bind.port, ENVIRONMENT
   );
 });
 
