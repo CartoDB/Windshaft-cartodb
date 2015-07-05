@@ -59,6 +59,14 @@ happen to have startup errors you may need to force rebuilding those
 modules. At any time just wipe out the node_modules/ directory and run
 ```npm install``` again.
 
+Upgrading
+---------
+
+Checkout your commit/branch. If you need to reinstall dependencies (you can check [NEWS](NEWS.md)) do the following:
+
+```
+rm -rf node_modules; npm install
+```
 
 Run
 ---
