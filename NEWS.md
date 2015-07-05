@@ -5,6 +5,7 @@
 Released 2015-mm-dd
 
 Announcements:
+ - Upgrades windshaft to [0.47.0](https://github.com/CartoDB/Windshaft/releases/tag/0.47.0)
  - Upgrades redis-mpool to [0.4.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.4.0)
 
 New features:
