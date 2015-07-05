@@ -65,7 +65,7 @@ if ( global.environment.log_filename ) {
 global.log4js.configure(log4js_config, { cwd: __dirname });
 global.logger = global.log4js.getLogger();
 
-var redisOpts = _.extend(global.environment.redis, { name: 'windshaft' }),
+var redisOpts = _.extend(global.environment.redis, { name: 'windshaft', unwatchOnRelease: false, noReadyCheck: true }),
     redisPool = new RedisPool(redisOpts);
 
 // Include cartodb_windshaft only _after_ the "global" variable is set

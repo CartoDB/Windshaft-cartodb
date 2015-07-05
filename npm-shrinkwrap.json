@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.6.2",
+  "version": "2.7.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -180,9 +180,9 @@
               "resolved": "https://registry.npmjs.org/qs/-/qs-3.1.0.tgz"
             },
             "tunnel-agent": {
-              "version": "0.4.0",
+              "version": "0.4.1",
               "from": "tunnel-agent@~0.4.0",
-              "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.0.tgz"
+              "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.1.tgz"
             },
             "tough-cookie": {
               "version": "2.0.0",
@@ -276,9 +276,9 @@
               "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-1.8.0.tgz",
               "dependencies": {
                 "bluebird": {
-                  "version": "2.9.30",
+                  "version": "2.9.32",
                   "from": "bluebird@^2.9.30",
-                  "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.30.tgz"
+                  "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.32.tgz"
                 },
                 "chalk": {
                   "version": "1.1.0",
@@ -437,9 +437,8 @@
       "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
     },
     "redis-mpool": {
-      "version": "0.3.0",
-      "from": "redis-mpool@~0.3.0",
-      "resolved": "https://registry.npmjs.org/redis-mpool/-/redis-mpool-0.3.0.tgz",
+      "version": "0.4.0",
+      "from": "redis-mpool@~0.4.0",
       "dependencies": {
         "generic-pool": {
           "version": "2.1.1",
@@ -2741,6 +2740,40 @@
             }
           }
         },
+        "redis-mpool": {
+          "version": "0.3.0",
+          "from": "redis-mpool@~0.3.0",
+          "resolved": "https://registry.npmjs.org/redis-mpool/-/redis-mpool-0.3.0.tgz",
+          "dependencies": {
+            "generic-pool": {
+              "version": "2.1.1",
+              "from": "generic-pool@~2.1.1",
+              "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-2.1.1.tgz"
+            },
+            "redis": {
+              "version": "0.12.1",
+              "from": "redis@~0.12.1",
+              "resolved": "https://registry.npmjs.org/redis/-/redis-0.12.1.tgz"
+            },
+            "hiredis": {
+              "version": "0.1.17",
+              "from": "hiredis@~0.1.17",
+              "resolved": "https://registry.npmjs.org/hiredis/-/hiredis-0.1.17.tgz",
+              "dependencies": {
+                "bindings": {
+                  "version": "1.2.1",
+                  "from": "bindings@*",
+                  "resolved": "https://registry.npmjs.org/bindings/-/bindings-1.2.1.tgz"
+                },
+                "nan": {
+                  "version": "1.1.2",
+                  "from": "nan@~1.1.0",
+                  "resolved": "https://registry.npmjs.org/nan/-/nan-1.1.2.tgz"
+                }
+              }
+            }
+          }
+        },
         "carto": {
           "version": "0.15.1-cdb1",
           "from": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb1",
@@ -2866,9 +2899,9 @@
               "resolved": "https://registry.npmjs.org/qs/-/qs-2.3.3.tgz"
             },
             "tunnel-agent": {
-              "version": "0.4.0",
+              "version": "0.4.1",
               "from": "tunnel-agent@~0.4.0",
-              "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.0.tgz"
+              "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.1.tgz"
             },
             "tough-cookie": {
               "version": "2.0.0",

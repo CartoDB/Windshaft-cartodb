@@ -1,8 +1,17 @@
 # Changelog
 
-## 2.6.2
+## 2.7.0
 
 Released 2015-mm-dd
+
+Announcements:
+ - Upgrades redis-mpool to [0.4.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.4.0)
+
+New features:
+ - Exposes redis `noReadyCheck` config
+
+Bug fixes:
+ - Fixes `unwatchOnRelease` redis config
 
 
 ## 2.6.1
