@@ -10,6 +10,9 @@ Announcements:
 New features:
  - Exposes redis `noReadyCheck` config
 
+Bug fixes:
+ - Fixes `unwatchOnRelease` redis config
+
 
 ## 2.6.1
 
