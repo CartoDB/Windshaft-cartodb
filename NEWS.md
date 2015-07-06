@@ -2,7 +2,7 @@
 
 ## 2.7.1
 
-Released 2015-mm-dd
+Released 2015-07-06
 
 Bug fixes:
  - redis-mpool `noReadyCheck` and `unwatchOnRelease` options from config and defaulted
