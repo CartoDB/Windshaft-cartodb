@@ -170,7 +170,9 @@ var config = {
         },
         emitter: {
             statusInterval: 5000 // time, in ms, between each status report is emitted from the pool, status is sent to statsd
-        }
+        },
+        unwatchOnRelease: false, // Send unwatch on release, see http://github.com/CartoDB/Windshaft-cartodb/issues/161
+        noReadyCheck: true // Check `no_ready_check` at https://github.com/mranney/node_redis/tree/v0.12.1#overloading
     }
     ,varnish: {
         host: 'localhost',
