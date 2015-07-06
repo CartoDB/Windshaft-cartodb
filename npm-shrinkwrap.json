@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.5.1",
+  "version": "2.7.1",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -471,9 +471,8 @@
       "resolved": "https://registry.npmjs.org/queue-async/-/queue-async-1.0.7.tgz"
     },
     "redis-mpool": {
-      "version": "0.3.0",
-      "from": "redis-mpool@~0.3.0",
-      "resolved": "https://registry.npmjs.org/redis-mpool/-/redis-mpool-0.3.0.tgz",
+      "version": "0.4.0",
+      "from": "redis-mpool@~0.4.0",
       "dependencies": {
         "generic-pool": {
           "version": "2.1.1",

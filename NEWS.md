@@ -1,8 +1,41 @@
 # Changelog
 
-## 2.5.1
+## 2.7.1
 
 Released 2015-mm-dd
+
+
+
+## 2.7.0
+
+Released 2015-07-03
+
+Announcements:
+ - Upgrades windshaft to [0.47.0](https://github.com/CartoDB/Windshaft/releases/tag/0.47.0)
+ - Upgrades redis-mpool to [0.4.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.4.0)
+
+New features:
+ - Exposes redis `noReadyCheck` config
+
+Bug fixes:
+ - Fixes `unwatchOnRelease` redis config
+
+
+## 2.6.1
+
+Released 2015-07-02
+
+Announcements:
+ - Upgrades windshaft to [0.46.1](https://github.com/CartoDB/Windshaft/releases/tag/0.46.1)
+
+
+## 2.6.0
+
+Released 2015-07-02
+
+Announcements:
+ - Upgrades windshaft to [0.46.0](https://github.com/CartoDB/Windshaft/releases/tag/0.46.0)
+ - New config to set metatile by format
 
 
 ## 2.5.0
