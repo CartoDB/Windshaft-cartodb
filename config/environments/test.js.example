@@ -2,6 +2,9 @@ var config = {
      environment: 'test'
     ,port: 8888
     ,host: '127.0.0.1'
+    // Size of the threadpool which can be used to run user code and get notified in the loop thread
+    // Its default size is 4, but it can be changed at startup time (the absolute maximum is 128).
+    // See http://docs.libuv.org/en/latest/threadpool.html
     ,uv_threadpool_size: undefined
     // Regular expression pattern to extract username
     // from hostname. Must have a single grabbing block.
@@ -80,8 +83,10 @@ var config = {
       cache_ttl: 60000,
       statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
       mapnik: {
-          // The size of the pool of internal mapnik renderers
-          // Check the configuration of uv_threadpool_size to use suitable value
+          // The size of the pool of internal mapnik backend
+          // This pool size is per mapnik renderer created in Windshaft's RendererFactory
+          // See https://github.com/CartoDB/Windshaft/blob/master/lib/windshaft/renderers/renderer_factory.js
+          // Important: check the configuration of uv_threadpool_size to use suitable value
           poolSize: 8,
 
           // Metatile is the number of tiles-per-side that are going
