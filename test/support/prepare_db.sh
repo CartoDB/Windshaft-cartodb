@@ -116,3 +116,16 @@ fi
 
 echo "Finished preparing data. Ready to run tests"
 
+
+############################ WINDSHAFT TESTS ############################
+
+echo "...Configuring Windshaft test database"
+
+cat sql/ported/populated_places_simple_reduced.sql |
+    sed "s/:PUBLICUSER/${PUBLICUSER}/" |
+    sed "s/:PUBLICPASS/${PUBLICPASS}/" |
+    sed "s/:TESTUSER/${TESTUSER}/" |
+    sed "s/:TESTPASS/${TESTPASS}/" |
+    psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+
+echo "...Test database configuration complete"

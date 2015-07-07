@@ -27,6 +27,11 @@ test: config/environments/test.js
 		test/acceptance/*.js \
 		test/acceptance/cache/*.js
 
+test-ported: config/environments/test.js
+	@echo "***tests ported***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
+		test/acceptance/ported/*.js
+
 test-unit: config/environments/test.js
 	@echo "***tests***"
 	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
@@ -48,7 +53,7 @@ jshint:
 	@echo "***jshint***"
 	@./node_modules/.bin/jshint lib/ test/ app.js
 
-test-all: jshint test
+test-all: jshint test test-ported
 
 coverage:
 	@RUNTESTFLAGS=--with-coverage make test
