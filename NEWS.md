@@ -1,14 +1,21 @@
 # Changelog
 
-## 2.7.1
+## 2.7.2
 
 Released 2015-mm-dd
 
 
+## 2.7.1
+
+Released 2015-07-06
+
+Bug fixes:
+ - redis-mpool `noReadyCheck` and `unwatchOnRelease` options from config and defaulted
+
 
 ## 2.7.0
 
-Released 2015-07-03
+Released 2015-07-06
 
 Announcements:
  - Upgrades windshaft to [0.47.0](https://github.com/CartoDB/Windshaft/releases/tag/0.47.0)
