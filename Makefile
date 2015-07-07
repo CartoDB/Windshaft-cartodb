@@ -30,6 +30,7 @@ test: config/environments/test.js
 test-ported: config/environments/test.js
 	@echo "***tests ported***"
 	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
+		test/unit/cartodb/ported/*.js \
 		test/acceptance/ported/*.js
 
 test-unit: config/environments/test.js

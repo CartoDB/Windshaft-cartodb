@@ -12,6 +12,7 @@ var lzmaWorker = new LZMA();
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
+global.environment.name = 'test';
 process.env.NODE_ENV = 'test';
 
 
