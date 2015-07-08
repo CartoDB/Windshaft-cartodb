@@ -57,6 +57,7 @@ module.exports = _.extend({}, serverOptions, {
 
         _.extend(req.params, req.query);
         req.params.user = 'localhost';
+        req.context = {user: 'localhost'};
         req.params.dbuser = 'test_windshaft_publicuser';
         if (req.params.dbname !== 'windshaft_test2') {
             req.params.dbuser = 'test_windshaft_cartodb_user_1';
