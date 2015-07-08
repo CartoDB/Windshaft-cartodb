@@ -3,7 +3,6 @@ require(__dirname + '/../support/test_helper');
 var assert      = require('../support/assert');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 
 var metadataBackend = {};
 var tilelive = {};
@@ -32,6 +31,8 @@ describe('health checks', function () {
 
     it('returns 200 and ok=true with enabled configuration', function (done) {
         resetHealthConfig();
+
+        var server = new CartodbWindshaft(serverOptions);
 
         assert.response(server,
             healthCheckRequest,
@@ -72,6 +73,8 @@ describe('health checks', function () {
       resetHealthConfig();
 
       global.environment.disabled_file = '/tmp/ftreftrgtrccre';
+
+      var server = new CartodbWindshaft(serverOptions);
 
       assert.response(server,
         healthCheckRequest,
