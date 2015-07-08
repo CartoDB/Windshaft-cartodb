@@ -828,7 +828,7 @@ describe('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
-              token2 = LayergroupToken.parse(parsedBody.layergroupid).token
+              token2 = LayergroupToken.parse(parsedBody.layergroupid).token;
               assert.ok(token2);
               next(null);
           });
