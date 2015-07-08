@@ -9,7 +9,7 @@ var server = new CartodbWindshaft(serverOptions);
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
 
-describe('named static maps', function() {
+describe.skip('named static maps', function() {
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 
