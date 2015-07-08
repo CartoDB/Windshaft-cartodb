@@ -12,7 +12,7 @@ var ServerOptions = require('./support/ported_server_options');
 var http = require('http');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
 
-describe.skip('multilayer', function() {
+describe('multilayer', function() {
 
     var server = cartodbServer(ServerOptions);
     server.req2params = ServerOptions.req2params;
@@ -453,7 +453,7 @@ describe.skip('multilayer', function() {
         ]
       };
 
-      var expected_token = "cb0a407726cc8cb47711e90a30dd9422";
+      var expected_token;
       step(
         function do_get_token()
         {
@@ -470,22 +470,30 @@ describe.skip('multilayer', function() {
         function do_check_token(err, res) {
           assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
-          assert.equal(res.body, 'jsonp_test(' + JSON.stringify({
-              layergroupid: expected_token,
-              metadata: {
+
+          var didRunJsonCallback = false;
+          // jshint ignore:start
+          function jsonp_test(body) {
+              assert.ok(body.layergroupid);
+              expected_token = LayergroupToken.parse(body.layergroupid).token;
+              assert.deepEqual(body.metadata, {
                   layers: [
                       { type: "mapnik", "meta":{} },
                       { type: "mapnik", "meta":{} }
                   ]
-              },
-              layercount: 2
-          }) + ');');
+              });
+              didRunJsonCallback = true;
+          }
+          eval(res.body);
+          // jshint ignore:end
+          assert.ok(didRunJsonCallback);
 
           // TODO: check caching headers !
           return null;
         },
         function do_get_tile(err)
         {
+          console.log(err);
           assert.ifError(err);
           var next = this;
           assert.response(server, {
@@ -495,7 +503,7 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png',
+              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png',
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -625,7 +633,7 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.png',
+              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png',
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -642,7 +650,8 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
+              assert.utfgridEqualsFile(
+                res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                 function(err/*, similarity*/) {
                   next(err);
               });
@@ -659,7 +668,8 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
+              assert.utfgridEqualsFile(
+                res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err/*, similarity*/) {
                   next(err);
               });
@@ -779,8 +789,18 @@ describe.skip('multilayer', function() {
         ]
       };
 
+      var initialMapConfigs = 0;
       var token1, token2;
       step(
+        function count_mapconfig() {
+            var next = this;
+            redis_client.keys('map_cfg|*', function(err, matches) {
+                if (matches) {
+                    initialMapConfigs = matches.length;
+                }
+                next(null);
+            });
+        },
         function do_post1()
         {
           var next = this;
@@ -792,7 +812,7 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
-              token1 = parsedBody.layergroupid;
+              token1 = LayergroupToken.parse(parsedBody.layergroupid).token;
               assert.ok(token1, res.body);
               next(null);
           });
@@ -808,7 +828,7 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
-              token2 = parsedBody.layergroupid;
+              token2 = LayergroupToken.parse(parsedBody.layergroupid).token
               assert.ok(token2);
               next(null);
           });
@@ -824,7 +844,7 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer2.png',
+              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer2.png',
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -840,7 +860,8 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
+              assert.utfgridEqualsFile(
+                res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                 function(err/*, similarity*/) {
                   next(err);
               });
@@ -857,7 +878,7 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer3.png',
+              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer3.png',
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -873,7 +894,8 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
+              assert.utfgridEqualsFile(
+                res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                 function(err/*, similarity*/) {
                   next(err);
               });
@@ -888,7 +910,7 @@ describe.skip('multilayer', function() {
               if ( err ) {
                   errors.push(err.message);
               }
-              assert.equal(matches.length, 2);
+              assert.equal(matches.length, initialMapConfigs + 2);
               assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
                         "Missing expected token " + token1 + " from redis");
               assert.ok(_.indexOf(matches, 'map_cfg|'+token2) > -1,
@@ -917,17 +939,20 @@ describe.skip('multilayer', function() {
            { options: {
                sql: "select st_setsrid('LINESTRING(-60 -60,-60 60)'::geometry, 4326) as the_geom",
                cartocss_version: '2.0.2',
-               cartocss: '#layer { line-width:16; line-color:#ff0000; }'
+               cartocss: '#layer { line-width:16; line-color:#ff0000; }',
+               geom_column: 'the_geom'
              } },
            { options: {
                sql: "select st_setsrid('LINESTRING(-100 0,100 0)'::geometry, 4326) as the_geom",
                cartocss_version: '2.0.2',
-               cartocss: '#layer { line-width:16; line-color:#00ff00; }'
+               cartocss: '#layer { line-width:16; line-color:#00ff00; }',
+               geom_column: 'the_geom'
              } },
            { options: {
                sql: "select st_setsrid('LINESTRING(60 -60,60 60)'::geometry, 4326) as the_geom",
                cartocss_version: '2.0.2',
-               cartocss: '#layer { line-width:16; line-color:#0000ff; }'
+               cartocss: '#layer { line-width:16; line-color:#0000ff; }',
+               geom_column: 'the_geom'
              } }
         ]
       };
@@ -966,7 +991,7 @@ describe.skip('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/fixtures/test_table_0_0_0_multilayer4.png',
+              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer4.png',
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -1005,12 +1030,14 @@ describe.skip('multilayer', function() {
            { options: {
                sql: "select 'single''quote' as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
                cartocss: '#s [n="single\'quote" ] { marker-fill:red; }',
-               cartocss_version: '2.1.0'
+               cartocss_version: '2.1.0',
+               geom_column: 'the_geom'
              } },
            { options: {
                sql: "select 'double\"quote' as n, 'SRID=4326;POINT(2 0)'::geometry as the_geom",
                cartocss: '#s [n="double\\"quote" ] { marker-fill:red; }',
-               cartocss_version: '2.1.0'
+               cartocss_version: '2.1.0',
+               geom_column: 'the_geom'
              } }
         ]
       };
@@ -1039,7 +1066,8 @@ describe.skip('multilayer', function() {
            { options: {
                sql: "select 1.0 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
                cartocss: '#s [n=1e-4 ] { marker-fill:red; }',
-               cartocss_version: '2.1.0'
+               cartocss_version: '2.1.0',
+               geom_column: 'the_geom'
              } }
         ]
       };
@@ -1067,7 +1095,8 @@ describe.skip('multilayer', function() {
            { options: {
                sql: "select 1.0 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
                cartocss: '#s { text-name: [n]; text-face-name: "<%= font %>"; }',
-               cartocss_version: '2.1.0'
+               cartocss_version: '2.1.0',
+               geom_column: 'the_geom'
              } }
         ]
       };
@@ -1237,13 +1266,15 @@ describe.skip('multilayer', function() {
                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
                cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1',
-               interactivity: [ 'cartodb_id' ]
+               interactivity: [ 'cartodb_id' ],
+               geom_column: 'the_geom'
              } },
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
                cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.0.2',
-               interactivity: [ 'cartodb_id' ]
+               interactivity: [ 'cartodb_id' ],
+               geom_column: 'the_geom'
              } }
         ]
       };
@@ -1295,20 +1326,30 @@ describe.skip('multilayer', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/163
-    it("has different token for different database",
-    function(done) {
+    it("has different token for different database", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
            { options: {
                sql: 'select 1 as i, 2::int2 as n, now() as t, ST_SetSRID(ST_MakePoint(0,0),3857) as the_geom',
                cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.1'
+               cartocss_version: '2.0.1',
+               geom_column: 'the_geom'
              } }
         ]
       };
+      var initialMapConfigs = 0;
       var token1, token2;
       step(
+        function count_mapconfig() {
+            var next = this;
+            redis_client.keys('map_cfg|*', function(err, matches) {
+                if (matches) {
+                    initialMapConfigs = matches.length;
+                }
+                next(null);
+            });
+        },
         function do_post_1()
         {
           var next = this;
@@ -1323,7 +1364,7 @@ describe.skip('multilayer', function() {
           assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsedBody = JSON.parse(res.body);
-          token1 = parsedBody.layergroupid;
+          token1 = LayergroupToken.parse(parsedBody.layergroupid).token;
           return null;
         },
         function do_post_2()
@@ -1340,7 +1381,7 @@ describe.skip('multilayer', function() {
           assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsedBody = JSON.parse(res.body);
-          token2 = parsedBody.layergroupid;
+          token2 = LayergroupToken.parse(parsedBody.layergroupid).token;
           assert.ok(token1 !== token2);
           return null;
         },
@@ -1353,7 +1394,7 @@ describe.skip('multilayer', function() {
               if ( err ) {
                   errors.push(err.message);
               }
-              assert.equal(matches.length, 2);
+              assert.equal(matches.length, initialMapConfigs + 2);
               assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
                         "Missing expected token " + token1 + " from redis");
               assert.ok(_.indexOf(matches, 'map_cfg|'+token2) > -1,
@@ -1388,8 +1429,18 @@ describe.skip('multilayer', function() {
              } }
         ]
       };
+      var initialMapConfigs = 0;
       var token1;
       step(
+        function count_mapconfig() {
+            var next = this;
+            redis_client.keys('map_cfg|*', function(err, matches) {
+                if (matches) {
+                    initialMapConfigs = matches.length;
+                }
+                next(null);
+            });
+        },
         function do_post_1()
         {
           var next = this;
@@ -1404,7 +1455,7 @@ describe.skip('multilayer', function() {
           assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsedBody = JSON.parse(res.body);
-          token1 = parsedBody.layergroupid;
+          token1 = LayergroupToken.parse(parsedBody.layergroupid).token;
           return null;
         },
         function do_get_tile(err)
@@ -1435,7 +1486,7 @@ describe.skip('multilayer', function() {
                   errors.push(err.message);
               }
               try {
-                assert.equal(matches.length, 1);
+                assert.equal(matches.length, initialMapConfigs + 1);
                 assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
                           "Missing expected token " + token1 + " from redis");
               } catch (e) {
