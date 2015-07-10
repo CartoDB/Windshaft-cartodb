@@ -30,7 +30,7 @@ describe('windshaft', function() {
             function(){
                 var ws = cartodbServer({unbuffered_logging:true});
                 ws.listen();
-            }, /Cannot read property 'mapnik_version' of undefined/
+            }, /Cannot read property 'mapnik' of undefined/
         );
     });
 
