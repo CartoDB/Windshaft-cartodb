@@ -5,7 +5,7 @@ var cartodbServer = require('../../../../lib/cartodb/server');
 var serverOptions = require('../../../../lib/cartodb/server_options');
 var StatsClient = require('windshaft').stats.Client;
 
-var MapController = require('../../../../lib/cartodb/controllers/map');
+var LayergroupController = require('../../../../lib/cartodb/controllers/layergroup');
 
 describe('tile stats', function() {
 
@@ -31,14 +31,14 @@ describe('tile stats', function() {
         var ws = cartodbServer(serverOptions);
         ws.sendError = function(){};
 
-        var mapController = new MapController(ws, null);
+        var layergroupController = new LayergroupController(ws, null);
 
         var reqMock = {
             params: {
                 format: invalidFormat
             }
         };
-        mapController.finalizeGetTileOrGrid('Unsupported format png2', reqMock, {}, null, null);
+        layergroupController.finalizeGetTileOrGrid('Unsupported format png2', reqMock, {}, null, null);
 
         assert.ok(formatMatched, 'Format was never matched in increment method');
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
@@ -64,9 +64,9 @@ describe('tile stats', function() {
         var ws = cartodbServer(serverOptions);
         ws.sendError = function(){};
 
-        var mapController = new MapController(ws, null);
+        var layergroupController = new LayergroupController(ws, null);
 
-        mapController.finalizeGetTileOrGrid('Another error happened', reqMock, {}, null, null);
+        layergroupController.finalizeGetTileOrGrid('Another error happened', reqMock, {}, null, null);
 
         assert.ok(formatMatched, 'Format was never matched in increment method');
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
