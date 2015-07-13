@@ -17,6 +17,8 @@ var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
+var TablesCacheEntry = require('../../lib/cartodb/cache/model/database_tables_entry');
+
 ['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
 
 var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
@@ -67,11 +69,8 @@ suite(suiteName, function() {
               assert.equal(res.statusCode, 200, res.body);
               var parsedBody = JSON.parse(res.body);
               assert.equal(parsedBody.last_updated, expected_last_updated);
-              if ( expected_token ) {
-                assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
-                assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
-              }
-              else expected_token = parsedBody.layergroupid.split(':')[0];
+              assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+              expected_token = parsedBody.layergroupid.split(':')[0];
               next(null, res);
           });
         },
@@ -226,17 +225,23 @@ suite(suiteName, function() {
 
     test("get creation requests has cache", function(done) {
 
-      var layergroup =  {
-        version: '1.0.0',
-        layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator' +
-                   ' from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
-               cartocss_version: '2.0.1'
-             } }
-        ]
-      };
+        var layergroup =  {
+            version: '1.0.0',
+            layers: [
+                { options: {
+                    sql: 'select cartodb_id, the_geom_webmercator from test_table',
+                    cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                    cartocss_version: '2.0.1',
+                    interactivity: 'cartodb_id'
+                } },
+                { options: {
+                    sql: 'select cartodb_id, the_geom_webmercator from test_table_2',
+                    cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
+                    cartocss_version: '2.0.2',
+                    interactivity: 'cartodb_id'
+                } }
+            ]
+        };
 
       var expected_token; 
       step(
@@ -255,6 +260,10 @@ suite(suiteName, function() {
           var parsedBody = JSON.parse(res.body);
           expected_token = parsedBody.layergroupid.split(':')[0];
           helper.checkCache(res);
+          helper.checkSurrogateKey(res, new TablesCacheEntry('test_windshaft_cartodb_user_1_db', [
+              'public.test_table',
+              'public.test_table_2'
+          ]).key().join(' '));
           return null;
         },
         function finish(err) {
