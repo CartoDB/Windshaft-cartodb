@@ -310,9 +310,9 @@
               "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-1.8.0.tgz",
               "dependencies": {
                 "bluebird": {
-                  "version": "2.9.32",
+                  "version": "2.9.33",
                   "from": "bluebird@^2.9.30",
-                  "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.32.tgz"
+                  "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.33.tgz"
                 },
                 "chalk": {
                   "version": "1.1.0",
@@ -2702,39 +2702,6 @@
               "version": "1.5.3",
               "from": "nan@~1.5.1",
               "resolved": "https://registry.npmjs.org/nan/-/nan-1.5.3.tgz"
-            }
-          }
-        },
-        "redis-mpool": {
-          "version": "0.4.0",
-          "from": "redis-mpool@~0.4.0",
-          "dependencies": {
-            "generic-pool": {
-              "version": "2.1.1",
-              "from": "generic-pool@~2.1.1",
-              "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-2.1.1.tgz"
-            },
-            "redis": {
-              "version": "0.12.1",
-              "from": "redis@~0.12.1",
-              "resolved": "https://registry.npmjs.org/redis/-/redis-0.12.1.tgz"
-            },
-            "hiredis": {
-              "version": "0.1.17",
-              "from": "hiredis@~0.1.17",
-              "resolved": "https://registry.npmjs.org/hiredis/-/hiredis-0.1.17.tgz",
-              "dependencies": {
-                "bindings": {
-                  "version": "1.2.1",
-                  "from": "bindings@*",
-                  "resolved": "https://registry.npmjs.org/bindings/-/bindings-1.2.1.tgz"
-                },
-                "nan": {
-                  "version": "1.1.2",
-                  "from": "nan@~1.1.0",
-                  "resolved": "https://registry.npmjs.org/nan/-/nan-1.1.2.tgz"
-                }
-              }
             }
           }
         },
