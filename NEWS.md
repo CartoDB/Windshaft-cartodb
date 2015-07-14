@@ -2,7 +2,7 @@
 
 ## 2.7.2
 
-Released 2015-mm-dd
+Released 2015-07-14
 
 Enhancements:
  - Replaces `CDB_QueryTables` with `CDB_QueryTablesText` to avoid issues with long schema+table names
