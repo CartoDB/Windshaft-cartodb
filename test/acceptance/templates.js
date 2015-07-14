@@ -21,7 +21,7 @@ var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
 describe('template_api', function() {
-    server.channelCache = {};
+    server.layergroupAffectedTablesCache.cache = {};
 
     var redis_client = redis.createClient(global.environment.redis.port);
 
@@ -1155,7 +1155,7 @@ describe('template_api', function() {
           assert.ok(cc);
           assert.ok(cc.match, /ciao/, cc);
           // hack simulating restart...
-          server.channelCache = {}; // need to clean channel cache
+          server.layergroupAffectedTablesCache.cache = {}; // need to clean channel cache
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
               method: 'GET',
