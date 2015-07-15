@@ -76,7 +76,7 @@ suite(suiteName, function() {
         },
         function do_get_tile(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png',
@@ -121,7 +121,7 @@ suite(suiteName, function() {
         // See https://github.com/CartoDB/Windshaft-cartodb/issues/170
         function do_get_tile_nosignature(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + '/localhost@' + expected_token + ':cb0/0/0/0.png',
@@ -138,7 +138,7 @@ suite(suiteName, function() {
         },
         function do_get_grid_layer0(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + '/0/0/0/0.grid.json',
@@ -155,7 +155,7 @@ suite(suiteName, function() {
         },
         function do_get_grid_layer1(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + '/1/0/0/0.grid.json',
@@ -177,12 +177,20 @@ suite(suiteName, function() {
             console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
+              if ( err ) {
+                  errors.push(err.message);
+              }
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors));
+                }
+                else {
+                    done(null);
+                }
               });
           });
         }
@@ -255,7 +263,7 @@ suite(suiteName, function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function do_check_create(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsedBody = JSON.parse(res.body);
           expected_token = parsedBody.layergroupid.split(':')[0];
@@ -273,12 +281,20 @@ suite(suiteName, function() {
             console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
+              if ( err ) {
+                  errors.push(err.message);
+              }
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors));
+                }
+                else {
+                    done(null);
+                }
               });
           });
         }
@@ -362,13 +378,15 @@ suite(suiteName, function() {
               if ( expected_token ) {
                 assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
               }
-              else expected_token = parsedBody.layergroupid.split(':')[0];
+              else {
+                  expected_token = parsedBody.layergroupid.split(':')[0];
+              }
               next(null, res);
           });
         },
         function do_get_tile1(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb10/1/0/0.png',
@@ -407,7 +425,7 @@ suite(suiteName, function() {
         },
         function do_get_tile4(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb11/4/0/0.png',
@@ -446,7 +464,7 @@ suite(suiteName, function() {
         },
         function do_get_grid1(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + '/0/1/0/0.grid.json',
@@ -463,7 +481,7 @@ suite(suiteName, function() {
         },
         function do_get_grid4(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + '/0/4/0/0.grid.json',
@@ -485,12 +503,20 @@ suite(suiteName, function() {
             console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
+              if ( err ) {
+                  errors.push(err.message);
+              }
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors));
+                }
+                else {
+                    done(null);
+                }
               });
           });
         }
@@ -520,13 +546,17 @@ suite(suiteName, function() {
         {
           var next = this;
           redis_stats_client.select(redis_stats_db, function(err) {
-            if ( err ) next(err);
-            else redis_stats_client.del(statskey+':global', next);
+            if ( err ) {
+                next(err);
+            }
+            else {
+                redis_stats_client.del(statskey+':global', next);
+            }
           });
         },
         function do_post_1(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url,
@@ -540,12 +570,12 @@ suite(suiteName, function() {
           });
         },
         function check_global_stats_1(err, val) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(val, 1, "Expected score of " + now + " in " + statskey + ":global to be 1, got " + val);
           redis_stats_client.zscore(statskey+':stat_tag:random_tag', now, this);
         },
         function check_tag_stats_1_do_post_2(err, val) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.equal(val, 1, "Expected score of " + now + " in " + statskey + ":stat_tag:" + layergroup.stat_tag +
               " to be 1, got " + val);
           var next = this;
@@ -562,19 +592,21 @@ suite(suiteName, function() {
         },
         function check_global_stats_2(err, val)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(val, 2, "Expected score of " + now + " in " +  statskey + ":global to be 2, got " + val);
           redis_stats_client.zscore(statskey+':stat_tag:' + layergroup.stat_tag, now, this);
         },
         function check_tag_stats_2(err, val)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(val, 2, "Expected score of " + now + " in " + statskey + ":stat_tag:" + layergroup.stat_tag +
               " to be 2, got " + val);
           return 1;
         },
         function cleanup_map_style(err) {
-          if ( err ) errors.push('' + err);
+          if ( err ) {
+              errors.push('' + err);
+          }
           var next = this;
           // trip epoch
           expected_token = expected_token.split(':')[0];
@@ -583,13 +615,21 @@ suite(suiteName, function() {
           });
         },
         function cleanup_stats(err) {
-          if ( err ) errors.push('' + err);
+          if ( err ) {
+              errors.push('' + err);
+          }
           redis_client.del([statskey+':global', statskey+':stat_tag:'+layergroup.stat_tag], this);
         },
         function finish(err) {
-          if ( err ) errors.push('' + err);
-          if ( errors.length ) done(new Error(errors.join(',')));
-          else done(null);
+          if ( err ) {
+              errors.push('' + err);
+          }
+          if ( errors.length ) {
+              done(new Error(errors.join(',')));
+          }
+          else {
+              done(null);
+          }
         }
       );
     });
@@ -687,13 +727,15 @@ suite(suiteName, function() {
               if ( expected_token ) {
                 assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
               }
-              else expected_token = parsedBody.layergroupid.split(':')[0];
+              else {
+                  expected_token = parsedBody.layergroupid.split(':')[0];
+              }
               next(null, res);
           });
         },
         function do_get_tile(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png?map_key=1234',
@@ -714,7 +756,7 @@ suite(suiteName, function() {
         },
         function do_get_grid_layer0(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + '/0/0/0/0.grid.json?map_key=1234',
@@ -727,7 +769,7 @@ suite(suiteName, function() {
         },
         function do_get_grid_layer1(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + '/1/0/0/0.grid.json?map_key=1234',
@@ -741,7 +783,7 @@ suite(suiteName, function() {
         },
         function do_get_tile_unauth(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png',
@@ -757,7 +799,7 @@ suite(suiteName, function() {
         },
         function do_get_grid_layer0_unauth(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + '/0/0/0/0.grid.json',
@@ -772,7 +814,7 @@ suite(suiteName, function() {
         },
         function do_get_grid_layer1_unauth(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + '/1/0/0/0.grid.json',
@@ -792,12 +834,20 @@ suite(suiteName, function() {
             console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
+              if ( err ) {
+                  errors.push(err.message);
+              }
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors));
+                }
+                else {
+                    done(null);
+                }
               });
           });
         }
@@ -832,19 +882,21 @@ suite(suiteName, function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_post(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsedBody = JSON.parse(res.body);
           assert.equal(parsedBody.last_updated, expected_last_updated);
           if ( expected_token ) {
             assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
           }
-          else expected_token = parsedBody.layergroupid.split(':')[0];
+          else {
+              expected_token = parsedBody.layergroupid.split(':')[0];
+          }
           return null;
         },
         function do_get0(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png?map_key=1234',
@@ -854,7 +906,7 @@ suite(suiteName, function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function do_check0(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           assert.equal(res.headers['content-type'], "image/png");
 
@@ -866,14 +918,14 @@ suite(suiteName, function() {
           return null;
         },
         function do_restart_server(err/*, res*/) {
-          if ( err ) throw err;
+            assert.ifError(err);
           // hack simulating restart...
           server = new CartodbWindshaft(serverOptions);
           return null;
         },
         function do_get1(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png?map_key=1234',
@@ -883,7 +935,7 @@ suite(suiteName, function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function do_check1(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           assert.equal(res.headers['content-type'], "image/png");
 
@@ -901,12 +953,20 @@ suite(suiteName, function() {
             console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
+              if ( err ) {
+                  errors.push(err.message);
+              }
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors.join(',')));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors.join(',')));
+                }
+                else {
+                    done(null);
+                }
               });
           });
         }
@@ -1033,7 +1093,7 @@ suite(suiteName, function() {
         },
         function do_get_tile(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png',
@@ -1057,12 +1117,20 @@ suite(suiteName, function() {
             console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
+              if ( err ) {
+                  errors.push(err.message);
+              }
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) done(new Error(errors));
-                else done(null);
+                if ( err ) {
+                    errors.push(err.message);
+                }
+                if ( errors.length ) {
+                    done(new Error(errors));
+                }
+                else {
+                    done(null);
+                }
               });
           });
         }
@@ -1096,7 +1164,7 @@ suite(suiteName, function() {
           }, {}, function(res) { next(null, res); });
         },
         function check_result(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsedBody = JSON.parse(res.body);
@@ -1113,7 +1181,7 @@ suite(suiteName, function() {
         },
         function do_get_tile(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var next = this;
           assert.response(server, {
               url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png?api_key=1234',
@@ -1123,19 +1191,27 @@ suite(suiteName, function() {
           }, {}, function(res) { next(null, res); });
         },
         function check_get_tile(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           return null;
         },
         function cleanup(err) {
-          if ( err ) errors.push(err.message);
-          if ( ! expected_token ) return null;
+          if ( err ) {
+              errors.push(err.message);
+          }
+          if ( ! expected_token ) {
+              return null;
+          }
           var next = this;
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
+              if ( err ) {
+                  errors.push(err.message);
+              }
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
+                if ( err ) {
+                    errors.push(err.message);
+                }
                 next();
               });
           });
@@ -1145,8 +1221,12 @@ suite(suiteName, function() {
             errors.push(err.message);
             console.log("Error: " + err);
           }
-          if ( errors.length ) done(new Error(errors));
-          else done(null);
+          if ( errors.length ) {
+              done(new Error(errors));
+          }
+          else {
+              done(null);
+          }
         }
       );
     });
@@ -1155,11 +1235,14 @@ suite(suiteName, function() {
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/111
     test("sql string can be very long", function(done){
       var long_val = 'pretty';
-      for (var i=0; i<1024; ++i) long_val += ' long';
+      for (var i=0; i<1024; ++i) {
+          long_val += ' long';
+      }
       long_val += ' string';
       var sql = "SELECT ";
-      for (i=0; i<16; ++i)
+      for (i=0; i<16; ++i) {
         sql += "'" + long_val + "'::text as pretty_long_field_name_" + i + ", ";
+      }
       sql += "cartodb_id, the_geom_webmercator FROM gadm4 g";
       var layergroup =  {
         version: '1.0.0',
@@ -1187,7 +1270,7 @@ suite(suiteName, function() {
           }, {}, function(res) { next(null, res); });
         },
         function check_result(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsedBody = JSON.parse(res.body);
           var token_components = parsedBody.layergroupid.split(':');
@@ -1195,22 +1278,36 @@ suite(suiteName, function() {
           return null;
         },
         function cleanup(err) {
-          if ( err ) errors.push('' + err);
-          if ( ! expected_token ) return null;
+          if ( err ) {
+              errors.push('' + err);
+          }
+          if ( ! expected_token ) {
+              return null;
+          }
           var next = this;
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) errors.push(err.message);
+              if ( err ) {
+                  errors.push(err.message);
+              }
               assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
               redis_client.del(matches, function(err) {
-                if ( err ) errors.push(err.message);
+                if ( err ) {
+                    errors.push(err.message);
+                }
                 next();
               });
           });
         },
         function finish(err) {
-          if ( err ) errors.push('' + err);
-          if ( errors.length ) done(new Error(errors.join(',')));
-          else done(null);
+          if ( err ) {
+              errors.push('' + err);
+          }
+          if ( errors.length ) {
+              done(new Error(errors.join(',')));
+          }
+          else {
+              done(null);
+          }
         }
       );
     });
@@ -1241,7 +1338,7 @@ suite(suiteName, function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_post(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors, 'Missing "errors" in response: ' + JSON.stringify(parsed));
@@ -1283,7 +1380,7 @@ suite(suiteName, function() {
           }, {}, function(res, err) { next(err, res); });
         },
         function check_post(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors, 'Missing "errors" in response: ' + JSON.stringify(parsed));
