@@ -346,7 +346,7 @@ describe('tests from old api translated to multilayer', function() {
                 };
 
                 // reset internal cacheChannel cache
-                server.layergroupAffectedTablesCache.cache = {};
+                server.layergroupAffectedTablesCache.cache.reset();
 
                 assert.response(server,
                     {
