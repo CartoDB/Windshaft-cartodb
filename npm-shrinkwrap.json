@@ -2310,8 +2310,8 @@
         },
         "mapnik": {
           "version": "1.4.15-cdb2",
-          "from": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb2",
-          "resolved": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb2",
+          "from": "https://github.com/CartoDB/node-mapnik/tarball/bin-rhel65",
+          "resolved": "https://github.com/CartoDB/node-mapnik/tarball/bin-rhel65",
           "dependencies": {
             "nan": {
               "version": "1.2.0",
