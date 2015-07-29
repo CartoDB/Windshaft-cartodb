@@ -496,7 +496,7 @@
         },
         "grainstore": {
           "version": "1.0.0",
-          "from": "grainstore@~1.0.0",
+          "from": "https://github.com/CartoDB/grainstore/tarball/bin-rhel65",
           "dependencies": {
             "carto": {
               "version": "0.9.5-cdb2",
@@ -546,8 +546,8 @@
             },
             "millstone": {
               "version": "0.6.14",
-              "from": "millstone@0.6.14",
-              "resolved": "https://registry.npmjs.org/millstone/-/millstone-0.6.14.tgz",
+              "from": "https://github.com/CartoDB/millstone/tarball/bin-rhel65",
+              "resolved": "https://github.com/CartoDB/millstone/tarball/bin-rhel65",
               "dependencies": {
                 "generic-pool": {
                   "version": "2.0.4",
@@ -676,8 +676,8 @@
                 },
                 "srs": {
                   "version": "0.4.8",
-                  "from": "srs@~0.4.1",
-                  "resolved": "https://registry.npmjs.org/srs/-/srs-0.4.8.tgz",
+                  "from": "https://github.com/CartoDB/Windshaft/tarball/bin-rhel65",
+                  "resolved": "https://github.com/CartoDB/Windshaft/tarball/bin-rhel65",
                   "dependencies": {
                     "nan": {
                       "version": "1.8.4",
