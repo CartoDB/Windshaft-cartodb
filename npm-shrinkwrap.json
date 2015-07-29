@@ -486,8 +486,8 @@
     },
     "windshaft": {
       "version": "0.48.0",
-      "from": "windshaft@0.48.0",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.48.0.tgz",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/bin-rhel65",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/bin-rhel65",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
