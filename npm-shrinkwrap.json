@@ -676,8 +676,8 @@
                 },
                 "srs": {
                   "version": "0.4.8",
-                  "from": "https://github.com/CartoDB/Windshaft/tarball/bin-rhel65",
-                  "resolved": "https://github.com/CartoDB/Windshaft/tarball/bin-rhel65",
+                  "from": "https://github.com/CartoDB/node-srs/tarball/bin-rhel65",
+                  "resolved": "https://github.com/CartoDB/node-srs/tarball/bin-rhel65",
                   "dependencies": {
                     "nan": {
                       "version": "1.8.4",
