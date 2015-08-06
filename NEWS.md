@@ -1,8 +1,11 @@
 # Changelog
 
-## 2.8.1
+## 2.9.0
 
 Released 2015-mm-dd
+
+New features:
+ - Send memory usage stats
 
 
 ## 2.8.0
