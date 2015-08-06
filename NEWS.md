@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.9.0
+
+Released 2015-08-06
+
+New features:
+ - Send memory usage stats
+
+
 ## 2.8.0
 
 Released 2015-07-15

@@ -86,6 +86,13 @@ if (global.statsClient) {
         global.statsClient.gauge(keyPrefix + 'unused', status.unused);
         global.statsClient.gauge(keyPrefix + 'waiting', status.waiting);
     });
+
+    setInterval(function() {
+        var memoryUsage = process.memoryUsage();
+        Object.keys(memoryUsage).forEach(function(k) {
+            global.statsClient.gauge('windshaft.memory.' + k, memoryUsage[k]);
+        });
+    }, 5000);
 }
 
 // Maximum number of connections for one process
