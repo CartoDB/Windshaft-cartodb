@@ -2,7 +2,7 @@
 
 ## 2.9.0
 
-Released 2015-mm-dd
+Released 2015-08-06
 
 New features:
  - Send memory usage stats
