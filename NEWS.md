@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.10.0
+
+Released 2015-08-18
+
+New features:
+ - Exposes metatile cache configuration for tilelive-mapnik, see configuration sample files for more information.
+
+Announcements:
+ - Upgrades windshaft to [0.49.0](https://github.com/CartoDB/Windshaft/releases/tag/0.49.0)
+
+
 ## 2.9.0
 
 Released 2015-08-06

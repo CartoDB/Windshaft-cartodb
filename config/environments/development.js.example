@@ -101,6 +101,17 @@ var config = {
           // wasted time.
           metatile: 2,
 
+          // tilelive-mapnik uses an internal cache to store tiles/grids
+          // generated when using metatile. This options allow to tune
+          // the behaviour for that internal cache.
+          metatileCache: {
+              // Time an object must stay in the cache until is removed
+              ttl: 0,
+              // Whether an object must be removed after the first hit
+              // Usually you want to use `true` here when ttl>0.
+              deleteOnHit: false
+          },
+
           // Override metatile behaviour depending on the format
           formatMetatile: {
               png: 2,
