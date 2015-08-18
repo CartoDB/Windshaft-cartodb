@@ -2,7 +2,7 @@
 
 ## 2.10.0
 
-Released 2015-mm-dd
+Released 2015-08-18
 
 New features:
  - Exposes metatile cache configuration for tilelive-mapnik, see configuration sample files for more information.
