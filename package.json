@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "windshaft-cartodb",
-    "version": "2.9.1",
+    "version": "2.10.0",
     "description": "A map tile server for CartoDB",
     "keywords": [
       "cartodb"
@@ -24,7 +24,7 @@
     "dependencies": {
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
-        "windshaft": "0.48.0",
+        "windshaft": "0.49.0",
         "step": "~0.0.5",
         "queue-async": "~1.0.7",
         "request": "~2.9.203",
