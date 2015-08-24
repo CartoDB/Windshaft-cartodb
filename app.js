@@ -106,10 +106,10 @@ ws.listen(global.environment.port, global.environment.host);
 var version = require("./package").version;
 
 ws.on('listening', function() {
-  console.log(
-      "Windshaft tileserver %s started on %s:%s (%s)",
-      version, global.environment.host, global.environment.port, ENV
-  );
+    console.log(
+        "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
+        version, global.environment.host, global.environment.port, process.pid, ENV
+    );
 });
 
 process.on('SIGHUP', function() {
