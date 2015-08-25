@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.10.1",
+  "version": "2.11.0",
   "dependencies": {
     "cartodb-psql": {
       "version": "0.4.0",
@@ -76,9 +76,9 @@
       "from": "fastly-purge@~1.0.0",
       "dependencies": {
         "request": {
-          "version": "2.60.0",
+          "version": "2.61.0",
           "from": "request@^2.55.0",
-          "resolved": "https://registry.npmjs.org/request/-/request-2.60.0.tgz",
+          "resolved": "https://registry.npmjs.org/request/-/request-2.61.0.tgz",
           "dependencies": {
             "bl": {
               "version": "1.0.0",
@@ -156,14 +156,14 @@
               "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
             },
             "mime-types": {
-              "version": "2.1.4",
+              "version": "2.1.5",
               "from": "mime-types@~2.1.2",
-              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.4.tgz",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.5.tgz",
               "dependencies": {
                 "mime-db": {
-                  "version": "1.16.0",
-                  "from": "mime-db@~1.16.0",
-                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.16.0.tgz"
+                  "version": "1.17.0",
+                  "from": "mime-db@~1.17.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.17.0.tgz"
                 }
               }
             },
@@ -279,9 +279,9 @@
                   "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.34.tgz"
                 },
                 "chalk": {
-                  "version": "1.1.0",
+                  "version": "1.1.1",
                   "from": "chalk@^1.0.0",
-                  "resolved": "https://registry.npmjs.org/chalk/-/chalk-1.1.0.tgz",
+                  "resolved": "https://registry.npmjs.org/chalk/-/chalk-1.1.1.tgz",
                   "dependencies": {
                     "ansi-styles": {
                       "version": "2.1.0",
@@ -408,7 +408,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2"
+              "from": "inherits@~2.0.1"
             }
           }
         },
@@ -483,9 +483,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.49.0",
-      "from": "windshaft@0.49.0",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.49.0.tgz",
+      "version": "0.50.0",
+      "from": "windshaft@0.50.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-0.50.0.tgz",
       "dependencies": {
         "chronograph": {
           "version": "0.1.0",
@@ -2707,14 +2707,14 @@
           }
         },
         "canvas": {
-          "version": "1.2.1",
-          "from": "canvas@1.2.1",
-          "resolved": "https://registry.npmjs.org/canvas/-/canvas-1.2.1.tgz",
+          "version": "1.2.7-cdb1",
+          "from": "https://github.com/CartoDB/node-canvas/tarball/1.2.7-cdb1",
+          "resolved": "https://github.com/CartoDB/node-canvas/tarball/1.2.7-cdb1",
           "dependencies": {
             "nan": {
-              "version": "1.5.3",
-              "from": "nan@~1.5.1",
-              "resolved": "https://registry.npmjs.org/nan/-/nan-1.5.3.tgz"
+              "version": "1.9.0",
+              "from": "nan@^1.8.4",
+              "resolved": "https://registry.npmjs.org/nan/-/nan-1.9.0.tgz"
             }
           }
         },
