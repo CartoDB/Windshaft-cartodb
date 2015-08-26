@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.11.1
+
+Released 2015-mm-dd
+
+
 ## 2.11.0
 
 Released 2015-08-26
