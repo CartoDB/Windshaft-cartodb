@@ -1,8 +1,12 @@
 # Changelog
 
-## 2.11.1
+## 2.12.0
 
 Released 2015-mm-dd
+
+New features:
+ - Make http and https globalAgent options configurable
+   * If config is not provided it configures them with default values
 
 
 ## 2.11.0
