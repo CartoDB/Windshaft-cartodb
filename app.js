@@ -9,6 +9,8 @@
 
 var path = require('path');
 var fs = require('fs');
+var http = require('http');
+var https = require('https');
 var RedisPool = require('redis-mpool');
 var _ = require('underscore');
 
@@ -71,6 +73,17 @@ var redisOpts = _.defaults(global.environment.redis, {
     noReadyCheck: true
 });
 var redisPool = new RedisPool(redisOpts);
+
+// set global HTTP and HTTPS agent default configurations
+// ref https://nodejs.org/api/http.html#http_new_agent_options
+var agentOptions = _.defaults(global.environment.httpAgent || {}, {
+    keepAlive: false,
+    keepAliveMsecs: 1000,
+    maxSockets: Infinity,
+    maxFreeSockets: 256
+});
+http.globalAgent = new http.Agent(agentOptions);
+https.globalAgent = new https.Agent(agentOptions);
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28

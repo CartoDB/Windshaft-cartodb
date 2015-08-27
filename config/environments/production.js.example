@@ -190,6 +190,13 @@ var config = {
         unwatchOnRelease: false, // Send unwatch on release, see http://github.com/CartoDB/Windshaft-cartodb/issues/161
         noReadyCheck: true // Check `no_ready_check` at https://github.com/mranney/node_redis/tree/v0.12.1#overloading
     }
+    // For more details about this options check https://nodejs.org/api/http.html#http_new_agent_options
+    ,httpAgent: {
+        keepAlive: true,
+        keepAliveMsecs: 1000,
+        maxSockets: 25,
+        maxFreeSockets: 256
+    }
     ,varnish: {
         host: 'localhost',
         port: 6082, // the por for the telnet interface where varnish is listening to
