@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.12.0
+
+Released 2015-08-27
+
+Announcements:
+ - Upgrades windshaft to [0.51.0](https://github.com/CartoDB/Windshaft/releases/tag/0.51.0)
+
+New features:
+ - Make http and https globalAgent options configurable
+   * If config is not provided it configures them with default values
+
+
 ## 2.11.0
 
 Released 2015-08-26
