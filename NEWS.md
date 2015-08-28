@@ -1,8 +1,48 @@
 # Changelog
 
-## 2.8.1
+## 2.12.1
 
 Released 2015-mm-dd
+
+
+
+## 2.12.0
+
+Released 2015-08-27
+
+Announcements:
+ - Upgrades windshaft to [0.51.0](https://github.com/CartoDB/Windshaft/releases/tag/0.51.0)
+
+New features:
+ - Make http and https globalAgent options configurable
+   * If config is not provided it configures them with default values
+
+
+## 2.11.0
+
+Released 2015-08-26
+
+Announcements:
+ - Upgrades windshaft to [0.50.0](https://github.com/CartoDB/Windshaft/releases/tag/0.50.0)
+
+
+## 2.10.0
+
+Released 2015-08-18
+
+New features:
+ - Exposes metatile cache configuration for tilelive-mapnik, see configuration sample files for more information.
+
+Announcements:
+ - Upgrades windshaft to [0.49.0](https://github.com/CartoDB/Windshaft/releases/tag/0.49.0)
+
+
+## 2.9.0
+
+Released 2015-08-06
+
+New features:
+ - Send memory usage stats
 
 
 ## 2.8.0
