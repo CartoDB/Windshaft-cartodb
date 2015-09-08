@@ -191,14 +191,14 @@
               "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
             },
             "mime-types": {
-              "version": "2.1.5",
+              "version": "2.1.6",
               "from": "mime-types@~2.1.2",
-              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.5.tgz",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.6.tgz",
               "dependencies": {
                 "mime-db": {
-                  "version": "1.17.0",
-                  "from": "mime-db@~1.17.0",
-                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.17.0.tgz"
+                  "version": "1.18.0",
+                  "from": "mime-db@~1.18.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.18.0.tgz"
                 }
               }
             },
@@ -372,9 +372,9 @@
                   }
                 },
                 "is-my-json-valid": {
-                  "version": "2.12.1",
+                  "version": "2.12.2",
                   "from": "is-my-json-valid@^2.12.0",
-                  "resolved": "https://registry.npmjs.org/is-my-json-valid/-/is-my-json-valid-2.12.1.tgz",
+                  "resolved": "https://registry.npmjs.org/is-my-json-valid/-/is-my-json-valid-2.12.2.tgz",
                   "dependencies": {
                     "generate-function": {
                       "version": "2.0.0",
@@ -394,9 +394,9 @@
                       }
                     },
                     "jsonpointer": {
-                      "version": "1.1.0",
-                      "from": "jsonpointer@^1.1.0",
-                      "resolved": "https://registry.npmjs.org/jsonpointer/-/jsonpointer-1.1.0.tgz"
+                      "version": "2.0.0",
+                      "from": "jsonpointer@2.0.0",
+                      "resolved": "https://registry.npmjs.org/jsonpointer/-/jsonpointer-2.0.0.tgz"
                     },
                     "xtend": {
                       "version": "4.0.0",
@@ -524,7 +524,7 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "0.51.1",
+      "version": "0.52.0",
       "from": "https://github.com/CartoDB/Windshaft/tarball/backend-foundations",
       "resolved": "https://github.com/CartoDB/Windshaft/tarball/backend-foundations",
       "dependencies": {
@@ -2284,6 +2284,18 @@
                   }
                 }
               }
+            }
+          }
+        },
+        "debug": {
+          "version": "2.2.0",
+          "from": "debug@~2.2.0",
+          "resolved": "https://registry.npmjs.org/debug/-/debug-2.2.0.tgz",
+          "dependencies": {
+            "ms": {
+              "version": "0.7.1",
+              "from": "ms@0.7.1",
+              "resolved": "https://registry.npmjs.org/ms/-/ms-0.7.1.tgz"
             }
           }
         },
