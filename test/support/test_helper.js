@@ -34,6 +34,7 @@ function lzma_compress_to_base64(payload, mode, callback) {
 // Throws on failure
 function checkNoCache(res) {
   assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+  assert.ok(!res.headers.hasOwnProperty('surrogate-key'));
   assert.ok(!res.headers.hasOwnProperty('cache-control')); // is this correct ?
   assert.ok(!res.headers.hasOwnProperty('last-modified')); // is this correct ?
 }

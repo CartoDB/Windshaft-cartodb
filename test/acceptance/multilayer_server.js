@@ -318,7 +318,7 @@ describe('tests from old api translated to multilayer', function() {
 
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed, {
-                    errors: ["Error: could not fetch affected tables and last updated time: fake error message"]
+                    errors: ["Error: could not fetch affected tables or last updated time: fake error message"]
                 });
 
                 done();
@@ -346,7 +346,7 @@ describe('tests from old api translated to multilayer', function() {
                 };
 
                 // reset internal cacheChannel cache
-                server.channelCache = {};
+                server.layergroupAffectedTablesCache.cache.reset();
 
                 assert.response(server,
                     {

@@ -2,6 +2,9 @@ var config = {
      environment: 'development'
     ,port: 8181
     ,host: '127.0.0.1'
+    // Size of the threadpool which can be used to run user code and get notified in the loop thread
+    // Its default size is 4, but it can be changed at startup time (the absolute maximum is 128).
+    // See http://docs.libuv.org/en/latest/threadpool.html
     ,uv_threadpool_size: undefined
     // Regular expression pattern to extract username
     // from hostname. Must have a single grabbing block.
@@ -86,8 +89,10 @@ var config = {
       cache_ttl: 60000,
       statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
       mapnik: {
-          // The size of the pool of internal mapnik renderers
-          // Check the configuration of uv_threadpool_size to use suitable value
+          // The size of the pool of internal mapnik backend
+          // This pool size is per mapnik renderer created in Windshaft's RendererFactory
+          // See https://github.com/CartoDB/Windshaft/blob/master/lib/windshaft/renderers/renderer_factory.js
+          // Important: check the configuration of uv_threadpool_size to use suitable value
           poolSize: 8,
 
           // Metatile is the number of tiles-per-side that are going
@@ -95,6 +100,17 @@ var config = {
           // we'd have saved time. If only one will be used, we'd have
           // wasted time.
           metatile: 2,
+
+          // tilelive-mapnik uses an internal cache to store tiles/grids
+          // generated when using metatile. This options allow to tune
+          // the behaviour for that internal cache.
+          metatileCache: {
+              // Time an object must stay in the cache until is removed
+              ttl: 0,
+              // Whether an object must be removed after the first hit
+              // Usually you want to use `true` here when ttl>0.
+              deleteOnHit: false
+          },
 
           // Override metatile behaviour depending on the format
           formatMetatile: {
@@ -146,6 +162,16 @@ var config = {
               type: 'fs', // 'fs' and 'url' supported
               src: __dirname + '/../../assets/default-placeholder.png'
           }
+      },
+      torque: {
+          dbPoolParams: {
+              // maximum number of resources to create at any given time
+              size: 16,
+              // max milliseconds a resource can go unused before it should be destroyed
+              idleTimeout: 3000,
+              // frequency to check for idle resources
+              reapInterval: 1000
+          }
       }
     }
     ,millstone: {
@@ -179,6 +205,13 @@ var config = {
         },
         unwatchOnRelease: false, // Send unwatch on release, see http://github.com/CartoDB/Windshaft-cartodb/issues/161
         noReadyCheck: true // Check `no_ready_check` at https://github.com/mranney/node_redis/tree/v0.12.1#overloading
+    }
+    // For more details about this options check https://nodejs.org/api/http.html#http_new_agent_options
+    ,httpAgent: {
+        keepAlive: true,
+        keepAliveMsecs: 1000,
+        maxSockets: 25,
+        maxFreeSockets: 256
     }
     ,varnish: {
         host: 'localhost',

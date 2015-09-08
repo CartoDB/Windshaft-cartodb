@@ -1,5 +1,9 @@
+var http = require('http');
+var https = require('https');
 var path = require('path');
 var fs = require('fs');
+
+var _ = require('underscore');
 
 var ENVIRONMENT;
 if ( process.argv[2] ) {
@@ -37,6 +41,17 @@ var log4js_config = {
 if (global.environment.uv_threadpool_size) {
     process.env.UV_THREADPOOL_SIZE = global.environment.uv_threadpool_size;
 }
+
+// set global HTTP and HTTPS agent default configurations
+// ref https://nodejs.org/api/http.html#http_new_agent_options
+var agentOptions = _.defaults(global.environment.httpAgent || {}, {
+    keepAlive: false,
+    keepAliveMsecs: 1000,
+    maxSockets: Infinity,
+    maxFreeSockets: 256
+});
+http.globalAgent = new http.Agent(agentOptions);
+https.globalAgent = new https.Agent(agentOptions);
 
 if ( global.environment.log_filename ) {
   var logdir = path.dirname(global.environment.log_filename);
@@ -79,11 +94,18 @@ server.listen(serverOptions.bind.port, serverOptions.bind.host);
 var version = require("./package").version;
 
 server.on('listening', function() {
-  console.log(
-      "Windshaft tileserver %s started on %s:%s (%s)",
-      version, serverOptions.bind.host, serverOptions.bind.port, ENVIRONMENT
-  );
+    console.log(
+        "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
+        version, serverOptions.bind.host, serverOptions.bind.port, process.pid, ENVIRONMENT
+    );
 });
+
+setInterval(function() {
+    var memoryUsage = process.memoryUsage();
+    Object.keys(memoryUsage).forEach(function(k) {
+        global.statsClient.gauge('windshaft.memory.' + k, memoryUsage[k]);
+    });
+}, 5000);
 
 process.on('SIGHUP', function() {
     global.log4js.clearAndShutdownAppenders(function() {

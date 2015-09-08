@@ -25,13 +25,9 @@ test: config/environments/test.js
 		test/unit/cartodb/cache/model/*.js \
 		test/integration/*.js \
 		test/acceptance/*.js \
-		test/acceptance/cache/*.js
-
-test-ported: config/environments/test.js
-	@echo "***tests ported***"
-	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
-		test/unit/cartodb/ported/*.js \
-		test/acceptance/ported/*.js
+		test/acceptance/cache/*.js \
+		test/acceptance/ported/*.js \
+		test/unit/cartodb/ported/*.js
 
 test-unit: config/environments/test.js
 	@echo "***tests***"
@@ -54,7 +50,7 @@ jshint:
 	@echo "***jshint***"
 	@./node_modules/.bin/jshint lib/ test/ app.js
 
-test-all: jshint test test-ported
+test-all: jshint test
 
 coverage:
 	@RUNTESTFLAGS=--with-coverage make test

@@ -23,7 +23,7 @@ suite('server', function() {
           },{}, function(res, err) { next(err,res); });
         },
         function doCheck(err, res) {
-          if ( err ) throw err;
+          assert.ifError(err);
           assert.ok(res.statusCode, 200);
           var cc = res.headers['x-cache-channel'];
           assert.ok(!cc);
