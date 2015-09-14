@@ -23,6 +23,9 @@
     ],
     "dependencies": {
         "express": "~2.5.11",
+        "debug": "~2.2.0",
+        "step-profiler": "~0.2.1",
+        "node-statsd": "~0.0.7",
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
         "windshaft": "https://github.com/CartoDB/Windshaft/tarball/backend-foundations",

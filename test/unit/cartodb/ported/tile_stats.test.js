@@ -3,7 +3,7 @@ require('../../../support/test_helper.js');
 var assert = require('assert');
 var cartodbServer = require('../../../../lib/cartodb/server');
 var serverOptions = require('../../../../lib/cartodb/server_options');
-var StatsClient = require('windshaft').stats.Client;
+var StatsClient = require('../../../../lib/cartodb/stats/client');
 
 var LayergroupController = require('../../../../lib/cartodb/controllers/layergroup');
 
