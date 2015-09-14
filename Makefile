@@ -22,6 +22,7 @@ test: config/environments/test.js
 	@echo "***tests***"
 	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
 		test/unit/cartodb/*.js \
+		test/unit/cartodb/ported/*.js \
 		test/unit/cartodb/cache/model/*.js \
 		test/integration/*.js \
 		test/acceptance/*.js \
@@ -33,6 +34,7 @@ test-unit: config/environments/test.js
 	@echo "***tests***"
 	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
 		test/unit/cartodb/*.js \
+		test/unit/cartodb/ported/*.js \
 		test/unit/cartodb/cache/model/*.js
 
 test-integration: config/environments/test.js
