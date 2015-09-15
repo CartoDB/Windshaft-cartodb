@@ -18,14 +18,17 @@ suite('req2params', function() {
       assert.ok(_.isFunction(server.req2params));
     });
 
-    function addContext(req) {
+    function prepareRequest(req) {
+        req.profiler = {
+            done: function() {}
+        };
         req.context = { user: 'localhost' };
         return req;
     }
 
     test('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
-      server.req2params(addContext(req), function(err, req) {
+      server.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -39,7 +42,7 @@ suite('req2params', function() {
 
     test('sets dbname from redis metadata', function(done){
       var req = {headers: { host:'localhost' }, query: {} };
-      server.req2params(addContext(req), function(err, req) {
+      server.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
@@ -54,7 +57,7 @@ suite('req2params', function() {
 
     test('sets also dbuser for authenticated requests', function(done){
       var req = {headers: { host:'localhost' }, query: {map_key: '1234'} };
-      server.req2params(addContext(req), function(err, req) {
+      server.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
@@ -63,8 +66,16 @@ suite('req2params', function() {
           assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
           assert.equal(req.params.dbname, test_database);
           assert.equal(req.params.dbuser, test_user);
- 
-          server.req2params(addContext({headers: { host:'localhost' }, query: {map_key: '1235'} }), function(err, req) {
+
+          req = {
+              headers: {
+                  host:'localhost'
+              },
+              query: {
+                  map_key: '1235'
+              }
+          };
+          server.req2params(prepareRequest(req), function(err, req) {
               // wrong key resets params to no user
               assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
               done();
@@ -90,7 +101,7 @@ suite('req2params', function() {
                     lzma: data
                 }
             };
-            server.req2params(addContext(req), function(err, req) {
+            server.req2params(prepareRequest(req), function(err, req) {
                 if ( err ) {
                     return done(err);
                 }
