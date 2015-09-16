@@ -41,20 +41,4 @@ describe('windshaft', function() {
         assert.equal(ws.base_url, '/tiles/:table');
     });
 
-    it('different formats for postgis plugin error returns 400 as status code', function() {
-
-        var expectedStatusCode = 400;
-        assert.equal(
-            cartodbServer.findStatusCode("Postgis Plugin: ERROR:  column \"missing\" does not exist\n"),
-            expectedStatusCode,
-            "Error status code for single line does not match"
-        );
-
-        assert.equal(
-            cartodbServer.findStatusCode("Postgis Plugin: PSQL error:\nERROR:  column \"missing\" does not exist\n"),
-            expectedStatusCode,
-            "Error status code for multiline/PSQL does not match"
-        );
-    });
-
 });
