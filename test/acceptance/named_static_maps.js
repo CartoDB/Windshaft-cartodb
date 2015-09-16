@@ -163,8 +163,10 @@ describe('named static maps', function() {
         var nonexistentName = 'nonexistent';
         getStaticMap(nonexistentName, { status: 404 }, function(err, res) {
             assert.ok(!err);
-            var parsed = JSON.parse(res.body);
-            assert.equal(parsed.error, "Template '" + nonexistentName + "' of user '" + username + "' not found");
+            assert.deepEqual(
+                JSON.parse(res.body),
+                { errors: ["Template '" + nonexistentName + "' of user '" + username + "' not found"] }
+            );
             done();
         });
     });
@@ -172,8 +174,7 @@ describe('named static maps', function() {
     it('should return 403 if not properly authorized', function(done) {
         getStaticMap(tokenAuthTemplateName, { status: 403 }, function(err, res) {
             assert.ok(!err);
-            var parsed = JSON.parse(res.body);
-            assert.equal(parsed.error, 'Unauthorized template instantiation');
+            assert.deepEqual(JSON.parse(res.body), { errors: ['Unauthorized template instantiation'] });
             done();
         });
     });

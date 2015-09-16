@@ -3,7 +3,7 @@ require('../../../support/test_helper.js');
 var assert = require('assert');
 var cartodbServer = require('../../../../lib/cartodb/server');
 var serverOptions = require('../../../../lib/cartodb/server_options');
-var StatsClient = require('windshaft').stats.Client;
+var StatsClient = require('../../../../lib/cartodb/stats/client');
 
 var LayergroupController = require('../../../../lib/cartodb/controllers/layergroup');
 
@@ -28,17 +28,17 @@ describe('tile stats', function() {
             }
         });
 
-        var ws = cartodbServer(serverOptions);
-        ws.sendError = function(){};
-
-        var layergroupController = new LayergroupController(ws, null);
+        var layergroupController = new LayergroupController(cartodbServer(serverOptions));
 
         var reqMock = {
             params: {
                 format: invalidFormat
             }
         };
-        layergroupController.finalizeGetTileOrGrid('Unsupported format png2', reqMock, {}, null, null);
+        var resMock = {
+            sendError: function() {}
+        };
+        layergroupController.finalizeGetTileOrGrid('Unsupported format png2', reqMock, resMock, null, null);
 
         assert.ok(formatMatched, 'Format was never matched in increment method');
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
@@ -60,13 +60,13 @@ describe('tile stats', function() {
                 format: validFormat
             }
         };
+        var resMock = {
+            sendError: function() {}
+        };
 
-        var ws = cartodbServer(serverOptions);
-        ws.sendError = function(){};
+        var layergroupController = new LayergroupController(cartodbServer(serverOptions));
 
-        var layergroupController = new LayergroupController(ws, null);
-
-        layergroupController.finalizeGetTileOrGrid('Another error happened', reqMock, {}, null, null);
+        layergroupController.finalizeGetTileOrGrid('Another error happened', reqMock, resMock, null, null);
 
         assert.ok(formatMatched, 'Format was never matched in increment method');
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
