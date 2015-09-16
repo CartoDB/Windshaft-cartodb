@@ -158,7 +158,9 @@ describe('templates surrogate keys', function() {
                         status: 200
                     },
                     function(res) {
-                        next(null, res);
+                        setTimeout(function() {
+                            next(null, res);
+                        }, 50);
                     }
                 );
             },
@@ -229,7 +231,9 @@ describe('templates surrogate keys', function() {
                         status: 204
                     },
                     function(res) {
-                        next(null, res);
+                        setTimeout(function() {
+                            next(null, res);
+                        }, 50);
                     }
                 );
             },
@@ -256,6 +260,15 @@ describe('templates surrogate keys', function() {
             .matchHeader('Invalidation-Match', invalidationMatchHeader)
             .reply(503, '');
 
+        var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
+            .post(fastlyPurgePath)
+            .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
+            .matchHeader('Fastly-Soft-Purge', 1)
+            .matchHeader('Accept', 'application/json')
+            .reply(200, {
+                status:'ok'
+            });
+
         step(
             function createTemplateToUpdate() {
                 createTemplate(this);
@@ -280,7 +293,9 @@ describe('templates surrogate keys', function() {
                         status: 200
                     },
                     function(res) {
-                        next(null, res);
+                        setTimeout(function() {
+                            next(null, res);
+                        }, 50);
                     }
                 );
             },
@@ -292,6 +307,7 @@ describe('templates surrogate keys', function() {
                 assert.deepEqual(parsedBody, expectedBody);
 
                 assert.equal(scope.pendingMocks().length, 0);
+                assert.equal(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },
