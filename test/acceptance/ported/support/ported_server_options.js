@@ -70,8 +70,7 @@ module.exports = _.extend({}, serverOptions, {
 
 
         // increment number of calls counter
-        // NOTE: "this" would likely point to the server instance
-        this.req2params_calls = this.req2params_calls ? this.req2params_calls + 1 : 1;
+        global.req2params_calls = global.req2params_calls ? global.req2params_calls + 1 : 1;
 
         // send the finished req object on
         callback(null,req);

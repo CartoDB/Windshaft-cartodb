@@ -1283,7 +1283,7 @@ describe('multilayer', function() {
       step(
         function do_post()
         {
-          server.req2params_calls = 0;
+          global.req2params_calls = 0;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
@@ -1297,7 +1297,7 @@ describe('multilayer', function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsedBody = JSON.parse(res.body);
           expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
-          assert.equal(server.req2params_calls, 1);
+          assert.equal(global.req2params_calls, 1);
           return null;
         },
         function finish(err) {
