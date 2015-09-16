@@ -22,7 +22,8 @@
       "Sandro Santilli <strk@vizzuality.com>"
     ],
     "dependencies": {
-        "express": "~2.5.11",
+        "express": "~4.13.3",
+        "body-parser": "~1.14.0",
         "debug": "~2.2.0",
         "step-profiler": "~0.2.1",
         "node-statsd": "~0.0.7",
