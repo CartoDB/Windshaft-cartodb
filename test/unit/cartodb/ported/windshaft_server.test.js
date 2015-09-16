@@ -36,7 +36,8 @@ describe('windshaft', function() {
 
     it('options are set on main windshaft object',  function(){
         var ws = cartodbServer(serverOptions);
-        assert.ok(_.isFunction(ws.req2params));
+        assert.ok(_.isObject(ws.bind));
+        assert.ok(_.isObject(ws.grainstore));
         assert.equal(ws.base_url, '/tiles/:table');
     });
 

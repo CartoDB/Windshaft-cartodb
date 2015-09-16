@@ -5,11 +5,12 @@ var redis         = require('redis');
 var step          = require('step');
 var cartodbServer = require('../../../lib/cartodb/server');
 var PortedServerOptions = require('./support/ported_server_options');
+var BaseController = require('../../../lib/cartodb/controllers/base');
+
 
 describe('attributes', function() {
 
     var server = cartodbServer(PortedServerOptions);
-    server.req2params = PortedServerOptions.req2params;
     server.setMaxListeners(0);
     var redis_client = redis.createClient(PortedServerOptions.redis.port);
 
@@ -37,6 +38,16 @@ describe('attributes', function() {
         );
         assert.equal(res.headers['access-control-allow-origin'], '*');
     }
+
+    var req2paramsFn;
+    before(function() {
+        req2paramsFn = BaseController.prototype.req2params;
+        BaseController.prototype.req2params = PortedServerOptions.req2params;
+    });
+
+    after(function() {
+        BaseController.prototype.req2params = req2paramsFn;
+    });
 
     it("can only be fetched from layer having an attributes spec", function(done) {
 

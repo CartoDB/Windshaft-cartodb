@@ -8,6 +8,8 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
+var BaseController = require('../../../lib/cartodb/controllers/base');
+
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
   for (var i=0; i<files.length; ++i) {
@@ -28,7 +30,10 @@ describe('regressions', function() {
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
+    var req2paramsFn;
     before(function(done) {
+        req2paramsFn = BaseController.prototype.req2params;
+        BaseController.prototype.req2params = ServerOptions.req2params;
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
@@ -49,6 +54,7 @@ describe('regressions', function() {
 
 
     after(function(done) {
+        BaseController.prototype.req2params = req2paramsFn;
         rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
         // Close the resources server

@@ -6,11 +6,22 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
+var BaseController = require('../../../lib/cartodb/controllers/base');
+
 describe('multilayer error cases', function() {
 
     var server = cartodbServer(ServerOptions);
-    server.req2params = ServerOptions.req2params;
     server.setMaxListeners(0);
+
+    var req2paramsFn;
+    before(function() {
+        req2paramsFn = BaseController.prototype.req2params;
+        BaseController.prototype.req2params = ServerOptions.req2params;
+    });
+
+    after(function() {
+        BaseController.prototype.req2params = req2paramsFn;
+    });
 
     it("post layergroup with wrong Content-Type", function(done) {
         assert.response(server, {

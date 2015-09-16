@@ -7,6 +7,8 @@ var PortedServerOptions = require('./support/ported_server_options');
 var http = require('http');
 var testClient = require('./support/test_client');
 
+var BaseController = require('../../../lib/cartodb/controllers/base');
+
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
   for (var i=0; i<files.length; ++i) {
@@ -29,7 +31,10 @@ describe('external resources', function() {
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
+    var req2paramsFn;
     before(function(done) {
+        req2paramsFn = BaseController.prototype.req2params;
+        BaseController.prototype.req2params = PortedServerOptions.req2params;
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
@@ -46,6 +51,15 @@ describe('external resources', function() {
             });
         });
         res_serv.listen(res_serv_port, done);
+    });
+
+    after(function(done) {
+        BaseController.prototype.req2params = req2paramsFn;
+
+        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+
+        // Close the resources server
+        res_serv.close(done);
     });
 
     function imageCompareFn(fixture, done) {
@@ -121,12 +135,5 @@ describe('external resources', function() {
         });
     });
 
-
-    after(function(done) {
-        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
-
-        // Close the resources server
-        res_serv.close(done);
-    });
 });
 

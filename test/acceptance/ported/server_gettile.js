@@ -9,6 +9,8 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
+var BaseController = require('../../../lib/cartodb/controllers/base');
+
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
   for (var i=0; i<files.length; ++i) {
@@ -26,7 +28,6 @@ function rmdir_recursive_sync(dirname) {
 describe('server_gettile', function() {
 
     var server = cartodbServer(ServerOptions);
-    server.req2params = ServerOptions.req2params;
     server.setMaxListeners(0);
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
@@ -34,7 +35,11 @@ describe('server_gettile', function() {
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
+    var req2paramsFn;
     before(function(done) {
+        req2paramsFn = BaseController.prototype.req2params;
+        BaseController.prototype.req2params = ServerOptions.req2params;
+
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
@@ -55,6 +60,8 @@ describe('server_gettile', function() {
 
 
     after(function(done) {
+        BaseController.prototype.req2params = req2paramsFn;
+
         rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
         // Close the resources server
