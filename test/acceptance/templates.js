@@ -13,6 +13,9 @@ var redis_stats_db = 5;
 process.env.PGPORT = '666';
 process.env.PGHOST = 'fake';
 
+var fs = require('fs');
+var http = require('http');
+
 var helper = require(__dirname + '/../support/test_helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
@@ -22,6 +25,24 @@ server.setMaxListeners(0);
 
 describe('template_api', function() {
     server.layergroupAffectedTablesCache.cache.reset();
+
+    var httpRendererResourcesServer;
+    before(function(done) {
+        // Start a server to test external resources
+        httpRendererResourcesServer = http.createServer( function(request, response) {
+            var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
+            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+                response.writeHead(200);
+                response.write(file, "binary");
+                response.end();
+            });
+        });
+        httpRendererResourcesServer.listen(8033, done);
+    });
+
+    after(function(done) {
+        httpRendererResourcesServer.close(done);
+    });
 
     var redis_client = redis.createClient(global.environment.redis.port);
 
@@ -2006,7 +2027,7 @@ describe('template_api', function() {
                     {
                         type: "http",
                         options: {
-                            urlTemplate: "http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+                            urlTemplate: "http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png",
                             subdomains: [
                                 "a",
                                 "b",
