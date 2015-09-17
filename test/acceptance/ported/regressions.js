@@ -135,31 +135,4 @@ describe('regressions', function() {
             testClient.createLayergroup(mapConfig, { server: server }, completed);
         }
     });
-
-    // See https://github.com/CartoDB/Windshaft/issues/173
-    it.skip("#173 does not send db details in connection error response", function(done) {
-
-        var mapConfig = testClient.defaultTableMapConfig('test_table');
-
-        var CustomOptions = _.clone(ServerOptions);
-        CustomOptions.grainstore = _.clone(CustomOptions.grainstore);
-        CustomOptions.grainstore.datasource = _.clone(CustomOptions.grainstore.datasource);
-        CustomOptions.grainstore.datasource.port = '666';
-
-        var options = {
-            statusCode: 400,
-            serverOptions: CustomOptions
-        };
-
-        testClient.createLayergroup(mapConfig, options, function(err, res, parsedBody) {
-            assert.ok(parsedBody.errors);
-            var msg = parsedBody.errors[0];
-            assert.ok(msg.match(/connect/), msg);
-            assert.ok(!msg.match(/666/), msg);
-
-            done();
-        });
-
-    });
-
 });
