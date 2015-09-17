@@ -10,6 +10,9 @@ var LZMA  = require('lzma').LZMA;
 
 var lzmaWorker = new LZMA();
 
+var redis = require('redis');
+var nock = require('nock');
+
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
 global.environment.name = 'test';
@@ -56,10 +59,12 @@ function checkSurrogateKey(res, expectedKey) {
     assert.equal(res.headers['surrogate-key'], expectedKey);
 }
 
-//var _ = require('underscore');
-var redis = require('redis');
 //global after to capture test suites that leave keys in redis
 after(function(done) {
+
+    // restoring nock globally after each suite
+    nock.restore();
+
     var expectedKeys = {
         'rails:test_windshaft_cartodb_user_1_db:test_table_private_1': true,
         'rails:test_windshaft_cartodb_user_1_db:my_table': true,
