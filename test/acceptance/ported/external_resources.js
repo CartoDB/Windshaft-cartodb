@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 
 var assert = require('../../support/assert');
@@ -6,6 +6,8 @@ var fs = require('fs');
 var PortedServerOptions = require('./support/ported_server_options');
 var http = require('http');
 var testClient = require('./support/test_client');
+
+var nock = require('nock');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
 
@@ -33,6 +35,8 @@ describe('external resources', function() {
 
     var req2paramsFn;
     before(function(done) {
+        nock.enableNetConnect('127.0.0.1');
+
         req2paramsFn = BaseController.prototype.req2params;
         BaseController.prototype.req2params = PortedServerOptions.req2params;
         // Start a server to test external resources
@@ -58,8 +62,13 @@ describe('external resources', function() {
 
         rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
-        // Close the resources server
-        res_serv.close(done);
+        testHelper.deleteRedisKeys({
+            'user:localhost:mapviews:global': 5
+        }, function() {
+            // Close the resources server
+            res_serv.close(done);
+        });
+
     });
 
     function imageCompareFn(fixture, done) {

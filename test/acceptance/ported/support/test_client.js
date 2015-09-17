@@ -76,9 +76,20 @@ function createLayergroup(layergroupConfig, options, callback) {
 
             var parsedBody;
             var layergroupid;
-            if (!options.callbackName) {
+            if (options.callbackName) {
+                global[options.callbackName] = function(layergroup) {
+                    layergroupid = layergroup.layergroupid;
+                };
+                // jshint ignore:start
+                eval(res.body);
+                // jshint ignore:end
+                delete global[options.callbackName];
+            } else {
                 parsedBody = JSON.parse(res.body);
                 layergroupid = parsedBody.layergroupid;
+                if (layergroupid) {
+                    layergroupid = layergroupid.split(':')[0];
+                }
             }
 
             if (layergroupid) {
@@ -370,7 +381,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
         },
         function validateTile(err, res) {
             assert.ok(!err, 'Failed to get tile');
-            var redisKey = 'map_cfg|' + layergroupid;
+            var redisKey = 'map_cfg|' + layergroupid.split(':')[0];
 
             var img;
             if (contentType === pngContentType) {
@@ -455,7 +466,7 @@ function withLayergroup(layergroupConfig, options, callback) {
             }
 
             function finish(done) {
-                var redisKey = 'map_cfg|' + layergroupid;
+                var redisKey = 'map_cfg|' + layergroupid.split(':')[0];
                 redisClient.del(redisKey, function (delErr) {
                     return done(delErr);
                 });
