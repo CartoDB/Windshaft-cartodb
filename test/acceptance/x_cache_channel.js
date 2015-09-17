@@ -1,4 +1,4 @@
-require('../support/test_helper');
+var testHelper = require('../support/test_helper');
 
 var assert = require('../support/assert');
 var qs = require('querystring');
@@ -105,6 +105,13 @@ describe('get requests x-cache-channel', function() {
     }
 
     describe('header should be present', function() {
+
+        after(function(done) {
+            testHelper.deleteRedisKeys({
+                'map_cfg|a181ac96fac6d2b315dda88bc0bfa6cd': 0,
+                'user:localhost:mapviews:global': 5
+            }, done);
+        });
 
         it('/api/v1/map Map instantiation', function(done) {
             assert.response(

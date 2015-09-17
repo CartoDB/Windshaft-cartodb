@@ -22,7 +22,7 @@ describe('tests from old api translated to multilayer', function() {
         // 'map_style|null|publicuser|my_table',
         redisClient.keys("map_style|*", function(err, matches) {
             redisClient.del(matches, function() {
-                done();
+                testHelper.deleteRedisKeys({ 'user:cartodb250user:mapviews:global': 5 }, done);
             });
         });
     });

@@ -57,22 +57,70 @@ function checkSurrogateKey(res, expectedKey) {
 }
 
 //var _ = require('underscore');
-//var redis = require('redis');
-// global afterEach to capture tests that leave keys in redis
-//afterEach(function(done) {
-//    var redisClient = redis.createClient(global.environment.redis.port);
-//    // Check that we start with an empty redis db
-//    redisClient.keys("*", function(err, keys) {
-//        if ( err ) {
-//            return done(err);
-//        }
-//        assert.equal(keys.length, 0, "test left objects in redis:\n" + keys.join("\n"));
-//        redisClient.flushall(done);
-//    });
-//});
+var redis = require('redis');
+//global after to capture test suites that leave keys in redis
+after(function(done) {
+    var expectedKeys = {
+        'rails:test_windshaft_cartodb_user_1_db:test_table_private_1': true,
+        'rails:test_windshaft_cartodb_user_1_db:my_table': true,
+        'rails:users:localhost:map_key': true,
+        'rails:users:cartodb250user': true,
+        'rails:users:localhost': true
+    };
+    var databasesTasks = { 0: 'users', 5: 'meta'};
+
+    var keysFound = [];
+    function taskDone(err, db, keys) {
+        if (err) {
+            return done(err);
+        }
+
+        delete databasesTasks[db];
+        keys.forEach(function(k) {
+            if (!expectedKeys[k]) {
+                keysFound.push(k);
+            }
+        });
+
+        if (Object.keys(databasesTasks).length === 0) {
+            assert.equal(keysFound.length, 0, 'Unexpected keys found in redis: ' + keysFound.join(', '));
+            done();
+        }
+    }
+
+    Object.keys(databasesTasks).forEach(function(db) {
+        var redisClient = redis.createClient(global.environment.redis.port);
+        redisClient.select(db, function() {
+            // Check that we start with an empty redis db
+            redisClient.keys("*", function(err, keys) {
+                return taskDone(err, db, keys);
+            });
+        });
+    });
+});
+
+function deleteRedisKeys(keysToDelete, callback) {
+
+    function taskDone(k) {
+        delete keysToDelete[k];
+        if (Object.keys(keysToDelete).length === 0) {
+            callback();
+        }
+    }
+
+    Object.keys(keysToDelete).forEach(function(k) {
+        var redisClient = redis.createClient(global.environment.redis.port);
+        redisClient.select(keysToDelete[k], function() {
+            redisClient.del(k, function() {
+                taskDone(k);
+            });
+        });
+    });
+}
 
 
 module.exports = {
+  deleteRedisKeys: deleteRedisKeys,
   lzma_compress_to_base64: lzma_compress_to_base64,
   checkNoCache: checkNoCache,
   checkSurrogateKey: checkSurrogateKey,
