@@ -44,6 +44,7 @@ server.setMaxListeners(0);
 var redisClient = redis.createClient(global.environment.redis.port);
 
 var jsonContentType = 'application/json; charset=utf-8';
+var jsContentType = 'text/javascript; charset=utf-8';
 var pngContentType = 'image/png';
 
 function createLayergroup(layergroupConfig, options, callback) {
@@ -218,7 +219,7 @@ function getGrid(layergroupConfig, layer, z, x, y, expectedResponse, callback) {
 function getGridJsonp(layergroupConfig, layer, z, x, y, jsonpCallbackName, expectedResponse, callback) {
     if (!callback) {
         callback = expectedResponse;
-        expectedResponse = jsonContentType;
+        expectedResponse = jsContentType;
     }
 
     var options = {

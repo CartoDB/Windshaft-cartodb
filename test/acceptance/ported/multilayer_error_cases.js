@@ -56,7 +56,10 @@ describe('multilayer error cases', function() {
             headers: {'Content-Type': 'application/json' }
         }, {}, function(res) {
             assert.equal(res.statusCode, 200);
-            assert.equal(res.body, 'test({"errors":["Missing layers array from layergroup config"]});');
+            assert.equal(
+                res.body,
+                '/**/ typeof test === \'function\' && test({"errors":["Missing layers array from layergroup config"]});'
+            );
             done();
         });
     });
@@ -340,7 +343,10 @@ describe('multilayer error cases', function() {
             }
         };
         testClient.createLayergroup(bogusSqlMapConfig, options, function(err, res) {
-            assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
+            assert.ok(
+                /^\/\*\*\/ typeof test === 'function' && test\(/.test(res.body),
+                "Body start expected callback name: " + res.body
+            );
             assert.ok(/syntax error/.test(res.body), "Unexpected error: " + res.body);
             done();
         });
@@ -356,7 +362,10 @@ describe('multilayer error cases', function() {
             }
         };
         testClient.createLayergroup(noGeomMapConfig, options, function(err, res) {
-            assert.ok(/^test\(/.test(res.body), "Body start expected callback name: " + res.body);
+            assert.ok(
+                /^\/\*\*\/ typeof test === 'function' && test\(/.test(res.body),
+                "Body start expected callback name: " + res.body
+            );
             assert.ok(/column.*does not exist/.test(res.body), "Unexpected error: " + res.body);
             done();
         });
