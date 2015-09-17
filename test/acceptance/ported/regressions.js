@@ -8,6 +8,8 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
+var BaseController = require('../../../lib/cartodb/controllers/base');
+
 function rmdir_recursive_sync(dirname) {
   var files = fs.readdirSync(dirname);
   for (var i=0; i<files.length; ++i) {
@@ -28,7 +30,10 @@ describe('regressions', function() {
     var res_serv_status = { numrequests:0 }; // status of resources server
     var res_serv_port = 8033; // FIXME: make configurable ?
 
+    var req2paramsFn;
     before(function(done) {
+        req2paramsFn = BaseController.prototype.req2params;
+        BaseController.prototype.req2params = ServerOptions.req2params;
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
@@ -49,6 +54,7 @@ describe('regressions', function() {
 
 
     after(function(done) {
+        BaseController.prototype.req2params = req2paramsFn;
         rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
         // Close the resources server
@@ -129,31 +135,4 @@ describe('regressions', function() {
             testClient.createLayergroup(mapConfig, { server: server }, completed);
         }
     });
-
-    // See https://github.com/CartoDB/Windshaft/issues/173
-    it.skip("#173 does not send db details in connection error response", function(done) {
-
-        var mapConfig = testClient.defaultTableMapConfig('test_table');
-
-        var CustomOptions = _.clone(ServerOptions);
-        CustomOptions.grainstore = _.clone(CustomOptions.grainstore);
-        CustomOptions.grainstore.datasource = _.clone(CustomOptions.grainstore.datasource);
-        CustomOptions.grainstore.datasource.port = '666';
-
-        var options = {
-            statusCode: 400,
-            serverOptions: CustomOptions
-        };
-
-        testClient.createLayergroup(mapConfig, options, function(err, res, parsedBody) {
-            assert.ok(parsedBody.errors);
-            var msg = parsedBody.errors[0];
-            assert.ok(msg.match(/connect/), msg);
-            assert.ok(!msg.match(/666/), msg);
-
-            done();
-        });
-
-    });
-
 });

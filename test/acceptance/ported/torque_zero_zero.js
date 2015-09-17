@@ -3,7 +3,20 @@ require('../../support/test_helper');
 var assert = require('../../support/assert');
 var testClient = require('./support/test_client');
 
+var PortedServerOptions = require('./support/ported_server_options');
+var BaseController = require('../../../lib/cartodb/controllers/base');
+
 describe('torque tiles at 0,0 point', function() {
+
+    var req2paramsFn;
+    before(function() {
+        req2paramsFn = BaseController.prototype.req2params;
+        BaseController.prototype.req2params = PortedServerOptions.req2params;
+    });
+
+    after(function() {
+        BaseController.prototype.req2params = req2paramsFn;
+    });
 
 /*
     Tiles are represented as in:

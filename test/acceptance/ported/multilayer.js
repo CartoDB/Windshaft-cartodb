@@ -11,11 +11,11 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var http = require('http');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
+var BaseController = require('../../../lib/cartodb/controllers/base');
 
 describe('multilayer', function() {
 
     var server = cartodbServer(ServerOptions);
-    server.req2params = ServerOptions.req2params;
     server.setMaxListeners(0);
     var redis_client = redis.createClient(ServerOptions.redis.port);
     var res_serv; // resources server
@@ -30,7 +30,11 @@ describe('multilayer', function() {
       assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
+    var req2paramsFn;
     before(function(done) {
+      req2paramsFn = BaseController.prototype.req2params;
+      BaseController.prototype.req2params = ServerOptions.req2params;
+
       // Start a server to test external resources
       res_serv = http.createServer( function(request, response) {
           var filename = __dirname + '/../fixtures/markers' + request.url;
@@ -50,6 +54,8 @@ describe('multilayer', function() {
     });
 
     after(function(done) {
+        BaseController.prototype.req2params = req2paramsFn;
+
         // Close the resources server
         res_serv.close(done);
     });
@@ -1283,7 +1289,7 @@ describe('multilayer', function() {
       step(
         function do_post()
         {
-          server.req2params_calls = 0;
+          global.req2params_calls = 0;
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
@@ -1297,7 +1303,7 @@ describe('multilayer', function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsedBody = JSON.parse(res.body);
           expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
-          assert.equal(server.req2params_calls, 1);
+          assert.equal(global.req2params_calls, 1);
           return null;
         },
         function finish(err) {

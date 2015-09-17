@@ -40,7 +40,6 @@ module.exports = {
 
 
 var server = new CartodbServer(PortedServerOptions);
-server.req2params = PortedServerOptions.req2params;
 server.setMaxListeners(0);
 var redisClient = redis.createClient(global.environment.redis.port);
 

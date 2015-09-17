@@ -36,7 +36,7 @@ describe('tile stats', function() {
             }
         };
         var resMock = {
-            sendError: function() {}
+            send: function() {}
         };
         layergroupController.finalizeGetTileOrGrid('Unsupported format png2', reqMock, resMock, null, null);
 
@@ -61,7 +61,7 @@ describe('tile stats', function() {
             }
         };
         var resMock = {
-            sendError: function() {}
+            send: function() {}
         };
 
         var layergroupController = new LayergroupController(cartodbServer(serverOptions));

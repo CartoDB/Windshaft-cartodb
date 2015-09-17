@@ -2,20 +2,37 @@ var assert = require('assert');
 var _ = require('underscore');
 var test_helper = require('../../support/test_helper');
 
-suite('req2params', function() {
+var RedisPool = require('redis-mpool');
+var cartodbRedis = require('cartodb-redis');
+var PgConnection = require('../../../lib/cartodb/backends/pg_connection');
+var AuthApi = require('../../../lib/cartodb/api/auth_api');
+var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 
-    // configure redis pool instance to use in tests
-    var CartodbWindshaft = require('../../../lib/cartodb/server');
-    var serverOptions = require('../../../lib/cartodb/server_options');
-    var server = new CartodbWindshaft(serverOptions);
+var BaseController = require('../../../lib/cartodb/controllers/base');
+var windshaft = require('windshaft');
+
+suite('req2params', function() {
 
     var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
     var test_pubuser = global.environment.postgres.user;
     var test_database = test_user + '_db';
 
+
+    var baseController;
+    before(function() {
+        var redisPool = new RedisPool(global.environment.redis);
+        var mapStore = new windshaft.storage.MapStore();
+        var metadataBackend = cartodbRedis({pool: redisPool});
+        var pgConnection = new PgConnection(metadataBackend);
+        var templateMaps = new TemplateMaps(redisPool);
+        var authApi = new AuthApi(pgConnection, metadataBackend, mapStore, templateMaps);
+
+        baseController = new BaseController(authApi, pgConnection);
+    });
+
     
     test('can be found in server_options', function(){
-      assert.ok(_.isFunction(server.req2params));
+      assert.ok(_.isFunction(baseController.req2params));
     });
 
     function prepareRequest(req) {
@@ -28,7 +45,7 @@ suite('req2params', function() {
 
     test('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
-      server.req2params(prepareRequest(req), function(err, req) {
+      baseController.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -42,7 +59,7 @@ suite('req2params', function() {
 
     test('sets dbname from redis metadata', function(done){
       var req = {headers: { host:'localhost' }, query: {} };
-      server.req2params(prepareRequest(req), function(err, req) {
+      baseController.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
@@ -57,7 +74,7 @@ suite('req2params', function() {
 
     test('sets also dbuser for authenticated requests', function(done){
       var req = {headers: { host:'localhost' }, query: {map_key: '1234'} };
-      server.req2params(prepareRequest(req), function(err, req) {
+      baseController.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
           //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
@@ -75,7 +92,7 @@ suite('req2params', function() {
                   map_key: '1235'
               }
           };
-          server.req2params(prepareRequest(req), function(err, req) {
+          baseController.req2params(prepareRequest(req), function(err, req) {
               // wrong key resets params to no user
               assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
               done();
@@ -101,7 +118,7 @@ suite('req2params', function() {
                     lzma: data
                 }
             };
-            server.req2params(prepareRequest(req), function(err, req) {
+            baseController.req2params(prepareRequest(req), function(err, req) {
                 if ( err ) {
                     return done(err);
                 }
