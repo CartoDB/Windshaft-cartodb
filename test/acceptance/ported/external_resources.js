@@ -23,7 +23,7 @@ function rmdir_recursive_sync(dirname) {
   }
 }
 
-describe.skip('external resources', function() {
+describe('external resources', function() {
 
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
@@ -96,7 +96,7 @@ describe.skip('external resources', function() {
             serverOptions: PortedServerOptions
         };
 
-        var externalResourceStyle = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +
+        var externalResourceStyle = "#test_table_3{marker-file: url('http://127.0.0.1:" + res_serv_port +
           "/square.svg'); marker-transform:'scale(0.2)'; }";
 
         var externalResourceMapConfig = testClient.defaultTableMapConfig('test_table_3', externalResourceStyle);
@@ -122,7 +122,7 @@ describe.skip('external resources', function() {
     });
 
     it("referencing unexistant external resources returns an error", function(done) {
-        var url = "http://localhost:" + res_serv_port + "/notfound.png";
+        var url = "http://127.0.0.1:" + res_serv_port + "/notfound.png";
         var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
 
         var mapConfig = testClient.defaultTableMapConfig('test_table_3', style);
