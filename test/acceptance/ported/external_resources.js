@@ -23,7 +23,7 @@ function rmdir_recursive_sync(dirname) {
   }
 }
 
-describe('external resources', function() {
+describe.skip('external resources', function() {
 
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
