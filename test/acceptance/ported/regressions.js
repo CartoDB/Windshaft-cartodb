@@ -1,10 +1,8 @@
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
-var _ = require('underscore');
 var fs = require('fs');
 var http = require('http');
-var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
