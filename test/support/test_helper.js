@@ -63,7 +63,8 @@ function checkSurrogateKey(res, expectedKey) {
 after(function(done) {
 
     // restoring nock globally after each suite
-    nock.restore();
+    nock.cleanAll();
+    nock.enableNetConnect();
 
     var expectedKeys = {
         'rails:test_windshaft_cartodb_user_1_db:test_table_private_1': true,
