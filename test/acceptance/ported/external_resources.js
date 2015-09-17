@@ -73,7 +73,7 @@ describe('external resources', function() {
 
     it("basic external resource", function(done) {
 
-        var circleStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
+        var circleStyle = "#test_table_3 { marker-file: url('http://127.0.0.1:" + res_serv_port +
             "/circle.svg'); marker-transform:'scale(0.2)'; }";
 
         testClient.getTile(testClient.defaultTableMapConfig('test_table_3', circleStyle), 13, 4011, 3088,
@@ -82,7 +82,7 @@ describe('external resources', function() {
 
     it("different external resource", function(done) {
 
-        var squareStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
+        var squareStyle = "#test_table_3 { marker-file: url('http://127.0.0.1:" + res_serv_port +
             "/square.svg'); marker-transform:'scale(0.2)'; }";
 
         testClient.getTile(testClient.defaultTableMapConfig('test_table_3', squareStyle), 13, 4011, 3088,
