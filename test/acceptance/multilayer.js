@@ -174,7 +174,6 @@ suite(suiteName, function() {
           var errors = [];
           if ( err ) {
             errors.push(err.message);
-            console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) {
@@ -278,7 +277,6 @@ suite(suiteName, function() {
           var errors = [];
           if ( err ) {
             errors.push(err.message);
-            console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) {
@@ -500,7 +498,6 @@ suite(suiteName, function() {
           var errors = [];
           if ( err ) {
             errors.push(err.message);
-            console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) {
@@ -831,7 +828,6 @@ suite(suiteName, function() {
           var errors = [];
           if ( err ) {
             errors.push(err.message);
-            console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) {
@@ -950,7 +946,6 @@ suite(suiteName, function() {
           var errors = [];
           if ( err ) {
             errors.push(err.message);
-            console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) {
@@ -1114,7 +1109,6 @@ suite(suiteName, function() {
           var errors = [];
           if ( err ) {
             errors.push(err.message);
-            console.log("Error: " + err);
           }
           redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
               if ( err ) {
@@ -1219,7 +1213,6 @@ suite(suiteName, function() {
         function finish(err) {
           if ( err ) {
             errors.push(err.message);
-            console.log("Error: " + err);
           }
           if ( errors.length ) {
               done(new Error(errors));

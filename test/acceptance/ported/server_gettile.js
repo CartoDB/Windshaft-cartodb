@@ -201,10 +201,8 @@ describe('server_gettile', function() {
     };
     var test_strict_lbl = "unused directives are not tolerated if strict";
     if ( semver.satisfies(mapnik.versions.mapnik, '2.3.x') ) {
-      // Strictness handling changed in 2.3.x, possibly a bug:
-      // see http://github.com/mapnik/mapnik/issues/2301
-      console.warn("Strictness test skipped due to http://github.com/mapnik/mapnik/issues/2301");
-      it.skip(test_strict_lbl,  test_strictness);
+      // Strictness handling changed in 2.3.x, possibly a bug: see http://github.com/mapnik/mapnik/issues/2301
+      it.skip('[skipped due to http://github.com/mapnik/mapnik/issues/2301]' + test_strict_lbl,  test_strictness);
     }
     else {
       it(test_strict_lbl,  test_strictness);
