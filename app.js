@@ -87,9 +87,9 @@ var server = cartodbWindshaft(serverOptions);
 // 128 is a good number if you have up to 1024 filedescriptors
 // 4 is good if you have max 32 filedescriptors
 // 1 is good if you have max 16 filedescriptors
-server.maxConnections = global.environment.maxConnections || 128;
+var backlog = global.environment.maxConnections || 128;
 
-var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host);
+var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, backlog);
 
 var version = require("./package").version;
 

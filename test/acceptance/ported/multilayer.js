@@ -41,7 +41,6 @@ describe('multilayer', function() {
           fs.readFile(filename, "binary", function(err, file) {
             if ( err ) {
               response.writeHead(404, {'Content-Type': 'text/plain'});
-              console.log("File '" + filename + "' not found");
               response.write("404 Not Found\n");
             } else {
               response.writeHead(200);
@@ -499,7 +498,6 @@ describe('multilayer', function() {
         },
         function do_get_tile(err)
         {
-          console.log(err);
           assert.ifError(err);
           var next = this;
           assert.response(server, {
@@ -742,7 +740,6 @@ describe('multilayer', function() {
           return null;
         },
         function finish(err) {
-//if ( err ) console.log(err.stack);
           var errors = [];
           if ( err ) {
               errors.push(''+err);

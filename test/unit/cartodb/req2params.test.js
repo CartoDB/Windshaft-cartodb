@@ -61,7 +61,6 @@ suite('req2params', function() {
       var req = {headers: { host:'localhost' }, query: {} };
       baseController.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
-          //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
@@ -76,7 +75,6 @@ suite('req2params', function() {
       var req = {headers: { host:'localhost' }, query: {map_key: '1234'} };
       baseController.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
-          //console.dir(req);
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
