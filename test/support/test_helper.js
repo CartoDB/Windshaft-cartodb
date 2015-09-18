@@ -12,11 +12,17 @@ var lzmaWorker = new LZMA();
 
 var redis = require('redis');
 var nock = require('nock');
+var log4js = require('log4js');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
 global.environment.name = 'test';
 process.env.NODE_ENV = 'test';
+
+
+// don't output logs in test environment to reduce noise
+log4js.configure({ appenders: [] });
+global.logger = log4js.getLogger();
 
 
 // Utility function to compress & encode LZMA
