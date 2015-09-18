@@ -1,10 +1,8 @@
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
-var _ = require('underscore');
 var fs = require('fs');
 var http = require('http');
-var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
@@ -101,38 +99,5 @@ describe('regressions', function() {
             assert.ok(parsedBody.errors[0].match(/read-only transaction/), 'read-only error message expected');
             done();
         });
-    });
-
-    // See https://github.com/CartoDB/Windshaft/issues/167
-    it("#167 does not die on unexistent statsd host",  function(done) {
-        var CustomOptions = _.clone(ServerOptions);
-        CustomOptions.statsd = _.clone(CustomOptions.statsd);
-        CustomOptions.statsd.host = 'whoami.vizzuality.com';
-        CustomOptions.statsd.cacheDns = false;
-        var server = cartodbServer(CustomOptions);
-        server.req2params = CustomOptions.req2params;
-        server.setMaxListeners(0);
-
-        var errors = [];
-        // We need multiple requests to make sure
-        // statsd_client eventually tries to send
-        // stats _and_ DNS lookup is given enough
-        // time (an interval is used later for that)
-        var numreq = 10;
-        var pending = numreq;
-        var completed = function(err) {
-            if ( err ) {
-                errors.push(err);
-            }
-            if ( ! --pending ) {
-                setTimeout(function() {
-                    done(errors.length ? new Error(errors.join(',')) : null);
-                }, 10);
-            }
-        };
-        var mapConfig = testClient.defaultTableMapConfig('test_table');
-        for (var i=0; i<numreq; ++i) {
-            testClient.createLayergroup(mapConfig, { server: server }, completed);
-        }
     });
 });

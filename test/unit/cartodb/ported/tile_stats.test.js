@@ -36,6 +36,9 @@ describe('tile stats', function() {
             }
         };
         var resMock = {
+            status: function() { return this; },
+            json: function() {},
+            jsonp: function() {},
             send: function() {}
         };
         layergroupController.finalizeGetTileOrGrid('Unsupported format png2', reqMock, resMock, null, null);
@@ -61,6 +64,9 @@ describe('tile stats', function() {
             }
         };
         var resMock = {
+            status: function() { return this; },
+            json: function() {},
+            jsonp: function() {},
             send: function() {}
         };
 

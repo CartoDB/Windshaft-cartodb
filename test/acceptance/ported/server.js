@@ -111,13 +111,20 @@ describe('server', function() {
 
     it("grid jsonp",  function(done){
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
-        testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'test', function(err, res) {
+        testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'jsonp_test', function(err, res) {
             assert.equal(res.statusCode, 200, res.body);
-            assert.deepEqual(res.headers['content-type'], 'application/json; charset=utf-8');
-            var regexp = '^test\\((.*)\\);$';
-            var matches = res.body.match(regexp);
-            assert.equal(matches.length, 2, 'Unexpected JSONP response:'  + res.body);
-            assert.utfgridEqualsFile(matches[1], './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
+            assert.deepEqual(res.headers['content-type'], 'text/javascript; charset=utf-8');
+            var didRunJsonCallback = false;
+            var response = {};
+            // jshint ignore:start
+            function jsonp_test(body) {
+                response = body;
+                didRunJsonCallback = true;
+            }
+            eval(res.body);
+            // jshint ignore:end
+            assert.ok(didRunJsonCallback);
+            assert.utfgridEqualsFile(response, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
         });
     });
 
@@ -145,7 +152,7 @@ describe('server', function() {
             }
         };
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, expectedResponse, function(err, res) {
-            console.log(res.body);
+            assert.deepEqual(JSON.parse(res.body), {"errors":["Tileset has no interactivity"]});
             done();
         });
     });

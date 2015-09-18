@@ -235,7 +235,10 @@ describe('attributes', function() {
                 assert.ifError(err);
                 // jsonp errors should be returned with HTTP status 200
                 assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-                assert.equal(res.body, 'test({"errors":["Layer 0 has no exposed attributes"]});');
+                assert.equal(
+                    res.body,
+                    '/**/ typeof test === \'function\' && test({"errors":["Layer 0 has no exposed attributes"]});'
+                );
                 return null;
             },
             function do_get_attr_1(err)

@@ -89,11 +89,11 @@ var server = cartodbWindshaft(serverOptions);
 // 1 is good if you have max 16 filedescriptors
 server.maxConnections = global.environment.maxConnections || 128;
 
-server.listen(serverOptions.bind.port, serverOptions.bind.host);
+var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host);
 
 var version = require("./package").version;
 
-server.on('listening', function() {
+listener.on('listening', function() {
     console.log(
         "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
         version, serverOptions.bind.host, serverOptions.bind.port, process.pid, ENVIRONMENT
