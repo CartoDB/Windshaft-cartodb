@@ -11,8 +11,6 @@ This is the [CartoDB Maps API](http://docs.cartodb.com/cartodb-platform/maps-api
 * gets the default geometry type from the cartodb redis store
 * allows tiles to be styled individually
 * provides a link to varnish high speed cache
-* provides a ``infowindow`` endpoint for windshaft (DEPRECATED)
-* provides a ``map_metadata`` endpoint for windshaft (DEPRECATED)
 * provides a [template maps API](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/Template-maps.md)
 
 Requirements
@@ -27,7 +25,6 @@ Requirements
    - libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 
 - For cache control (optional)
-   - CartoDB-SQL-API 1.0.0+
    - CartoDB 0.9.5+ (for `CDB_QueryTables`)
    - Varnish (http://www.varnish-cache.org)
 
