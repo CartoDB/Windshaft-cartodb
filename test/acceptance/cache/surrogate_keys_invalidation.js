@@ -1,4 +1,4 @@
-require(__dirname + '/../../support/test_helper');
+require('../../support/test_helper');
 
 var assert      = require('../../support/assert');
 var redis       = require('redis');

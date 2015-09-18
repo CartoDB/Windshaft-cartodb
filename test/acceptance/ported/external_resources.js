@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 
 var assert = require('../../support/assert');
@@ -6,6 +6,8 @@ var fs = require('fs');
 var PortedServerOptions = require('./support/ported_server_options');
 var http = require('http');
 var testClient = require('./support/test_client');
+
+var nock = require('nock');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
 
@@ -33,6 +35,8 @@ describe('external resources', function() {
 
     var req2paramsFn;
     before(function(done) {
+        nock.enableNetConnect('127.0.0.1');
+
         req2paramsFn = BaseController.prototype.req2params;
         BaseController.prototype.req2params = PortedServerOptions.req2params;
         // Start a server to test external resources
@@ -58,8 +62,13 @@ describe('external resources', function() {
 
         rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
-        // Close the resources server
-        res_serv.close(done);
+        testHelper.deleteRedisKeys({
+            'user:localhost:mapviews:global': 5
+        }, function() {
+            // Close the resources server
+            res_serv.close(done);
+        });
+
     });
 
     function imageCompareFn(fixture, done) {
@@ -73,7 +82,7 @@ describe('external resources', function() {
 
     it("basic external resource", function(done) {
 
-        var circleStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
+        var circleStyle = "#test_table_3 { marker-file: url('http://127.0.0.1:" + res_serv_port +
             "/circle.svg'); marker-transform:'scale(0.2)'; }";
 
         testClient.getTile(testClient.defaultTableMapConfig('test_table_3', circleStyle), 13, 4011, 3088,
@@ -82,7 +91,7 @@ describe('external resources', function() {
 
     it("different external resource", function(done) {
 
-        var squareStyle = "#test_table_3 { marker-file: url('http://localhost:" + res_serv_port +
+        var squareStyle = "#test_table_3 { marker-file: url('http://127.0.0.1:" + res_serv_port +
             "/square.svg'); marker-transform:'scale(0.2)'; }";
 
         testClient.getTile(testClient.defaultTableMapConfig('test_table_3', squareStyle), 13, 4011, 3088,
@@ -96,7 +105,7 @@ describe('external resources', function() {
             serverOptions: PortedServerOptions
         };
 
-        var externalResourceStyle = "#test_table_3{marker-file: url('http://localhost:" + res_serv_port +
+        var externalResourceStyle = "#test_table_3{marker-file: url('http://127.0.0.1:" + res_serv_port +
           "/square.svg'); marker-transform:'scale(0.2)'; }";
 
         var externalResourceMapConfig = testClient.defaultTableMapConfig('test_table_3', externalResourceStyle);
@@ -122,7 +131,7 @@ describe('external resources', function() {
     });
 
     it("referencing unexistant external resources returns an error", function(done) {
-        var url = "http://localhost:" + res_serv_port + "/notfound.png";
+        var url = "http://127.0.0.1:" + res_serv_port + "/notfound.png";
         var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
 
         var mapConfig = testClient.defaultTableMapConfig('test_table_3', style);
