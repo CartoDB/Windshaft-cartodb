@@ -139,8 +139,6 @@ describe('named static maps', function() {
             }
         };
 
-        console.log(url);
-
         var statusCode = options.status || 200;
 
         var expectedResponse = {
