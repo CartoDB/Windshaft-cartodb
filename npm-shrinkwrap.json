@@ -441,7 +441,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@~2.0.1",
+              "from": "inherits@2",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -594,7 +594,7 @@
         },
         "mime-types": {
           "version": "2.1.6",
-          "from": "mime-types@~2.1.6",
+          "from": "mime-types@~2.1.2",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.6.tgz",
           "dependencies": {
             "mime-db": {
@@ -3018,8 +3018,8 @@
           "dependencies": {
             "mapnik-pool": {
               "version": "0.1.1",
-              "from": "mapnik-pool@0.1.x",
-              "resolved": "https://registry.npmjs.org/mapnik-pool/-/mapnik-pool-0.1.1.tgz",
+              "from": "https://github.com/CartoDB/mapnik-pool/tarball/cdb",
+              "resolved": "https://github.com/CartoDB/mapnik-pool/tarball/cdb",
               "dependencies": {
                 "generic-pool": {
                   "version": "2.1.1",
