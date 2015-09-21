@@ -59,7 +59,7 @@ describe('health checks', function () {
         callback(null, "Maintenance");
       };
       
-      healthCheck.check(null, function(err/*, result*/) {
+      healthCheck.check(function(err) {
         assert.equal(err.message, "Maintenance");
         assert.equal(err.http_status, 503);
         done();
