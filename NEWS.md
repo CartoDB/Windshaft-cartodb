@@ -1,9 +1,11 @@
 # Changelog
 
-## 2.12.1
+## 2.13.0
 
 Released 2015-mm-dd
 
+New features:
+ - Keep x-cache-channel in named map static maps
 
 
 ## 2.12.0
