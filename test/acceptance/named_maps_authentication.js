@@ -163,34 +163,36 @@ describe('named maps authentication', function() {
         );
     }
 
-    it('should return a 404 error for nonexistent template name', function (done) {
-        var nonexistentName = 'nonexistent';
-        getNamedTile(nonexistentName, 0, 0, 0, { status: 404 }, function(err, res) {
-            assert.ok(!err);
-            assert.deepEqual(
-                JSON.parse(res.body),
-                { errors: ["Template '" + nonexistentName + "' of user '" + username + "' not found"] }
-            );
-            done();
+    describe('tiles', function() {
+        it('should return a 404 error for nonexistent template name', function (done) {
+            var nonexistentName = 'nonexistent';
+            getNamedTile(nonexistentName, 0, 0, 0, { status: 404 }, function(err, res) {
+                assert.ok(!err);
+                assert.deepEqual(
+                    JSON.parse(res.body),
+                    { errors: ["Template '" + nonexistentName + "' of user '" + username + "' not found"] }
+                );
+                done();
+            });
         });
-    });
 
-    it('should return 403 if not properly authorized', function(done) {
-        getNamedTile(tokenAuthTemplateName, 0, 0, 0, { status: 403 }, function(err, res) {
-            assert.ok(!err);
-            assert.deepEqual(JSON.parse(res.body), { errors: ['Unauthorized template instantiation'] });
-            done();
+        it('should return 403 if not properly authorized', function(done) {
+            getNamedTile(tokenAuthTemplateName, 0, 0, 0, { status: 403 }, function(err, res) {
+                assert.ok(!err);
+                assert.deepEqual(JSON.parse(res.body), { errors: ['Unauthorized template instantiation'] });
+                done();
+            });
         });
-    });
 
-    it('should return 200 if properly authorized', function(done) {
-        getNamedTile(tokenAuthTemplateName, 0, 0, 0, { params: { auth_token: 'valid1' } }, function(err, res, img) {
-            assert.equal(img.width(), 256);
-            assert.equal(img.height(), 256);
+        it('should return 200 if properly authorized', function(done) {
+            getNamedTile(tokenAuthTemplateName, 0, 0, 0, { params: { auth_token: 'valid1' } }, function(err, res, img) {
+                assert.equal(img.width(), 256);
+                assert.equal(img.height(), 256);
 
-            assert.ok(!err);
-            test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
-            done();
+                assert.ok(!err);
+                test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
+                done();
+            });
         });
     });
 
@@ -230,36 +232,37 @@ describe('named maps authentication', function() {
             }
         );
     }
-
-    it('should return a 404 error for nonexistent template name', function (done) {
-        var nonexistentName = 'nonexistent';
-        getStaticMap(nonexistentName, { status: 404 }, function(err, res) {
-            assert.ok(!err);
-            assert.deepEqual(
-                JSON.parse(res.body),
-                { errors: ["Template '" + nonexistentName + "' of user '" + username + "' not found"] }
-            );
-            done();
+    describe('static maps', function() {
+        it('should return a 404 error for nonexistent template name', function (done) {
+            var nonexistentName = 'nonexistent';
+            getStaticMap(nonexistentName, { status: 404 }, function(err, res) {
+                assert.ok(!err);
+                assert.deepEqual(
+                    JSON.parse(res.body),
+                    { errors: ["Template '" + nonexistentName + "' of user '" + username + "' not found"] }
+                );
+                done();
+            });
         });
-    });
 
-    it('should return 403 if not properly authorized', function(done) {
-        getStaticMap(tokenAuthTemplateName, { status: 403 }, function(err, res) {
-            assert.ok(!err);
-            assert.deepEqual(JSON.parse(res.body), { errors: ['Unauthorized template instantiation'] });
-            done();
+        it('should return 403 if not properly authorized', function(done) {
+            getStaticMap(tokenAuthTemplateName, { status: 403 }, function(err, res) {
+                assert.ok(!err);
+                assert.deepEqual(JSON.parse(res.body), { errors: ['Unauthorized template instantiation'] });
+                done();
+            });
         });
-    });
 
-    it('should return 200 if properly authorized', function(done) {
-        getStaticMap(tokenAuthTemplateName, { params: { auth_token: 'valid1' } }, function(err, res, img) {
-            assert.ok(!err);
+        it('should return 200 if properly authorized', function(done) {
+            getStaticMap(tokenAuthTemplateName, { params: { auth_token: 'valid1' } }, function(err, res, img) {
+                assert.ok(!err);
 
-            assert.equal(img.width(), 640);
-            assert.equal(img.height(), 480);
+                assert.equal(img.width(), 640);
+                assert.equal(img.height(), 480);
 
-            test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
-            done();
+                test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
+                done();
+            });
         });
     });
 
