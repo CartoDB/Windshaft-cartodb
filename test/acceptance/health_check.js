@@ -76,21 +76,21 @@ describe('health checks', function () {
         });
     });
 
-    it('no error if disabled file exists but has no content', function(done) {
+    it('error if disabled file exists but has no content', function(done) {
         var readFileFn = fs.readFile;
         fs.readFile = function(filename, callback) {
             callback(null, '');
         };
         var server = new CartodbWindshaft(serverOptions);
 
-        assert.response(server, healthCheckRequest, RESPONSE_OK, function(res, err) {
+        assert.response(server, healthCheckRequest, RESPONSE_FAIL, function(res, err) {
             fs.readFile = readFileFn;
 
             assert.ok(!err);
             var parsed = JSON.parse(res.body);
-
-            assert.equal(parsed.enabled, true);
-            assert.equal(parsed.ok, true);
+            assert.ok(parsed.enabled);
+            assert.ok(!parsed.ok);
+            assert.equal(parsed.err, 'Unknown error');
 
             done();
         });
