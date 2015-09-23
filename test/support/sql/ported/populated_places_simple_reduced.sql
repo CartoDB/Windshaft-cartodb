@@ -7383,3 +7383,5 @@ CREATE INDEX the_geom_ffebe516_1e32_11e4_ae44_6476ba93d4f6 ON populated_places_s
 
 GRANT ALL ON TABLE populated_places_simple_reduced TO :TESTUSER;
 GRANT SELECT ON TABLE populated_places_simple_reduced TO :PUBLICUSER;
+
+VACUUM ANALYZE populated_places_simple_reduced;
