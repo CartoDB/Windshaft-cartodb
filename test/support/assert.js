@@ -6,6 +6,8 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 
+var mapnik = require('windshaft').mapnik;
+
 var request = require('request');
 
 var assert = module.exports = exports = require('assert');
@@ -81,6 +83,47 @@ function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance
             }
         }
     });
+}
+
+assert.imagesAreSimilar = function(testImage, referenceImage, tolerance, callback) {
+    if (testImage.width() !== referenceImage.width() || testImage.height() !== referenceImage.height()) {
+        return callback(new Error('Images are not the same size'));
+    }
+
+    var pixelsDifference = referenceImage.compare(testImage);
+    var similarity = pixelsDifference / (referenceImage.width() * referenceImage.height());
+    var tolerancePerMil = (tolerance / 1000);
+
+    if (similarity > tolerancePerMil) {
+        var err = new Error(
+            util.format('Images are not similar (got %d similarity, expected %d)', similarity, tolerancePerMil)
+        );
+        err.similarity = similarity;
+        callback(err, similarity);
+    } else {
+        callback(null, similarity);
+    }
+};
+
+assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback) {
+    callback = callback || function(err) { assert.ifError(err); };
+
+    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
+
+    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
+
+    assert.imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
+        if (err) {
+            var testImageFilePath = randomImagePath();
+            testImage.save(testImageFilePath);
+        }
+        callback(err);
+    });
+};
+
+function randomImagePath(nameHint) {
+    nameHint = nameHint || 'test';
+    return path.resolve('test/results/png/image-' + nameHint + '-' + Date.now() + '.png');
 }
 
 // jshint maxcomplexity:9
