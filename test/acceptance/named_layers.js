@@ -435,7 +435,7 @@ describe('named_layers', function() {
             },
             function deleteTemplate(err) {
                 var next = this;
-                templateMaps.delTemplate(username, privateTableTemplate, function(/*delErr*/) {
+                templateMaps.delTemplate(username, privateTableTemplateName, function(/*delErr*/) {
                     // ignore deletion error
                     next(err);
                 });
@@ -563,7 +563,7 @@ describe('named_layers', function() {
             },
             function deleteTemplate(err) {
                 var next = this;
-                templateMaps.delTemplate(username, privateTableTemplate, function(/*delErr*/) {
+                templateMaps.delTemplate(username, privateTableTemplateNameInteractivity, function(/*delErr*/) {
                     // ignore deletion error
                     next(err);
                 });
@@ -717,6 +717,117 @@ describe('named_layers', function() {
     });
 
 
+    it('should work with named tiles', function(done) {
+
+        var namedTilesTemplateName = 'named_tiles_template';
+        var namedTilesTemplate = {
+            version: '0.0.1',
+            name: namedTilesTemplateName,
+            auth: {
+                method: 'open'
+            },
+            layergroup: {
+                layers: [
+                    namedMapLayer,
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from test_table_private_1',
+                            cartocss: '#layer { marker-fill: #cc3300; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]
+            }
+        };
+
+        step(
+            function createTemplate() {
+                templateMaps.addTemplate(username, namedTilesTemplate, this);
+            },
+            function createLayergroup(err) {
+                if (err) {
+                    throw err;
+                }
+
+                var next = this;
+                assert.response(server,
+                    {
+                        url: '/api/v1/map/named/' + namedTilesTemplateName + '?api_key=1234',
+                        method: 'POST',
+                        headers: {
+                            host: 'localhost',
+                            'Content-Type': 'application/json'
+                        }
+                    },
+                    {
+                        status: 200
+                    },
+                    function(res, err) {
+                        next(err, res);
+                    }
+                );
+            },
+            function checkLayergroup(err, response) {
+                if (err) {
+                    throw err;
+                }
+
+                var parsedBody = JSON.parse(response.body);
+                assert.ok(parsedBody.layergroupid);
+                assert.ok(parsedBody.last_updated);
+
+                assert.equal(parsedBody.metadata.layers[0].type, 'mapnik');
+                assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
+
+                return parsedBody.layergroupid;
+            },
+            function requestTile(err, layergroupId) {
+                if (err) {
+                    throw err;
+                }
+
+                var next = this;
+                assert.response(server,
+                    {
+                        url: '/api/v1/map/' + layergroupId + '/all/0/0/0.png',
+                        method: 'GET',
+                        headers: {
+                            host: 'localhost'
+                        },
+                        encoding: 'binary'
+                    },
+                    {
+                        status: 200,
+                        headers: {
+                            'content-type': 'image/png'
+                        }
+                    },
+                    function(res, err) {
+                        next(err, res);
+                    }
+                );
+            },
+            function handleTileResponse(err, res) {
+                if (err) {
+                    throw err;
+                }
+                test_helper.checkCache(res);
+                return true;
+            },
+            function deleteTemplate(err) {
+                var next = this;
+                templateMaps.delTemplate(username, namedTilesTemplateName, function(/*delErr*/) {
+                    // ignore deletion error
+                    next(err);
+                });
+            },
+            function finish(err) {
+                done(err);
+            }
+        );
+
+    });
 
     after(function(done) {
         global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
