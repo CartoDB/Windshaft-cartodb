@@ -4,6 +4,7 @@ var assert      = require('../../support/assert');
 var redis       = require('redis');
 var step        = require('step');
 var FastlyPurge = require('fastly-purge');
+var _ = require('underscore');
 
 var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cartodb/cache/model/named_maps_entry');
 var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/server');
@@ -34,29 +35,35 @@ describe('templates surrogate keys', function() {
 
     var server = new CartodbWindshaft(serverOptions);
 
-    var templateOwner = 'localhost',
-        templateName = 'acceptance',
-        expectedTemplateId = templateName,
-        template = {
-            version: '0.0.1',
-            name: templateName,
-            auth: {
-                method: 'open'
-            },
-            layergroup:  {
-                version: '1.2.0',
-                layers: [
-                    {
-                        options: {
-                            sql: 'select 1 cartodb_id, null::geometry as the_geom_webmercator',
-                            cartocss: '#layer { marker-fill:blue; }',
-                            cartocss_version: '2.3.0'
-                        }
-                    }
-                ]
-            }
+    var templateOwner = 'localhost';
+    var templateName = 'acceptance';
+    var expectedTemplateId = templateName;
+    var template = {
+        version: '0.0.1',
+        name: templateName,
+        auth: {
+            method: 'open'
         },
-        expectedBody = { template_id: expectedTemplateId };
+        layergroup:  {
+            version: '1.2.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select 1 cartodb_id, null::geometry as the_geom_webmercator',
+                        cartocss: '#layer { marker-fill:blue; }',
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
+        }
+    };
+    var templateUpdated = _.extend({}, template, {layergroup: {layers: [{
+        type: 'plain',
+        options: {
+            color: 'red'
+        }
+    }]} });
+    var expectedBody = { template_id: expectedTemplateId };
 
     var varnishHttpUrl = [
         'http://', serverOptions.varnish_host, ':', serverOptions.varnish_http_port
@@ -149,7 +156,7 @@ describe('templates surrogate keys', function() {
                         host: templateOwner,
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(template)
+                    data: JSON.stringify(templateUpdated)
                 };
                 var next = this;
                 assert.response(server,
@@ -284,7 +291,7 @@ describe('templates surrogate keys', function() {
                         host: templateOwner,
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(template)
+                    data: JSON.stringify(templateUpdated)
                 };
                 var next = this;
                 assert.response(server,

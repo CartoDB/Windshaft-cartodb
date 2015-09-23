@@ -26,6 +26,13 @@ describe('template_maps', function() {
         }
     };
 
+    var LAYER_PLAIN = {
+        type: 'plain',
+        options: {
+            color: 'red'
+        }
+    };
+
   it('does not accept template with unsupported version', function(done) {
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
@@ -549,5 +556,80 @@ describe('template_maps', function() {
       }
     );
   });
+
+    describe('emit', function() {
+        var owner = 'me';
+        var templateName = 'emit';
+        var template = {
+            version:'0.0.1',
+            name: templateName,
+            auth: {
+                method: 'open'
+            },
+            placeholders: {},
+            layergroup: {
+                layers: [
+                    wadusLayer
+                ]
+            }
+        };
+        var templateUpdated = _.extend({}, template, { layergroup: { layers: [LAYER_PLAIN] } });
+        var templateMaps;
+        beforeEach(function() {
+            templateMaps = new TemplateMaps(redis_pool);
+        });
+
+        it('should emit on template update', function(done) {
+            templateMaps.on('update', function(_owner, _templateName, _template) {
+                assert.equal(_owner, owner);
+                assert.equal(_templateName, templateName);
+                assert.deepEqual(_template, templateUpdated);
+
+                templateMaps.delTemplate(owner, templateName, done);
+            });
+
+            templateMaps.addTemplate(owner, template, function(err, templateName, _template) {
+                assert.ok(!err, err);
+
+                assert.deepEqual(_template, template);
+                templateMaps.updTemplate(owner, templateName, templateUpdated, function() {});
+            });
+        });
+
+        it('should emit on template deletion', function(done) {
+            templateMaps.on('delete', function(_owner, _templateName) {
+                assert.equal(_owner, owner);
+                assert.equal(_templateName, templateName);
+
+                done();
+            });
+
+            templateMaps.addTemplate(owner, template, function(err, templateName, _template) {
+                assert.ok(!err, err);
+
+                assert.deepEqual(_template, template);
+                templateMaps.delTemplate(owner, templateName, function() {});
+            });
+        });
+
+        it('should NOT emit on template update when template is the same', function(done) {
+            templateMaps.on('update', function(_owner, _templateName, _template) {
+                assert.equal(_owner, owner);
+                assert.equal(_templateName, templateName);
+                assert.deepEqual(_template, templateUpdated);
+
+                templateMaps.delTemplate(owner, templateName, done);
+            });
+
+            templateMaps.addTemplate(owner, template, function(err, templateName, _template) {
+                assert.ok(!err, err);
+                assert.deepEqual(_template, template);
+
+                templateMaps.updTemplate(owner, templateName, template, function() {
+                    templateMaps.updTemplate(owner, templateName, templateUpdated, function() {});
+                });
+            });
+        });
+    });
 
 });
