@@ -1,4 +1,6 @@
-require('../../../support/test_helper');
+var testHelper = require('../../../support/test_helper');
+var LayergroupToken = require('../../../../lib/cartodb/models/layergroup_token');
+
 var step = require('step');
 var assert = require('../../../support/assert');
 var redis = require('redis');
@@ -88,13 +90,17 @@ function createLayergroup(layergroupConfig, options, callback) {
                 parsedBody = JSON.parse(res.body);
                 layergroupid = parsedBody.layergroupid;
                 if (layergroupid) {
-                    layergroupid = layergroupid.split(':')[0];
+                    layergroupid = LayergroupToken.parse(layergroupid).token;
                 }
             }
 
             if (layergroupid) {
+                var keysToDelete = {
+                    'user:localhost:mapviews:global': 5
+                };
                 var redisKey = 'map_cfg|' + layergroupid;
-                redisClient.del(redisKey, function (/*delErr*/) {
+                keysToDelete[redisKey] = 0;
+                testHelper.deleteRedisKeys(keysToDelete, function() {
                     return callback(err, res, parsedBody);
                 });
             } else {
@@ -381,14 +387,18 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
         },
         function validateTile(err, res) {
             assert.ok(!err, 'Failed to get tile');
-            var redisKey = 'map_cfg|' + layergroupid.split(':')[0];
 
             var img;
             if (contentType === pngContentType) {
                 img = new mapnik.Image.fromBytesSync(new Buffer(res.body, 'binary'));
             }
 
-            redisClient.del(redisKey, function (/*delErr*/) {
+            var keysToDelete = {
+                'user:localhost:mapviews:global': 5
+            };
+            var redisKey = 'map_cfg|' + LayergroupToken.parse(layergroupid).token;
+            keysToDelete[redisKey] = 0;
+            testHelper.deleteRedisKeys(keysToDelete, function() {
                 return callback(err, res, img);
             });
         }
