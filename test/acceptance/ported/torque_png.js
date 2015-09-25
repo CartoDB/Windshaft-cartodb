@@ -18,10 +18,6 @@ describe('torque png renderer', function() {
         BaseController.prototype.req2params = req2paramsFn;
     });
 
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
-    });
-
     var IMAGE_TOLERANCE_PER_MIL = 20;
 
     var torquePngPointsMapConfig =  {
