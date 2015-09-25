@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var step = require('step');
@@ -396,7 +396,7 @@ describe('multilayer error cases', function() {
 
         testClient.getGrid(mapConfig, 1, 13, 4011, 3088, defaultErrorExpectedResponse, function(err, res) {
             assert.deepEqual(JSON.parse(res.body), { errors: ["Layer '1' not found in layergroup"] });
-            done();
+            testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
         });
     });
 
