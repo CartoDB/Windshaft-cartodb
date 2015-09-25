@@ -10,10 +10,10 @@ var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
 
-suite('server', function() {
+describe('server', function() {
 
     // TODO: I guess this should be a 404 instead...
-    test("get call to server returns 200", function(done){
+    it("get call to server returns 200", function(done){
       step(
         function doGet() {
           var next = this;
@@ -35,7 +35,7 @@ suite('server', function() {
       );
     });
 
-    test("get call to server returns 200", function(done){
+    it("get call to server returns 200", function(done){
         assert.response(server, {
             url: '/version',
             method: 'GET'
@@ -53,10 +53,10 @@ suite('server', function() {
     });
 });
 
-suite('server old_api', function() {
+describe('server old_api', function() {
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/115
-    test.skip("get'ing tile with not-strictly-valid style", function(done) {
+    it.skip("get'ing tile with not-strictly-valid style", function(done) {
         var style = querystring.stringify({style: '#test_table{line-color:black}}', style_version: '2.0.0'});
         assert.response(server, {
             headers: {host: 'localhost'},

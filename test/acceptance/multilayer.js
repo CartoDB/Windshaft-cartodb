@@ -22,7 +22,7 @@ var TablesCacheEntry = require('../../lib/cartodb/cache/model/database_tables_en
 ['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
 
 var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
-suite(suiteName, function() {
+describe(suiteName, function() {
 
     var cdbQueryTablesFromPostgresEnabledValue = true;
 
@@ -33,7 +33,7 @@ suite(suiteName, function() {
     var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
     var test_database = test_user + '_db';
 
-    test("layergroup with 2 layers, each with its style", function(done) {
+    it("layergroup with 2 layers, each with its style", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
@@ -197,7 +197,7 @@ suite(suiteName, function() {
     });
 
 
-    test("should include serverMedata in the response", function(done) {
+    it("should include serverMedata in the response", function(done) {
       global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } };
       var layergroup =  {
         version: '1.0.0',
@@ -230,7 +230,7 @@ suite(suiteName, function() {
     });
 
 
-    test("get creation requests has cache", function(done) {
+    it("get creation requests has cache", function(done) {
 
         var layergroup =  {
             version: '1.0.0',
@@ -299,7 +299,7 @@ suite(suiteName, function() {
       );
     });
 
-    test("get creation has no cache if sql is bogus", function(done) {
+    it("get creation has no cache if sql is bogus", function(done) {
         var layergroup =  {
             version: '1.0.0',
             layers: [
@@ -321,7 +321,7 @@ suite(suiteName, function() {
         });
     });
 
-    test("get creation has no cache if cartocss is not valid", function(done) {
+    it("get creation has no cache if cartocss is not valid", function(done) {
         var layergroup =  {
             version: '1.0.0',
             layers: [
@@ -344,7 +344,7 @@ suite(suiteName, function() {
         });
     });
 
-    test("layergroup can hold substitution tokens", function(done) {
+    it("layergroup can hold substitution tokens", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
@@ -520,7 +520,7 @@ suite(suiteName, function() {
       );
     });
 
-    test("layergroup creation raises mapviews counter", function(done) {
+    it("layergroup creation raises mapviews counter", function(done) {
       var layergroup =  {
         stat_tag: 'random_tag',
         version: '1.0.0',
@@ -631,7 +631,7 @@ suite(suiteName, function() {
       );
     });
 
-    test("layergroup creation fails if CartoCSS is bogus", function(done) {
+    it("layergroup creation fails if CartoCSS is bogus", function(done) {
       var layergroup =  {
         stat_tag: 'random_tag',
         version: '1.0.0',
@@ -660,7 +660,7 @@ suite(suiteName, function() {
 
     // Also tests that server doesn't crash:
     // see http://github.com/CartoDB/Windshaft-cartodb/issues/109
-    test("layergroup creation fails if sql is bogus", function(done) {
+    it("layergroup creation fails if sql is bogus", function(done) {
       var layergroup =  {
         stat_tag: 'random_tag',
         version: '1.0.0',
@@ -687,7 +687,7 @@ suite(suiteName, function() {
       });
     });
 
-    test("layergroup with 2 private-table layers", function(done) {
+    it("layergroup with 2 private-table layers", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
@@ -851,7 +851,7 @@ suite(suiteName, function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/152
-    test("x-cache-channel still works for GETs after tiler restart", function(done) {
+    it("x-cache-channel still works for GETs after tiler restart", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
@@ -969,7 +969,7 @@ suite(suiteName, function() {
     });
 
     // https://github.com/cartodb/Windshaft-cartodb/issues/81
-    test("invalid text-name in CartoCSS", function(done) {
+    it("invalid text-name in CartoCSS", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -997,7 +997,7 @@ suite(suiteName, function() {
       });
     });
 
-    test("quotes CartoCSS", function(done) {
+    it("quotes CartoCSS", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -1027,7 +1027,7 @@ suite(suiteName, function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/87
-    test("exponential notation in CartoCSS filter values", function(done) {
+    it("exponential notation in CartoCSS filter values", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
@@ -1050,7 +1050,7 @@ suite(suiteName, function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/93
-    test("accepts unused directives", function(done) {
+    it("accepts unused directives", function(done) {
       var layergroup =  {
         version: '1.0.0',
         layers: [
@@ -1133,7 +1133,7 @@ suite(suiteName, function() {
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/91
     // and https://github.com/CartoDB/Windshaft-cartodb/issues/38
-    test("tiles for private tables can be fetched with api_key", function(done) {
+    it("tiles for private tables can be fetched with api_key", function(done) {
       var errors = [];
       var layergroup =  {
         version: '1.0.0',
@@ -1226,7 +1226,7 @@ suite(suiteName, function() {
 
     // SQL strings can be of arbitrary length, when using POST
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/111
-    test("sql string can be very long", function(done){
+    it("sql string can be very long", function(done){
       var long_val = 'pretty';
       for (var i=0; i<1024; ++i) {
           long_val += ' long';
@@ -1306,7 +1306,7 @@ suite(suiteName, function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/133
-    test("MapConfig with mapnik layer and no cartocss", function(done) {
+    it("MapConfig with mapnik layer and no cartocss", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
@@ -1348,7 +1348,7 @@ suite(suiteName, function() {
 
     if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/167
-    test("lack of response from sql-api will result in a timeout", function(done) {
+    it("lack of response from sql-api will result in a timeout", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
@@ -1407,7 +1407,7 @@ suite(suiteName, function() {
         status: 200
     };
 
-    test("cache control for layergroup default value", function(done) {
+    it("cache control for layergroup default value", function(done) {
         global.environment.varnish.layergroupTtl = null;
 
         assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
@@ -1419,7 +1419,7 @@ suite(suiteName, function() {
         );
     });
 
-    test("cache control for layergroup uses configuration for max-age", function(done) {
+    it("cache control for layergroup uses configuration for max-age", function(done) {
         var layergroupTtl = 300;
         global.environment.varnish.layergroupTtl = layergroupTtl;
 
@@ -1433,7 +1433,7 @@ suite(suiteName, function() {
     });
 
 
-    test("it's not possible to override authorization with a crafted layergroup", function(done) {
+    it("it's not possible to override authorization with a crafted layergroup", function(done) {
 
         var layergroup =  {
             version: '1.0.0',
@@ -1477,7 +1477,7 @@ suite(suiteName, function() {
     });
 
 
-    suiteTeardown(function(done) {
+    after(function(done) {
 
         // This test will add map_style records, like
         // 'map_style|null|publicuser|my_table',
