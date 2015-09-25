@@ -2,9 +2,9 @@ var testHelper = require('../support/test_helper');
 
 var assert = require('../support/assert');
 
-var redis = require('redis');
 var _ = require('underscore');
 
+var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
 
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var CartodbWindshaft = require('../../lib/cartodb/server');
@@ -16,15 +16,16 @@ describe('tests from old api translated to multilayer', function() {
 
     var layergroupUrl = '/api/v1/map';
 
-    var redisClient = redis.createClient(global.environment.redis.port);
-    after(function(done) {
-        // This test will add map_style records, like
-        // 'map_style|null|publicuser|my_table',
-        redisClient.keys("map_style|*", function(err, matches) {
-            redisClient.del(matches, function() {
-                testHelper.deleteRedisKeys({ 'user:cartodb250user:mapviews:global': 5 }, done);
-            });
-        });
+    var keysToDelete;
+
+    beforeEach(function() {
+        keysToDelete = {
+            'user:localhost:mapviews:global': 5
+        };
+    });
+
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     var wadusSql = 'select 1 as cartodb_id, null::geometry as the_geom_webmercator';
@@ -109,6 +110,9 @@ describe('tests from old api translated to multilayer', function() {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+
                 done();
             }
         );
@@ -130,6 +134,10 @@ describe('tests from old api translated to multilayer', function() {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['user:cartodb250user:mapviews:global'] = 5;
 
                 global.environment.postgres.host = backupDBHost;
                 done();
@@ -153,6 +161,9 @@ describe('tests from old api translated to multilayer', function() {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['user:cartodb250user:mapviews:global'] = 5;
 
                 global.environment.postgres_auth_pass = backupDBPass;
                 done();
@@ -184,6 +195,8 @@ describe('tests from old api translated to multilayer', function() {
                 function(res) {
                     var parsed = JSON.parse(res.body);
                     assert.ok(parsed.layergroupid);
+
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
 
                     done();
                 }
@@ -251,6 +264,8 @@ describe('tests from old api translated to multilayer', function() {
 
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
 
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+
                 done();
             }
         );
@@ -316,6 +331,9 @@ describe('tests from old api translated to multilayer', function() {
 
                 assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
 
+                // TODO when affected tables query makes the request to fail layergroup should be removed
+                keysToDelete['map_cfg|f14693f2d7b6dcf4629724b3d1efe22d'] = 0;
+
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed, {
                     errors: ["Error: could not fetch affected tables or last updated time: fake error message"]
@@ -340,6 +358,9 @@ describe('tests from old api translated to multilayer', function() {
                 status: 200
             },
             function(res) {
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+
                 var runQueryFn = PgQueryRunner.prototype.run;
                 PgQueryRunner.prototype.run = function(username, query, queryHandler, callback) {
                     return queryHandler(new Error('failed to query database for affected tables'), [], callback);
