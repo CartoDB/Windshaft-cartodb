@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var fs = require('fs');
@@ -61,6 +61,10 @@ describe('server', function() {
 
         // Close the resources server
         res_serv.close(done);
+    });
+
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
     });
 
 
