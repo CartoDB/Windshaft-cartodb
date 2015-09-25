@@ -135,8 +135,12 @@ describe('mapconfig_named_layers_adapter', function() {
     }
 
 
-    before(function(done) {
+    beforeEach(function(done) {
         templateMaps.addTemplate(username, template, done);
+    });
+
+    afterEach(function(done) {
+        templateMaps.delTemplate(username, templateName, done);
     });
 
     it('should fail for named map layer with missing name', function(done) {
@@ -319,9 +323,5 @@ describe('mapconfig_named_layers_adapter', function() {
                 }
             );
         });
-    });
-
-    after(function(done) {
-        templateMaps.delTemplate(username, templateName, done);
     });
 });

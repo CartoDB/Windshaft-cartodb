@@ -95,12 +95,21 @@ var multipleLayersTemplate = {
 };
 
 describe('named_layers datasources', function() {
-    before(function(done) {
+    beforeEach(function(done) {
         templateMaps.addTemplate(username, template, function(err) {
             if (err) {
                 return done(err);
             }
             templateMaps.addTemplate(username, multipleLayersTemplate, done);
+        });
+    });
+
+    afterEach(function(done) {
+        templateMaps.delTemplate(username, templateName, function(err) {
+            if (err) {
+                return done(err);
+            }
+            templateMaps.delTemplate(username, multipleLayersTemplateName, done);
         });
     });
 
@@ -290,15 +299,6 @@ describe('named_layers datasources', function() {
                     testScenario.test(err, layers, datasource, done);
                 }
             );
-        });
-    });
-
-    after(function(done) {
-        templateMaps.delTemplate(username, templateName, function(err) {
-            if (err) {
-                return done(err);
-            }
-            templateMaps.delTemplate(username, multipleLayersTemplateName, done);
         });
     });
 });
