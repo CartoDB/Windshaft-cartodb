@@ -1,7 +1,6 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert      = require('../../support/assert');
-var redis       = require('redis');
 var step        = require('step');
 var FastlyPurge = require('fastly-purge');
 var _ = require('underscore');
@@ -11,8 +10,6 @@ var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/server');
 
 
 describe('templates surrogate keys', function() {
-
-    var redisClient = redis.createClient(global.environment.redis.port);
 
     var serverOptions = require('../../../lib/cartodb/server_options');
 
@@ -187,14 +184,7 @@ describe('templates surrogate keys', function() {
                 if ( err ) {
                     return done(err);
                 }
-                redisClient.keys("map_*|localhost", function(err, keys) {
-                    if ( err ) {
-                        return done(err);
-                    }
-                    redisClient.del(keys, function(err) {
-                        return done(err);
-                    });
-                });
+                testHelper.deleteRedisKeys({'map_tpl|localhost': 0}, done);
             }
         );
     });
@@ -322,14 +312,7 @@ describe('templates surrogate keys', function() {
                 if ( err ) {
                     return done(err);
                 }
-                redisClient.keys("map_*|localhost", function(err, keys) {
-                    if ( err ) {
-                        return done(err);
-                    }
-                    redisClient.del(keys, function(err) {
-                        return done(err);
-                    });
-                });
+                testHelper.deleteRedisKeys({'map_tpl|localhost': 0}, done);
             }
         );
     });
