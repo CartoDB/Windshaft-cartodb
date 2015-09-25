@@ -1,25 +1,10 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
-var fs = require('fs');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
-
-function rmdir_recursive_sync(dirname) {
-  var files = fs.readdirSync(dirname);
-  for (var i=0; i<files.length; ++i) {
-    var f = dirname + "/" + files[i];
-    var s = fs.lstatSync(f);
-    if ( s.isFile() ) {
-      fs.unlinkSync(f);
-    }
-    else {
-        rmdir_recursive_sync(f);
-    }
-  }
-}
 
 describe('regressions', function() {
 
@@ -32,7 +17,7 @@ describe('regressions', function() {
 
     after(function() {
         BaseController.prototype.req2params = req2paramsFn;
-        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+        testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/65

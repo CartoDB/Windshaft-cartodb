@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 
 var assert = require('../../support/assert');
@@ -10,20 +10,6 @@ var testClient = require('./support/test_client');
 var nock = require('nock');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
-
-function rmdir_recursive_sync(dirname) {
-  var files = fs.readdirSync(dirname);
-  for (var i=0; i<files.length; ++i) {
-    var f = dirname + "/" + files[i];
-    var s = fs.lstatSync(f);
-    if ( s.isFile() ) {
-      fs.unlinkSync(f);
-    }
-    else {
-        rmdir_recursive_sync(f);
-    }
-  }
-}
 
 describe('external resources', function() {
 
@@ -60,7 +46,7 @@ describe('external resources', function() {
     after(function(done) {
         BaseController.prototype.req2params = req2paramsFn;
 
-        rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+        testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
 
         // Close the resources server
         res_serv.close(done);
@@ -112,7 +98,7 @@ describe('external resources', function() {
                 assert.equal(res_serv_status.numrequests, externalResourceRequestsCount);
 
                 // reset resources cache
-                rmdir_recursive_sync(global.environment.millstone.cache_basedir);
+                testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
 
                 externalResourceMapConfig = testClient.defaultTableMapConfig('test_table_3 ', externalResourceStyle);
 

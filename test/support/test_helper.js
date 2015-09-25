@@ -6,6 +6,7 @@
  */
 
 var assert = require('assert');
+var fs = require('fs');
 var LZMA  = require('lzma').LZMA;
 
 var lzmaWorker = new LZMA();
@@ -135,12 +136,26 @@ function deleteRedisKeys(keysToDelete, callback) {
     });
 }
 
+function rmdirRecursiveSync(dirname) {
+    var files = fs.readdirSync(dirname);
+    for (var i=0; i<files.length; ++i) {
+        var f = dirname + "/" + files[i];
+        var s = fs.lstatSync(f);
+        if ( s.isFile() ) {
+            fs.unlinkSync(f);
+        }
+        else {
+            rmdirRecursiveSync(f);
+        }
+    }
+}
 
 module.exports = {
   deleteRedisKeys: deleteRedisKeys,
   lzma_compress_to_base64: lzma_compress_to_base64,
   checkNoCache: checkNoCache,
   checkSurrogateKey: checkSurrogateKey,
-  checkCache: checkCache
+  checkCache: checkCache,
+  rmdirRecursiveSync: rmdirRecursiveSync
 };
 
