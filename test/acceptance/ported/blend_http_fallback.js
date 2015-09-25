@@ -43,11 +43,6 @@ describe('blend http fallback', function() {
         httpRendererResourcesServer.close(done);
     });
 
-
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
-    });
-
     var mapConfig = {
         version: '1.2.0',
         layers: [

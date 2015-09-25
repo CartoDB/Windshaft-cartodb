@@ -1,4 +1,4 @@
-var testHelper = require('../../support/test_helper');
+require('../../support/test_helper');
 
 
 var assert = require('../../support/assert');
@@ -62,17 +62,8 @@ describe('external resources', function() {
 
         rmdir_recursive_sync(global.environment.millstone.cache_basedir);
 
-        testHelper.deleteRedisKeys({
-            'user:localhost:mapviews:global': 5
-        }, function() {
-            // Close the resources server
-            res_serv.close(done);
-        });
-
-    });
-
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
+        // Close the resources server
+        res_serv.close(done);
     });
 
     function imageCompareFn(fixture, done) {
