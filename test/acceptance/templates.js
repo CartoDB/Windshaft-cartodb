@@ -23,6 +23,8 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
+var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+
 describe('template_api', function() {
     server.layergroupAffectedTablesCache.cache.reset();
 
@@ -44,7 +46,16 @@ describe('template_api', function() {
         httpRendererResourcesServer.close(done);
     });
 
-    var redis_client = redis.createClient(global.environment.redis.port);
+    var keysToDelete;
+    beforeEach(function() {
+        keysToDelete = {
+            'user:localhost:mapviews:global': 5
+        };
+    });
+
+    afterEach(function(done) {
+        helper.deleteRedisKeys(keysToDelete, done);
+    });
 
     var template_acceptance1 =  {
         version: '0.0.1',
@@ -90,7 +101,6 @@ describe('template_api', function() {
 
     it("can add template, returning id", function(done) {
 
-      var errors = [];
       var expected_tpl_id = "acceptance1";
       var post_request_1 = {
           url: '/api/v1/map/named',
@@ -126,6 +136,9 @@ describe('template_api', function() {
           var parsedBody = JSON.parse(res.body);
           var expectedBody = { template_id: expected_tpl_id };
           assert.deepEqual(parsedBody, expectedBody);
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
           var next = this;
           assert.response(server, post_request_1, {},
             function(res) { next(null, res); });
@@ -138,40 +151,8 @@ describe('template_api', function() {
           assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
           assert.ok(parsedBody.errors[0].match(/already exists/i),
             'Unexpected error for pre-existing template name: ' + parsedBody.errors);
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) ) {
-                    return m;
-                }
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') === -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+
+          done();
         }
       );
     });
@@ -303,32 +284,8 @@ describe('template_api', function() {
             assert.ifError(err);
           assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
           assert.ok(!res.body, 'Unexpected body in DELETE /template response');
-          return null;
-        },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) ) {
-                    return m;
-                }
-              });
-              if ( todrop.length ) {
-                  errors.push(new Error("Unexpected keys in redis: " + todrop));
-              }
-              if ( errors.length ) {
-                  done(new Error(errors.join(',')));
-              }
-              else {
-                  done();
-              }
-          });
+
+          done();
         }
       );
     });
@@ -385,6 +342,7 @@ describe('template_api', function() {
               status: 200
           }, function(res) { 
             var parsed = JSON.parse(res.body);
+            keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
             assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
             next(null); 
           });
@@ -407,7 +365,6 @@ describe('template_api', function() {
 
     it("can list templates", function(done) {
 
-      var errors = [];
       var tplid1, tplid2;
       step(
         function postTemplate1()
@@ -492,48 +449,16 @@ describe('template_api', function() {
             'Missing "' + tplid1 + "' from list response: " + ids.join(','));
           assert.ok(ids.indexOf(tplid2) !== -1,
             'Missing "' + tplid2 + "' from list response: " + ids.join(','));
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                {
-                    return m;
-                }
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') === -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
 
     it("can update template", function(done) {
 
-      var errors = [];
       var tpl_id;
       step(
         function postTemplate()
@@ -613,47 +538,16 @@ describe('template_api', function() {
           assert.ok(parsed.hasOwnProperty('template_id'),
             "Missing 'template_id' from response body: " + res.body);
           assert.equal(tpl_id, parsed.template_id);
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) ) {
-                    return m;
-                }
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') === -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
 
     it("can get a template by id", function(done) {
 
-      var errors = [];
       var tpl_id;
       step(
         function postTemplate()
@@ -710,47 +604,16 @@ describe('template_api', function() {
           assert.ok(parsed.hasOwnProperty('template'),
             "Missing 'template' from response body: " + res.body);
           assert.deepEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) ) {
-                    return m;
-                }
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') === -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
 
     it("can delete a template by id", function(done) {
 
-      var errors = [];
       var tpl_id;
       step(
         function postTemplate()
@@ -840,43 +703,10 @@ describe('template_api', function() {
             "Missing 'errors' from response body: " + res.body);
           assert.ok(parsed.errors[0].match(/cannot find/i),
             'Unexpected error for missing template: ' + parsed.errors);
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) ) {
-                    return m;
-                }
-              });
-              if ( todrop.length ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-                redis_client.del(todrop, function(err) {
-                  if ( err ) {
-                      errors.push(err.message);
-                  }
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else {
-                      done(null);
-                  }
-                });
-              } else {
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else {
-                      done(null);
-                  }
-              }
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
@@ -903,7 +733,6 @@ describe('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
       var tpl_id;
       var layergroupid;
       step(
@@ -986,6 +815,9 @@ describe('template_api', function() {
             "Returned layergroupid does not start with signer name: " + layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+
           // TODO: check value of last_updated ?
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb0/0/0/0.png',
@@ -1078,44 +910,10 @@ describe('template_api', function() {
             assert.ifError(err);
           assert.equal(res.statusCode, 200, 'Tile should be accessible');
           assert.equal(res.headers['content-type'], "image/png");
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                {
-                    return m;
-                }
-              });
-              if ( todrop.length ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-                redis_client.del(todrop, function(err) {
-                  if ( err ) {
-                      errors.push(err.message);
-                  }
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else {
-                      done(null);
-                  }
-                });
-              } else {
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else {
-                      done(null);
-                  }
-              }
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
@@ -1141,7 +939,6 @@ describe('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
       var tpl_id;
       var layergroupid;
       step(
@@ -1207,6 +1004,9 @@ describe('template_api', function() {
             "Returned layergroupid does not start with signer name: " + layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+
           // TODO: check value of last_updated ?
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb0/0/0/0/0.json.torque',
@@ -1297,44 +1097,10 @@ describe('template_api', function() {
             assert.ifError(err);
           assert.equal(res.statusCode, 200, 'Torque tile should be accessible');
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                {
-                    return m;
-                }
-              });
-              if ( todrop.length ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-                redis_client.del(todrop, function(err) {
-                  if ( err ) {
-                      errors.push(err.message);
-                  }
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else {
-                      done(null);
-                  }
-                });
-              } else {
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else {
-                      done(null);
-                  }
-              }
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
@@ -1361,7 +1127,6 @@ describe('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
       var tpl_id;
       var layergroupid;
       step(
@@ -1428,6 +1193,9 @@ describe('template_api', function() {
           assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+
           // TODO: check value of last_updated ?
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb0/0/attributes/5',
@@ -1495,44 +1263,10 @@ describe('template_api', function() {
             assert.ifError(err);
           assert.equal(res.statusCode, 200, 'Layer attributes should be accessible');
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                {
-                    return m;
-                }
-              });
-              if ( todrop.length ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-                redis_client.del(todrop, function(err) {
-                  if ( err ) {
-                      errors.push(err.message);
-                  }
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else {
-                      done(null);
-                  }
-                });
-              } else {
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else {
-                      done(null);
-                  }
-              }
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
@@ -1597,6 +1331,10 @@ describe('template_api', function() {
             assert.ifError(err);
           assert.equal(res.statusCode, 200,
             'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+          keysToDelete['map_tpl|localhost'] = 0;
+
           done();
         }
       );
@@ -1645,7 +1383,7 @@ describe('template_api', function() {
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=test",
+              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=json_test",
               method: 'GET',
               headers: {host: 'localhost' }
           };
@@ -1664,6 +1402,15 @@ describe('template_api', function() {
               new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
           ].join(' ');
           helper.checkSurrogateKey(res, expectedSurrogateKey);
+
+          // jshint ignore:start
+          function json_test(body) {
+              keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
+          }
+          eval(res.body);
+          // jshint ignore:end
+          keysToDelete['map_tpl|localhost'] = 0;
+
           return null;
         },
         function finish(err) {
@@ -1718,7 +1465,7 @@ describe('template_api', function() {
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=test%config=" + JSON.stringify('{color:blue}'),
+              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=json_test&config=" + JSON.stringify({color:'blue'}),
               method: 'GET',
               headers: {host: 'localhost' }
           };
@@ -1737,10 +1484,17 @@ describe('template_api', function() {
               new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
           ].join(' ');
           helper.checkSurrogateKey(res, expectedSurrogateKey);
-          return null;
-        },
-        function finish(err) {
-          done(err);
+
+          // jshint ignore:start
+          function json_test(body) {
+              console.log(body);
+              keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
+          }
+          eval(res.body);
+          // jshint ignore:end
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
@@ -1816,6 +1570,7 @@ describe('template_api', function() {
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('layergroupid'),
             "Missing 'layergroupid' from response body: " + res.body);
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
           redis_stats_client.ZSCORE(statskey + ":global", now, this);
         },
         function check_tag_stats(err, val) {
@@ -1842,23 +1597,17 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function cleanup_stats(err, res) {
-            assert.ifError(err);
+          if (err) {
+              return done(err);
+          }
           assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
           if ( err ) {
               errors.push('' + err);
           }
-          redis_client.del([statskey+':global', statskey+':stat_tag:'+layergroup.stat_tag], this);
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push('' + err);
-          }
-          if ( errors.length ) {
-              done(new Error(errors.join(',')));
-          }
-          else {
-              done(null);
-          }
+
+          keysToDelete[statskey+':stat_tag:'+layergroup.stat_tag] = 5;
+
+          done();
         }
       );
     });
@@ -1885,7 +1634,6 @@ describe('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
       var tpl_id;
       var layergroupid;
       step(
@@ -1928,6 +1676,8 @@ describe('template_api', function() {
             "Missing 'layergroupid' from response body: " + res.body);
           layergroupid = parsed.layergroupid;
           helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
           return null;
         },
         function updateTemplate(err)
@@ -1973,41 +1723,11 @@ describe('template_api', function() {
             "Missing 'layergroupid' from response body: " + res.body);
           assert.ok(layergroupid !== parsed.layergroupid);
           helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push(err);
-          }
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                {
-                    return m;
-                }
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') === -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+
+          done();
         }
       );
     });
@@ -2050,7 +1770,6 @@ describe('template_api', function() {
 
         var template_params = {};
 
-        var errors = [];
         var expectedTemplateId = httpTemplateName;
         var layergroupid;
         step(
@@ -2111,6 +1830,8 @@ describe('template_api', function() {
                     parsed.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
 
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+
                 var next = this;
                 assert.response(
                     server,
@@ -2160,41 +1881,7 @@ describe('template_api', function() {
                 );
             },
             function finish(err) {
-                if (err) {
-                    errors.push(err);
-                }
-                redis_client.keys("map_*|localhost", function(err, keys) {
-                    if ( err ) {
-                        errors.push(err.message);
-                    }
-                    var todrop = _.map(keys, function(m) {
-                        if ( m.match(/^map_(tpl|crt)|/) )
-                        {
-                            return m;
-                        }
-                    });
-                    if ( todrop.length ) {
-                        errors.push(new Error("Unexpected keys in redis: " + todrop));
-                        redis_client.del(todrop, function(err) {
-                            if ( err ) {
-                                errors.push(err.message);
-                            }
-                            if ( errors.length ) {
-                                done(new Error(errors));
-                            }
-                            else {
-                                done(null);
-                            }
-                        });
-                    } else {
-                        if ( errors.length ) {
-                            done(new Error(errors));
-                        }
-                        else {
-                            done(null);
-                        }
-                    }
-                });
+                done(err);
             }
         );
     });
@@ -2261,27 +1948,4 @@ describe('template_api', function() {
 
     });
 
-    after(function(done) {
-
-        // This test will add map_style records, like
-        // 'map_style|null|publicuser|my_table',
-        redis_client.keys("map_*", function(err, keys) {
-            var todrop = _.map(keys, function(m) {
-              if ( m.match(/^map_(tpl|crt|sig)|/) ) {
-                  return m;
-              }
-            });
-            redis_client.del(todrop, function() {
-              redis_client.select(5, function() {
-                redis_client.keys("user:localhost:mapviews*", function(err, keys) {
-                  redis_client.del(keys, function() {
-                    done();
-                  });
-                });
-              });
-            });
-        });
-
-    });
-    
 });
