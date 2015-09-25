@@ -8,7 +8,20 @@ var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
+var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+
 describe('get requests x-cache-channel', function() {
+
+    var keysToDelete;
+    beforeEach(function() {
+        keysToDelete = {
+            'user:localhost:mapviews:global': 5
+        };
+    });
+
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys(keysToDelete, done);
+    });
 
     var statusOkResponse = {
         status: 200
@@ -99,14 +112,16 @@ describe('get requests x-cache-channel', function() {
                 if (err) {
                     return callback(err);
                 }
-                callback(null, JSON.parse(res.body).layergroupid);
+                var layergroupId = JSON.parse(res.body).layergroupid;
+                keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+                callback(null, layergroupId);
             }
         );
     }
 
     describe('header should be present', function() {
 
-        after(function(done) {
+        afterEach(function(done) {
             testHelper.deleteRedisKeys({
                 'map_cfg|a181ac96fac6d2b315dda88bc0bfa6cd': 0,
                 'user:localhost:mapviews:global': 5
@@ -226,7 +241,7 @@ describe('get requests x-cache-channel', function() {
 
             var templateName = 'x_cache';
 
-            before(function(done) {
+            beforeEach(function(done) {
                 var template =  {
                     version: '0.0.1',
                     name: templateName,
@@ -256,7 +271,7 @@ describe('get requests x-cache-channel', function() {
                 );
             });
 
-            after(function(done) {
+            afterEach(function(done) {
                 assert.response(
                     server,
                     {
