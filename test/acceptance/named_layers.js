@@ -100,9 +100,7 @@ describe('named_layers', function() {
     var keysToDelete;
 
     beforeEach(function() {
-        keysToDelete = {
-            'user:localhost:mapviews:global': 5
-        };
+        keysToDelete = {};
     });
 
     afterEach(function(done) {
@@ -297,6 +295,7 @@ describe('named_layers', function() {
                 assert.ok(parsedBody.last_updated);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 return null;
             },
@@ -432,6 +431,7 @@ describe('named_layers', function() {
                 assert.ok(parsedBody.last_updated);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 return parsedBody.layergroupid;
             },
@@ -562,6 +562,7 @@ describe('named_layers', function() {
                 assert.ok(parsedBody.last_updated);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 return parsedBody.layergroupid;
             },
@@ -745,6 +746,7 @@ describe('named_layers', function() {
                 assert.equal(parsedBody.metadata.layers[4].type, 'torque');
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 return null;
             },
@@ -819,6 +821,7 @@ describe('named_layers', function() {
                 assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 return parsedBody.layergroupid;
             },
