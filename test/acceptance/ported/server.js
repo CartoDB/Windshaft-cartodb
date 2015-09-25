@@ -63,11 +63,6 @@ describe('server', function() {
         res_serv.close(done);
     });
 
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
-    });
-
-
     ////////////////////////////////////////////////////////////////////
     //
     // GET INVALID
