@@ -1,19 +1,18 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var _ = require('underscore');
-var redis = require('redis');
 var step = require('step');
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
 
 describe('torque', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
 
     var req2paramsFn;
     before(function() {
@@ -23,6 +22,17 @@ describe('torque', function() {
 
     after(function() {
         BaseController.prototype.req2params = req2paramsFn;
+    });
+
+    var keysToDelete;
+    beforeEach(function() {
+        keysToDelete = {
+            'user:localhost:mapviews:global': 5
+        };
+    });
+
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     function checkCORSHeaders(res) {
@@ -284,26 +294,8 @@ describe('torque', function() {
           return null;
         },
         function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(''+err);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err/*, exists*/) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              //assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
+            keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+            done(err);
         }
       );
     });
