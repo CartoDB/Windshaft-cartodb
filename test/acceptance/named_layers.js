@@ -5,6 +5,8 @@ var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 
+var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 
@@ -95,7 +97,19 @@ describe('named_layers', function() {
         }
     };
 
-    before(function(done) {
+    var keysToDelete;
+
+    beforeEach(function() {
+        keysToDelete = {
+            'user:localhost:mapviews:global': 5
+        };
+    });
+
+    afterEach(function(done) {
+        test_helper.deleteRedisKeys(keysToDelete, done);
+    });
+
+    beforeEach(function(done) {
         global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: true};
         templateMaps.addTemplate(username, nestedNamedMapTemplate, function(err) {
             if (err) {
@@ -106,6 +120,23 @@ describe('named_layers', function() {
                     return done(err);
                 }
                 templateMaps.addTemplate(username, template, function(err) {
+                    return done(err);
+                });
+            });
+        });
+    });
+
+    afterEach(function(done) {
+        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
+        templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
+            if (err) {
+                return done(err);
+            }
+            templateMaps.delTemplate(username, tokenAuthTemplateName, function(err) {
+                if (err) {
+                    return done(err);
+                }
+                templateMaps.delTemplate(username, templateName, function(err) {
                     return done(err);
                 });
             });
@@ -265,6 +296,8 @@ describe('named_layers', function() {
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
 
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+
                 return null;
             },
             function finish(err) {
@@ -398,6 +431,8 @@ describe('named_layers', function() {
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
 
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+
                 return parsedBody.layergroupid;
             },
             function requestTile(err, layergroupId) {
@@ -525,6 +560,8 @@ describe('named_layers', function() {
                 var parsedBody = JSON.parse(response.body);
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
 
                 return parsedBody.layergroupid;
             },
@@ -707,6 +744,8 @@ describe('named_layers', function() {
                 assert.equal(parsedBody.metadata.layers[3].type, 'mapnik');
                 assert.equal(parsedBody.metadata.layers[4].type, 'torque');
 
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+
                 return null;
             },
             function finish(err) {
@@ -715,7 +754,6 @@ describe('named_layers', function() {
         );
 
     });
-
 
     it('should work with named tiles', function(done) {
 
@@ -780,6 +818,8 @@ describe('named_layers', function() {
                 assert.equal(parsedBody.metadata.layers[0].type, 'mapnik');
                 assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
 
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+
                 return parsedBody.layergroupid;
             },
             function requestTile(err, layergroupId) {
@@ -827,22 +867,5 @@ describe('named_layers', function() {
             }
         );
 
-    });
-
-    after(function(done) {
-        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
-        templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
-            if (err) {
-                return done(err);
-            }
-            templateMaps.delTemplate(username, tokenAuthTemplateName, function(err) {
-                if (err) {
-                    return done(err);
-                }
-                templateMaps.delTemplate(username, templateName, function(err) {
-                    return done(err);
-                });
-            });
-        });
     });
 });
