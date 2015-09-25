@@ -59,10 +59,6 @@ describe('regressions', function() {
         res_serv.close(done);
     });
 
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
-    });
-
     // See https://github.com/Vizzuality/Windshaft/issues/65
     it("#65 catching non-Error exception doesn't kill the backend", function(done) {
         var mapConfig = testClient.defaultTableMapConfig('test_table');

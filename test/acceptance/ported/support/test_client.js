@@ -476,10 +476,12 @@ function withLayergroup(layergroupConfig, options, callback) {
             }
 
             function finish(done) {
-                var redisKey = 'map_cfg|' + layergroupid.split(':')[0];
-                redisClient.del(redisKey, function (delErr) {
-                    return done(delErr);
-                });
+                var keysToDelete = {
+                    'user:localhost:mapviews:global': 5
+                };
+                var redisKey = 'map_cfg|' + LayergroupToken.parse(layergroupid).token;
+                keysToDelete[redisKey] = 0;
+                testHelper.deleteRedisKeys(keysToDelete, done);
             }
 
             return callback(err, requestTile, finish);
