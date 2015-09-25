@@ -29,43 +29,20 @@ describe('server_gettile', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
-    var res_serv; // resources server
-    var res_serv_status = { numrequests:0 }; // status of resources server
-    var res_serv_port = 8033; // FIXME: make configurable ?
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
     var req2paramsFn;
-    before(function(done) {
+    before(function() {
         req2paramsFn = BaseController.prototype.req2params;
         BaseController.prototype.req2params = ServerOptions.req2params;
-
-        // Start a server to test external resources
-        res_serv = http.createServer( function(request, response) {
-            ++res_serv_status.numrequests;
-            var filename = __dirname + '/../fixtures/markers' + request.url;
-            fs.readFile(filename, "binary", function(err, file) {
-              if ( err ) {
-                response.writeHead(404, {'Content-Type': 'text/plain'});
-                response.write("404 Not Found\n");
-              } else {
-                response.writeHead(200);
-                response.write(file, "binary");
-              }
-              response.end();
-            });
-        });
-        res_serv.listen(res_serv_port, done);
     });
 
 
-    after(function(done) {
+    after(function() {
         BaseController.prototype.req2params = req2paramsFn;
 
         rmdir_recursive_sync(global.environment.millstone.cache_basedir);
-
-        // Close the resources server
-        res_serv.close(done);
     });
 
     function imageCompareFn(fixture, done) {
