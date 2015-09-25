@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var redis = require('redis');
@@ -7,6 +7,7 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
 
 describe('retina support', function() {
 
@@ -26,7 +27,10 @@ describe('retina support', function() {
         BaseController.prototype.req2params = req2paramsFn;
     });
 
+    var keysToDelete;
     beforeEach(function(done) {
+        keysToDelete = {'user:localhost:mapviews:global': 5};
+
         var retinaSampleMapConfig =  {
             version: '1.2.0',
             layers: [
@@ -61,6 +65,12 @@ describe('retina support', function() {
                 done();
             }
         );
+    });
+
+
+    afterEach(function(done) {
+        keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
 
