@@ -11,11 +11,12 @@ describe('template_maps', function() {
   // configure redis pool instance to use in tests
   var redis_pool = new RedisPool(global.environment.redis);
 
+    var keysToDelete;
+    beforeEach(function() {
+        keysToDelete = {};
+    });
     afterEach(function(done) {
-        testHelper.deleteRedisKeys({
-            'map_tpl|me': 0,
-            'map_tpl|you': 0
-        }, done);
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     var wadusLayer = {
@@ -110,6 +111,7 @@ describe('template_maps', function() {
             it('should accept template with valid name: ' + validName, function(done) {
                 templateMaps.addTemplate('me', createTemplate(validName), function(err) {
                     assert.ok(!err, "Unexpected error with valid name '" + validName + "': " + err);
+                    keysToDelete['map_tpl|me'] = 0;
                     done();
                 });
             });
@@ -551,6 +553,8 @@ describe('template_maps', function() {
         return null;
       },
       function finish(err) {
+        keysToDelete['map_tpl|you'] = 0;
+        keysToDelete['map_tpl|me'] = 0;
         // TODO: delete all templates
         done(err);
       }
