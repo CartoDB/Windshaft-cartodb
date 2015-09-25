@@ -113,6 +113,10 @@ after(function(done) {
 
 function deleteRedisKeys(keysToDelete, callback) {
 
+    if (Object.keys(keysToDelete).length === 0) {
+        return callback();
+    }
+
     function taskDone(k) {
         delete keysToDelete[k];
         if (Object.keys(keysToDelete).length === 0) {
