@@ -11,7 +11,7 @@ describe('template_maps', function() {
   // configure redis pool instance to use in tests
   var redis_pool = new RedisPool(global.environment.redis);
 
-    after(function(done) {
+    afterEach(function(done) {
         testHelper.deleteRedisKeys({
             'map_tpl|me': 0,
             'map_tpl|you': 0
