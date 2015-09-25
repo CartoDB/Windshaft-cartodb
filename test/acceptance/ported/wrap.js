@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var testClient = require('./support/test_client');
@@ -16,6 +16,10 @@ describe('wrap x coordinate', function() {
 
     after(function() {
         BaseController.prototype.req2params = req2paramsFn;
+    });
+
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
     });
 
     describe('renders correct tile', function() {
