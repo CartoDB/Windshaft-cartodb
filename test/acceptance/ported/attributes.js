@@ -42,9 +42,7 @@ describe('attributes', function() {
     var keysToDelete;
 
     beforeEach(function() {
-        keysToDelete = {
-            'user:localhost:mapviews:global': 5
-        };
+        keysToDelete = {};
     });
 
     afterEach(function(done) {
@@ -145,6 +143,7 @@ describe('attributes', function() {
                 },
                 function finish(err) {
                     keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
 
                     done(err);
                 }
@@ -254,6 +253,7 @@ describe('attributes', function() {
             },
             function finish(err) {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done(err);
             }
