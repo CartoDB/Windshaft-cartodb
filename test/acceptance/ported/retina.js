@@ -1,7 +1,6 @@
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
-var redis = require('redis');
 var mapnik = require('windshaft').mapnik;
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
@@ -15,7 +14,6 @@ describe('retina support', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
 
     var req2paramsFn;
     before(function() {
@@ -136,12 +134,5 @@ describe('retina support', function() {
                 done();
             }
         );
-    });
-
-    afterEach(function(done) {
-        var redisKey = 'map_cfg|' + layergroupId;
-        redis_client.del(redisKey, function () {
-            done();
-        });
     });
 });
