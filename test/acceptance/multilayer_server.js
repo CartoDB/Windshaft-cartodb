@@ -19,9 +19,7 @@ describe('tests from old api translated to multilayer', function() {
     var keysToDelete;
 
     beforeEach(function() {
-        keysToDelete = {
-            'user:localhost:mapviews:global': 5
-        };
+        keysToDelete = {};
     });
 
     afterEach(function(done) {
@@ -112,6 +110,7 @@ describe('tests from old api translated to multilayer', function() {
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done();
             }
@@ -197,6 +196,7 @@ describe('tests from old api translated to multilayer', function() {
                     assert.ok(parsed.layergroupid);
 
                     keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
 
                     done();
                 }
@@ -265,6 +265,7 @@ describe('tests from old api translated to multilayer', function() {
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done();
             }
@@ -333,6 +334,7 @@ describe('tests from old api translated to multilayer', function() {
 
                 // TODO when affected tables query makes the request to fail layergroup should be removed
                 keysToDelete['map_cfg|f14693f2d7b6dcf4629724b3d1efe22d'] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed, {
@@ -360,6 +362,7 @@ describe('tests from old api translated to multilayer', function() {
             function(res) {
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 var runQueryFn = PgQueryRunner.prototype.run;
                 PgQueryRunner.prototype.run = function(username, query, queryHandler, callback) {
