@@ -48,9 +48,7 @@ describe('template_api', function() {
 
     var keysToDelete;
     beforeEach(function() {
-        keysToDelete = {
-            'user:localhost:mapviews:global': 5
-        };
+        keysToDelete = {};
     });
 
     afterEach(function(done) {
@@ -343,6 +341,7 @@ describe('template_api', function() {
           }, function(res) { 
             var parsed = JSON.parse(res.body);
             keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+            keysToDelete['user:localhost:mapviews:global'] = 5;
             assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
             next(null); 
           });
@@ -704,8 +703,6 @@ describe('template_api', function() {
           assert.ok(parsed.errors[0].match(/cannot find/i),
             'Unexpected error for missing template: ' + parsed.errors);
 
-          keysToDelete['map_tpl|localhost'] = 0;
-
           done();
         }
       );
@@ -816,6 +813,7 @@ describe('template_api', function() {
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
 
+          keysToDelete['user:localhost:mapviews:global'] = 5;
           keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
 
           // TODO: check value of last_updated ?
@@ -911,8 +909,6 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 200, 'Tile should be accessible');
           assert.equal(res.headers['content-type'], "image/png");
 
-          keysToDelete['map_tpl|localhost'] = 0;
-
           done();
         }
       );
@@ -1006,6 +1002,7 @@ describe('template_api', function() {
             "Missing 'last_updated' from response body: " + res.body);
 
           keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
 
           // TODO: check value of last_updated ?
           var get_request = {
@@ -1097,8 +1094,6 @@ describe('template_api', function() {
             assert.ifError(err);
           assert.equal(res.statusCode, 200, 'Torque tile should be accessible');
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-
-          keysToDelete['map_tpl|localhost'] = 0;
 
           done();
         }
@@ -1195,6 +1190,7 @@ describe('template_api', function() {
             "Missing 'last_updated' from response body: " + res.body);
 
           keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
 
           // TODO: check value of last_updated ?
           var get_request = {
@@ -1264,8 +1260,6 @@ describe('template_api', function() {
           assert.equal(res.statusCode, 200, 'Layer attributes should be accessible');
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
 
-          keysToDelete['map_tpl|localhost'] = 0;
-
           done();
         }
       );
@@ -1334,6 +1328,7 @@ describe('template_api', function() {
 
           keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
           keysToDelete['map_tpl|localhost'] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
 
           done();
         }
@@ -1410,6 +1405,7 @@ describe('template_api', function() {
           eval(res.body);
           // jshint ignore:end
           keysToDelete['map_tpl|localhost'] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
 
           return null;
         },
@@ -1493,6 +1489,7 @@ describe('template_api', function() {
           eval(res.body);
           // jshint ignore:end
           keysToDelete['map_tpl|localhost'] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
 
           done();
         }
@@ -1605,6 +1602,7 @@ describe('template_api', function() {
               errors.push('' + err);
           }
 
+          keysToDelete['user:localhost:mapviews:global'] = 5;
           keysToDelete[statskey+':stat_tag:'+layergroup.stat_tag] = 5;
 
           done();
@@ -1726,6 +1724,7 @@ describe('template_api', function() {
 
           keysToDelete['map_tpl|localhost'] = 0;
           keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
 
           done();
         }
@@ -1831,6 +1830,7 @@ describe('template_api', function() {
                 layergroupid = parsed.layergroupid;
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 var next = this;
                 assert.response(
