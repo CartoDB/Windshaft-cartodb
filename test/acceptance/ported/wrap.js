@@ -18,10 +18,6 @@ describe('wrap x coordinate', function() {
         BaseController.prototype.req2params = req2paramsFn;
     });
 
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
-    });
-
     describe('renders correct tile', function() {
         var IMG_TOLERANCE_PER_MIL = 20;
 
