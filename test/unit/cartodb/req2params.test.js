@@ -11,7 +11,7 @@ var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 var BaseController = require('../../../lib/cartodb/controllers/base');
 var windshaft = require('windshaft');
 
-suite('req2params', function() {
+describe('req2params', function() {
 
     var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
     var test_pubuser = global.environment.postgres.user;
@@ -31,7 +31,7 @@ suite('req2params', function() {
     });
 
     
-    test('can be found in server_options', function(){
+    it('can be found in server_options', function(){
       assert.ok(_.isFunction(baseController.req2params));
     });
 
@@ -43,7 +43,7 @@ suite('req2params', function() {
         return req;
     }
 
-    test('cleans up request', function(done){
+    it('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
       baseController.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
@@ -57,7 +57,7 @@ suite('req2params', function() {
       });
     });
 
-    test('sets dbname from redis metadata', function(done){
+    it('sets dbname from redis metadata', function(done){
       var req = {headers: { host:'localhost' }, query: {} };
       baseController.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
@@ -71,7 +71,7 @@ suite('req2params', function() {
       });
     });
 
-    test('sets also dbuser for authenticated requests', function(done){
+    it('sets also dbuser for authenticated requests', function(done){
       var req = {headers: { host:'localhost' }, query: {map_key: '1234'} };
       baseController.req2params(prepareRequest(req), function(err, req) {
           if ( err ) { done(err); return; }
@@ -98,7 +98,7 @@ suite('req2params', function() {
       });
     });
 
-    test('it should extend params with decoded lzma', function(done) {
+    it('it should extend params with decoded lzma', function(done) {
         var qo = {
             config: {
                 version: '1.3.0'
