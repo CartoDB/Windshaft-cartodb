@@ -89,10 +89,6 @@
         "after": true,
         "beforeEach": true,
         "afterEach": true,
-        "it": true,
-        "suite": true,
-        "suiteSetup": true,
-        "test": true,
-        "suiteTeardown": true
+        "it": true
     }
 }
