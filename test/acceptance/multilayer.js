@@ -29,9 +29,7 @@ describe(suiteName, function() {
     var keysToDelete;
 
     beforeEach(function() {
-        keysToDelete = {
-            'user:localhost:mapviews:global': 5
-        };
+        keysToDelete = {};
     });
 
     afterEach(function(done) {
@@ -186,6 +184,7 @@ describe(suiteName, function() {
         },
         function finish(err) {
             keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+            keysToDelete['user:localhost:mapviews:global'] = 5;
             done(err);
         }
       );
@@ -219,6 +218,7 @@ describe(suiteName, function() {
         function do_check_create(err, res) {
           var parsed = JSON.parse(res.body);
           keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
           assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
           done();
         }
@@ -267,30 +267,12 @@ describe(suiteName, function() {
               'public.test_table',
               'public.test_table_2'
           ]).key().join(' '));
-          return null;
-        },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-            errors.push(err.message);
-          }
-          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
-              redis_client.del(matches, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+
+
+          keysToDelete['map_cfg|' + expected_token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+
+          done();
         }
       );
     });
@@ -484,34 +466,14 @@ describe(suiteName, function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-              assert.utfgridEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.grid.json', 2,
-                function(err/*, similarity*/) {
-                  next(err);
-              });
+              assert.utfgridEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.grid.json', 2, next);
           });
         },
         function finish(err) {
-          var errors = [];
-          if ( err ) {
-            errors.push(err.message);
-          }
-          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
-              redis_client.del(matches, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+            keysToDelete['map_cfg|' + expected_token] = 0;
+            keysToDelete['user:localhost:mapviews:global'] = 5;
+
+            done(err);
         }
       );
     });
@@ -611,19 +573,9 @@ describe(suiteName, function() {
           if ( err ) {
               errors.push('' + err);
           }
+          keysToDelete['user:localhost:mapviews:global'] = 5;
           keysToDelete[statskey+':stat_tag:'+layergroup.stat_tag] = 5;
-          return null;
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push('' + err);
-          }
-          if ( errors.length ) {
-              done(new Error(errors.join(',')));
-          }
-          else {
-              done(null);
-          }
+          done();
         }
       );
     });
@@ -822,27 +774,10 @@ describe(suiteName, function() {
           });
         },
         function finish(err) {
-          var errors = [];
-          if ( err ) {
-            errors.push(err.message);
-          }
-          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
-              redis_client.del(matches, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+            keysToDelete['map_cfg|' + expected_token] = 0;
+            keysToDelete['user:localhost:mapviews:global'] = 5;
+
+            done(err);
         }
       );
     });
@@ -940,27 +875,10 @@ describe(suiteName, function() {
           return null;
         },
         function finish(err) {
-          var errors = [];
-          if ( err ) {
-            errors.push(err.message);
-          }
-          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
-              redis_client.del(matches, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors.join(',')));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+            keysToDelete['map_cfg|' + expected_token] = 0;
+            keysToDelete['user:localhost:mapviews:global'] = 5;
+
+            done(err);
         }
       );
     });
@@ -1020,6 +938,7 @@ describe(suiteName, function() {
       }, {}, function(res) {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
           done();
       });
     });
@@ -1044,6 +963,7 @@ describe(suiteName, function() {
       }, {}, function(res) {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
           done();
       });
     });
@@ -1105,27 +1025,10 @@ describe(suiteName, function() {
           });
         },
         function finish(err) {
-          var errors = [];
-          if ( err ) {
-            errors.push(err.message);
-          }
-          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
-              redis_client.del(matches, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                }
-                else {
-                    done(null);
-                }
-              });
-          });
+            keysToDelete['user:localhost:mapviews:global'] = 5;
+            keysToDelete['map_cfg|' + expected_token] = 0;
+
+            done(err);
         }
       );
     });
@@ -1184,41 +1087,13 @@ describe(suiteName, function() {
           }, {}, function(res) { next(null, res); });
         },
         function check_get_tile(err, res) {
-            assert.ifError(err);
-          assert.equal(res.statusCode, 200, res.body);
-          return null;
-        },
-        function cleanup(err) {
-          if ( err ) {
-              errors.push(err.message);
-          }
-          if ( ! expected_token ) {
-              return null;
-          }
-          var next = this;
-          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
-              redis_client.del(matches, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                next();
-              });
-          });
-        },
-        function finish(err) {
-          if ( err ) {
-            errors.push(err.message);
-          }
-          if ( errors.length ) {
-              done(new Error(errors));
-          }
-          else {
-              done(null);
-          }
+            if (err) {
+                return done(err);
+            }
+            assert.equal(res.statusCode, 200, res.body);
+            keysToDelete['user:localhost:mapviews:global'] = 5;
+            keysToDelete['map_cfg|' + expected_token] = 0;
+            done(err);
         }
       );
     });
@@ -1270,36 +1145,13 @@ describe(suiteName, function() {
           return null;
         },
         function cleanup(err) {
-          if ( err ) {
-              errors.push('' + err);
-          }
-          if ( ! expected_token ) {
-              return null;
-          }
-          var next = this;
-          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              assert.equal(matches.length, 1, "Missing expected token " + expected_token + " from redis: " + matches);
-              redis_client.del(matches, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                next();
-              });
-          });
-        },
-        function finish(err) {
-          if ( err ) {
-              errors.push('' + err);
-          }
-          if ( errors.length ) {
-              done(new Error(errors.join(',')));
-          }
-          else {
-              done(null);
-          }
+            if (err) {
+                return done(err);
+            }
+            keysToDelete['user:localhost:mapviews:global'] = 5;
+            keysToDelete['map_cfg|' + expected_token] = 0;
+
+            done(err);
         }
       );
     });
@@ -1413,6 +1265,7 @@ describe(suiteName, function() {
             function(res) {
                 assert.equal(res.headers['cache-control'], 'public,max-age=86400,must-revalidate');
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done();
             }
@@ -1427,6 +1280,7 @@ describe(suiteName, function() {
             function(res) {
                 assert.equal(res.headers['cache-control'], 'public,max-age=' + layergroupTtl + ',must-revalidate');
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done();
             }
