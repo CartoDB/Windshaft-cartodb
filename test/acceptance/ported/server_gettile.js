@@ -68,10 +68,6 @@ describe('server_gettile', function() {
         res_serv.close(done);
     });
 
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
-    });
-
     function imageCompareFn(fixture, done) {
         return function(err, res) {
             if (err) {
