@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var testClient = require('./support/test_client');
@@ -34,6 +34,10 @@ describe('blend layer filtering', function() {
     after(function(done) {
         BaseController.prototype.req2params = req2paramsFn;
         httpRendererResourcesServer.close(done);
+    });
+
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
     });
 
     var mapConfig = {
