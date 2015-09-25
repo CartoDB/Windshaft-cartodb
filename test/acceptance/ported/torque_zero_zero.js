@@ -18,10 +18,6 @@ describe('torque tiles at 0,0 point', function() {
         BaseController.prototype.req2params = req2paramsFn;
     });
 
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
-    });
-
 /*
     Tiles are represented as in:
 
