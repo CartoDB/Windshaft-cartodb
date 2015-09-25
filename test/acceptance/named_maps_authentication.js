@@ -94,7 +94,7 @@ describe('named maps authentication', function() {
         }
     };
 
-    before(function (done) {
+    beforeEach(function (done) {
         templateMaps.addTemplate(username, nestedNamedMapTemplate, function (err) {
             if (err) {
                 return done(err);
@@ -110,7 +110,7 @@ describe('named maps authentication', function() {
         });
     });
 
-    after(function (done) {
+    afterEach(function (done) {
         templateMaps.delTemplate(username, nestedNamedMapTemplateName, function (err) {
             if (err) {
                 return done(err);
