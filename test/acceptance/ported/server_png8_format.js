@@ -1,13 +1,13 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
-var redis = require('redis');
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
@@ -25,8 +25,6 @@ describe('server_png8_format', function() {
     var serverPng8 = new cartodbServer(serverOptionsPng8);
     serverPng8.setMaxListeners(0);
 
-
-    var redisClient = redis.createClient(ServerOptions.redis.port);
 
     var layergroupId;
 
@@ -49,6 +47,17 @@ describe('server_png8_format', function() {
 
     after(function() {
         BaseController.prototype.req2params = req2paramsFn;
+    });
+
+    var keysToDelete;
+    beforeEach(function() {
+        keysToDelete = {
+            'user:localhost:mapviews:global': 5
+        };
+    });
+
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     function testOutputForPng32AndPng8(desc, tile, callback) {
@@ -101,9 +110,10 @@ describe('server_png8_format', function() {
                             assert.ok(bufferPng8.length < bufferPng32.length);
                             assert.imageBuffersAreEqual(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                                 function(err, imagePaths, similarity) {
-                                    redisClient.del('map_cfg|' + layergroupId, function() {
-                                        callback(err, imagePaths, similarity, done);
-                                    });
+
+                                    keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+
+                                    callback(err, imagePaths, similarity, done);
                                 }
                             );
                         });
