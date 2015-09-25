@@ -37,10 +37,6 @@ describe('static_maps', function() {
         httpRendererResourcesServer.close(done);
     });
 
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
-    });
-
     function staticMapConfig(urlTemplate, cartocss) {
         return {
             version: '1.2.0',
