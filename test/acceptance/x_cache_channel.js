@@ -14,9 +14,7 @@ describe('get requests x-cache-channel', function() {
 
     var keysToDelete;
     beforeEach(function() {
-        keysToDelete = {
-            'user:localhost:mapviews:global': 5
-        };
+        keysToDelete = {};
     });
 
     afterEach(function(done) {
@@ -114,27 +112,19 @@ describe('get requests x-cache-channel', function() {
                 }
                 var layergroupId = JSON.parse(res.body).layergroupid;
                 keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-                callback(null, layergroupId);
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+                callback(null, layergroupId, res);
             }
         );
     }
 
     describe('header should be present', function() {
 
-        afterEach(function(done) {
-            testHelper.deleteRedisKeys({
-                'map_cfg|a181ac96fac6d2b315dda88bc0bfa6cd': 0,
-                'user:localhost:mapviews:global': 5
-            }, done);
-        });
-
         it('/api/v1/map Map instantiation', function(done) {
-            assert.response(
-                server,
-                layergroupRequest,
-                statusOkResponse,
-                validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table')
-            );
+            var testFn = validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table');
+            withLayergroupId(function(err, layergroupId, res) {
+                testFn(res);
+            });
         });
 
         it ('/api/v1/map/:token/:z/:x/:y@:scale_factor?x.:format Mapnik retina tiles', function(done) {
