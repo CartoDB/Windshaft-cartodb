@@ -71,6 +71,10 @@ describe('external resources', function() {
 
     });
 
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
+    });
+
     function imageCompareFn(fixture, done) {
         return function(err, res) {
             if (err) {
