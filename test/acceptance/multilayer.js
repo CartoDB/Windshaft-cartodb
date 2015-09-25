@@ -38,7 +38,6 @@ describe(suiteName, function() {
 
     var cdbQueryTablesFromPostgresEnabledValue = true;
 
-    var redis_client = redis.createClient(global.environment.redis.port);
     var expected_last_updated_epoch = 1234567890123; // this is hard-coded into SQLAPIEmu
     var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
 
@@ -495,7 +494,6 @@ describe(suiteName, function() {
       var redis_stats_client = redis.createClient(global.environment.redis.port);
       var expected_token; // will be set on first post and checked on second
       var now = strftime("%Y%m%d", new Date());
-      var errors = [];
       step(
         function clean_stats()
         {
@@ -558,24 +556,16 @@ describe(suiteName, function() {
               " to be 2, got " + val);
           return 1;
         },
-        function cleanup_map_style(err) {
-          if ( err ) {
-              errors.push('' + err);
-          }
-          var next = this;
-          // trip epoch
-          expected_token = expected_token.split(':')[0];
-          redis_client.keys("map_cfg|" + expected_token, function(err, matches) {
-              redis_client.del(matches, next);
-          });
-        },
-        function cleanup_stats(err) {
-          if ( err ) {
-              errors.push('' + err);
-          }
-          keysToDelete['user:localhost:mapviews:global'] = 5;
-          keysToDelete[statskey+':stat_tag:'+layergroup.stat_tag] = 5;
-          done();
+        function finish(err) {
+            if ( err ) {
+              return done(err);
+            }
+            // trip epoch
+            expected_token = expected_token.split(':')[0];
+            keysToDelete['map_cfg|' + expected_token] = 0;
+            keysToDelete['user:localhost:mapviews:global'] = 5;
+            keysToDelete[statskey+':stat_tag:'+layergroup.stat_tag] = 5;
+            done();
         }
       );
     });
