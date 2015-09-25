@@ -1,11 +1,11 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
-var redis = require('redis');
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
 
 describe('torque boundary points', function() {
 
@@ -26,15 +26,16 @@ describe('torque boundary points', function() {
     });
 
     afterEach(function(done) {
-        var redisKey = 'map_cfg|' + layergroupIdToDelete;
-        redis_client.del(redisKey, function () {
-            done();
-        });
+        var keysToDelete = {
+            'user:localhost:mapviews:global': 5
+        };
+        var mapKey = 'map_cfg|' + LayergroupToken.parse(layergroupIdToDelete).token;
+        keysToDelete[mapKey] = 0;
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
 
     var boundaryPointsMapConfig =  {
         version: '1.1.0',
