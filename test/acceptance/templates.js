@@ -1483,7 +1483,6 @@ describe('template_api', function() {
 
           // jshint ignore:start
           function json_test(body) {
-              console.log(body);
               keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
           }
           eval(res.body);
