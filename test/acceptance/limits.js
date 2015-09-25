@@ -24,11 +24,7 @@ describe('render limits', function() {
     });
 
     afterEach(function(done) {
-        var keys = {
-            'user:localhost:mapviews:global': 5
-        };
-        var allKeysToDelete = _.extend({}, keys, keysToDelete);
-        testHelper.deleteRedisKeys(allKeysToDelete, done);
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     var user = 'localhost';
@@ -133,6 +129,7 @@ describe('render limits', function() {
                         var parsed = JSON.parse(res.body);
                         assert.ok(parsed.layergroupid);
                         keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         done();
                     }
                 );
@@ -154,6 +151,7 @@ describe('render limits', function() {
                     },
                     function(res) {
                         keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         assert.response(server,
                             {
                                 url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
@@ -197,6 +195,7 @@ describe('render limits', function() {
                     },
                     function(res) {
                         keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         assert.response(server,
                             {
                                 url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
@@ -247,6 +246,7 @@ describe('render limits', function() {
                         var parsed = JSON.parse(res.body);
                         assert.ok(parsed.layergroupid);
                         keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         done();
                     }
                 );
@@ -267,6 +267,7 @@ describe('render limits', function() {
                     },
                     function(res) {
                         keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         assert.response(server,
                             {
                                 url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
