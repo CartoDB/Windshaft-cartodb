@@ -1,4 +1,4 @@
-var testHelper = require('../../support/test_helper');
+require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var testClient = require('./support/test_client');

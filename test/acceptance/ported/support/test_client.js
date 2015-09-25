@@ -3,7 +3,6 @@ var LayergroupToken = require('../../../../lib/cartodb/models/layergroup_token')
 
 var step = require('step');
 var assert = require('../../../support/assert');
-var redis = require('redis');
 var _ = require('underscore');
 var querystring = require('querystring');
 var mapnik = require('windshaft').mapnik;
@@ -43,7 +42,6 @@ module.exports = {
 
 var server = new CartodbServer(PortedServerOptions);
 server.setMaxListeners(0);
-var redisClient = redis.createClient(global.environment.redis.port);
 
 var jsonContentType = 'application/json; charset=utf-8';
 var jsContentType = 'text/javascript; charset=utf-8';

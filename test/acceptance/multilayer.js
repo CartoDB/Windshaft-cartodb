@@ -1036,7 +1036,6 @@ describe(suiteName, function() {
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/91
     // and https://github.com/CartoDB/Windshaft-cartodb/issues/38
     it("tiles for private tables can be fetched with api_key", function(done) {
-      var errors = [];
       var layergroup =  {
         version: '1.0.0',
         layers: [
@@ -1121,8 +1120,7 @@ describe(suiteName, function() {
              } }
         ]
       };
-      var errors = [];
-      var expected_token; 
+      var expected_token;
       step(
         function do_post()
         {
