@@ -2,7 +2,6 @@ var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var _             = require('underscore');
-var redis         = require('redis');
 var cartodbServer = require('../../../lib/cartodb/server');
 var getLayerTypeFn = require('windshaft').model.MapConfig.prototype.getType;
 var PortedServerOptions = require('./support/ported_server_options');
@@ -14,7 +13,6 @@ describe('multilayer interactivity and layers order', function() {
 
     var server = cartodbServer(PortedServerOptions);
     server.setMaxListeners(0);
-    var redisClient = redis.createClient(PortedServerOptions.redis.port);
 
     var req2paramsFn;
     before(function() {
