@@ -3,13 +3,10 @@ var testHelper = require('../../support/test_helper');
 var assert = require('../../support/assert');
 var _ = require('underscore');
 var querystring = require('querystring');
-var fs = require('fs');
-var redis = require('redis');
 var step = require('step');
 var mapnik = require('windshaft').mapnik;
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
-var http = require('http');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
 var BaseController = require('../../../lib/cartodb/controllers/base');
 
@@ -17,9 +14,6 @@ describe('multilayer', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
-    var redis_client = redis.createClient(ServerOptions.redis.port);
-    var res_serv; // resources server
-    var res_serv_port = 8033; // FIXME: make configurable ?
     mapnik.register_system_fonts();
     var available_system_fonts = _.keys(mapnik.fontFiles());
 
@@ -31,36 +25,13 @@ describe('multilayer', function() {
     }
 
     var req2paramsFn;
-    before(function(done) {
+    before(function() {
       req2paramsFn = BaseController.prototype.req2params;
       BaseController.prototype.req2params = ServerOptions.req2params;
-
-      // Start a server to test external resources
-      res_serv = http.createServer( function(request, response) {
-          var filename = __dirname + '/../fixtures/markers' + request.url;
-          fs.readFile(filename, "binary", function(err, file) {
-            if ( err ) {
-              response.writeHead(404, {'Content-Type': 'text/plain'});
-              response.write("404 Not Found\n");
-            } else {
-              response.writeHead(200);
-              response.write(file, "binary");
-            }
-            response.end();
-          });
-      });
-      res_serv.listen(res_serv_port, done);
     });
 
-    after(function(done) {
+    after(function() {
         BaseController.prototype.req2params = req2paramsFn;
-
-        // Close the resources server
-        res_serv.close(done);
-    });
-
-    afterEach(function(done) {
-        testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
     });
 
     // See https://github.com/Vizzuality/Windshaft/issues/70
@@ -94,26 +65,12 @@ describe('multilayer', function() {
           });
         },
         function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err.message);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
+            if (err) {
+                return done(err);
+            }
+            var keysToDelete = {'user:localhost:mapviews:global': 5};
+            keysToDelete['map_cfg|' +  expected_token] = 0;
+            testHelper.deleteRedisKeys(keysToDelete, done);
         }
       );
     });
@@ -166,28 +123,14 @@ describe('multilayer', function() {
               });
           });
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err.message);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) {
-                  errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  expected_token] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
@@ -289,28 +232,14 @@ describe('multilayer', function() {
               });
           });
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err.message);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) {
-                  errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  expected_token] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
@@ -415,28 +344,14 @@ describe('multilayer', function() {
               });
           });
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err.message);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) {
-                  errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  expected_token] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
@@ -553,28 +468,14 @@ describe('multilayer', function() {
               });
           });
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err.message);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) {
-                  errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  expected_token] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
@@ -743,28 +644,14 @@ describe('multilayer', function() {
           assert.ok(msg.match(/Unsupported format json.torque/i), msg);
           return null;
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(''+err);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) {
-                  errors.push(''+err);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors.join(',')));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  expected_token] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
@@ -796,18 +683,8 @@ describe('multilayer', function() {
         ]
       };
 
-      var initialMapConfigs = 0;
       var token1, token2;
       step(
-        function count_mapconfig() {
-            var next = this;
-            redis_client.keys('map_cfg|*', function(err, matches) {
-                if (matches) {
-                    initialMapConfigs = matches.length;
-                }
-                next(null);
-            });
-        },
         function do_post1()
         {
           var next = this;
@@ -908,33 +785,15 @@ describe('multilayer', function() {
               });
           });
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err.message);
-          }
-          redis_client.keys('map_cfg|*', function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.equal(matches.length, initialMapConfigs + 2);
-              assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
-                        "Missing expected token " + token1 + " from redis");
-              assert.ok(_.indexOf(matches, 'map_cfg|'+token2) > -1,
-                        "Missing expected token " + token2 + " from redis");
-              var cb = function(err/*, deleted*/) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              };
-              redis_client.del(matches, cb);
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' + token1] = 0;
+              keysToDelete['map_cfg|' + token2] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
@@ -1004,28 +863,14 @@ describe('multilayer', function() {
               });
           });
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err.message);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) {
-                  errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  expected_token] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
@@ -1058,9 +903,9 @@ describe('multilayer', function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
-          redis_client.del("map_cfg|" +  expected_token, function(/*err*/) {
-            done();
-          });
+          var keysToDelete = {'user:localhost:mapviews:global': 5};
+          keysToDelete['map_cfg|' +  expected_token] = 0;
+          testHelper.deleteRedisKeys(keysToDelete, done);
       });
     });
 
@@ -1087,9 +932,9 @@ describe('multilayer', function() {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
-          redis_client.del("map_cfg|" +  expected_token, function(/*err*/) {
-            done();
-          });
+          var keysToDelete = {'user:localhost:mapviews:global': 5};
+          keysToDelete['map_cfg|' +  expected_token] = 0;
+          testHelper.deleteRedisKeys(keysToDelete, done);
       });
     });
 
@@ -1143,13 +988,11 @@ describe('multilayer', function() {
         function checkGoodFont(err, res) {
           assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          var next = this;
           var parsed = JSON.parse(res.body);
           var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
-          redis_client.del("map_cfg|" +  expected_token, next);
-        },
-        function finish(err) {
-          done(err);
+            var keysToDelete = {'user:localhost:mapviews:global': 5};
+            keysToDelete['map_cfg|' +  expected_token] = 0;
+            testHelper.deleteRedisKeys(keysToDelete, done);
         }
       );
 
@@ -1243,28 +1086,19 @@ describe('multilayer', function() {
           assert.ok(data.hasOwnProperty('t'), "Missing 't' from grid data keys: " + _.keys(data));
           next();
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
+              }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  expected_token] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
           }
-          redis_client.del("map_cfg|" +  expected_token, function(err) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              if ( errors.length ) {
-                  done(new Error(errors));
-              } else {
-                  done(null);
-              }
-          });
-        }
       );
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/157
-    it("req2params is called only once for a multilayer post",
-    function(done) {
+    it("req2params is called only once for a multilayer post", function(done) {
 
       var layergroup =  {
         version: '1.0.1',
@@ -1307,28 +1141,14 @@ describe('multilayer', function() {
           assert.equal(global.req2params_calls, 1);
           return null;
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push('' + err);
-          }
-          redis_client.exists("map_cfg|" +  expected_token, function(err, exists) {
-              if ( err ) {
-                  errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.ok(exists, "Missing expected token " + expected_token + " from redis");
-              redis_client.del("map_cfg|" +  expected_token, function(err) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              });
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  expected_token] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
@@ -1345,18 +1165,9 @@ describe('multilayer', function() {
              } }
         ]
       };
-      var initialMapConfigs = 0;
+
       var token1, token2;
       step(
-        function count_mapconfig() {
-            var next = this;
-            redis_client.keys('map_cfg|*', function(err, matches) {
-                if (matches) {
-                    initialMapConfigs = matches.length;
-                }
-                next(null);
-            });
-        },
         function do_post_1()
         {
           var next = this;
@@ -1392,39 +1203,20 @@ describe('multilayer', function() {
           assert.ok(token1 !== token2);
           return null;
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push('' + err);
-          }
-          redis_client.keys('map_cfg|*', function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
+          function finish(err) {
+              if (err) {
+                  return done(err);
               }
-              assert.equal(matches.length, initialMapConfigs + 2);
-              assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
-                        "Missing expected token " + token1 + " from redis");
-              assert.ok(_.indexOf(matches, 'map_cfg|'+token2) > -1,
-                        "Missing expected token " + token2 + " from redis");
-              var cb = function(err/*, deleted*/) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              };
-              redis_client.del(matches, cb);
-          });
-        }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  token1] = 0;
+              keysToDelete['map_cfg|' +  token2] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
+          }
       );
     });
 
     // See http://github.com/CartoDB/Windshaft/issues/191
-    it("mapnik layer with custom geom_column",
-    function(done) {
+    it("mapnik layer with custom geom_column", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
@@ -1436,18 +1228,9 @@ describe('multilayer', function() {
              } }
         ]
       };
-      var initialMapConfigs = 0;
+
       var token1;
       step(
-        function count_mapconfig() {
-            var next = this;
-            redis_client.keys('map_cfg|*', function(err, matches) {
-                if (matches) {
-                    initialMapConfigs = matches.length;
-                }
-                next(null);
-            });
-        },
         function do_post_1()
         {
           var next = this;
@@ -1483,35 +1266,14 @@ describe('multilayer', function() {
               });
           });
         },
-        function finish(err) {
-          var errors = [];
-          if ( err ) {
-              errors.push('' + err);
+          function finish(err) {
+              if (err) {
+                  return done(err);
+              }
+              var keysToDelete = {'user:localhost:mapviews:global': 5};
+              keysToDelete['map_cfg|' +  token1] = 0;
+              testHelper.deleteRedisKeys(keysToDelete, done);
           }
-          redis_client.keys('map_cfg|*', function(err, matches) {
-              if ( err ) {
-                  errors.push(err.message);
-              }
-              try {
-                assert.equal(matches.length, initialMapConfigs + 1);
-                assert.ok(_.indexOf(matches, 'map_cfg|'+token1) > -1,
-                          "Missing expected token " + token1 + " from redis");
-              } catch (e) {
-                errors.push('' + e);
-              }
-              var cb = function(err/*, deleted*/) {
-                if ( err ) {
-                    errors.push(err.message);
-                }
-                if ( errors.length ) {
-                    done(new Error(errors));
-                } else {
-                    done(null);
-                }
-              };
-              redis_client.del(matches, cb);
-          });
-        }
       );
     });
 
