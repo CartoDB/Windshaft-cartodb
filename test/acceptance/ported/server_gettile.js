@@ -4,7 +4,6 @@ var assert = require('../../support/assert');
 var fs = require('fs');
 var mapnik = require('windshaft').mapnik;
 var semver = require('semver');
-var http = require('http');
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
