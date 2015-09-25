@@ -1,4 +1,4 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var _             = require('underscore');
@@ -87,17 +87,12 @@ describe('multilayer interactivity and layers order', function() {
                         assert.equal(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
                     }
 
-                    var token = LayergroupToken.parse(layergroupId).token;
+                    var keysToDelete = {
+                        'user:localhost:mapviews:global': 5
+                    };
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
 
-                    redisClient.exists("map_cfg|" +  token, function(err, exists) {
-                        if (err) {
-                            return done(err);
-                        }
-                        assert.ok(exists, "Missing expected token " + token + " from redis");
-                        redisClient.del("map_cfg|" +  token, function(err) {
-                            done(err);
-                        });
-                    });
+                    testHelper.deleteRedisKeys(keysToDelete, done);
                 }
             );
         });
