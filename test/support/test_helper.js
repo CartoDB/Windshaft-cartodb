@@ -65,8 +65,8 @@ function checkSurrogateKey(res, expectedKey) {
     assert.equal(res.headers['surrogate-key'], expectedKey);
 }
 
-//global after to capture test suites that leave keys in redis
-after(function(done) {
+//global afterEach to capture test suites that leave keys in redis
+afterEach(function(done) {
 
     // restoring nock globally after each suite
     nock.cleanAll();
@@ -95,7 +95,7 @@ after(function(done) {
         });
 
         if (Object.keys(databasesTasks).length === 0) {
-            //assert.equal(keysFound.length, 0, 'Unexpected keys found in redis: ' + keysFound.join(', '));
+            assert.equal(keysFound.length, 0, 'Unexpected keys found in redis: ' + keysFound.join(', '));
             done();
         }
     }
@@ -127,7 +127,8 @@ function deleteRedisKeys(keysToDelete, callback) {
     Object.keys(keysToDelete).forEach(function(k) {
         var redisClient = redis.createClient(global.environment.redis.port);
         redisClient.select(keysToDelete[k], function() {
-            redisClient.del(k, function() {
+            redisClient.del(k, function(err, deletedKeysCount) {
+                assert.notStrictEqual(deletedKeysCount, 0, 'No KEYS deleted for: [db=' + keysToDelete[k] + ']' + k);
                 taskDone(k);
             });
         });
