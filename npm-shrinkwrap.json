@@ -68,14 +68,14 @@
           "dependencies": {
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@~1.0.0",
+              "from": "unpipe@1.0.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
         },
         "type-is": {
           "version": "1.6.9",
-          "from": "type-is@~1.6.6",
+          "from": "type-is@~1.6.9",
           "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.6.9.tgz",
           "dependencies": {
             "media-typer": {
@@ -359,7 +359,7 @@
             },
             "statuses": {
               "version": "1.2.1",
-              "from": "statuses@1",
+              "from": "statuses@~1.2.1",
               "resolved": "https://registry.npmjs.org/statuses/-/statuses-1.2.1.tgz"
             }
           }
@@ -441,7 +441,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2",
+              "from": "inherits@~2.0.1",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -533,7 +533,7 @@
                 },
                 "inherits": {
                   "version": "2.0.1",
-                  "from": "inherits@~2.0.1",
+                  "from": "inherits@2",
                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
                 },
                 "isarray": {
@@ -594,7 +594,7 @@
         },
         "mime-types": {
           "version": "2.1.7",
-          "from": "mime-types@~2.1.7",
+          "from": "mime-types@~2.1.6",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.7.tgz",
           "dependencies": {
             "mime-db": {
@@ -828,8 +828,8 @@
     },
     "windshaft": {
       "version": "1.0.0-alpha",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/backend-foundations",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/backend-foundations",
+      "from": "https://github.com/CartoDB/Windshaft/tarball/master",
+      "resolved": "https://github.com/CartoDB/Windshaft/tarball/master",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb2",
