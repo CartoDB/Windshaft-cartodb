@@ -261,7 +261,7 @@ describe('named maps authentication', function() {
                 assert.equal(img.height(), 480);
 
                 test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
-                done();
+                test_helper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
             });
         });
     });

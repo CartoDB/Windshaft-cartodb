@@ -1,4 +1,4 @@
-require('../support/test_helper');
+var testHelper = require('../support/test_helper');
 var RedisPool = require('redis-mpool');
 
 var assert = require('../support/assert');
@@ -77,7 +77,9 @@ describe('named maps static view', function() {
         var server = new CartodbWindshaft(serverOptions);
 
         assert.response(server, requestOptions, expectedResponse, function (res, err) {
-            return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
+            testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, function() {
+                return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
+            });
         });
     }
 
