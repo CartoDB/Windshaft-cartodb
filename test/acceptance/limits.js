@@ -1,37 +1,30 @@
-require('../support/test_helper');
+var testHelper = require('../support/test_helper');
 
 var assert = require('../support/assert');
 var _ = require('underscore');
 var redis = require('redis');
 
-var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
+var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
+
+var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
 
 describe('render limits', function() {
 
     var layergroupUrl = '/api/v1/map';
 
     var redisClient = redis.createClient(global.environment.redis.port);
-    after(function(done) {
-        redisClient.keys("map_style|*", function(err, matches) {
-            redisClient.del(matches, function() {
-                done();
-            });
-        });
-    });
 
     var server;
+    var keysToDelete;
     beforeEach(function() {
-        server = new CartodbWindshaft(serverOptions());
+        keysToDelete = {};
+        server = new CartodbWindshaft(serverOptions);
         server.setMaxListeners(0);
     });
 
-    var keysToDelete = [];
     afterEach(function(done) {
-        redisClient.DEL(keysToDelete, function() {
-            keysToDelete = [];
-            done();
-        });
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     var user = 'localhost';
@@ -81,7 +74,7 @@ describe('render limits', function() {
                 if (err) {
                     return callback(err);
                 }
-                keysToDelete.push(userLimitsKey);
+                keysToDelete[userLimitsKey] = 5;
                 return callback();
             });
         });
@@ -135,6 +128,8 @@ describe('render limits', function() {
                     function(res) {
                         var parsed = JSON.parse(res.body);
                         assert.ok(parsed.layergroupid);
+                        keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         done();
                     }
                 );
@@ -155,6 +150,8 @@ describe('render limits', function() {
                         status: 200
                     },
                     function(res) {
+                        keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         assert.response(server,
                             {
                                 url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
@@ -197,6 +194,8 @@ describe('render limits', function() {
                         status: 200
                     },
                     function(res) {
+                        keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         assert.response(server,
                             {
                                 url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {
@@ -246,6 +245,8 @@ describe('render limits', function() {
                     function(res) {
                         var parsed = JSON.parse(res.body);
                         assert.ok(parsed.layergroupid);
+                        keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         done();
                     }
                 );
@@ -265,6 +266,8 @@ describe('render limits', function() {
                         status: 200
                     },
                     function(res) {
+                        keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+                        keysToDelete['user:localhost:mapviews:global'] = 5;
                         assert.response(server,
                             {
                                 url: layergroupUrl + _.template('/<%= layergroupId %>/<%= z %>/<%= x %>/<%= y %>.png', {

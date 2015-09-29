@@ -3,7 +3,8 @@ var _           = require('underscore');
 var redis       = require('redis');
 var step        = require('step');
 var strftime    = require('strftime');
-var NamedMapsCacheEntry = require(__dirname + '/../../lib/cartodb/cache/model/named_maps_entry');
+var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
+var TablesCacheEntry = require('../../lib/cartodb/cache/model/database_tables_entry');
 var redis_stats_db = 5;
 
 // Pollute the PG environment to make sure
@@ -12,17 +13,47 @@ var redis_stats_db = 5;
 process.env.PGPORT = '666';
 process.env.PGHOST = 'fake';
 
+var fs = require('fs');
+var http = require('http');
+
 var helper = require(__dirname + '/../support/test_helper');
 
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
+var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
+var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-describe('template_api', function() {
-    serverOptions.channelCache = {};
+var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
 
-    var redis_client = redis.createClient(global.environment.redis.port);
+describe('template_api', function() {
+    server.layergroupAffectedTablesCache.cache.reset();
+
+    var httpRendererResourcesServer;
+    before(function(done) {
+        // Start a server to test external resources
+        httpRendererResourcesServer = http.createServer( function(request, response) {
+            var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
+            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+                response.writeHead(200);
+                response.write(file, "binary");
+                response.end();
+            });
+        });
+        httpRendererResourcesServer.listen(8033, done);
+    });
+
+    after(function(done) {
+        httpRendererResourcesServer.close(done);
+    });
+
+    var keysToDelete;
+    beforeEach(function() {
+        keysToDelete = {};
+    });
+
+    afterEach(function(done) {
+        helper.deleteRedisKeys(keysToDelete, done);
+    });
 
     var template_acceptance1 =  {
         version: '0.0.1',
@@ -68,7 +99,6 @@ describe('template_api', function() {
 
     it("can add template, returning id", function(done) {
 
-      var errors = [];
       var expected_tpl_id = "acceptance1";
       var post_request_1 = {
           url: '/api/v1/map/named',
@@ -85,7 +115,7 @@ describe('template_api', function() {
         },
         function postTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('errors'), res.body);
@@ -99,48 +129,28 @@ describe('template_api', function() {
         },
         function rePostTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsedBody = JSON.parse(res.body);
           var expectedBody = { template_id: expected_tpl_id };
           assert.deepEqual(parsedBody, expectedBody);
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
           var next = this;
           assert.response(server, post_request_1, {},
             function(res) { next(null, res); });
         },
         function checkFailure(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 400, res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
           assert.ok(parsedBody.errors[0].match(/already exists/i),
             'Unexpected error for pre-existing template name: ' + parsedBody.errors);
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else done(null);
-              });
-          });
+
+          done();
         }
       );
     });
@@ -169,7 +179,7 @@ describe('template_api', function() {
         },
         function checkFailure1(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 400, res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
@@ -180,7 +190,7 @@ describe('template_api', function() {
         },
         function postTemplate2(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           // clone the valid one and rename it
           var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
           broken_template.name = 'broken1';
@@ -199,7 +209,7 @@ describe('template_api', function() {
         },
         function checkFailure2(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 400, res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
@@ -210,7 +220,7 @@ describe('template_api', function() {
         },
         function postTemplateValid(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           // clone the valid one and rename it
           var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
           broken_template.name = 'broken1';
@@ -226,7 +236,7 @@ describe('template_api', function() {
         },
         function putTemplateInvalid(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -250,7 +260,7 @@ describe('template_api', function() {
         },
         function deleteTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('errors'),
@@ -269,25 +279,11 @@ describe('template_api', function() {
             function(res, err) { next(err, res); });
         },
         function checkDelete(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
           assert.ok(!res.body, 'Unexpected body in DELETE /template response');
-          return null;
-        },
-        function finish(err) {
-          var errors = [];
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length )
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              if ( errors.length ) done(new Error(errors.join(',')));
-              else done();
-          });
+
+          done();
         }
       );
     });
@@ -344,12 +340,14 @@ describe('template_api', function() {
               status: 200
           }, function(res) { 
             var parsed = JSON.parse(res.body);
+            keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+            keysToDelete['user:localhost:mapviews:global'] = 5;
             assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
             next(null); 
           });
         },
         function deleteTemplate(err) {
-          if ( err ) throw err;
+            assert.ifError(err);
           var del_request = {
               url: '/api/v1/map/named/' + tmpl.name + '?api_key=1234',
               method: 'DELETE',
@@ -366,7 +364,6 @@ describe('template_api', function() {
 
     it("can list templates", function(done) {
 
-      var errors = [];
       var tplid1, tplid2;
       step(
         function postTemplate1()
@@ -383,7 +380,7 @@ describe('template_api', function() {
         },
         function postTemplate2(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -405,7 +402,7 @@ describe('template_api', function() {
         },
         function litsTemplatesUnauthenticated(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -422,7 +419,7 @@ describe('template_api', function() {
         },
         function litsTemplates(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('errors'),
@@ -440,49 +437,27 @@ describe('template_api', function() {
         },
         function checkList(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_ids'),
             "Missing 'template_ids' from response body: " + res.body);
           var ids = parsed.template_ids;
           assert.equal(ids.length, 2);
-          assert.ok(ids.indexOf(tplid1) != -1,
+          assert.ok(ids.indexOf(tplid1) !== -1,
             'Missing "' + tplid1 + "' from list response: " + ids.join(','));
-          assert.ok(ids.indexOf(tplid2) != -1,
+          assert.ok(ids.indexOf(tplid2) !== -1,
             'Missing "' + tplid2 + "' from list response: " + ids.join(','));
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else done(null);
-              });
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
 
     it("can update template", function(done) {
 
-      var errors = [];
       var tpl_id;
       step(
         function postTemplate()
@@ -499,7 +474,7 @@ describe('template_api', function() {
         },
         function putMisnamedTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -520,7 +495,7 @@ describe('template_api', function() {
         },
         function putUnexistentTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
@@ -538,7 +513,7 @@ describe('template_api', function() {
         },
         function putValidTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
@@ -556,44 +531,22 @@ describe('template_api', function() {
         },
         function checkValidUpate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
             "Missing 'template_id' from response body: " + res.body);
           assert.equal(tpl_id, parsed.template_id);
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else done(null);
-              });
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
 
     it("can get a template by id", function(done) {
 
-      var errors = [];
       var tpl_id;
       step(
         function postTemplate()
@@ -610,7 +563,7 @@ describe('template_api', function() {
         },
         function getTemplateUnauthorized(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -627,7 +580,7 @@ describe('template_api', function() {
         },
         function getTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403, res.statusCode + ": " + res.body);
           var parsedBody = JSON.parse(res.body);
           assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
@@ -644,44 +597,22 @@ describe('template_api', function() {
         },
         function checkReturnTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template'),
             "Missing 'template' from response body: " + res.body);
           assert.deepEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else done(null);
-              });
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+
+          done();
         }
       );
     });
 
     it("can delete a template by id", function(done) {
 
-      var errors = [];
       var tpl_id;
       step(
         function postTemplate()
@@ -698,7 +629,7 @@ describe('template_api', function() {
         },
         function getTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -715,7 +646,7 @@ describe('template_api', function() {
         },
         function deleteTemplateUnauthorized(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template'),
@@ -732,7 +663,7 @@ describe('template_api', function() {
         },
         function deleteTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('errors'),
@@ -750,7 +681,7 @@ describe('template_api', function() {
         },
         function getMissingTemplate(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
           assert.ok(!res.body, 'Unexpected body in DELETE /template response');
           var get_request = {
@@ -764,39 +695,15 @@ describe('template_api', function() {
         },
         function checkGetFailure(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('errors'),
             "Missing 'errors' from response body: " + res.body);
           assert.ok(parsed.errors[0].match(/cannot find/i),
             'Unexpected error for missing template: ' + parsed.errors);
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-                redis_client.del(todrop, function(err) {
-                  if ( err ) errors.push(err.message);
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else done(null);
-                });
-              } else {
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else done(null);
-              }
-          });
+
+          done();
         }
       );
     });
@@ -823,7 +730,6 @@ describe('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
       var tpl_id;
       var layergroupid;
       step(
@@ -841,7 +747,7 @@ describe('template_api', function() {
         },
         function instanciateNoAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -859,7 +765,7 @@ describe('template_api', function() {
         },
         // See https://github.com/CartoDB/Windshaft-cartodb/issues/173
         function instanciateForeignDB(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -879,7 +785,7 @@ describe('template_api', function() {
         },
         function instanciateAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('errors'), "Missing 'errors' from response body: " + res.body);
@@ -895,7 +801,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchTileNoAuth(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200,
             'Instantiating template: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -906,6 +812,10 @@ describe('template_api', function() {
             "Returned layergroupid does not start with signer name: " + layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
+
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+
           // TODO: check value of last_updated ?
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb0/0/0/0.png',
@@ -918,7 +828,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchTileAuth(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -937,7 +847,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function checkTile(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, 
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "image/png");
@@ -945,7 +855,7 @@ describe('template_api', function() {
         },
         // See https://github.com/CartoDB/Windshaft-cartodb/issues/172
         function fetchTileForeignSignature(err) {
-          if ( err ) throw err;
+            assert.ifError(err);
           var foreignsigned = layergroupid.replace(/[^@]*@/, 'foreign@');
           var get_request = {
               url: '/api/v1/map/' + foreignsigned + '/0/0/0.png?auth_token=valid1',
@@ -958,7 +868,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function checkForeignSignerError(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403, 
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -970,7 +880,7 @@ describe('template_api', function() {
         },
         function deleteTemplate(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var del_request = {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
@@ -981,7 +891,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchTileDeleted(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 204,
             'Deleting template: ' + res.statusCode + ':' + res.body);
           var get_request = {
@@ -995,35 +905,11 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function checkTileAvailable(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, 'Tile should be accessible');
           assert.equal(res.headers['content-type'], "image/png");
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-                redis_client.del(todrop, function(err) {
-                  if ( err ) errors.push(err.message);
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else done(null);
-                });
-              } else {
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else done(null);
-              }
-          });
+
+          done();
         }
       );
     });
@@ -1049,7 +935,6 @@ describe('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
       var tpl_id;
       var layergroupid;
       step(
@@ -1067,7 +952,7 @@ describe('template_api', function() {
         },
         function instanciateNoAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -1085,7 +970,7 @@ describe('template_api', function() {
         },
         function instanciateAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1104,7 +989,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchTileNoAuth(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200,
             'Instantiating template: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1115,6 +1000,10 @@ describe('template_api', function() {
             "Returned layergroupid does not start with signer name: " + layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+
           // TODO: check value of last_updated ?
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb0/0/0/0/0.json.torque',
@@ -1127,7 +1016,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchTileAuth(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1146,7 +1035,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function checkTile_fetchOnRestart(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, 
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -1154,7 +1043,7 @@ describe('template_api', function() {
           assert.ok(cc);
           assert.ok(cc.match, /ciao/, cc);
           // hack simulating restart...
-          serverOptions.channelCache = {}; // need to clean channel cache
+          server.layergroupAffectedTablesCache.cache.reset(); // need to clean channel cache
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
               method: 'GET',
@@ -1166,7 +1055,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function checkCacheChannel(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, 
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -1177,7 +1066,7 @@ describe('template_api', function() {
         },
         function deleteTemplate(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var del_request = {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
@@ -1188,7 +1077,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchTileDeleted(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 204,
             'Deleting template: ' + res.statusCode + ':' + res.body);
           var get_request = {
@@ -1202,35 +1091,11 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function checkTorqueTileAvailable(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, 'Torque tile should be accessible');
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-                redis_client.del(todrop, function(err) {
-                  if ( err ) errors.push(err.message);
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else done(null);
-                });
-              } else {
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else done(null);
-              }
-          });
+
+          done();
         }
       );
     });
@@ -1257,7 +1122,6 @@ describe('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
       var tpl_id;
       var layergroupid;
       step(
@@ -1275,7 +1139,7 @@ describe('template_api', function() {
         },
         function instanciateNoAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -1293,7 +1157,7 @@ describe('template_api', function() {
         },
         function instanciateAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403,
             'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1312,7 +1176,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchAttributeNoAuth(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200,
             'Instantiating template: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1324,6 +1188,10 @@ describe('template_api', function() {
           assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
           assert.ok(parsed.hasOwnProperty('last_updated'),
             "Missing 'last_updated' from response body: " + res.body);
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+
           // TODO: check value of last_updated ?
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb0/0/attributes/5',
@@ -1336,7 +1204,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchAttributeAuth(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 403,
             'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1355,7 +1223,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function checkAttribute(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, 
             'Unexpected error for authorized getAttributes: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -1363,7 +1231,7 @@ describe('template_api', function() {
         },
         function deleteTemplate(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var del_request = {
               url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
               method: 'DELETE',
@@ -1374,7 +1242,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function fetchAttrDeleted(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 204,
             'Deleting template: ' + res.statusCode + ':' + res.body);
           var get_request = {
@@ -1388,35 +1256,11 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function checkLayerAttributesAvailable(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, 'Layer attributes should be accessible');
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-                redis_client.del(todrop, function(err) {
-                  if ( err ) errors.push(err.message);
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else done(null);
-                });
-              } else {
-                  if ( errors.length ) {
-                    done(new Error(errors));
-                  }
-                  else done(null);
-              }
-          });
+
+          done();
         }
       );
     });
@@ -1459,7 +1303,7 @@ describe('template_api', function() {
         },
         function instanciateNoAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -1478,9 +1322,14 @@ describe('template_api', function() {
         },
         function instanciateAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200,
             'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
+          keysToDelete['map_tpl|localhost'] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+
           done();
         }
       );
@@ -1522,14 +1371,14 @@ describe('template_api', function() {
         },
         function instanciateNoAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=test",
+              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=json_test",
               method: 'GET',
               headers: {host: 'localhost' }
           };
@@ -1539,11 +1388,25 @@ describe('template_api', function() {
         },
         function checkInstanciation(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
-          helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key());
+          var expectedSurrogateKey = [
+              new TablesCacheEntry('test_windshaft_cartodb_user_1_db', ['public.test_table_private_1']).key(),
+              new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
+          ].join(' ');
+          helper.checkSurrogateKey(res, expectedSurrogateKey);
+
+          // jshint ignore:start
+          function json_test(body) {
+              keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
+          }
+          eval(res.body);
+          // jshint ignore:end
+          keysToDelete['map_tpl|localhost'] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+
           return null;
         },
         function finish(err) {
@@ -1591,14 +1454,14 @@ describe('template_api', function() {
         },
         function instanciateNoAuth(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
             "Missing 'template_id' from response body: " + res.body);
           tpl_id = parsed.template_id;
           var post_request = {
-              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=test%config=" + JSON.stringify('{color:blue}'),
+              url: '/api/v1/map/named/' + tpl_id + "/jsonp?callback=json_test&config=" + JSON.stringify({color:'blue'}),
               method: 'GET',
               headers: {host: 'localhost' }
           };
@@ -1608,15 +1471,26 @@ describe('template_api', function() {
         },
         function checkInstanciation(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
-          helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key());
-          return null;
-        },
-        function finish(err) {
-          done(err);
+          var expectedSurrogateKey = [
+              new TablesCacheEntry('test_windshaft_cartodb_user_1_db', ['public.test_table_private_1']).key(),
+              new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
+          ].join(' ');
+          helper.checkSurrogateKey(res, expectedSurrogateKey);
+
+          // jshint ignore:start
+          function json_test(body) {
+              keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
+          }
+          eval(res.body);
+          // jshint ignore:end
+          keysToDelete['map_tpl|localhost'] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+
+          done();
         }
       );
     });
@@ -1650,13 +1524,17 @@ describe('template_api', function() {
         {
           var next = this;
           redis_stats_client.select(redis_stats_db, function(err) {
-            if ( err ) next(err);
-            else redis_stats_client.del(statskey+':global', next);
+            if ( err ) {
+                next(err);
+            }
+            else {
+                redis_stats_client.del(statskey+':global', next);
+            }
           });
         },
         function do_post_tempate(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var post_request = {
               url: '/api/v1/map/named?api_key=1234',
               method: 'POST',
@@ -1668,7 +1546,7 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function instantiateTemplate(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           template_id = JSON.parse(res.body).template_id;
           var post_request = {
@@ -1682,28 +1560,29 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function check_global_stats(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200,
             'Instantiating template: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('layergroupid'),
             "Missing 'layergroupid' from response body: " + res.body);
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
           redis_stats_client.ZSCORE(statskey + ":global", now, this);
         },
         function check_tag_stats(err, val) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(val, 1, "Expected score of " + now + " in " +  statskey + ":global to be 1, got " + val);
           redis_stats_client.ZSCORE(statskey+':stat_tag:random_tag', now, this);
         },
         function check_tag_stats_value(err, val) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(val, 1, "Expected score of " + now + " in " +  statskey + ":stat_tag:" + layergroup.stat_tag +
               " to be 1, got " + val);
           return null;
         },
         function deleteTemplate(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           var del_request = {
               url: '/api/v1/map/named/' + template_id + '?api_key=1234',
               method: 'DELETE',
@@ -1714,15 +1593,18 @@ describe('template_api', function() {
             function(res) { next(null, res); });
         },
         function cleanup_stats(err, res) {
-          if ( err ) throw err;
+          if (err) {
+              return done(err);
+          }
           assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
-          if ( err ) errors.push('' + err);
-          redis_client.del([statskey+':global', statskey+':stat_tag:'+layergroup.stat_tag], this);
-        },
-        function finish(err) {
-          if ( err ) errors.push('' + err);
-          if ( errors.length ) done(new Error(errors.join(',')));
-          else done(null);
+          if ( err ) {
+              errors.push('' + err);
+          }
+
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+          keysToDelete[statskey+':stat_tag:'+layergroup.stat_tag] = 5;
+
+          done();
         }
       );
     });
@@ -1749,7 +1631,6 @@ describe('template_api', function() {
 
       var template_params = {};
 
-      var errors = [];
       var tpl_id;
       var layergroupid;
       step(
@@ -1767,7 +1648,7 @@ describe('template_api', function() {
         },
         function instance1(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -1784,7 +1665,7 @@ describe('template_api', function() {
             function(res, err) { next(err, res); });
         },
         function checkInstance1(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200,
             'Instantiating template: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
@@ -1792,11 +1673,13 @@ describe('template_api', function() {
             "Missing 'layergroupid' from response body: " + res.body);
           layergroupid = parsed.layergroupid;
           helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
+
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
           return null;
         },
         function updateTemplate(err)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           // clone the valid one and rename it
           var changedTemplate = JSON.parse(JSON.stringify(template_acceptance2));
           changedTemplate.auth.method = 'open';
@@ -1812,7 +1695,7 @@ describe('template_api', function() {
         },
         function instance2(err, res)
         {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200, res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('template_id'),
@@ -1829,39 +1712,20 @@ describe('template_api', function() {
             function(res, err) { next(err, res); });
         },
         function checkInstance2(err, res) {
-          if ( err ) throw err;
+            assert.ifError(err);
           assert.equal(res.statusCode, 200,
             'Instantiating template: ' + res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('layergroupid'),
             "Missing 'layergroupid' from response body: " + res.body);
-          assert.ok(layergroupid != parsed.layergroupid);
+          assert.ok(layergroupid !== parsed.layergroupid);
           helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
-          return null;
-        },
-        function finish(err) {
-          if ( err ) errors.push(err);
-          redis_client.keys("map_*|localhost", function(err, keys) {
-              if ( err ) errors.push(err.message);
-              var todrop = _.map(keys, function(m) {
-                if ( m.match(/^map_(tpl|crt)|/) )
-                  return m;
-              });
-              if ( todrop.length !== 1 ) {
-                errors.push(new Error("Unexpected keys in redis: " + todrop));
-              } else {
-                if ( todrop.indexOf('map_tpl|localhost') == -1 ) {
-                  errors.push(new Error("Missing 'map_tpl|localhost' key in redis"));
-                }
-              }
-              redis_client.del(todrop, function(err) {
-                if ( err ) errors.push(err.message);
-                if ( errors.length ) {
-                  done(new Error(errors));
-                }
-                else done(null);
-              });
-          });
+
+          keysToDelete['map_tpl|localhost'] = 0;
+          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+          keysToDelete['user:localhost:mapviews:global'] = 5;
+
+          done();
         }
       );
     });
@@ -1881,7 +1745,7 @@ describe('template_api', function() {
                     {
                         type: "http",
                         options: {
-                            urlTemplate: "http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
+                            urlTemplate: "http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png",
                             subdomains: [
                                 "a",
                                 "b",
@@ -1904,7 +1768,6 @@ describe('template_api', function() {
 
         var template_params = {};
 
-        var errors = [];
         var expectedTemplateId = httpTemplateName;
         var layergroupid;
         step(
@@ -1965,6 +1828,9 @@ describe('template_api', function() {
                     parsed.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
 
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+
                 var next = this;
                 assert.response(
                     server,
@@ -2014,31 +1880,7 @@ describe('template_api', function() {
                 );
             },
             function finish(err) {
-                if (err) {
-                    errors.push(err);
-                }
-                redis_client.keys("map_*|localhost", function(err, keys) {
-                    if ( err ) errors.push(err.message);
-                    var todrop = _.map(keys, function(m) {
-                        if ( m.match(/^map_(tpl|crt)|/) )
-                            return m;
-                    });
-                    if ( todrop.length ) {
-                        errors.push(new Error("Unexpected keys in redis: " + todrop));
-                        redis_client.del(todrop, function(err) {
-                            if ( err ) errors.push(err.message);
-                            if ( errors.length ) {
-                                done(new Error(errors));
-                            }
-                            else done(null);
-                        });
-                    } else {
-                        if ( errors.length ) {
-                            done(new Error(errors));
-                        }
-                        else done(null);
-                    }
-                });
+                done(err);
             }
         );
     });
@@ -2105,25 +1947,4 @@ describe('template_api', function() {
 
     });
 
-    after(function(done) {
-
-        // This test will add map_style records, like
-        // 'map_style|null|publicuser|my_table',
-        redis_client.keys("map_*", function(err, keys) {
-            var todrop = _.map(keys, function(m) {
-              if ( m.match(/^map_(tpl|crt|sig)|/) ) return m;
-            });
-            redis_client.del(todrop, function() {
-              redis_client.select(5, function() {
-                redis_client.keys("user:localhost:mapviews*", function(err, keys) {
-                  redis_client.del(keys, function() {
-                    done();
-                  });
-                });
-              });
-            });
-        });
-
-    });
-    
 });

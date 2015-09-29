@@ -1,50 +1,57 @@
-/*
- * Windshaft-CartoDB
- * ===============
- *
- * ./app.js [environment]
- *
- * environments: [development, production]
- */
-
-var path = require('path');
-var fs = require('fs');
 var http = require('http');
 var https = require('https');
-var RedisPool = require('redis-mpool');
+var path = require('path');
+var fs = require('fs');
+
 var _ = require('underscore');
 
-var ENV;
+var ENVIRONMENT;
 if ( process.argv[2] ) {
-    ENV = process.argv[2];
+    ENVIRONMENT = process.argv[2];
 } else if ( process.env.NODE_ENV ) {
-    ENV = process.env.NODE_ENV;
+    ENVIRONMENT = process.env.NODE_ENV;
 } else {
-    ENV = 'development';
+    ENVIRONMENT = 'development';
 }
 
-process.env.NODE_ENV = ENV;
+var availableEnvironments = {
+    production: true,
+    staging: true,
+    development: true
+};
 
 // sanity check
-if (ENV != 'development' && ENV != 'production' && ENV != 'staging' ){
-    console.error("\nnode app.js [environment]");
-    console.error("environments: development, production, staging\n");
+if (!availableEnvironments[ENVIRONMENT]){
+    console.error('node app.js [environment]');
+    console.error('environments: %s', Object.keys(availableEnvironments).join(', '));
     process.exit(1);
 }
 
+process.env.NODE_ENV = ENVIRONMENT;
+
 // set environment specific variables
-global.environment  = require(__dirname + '/config/environments/' + ENV);
-global.environment.api_hostname = require('os').hostname().split('.')[0];
+global.environment = require('./config/environments/' + ENVIRONMENT);
 
 global.log4js = require('log4js');
 var log4js_config = {
   appenders: [],
-  replaceConsole:true
+  replaceConsole: true
 };
 
 if (global.environment.uv_threadpool_size) {
     process.env.UV_THREADPOOL_SIZE = global.environment.uv_threadpool_size;
 }
+
+// set global HTTP and HTTPS agent default configurations
+// ref https://nodejs.org/api/http.html#http_new_agent_options
+var agentOptions = _.defaults(global.environment.httpAgent || {}, {
+    keepAlive: false,
+    keepAliveMsecs: 1000,
+    maxSockets: Infinity,
+    maxFreeSockets: 256
+});
+http.globalAgent = new http.Agent(agentOptions);
+https.globalAgent = new https.Agent(agentOptions);
 
 if ( global.environment.log_filename ) {
   var logdir = path.dirname(global.environment.log_filename);
@@ -67,63 +74,38 @@ if ( global.environment.log_filename ) {
 global.log4js.configure(log4js_config, { cwd: __dirname });
 global.logger = global.log4js.getLogger();
 
-var redisOpts = _.defaults(global.environment.redis, {
-    name: 'windshaft',
-    unwatchOnRelease: false,
-    noReadyCheck: true
-});
-var redisPool = new RedisPool(redisOpts);
-
-// set global HTTP and HTTPS agent default configurations
-// ref https://nodejs.org/api/http.html#http_new_agent_options
-var agentOptions = _.defaults(global.environment.httpAgent || {}, {
-    keepAlive: false,
-    keepAliveMsecs: 1000,
-    maxSockets: Infinity,
-    maxFreeSockets: 256
-});
-http.globalAgent = new http.Agent(agentOptions);
-https.globalAgent = new https.Agent(agentOptions);
+global.environment.api_hostname = require('os').hostname().split('.')[0];
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-var cartodbWindshaft = require('./lib/cartodb/cartodb_windshaft'),
-    serverOptions = require('./lib/cartodb/server_options')(redisPool);
+var cartodbWindshaft = require('./lib/cartodb/server');
+var serverOptions = require('./lib/cartodb/server_options');
 
-var ws = cartodbWindshaft(serverOptions);
-
-if (global.statsClient) {
-    redisPool.on('status', function(status) {
-        var keyPrefix = 'windshaft.redis-pool.' + status.name + '.db' + status.db + '.';
-        global.statsClient.gauge(keyPrefix + 'count', status.count);
-        global.statsClient.gauge(keyPrefix + 'unused', status.unused);
-        global.statsClient.gauge(keyPrefix + 'waiting', status.waiting);
-    });
-
-    setInterval(function() {
-        var memoryUsage = process.memoryUsage();
-        Object.keys(memoryUsage).forEach(function(k) {
-            global.statsClient.gauge('windshaft.memory.' + k, memoryUsage[k]);
-        });
-    }, 5000);
-}
+var server = cartodbWindshaft(serverOptions);
 
 // Maximum number of connections for one process
 // 128 is a good number if you have up to 1024 filedescriptors
 // 4 is good if you have max 32 filedescriptors
 // 1 is good if you have max 16 filedescriptors
-ws.maxConnections = global.environment.maxConnections || 128;
+var backlog = global.environment.maxConnections || 128;
 
-ws.listen(global.environment.port, global.environment.host);
+var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, backlog);
 
 var version = require("./package").version;
 
-ws.on('listening', function() {
+listener.on('listening', function() {
     console.log(
         "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
-        version, global.environment.host, global.environment.port, process.pid, ENV
+        version, serverOptions.bind.host, serverOptions.bind.port, process.pid, ENVIRONMENT
     );
 });
+
+setInterval(function() {
+    var memoryUsage = process.memoryUsage();
+    Object.keys(memoryUsage).forEach(function(k) {
+        global.statsClient.gauge('windshaft.memory.' + k, memoryUsage[k]);
+    });
+}, 5000);
 
 process.on('SIGHUP', function() {
     global.log4js.clearAndShutdownAppenders(function() {

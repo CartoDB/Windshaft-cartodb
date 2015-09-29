@@ -2,7 +2,7 @@ require('../support/test_helper');
 
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../lib/cartodb/template_maps.js');
+var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
 var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig_named_layers_adapter');
 
@@ -95,12 +95,21 @@ var multipleLayersTemplate = {
 };
 
 describe('named_layers datasources', function() {
-    before(function(done) {
+    beforeEach(function(done) {
         templateMaps.addTemplate(username, template, function(err) {
             if (err) {
                 return done(err);
             }
             templateMaps.addTemplate(username, multipleLayersTemplate, done);
+        });
+    });
+
+    afterEach(function(done) {
+        templateMaps.delTemplate(username, templateName, function(err) {
+            if (err) {
+                return done(err);
+            }
+            templateMaps.delTemplate(username, multipleLayersTemplateName, done);
         });
     });
 
@@ -290,15 +299,6 @@ describe('named_layers datasources', function() {
                     testScenario.test(err, layers, datasource, done);
                 }
             );
-        });
-    });
-
-    after(function(done) {
-        templateMaps.delTemplate(username, templateName, function(err) {
-            if (err) {
-                return done(err);
-            }
-            templateMaps.delTemplate(username, multipleLayersTemplateName, done);
         });
     });
 });

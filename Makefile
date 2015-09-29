@@ -18,14 +18,26 @@ config.status--test:
 config/environments/test.js: config.status--test
 	./config.status--test 
 
+TEST_SUITE := $(shell find test/{acceptance,integration,unit} -name "*.js")
+TEST_SUITE_UNIT := $(shell find test/unit -name "*.js")
+TEST_SUITE_INTEGRATION := $(shell find test/integration -name "*.js")
+TEST_SUITE_ACCEPTANCE := $(shell find test/acceptance -name "*.js")
+
 test: config/environments/test.js
 	@echo "***tests***"
-	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} \
-		test/unit/cartodb/*.js \
-		test/unit/cartodb/cache/model/*.js \
-		test/integration/*.js \
-		test/acceptance/*.js \
-		test/acceptance/cache/*.js
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} $(TEST_SUITE)
+
+test-unit: config/environments/test.js
+	@echo "***tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} $(TEST_SUITE_UNIT)
+
+test-integration: config/environments/test.js
+	@echo "***tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} $(TEST_SUITE_INTEGRATION)
+
+test-acceptance: config/environments/test.js
+	@echo "***tests***"
+	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} $(TEST_SUITE_ACCEPTANCE)
 
 jshint:
 	@echo "***jshint***"
