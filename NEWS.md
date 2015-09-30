@@ -4,6 +4,9 @@
 
 Released 2015-mm-dd
 
+Improvements:
+ - Safer user extraction from request Host header
+
 
 ## 2.14.0
 
