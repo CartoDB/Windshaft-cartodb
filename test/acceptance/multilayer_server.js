@@ -333,7 +333,7 @@ describe('tests from old api translated to multilayer', function() {
                 assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
 
                 // TODO when affected tables query makes the request to fail layergroup should be removed
-                keysToDelete['map_cfg|f14693f2d7b6dcf4629724b3d1efe22d'] = 0;
+                keysToDelete['map_cfg|4fb7bd7008322ce66f22d20aebba1ab0'] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 var parsed = JSON.parse(res.body);
