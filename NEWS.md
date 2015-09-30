@@ -4,6 +4,9 @@
 
 Released 2015-mm-dd
 
+Enhancements:
+ - Remove app dependency from controllers
+
 Announcements:
  - Upgrades windshaft to [1.0.1](https://github.com/CartoDB/Windshaft/releases/tag/1.0.1)
 

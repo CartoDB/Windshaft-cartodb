@@ -1,18 +1,13 @@
 require('../../../support/test_helper.js');
 
 var assert = require('assert');
-var cartodbServer = require('../../../../lib/cartodb/server');
-var serverOptions = require('../../../../lib/cartodb/server_options');
-var StatsClient = require('../../../../lib/cartodb/stats/client');
 
 var LayergroupController = require('../../../../lib/cartodb/controllers/layergroup');
 
 describe('tile stats', function() {
 
-    var statsClientGetInstanceFn = StatsClient.getInstance;
-
     after(function() {
-        StatsClient.getInstance = statsClientGetInstanceFn;
+        global.statsClient = null;
     });
 
 
@@ -28,7 +23,7 @@ describe('tile stats', function() {
             }
         });
 
-        var layergroupController = new LayergroupController(cartodbServer(serverOptions));
+        var layergroupController = new LayergroupController();
 
         var reqMock = {
             params: {
@@ -70,7 +65,7 @@ describe('tile stats', function() {
             send: function() {}
         };
 
-        var layergroupController = new LayergroupController(cartodbServer(serverOptions));
+        var layergroupController = new LayergroupController();
 
         layergroupController.finalizeGetTileOrGrid('Another error happened', reqMock, resMock, null, null);
 
@@ -79,9 +74,7 @@ describe('tile stats', function() {
     });
 
     function mockStatsClientGetInstance(instance) {
-        StatsClient.getInstance = function() {
-            return instance;
-        };
+        global.statsClient = instance;
     }
 
 });
