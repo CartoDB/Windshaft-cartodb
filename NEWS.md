@@ -2,7 +2,7 @@
 
 ## 2.14.1
 
-Released 2015-mm-dd
+Released 2015-09-30
 
 Enhancements:
  - Remove app dependency from controllers
