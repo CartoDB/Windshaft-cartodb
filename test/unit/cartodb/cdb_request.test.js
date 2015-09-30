@@ -57,4 +57,28 @@ describe('req2params', function() {
 
         assert.equal(user, undefined);
     });
+
+    it('should not fail for undefined host header', function() {
+        var userFromHostConfig = global.environment.user_from_host;
+        global.environment.user_from_host = null;
+
+        var cdbRequest = new CdbRequest();
+        var user = cdbRequest.userByReq(createRequest(undefined));
+
+        global.environment.user_from_host = userFromHostConfig;
+
+        assert.equal(user, undefined);
+    });
+
+    it('should not fail for null host header', function() {
+        var userFromHostConfig = global.environment.user_from_host;
+        global.environment.user_from_host = null;
+
+        var cdbRequest = new CdbRequest();
+        var user = cdbRequest.userByReq(createRequest(null));
+
+        global.environment.user_from_host = userFromHostConfig;
+
+        assert.equal(user, undefined);
+    });
 });
