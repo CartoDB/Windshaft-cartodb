@@ -2,7 +2,7 @@
 
 ## 2.14.0
 
-Released 2015-mm-dd
+Released 2015-09-30
 
 Summary: this starts using Windshaft as library (aka version 1.0.0), it no longer extends old Windshaft server.
 
