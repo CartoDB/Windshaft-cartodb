@@ -4,7 +4,10 @@
 
 Released 2015-mm-dd
 
-Summary: this starts using Windshaft as library, it no longer extends old Windshaft server.
+Summary: this starts using Windshaft as library (aka version 1.0.0), it no longer extends old Windshaft server.
+
+Announcements:
+ - Upgrades windshaft to [1.0.0](https://github.com/CartoDB/Windshaft/releases/tag/1.0.0)
 
 New features:
  - Named tiles: /api/v1/map/named/:name/:layer/:z/:x/:y.:format
