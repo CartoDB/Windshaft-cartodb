@@ -4,6 +4,9 @@
 
 Released 2015-mm-dd
 
+Announcements:
+ - Upgrades windshaft to [1.0.1](https://github.com/CartoDB/Windshaft/releases/tag/1.0.1)
+
 Improvements:
  - Safer user extraction from request Host header
 
