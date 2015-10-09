@@ -132,7 +132,6 @@ describe('templates surrogate keys', function() {
         var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
             .post(fastlyPurgePath)
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
-            .matchHeader('Fastly-Soft-Purge', 1)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
                 status:'ok'
@@ -199,7 +198,6 @@ describe('templates surrogate keys', function() {
         var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
             .post(fastlyPurgePath)
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
-            .matchHeader('Fastly-Soft-Purge', 1)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
                 status:'ok'
@@ -260,7 +258,6 @@ describe('templates surrogate keys', function() {
         var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
             .post(fastlyPurgePath)
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
-            .matchHeader('Fastly-Soft-Purge', 1)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
                 status:'ok'
