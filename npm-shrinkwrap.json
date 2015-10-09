@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.14.2",
+  "version": "2.15.0",
   "dependencies": {
     "body-parser": {
       "version": "1.14.1",
@@ -58,7 +58,7 @@
         },
         "qs": {
           "version": "5.1.0",
-          "from": "qs@5.1.0",
+          "from": "qs@~5.1.0",
           "resolved": "https://registry.npmjs.org/qs/-/qs-5.1.0.tgz"
         },
         "raw-body": {
@@ -406,8 +406,8 @@
       }
     },
     "fastly-purge": {
-      "version": "1.0.0",
-      "from": "fastly-purge@~1.0.0"
+      "version": "1.0.1",
+      "from": "fastly-purge@~1.0.1"
     },
     "log4js": {
       "version": "0.6.25",
@@ -441,7 +441,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@2",
+              "from": "inherits@~2.0.1",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -533,7 +533,7 @@
                 },
                 "inherits": {
                   "version": "2.0.1",
-                  "from": "inherits@2",
+                  "from": "inherits@~2.0.1",
                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
                 },
                 "isarray": {
@@ -552,9 +552,9 @@
                   "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz"
                 },
                 "util-deprecate": {
-                  "version": "1.0.1",
+                  "version": "1.0.2",
                   "from": "util-deprecate@~1.0.1",
-                  "resolved": "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.1.tgz"
+                  "resolved": "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
                 }
               }
             }
@@ -620,9 +620,9 @@
           "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.1.tgz"
         },
         "tough-cookie": {
-          "version": "2.0.0",
+          "version": "2.2.0",
           "from": "tough-cookie@>=0.12.0",
-          "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.0.0.tgz"
+          "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.2.0.tgz"
         },
         "http-signature": {
           "version": "0.11.0",
@@ -711,9 +711,9 @@
           "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-1.8.0.tgz",
           "dependencies": {
             "bluebird": {
-              "version": "2.10.1",
+              "version": "2.10.2",
               "from": "bluebird@^2.9.30",
-              "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.10.1.tgz"
+              "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.10.2.tgz"
             },
             "chalk": {
               "version": "1.1.1",
@@ -827,8 +827,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.0.1",
-      "from": "windshaft@~1.0.1",
+      "version": "1.1.0",
+      "from": "windshaft@~1.1.0",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb2",
@@ -1301,9 +1301,9 @@
                       "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
                     },
                     "tough-cookie": {
-                      "version": "2.0.0",
+                      "version": "2.2.0",
                       "from": "tough-cookie@>=0.12.0",
-                      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.0.0.tgz"
+                      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.2.0.tgz"
                     },
                     "form-data": {
                       "version": "0.1.4",
