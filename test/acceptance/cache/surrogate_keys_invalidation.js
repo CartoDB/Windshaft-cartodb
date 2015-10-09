@@ -68,7 +68,7 @@ describe('templates surrogate keys', function() {
 
     var cacheEntryKey = new NamedMapsCacheEntry(templateOwner, templateName).key();
     var invalidationMatchHeader = '\\b' + cacheEntryKey + '\\b';
-    var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + encodeURIComponent(cacheEntryKey);
+    var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + cacheEntryKey;
 
     var nock = require('nock');
     nock.enableNetConnect(/(127.0.0.1:5555|cartocdn.com)/);
