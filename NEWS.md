@@ -2,7 +2,7 @@
 
 ## 2.15.0
 
-Released 2015-mm-dd
+Released 2015-10-13
 
 Announcements:
  - Fastly purging no longer uses soft-purge option
