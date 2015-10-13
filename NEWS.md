@@ -1,8 +1,19 @@
 # Changelog
 
-## 2.14.2
+## 2.15.1
 
 Released 2015-mm-dd
+
+
+
+## 2.15.0
+
+Released 2015-10-13
+
+Announcements:
+ - Fastly purging no longer uses soft-purge option
+ - Upgrades windshaft to [1.1.0](https://github.com/CartoDB/Windshaft/releases/tag/1.1.0)
+ - Upgrades fastly-purge to [1.0.1](https://github.com/CartoDB/node-fastly-purge/releases/tag/1.0.1)
 
 
 ## 2.14.1

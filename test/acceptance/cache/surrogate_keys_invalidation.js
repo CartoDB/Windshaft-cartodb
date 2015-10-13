@@ -68,7 +68,7 @@ describe('templates surrogate keys', function() {
 
     var cacheEntryKey = new NamedMapsCacheEntry(templateOwner, templateName).key();
     var invalidationMatchHeader = '\\b' + cacheEntryKey + '\\b';
-    var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + encodeURIComponent(cacheEntryKey);
+    var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + cacheEntryKey;
 
     var nock = require('nock');
     nock.enableNetConnect(/(127.0.0.1:5555|cartocdn.com)/);
@@ -132,7 +132,6 @@ describe('templates surrogate keys', function() {
         var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
             .post(fastlyPurgePath)
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
-            .matchHeader('Fastly-Soft-Purge', 1)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
                 status:'ok'
@@ -199,7 +198,6 @@ describe('templates surrogate keys', function() {
         var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
             .post(fastlyPurgePath)
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
-            .matchHeader('Fastly-Soft-Purge', 1)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
                 status:'ok'
@@ -260,7 +258,6 @@ describe('templates surrogate keys', function() {
         var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
             .post(fastlyPurgePath)
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
-            .matchHeader('Fastly-Soft-Purge', 1)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
                 status:'ok'
