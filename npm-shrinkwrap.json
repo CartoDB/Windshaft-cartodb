@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.15.2",
+  "version": "2.16.0",
   "dependencies": {
     "body-parser": {
       "version": "1.14.1",
@@ -533,7 +533,7 @@
                 },
                 "inherits": {
                   "version": "2.0.1",
-                  "from": "inherits@2",
+                  "from": "inherits@~2.0.1",
                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
                 },
                 "isarray": {
@@ -827,8 +827,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.1.1",
-      "from": "windshaft@~1.1.1",
+      "version": "1.2.0",
+      "from": "windshaft@~1.2.0",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb2",
@@ -1216,8 +1216,8 @@
           }
         },
         "grainstore": {
-          "version": "1.0.0",
-          "from": "grainstore@~1.0.0",
+          "version": "1.1.0",
+          "from": "grainstore@~1.1.0",
           "dependencies": {
             "carto": {
               "version": "0.9.5-cdb2",
@@ -2966,6 +2966,11 @@
                   }
                 }
               }
+            },
+            "semver": {
+              "version": "5.0.3",
+              "from": "semver@~5.0.3",
+              "resolved": "https://registry.npmjs.org/semver/-/semver-5.0.3.tgz"
             }
           }
         },
