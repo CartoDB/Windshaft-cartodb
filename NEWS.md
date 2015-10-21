@@ -2,7 +2,7 @@
 
 ## 2.15.1
 
-Released 2015-mm-dd
+Released 2015-10-21
 
 Announcements:
  - Upgrades windshaft to [1.1.1](https://github.com/CartoDB/Windshaft/releases/tag/1.1.1)
