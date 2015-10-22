@@ -1,17 +1,17 @@
-## Anonymous Maps
+# Anonymous Maps
 
 Anonymous maps allows you to instantiate a map given SQL and CartoCSS. It also allows you to add interaction capabilities using [UTF Grid.](https://github.com/mapbox/utfgrid-spec)
 
-### Instantiate
+## Instantiate
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```html
 POST /api/v1/map
 ```
 
-#### Params
+### Params
 
 ```javascript
 {
@@ -30,7 +30,7 @@ POST /api/v1/map
 
 Should be a [Mapconfig](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md).
 
-#### Response
+### Response
 
 The response includes:
 
@@ -51,7 +51,7 @@ The response includes:
 - **cdn_url**  
   URLs to fetch the data using the best CDN for your zone.
 
-#### Example
+### Example
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
@@ -78,9 +78,9 @@ curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: applicatio
 }
 ```
 
-##### Retrieve resources from the layergroup
+#### Retrieve resources from the layergroup
 
-###### Mapnik tiles can be accessed using:
+##### Mapnik tiles can be accessed using:
 
 These tiles will get just the mapnik layers. To get individual layers see next section.
 
@@ -88,7 +88,7 @@ These tiles will get just the mapnik layers. To get individual layers see next s
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
 ```
 
-###### Individual layers
+##### Individual layers
 
 The MapConfig specification holds the layers definition in a 0-based index. Layers can be requested individually in different formats depending on the layer type.
 
@@ -106,7 +106,7 @@ If the MapConfig had a Torque layer at index 1 it could be possible to request i
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/1/{z}/{x}/{y}.torque.json
 ```
 
-###### Attributes defined in `attributes` section:
+##### Attributes defined in `attributes` section:
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer/attributes/:feature_id
@@ -118,7 +118,7 @@ Which returns JSON with the attributes defined, like:
 { "c": 1, "d": 2 }
 ```
 
-###### Blending and layer selection
+##### Blending and layer selection
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer_filter/{z}/{x}/{y}.png
@@ -154,18 +154,18 @@ Some notes about filtering:
   may change in the future **it is recommended** to always select the layers in ascending order so you will get a
   consistent behavior in the future.
 
-### Create JSONP
+## Create JSONP
 
 The JSONP endpoint is provided in order to allow web browsers access which don't support CORS.
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map?callback=method
 ```
 
-#### Params
+### Params
 
 - **config**
   Encoded JSON with the params for creating named maps (the variables defined in the template).
@@ -176,7 +176,7 @@ GET /api/v1/map?callback=method
 - **callback**  
   JSON callback name.
 
-#### Example
+### Example
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
@@ -195,6 +195,6 @@ callback({
 })
 ```
 
-### Remove
+## Remove
 
 Anonymous maps cannot be removed by an API call. They will expire after about five minutes but sometimes longer. If an anonymous map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time, returns to the map and attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.

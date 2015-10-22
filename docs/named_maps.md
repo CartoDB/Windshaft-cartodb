@@ -1,4 +1,4 @@
-## Named Maps
+# Named Maps
 
 Named maps are essentially the same as anonymous maps except the MapConfig is stored on the server and the map is given a unique name. Two other big differences are: you can create named maps from private data and that users without an API Key can see them even though they are from that private data.
 
@@ -12,16 +12,16 @@ The main two differences compared to anonymous maps are:
 
 Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
 
-### Create
+## Create
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```html
 POST /api/v1/map/named
 ```
 
-#### Params
+### Params
 
 - **api_key** is required
 
@@ -76,7 +76,7 @@ POST /api/v1/map/named
 }
 ```
 
-##### Arguments
+#### Arguments
 
 - **name**: There can be at most _one_ template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-) or underscores (_).
 - **auth**:
@@ -95,13 +95,13 @@ POST /api/v1/map/named
     - **east**: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
     - **north**: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
 
-#### Template Format
+### Template Format
 
 A templated `layergroup` allows the use of placeholders in the "cartocss" and "sql" elements of the "option" object in any "layer" of a `layergroup` configuration
 
 Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced.
 
-##### Example
+#### Example
 
 ```javascript
 <%= my_color %>
@@ -109,7 +109,7 @@ Valid placeholder names start with a letter and can only contain letters, number
 
 The set of supported placeholders for a template will need to be explicitly defined with a specific type and default value for each.
 
-#### Placeholder Types
+### Placeholder Types
 
 The placeholder type will determine the kind of escaping for the associated value. Supported types are:
 
@@ -137,18 +137,18 @@ curl -X POST \
 }
 ```
 
-### Instantiate
+## Instantiate
 
 Instantiating a map allows you to get the information needed to fetch tiles. That temporal map is an anonymous map.
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```html
 POST /api/v1/map/named/:template_name
 ```
 
-#### Param
+### Param
 
 - **auth_token** optional, but required when `"method"` is set to `"token"`
 
@@ -164,7 +164,7 @@ The fields you pass as `params.json` depend on the variables allowed by the name
 
 - **auth_token** *optional* if the named map needs auth
 
-#### Example
+### Example
 
 You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/map/named/:template_name`.
 
@@ -195,18 +195,18 @@ curl -X POST \
 
 You can then use the `layergroupid` for fetching tiles and grids as you would normally (see anonymous map section).  However you'll need to show the `auth_token`, if required by the template.
 
-### Using JSONP
+## Using JSONP
 
 There is also a special endpoint to be able to initialize a map using JSONP (for old browsers).
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map/named/:template_name/jsonp
 ```
 
-#### Params
+### Params
 
 - **auth_token** optional, but required when `"method"` is set to `"token"`
 - **config** Encoded JSON with the params for creating named maps (the variables defined in the template)
@@ -246,28 +246,28 @@ callback({
 })
 ```
 
-### Update
+## Update
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```bash
 PUT /api/v1/map/named/:template_name
 ```
 
-#### Params
+### Params
 
 - **api_key** is required
 
-#### Response
+### Response
 
 Same as updating a map.
 
-#### Other Info
+### Other Info
 
 Updating a named map removes all the named map instances so they need to be initialized again.
 
-#### Example
+### Example
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
@@ -294,22 +294,22 @@ If a template with the same name does NOT exist, a 400 HTTP response is generate
 }
 ```
 
-### Delete
+## Delete
 
 Delete the specified template map from the server and it disables any previously initialized versions of the map.
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```bash
 DELETE /api/v1/map/named/:template_name
 ```
 
-#### Params
+### Params
 
 - **api_key** is required
 
-#### Example
+### Example
 
 <div class="code-title code-request">REQUEST</div>
 ```bash
@@ -325,22 +325,22 @@ curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_nam
 
 On success, a 204 (No Content) response will be issued. Otherwise a 4xx response with an error will be returned.
 
-### Listing Available Templates
+## Listing Available Templates
 
 This allows you to get a list of all available templates.
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map/named/
 ```
 
-#### Params
+### Params
 
 - **api_key** is required
 
-#### Example
+### Example
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
@@ -361,22 +361,22 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 }
 ```
 
-### Getting a Specific Template
+## Getting a Specific Template
 
 This gets the definition of a template.
 
-#### Definition
+### Definition
 
 <div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map/named/:template_name
 ```
 
-#### Params
+### Params
 
 - **api_key** is required
 
-#### Example
+### Example
 
 <div class="code-title code-request with-result">REQUEST</div>
 ```bash
@@ -397,7 +397,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 }
 ```
 
-### Use with CartoDB.js
+## Use with CartoDB.js
 Named maps can be used with CartoDB.js by specifying a named map in a layer source as follows. Named maps are treated almost the same as other layer source types in most other ways.
 
 ```js

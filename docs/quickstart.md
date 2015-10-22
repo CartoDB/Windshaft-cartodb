@@ -1,4 +1,4 @@
-## Quickstart
+# Quickstart
 
 You can create two types of maps with the Maps API:
 
@@ -8,7 +8,7 @@ You can create two types of maps with the Maps API:
 - **Named maps**  
   There are also maps that have access to your private data. These maps require an owner to setup and modify any SQL and CartoCSS parameters and are not modifiable without new setup calls.
 
-### Anonymous maps
+## Anonymous maps
 
 Here is an example of how to create an anonymous map with JavaScript:
 
@@ -39,7 +39,7 @@ $.ajax({
 })
 ```
 
-### Named maps
+## Named maps
 
 Let's create a named map using some private tables in a CartoDB account.
 The following map config sets up a map of European countries that have a white fill color:
