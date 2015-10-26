@@ -71,7 +71,9 @@ describe('lists', function() {
                         if (err) {
                             return next(err);
                         }
-                        return next(null, JSON.parse(res.body).layergroupid);
+                        var parsedBody = JSON.parse(res.body);
+                        assert.ok(parsedBody.metadata.layers[0].widgets.names);
+                        return next(null, parsedBody.layergroupid);
                     }
                 );
             },
