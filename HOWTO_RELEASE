@@ -1,12 +1,11 @@
 1. Test (make clean all check), fix if broken before proceeding
 2. Ensure proper version in package.json 
 3. Ensure NEWS section exists for the new version, review it, add release date
-4. Drop npm-shrinkwrap.json
-5. Run npm shrinkwrap to recreate npm-shrinkwrap.json
-6. Commit package.json, npm-shrinwrap.json, NEWS
-7. git tag -a Major.Minor.Patch # use NEWS section as content
-8. Announce on cartodb@googlegroups.com
-9. Stub NEWS/package for next version
+4. Recreate npm-shrinkwrap.json with: `npm install --no-shrinkwrap && npm shrinkwrap`
+5. Commit package.json, npm-shrinwrap.json, NEWS
+6. git tag -a Major.Minor.Patch # use NEWS section as content
+7. Announce on cartodb@googlegroups.com
+8. Stub NEWS/package for next version
 
 Versions:
 
