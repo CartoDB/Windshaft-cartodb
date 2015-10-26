@@ -72,7 +72,12 @@ describe('lists', function() {
                             return next(err);
                         }
                         var parsedBody = JSON.parse(res.body);
+                        var expectedWidgetURLS = {
+                            "http": "http://localhost.localhost.lan:8888" +
+                                    "/api/v1/map/adfb1f912ddb9a5af5e9ef0b2229ed3b:1234567890123/0/widget/names"
+                        };
                         assert.ok(parsedBody.metadata.layers[0].widgets.names);
+                        assert.equal(parsedBody.metadata.layers[0].widgets.names.url.http, expectedWidgetURLS.http);
                         return next(null, parsedBody.layergroupid);
                     }
                 );
