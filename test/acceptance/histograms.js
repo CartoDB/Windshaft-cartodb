@@ -10,7 +10,7 @@ var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
 
-describe('lists', function() {
+describe('histograms', function() {
 
     var keysToDelete;
 
@@ -75,7 +75,7 @@ describe('lists', function() {
                     }
                 );
             },
-            function getList(err, _layergroupId) {
+            function getHistogram(err, _layergroupId) {
                 assert.ifError(err);
 
                 var next = this;
