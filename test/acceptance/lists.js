@@ -33,13 +33,13 @@ describe('lists', function() {
                     options: {
                         sql: 'select * from test_table',
                         cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
-                        cartocss_version: '2.3.0'
-                    },
-                    widgets: {
-                        names: {
-                            type: 'list',
-                            options: {
-                                columns: ['name']
+                        cartocss_version: '2.3.0',
+                        widgets: {
+                            names: {
+                                type: 'list',
+                                options: {
+                                    columns: ['name']
+                                }
                             }
                         }
                     }

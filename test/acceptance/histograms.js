@@ -33,13 +33,13 @@ describe('histograms', function() {
                     options: {
                         sql: 'select * from populated_places_simple_reduced',
                         cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
-                        cartocss_version: '2.3.0'
-                    },
-                    widgets: {
-                        pop_max: {
-                            type: 'histogram',
-                            options: {
-                                column: 'pop_max'
+                        cartocss_version: '2.3.0',
+                        widgets: {
+                            pop_max: {
+                                type: 'histogram',
+                                options: {
+                                    column: 'pop_max'
+                                }
                             }
                         }
                     }
