@@ -35,9 +35,12 @@ describe('lists', function() {
                         cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
                         cartocss_version: '2.3.0'
                     },
-                    lists: {
+                    widgets: {
                         names: {
-                            columns: ['name']
+                            type: 'list',
+                            options: {
+                                columns: ['name']
+                            }
                         }
                     }
                 }
@@ -80,7 +83,7 @@ describe('lists', function() {
 
                 assert.response(server,
                     {
-                        url: '/api/v1/map/' + layergroupId + '/list/names',
+                        url: '/api/v1/map/' + layergroupId + '/0/list/names',
                         method: 'GET',
                         headers: {
                             host: 'localhost'
