@@ -83,7 +83,7 @@ describe('lists', function() {
 
                 assert.response(server,
                     {
-                        url: '/api/v1/map/' + layergroupId + '/0/list/names',
+                        url: '/api/v1/map/' + layergroupId + '/0/widget/names',
                         method: 'GET',
                         headers: {
                             host: 'localhost'

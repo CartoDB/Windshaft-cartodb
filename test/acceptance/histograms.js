@@ -83,7 +83,7 @@ describe('histograms', function() {
 
                 assert.response(server,
                     {
-                        url: '/api/v1/map/' + layergroupId + '/0/histogram/pop_max',
+                        url: '/api/v1/map/' + layergroupId + '/0/widget/pop_max',
                         method: 'GET',
                         headers: {
                             host: 'localhost'
@@ -100,7 +100,9 @@ describe('histograms', function() {
                             return next(err);
                         }
 
-                        console.log(JSON.parse(res.body));
+                        var histogram = JSON.parse(res.body);
+
+                        assert.ok(histogram.length);
 
                         next(null);
                     }
