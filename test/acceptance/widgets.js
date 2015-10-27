@@ -183,4 +183,62 @@ describe('widgets', function() {
         });
     });
 
+    describe('filters', function() {
+        var layergroup =  {
+            version: '1.5.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                        cartocss_version: '2.3.0',
+                        widgets: {
+                            country_places_count: {
+                                type: 'aggregation',
+                                options: {
+                                    column: 'adm0_a3',
+                                    aggregation: 'count'
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        };
+
+        it("should expose an aggregation", function(done) {
+            getWidget(layergroup, 'country_places_count', function(err, res) {
+                if (err) {
+                    return done(err);
+                }
+
+                var aggregation = JSON.parse(res.body);
+                assert.equal(aggregation.length, 223);
+                assert.deepEqual(aggregation[0], { count: 769, adm0_a3: 'USA' });
+
+                done();
+            });
+        });
+
+        it("should expose a filtered aggregation", function(done) {
+            var filters = {
+                layers: [
+                    {country_places_count: {accept: ['CAN']}}
+                ]
+            };
+            getWidget(layergroup, 'country_places_count', filters, function(err, res) {
+                if (err) {
+                    return done(err);
+                }
+
+                var aggregation = JSON.parse(res.body);
+                assert.equal(aggregation.length, 1);
+                assert.deepEqual(aggregation[0], { count: 256, adm0_a3: 'CAN' });
+
+                done();
+            });
+        });
+    });
+
 });
