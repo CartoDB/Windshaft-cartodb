@@ -64,7 +64,10 @@ describe('widgets', function() {
                                     "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
                         };
                         assert.ok(parsedBody.metadata.layers[0].widgets[widgetName]);
-                        assert.equal(parsedBody.metadata.layers[0].widgets[widgetName].url.http, expectedWidgetURLS.http);
+                        assert.equal(
+                            parsedBody.metadata.layers[0].widgets[widgetName].url.http,
+                            expectedWidgetURLS.http
+                        );
                         return next(null, parsedBody.layergroupid);
                     }
                 );
@@ -109,7 +112,7 @@ describe('widgets', function() {
 
     it("should expose layer list", function(done) {
 
-        var layergroup =  {
+        var listWidgetMapConfig =  {
             version: '1.5.0',
             layers: [
                 {
@@ -131,7 +134,7 @@ describe('widgets', function() {
             ]
         };
 
-        getWidget(layergroup, 'names', function(err, res) {
+        getWidget(listWidgetMapConfig, 'names', function(err, res) {
             if (err) {
                 return done(err);
             }
@@ -150,7 +153,7 @@ describe('widgets', function() {
     });
 
     it("should expose layer histogram", function(done) {
-        var layergroup =  {
+        var histogramMapConfig =  {
             version: '1.5.0',
             layers: [
                 {
@@ -171,7 +174,7 @@ describe('widgets', function() {
                 }
             ]
         };
-        getWidget(layergroup, 'pop_max', function(err, res) {
+        getWidget(histogramMapConfig, 'pop_max', function(err, res) {
             if (err) {
                 return done(err);
             }
@@ -184,59 +187,121 @@ describe('widgets', function() {
     });
 
     describe('filters', function() {
-        var layergroup =  {
-            version: '1.5.0',
-            layers: [
-                {
-                    type: 'mapnik',
-                    options: {
-                        sql: 'select * from populated_places_simple_reduced',
-                        cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
-                        cartocss_version: '2.3.0',
-                        widgets: {
-                            country_places_count: {
-                                type: 'aggregation',
-                                options: {
-                                    column: 'adm0_a3',
-                                    aggregation: 'count'
+
+        describe('category', function() {
+            var aggregationMapConfig =  {
+                version: '1.5.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
+                            widgets: {
+                                country_places_count: {
+                                    type: 'aggregation',
+                                    options: {
+                                        column: 'adm0_a3',
+                                        aggregation: 'count'
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            ]
-        };
+                ]
+            };
 
-        it("should expose an aggregation", function(done) {
-            getWidget(layergroup, 'country_places_count', function(err, res) {
-                if (err) {
-                    return done(err);
-                }
+            it("should expose an aggregation", function(done) {
+                getWidget(aggregationMapConfig, 'country_places_count', function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
 
-                var aggregation = JSON.parse(res.body);
-                assert.equal(aggregation.length, 223);
-                assert.deepEqual(aggregation[0], { count: 769, adm0_a3: 'USA' });
+                    var aggregation = JSON.parse(res.body);
+                    assert.equal(aggregation.length, 223);
+                    assert.deepEqual(aggregation[0], { count: 769, adm0_a3: 'USA' });
 
-                done();
+                    done();
+                });
+            });
+
+            it("should expose a filtered aggregation", function(done) {
+                var filters = {
+                    layers: [
+                        {country_places_count: {accept: ['CAN']}}
+                    ]
+                };
+                getWidget(aggregationMapConfig, 'country_places_count', filters, function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    var aggregation = JSON.parse(res.body);
+                    assert.equal(aggregation.length, 1);
+                    assert.deepEqual(aggregation[0], { count: 256, adm0_a3: 'CAN' });
+
+                    done();
+                });
             });
         });
 
-        it("should expose a filtered aggregation", function(done) {
-            var filters = {
+        describe('range', function() {
+            var histogramMapConfig =  {
+                version: '1.5.0',
                 layers: [
-                    {country_places_count: {accept: ['CAN']}}
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
+                            widgets: {
+                                country_places_histogram: {
+                                    type: 'histogram',
+                                    options: {
+                                        column: 'pop_max'
+                                    }
+                                }
+                            }
+                        }
+                    }
                 ]
             };
-            getWidget(layergroup, 'country_places_count', filters, function(err, res) {
-                if (err) {
-                    return done(err);
-                }
 
-                var aggregation = JSON.parse(res.body);
-                assert.equal(aggregation.length, 1);
-                assert.deepEqual(aggregation[0], { count: 256, adm0_a3: 'CAN' });
+            it("should expose an aggregation", function(done) {
+                getWidget(histogramMapConfig, 'country_places_histogram', function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
 
-                done();
+                    var histogram = JSON.parse(res.body);
+                    // notice min value
+                    assert.deepEqual(histogram[0], { bucket: 0, buckets: 10, min: 0, max: 3917000, freq: 7229 });
+
+                    done();
+                });
+            });
+
+            it("should expose a filtered aggregation", function(done) {
+                var filters = {
+                    layers: [
+                        {
+                            country_places_histogram: { min: 4000000 }
+                        }
+                    ]
+                };
+                getWidget(histogramMapConfig, 'country_places_histogram', filters, function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    var histogram = JSON.parse(res.body);
+                    // notice min value
+                    assert.deepEqual(histogram[0], { bucket: 0, buckets: 10, min: 4009000, max: 7297054, freq: 50 });
+
+                    done();
+                });
             });
         });
     });
