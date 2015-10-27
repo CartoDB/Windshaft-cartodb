@@ -60,13 +60,11 @@ describe('widgets', function() {
                         }
                         var parsedBody = JSON.parse(res.body);
                         var expectedWidgetURLS = {
-                            "http": "http://localhost.localhost.lan:8888" +
-                                    "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
+                            http: "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
                         };
                         assert.ok(parsedBody.metadata.layers[0].widgets[widgetName]);
-                        assert.equal(
-                            parsedBody.metadata.layers[0].widgets[widgetName].url.http,
-                            expectedWidgetURLS.http
+                        assert.ok(
+                            parsedBody.metadata.layers[0].widgets[widgetName].url.http.match(expectedWidgetURLS.http)
                         );
                         return next(null, parsedBody.layergroupid);
                     }
