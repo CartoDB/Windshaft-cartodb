@@ -1,5 +1,6 @@
-var assert      = require('../support/assert');
-var step        = require('step');
+var assert = require('../support/assert');
+var step = require('step');
+var qs = require('querystring');
 
 var helper = require(__dirname + '/../support/test_helper');
 var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
@@ -21,6 +22,89 @@ describe('widgets', function() {
     afterEach(function(done) {
         helper.deleteRedisKeys(keysToDelete, done);
     });
+
+    function getWidget(mapConfig, widgetName, filters, callback) {
+        if (!callback) {
+            callback = filters;
+            filters = null;
+        }
+
+        var url = '/api/v1/map';
+        if (filters) {
+            url += '?' + qs.stringify({filters: JSON.stringify(filters)});
+        }
+
+        var layergroupId;
+        step(
+            function createLayergroup() {
+                var next = this;
+                assert.response(server,
+                    {
+                        url: url,
+                        method: 'POST',
+                        headers: {
+                            host: 'localhost',
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(mapConfig)
+                    },
+                    {
+                        status: 200,
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    },
+                    function(res, err) {
+                        if (err) {
+                            return next(err);
+                        }
+                        var parsedBody = JSON.parse(res.body);
+                        var expectedWidgetURLS = {
+                            "http": "http://localhost.localhost.lan:8888" +
+                                    "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
+                        };
+                        assert.ok(parsedBody.metadata.layers[0].widgets[widgetName]);
+                        assert.equal(parsedBody.metadata.layers[0].widgets[widgetName].url.http, expectedWidgetURLS.http);
+                        return next(null, parsedBody.layergroupid);
+                    }
+                );
+            },
+            function getWidgetResult(err, _layergroupId) {
+                assert.ifError(err);
+
+                var next = this;
+                layergroupId = _layergroupId;
+
+                assert.response(server,
+                    {
+                        url: '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName,
+                        method: 'GET',
+                        headers: {
+                            host: 'localhost'
+                        }
+                    },
+                    {
+                        status: 200,
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    },
+                    function(res, err) {
+                        if (err) {
+                            return next(err);
+                        }
+
+                        next(null, res);
+                    }
+                );
+            },
+            function finish(err, res) {
+                keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+                return callback(err, res);
+            }
+        );
+    }
 
 
     it("should expose layer list", function(done) {
@@ -47,89 +131,25 @@ describe('widgets', function() {
             ]
         };
 
-        var layergroupId;
-        step(
-            function createLayergroup() {
-                var next = this;
-                assert.response(server,
-                    {
-                        url: '/api/v1/map',
-                        method: 'POST',
-                        headers: {
-                            host: 'localhost',
-                            'Content-Type': 'application/json'
-                        },
-                        data: JSON.stringify(layergroup)
-                    },
-                    {
-                        status: 200,
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8'
-                        }
-                    },
-                    function(res, err) {
-                        if (err) {
-                            return next(err);
-                        }
-                        var parsedBody = JSON.parse(res.body);
-                        var expectedWidgetURLS = {
-                            "http": "http://localhost.localhost.lan:8888" +
-                                    "/api/v1/map/adfb1f912ddb9a5af5e9ef0b2229ed3b:1234567890123/0/widget/names"
-                        };
-                        assert.ok(parsedBody.metadata.layers[0].widgets.names);
-                        assert.equal(parsedBody.metadata.layers[0].widgets.names.url.http, expectedWidgetURLS.http);
-                        return next(null, parsedBody.layergroupid);
-                    }
-                );
-            },
-            function getList(err, _layergroupId) {
-                assert.ifError(err);
-
-                var next = this;
-                layergroupId = _layergroupId;
-
-                assert.response(server,
-                    {
-                        url: '/api/v1/map/' + layergroupId + '/0/widget/names',
-                        method: 'GET',
-                        headers: {
-                            host: 'localhost'
-                        }
-                    },
-                    {
-                        status: 200,
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8'
-                        }
-                    },
-                    function(res, err) {
-                        if (err) {
-                            return next(err);
-                        }
-
-                        var expectedList = [
-                            {name:"Hawai"},
-                            {name:"El Estocolmo"},
-                            {name:"El Rey del Tallarín"},
-                            {name:"El Lacón"},
-                            {name:"El Pico"}
-                        ];
-                        assert.deepEqual(JSON.parse(res.body), expectedList);
-
-                        next(null);
-                    }
-                );
-            },
-            function finish(err) {
-                keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-                keysToDelete['user:localhost:mapviews:global'] = 5;
-                done(err);
+        getWidget(layergroup, 'names', function(err, res) {
+            if (err) {
+                return done(err);
             }
-        );
+
+            var expectedList = [
+                {name:"Hawai"},
+                {name:"El Estocolmo"},
+                {name:"El Rey del Tallarín"},
+                {name:"El Lacón"},
+                {name:"El Pico"}
+            ];
+            assert.deepEqual(JSON.parse(res.body), expectedList);
+
+            done();
+        });
     });
 
     it("should expose layer histogram", function(done) {
-
         var layergroup =  {
             version: '1.5.0',
             layers: [
@@ -151,74 +171,16 @@ describe('widgets', function() {
                 }
             ]
         };
-
-        var layergroupId;
-        step(
-            function createLayergroup() {
-                var next = this;
-                assert.response(server,
-                    {
-                        url: '/api/v1/map',
-                        method: 'POST',
-                        headers: {
-                            host: 'localhost',
-                            'Content-Type': 'application/json'
-                        },
-                        data: JSON.stringify(layergroup)
-                    },
-                    {
-                        status: 200,
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8'
-                        }
-                    },
-                    function(res, err) {
-                        if (err) {
-                            return next(err);
-                        }
-                        return next(null, JSON.parse(res.body).layergroupid);
-                    }
-                );
-            },
-            function getHistogram(err, _layergroupId) {
-                assert.ifError(err);
-
-                var next = this;
-                layergroupId = _layergroupId;
-
-                assert.response(server,
-                    {
-                        url: '/api/v1/map/' + layergroupId + '/0/widget/pop_max',
-                        method: 'GET',
-                        headers: {
-                            host: 'localhost'
-                        }
-                    },
-                    {
-                        status: 200,
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8'
-                        }
-                    },
-                    function(res, err) {
-                        if (err) {
-                            return next(err);
-                        }
-
-                        var histogram = JSON.parse(res.body);
-
-                        assert.ok(histogram.length);
-
-                        next(null);
-                    }
-                );
-            },
-            function finish(err) {
-                keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-                keysToDelete['user:localhost:mapviews:global'] = 5;
-                done(err);
+        getWidget(layergroup, 'pop_max', function(err, res) {
+            if (err) {
+                return done(err);
             }
-        );
+
+            var histogram = JSON.parse(res.body);
+            assert.ok(histogram.length);
+
+            done();
+        });
     });
 
 });
