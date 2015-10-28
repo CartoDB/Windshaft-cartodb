@@ -2,16 +2,16 @@
 
 Anonymous maps allows you to instantiate a map given SQL and CartoCSS. It also allows you to add interaction capabilities using [UTF Grid.](https://github.com/mapbox/utfgrid-spec)
 
+
 ## Instantiate
 
-### Definition
+#### Definition
 
-<div class="code-title notitle code-request"></div>
 ```html
 POST /api/v1/map
 ```
 
-### Params
+#### Params
 
 ```javascript
 {
@@ -30,35 +30,28 @@ POST /api/v1/map
 
 Should be a [Mapconfig](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md).
 
-### Response
+#### Response
 
 The response includes:
 
-- **layergroupid**  
-  The ID for that map, used to compose the URL for the tiles. The final URL is:
-
-  ```html
-  https://{account}.cartodb.com/api/v1/map/:layergroupid/{z}/{x}/{y}.png
-  ```
-
-- **updated_at**  
-  The ISO date of the last time the data involved in the query was updated.
-
-- **metadata**
-  Includes information about the layers.
-  -
-
-- **cdn_url**  
-  URLs to fetch the data using the best CDN for your zone.
+Attributes | Description
+--- | ---
+layergroupid | The ID for that map, used to compose the URL for the tiles. The final URL is: ```html
+  https://{account}.cartodb.com/api/v1/map/:layergroupid/{z}/{x}/{y}.png```
+updated_at | The ISO date of the last time the data involved in the query was updated.
+metadata | Includes information about the layers.
+cdn_url | URLs to fetch the data using the best CDN for your zone.
 
 ### Example
 
-<div class="code-title code-request with-result">REQUEST</div>
+#### Call
+
 ```bash
 curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: application/json' -d @mapconfig.json
 ```
 
-<div class="code-title">RESPONSE</div>
+#### Response
+
 ```javascript
 {
   "layergroupid": "c01a54877c62831bb51720263f91fb33:0",
@@ -78,9 +71,9 @@ curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: applicatio
 }
 ```
 
-#### Retrieve resources from the layergroup
+### Retrieve resources from the layergroup
 
-##### Mapnik tiles can be accessed using:
+#### Mapnik tiles can be accessed using
 
 These tiles will get just the mapnik layers. To get individual layers see next section.
 
@@ -88,7 +81,7 @@ These tiles will get just the mapnik layers. To get individual layers see next s
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
 ```
 
-##### Individual layers
+#### Individual layers
 
 The MapConfig specification holds the layers definition in a 0-based index. Layers can be requested individually in different formats depending on the layer type.
 
@@ -106,7 +99,7 @@ If the MapConfig had a Torque layer at index 1 it could be possible to request i
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/1/{z}/{x}/{y}.torque.json
 ```
 
-##### Attributes defined in `attributes` section:
+#### Attributes defined in `attributes` section
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer/attributes/:feature_id
@@ -118,7 +111,7 @@ Which returns JSON with the attributes defined, like:
 { "c": 1, "d": 2 }
 ```
 
-##### Blending and layer selection
+#### Blending and layer selection
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/:layer_filter/{z}/{x}/{y}.png
@@ -154,46 +147,46 @@ Some notes about filtering:
   may change in the future **it is recommended** to always select the layers in ascending order so you will get a
   consistent behavior in the future.
 
+
 ## Create JSONP
 
 The JSONP endpoint is provided in order to allow web browsers access which don't support CORS.
 
-### Definition
+#### Definition
 
-<div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map?callback=method
 ```
 
-### Params
+#### Params
 
-- **config**
-  Encoded JSON with the params for creating named maps (the variables defined in the template).
-
-- **lmza**  
-  This attribute contains the same as config but LZMA compressed. It cannot be used at the same time as `config`.
-
-- **callback**  
-  JSON callback name.
+Param | Description
+--- | ---
+config | Encoded JSON with the params for creating named maps (the variables defined in the template).
+lmza | This attribute contains the same as config but LZMA compressed. It cannot be used at the same time as `config`.
+callback | JSON callback name.
 
 ### Example
 
-<div class="code-title code-request with-result">REQUEST</div>
+#### Call
+
 ```bash
 curl "https://documentation.cartodb.com/api/v1/map?callback=callback&config=%7B%22version%22%3A%221.0.1%22%2C%22layers%22%3A%5B%7B%22type%22%3A%22cartodb%22%2C%22options%22%3A%7B%22sql%22%3A%22select+%2A+from+european_countries_e%22%2C%22cartocss%22%3A%22%23european_countries_e%7B+polygon-fill%3A+%23FF6600%3B+%7D%22%2C%22cartocss_version%22%3A%222.3.0%22%2C%22interactivity%22%3A%5B%22cartodb_id%22%5D%7D%7D%5D%7D"
 ```
 
-<div class="code-title">RESPONSE</div>
+#### Response
+
 ```javascript
 callback({
-    layergroupid: "d9034c133262dfb90285cea26c5c7ad7:0",
-    cdn_url: {
-        "http": "http://cdb.com",
-        "https": "https://cdb.com"
-    },
-    last_updated: "1970-01-01T00:00:00.000Z"
+  layergroupid: "d9034c133262dfb90285cea26c5c7ad7:0",
+  cdn_url: {
+    "http": "http://cdb.com",
+    "https": "https://cdb.com"
+  },
+  last_updated: "1970-01-01T00:00:00.000Z"
 })
 ```
+
 
 ## Remove
 
