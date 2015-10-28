@@ -281,7 +281,7 @@ describe('widgets', function() {
                 });
             });
 
-            it("should expose a filtered aggregation", function(done) {
+            it("should expose a filtered histogram", function(done) {
                 var filters = {
                     layers: [
                         {
