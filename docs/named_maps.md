@@ -14,18 +14,20 @@ Template maps are persistent with no preset expiration. They can only be created
 
 ## Create
 
-### Definition
+#### Definition
 
-<div class="code-title notitle code-request"></div>
 ```html
 POST /api/v1/map/named
 ```
 
-### Params
+#### Params
 
-- **api_key** is required
+Params | Description
+--- | ---
+api_key | is required
 
-<div class="code-title">template.json</div>
+#### template.json
+
 ```javascript
 {
   "version": "0.0.1",
@@ -78,22 +80,32 @@ POST /api/v1/map/named
 
 #### Arguments
 
-- **name**: There can be at most _one_ template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-) or underscores (_).
-- **auth**:
-  - **method** `"token"` or `"open"` (the default if no `"method"` is given).
-  - **valid_tokens** when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
-- **placeholders**: Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
-- **layergroup**: the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md) for more info.
-- **view** (optional): extra keys to specify the compelling area for the map. It can be used to have a static preview of a named map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
-  - **zoom** The zoom level to use
-  - **center**
-    - **lng** The longitude to use for the center
-    - **lat** The latitude to use for the center
-  - **bounds**
-    - **west**: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
-    - **south**: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
-    - **east**: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
-    - **north**: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
+Params | Description
+--- | ---
+name | There can be at most _one_ template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-) or underscores (_).
+
+auth | 
+--- | ---
+&#124;_ method | `"token"` or `"open"` (the default if no `"method"` is given).
+&#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
+placeholders | Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
+layergroup | the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md) for more info.
+
+view (optional) | extra keys to specify the compelling area for the map. It can be used to have a static preview of a named map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
+--- | ---
+&#124;_ zoom | The zoom level to use
+
+&#124;_ center | 
+--- | ---
+&#124;_ &#124;_ lng | The longitude to use for the center
+&#124;_ &#124;_ lat | The latitude to use for the center
+
+&#124;_ bounds | 
+--- | ---
+&#124;_ &#124;_ west | LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
+&#124;_ &#124;_ south | LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
+&#124;_ &#124;_ east | UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
+&#124;_ &#124;_ north | UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
 
 ### Template Format
 
@@ -113,16 +125,19 @@ The set of supported placeholders for a template will need to be explicitly defi
 
 The placeholder type will determine the kind of escaping for the associated value. Supported types are:
 
-- **sql_literal** internal single-quotes will be sql-escaped
-- **sql_ident** internal double-quotes will be sql-escaped
-- **number** can only contain numerical representation
-- **css_color** can only contain color names or hex-values
+Types | Description
+--- | ---
+sql_literal | internal single-quotes will be sql-escaped
+sql_ident | internal double-quotes will be sql-escaped
+number | can only contain numerical representation
+css_color | can only contain color names or hex-values
 
 Placeholder default values will be used whenever new values are not provided as options at the time of creation on the client. They can also be used to test the template by creating a default version with new options provided.
 
 When using templates, be very careful about your selections as they can give broad access to your data if they are defined losely.
 
-<div class="code-title code-request with-result">REQUEST</div>
+#### Call
+
 ```html
 curl -X POST \
    -H 'Content-Type: application/json' \
@@ -130,7 +145,8 @@ curl -X POST \
    'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 ```
 
-<div class="code-title">RESPONSE</div>
+#### Response
+
 ```javascript
 {
   "template_id":"name",
@@ -141,16 +157,17 @@ curl -X POST \
 
 Instantiating a map allows you to get the information needed to fetch tiles. That temporal map is an anonymous map.
 
-### Definition
+#### Definition
 
-<div class="code-title notitle code-request"></div>
 ```html
 POST /api/v1/map/named/:template_name
 ```
 
-### Param
+#### Param
 
-- **auth_token** optional, but required when `"method"` is set to `"token"`
+Param | Description
+--- | ---
+auth_token | optional, but required when `"method"` is set to `"token"`
 
 ```javascript
 // params.json
@@ -162,15 +179,15 @@ POST /api/v1/map/named/:template_name
 
 The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400)
 
-- **auth_token** *optional* if the named map needs auth
-
 ### Example
 
 You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/map/named/:template_name`.
 
 Valid credentials will be needed if required by the template.
 
-<div class="code-title code-request with-result">REQUEST</div>
+
+#### Call
+
 ```bash
 curl -X POST \
   -H 'Content-Type: application/json' \
@@ -178,7 +195,8 @@ curl -X POST \
   'https://documentation.cartodb.com/api/v1/map/named/@template_name?auth_token=AUTH_TOKEN'
 ```
 
-<div class="code-title">Response</div>
+#### Response
+
 ```javascript
 {
   "layergroupid": "docs@fd2861af@c01a54877c62831bb51720263f91fb33:123456788",
@@ -186,39 +204,43 @@ curl -X POST \
 }
 ```
 
-<div class="code-title">Error</div>
+#### Error
+
 ```javascript
 {
   "errors" : ["Some error string here"]
 }
 ```
 
-You can then use the `layergroupid` for fetching tiles and grids as you would normally (see anonymous map section).  However you'll need to show the `auth_token`, if required by the template.
+You can then use the `layergroupid` for fetching tiles and grids as you would normally (see anonymous map section). However you'll need to show the `auth_token`, if required by the template.
 
 ## Using JSONP
 
 There is also a special endpoint to be able to initialize a map using JSONP (for old browsers).
 
-### Definition
+#### Definition
 
-<div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map/named/:template_name/jsonp
 ```
 
-### Params
+#### Params
 
-- **auth_token** optional, but required when `"method"` is set to `"token"`
-- **config** Encoded JSON with the params for creating named maps (the variables defined in the template)
-- **lmza** This attribute contains the same as config but LZMA compressed. It cannot be used at the same time than `config`.
-- **callback:** JSON callback name
+Params | Description
+--- | ---
+auth_token | optional, but required when `"method"` is set to `"token"`
+config | Encoded JSON with the params for creating named maps (the variables defined in the template)
+lmza | This attribute contains the same as config but LZMA compressed. It cannot be used at the same time than `config`.
+callback | JSON callback name
 
-<div class="code-title code-request with-result">REQUEST</div>
+#### Call
+
 ```bash
 curl 'https://documentation.cartodb.com/api/v1/map/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=callback&config=template_params_json'
 ```
 
-<div class="code-title">RESPONSE</div>
+#### Response
+
 ```javascript
 callback({
   "layergroupid":"c01a54877c62831bb51720263f91fb33:0",
@@ -248,18 +270,20 @@ callback({
 
 ## Update
 
-### Definition
+#### Definition
 
 <div class="code-title notitle code-request"></div>
 ```bash
 PUT /api/v1/map/named/:template_name
 ```
 
-### Params
+#### Params
 
-- **api_key** is required
+Param | Description
+--- | ---
+api_key | is required
 
-### Response
+#### Response
 
 Same as updating a map.
 
@@ -269,7 +293,8 @@ Updating a named map removes all the named map instances so they need to be init
 
 ### Example
 
-<div class="code-title code-request with-result">REQUEST</div>
+#### Call
+
 ```bash
 curl -X PUT \
   -H 'Content-Type: application/json' \
@@ -277,7 +302,8 @@ curl -X PUT \
   'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 ```
 
-<div class="code-title">RESPONSE</div>
+#### Response
+
 ```javascript
 {
   "template_id": "@template_name"
@@ -298,25 +324,29 @@ If a template with the same name does NOT exist, a 400 HTTP response is generate
 
 Delete the specified template map from the server and it disables any previously initialized versions of the map.
 
-### Definition
+#### Definition
 
 <div class="code-title notitle code-request"></div>
 ```bash
 DELETE /api/v1/map/named/:template_name
 ```
 
-### Params
+#### Params
 
-- **api_key** is required
+Param | Description
+--- | ---
+api_key | is required
 
 ### Example
 
-<div class="code-title code-request">REQUEST</div>
+#### Call
+
 ```bash
 curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 ```
 
-<div class="code-title">RESPONSE</div>
+#### Response
+
 ```javascript
 {
   "errors" : ["Some error string here"]
@@ -329,35 +359,39 @@ On success, a 204 (No Content) response will be issued. Otherwise a 4xx response
 
 This allows you to get a list of all available templates.
 
-### Definition
+#### Definition
 
-<div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map/named/
 ```
 
-### Params
+#### Params
 
-- **api_key** is required
+Param | Description
+--- | ---
+api_key | is required
 
 ### Example
 
-<div class="code-title code-request with-result">REQUEST</div>
+#### Call
+
 ```bash
 curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 ```
 
-<div class="code-title with-result">RESPONSE</div>
+#### Response
+
 ```javascript
 {
    "template_ids": ["@template_name1","@template_name2"]
 }
 ```
 
-<div class="code-title">ERROR</div>
+#### Error
+
 ```javascript
 {
-   "errors" : ["Some error string here"]
+  "errors" : ["Some error string here"]
 }
 ```
 
@@ -365,32 +399,36 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 
 This gets the definition of a template.
 
-### Definition
+#### Definition
 
-<div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map/named/:template_name
 ```
 
-### Params
+#### Params
 
-- **api_key** is required
+Param | Description
+--- | ---
+api_key | is required
 
 ### Example
 
-<div class="code-title code-request with-result">REQUEST</div>
+#### Call
+
 ```bash
 curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 ```
 
-<div class="code-title with-result">RESPONSE</div>
+#### Response
+
 ```javascript
 {
   "template": {...} // see template.json above
 }
 ```
 
-<div class="code-title">ERROR</div>
+#### Error
+
 ```javascript
 {
   "errors" : ["Some error string here"]
