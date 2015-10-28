@@ -302,6 +302,65 @@ describe('widgets', function() {
                 });
             });
         });
+
+        describe('combine widget filters', function() {
+            var combinedWidgetsMapConfig =  {
+                version: '1.5.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
+                            widgets: {
+                                country_places_count: {
+                                    type: 'aggregation',
+                                    options: {
+                                        column: 'adm0_a3',
+                                        aggregation: 'count'
+                                    }
+                                },
+                                country_places_histogram: {
+                                    type: 'histogram',
+                                    options: {
+                                        column: 'pop_max'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            };
+
+            it("should expose a filtered aggregation", function(done) {
+                var filters = {
+                    layers: [
+                        {
+                            country_places_count: { reject: ['CHN'] },
+                            country_places_histogram: { min: 7000000 }
+                        }
+                    ]
+                };
+                getWidget(combinedWidgetsMapConfig, 'country_places_count', filters, function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    var aggregation = JSON.parse(res.body);
+
+                    // first one would be CHN if reject filter wasn't applied
+                    assert.deepEqual(aggregation[0], { count: 4, adm0_a3: 'IND' });
+
+                    // confirm 'CHN' was filtered out (reject)
+                    assert.equal(aggregation.reduce(function(sum, row) {
+                        return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
+                    }, 0), 0);
+
+                    done();
+                });
+            });
+        });
     });
 
 });
