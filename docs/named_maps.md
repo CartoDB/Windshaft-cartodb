@@ -456,7 +456,7 @@ cartodb.createLayer('map_dom_id',layerSource)
 
 ```
 
-[CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js.html) has methods for accessing your named maps.
+[CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js/) has methods for accessing your named maps.
 
-1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
-2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js.html#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
+1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
+2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
