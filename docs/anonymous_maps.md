@@ -36,8 +36,7 @@ The response includes:
 
 Attributes | Description
 --- | ---
-layergroupid | The ID for that map, used to compose the URL for the tiles. The final URL is: ```html
-  https://{account}.cartodb.com/api/v1/map/:layergroupid/{z}/{x}/{y}.png```
+layergroupid | The ID for that map, used to compose the URL for the tiles. The final URL is: `https://{account}.cartodb.com/api/v1/map/:layergroupid/{z}/{x}/{y}.png`
 updated_at | The ISO date of the last time the data involved in the query was updated.
 metadata | Includes information about the layers.
 cdn_url | URLs to fetch the data using the best CDN for your zone.
