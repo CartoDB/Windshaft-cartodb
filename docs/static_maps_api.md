@@ -104,7 +104,7 @@ The Static Maps API allows for multiple layers of incorporation into the `MapCon
 
 By manipulating the `"urlTemplate"` custom basemaps can be used in generating static images. Supported map types for the Static Maps API are:
 
-```
+```javascript
 'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
