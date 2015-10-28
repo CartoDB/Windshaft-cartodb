@@ -179,6 +179,8 @@ auth_token | optional, but required when `"method"` is set to `"token"`
 
 The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400)
 
+- **auth_token** *optional* if the named map needs auth
+
 ### Example
 
 You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/map/named/:template_name`.
