@@ -3,7 +3,7 @@
 You can create two types of maps with the Maps API:
 
 - **Anonymous maps**  
-  You can create maps using your CartoDB public data. Any client can change the read-only SQL and CartoCSS parameters that generate the map tiles. These maps can be created from a JavaScript application alone and no authenticated calls are needed. See [this CartoDB.js example]({{ '/cartodb-platform/cartodb-js.html' | prepend: site.baseurl }}).
+  You can create maps using your CartoDB public data. Any client can change the read-only SQL and CartoCSS parameters that generate the map tiles. These maps can be created from a JavaScript application alone and no authenticated calls are needed. See [this CartoDB.js example](/cartodb-platform/cartodb-js/).
 
 - **Named maps**  
   There are also maps that have access to your private data. These maps require an owner to setup and modify any SQL and CartoCSS parameters and are not modifiable without new setup calls.
@@ -64,24 +64,27 @@ The following map config sets up a map of European countries that have a white f
 }
 ```
 
-The map config needs to be sent to CartoDB's Map API using an authenticated call. Here we will use a command line tool called `curl`. For more info about this tool, see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl), or type ``man curl`` in bash. Using `curl`, and storing the config from above in a file `mapconfig.json`, the call would look like:
+The map config needs to be sent to CartoDB's Map API using an authenticated call. Here we will use a command line tool called `curl`. For more info about this tool, see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl), or type `man curl` in bash. Using `curl`, and storing the config from above in a file `mapconfig.json`, the call would look like:
 
-<div class="code-title notitle code-request"></div>
+#### Call
+
 ```bash
 curl 'https://{account}.cartodb.com/api/v1/map/named?api_key=APIKEY' -H 'Content-Type: application/json' -d @mapconfig.json
 ```
 
 To get the `URL` to fetch the tiles you need to instantiate the map, where `template_id` is the template name from the previous response.
 
-<div class="code-title notitle code-request"></div>
+#### Call
+
 ```bash
 curl -X POST 'https://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
 ```
 
 The response will return JSON with properties for the `layergroupid`, the timestamp (`last_updated`) of the last data modification and some key/value pairs with `metadata` for the `layers`.
+
 Note: all `layers` in `metadata` will always have a `type` string and a `meta` dictionary with the key/value pairs.
 
-Here is an example response:
+#### Response
 
 ```javascript
 {
