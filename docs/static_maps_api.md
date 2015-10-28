@@ -55,6 +55,8 @@ Param | Description
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
+Note: you can see this endpoint as
+
 ```bash
 GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
 ```
