@@ -1,13 +1,5 @@
 # Quickstart
 
-You can create two types of maps with the Maps API:
-
-- **Anonymous maps**  
-  You can create maps using your CartoDB public data. Any client can change the read-only SQL and CartoCSS parameters that generate the map tiles. These maps can be created from a JavaScript application alone and no authenticated calls are needed. See [this CartoDB.js example](/cartodb-platform/cartodb-js/getting-started/).
-
-- **Named maps**  
-  There are also maps that have access to your private data. These maps require an owner to setup and modify any SQL and CartoCSS parameters and are not modifiable without new setup calls.
-
 ## Anonymous maps
 
 Here is an example of how to create an anonymous map with JavaScript:
