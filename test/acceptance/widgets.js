@@ -144,7 +144,7 @@ describe('widgets', function() {
                 {name:"El Lacón"},
                 {name:"El Pico"}
             ];
-            assert.deepEqual(JSON.parse(res.body), expectedList);
+            assert.deepEqual(JSON.parse(res.body).rows, expectedList);
 
             done();
         });
@@ -178,7 +178,7 @@ describe('widgets', function() {
             }
 
             var histogram = JSON.parse(res.body);
-            assert.ok(histogram.length);
+            assert.ok(histogram.bins.length);
 
             done();
         });
@@ -217,8 +217,8 @@ describe('widgets', function() {
                     }
 
                     var aggregation = JSON.parse(res.body);
-                    assert.equal(aggregation.length, 223);
-                    assert.deepEqual(aggregation[0], { count: 769, adm0_a3: 'USA' });
+                    assert.equal(aggregation.categories.length, 223);
+                    assert.deepEqual(aggregation.categories[0], { count: 769, adm0_a3: 'USA' });
 
                     done();
                 });
@@ -236,8 +236,8 @@ describe('widgets', function() {
                     }
 
                     var aggregation = JSON.parse(res.body);
-                    assert.equal(aggregation.length, 1);
-                    assert.deepEqual(aggregation[0], { count: 256, adm0_a3: 'CAN' });
+                    assert.equal(aggregation.categories.length, 1);
+                    assert.deepEqual(aggregation.categories[0], { count: 256, adm0_a3: 'CAN' });
 
                     done();
                 });
@@ -275,7 +275,7 @@ describe('widgets', function() {
 
                     var histogram = JSON.parse(res.body);
                     // notice min value
-                    assert.deepEqual(histogram[0], { bucket: 0, buckets: 10, min: 0, max: 3917000, freq: 7229 });
+                    assert.deepEqual(histogram.bins[0], { bin: 0, min: 0, max: 3917000, freq: 7229 });
 
                     done();
                 });
@@ -296,7 +296,7 @@ describe('widgets', function() {
 
                     var histogram = JSON.parse(res.body);
                     // notice min value
-                    assert.deepEqual(histogram[0], { bucket: 0, buckets: 10, min: 4009000, max: 7297054, freq: 50 });
+                    assert.deepEqual(histogram.bins[0], { bin: 0, min: 4009000, max: 7297054, freq: 50 });
 
                     done();
                 });
@@ -350,10 +350,10 @@ describe('widgets', function() {
                     var aggregation = JSON.parse(res.body);
 
                     // first one would be CHN if reject filter wasn't applied
-                    assert.deepEqual(aggregation[0], { count: 4, adm0_a3: 'IND' });
+                    assert.deepEqual(aggregation.categories[0], { count: 4, adm0_a3: 'IND' });
 
                     // confirm 'CHN' was filtered out (reject)
-                    assert.equal(aggregation.reduce(function(sum, row) {
+                    assert.equal(aggregation.categories.reduce(function(sum, row) {
                         return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
