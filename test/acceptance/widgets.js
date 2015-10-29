@@ -399,6 +399,67 @@ describe('widgets', function() {
                     done();
                 });
             });
+
+            it("should allow to filter by bounding box a filtered aggregation", function(done) {
+                var params = {
+                    filters: {
+                        layers: [
+                            {
+                                country_places_histogram: { min: 50000 }
+                            }
+                        ]
+                    },
+                    bbox: '-20,0,45,60'
+                };
+                getWidget(combinedWidgetsMapConfig, 'country_places_count', params, function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    var aggregation = JSON.parse(res.body);
+
+                    // first one would be CHN if reject filter wasn't applied
+                    assert.deepEqual(aggregation.categories[0], {"count":96,"adm0_a3":"RUS"});
+
+                    // confirm 'CHN' was filtered out (reject)
+                    assert.equal(aggregation.categories.reduce(function(sum, row) {
+                        return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
+                    }, 0), 0);
+
+                    done();
+                });
+            });
+
+            it("should allow to filter by bounding box a filtered aggregation, with reject", function(done) {
+                var params = {
+                    filters: {
+                        layers: [
+                            {
+                                country_places_count: { reject: ['RUS'] },
+                                country_places_histogram: { min: 50000 }
+                            }
+                        ]
+                    },
+                    bbox: '-20,0,45,60'
+                };
+                getWidget(combinedWidgetsMapConfig, 'country_places_count', params, function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    var aggregation = JSON.parse(res.body);
+
+                    // first one would be CHN if reject filter wasn't applied
+                    assert.deepEqual(aggregation.categories[0], {"count":77,"adm0_a3":"TUR"});
+
+                    // confirm 'CHN' was filtered out (reject)
+                    assert.equal(aggregation.categories.reduce(function(sum, row) {
+                        return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
+                    }, 0), 0);
+
+                    done();
+                });
+            });
         });
     });
 
