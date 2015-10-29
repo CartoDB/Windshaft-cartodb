@@ -23,15 +23,15 @@ describe('widgets', function() {
         helper.deleteRedisKeys(keysToDelete, done);
     });
 
-    function getWidget(mapConfig, widgetName, filters, callback) {
+    function getWidget(mapConfig, widgetName, params, callback) {
         if (!callback) {
-            callback = filters;
-            filters = null;
+            callback = params;
+            params = null;
         }
 
         var url = '/api/v1/map';
-        if (filters) {
-            url += '?' + qs.stringify({filters: JSON.stringify(filters)});
+        if (params && params.filters) {
+            url += '?' + qs.stringify({ filters: JSON.stringify(params.filters) });
         }
 
         var layergroupId;
@@ -76,9 +76,13 @@ describe('widgets', function() {
                 var next = this;
                 layergroupId = _layergroupId;
 
+                var url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName;
+                if (params && params.bbox) {
+                    url += '?' + qs.stringify({bbox: params.bbox});
+                }
                 assert.response(server,
                     {
-                        url: '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName,
+                        url: url,
                         method: 'GET',
                         headers: {
                             host: 'localhost'
@@ -225,12 +229,14 @@ describe('widgets', function() {
             });
 
             it("should expose a filtered aggregation", function(done) {
-                var filters = {
-                    layers: [
-                        {country_places_count: {accept: ['CAN']}}
-                    ]
+                var params = {
+                    filters: {
+                        layers: [
+                            {country_places_count: {accept: ['CAN']}}
+                        ]
+                    }
                 };
-                getWidget(aggregationMapConfig, 'country_places_count', filters, function(err, res) {
+                getWidget(aggregationMapConfig, 'country_places_count', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -282,14 +288,16 @@ describe('widgets', function() {
             });
 
             it("should expose a filtered histogram", function(done) {
-                var filters = {
-                    layers: [
-                        {
-                            country_places_histogram: { min: 4000000 }
-                        }
-                    ]
+                var params = {
+                    filters: {
+                        layers: [
+                            {
+                                country_places_histogram: { min: 4000000 }
+                            }
+                        ]
+                    }
                 };
-                getWidget(histogramMapConfig, 'country_places_histogram', filters, function(err, res) {
+                getWidget(histogramMapConfig, 'country_places_histogram', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -334,15 +342,46 @@ describe('widgets', function() {
             };
 
             it("should expose a filtered aggregation", function(done) {
-                var filters = {
-                    layers: [
-                        {
-                            country_places_count: { reject: ['CHN'] },
-                            country_places_histogram: { min: 7000000 }
-                        }
-                    ]
+                var params = {
+                    filters: {
+                        layers: [
+                            {
+                                country_places_count: { reject: ['CHN'] }
+                            }
+                        ]
+                    }
                 };
-                getWidget(combinedWidgetsMapConfig, 'country_places_count', filters, function(err, res) {
+                getWidget(combinedWidgetsMapConfig, 'country_places_count', params, function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    var aggregation = JSON.parse(res.body);
+
+                    // first one would be CHN if reject filter wasn't applied
+                    assert.deepEqual(aggregation.categories[0], {"count":769,"adm0_a3":"USA"});
+
+                    // confirm 'CHN' was filtered out (reject)
+                    assert.equal(aggregation.categories.reduce(function(sum, row) {
+                        return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
+                    }, 0), 0);
+
+                    done();
+                });
+            });
+
+            it("should expose a filtered aggregation", function(done) {
+                var params = {
+                    filters: {
+                        layers: [
+                            {
+                                country_places_count: { reject: ['CHN'] },
+                                country_places_histogram: { min: 7000000 }
+                            }
+                        ]
+                    }
+                };
+                getWidget(combinedWidgetsMapConfig, 'country_places_count', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
