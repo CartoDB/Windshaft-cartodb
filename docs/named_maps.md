@@ -274,7 +274,6 @@ callback({
 
 #### Definition
 
-<div class="code-title notitle code-request"></div>
 ```bash
 PUT /api/v1/map/named/:template_name
 ```
@@ -328,7 +327,6 @@ Delete the specified template map from the server and it disables any previously
 
 #### Definition
 
-<div class="code-title notitle code-request"></div>
 ```bash
 DELETE /api/v1/map/named/:template_name
 ```

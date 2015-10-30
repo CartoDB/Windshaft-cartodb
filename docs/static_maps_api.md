@@ -10,7 +10,6 @@ Begin by instantiating either a named or anonymous map using the `layergroupid t
 
 #### Definition
 
-<div class="code-title notitle code-request"></div>
 ```bash
 GET /api/v1/map/static/center/:token/:z/:lat/:lng/:width/:height.:format
 ```
