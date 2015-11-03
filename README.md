@@ -17,7 +17,7 @@ Requirements
 ------------
  - Core
    - Node.js >=0.8
-   - npm >=1.2.1
+   - npm >=1.2.1 <2.0.0
    - PostgreSQL >8.3.x, PostGIS >1.5.x
    - Redis >2.4.0 (http://www.redis.io)
    - Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See Installing Mapnik.
@@ -92,7 +92,7 @@ Examples
 --------
 
 [CartoDB's Map Gallery](http://cartodb.com/gallery/) showcases several examples of visualisations built on top of this.
-
+m
 
 Contributing
 ---
