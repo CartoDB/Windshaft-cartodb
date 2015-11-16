@@ -1,5 +1,106 @@
 # Changelog
 
+## 2.19.0
+
+Released 2015-11-12
+ - Upgrades windshaft to [1.6.0](https://github.com/CartoDB/Windshaft/releases/tag/1.6.0)
+
+## 2.18.0
+
+Released 2015-11-02
+
+Announcements:
+ - Upgrades windshaft to [1.5.0](https://github.com/CartoDB/Windshaft/releases/tag/1.5.0)
+
+
+## 2.17.0
+
+Released 2015-10-28
+
+Announcements:
+ - Upgrades windshaft to [1.4.0](https://github.com/CartoDB/Windshaft/releases/tag/1.4.0)
+
+
+## 2.16.0
+
+Released 2015-10-22
+
+Announcements:
+ - Upgrades windshaft to [1.2.0](https://github.com/CartoDB/Windshaft/releases/tag/1.2.0)
+
+
+## 2.15.1
+
+Released 2015-10-21
+
+Announcements:
+ - Upgrades windshaft to [1.1.1](https://github.com/CartoDB/Windshaft/releases/tag/1.1.1)
+
+
+## 2.15.0
+
+Released 2015-10-13
+
+Announcements:
+ - Fastly purging no longer uses soft-purge option
+ - Upgrades windshaft to [1.1.0](https://github.com/CartoDB/Windshaft/releases/tag/1.1.0)
+ - Upgrades fastly-purge to [1.0.1](https://github.com/CartoDB/node-fastly-purge/releases/tag/1.0.1)
+
+
+## 2.14.1
+
+Released 2015-09-30
+
+Enhancements:
+ - Remove app dependency from controllers
+
+Announcements:
+ - Upgrades windshaft to [1.0.1](https://github.com/CartoDB/Windshaft/releases/tag/1.0.1)
+
+Improvements:
+ - Safer user extraction from request Host header
+
+
+## 2.14.0
+
+Released 2015-09-30
+
+Summary: this starts using Windshaft as library (aka version 1.0.0), it no longer extends old Windshaft server.
+
+Announcements:
+ - Upgrades windshaft to [1.0.0](https://github.com/CartoDB/Windshaft/releases/tag/1.0.0)
+
+New features:
+ - Named tiles: /api/v1/map/named/:name/:layer/:z/:x/:y.:format
+
+Ported from Windshaft pre-library:
+ - Almost all acceptance tests, some unit and some integration tests
+ - Stats + profiler
+
+New features:
+ - Named maps MapConfig provider
+ - Base controller with: req2params, send response/error mechanisms
+ - Authentication/Authorization moves to its own API so it can be reused
+ - Surrogate-Key headers for named maps and affected tables
+
+Improvements:
+ - No more fake requests to emulate map config instantiations
+ - As named maps previews are using named map MapConfigProvider it doesn't need to load the MapConfig
+ - Controllers using Windshaft's backends to request resources through MapConfig providers
+ - Express 4.x, as Windshaft no longer provides an HTTP server, here we start using latest major version of Express.
+ - assert.response implemented using request
+ - All tests validate there are no unexpected keys in Redis and keys requested to be deleted after a test are present
+ - Test suite in Makefile generated with `find`
+ - Image comparison with `mapnik.Image.compare`
+ - Doesn't emit Named map update event on unmodified templates
+
+TODO:
+  - Named map provider checks on every request if named map has changed to reload it (actually reset it so MapConfig has to be regenerated). See https://github.com/CartoDB/Windshaft-cartodb/commit/f553efa69e83fdf296154ab1b7b49aa08957c04e. This is done this way because when running the Service in a cluster there is no communication between different instances so when a named map gets updated in one of the them the rest is not aware/notified of the change. In the future there should be a mechanism to synch this changes between instance:
+   * endpoint
+   * redis pub/sub
+   * backdoor
+
+
 ## 2.13.0
 
 Released 2015-09-21

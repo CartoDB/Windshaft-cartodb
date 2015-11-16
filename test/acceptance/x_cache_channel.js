@@ -1,14 +1,25 @@
-require('../support/test_helper');
+var testHelper = require('../support/test_helper');
 
 var assert = require('../support/assert');
 var qs = require('querystring');
 
-var CartodbWindshaft = require('../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require('../../lib/cartodb/server_options')();
+var CartodbWindshaft = require('../../lib/cartodb/server');
+var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
+var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+
 describe('get requests x-cache-channel', function() {
+
+    var keysToDelete;
+    beforeEach(function() {
+        keysToDelete = {};
+    });
+
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys(keysToDelete, done);
+    });
 
     var statusOkResponse = {
         status: 200
@@ -99,7 +110,10 @@ describe('get requests x-cache-channel', function() {
                 if (err) {
                     return callback(err);
                 }
-                callback(null, JSON.parse(res.body).layergroupid);
+                var layergroupId = JSON.parse(res.body).layergroupid;
+                keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+                callback(null, layergroupId, res);
             }
         );
     }
@@ -107,12 +121,10 @@ describe('get requests x-cache-channel', function() {
     describe('header should be present', function() {
 
         it('/api/v1/map Map instantiation', function(done) {
-            assert.response(
-                server,
-                layergroupRequest,
-                statusOkResponse,
-                validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table')
-            );
+            var testFn = validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table');
+            withLayergroupId(function(err, layergroupId, res) {
+                testFn(res);
+            });
         });
 
         it ('/api/v1/map/:token/:z/:x/:y@:scale_factor?x.:format Mapnik retina tiles', function(done) {
@@ -219,7 +231,7 @@ describe('get requests x-cache-channel', function() {
 
             var templateName = 'x_cache';
 
-            before(function(done) {
+            beforeEach(function(done) {
                 var template =  {
                     version: '0.0.1',
                     name: templateName,
@@ -249,7 +261,7 @@ describe('get requests x-cache-channel', function() {
                 );
             });
 
-            after(function(done) {
+            afterEach(function(done) {
                 assert.response(
                     server,
                     {

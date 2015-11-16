@@ -217,3 +217,24 @@ GRANT ALL ON TABLE long_table_name_with_enough_chars_to_break_querytables_functi
 GRANT SELECT ON TABLE long_table_name_with_enough_chars_to_break_querytables_function TO :PUBLICUSER;
 
 INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('long_table_name_with_enough_chars_to_break_querytables_function'::regclass, '2009-02-13T23:31:30.123Z');
+
+CREATE FUNCTION test_table_inserter(geometry, text) returns int AS $$
+ INSERT INTO test_table(name, the_geom, the_geom_webmercator)
+  SELECT $2, $1, ST_Transform($1, 3857) RETURNING cartodb_id;
+$$ LANGUAGE 'sql' SECURITY DEFINER;
+
+CREATE TABLE test_big_poly (
+    updated_at timestamp without time zone DEFAULT now(),
+    created_at timestamp without time zone DEFAULT now(),
+    cartodb_id serial NOT NULL,
+    name character varying,
+    the_geom geometry(polygon) CHECK ( ST_Srid(the_geom) = 4326 ),
+    the_geom_webmercator geometry(polygon) CHECK ( ST_Srid(the_geom_webmercator) = 3857 )
+);
+INSERT INTO test_big_poly (name, the_geom) VALUES ('west', 'SRID=4326;POLYGON((-180 -80, -180 80, 0 80, 0 -80, -180 -80))');
+UPDATE test_big_poly SET the_geom_webmercator = ST_Transform(the_geom, 3857);
+CREATE INDEX test_big_poly_the_geom_idx ON test_big_poly USING gist (the_geom);
+CREATE INDEX test_big_poly_the_geom_webmercator_idx ON test_big_poly USING gist (the_geom_webmercator);
+
+GRANT ALL ON TABLE test_big_poly TO :TESTUSER;
+GRANT SELECT ON TABLE test_big_poly TO :PUBLICUSER;

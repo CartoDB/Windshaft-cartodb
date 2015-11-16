@@ -1,8 +1,8 @@
-require('../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../../lib/cartodb/template_maps.js');
+var TemplateMaps = require('../../../lib/cartodb/backends/template_maps.js');
 var step = require('step');
 var _ = require('underscore');
 
@@ -11,11 +11,26 @@ describe('template_maps', function() {
   // configure redis pool instance to use in tests
   var redis_pool = new RedisPool(global.environment.redis);
 
+    var keysToDelete;
+    beforeEach(function() {
+        keysToDelete = {};
+    });
+    afterEach(function(done) {
+        testHelper.deleteRedisKeys(keysToDelete, done);
+    });
+
     var wadusLayer = {
         options: {
             sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
             cartocss: '#layer { marker-fill:blue; }',
             cartocss_version: '2.3.0'
+        }
+    };
+
+    var LAYER_PLAIN = {
+        type: 'plain',
+        options: {
+            color: 'red'
         }
     };
 
@@ -96,6 +111,7 @@ describe('template_maps', function() {
             it('should accept template with valid name: ' + validName, function(done) {
                 templateMaps.addTemplate('me', createTemplate(validName), function(err) {
                     assert.ok(!err, "Unexpected error with valid name '" + validName + "': " + err);
+                    keysToDelete['map_tpl|me'] = 0;
                     done();
                 });
             });
@@ -202,7 +218,7 @@ describe('template_maps', function() {
         tmap.addTemplate('me', tpl, this);
       },
       function addOmonimousTemplate(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         tpl_id = id;
         assert.equal(tpl_id, 'first');
         expected_failure = true;
@@ -210,13 +226,15 @@ describe('template_maps', function() {
         tmap.addTemplate('me', tpl, this);
       },
       function getTemplate(err) {
-        if ( ! expected_failure && err ) throw err;
+        if ( ! expected_failure && err ) {
+            throw err;
+        }
         assert.ok(err);
         assert.ok(err.message.match(/already exists/i), err);
         tmap.getTemplate('me', tpl_id, this);
       },
       function delTemplate(err, got_tpl) {
-        if ( err ) throw err;
+        assert.ifError(err);
         assert.deepEqual(got_tpl, _.extend({}, tpl, {auth: {method: 'open'}, placeholders: {}}));
         tmap.delTemplate('me', tpl_id, this);
       },
@@ -238,31 +256,35 @@ describe('template_maps', function() {
         tmap.addTemplate('me', tpl1, this);
       },
       function addTemplate2(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         tpl1_id = id;
         tmap.addTemplate('me', tpl2, this);
       },
       function listTemplates(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         tpl2_id = id;
         tmap.listTemplates('me', this);
       },
       function checkTemplates(err, ids) {
-        if ( err ) throw err;
+        assert.ifError(err);
         assert.equal(ids.length, 2);
-        assert.ok(ids.indexOf(tpl1_id) != -1, ids.join(','));
-        assert.ok(ids.indexOf(tpl2_id) != -1, ids.join(','));
+        assert.ok(ids.indexOf(tpl1_id) !== -1, ids.join(','));
+        assert.ok(ids.indexOf(tpl2_id) !== -1, ids.join(','));
         return null;
       },
       function delTemplate1(err) {
         if ( tpl1_id ) {
           var next = this;
           tmap.delTemplate('me', tpl1_id, function(e) {
-            if ( err || e ) next(new Error(err + '; ' + e));
-            else next();
+            if ( err || e ) {
+                next(new Error(err + '; ' + e));
+            }
+            else {
+                next();
+            }
           });
         } else {
-          if ( err ) throw err;
+          assert.ifError(err);
           return null;
         }
       },
@@ -270,11 +292,15 @@ describe('template_maps', function() {
         if ( tpl2_id ) {
           var next = this;
           tmap.delTemplate('me', tpl2_id, function(e) {
-            if ( err || e ) next(new Error(err + '; ' + e));
-            else next();
+            if ( err || e ) {
+                next(new Error(err + '; ' + e));
+            }
+            else {
+                next();
+            }
           });
         } else {
-          if ( err ) throw err;
+          assert.ifError(err);
           return null;
         }
       },
@@ -301,14 +327,16 @@ describe('template_maps', function() {
       },
       // Updating template name should fail
       function updateTemplateName(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         tpl_id = id;
         expected_failure = true;
         tpl.name = 'second';
         tmap.updTemplate(owner, tpl_id, tpl, this);
       },
       function updateTemplateAuth(err) {
-        if ( err && ! expected_failure) throw err;
+        if ( err && ! expected_failure) {
+            throw err;
+        }
         expected_failure = false;
         assert.ok(err);
         tpl.name = 'first';
@@ -317,13 +345,15 @@ describe('template_maps', function() {
         tmap.updTemplate(owner, tpl_id, tpl, this);
       },
       function updateTemplateWithInvalid(err) {
-        if ( err ) throw err;
+        assert.ifError(err);
         tpl.version = '999.999.999';
         expected_failure = true;
         tmap.updTemplate(owner, tpl_id, tpl, this);
       },
       function updateUnexistentTemplate(err) {
-        if ( err && ! expected_failure) throw err;
+        if ( err && ! expected_failure) {
+            throw err;
+        }
         assert.ok(err);
         assert.ok(err.message.match(/unsupported.*version/i), err);
         tpl.version = '0.0.1';
@@ -331,7 +361,9 @@ describe('template_maps', function() {
         tmap.updTemplate(owner, 'unexistent', tpl, this);
       },
       function delTemplate(err) {
-        if ( err && ! expected_failure) throw err;
+        if ( err && ! expected_failure) {
+            throw err;
+        }
         expected_failure = false;
         assert.ok(err);
         assert.ok(err.message.match(/cannot update name/i), err);
@@ -344,6 +376,7 @@ describe('template_maps', function() {
   });
 
   it('instanciate templates', function() {
+    // jshint maxcomplexity:7
     var tmap = new TemplateMaps(redis_pool);
     assert.ok(tmap);
 
@@ -456,14 +489,14 @@ describe('template_maps', function() {
         tmap.addTemplate('me', tpl, this);
       },
       function twoForMe(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         assert.ok(id);
         idMe.push(id);
         tpl.name = 'twoForMe';
         tmap.addTemplate('me', tpl, this);
       },
       function threeForMe(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         assert.ok(id);
         idMe.push(id);
         tpl.name = 'threeForMe';
@@ -471,37 +504,39 @@ describe('template_maps', function() {
         tmap.addTemplate('me', tpl, this);
       },
       function errForMe(err/*, id*/) {
-        if ( err && ! expectErr ) throw err;
+        if ( err && ! expectErr ) {
+            throw err;
+        }
         expectErr = false;
         assert.ok(err);
         assert.ok(err.message.match(/limit.*template/), err);
         return null;
       },
       function delOneMe(err) {
-        if ( err ) throw err;
+        assert.ifError(err);
         tmap.delTemplate('me', idMe.shift(), this);
       },
       function threeForMeRetry(err) {
-        if ( err ) throw err;
+        assert.ifError(err);
         tpl.name = 'threeForMe';
         tmap.addTemplate('me', tpl, this);
       },
       function oneForYou(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         assert.ok(id);
         idMe.push(id);
         tpl.name = 'oneForYou';
         tmap.addTemplate('you', tpl, this);
       },
       function twoForYou(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         assert.ok(id);
         idYou.push(id);
         tpl.name = 'twoForYou';
         tmap.addTemplate('you', tpl, this);
       },
       function threeForYou(err, id) {
-        if ( err ) throw err;
+        assert.ifError(err);
         assert.ok(id);
         idYou.push(id);
         tpl.name = 'threeForYou';
@@ -509,17 +544,96 @@ describe('template_maps', function() {
         tmap.addTemplate('you', tpl, this);
       },
       function errForYou(err/*, id*/) {
-        if ( err && ! expectErr ) throw err;
+        if ( err && ! expectErr ) {
+            throw err;
+        }
         expectErr = false;
         assert.ok(err);
         assert.ok(err.message.match(/limit.*template/), err);
         return null;
       },
       function finish(err) {
+        keysToDelete['map_tpl|you'] = 0;
+        keysToDelete['map_tpl|me'] = 0;
         // TODO: delete all templates
         done(err);
       }
     );
   });
+
+    describe('emit', function() {
+        var owner = 'me';
+        var templateName = 'emit';
+        var template = {
+            version:'0.0.1',
+            name: templateName,
+            auth: {
+                method: 'open'
+            },
+            placeholders: {},
+            layergroup: {
+                layers: [
+                    wadusLayer
+                ]
+            }
+        };
+        var templateUpdated = _.extend({}, template, { layergroup: { layers: [LAYER_PLAIN] } });
+        var templateMaps;
+        beforeEach(function() {
+            templateMaps = new TemplateMaps(redis_pool);
+        });
+
+        it('should emit on template update', function(done) {
+            templateMaps.on('update', function(_owner, _templateName, _template) {
+                assert.equal(_owner, owner);
+                assert.equal(_templateName, templateName);
+                assert.deepEqual(_template, templateUpdated);
+
+                templateMaps.delTemplate(owner, templateName, done);
+            });
+
+            templateMaps.addTemplate(owner, template, function(err, templateName, _template) {
+                assert.ok(!err, err);
+
+                assert.deepEqual(_template, template);
+                templateMaps.updTemplate(owner, templateName, templateUpdated, function() {});
+            });
+        });
+
+        it('should emit on template deletion', function(done) {
+            templateMaps.on('delete', function(_owner, _templateName) {
+                assert.equal(_owner, owner);
+                assert.equal(_templateName, templateName);
+
+                done();
+            });
+
+            templateMaps.addTemplate(owner, template, function(err, templateName, _template) {
+                assert.ok(!err, err);
+
+                assert.deepEqual(_template, template);
+                templateMaps.delTemplate(owner, templateName, function() {});
+            });
+        });
+
+        it('should NOT emit on template update when template is the same', function(done) {
+            templateMaps.on('update', function(_owner, _templateName, _template) {
+                assert.equal(_owner, owner);
+                assert.equal(_templateName, templateName);
+                assert.deepEqual(_template, templateUpdated);
+
+                templateMaps.delTemplate(owner, templateName, done);
+            });
+
+            templateMaps.addTemplate(owner, template, function(err, templateName, _template) {
+                assert.ok(!err, err);
+                assert.deepEqual(_template, template);
+
+                templateMaps.updTemplate(owner, templateName, template, function() {
+                    templateMaps.updTemplate(owner, templateName, templateUpdated, function() {});
+                });
+            });
+        });
+    });
 
 });

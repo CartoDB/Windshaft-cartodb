@@ -79,8 +79,8 @@ if test x"$PREPARE_PGSQL" = xyes; then
     psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
 
   psql -c "CREATE EXTENSION plpythonu;" ${TEST_DB}
-  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/cdb/scripts-available/CDB_QueryStatements.sql -o sql/CDB_QueryStatements.sql
-  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/cdb/scripts-available/CDB_QueryTables.sql -o sql/CDB_QueryTables.sql
+#  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/cdb/scripts-available/CDB_QueryStatements.sql -o sql/CDB_QueryStatements.sql
+#  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/cdb/scripts-available/CDB_QueryTables.sql -o sql/CDB_QueryTables.sql
   cat sql/CDB_QueryStatements.sql sql/CDB_QueryTables.sql |
     psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
 
@@ -116,3 +116,16 @@ fi
 
 echo "Finished preparing data. Ready to run tests"
 
+
+############################ WINDSHAFT TESTS ############################
+
+echo "...Configuring Windshaft test database"
+
+cat sql/ported/populated_places_simple_reduced.sql |
+    sed "s/:PUBLICUSER/${PUBLICUSER}/" |
+    sed "s/:PUBLICPASS/${PUBLICPASS}/" |
+    sed "s/:TESTUSER/${TESTUSER}/" |
+    sed "s/:TESTPASS/${TESTPASS}/" |
+    psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+
+echo "...Test database configuration complete"

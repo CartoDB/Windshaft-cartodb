@@ -24,7 +24,10 @@ cleanup() {
         return;
       fi
     fi
+    redis-cli -p ${REDIS_PORT} info stats
+    redis-cli -p ${REDIS_PORT} info keyspace
     echo "Killing test redis pid ${PID_REDIS}"
+    #kill ${PID_REDIS_MONITOR}
     kill ${PID_REDIS}
   fi
   if test x"$OPT_DROP_PGSQL" = xyes; then
@@ -117,6 +120,9 @@ sh prepare_db.sh ${PREPARE_DB_OPTS} || die "database preparation failure"
 cd -
 
 PATH=node_modules/.bin/:$PATH
+
+#redis-cli -p ${REDIS_PORT} monitor > /tmp/windshaft-cartodb.redis.log &
+#PID_REDIS_MONITOR=$!
 
 if test x"$OPT_COVERAGE" = xyes; then
   echo "Running tests with coverage"

@@ -1,24 +1,22 @@
 require(__dirname + '/../support/test_helper');
 
-var assert      = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/cartodb_windshaft');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options')();
-var server = new CartodbWindshaft(serverOptions);
+var fs = require('fs');
 
-var metadataBackend = {};
-var tilelive = {};
-var HealthCheck = require('../../lib/cartodb/monitoring/health_check');
-var healthCheck = new HealthCheck(metadataBackend, tilelive);
+var assert = require('../support/assert');
+var CartodbWindshaft = require('../../lib/cartodb/server');
+var serverOptions = require('../../lib/cartodb/server_options');
 
 describe('health checks', function () {
 
-    function resetHealthConfig() {
+    function enableHealthConfig() {
         global.environment.health = {
-            enabled: true,
-            username: 'localhost',
-            z: 0,
-            x: 0,
-            y: 0
+            enabled: true
+        };
+    }
+
+    function disableHealthConfig() {
+        global.environment.health = {
+            enabled: false
         };
     }
 
@@ -30,65 +28,89 @@ describe('health checks', function () {
         }
     };
 
+    beforeEach(enableHealthConfig);
+    afterEach(disableHealthConfig);
+
+    var RESPONSE_OK = {
+        status: 200
+    };
+
+    var RESPONSE_FAIL = {
+        status: 503
+    };
+
     it('returns 200 and ok=true with enabled configuration', function (done) {
-        resetHealthConfig();
+        var server = new CartodbWindshaft(serverOptions);
 
-        assert.response(server,
-            healthCheckRequest,
-            {
-                status: 200
-            },
-            function (res, err) {
-                assert.ok(!err);
+        assert.response(server, healthCheckRequest, RESPONSE_OK, function (res, err) {
+            assert.ok(!err);
 
-                var parsed = JSON.parse(res.body);
+            var parsed = JSON.parse(res.body);
 
-                assert.ok(parsed.enabled);
-                assert.ok(parsed.ok);
+            assert.ok(parsed.enabled);
+            assert.ok(parsed.ok);
 
-                done();
-            }
-        );
+            done();
+        });
     });
 
     it('error if disabled file exists', function(done) {
-      var fs = require('fs');
+        var errorMessage = "Maintenance";
 
-      var readFileFn = fs.readFile;
-      fs.readFile = function(filename, callback) {
-        callback(null, "Maintenance");
-      };
-      
-      healthCheck.check(function(err) {
-        assert.equal(err.message, "Maintenance");
-        assert.equal(err.http_status, 503);
-        done();
-        fs.readFile = readFileFn;
-      }); 
-      
-    }); 
+        var readFileFn = fs.readFile;
+        fs.readFile = function(filename, callback) {
+            callback(null, errorMessage);
+        };
+        var server = new CartodbWindshaft(serverOptions);
+
+        assert.response(server, healthCheckRequest, RESPONSE_FAIL, function(res, err) {
+            fs.readFile = readFileFn;
+
+            assert.ok(!err);
+            var parsed = JSON.parse(res.body);
+            assert.ok(parsed.enabled);
+            assert.ok(!parsed.ok);
+            assert.equal(parsed.err, errorMessage);
+
+            done();
+        });
+    });
+
+    it('error if disabled file exists but has no content', function(done) {
+        var readFileFn = fs.readFile;
+        fs.readFile = function(filename, callback) {
+            callback(null, '');
+        };
+        var server = new CartodbWindshaft(serverOptions);
+
+        assert.response(server, healthCheckRequest, RESPONSE_FAIL, function(res, err) {
+            fs.readFile = readFileFn;
+
+            assert.ok(!err);
+            var parsed = JSON.parse(res.body);
+            assert.ok(parsed.enabled);
+            assert.ok(!parsed.ok);
+            assert.equal(parsed.err, 'Unknown error');
+
+            done();
+        });
+    });
 
     it('not err if disabled file does not exists', function(done) {
-      resetHealthConfig();
+        global.environment.disabled_file = '/tmp/ftreftrgtrccre';
 
-      global.environment.disabled_file = '/tmp/ftreftrgtrccre';
+        var server = new CartodbWindshaft(serverOptions);
 
-      assert.response(server,
-        healthCheckRequest,
-        {
-          status: 200
-        },
-        function (res, err) {
-          assert.ok(!err);
+        assert.response(server, healthCheckRequest, RESPONSE_OK, function (res, err) {
+            assert.ok(!err);
 
-          var parsed = JSON.parse(res.body);
+            var parsed = JSON.parse(res.body);
 
-          assert.equal(parsed.enabled, true);
-          assert.equal(parsed.ok, true);
+            assert.equal(parsed.enabled, true);
+            assert.equal(parsed.ok, true);
 
-          done();
-        }
-      );
+            done();
+        });
     }); 
 
 });

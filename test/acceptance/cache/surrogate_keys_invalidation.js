@@ -1,28 +1,28 @@
-require(__dirname + '/../../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
 var assert      = require('../../support/assert');
-var redis       = require('redis');
 var step        = require('step');
 var FastlyPurge = require('fastly-purge');
+var _ = require('underscore');
 
 var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cartodb/cache/model/named_maps_entry');
-var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/cartodb_windshaft');
+var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/server');
 
 
 describe('templates surrogate keys', function() {
 
-    var redisClient = redis.createClient(global.environment.redis.port);
+    var serverOptions = require('../../../lib/cartodb/server_options');
 
     // Enable Varnish purge for tests
-    var varnishHost = global.environment.varnish.host;
-    global.environment.varnish.host = '127.0.0.1';
-    var varnishPurgeEnabled = global.environment.varnish.purge_enabled;
-    global.environment.varnish.purge_enabled = true;
+    var varnishHost = serverOptions.varnish_host;
+    serverOptions.varnish_host = '127.0.0.1';
+    var varnishPurgeEnabled = serverOptions.varnish_purge_enabled;
+    serverOptions.varnish_purge_enabled = true;
 
-    var fastlyConfig = global.environment.fastly;
+    var fastlyConfig = serverOptions.fastly;
     var FAKE_FASTLY_API_KEY = 'fastly-api-key';
     var FAKE_FASTLY_SERVICE_ID = 'fake-service-id';
-    global.environment.fastly = {
+    serverOptions.fastly = {
         enabled: true,
         // the fastly api key
         apiKey: FAKE_FASTLY_API_KEY,
@@ -30,50 +30,55 @@ describe('templates surrogate keys', function() {
         serviceId: FAKE_FASTLY_SERVICE_ID
     };
 
-    var serverOptions = require('../../../lib/cartodb/server_options')();
     var server = new CartodbWindshaft(serverOptions);
 
-    var templateOwner = 'localhost',
-        templateName = 'acceptance',
-        expectedTemplateId = templateName,
-        template = {
-            version: '0.0.1',
-            name: templateName,
-            auth: {
-                method: 'open'
-            },
-            layergroup:  {
-                version: '1.2.0',
-                layers: [
-                    {
-                        options: {
-                            sql: 'select 1 cartodb_id, null::geometry as the_geom_webmercator',
-                            cartocss: '#layer { marker-fill:blue; }',
-                            cartocss_version: '2.3.0'
-                        }
-                    }
-                ]
-            }
+    var templateOwner = 'localhost';
+    var templateName = 'acceptance';
+    var expectedTemplateId = templateName;
+    var template = {
+        version: '0.0.1',
+        name: templateName,
+        auth: {
+            method: 'open'
         },
-        expectedBody = { template_id: expectedTemplateId };
+        layergroup:  {
+            version: '1.2.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select 1 cartodb_id, null::geometry as the_geom_webmercator',
+                        cartocss: '#layer { marker-fill:blue; }',
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
+        }
+    };
+    var templateUpdated = _.extend({}, template, {layergroup: {layers: [{
+        type: 'plain',
+        options: {
+            color: 'red'
+        }
+    }]} });
+    var expectedBody = { template_id: expectedTemplateId };
 
     var varnishHttpUrl = [
-        'http://', global.environment.varnish.host, ':', global.environment.varnish.http_port
+        'http://', serverOptions.varnish_host, ':', serverOptions.varnish_http_port
     ].join('');
 
     var cacheEntryKey = new NamedMapsCacheEntry(templateOwner, templateName).key();
     var invalidationMatchHeader = '\\b' + cacheEntryKey + '\\b';
-    var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + encodeURIComponent(cacheEntryKey);
+    var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + cacheEntryKey;
 
     var nock = require('nock');
     nock.enableNetConnect(/(127.0.0.1:5555|cartocdn.com)/);
 
     after(function(done) {
         serverOptions.varnish_purge_enabled = false;
-        global.environment.varnish.host = varnishHost;
-        global.environment.varnish.purge_enabled = varnishPurgeEnabled;
+        serverOptions.varnish_host = varnishHost;
+        serverOptions.varnish_purge_enabled = varnishPurgeEnabled;
 
-        global.environment.fastly = fastlyConfig;
+        serverOptions.fastly = fastlyConfig;
 
         nock.restore();
         done();
@@ -127,7 +132,6 @@ describe('templates surrogate keys', function() {
         var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
             .post(fastlyPurgePath)
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
-            .matchHeader('Fastly-Soft-Purge', 1)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
                 status:'ok'
@@ -148,7 +152,7 @@ describe('templates surrogate keys', function() {
                         host: templateOwner,
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(template)
+                    data: JSON.stringify(templateUpdated)
                 };
                 var next = this;
                 assert.response(server,
@@ -157,7 +161,9 @@ describe('templates surrogate keys', function() {
                         status: 200
                     },
                     function(res) {
-                        next(null, res);
+                        setTimeout(function() {
+                            next(null, res);
+                        }, 50);
                     }
                 );
             },
@@ -177,14 +183,7 @@ describe('templates surrogate keys', function() {
                 if ( err ) {
                     return done(err);
                 }
-                redisClient.keys("map_*|localhost", function(err, keys) {
-                    if ( err ) {
-                        return done(err);
-                    }
-                    redisClient.del(keys, function(err) {
-                        return done(err);
-                    });
-                });
+                testHelper.deleteRedisKeys({'map_tpl|localhost': 0}, done);
             }
         );
     });
@@ -199,7 +198,6 @@ describe('templates surrogate keys', function() {
         var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
             .post(fastlyPurgePath)
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
-            .matchHeader('Fastly-Soft-Purge', 1)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
                 status:'ok'
@@ -228,7 +226,9 @@ describe('templates surrogate keys', function() {
                         status: 204
                     },
                     function(res) {
-                        next(null, res);
+                        setTimeout(function() {
+                            next(null, res);
+                        }, 50);
                     }
                 );
             },
@@ -255,6 +255,14 @@ describe('templates surrogate keys', function() {
             .matchHeader('Invalidation-Match', invalidationMatchHeader)
             .reply(503, '');
 
+        var fastlyScope = nock(FastlyPurge.FASTLY_API_ENDPOINT)
+            .post(fastlyPurgePath)
+            .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
+            .matchHeader('Accept', 'application/json')
+            .reply(200, {
+                status:'ok'
+            });
+
         step(
             function createTemplateToUpdate() {
                 createTemplate(this);
@@ -270,7 +278,7 @@ describe('templates surrogate keys', function() {
                         host: templateOwner,
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(template)
+                    data: JSON.stringify(templateUpdated)
                 };
                 var next = this;
                 assert.response(server,
@@ -279,7 +287,9 @@ describe('templates surrogate keys', function() {
                         status: 200
                     },
                     function(res) {
-                        next(null, res);
+                        setTimeout(function() {
+                            next(null, res);
+                        }, 50);
                     }
                 );
             },
@@ -291,6 +301,7 @@ describe('templates surrogate keys', function() {
                 assert.deepEqual(parsedBody, expectedBody);
 
                 assert.equal(scope.pendingMocks().length, 0);
+                assert.equal(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },
@@ -298,14 +309,7 @@ describe('templates surrogate keys', function() {
                 if ( err ) {
                     return done(err);
                 }
-                redisClient.keys("map_*|localhost", function(err, keys) {
-                    if ( err ) {
-                        return done(err);
-                    }
-                    redisClient.del(keys, function(err) {
-                        return done(err);
-                    });
-                });
+                testHelper.deleteRedisKeys({'map_tpl|localhost': 0}, done);
             }
         );
     });
