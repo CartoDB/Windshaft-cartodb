@@ -76,10 +76,14 @@ describe('widgets', function() {
                 var next = this;
                 layergroupId = _layergroupId;
 
-                var url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName;
+                var urlParams = {
+                    own_filter: 1
+                };
                 if (params && params.bbox) {
-                    url += '?' + qs.stringify({bbox: params.bbox});
+                    urlParams.bbox = params.bbox;
                 }
+                url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName + '?' + qs.stringify(urlParams);
+
                 assert.response(server,
                     {
                         url: url,
@@ -148,7 +152,7 @@ describe('widgets', function() {
                 {name:"El Lacón"},
                 {name:"El Pico"}
             ];
-            assert.deepEqual(JSON.parse(res.body).ownFilterOn.rows, expectedList);
+            assert.deepEqual(JSON.parse(res.body).rows, expectedList);
 
             done();
         });
@@ -182,7 +186,7 @@ describe('widgets', function() {
             }
 
             var histogram = JSON.parse(res.body);
-            assert.ok(histogram.ownFilterOn.bins.length);
+            assert.ok(histogram.bins.length);
 
             done();
         });
@@ -221,8 +225,8 @@ describe('widgets', function() {
                     }
 
                     var aggregation = JSON.parse(res.body);
-                    assert.equal(aggregation.ownFilterOn.categories.length, 223);
-                    assert.deepEqual(aggregation.ownFilterOn.categories[0], { count: 769, adm0_a3: 'USA' });
+                    assert.equal(aggregation.categories.length, 12);
+                    assert.deepEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
 
                     done();
                 });
@@ -242,8 +246,8 @@ describe('widgets', function() {
                     }
 
                     var aggregation = JSON.parse(res.body);
-                    assert.equal(aggregation.ownFilterOn.categories.length, 1);
-                    assert.deepEqual(aggregation.ownFilterOn.categories[0], { count: 256, adm0_a3: 'CAN' });
+                    assert.equal(aggregation.categories.length, 1);
+                    assert.deepEqual(aggregation.categories[0], { value: 256, category: 'CAN', agg: false });
 
                     done();
                 });
@@ -282,7 +286,7 @@ describe('widgets', function() {
                     var histogram = JSON.parse(res.body);
                     // notice min value
                     assert.deepEqual(
-                        histogram.ownFilterOn.bins[0],
+                        histogram.bins[0],
                         { bin:0, start:0, end:3567600, freq:7229, min:0, max:3917000 }
                     );
 
@@ -307,13 +311,13 @@ describe('widgets', function() {
 
                     var histogram = JSON.parse(res.body);
                     // notice min value
-                    assert.deepEqual(histogram.ownFilterOn.bins[0], {
+                    assert.deepEqual(histogram.bins[0], {
                         bin: 0,
                         start: 4009000,
-                        end: 7175700,
-                        freq: 50,
+                        end: 11925750,
+                        freq: 75,
                         min: 4009000,
-                        max: 7297054
+                        max: 13485000
                     });
 
                     done();
@@ -369,11 +373,11 @@ describe('widgets', function() {
                     var aggregation = JSON.parse(res.body);
 
                     // first one would be CHN if reject filter wasn't applied
-                    assert.deepEqual(aggregation.ownFilterOn.categories[0], {"count":769,"adm0_a3":"USA"});
+                    assert.deepEqual(aggregation.categories[0], { value: 769, category: "USA", agg: false });
 
                     // confirm 'CHN' was filtered out (reject)
-                    assert.equal(aggregation.ownFilterOn.categories.reduce(function(sum, row) {
-                        return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
+                    assert.equal(aggregation.categories.reduce(function(sum, row) {
+                        return sum + (row.category === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
                     done();
@@ -399,11 +403,11 @@ describe('widgets', function() {
                     var aggregation = JSON.parse(res.body);
 
                     // first one would be CHN if reject filter wasn't applied
-                    assert.deepEqual(aggregation.ownFilterOn.categories[0], { count: 4, adm0_a3: 'IND' });
+                    assert.deepEqual(aggregation.categories[0], { value: 4, category: 'IND', agg: false });
 
                     // confirm 'CHN' was filtered out (reject)
-                    assert.equal(aggregation.ownFilterOn.categories.reduce(function(sum, row) {
-                        return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
+                    assert.equal(aggregation.categories.reduce(function(sum, row) {
+                        return sum + (row.category === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
                     done();
@@ -429,11 +433,11 @@ describe('widgets', function() {
                     var aggregation = JSON.parse(res.body);
 
                     // first one would be CHN if reject filter wasn't applied
-                    assert.deepEqual(aggregation.ownFilterOn.categories[0], {"count":96,"adm0_a3":"RUS"});
+                    assert.deepEqual(aggregation.categories[0], { value: 96, category: "RUS", agg: false });
 
                     // confirm 'CHN' was filtered out (reject)
-                    assert.equal(aggregation.ownFilterOn.categories.reduce(function(sum, row) {
-                        return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
+                    assert.equal(aggregation.categories.reduce(function(sum, row) {
+                        return sum + (row.category === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
                     done();
@@ -460,11 +464,11 @@ describe('widgets', function() {
                     var aggregation = JSON.parse(res.body);
 
                     // first one would be CHN if reject filter wasn't applied
-                    assert.deepEqual(aggregation.ownFilterOn.categories[0], {"count":77,"adm0_a3":"TUR"});
+                    assert.deepEqual(aggregation.categories[0], { value: 77, category: "TUR", agg: false });
 
                     // confirm 'CHN' was filtered out (reject)
-                    assert.equal(aggregation.ownFilterOn.categories.reduce(function(sum, row) {
-                        return sum + (row.adm0_a3 === 'CHN' ? 1 : 0);
+                    assert.equal(aggregation.categories.reduce(function(sum, row) {
+                        return sum + (row.category === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
                     done();
