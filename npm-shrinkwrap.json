@@ -425,9 +425,9 @@
           "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
           "dependencies": {
             "core-util-is": {
-              "version": "1.0.1",
+              "version": "1.0.2",
               "from": "core-util-is@~1.0.0",
-              "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.1.tgz"
+              "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz"
             },
             "isarray": {
               "version": "0.0.1",
@@ -527,9 +527,9 @@
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.4.tgz",
               "dependencies": {
                 "core-util-is": {
-                  "version": "1.0.1",
+                  "version": "1.0.2",
                   "from": "core-util-is@~1.0.0",
-                  "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.1.tgz"
+                  "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz"
                 },
                 "inherits": {
                   "version": "2.0.1",
@@ -594,7 +594,7 @@
         },
         "mime-types": {
           "version": "2.1.7",
-          "from": "mime-types@~2.1.6",
+          "from": "mime-types@~2.1.2",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.7.tgz",
           "dependencies": {
             "mime-db": {
@@ -605,9 +605,9 @@
           }
         },
         "node-uuid": {
-          "version": "1.4.3",
+          "version": "1.4.7",
           "from": "node-uuid@~1.4.0",
-          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
+          "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
         },
         "qs": {
           "version": "5.1.0",
@@ -620,9 +620,9 @@
           "resolved": "https://registry.npmjs.org/tunnel-agent/-/tunnel-agent-0.4.1.tgz"
         },
         "tough-cookie": {
-          "version": "2.2.0",
+          "version": "2.2.1",
           "from": "tough-cookie@>=0.12.0",
-          "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.2.0.tgz"
+          "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.2.1.tgz"
         },
         "http-signature": {
           "version": "0.11.0",
@@ -652,9 +652,9 @@
           "resolved": "https://registry.npmjs.org/oauth-sign/-/oauth-sign-0.8.0.tgz"
         },
         "hawk": {
-          "version": "3.1.1",
+          "version": "3.1.2",
           "from": "hawk@~3.1.0",
-          "resolved": "https://registry.npmjs.org/hawk/-/hawk-3.1.1.tgz",
+          "resolved": "https://registry.npmjs.org/hawk/-/hawk-3.1.2.tgz",
           "dependencies": {
             "hoek": {
               "version": "2.16.3",
@@ -663,7 +663,7 @@
             },
             "boom": {
               "version": "2.10.1",
-              "from": "boom@^2.8.x",
+              "from": "boom@2.x.x",
               "resolved": "https://registry.npmjs.org/boom/-/boom-2.10.1.tgz"
             },
             "cryptiles": {
@@ -827,8 +827,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.6.0",
-      "from": "windshaft@~1.6.0",
+      "version": "1.6.1",
+      "from": "windshaft@1.6.1",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.6.1.tgz",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb6",
@@ -1296,14 +1297,14 @@
                       "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.5.2.tgz"
                     },
                     "node-uuid": {
-                      "version": "1.4.3",
+                      "version": "1.4.7",
                       "from": "node-uuid@~1.4.0",
-                      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.3.tgz"
+                      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
                     },
                     "tough-cookie": {
-                      "version": "2.2.0",
+                      "version": "2.2.1",
                       "from": "tough-cookie@>=0.12.0",
-                      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.2.0.tgz"
+                      "resolved": "https://registry.npmjs.org/tough-cookie/-/tough-cookie-2.2.1.tgz"
                     },
                     "form-data": {
                       "version": "0.1.4",
@@ -2999,9 +3000,9 @@
           }
         },
         "tilelive-mapnik": {
-          "version": "0.6.15-cdb4",
-          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/0.6.15-cdb4",
-          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/0.6.15-cdb4",
+          "version": "0.6.15-cdb5",
+          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/0.6.15-cdb5",
+          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/0.6.15-cdb5",
           "dependencies": {
             "generic-pool": {
               "version": "2.1.1",
@@ -3104,9 +3105,8 @@
           }
         },
         "torque.js": {
-          "version": "2.11.0",
-          "from": "torque.js@~2.11.0",
-          "resolved": "https://registry.npmjs.org/torque.js/-/torque.js-2.11.0.tgz"
+          "version": "2.11.4",
+          "from": "torque.js@~2.11.0"
         },
         "abaculus": {
           "version": "1.1.0-cdb4",
