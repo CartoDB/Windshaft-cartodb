@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.19.2
+
+Released 2015-mm-dd
+
+
 ## 2.19.1
 
 Released 2015-11-23
