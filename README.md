@@ -31,6 +31,15 @@ Requirements
 - For running the testsuite
    - ImageMagick (http://www.imagemagick.org)
 
+Dependencies installation example:
+
+```shell
+sudo add-apt-repository -y ppa:cartodb/cairo
+sudo apt-get update
+sudo apt-get install -y build-essential checkinstall pkg-config libcairo2-dev libjpeg8-dev libgif-dev
+```
+
+
 Configure
 ---------
 
@@ -46,7 +55,6 @@ Build/install
 To fetch and build all node-based dependencies, run:
 
 ```
-git clone
 npm install
 ```
 
