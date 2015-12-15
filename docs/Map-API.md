@@ -902,11 +902,7 @@ It is important to note that generated images are cached from the live data refe
 
 #### Limits
 
-* While images can encompass an entirety of a map, the default limit for pixel range is 8192 x 8192.
-* Image resolution by default is set to 72 DPI
-* JPEG quality by default is 85% 
-* Timeout limits for generating static maps are the same across the CartoDB Editor and Platform. It is important to ensure timely processing of queries.
-
+{% include cartodb-editor/static_images_limits.md %}
 
 ### Examples
 
