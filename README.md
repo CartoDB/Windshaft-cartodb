@@ -100,7 +100,6 @@ Examples
 --------
 
 [CartoDB's Map Gallery](http://cartodb.com/gallery/) showcases several examples of visualisations built on top of this.
-m
 
 Contributing
 ---
