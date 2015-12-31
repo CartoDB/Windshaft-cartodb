@@ -20,13 +20,27 @@ Make sure that you have the requirements needed. These are
   - ImageMagick (http://www.imagemagick.org)
 
 
-Dependencies installation example:
+On Ubuntu 14.04 the dependencies can be installed with
 
-  ```shell
-  sudo add-apt-repository -y ppa:cartodb/cairo
-  sudo apt-get update
-  sudo apt-get install -y build-essential checkinstall pkg-config libcairo2-dev libjpeg8-dev libgif-dev
-  ```
+```shell
+sudo apt-get update
+sudo apt-get install -y make g++ pkg-config git-core \
+  libgif-dev libjpeg-dev libcairo2-dev \
+  libhiredis-dev redis-server \
+  nodejs nodejs-legacy npm \
+  postgresql-9.3-postgis-2.1 postgresql-plpython-9.3 postgresql-server-dev-9.3
+```
+
+On Ubuntu 12.04 the [cartodb/cairo PPA](https://launchpad.net/~cartodb/+archive/ubuntu/cairo) may be useful.
+
+## PostGIS setup ##
+
+A `template_postgis` database is expected. One can be set up with
+
+```shell
+createdb --owner postgres --template template0 template_postgis
+psql -d template_postgis -c 'CREATE EXTENSION postgis;'
+```
 
 ## Build/install ##
 
