@@ -1,6 +1,8 @@
 # Named Maps
 
-Named maps are essentially the same as anonymous maps except the MapConfig is stored on the server and the map is given a unique name. Two other big differences are: you can create named maps from private data and that users without an API Key can see them even though they are from that private data.
+Named maps are essentially the same as anonymous maps except the MapConfig is stored on the server and the map is given a unique name. Two other big differences are: You can create named maps from private data, and users without an API Key can see them even though they are from that private data. 
+
+**Note there is a hard limit of 4,096 named maps per account**. If you need to create more named maps, consider using templates in the MapConfig (explained below).
 
 The main two differences compared to anonymous maps are:
 
