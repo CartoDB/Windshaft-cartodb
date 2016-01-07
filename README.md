@@ -17,10 +17,10 @@ Requirements
 ------------
  - Core
    - Node.js >=0.8
-   - npm >=1.2.1
+   - npm >=1.2.1 <2.0.0
    - PostgreSQL >8.3.x, PostGIS >1.5.x
    - Redis >2.4.0 (http://www.redis.io)
-   - Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See Installing Mapnik.
+   - Mapnik 2.0.1, 2.0.2, 2.1.0, 2.2.0, 2.3.0. See [Installing Mapnik](https://github.com/CartoDB/Windshaft#installing-mapnik).
    - Windshaft: check [Windshaft dependencies and installation notes](https://github.com/CartoDB/Windshaft#dependencies)
    - libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 
@@ -30,6 +30,15 @@ Requirements
 
 - For running the testsuite
    - ImageMagick (http://www.imagemagick.org)
+
+Dependencies installation example:
+
+```shell
+sudo add-apt-repository -y ppa:cartodb/cairo
+sudo apt-get update
+sudo apt-get install -y build-essential checkinstall pkg-config libcairo2-dev libjpeg8-dev libgif-dev
+```
+
 
 Configure
 ---------
@@ -46,7 +55,6 @@ Build/install
 To fetch and build all node-based dependencies, run:
 
 ```
-git clone
 npm install
 ```
 
@@ -92,7 +100,6 @@ Examples
 --------
 
 [CartoDB's Map Gallery](http://cartodb.com/gallery/) showcases several examples of visualisations built on top of this.
-
 
 Contributing
 ---
