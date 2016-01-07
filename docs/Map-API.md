@@ -559,6 +559,7 @@ GET /api/v1/map/named/:template_name/jsonp
 ```bash
 curl 'https://documentation.cartodb.com/api/v1/map/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=callback&config=template_params_json'
 ```
+**Tip:** The colon (:) in the cURL command signifies where a placeholder variable is to be added. For more details, see the description for [placeholder arguments](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#arguments).
 
 <div class="code-title">RESPONSE</div>
 ```javascript
@@ -618,6 +619,7 @@ curl -X PUT \
   -d @template.json \
   'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 ```
+**Tip:** The colon (:) in the cURL command signifies where a placeholder variable is to be added. For more details, see the description for [placeholder arguments](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#arguments).
 
 <div class="code-title">RESPONSE</div>
 ```javascript
@@ -657,6 +659,8 @@ DELETE /api/v1/map/named/:template_name
 ```bash
 curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 ```
+
+**Tip:** The colon (:) in the cURL command signifies where a placeholder variable is to be added. For more details, see the description for [placeholder arguments](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#arguments).
 
 <div class="code-title">RESPONSE</div>
 ```javascript
@@ -724,6 +728,7 @@ GET /api/v1/map/named/:template_name
 ```bash
 curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
 ```
+**Tip:** The colon (:) in the cURL command signifies where a placeholder variable is to be added. For more details, see the description for [placeholder arguments](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#arguments).
 
 <div class="code-title with-result">RESPONSE</div>
 ```javascript
