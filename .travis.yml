@@ -4,8 +4,8 @@ addons:
   postgresql: "9.3"
 
 before_install:
-  - sudo apt-get update
-  - sudo apt-get install -y postgresql-plpython-9.3 pkg-config libcairo2-dev libjpeg8-dev libgif-dev
+  - apt-get update
+  - apt-get install -y postgresql-plpython-9.3 pkg-config libcairo2-dev libjpeg8-dev libgif-dev
   - createdb template_postgis
   - psql -c "CREATE EXTENSION postgis" template_postgis
 
