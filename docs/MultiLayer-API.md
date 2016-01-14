@@ -17,7 +17,7 @@ Windshaft-CartoDB adds the following attributes in the response object
 
    ```json
    {
-     "http": "http://cdn_url.com/"
+     "http": "http://cdn_url.com/",
      "https": "https://secure.cdn_url.com/"
    }
    ```
