@@ -9,10 +9,6 @@ all:
 clean:
 	rm -rf node_modules/*
 
-update-windshaft:
-	rm -rf node_modules/windshaft
-	npm install windshaft
-
 distclean: clean
 	rm config.status*
 
