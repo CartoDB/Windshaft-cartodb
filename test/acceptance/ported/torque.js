@@ -216,8 +216,10 @@ describe('torque', function() {
           assert.ok(tm0,
             'No layer 0 in "torque" in metadata:' + JSON.stringify(tm));
           var expectedTorqueMetadata = {"start":0,"end":86400000,"data_steps":2,"column_type":"date"};
-          assert.deepEqual(tm0, expectedTorqueMetadata);
-          assert.deepEqual(meta.layers[0].meta, expectedTorqueMetadata);
+          Object.keys(expectedTorqueMetadata).forEach(function(k) {
+            assert.equal(tm0[k], expectedTorqueMetadata[k]);
+            assert.equal(meta.layers[0].meta[k], expectedTorqueMetadata[k]);
+          });
           return null;
         },
         function do_get_tile(err)
