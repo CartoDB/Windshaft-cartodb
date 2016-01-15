@@ -29,7 +29,7 @@
         "node-statsd": "~0.0.7",
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
-        "windshaft": "https://github.com/CartoDB/Windshaft/tarball/mapconfig-extension",
+        "windshaft": "https://github.com/CartoDB/Windshaft/tarball/master",
         "step": "~0.0.6",
         "queue-async": "~1.0.7",
         "request": "~2.62.0",
