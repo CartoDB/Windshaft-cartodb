@@ -26,7 +26,7 @@ describe('widgets', function() {
     function getWidget(mapConfig, widgetName, params, callback) {
         if (!callback) {
             callback = params;
-            params = null;
+            params = {};
         }
 
         var url = '/api/v1/map';
@@ -77,7 +77,7 @@ describe('widgets', function() {
                 layergroupId = _layergroupId;
 
                 var urlParams = {
-                    own_filter: 1
+                    own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
                 };
                 if (params && params.bbox) {
                     urlParams.bbox = params.bbox;
@@ -219,13 +219,13 @@ describe('widgets', function() {
             };
 
             it("should expose an aggregation", function(done) {
-                getWidget(aggregationMapConfig, 'country_places_count', function(err, res) {
+                getWidget(aggregationMapConfig, 'country_places_count', { own_filter: 0 }, function(err, res) {
                     if (err) {
                         return done(err);
                     }
 
                     var aggregation = JSON.parse(res.body);
-                    assert.equal(aggregation.categories.length, 12);
+                    assert.equal(aggregation.categories.length, 6);
                     assert.deepEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
 
                     done();
@@ -277,8 +277,8 @@ describe('widgets', function() {
                 ]
             };
 
-            it("should expose an aggregation", function(done) {
-                getWidget(histogramMapConfig, 'country_places_histogram', function(err, res) {
+            it("should expose an histogram", function(done) {
+                getWidget(histogramMapConfig, 'country_places_histogram', { own_filter: 0 }, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -287,7 +287,7 @@ describe('widgets', function() {
                     // notice min value
                     assert.deepEqual(
                         histogram.bins[0],
-                        { bin:0, start:0, end:3567600, freq:7229, min:0, max:3917000 }
+                        { bin: 0, freq: 6497, min: 0, max: 742572, avg: 113511.16823149147 }
                     );
 
                     done();
@@ -313,11 +313,10 @@ describe('widgets', function() {
                     // notice min value
                     assert.deepEqual(histogram.bins[0], {
                         bin: 0,
-                        start: 4009000,
-                        end: 11925750,
-                        freq: 75,
-                        min: 4009000,
-                        max: 13485000
+                        freq: 62,
+                        min: 4000000,
+                        max: 9276403,
+                        avg: 5815009.596774193
                     });
 
                     done();
