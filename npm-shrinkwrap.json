@@ -192,7 +192,7 @@
           "dependencies": {
             "mime-types": {
               "version": "2.1.9",
-              "from": "mime-types@~2.1.6",
+              "from": "mime-types@~2.1.8",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
               "dependencies": {
                 "mime-db": {
@@ -365,9 +365,9 @@
           }
         },
         "serve-static": {
-          "version": "1.10.1",
+          "version": "1.10.2",
           "from": "serve-static@~1.10.0",
-          "resolved": "https://registry.npmjs.org/serve-static/-/serve-static-1.10.1.tgz",
+          "resolved": "https://registry.npmjs.org/serve-static/-/serve-static-1.10.2.tgz",
           "dependencies": {
             "escape-html": {
               "version": "1.0.3",
@@ -432,7 +432,7 @@
             },
             "mime-types": {
               "version": "2.1.9",
-              "from": "mime-types@~2.1.6",
+              "from": "mime-types@~2.1.8",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
               "dependencies": {
                 "mime-db": {
@@ -568,13 +568,13 @@
       "resolved": "https://registry.npmjs.org/request/-/request-2.62.0.tgz",
       "dependencies": {
         "bl": {
-          "version": "1.0.0",
+          "version": "1.0.1",
           "from": "bl@~1.0.0",
-          "resolved": "https://registry.npmjs.org/bl/-/bl-1.0.0.tgz",
+          "resolved": "https://registry.npmjs.org/bl/-/bl-1.0.1.tgz",
           "dependencies": {
             "readable-stream": {
               "version": "2.0.5",
-              "from": "readable-stream@~2.0.0",
+              "from": "readable-stream@~2.0.5",
               "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.5.tgz",
               "dependencies": {
                 "core-util-is": {
@@ -645,7 +645,7 @@
         },
         "mime-types": {
           "version": "2.1.9",
-          "from": "mime-types@~2.1.8",
+          "from": "mime-types@~2.1.2",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
           "dependencies": {
             "mime-db": {
@@ -878,9 +878,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.6.2",
-      "from": "https://github.com/CartoDB/Windshaft/tarball/master",
-      "resolved": "https://github.com/CartoDB/Windshaft/tarball/master",
+      "version": "1.7.0",
+      "from": "windshaft@1.7.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.7.0.tgz",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb6",
