@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.19.2
+## 2.20.0
 
 Released 2015-mm-dd
 
