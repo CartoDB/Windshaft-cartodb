@@ -310,8 +310,8 @@ describe('tests from old api translated to multilayer', function() {
     it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
 
         var runQueryFn = PgQueryRunner.prototype.run;
-        PgQueryRunner.prototype.run = function(username, query, queryHandler, callback) {
-            return queryHandler(new Error('fake error message'), [], callback);
+        PgQueryRunner.prototype.run = function(username, query, callback) {
+            return callback(new Error('fake error message'), []);
         };
 
         var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
@@ -365,8 +365,8 @@ describe('tests from old api translated to multilayer', function() {
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 var runQueryFn = PgQueryRunner.prototype.run;
-                PgQueryRunner.prototype.run = function(username, query, queryHandler, callback) {
-                    return queryHandler(new Error('failed to query database for affected tables'), [], callback);
+                PgQueryRunner.prototype.run = function(username, query, callback) {
+                    return callback(new Error('failed to query database for affected tables'), []);
                 };
 
                 // reset internal cacheChannel cache
