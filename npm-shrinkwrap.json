@@ -8,7 +8,7 @@
       "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.14.2.tgz",
       "dependencies": {
         "bytes": {
-          "version": "2.2.0",
+          "version": "2.2.1",
           "from": "bytes@2.2.0",
           "resolved": "https://registry.npmjs.org/bytes/-/bytes-2.2.0.tgz"
         },
