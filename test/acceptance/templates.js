@@ -1947,4 +1947,140 @@ describe('template_api', function() {
 
     });
 
+    var torqueParamsScenarios = [
+        {
+            templateParams: {},
+            expectedTile: [{"x__uint8":125,"y__uint8":159,"vals__uint8":[2],"dates__uint16":[0]}]
+        },
+        {
+            templateParams: { namesFilter: "'Hawai'" },
+            expectedTile: [{"x__uint8":125,"y__uint8":159,"vals__uint8":[1],"dates__uint16":[0]}]
+        }
+    ];
+    torqueParamsScenarios.forEach(function(scenario) {
+        it("can instantiate with torque layer and params=" + JSON.stringify(scenario.templateParams), function(done) {
+
+            var torqueParamsTemplate =  {
+                version: '0.0.1',
+                name: 'acceptance_torque_params',
+                auth: {
+                    method: 'open'
+                },
+                placeholders: {
+                    namesFilter: {
+                        "type": "sql_ident",
+                        "default": "'Hawai', 'El Estocolmo'"
+                    }
+                },
+                layergroup:  {
+                    version: '1.4.0',
+                    layers: [
+                        {
+                            type: 'torque',
+                            options: {
+                                sql: "select * from test_table_private_1 where name in (<%= namesFilter %>)",
+                                cartocss: "Map { -torque-frame-count:1; -torque-resolution:1; " +
+                                "-torque-aggregation-function:'count(*)'; -torque-time-attribute:'cartodb_id'; }",
+                                cartocss_version: '2.0.2'
+                            }
+                        }
+                    ]
+                }
+            };
+
+            var layergroupIdToDelete;
+            step(
+                function createTemplate() {
+                    var next = this;
+                    var createTemplateRequest = {
+                        url: '/api/v1/map/named?api_key=1234',
+                        method: 'POST',
+                        headers: {
+                            host: 'localhost',
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(torqueParamsTemplate)
+                    };
+                    assert.response(
+                        server,
+                        createTemplateRequest,
+                        {
+                            status: 200
+                        },
+                        function(res, err) {
+                            next(err, res);
+                        }
+                    );
+                },
+                function instantiateTemplate(err, res) {
+                    assert.ifError(err);
+                    var parsed = JSON.parse(res.body);
+                    assert.ok(parsed.hasOwnProperty('template_id'), "Missing 'template_id' from response: " + res.body);
+                    var templateId = parsed.template_id;
+                    var instantiatePostRequest = {
+                        url: '/api/v1/map/named/' + templateId,
+                        method: 'POST',
+                        headers: {
+                            host: 'localhost',
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(scenario.templateParams)
+                    };
+                    var next = this;
+                    assert.response(
+                        server,
+                        instantiatePostRequest,
+                        {
+                            status: 200
+                        },
+                        function(res, err) {
+                            return next(err, res);
+                        }
+                    );
+                },
+                function requestTile(err, res) {
+                    assert.ifError(err);
+
+                    var layergroupId = JSON.parse(res.body).layergroupid;
+                    layergroupIdToDelete = LayergroupToken.parse(layergroupId).token;
+
+                    var torqueTileRequest = {
+                        url: '/api/v1/map/' + layergroupId + '/0/0/0/0.torque.json',
+                        method: 'GET',
+                        headers: {
+                            host: 'localhost'
+                        }
+                    };
+                    var next = this;
+                    assert.response(
+                        server,
+                        torqueTileRequest,
+                        {
+                            status: 200
+                        },
+                        function(res, err) {
+                            return next(err, res);
+                        }
+                    );
+                },
+                function validateTileAndFinish(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    keysToDelete['map_cfg|' + layergroupIdToDelete] = 0;
+                    keysToDelete['map_tpl|localhost'] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
+
+                    assert.deepEqual(
+                        JSON.parse(res.body),
+                        scenario.expectedTile
+                    );
+
+                    done();
+                }
+            );
+        });
+    });
+
 });

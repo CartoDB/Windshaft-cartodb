@@ -86,7 +86,7 @@ describe('blend http fallback', function() {
     };
 
     var filteredLayersSuite = [
-        ['all'], // layers displayed: 2 + 4, skipping 3 as it fails
+        //['all'], // layers displayed: 2 + 4, skipping 3 as it fails
         [0, 4],
         [0, 3], // skips layer 3 as it fails
         [1, 2],
