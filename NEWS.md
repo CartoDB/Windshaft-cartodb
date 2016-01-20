@@ -2,7 +2,7 @@
 
 ## 2.20.0
 
-Released 2015-mm-dd
+Released 2016-01-20
 
 Bug fixes:
  - Change redis pool name to report with a valid statsd key #363
