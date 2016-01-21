@@ -52,14 +52,14 @@ describe(suiteName, function() {
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator' +
                    ' from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1',
                interactivity: 'cartodb_id'
              } },
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, -5e6, 0) as the_geom_webmercator' +
                    ' from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.0.2',
                interactivity: 'cartodb_id'
              } }
@@ -104,7 +104,7 @@ describe(suiteName, function() {
 
               // Check X-Cache-Channel
               cc = res.headers['x-cache-channel'];
-              assert.ok(cc); 
+              assert.ok(cc);
               var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
               if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
@@ -198,7 +198,7 @@ describe(suiteName, function() {
            { options: {
                sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator' +
                    ' from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.0.1'
              } }
         ]
@@ -211,7 +211,7 @@ describe(suiteName, function() {
           assert.response(server, {
               url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
               method: 'GET',
-              headers: {host: 'localhost'} 
+              headers: {host: 'localhost'}
           }, {}, function(res, err) { next(err, res); });
         },
         function do_check_create(err, res) {
@@ -245,7 +245,7 @@ describe(suiteName, function() {
             ]
         };
 
-      var expected_token; 
+      var expected_token;
       step(
         function do_create_get()
         {
@@ -253,7 +253,7 @@ describe(suiteName, function() {
           assert.response(server, {
               url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
               method: 'GET',
-              headers: {host: 'localhost'} 
+              headers: {host: 'localhost'}
           }, {}, function(res, err) { next(err, res); });
         },
         function do_check_create(err, res) {
@@ -329,7 +329,7 @@ describe(suiteName, function() {
            { options: {
                sql: 'select 1 as cartodb_id, ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!))' +
                    ' as the_geom_webmercator from test_table limit 1',
-               cartocss: '#layer { polygon-fill:red; }', 
+               cartocss: '#layer { polygon-fill:red; }',
                cartocss_version: '2.0.1',
                interactivity: 'cartodb_id'
              } }
@@ -413,7 +413,7 @@ describe(suiteName, function() {
 
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
-              assert.ok(cc); 
+              assert.ok(cc);
               var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
               if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
@@ -485,8 +485,8 @@ describe(suiteName, function() {
            { options: {
                sql: 'select 1 as cartodb_id, !pixel_height! as h,' +
                    ' ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
-               cartocss: '#layer { polygon-fill:red; }', 
-               cartocss_version: '2.0.1' 
+               cartocss: '#layer { polygon-fill:red; }',
+               cartocss_version: '2.0.1'
              } }
         ]
       };
@@ -578,8 +578,8 @@ describe(suiteName, function() {
            { options: {
                sql: 'select 1 as cartodb_id, !pixel_height! as h,' +
                     'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
-               cartocss: '#layer { polygon-fit:red; }', 
-               cartocss_version: '2.0.1' 
+               cartocss: '#layer { polygon-fit:red; }',
+               cartocss_version: '2.0.1'
              } }
         ]
       };
@@ -606,8 +606,8 @@ describe(suiteName, function() {
         layers: [
            { options: {
                sql: 'select bogus(0,0) as the_geom_webmercator',
-               cartocss: '#layer { polygon-fill:red; }', 
-               cartocss_version: '2.0.1' 
+               cartocss: '#layer { polygon-fill:red; }',
+               cartocss_version: '2.0.1'
              } }
         ]
       };
@@ -617,7 +617,7 @@ describe(suiteName, function() {
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
-          assert.equal(res.statusCode, 404, res.statusCode + ": " + res.body);
+          assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           var msg = parsed.errors[0];
           assert.ok(msg.match(/bogus.*exist/), msg);
@@ -633,13 +633,13 @@ describe(suiteName, function() {
         layers: [
            { options: {
                sql: 'select * from test_table_private_1 where cartodb_id=1',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.1.0',
                interactivity: 'cartodb_id'
              } },
            { options: {
                sql: 'select * from test_table_private_1 where cartodb_id=2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                cartocss_version: '2.1.0',
                interactivity: 'cartodb_id'
              } }
@@ -684,7 +684,7 @@ describe(suiteName, function() {
 
               // Check X-Cache-Channel
               var cc = res.headers['x-cache-channel'];
-              assert.ok(cc); 
+              assert.ok(cc);
               var dbname = test_database;
               assert.equal(cc.substring(0, dbname.length), dbname);
               next(err);
@@ -780,7 +780,7 @@ describe(suiteName, function() {
         layers: [
            { options: {
                sql: 'select * from test_table where cartodb_id=1',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.1.0',
                interactivity: 'cartodb_id'
              } }
@@ -830,7 +830,7 @@ describe(suiteName, function() {
 
           // Check X-Cache-Channel
           var cc = res.headers['x-cache-channel'];
-          assert.ok(cc, "Missing X-Cache-Channel"); 
+          assert.ok(cc, "Missing X-Cache-Channel");
           var dbname = test_database;
           assert.equal(cc.substring(0, dbname.length), dbname);
           return null;
@@ -965,7 +965,7 @@ describe(suiteName, function() {
         layers: [
            { options: {
                sql: "select 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator",
-               cartocss: '#layer { point-transform:"scale(20)"; }', 
+               cartocss: '#layer { point-transform:"scale(20)"; }',
                cartocss_version: '2.0.1'
              } }
         ]
@@ -1031,7 +1031,7 @@ describe(suiteName, function() {
         layers: [
            { options: {
                sql: "select * from test_table_private_1 LIMIT 0",
-               cartocss: '#layer { marker-fill:red; }', 
+               cartocss: '#layer { marker-fill:red; }',
                cartocss_version: '2.0.1'
              } }
         ]
@@ -1105,7 +1105,7 @@ describe(suiteName, function() {
         layers: [
            { options: {
                sql: sql,
-               cartocss: '#layer { marker-fill:red; }', 
+               cartocss: '#layer { marker-fill:red; }',
                cartocss_version: '2.0.1'
              } }
         ]
@@ -1194,7 +1194,7 @@ describe(suiteName, function() {
         layers: [
            { options: {
                sql: "select *, 'SQLAPINOANSWER' from test_table",
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }', 
+               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
                cartocss_version: '2.1.0'
              } }
         ]
@@ -1318,7 +1318,7 @@ describe(suiteName, function() {
             }
         );
     });
-    
+
 });
 
 });
