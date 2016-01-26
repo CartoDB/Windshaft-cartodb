@@ -75,17 +75,17 @@ describe('MapConfigOverviewsAdapter', function() {
             assert.equal(layers[0].options.cartocss, cartocss);
             assert.equal(layers[0].options.cartocss_version, cartocss_version);
             assert.ok(layers[0].options.overviews);
-            assert.ok(layers[0].options.overviews['public.test_table_overviews']);
-            assert.deepEqual(_.keys(layers[0].options.overviews), ['public.test_table_overviews']);
-            assert.equal(_.keys(layers[0].options.overviews['public.test_table_overviews']).length, 2);
-            assert.ok(layers[0].options.overviews['public.test_table_overviews'][1]);
-            assert.ok(layers[0].options.overviews['public.test_table_overviews'][2]);
+            assert.ok(layers[0].options.overviews.test_table_overviews);
+            assert.deepEqual(_.keys(layers[0].options.overviews), ['test_table_overviews']);
+            assert.equal(_.keys(layers[0].options.overviews.test_table_overviews).length, 2);
+            assert.ok(layers[0].options.overviews.test_table_overviews[1]);
+            assert.ok(layers[0].options.overviews.test_table_overviews[2]);
             assert.equal(
-                layers[0].options.overviews['public.test_table_overviews'][1].table,
+                layers[0].options.overviews.test_table_overviews[1].table,
                 'test_table_overviews_ov1'
               );
             assert.equal(
-                layers[0].options.overviews['public.test_table_overviews'][2].table,
+                layers[0].options.overviews.test_table_overviews[2].table,
                 'test_table_overviews_ov2'
               );
             done();

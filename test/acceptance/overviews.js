@@ -88,17 +88,17 @@ describe('overviews', function() {
               assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
               assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
               assert.ok(mapConfig._cfg.layers[0].options.overviews);
-              assert.ok(mapConfig._cfg.layers[0].options.overviews['public.test_table_overviews']);
-              assert.deepEqual(_.keys(mapConfig._cfg.layers[0].options.overviews), ['public.test_table_overviews']);
-              assert.equal(_.keys(mapConfig._cfg.layers[0].options.overviews['public.test_table_overviews']).length, 2);
-              assert.ok(mapConfig._cfg.layers[0].options.overviews['public.test_table_overviews'][1]);
-              assert.ok(mapConfig._cfg.layers[0].options.overviews['public.test_table_overviews'][2]);
+              assert.ok(mapConfig._cfg.layers[0].options.overviews.test_table_overviews);
+              assert.deepEqual(_.keys(mapConfig._cfg.layers[0].options.overviews), ['test_table_overviews']);
+              assert.equal(_.keys(mapConfig._cfg.layers[0].options.overviews.test_table_overviews).length, 2);
+              assert.ok(mapConfig._cfg.layers[0].options.overviews.test_table_overviews[1]);
+              assert.ok(mapConfig._cfg.layers[0].options.overviews.test_table_overviews[2]);
               assert.equal(
-                  mapConfig._cfg.layers[0].options.overviews['public.test_table_overviews'][1].table,
+                  mapConfig._cfg.layers[0].options.overviews.test_table_overviews[1].table,
                   'test_table_overviews_ov1'
               );
               assert.equal(
-                  mapConfig._cfg.layers[0].options.overviews['public.test_table_overviews'][2].table,
+                  mapConfig._cfg.layers[0].options.overviews.test_table_overviews[2].table,
                   'test_table_overviews_ov2'
               );
             });

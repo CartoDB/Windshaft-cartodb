@@ -41,7 +41,7 @@ describe('OverviewsApi', function() {
             assert.ok(!err, err);
 
             assert.deepEqual(result, {
-                'public.test_table_overviews': {
+                'test_table_overviews': {
                   1: { table: 'test_table_overviews_ov1' },
                   2: { table: 'test_table_overviews_ov2' }
                 }
