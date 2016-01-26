@@ -21,7 +21,7 @@ describe('OverviewsApi', function() {
         var pgConnection = new PgConnection(metadataBackend);
         var pgQueryRunner = new PgQueryRunner(pgConnection);
         queryTablesApi = new QueryTablesApi(pgQueryRunner);
-        overviewsApi = new OverviewsApi(queryTablesApi);
+        overviewsApi = new OverviewsApi(pgQueryRunner);
     });
 
     it('should return an empty relation for tables that have no overviews', function(done) {
