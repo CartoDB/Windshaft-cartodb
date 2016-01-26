@@ -95,11 +95,11 @@ describe('overviews', function() {
               assert.ok(mapConfig._cfg.layers[0].options.overviews.test_table_overviews[2]);
               assert.equal(
                   mapConfig._cfg.layers[0].options.overviews.test_table_overviews[1].table,
-                  'test_table_overviews_ov1'
+                  '_vovw_1_test_table_overviews'
               );
               assert.equal(
                   mapConfig._cfg.layers[0].options.overviews.test_table_overviews[2].table,
-                  'test_table_overviews_ov2'
+                  '_vovw_2_test_table_overviews'
               );
             });
 

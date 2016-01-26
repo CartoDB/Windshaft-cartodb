@@ -285,7 +285,7 @@ CREATE INDEX test_table_overviews_the_geom_webmercator_idx ON test_table_overvie
 GRANT ALL ON TABLE test_table_overviews TO :TESTUSER;
 GRANT SELECT ON TABLE test_table_overviews TO :PUBLICUSER;
 
-CREATE TABLE test_table_overviews_ov1 (
+CREATE TABLE _vovw_1_test_table_overviews (
     updated_at timestamp without time zone DEFAULT now(),
     created_at timestamp without time zone DEFAULT now(),
     cartodb_id integer NOT NULL,
@@ -301,7 +301,7 @@ CREATE TABLE test_table_overviews_ov1 (
     CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
 );
 
-CREATE TABLE test_table_overviews_ov2 (
+CREATE TABLE _vovw_2_test_table_overviews (
     updated_at timestamp without time zone DEFAULT now(),
     created_at timestamp without time zone DEFAULT now(),
     cartodb_id integer NOT NULL,

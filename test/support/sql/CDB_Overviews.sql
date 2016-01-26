@@ -5,9 +5,9 @@ AS $$
   BEGIN
     IF (SELECT 'test_table_overviews'::regclass = ANY (table_names)) THEN
       RETURN QUERY
-        SELECT 'test_table_overviews'::regclass AS base_table, 1 AS z, 'test_table_overviews_ov1'::regclass AS overviw_table
+        SELECT 'test_table_overviews'::regclass AS base_table, 1 AS z, '_vovw_1_test_table_overviews'::regclass AS overview_table
         UNION ALL
-        SELECT 'test_table_overviews'::regclass AS base_table, 2 AS z, 'test_table_overviews_ov2'::regclass AS overviw_table;
+        SELECT 'test_table_overviews'::regclass AS base_table, 2 AS z, '_vovw_2_test_table_overviews'::regclass AS overview_table;
     ELSE
       RETURN;
     END IF;
