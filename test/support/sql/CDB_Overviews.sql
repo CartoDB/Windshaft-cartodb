@@ -13,3 +13,9 @@ AS $$
     END IF;
   END
 $$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION CDB_ZoomFromScale(scaleDenominator numeric) RETURNS int AS $$
+BEGIN
+  RETURN 0;
+END
+$$ LANGUAGE plpgsql IMMUTABLE;

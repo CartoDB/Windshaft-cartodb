@@ -257,6 +257,9 @@ CREATE TABLE test_table_overviews (
     CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
 );
 
+GRANT ALL ON TABLE test_table_overviews TO :TESTUSER;
+GRANT SELECT ON TABLE test_table_overviews TO :PUBLICUSER;
+
 CREATE SEQUENCE test_table_overviews_cartodb_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -301,6 +304,9 @@ CREATE TABLE _vovw_1_test_table_overviews (
     CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
 );
 
+GRANT ALL ON TABLE _vovw_1_test_table_overviews TO :TESTUSER;
+GRANT SELECT ON TABLE _vovw_1_test_table_overviews TO :PUBLICUSER;
+
 CREATE TABLE _vovw_2_test_table_overviews (
     updated_at timestamp without time zone DEFAULT now(),
     created_at timestamp without time zone DEFAULT now(),
@@ -316,3 +322,6 @@ CREATE TABLE _vovw_2_test_table_overviews (
     CONSTRAINT enforce_srid_the_geom CHECK ((st_srid(the_geom) = 4326)),
     CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
 );
+
+GRANT ALL ON TABLE _vovw_2_test_table_overviews TO :TESTUSER;
+GRANT SELECT ON TABLE _vovw_2_test_table_overviews TO :PUBLICUSER;
