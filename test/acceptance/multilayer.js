@@ -577,7 +577,7 @@ describe(suiteName, function() {
         layers: [
            { options: {
                sql: 'select 1 as cartodb_id, !pixel_height! as h,' +
-                    'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
+                   'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
                cartocss: '#layer { polygon-fit:red; }',
                cartocss_version: '2.0.1'
              } }
