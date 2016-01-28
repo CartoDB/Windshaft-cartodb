@@ -72,10 +72,10 @@ if test x"$PREPARE_PGSQL" = xyes; then
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 
   cat sql/windshaft.test.sql sql/gadm4.sql |
-    sed "s/:PUBLICUSER/${PUBLICUSER}/" | 
-    sed "s/:PUBLICPASS/${PUBLICPASS}/" | 
-    sed "s/:TESTUSER/${TESTUSER}/" | 
-    sed "s/:TESTPASS/${TESTPASS}/" | 
+    sed "s/:PUBLICUSER/${PUBLICUSER}/" |
+    sed "s/:PUBLICPASS/${PUBLICPASS}/" |
+    sed "s/:TESTUSER/${TESTUSER}/" |
+    sed "s/:TESTPASS/${TESTPASS}/" |
     psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
 
   psql -c "CREATE LANGUAGE plpythonu;" ${TEST_DB}
@@ -98,7 +98,7 @@ HMSET rails:users:localhost id ${TESTUSERID} \
 SADD rails:users:localhost:map_key 1235
 EOF
 
-  # A user configured as with cartodb-2.5.0+ 
+  # A user configured as with cartodb-2.5.0+
   cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
 HMSET rails:users:cartodb250user id ${TESTUSERID} \
                                  database_name "${TEST_DB}" \
