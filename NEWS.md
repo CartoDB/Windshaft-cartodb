@@ -1,8 +1,25 @@
 # Changelog
 
-## 2.19.2
+## 2.20.1
 
-Released 2015-mm-dd
+Released 2016-mm-dd
+
+
+## 2.20.0
+
+Released 2016-01-20
+
+Bug fixes:
+ - Change redis pool name to report with a valid statsd key #363
+
+Improvements:
+ - Query runner improvements #359
+
+Unsupported:
+ - Widgets endpoints
+ - Layer filters
+
+Note: API for unsupported list might change in the future, use at your own peril.
 
 
 ## 2.19.1
