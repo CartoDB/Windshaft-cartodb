@@ -437,7 +437,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 }
 ```
 
-## Creating Named Maps with CartoDB.js
+## Use CartoDB.js to Create Named Maps
 Named maps can be used with CartoDB.js by specifying a named map in a layer source as follows. Named maps are treated almost the same as other layer source types in most other ways.
 
 ```js
