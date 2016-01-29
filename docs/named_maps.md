@@ -1,6 +1,6 @@
-# Named Maps
+http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/# Named Maps
 
-Named maps are essentially the same as anonymous maps except the MapConfig is stored on the server and the map is given a unique name. Two other big differences are: you can create named maps from private data and that users without an API Key can see them even though they are from that private data.
+Named maps are essentially the same as anonymous maps except the MapConfig is stored on the server, and the map is given a unique name. You can create named maps from private data, and users without an API Key can view your Named Map (while keeping your data private). The Named map workflow consists of making a call to your database, referencing a table, inserting your variables into the template where placeholders are defined, and creating custom queries.
 
 The main two differences compared to anonymous maps are:
 
@@ -91,7 +91,7 @@ auth |
 &#124;_ method | `"token"` or `"open"` (the default if no `"method"` is given).
 &#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
 placeholders | Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
-layergroup | the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig documentation](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md) for more info.
+layergroup | the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig File Format](/cartodb-platform/maps-api/mapconfig/) for more info.
 
 view (optional) | extra keys to specify the compelling area for the map. It can be used to have a static preview of a named map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
 --- | ---
@@ -437,7 +437,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 }
 ```
 
-## Use with CartoDB.js
+## Creating Named Maps with CartoDB.js
 Named maps can be used with CartoDB.js by specifying a named map in a layer source as follows. Named maps are treated almost the same as other layer source types in most other ways.
 
 ```js
@@ -462,3 +462,11 @@ cartodb.createLayer('map_dom_id',layerSource)
 
 1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
 2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
+
+### Complete Examples of Named Maps created with CartoDB.js
+
+- [Named map selectors with interaction](http://bl.ocks.org/ohasselblad/515a8af1f99d5e690484)
+
+- [Named map with interactivity and config file used to create it](http://bl.ocks.org/ohasselblad/d1a45b8ff5e7bd90cd68)
+
+- [Toggling sublayers in a Named Map](http://bl.ocks.org/ohasselblad/c1a0f4913610eec53cd3)
