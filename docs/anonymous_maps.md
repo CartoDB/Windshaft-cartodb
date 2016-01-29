@@ -28,7 +28,7 @@ POST /api/v1/map
 }
 ```
 
-See [MapConfig File Formats](/cartodb-platform/maps-api/mapconfig/) for details.
+See [MapConfig File Formats](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/) for details.
 
 #### Response
 

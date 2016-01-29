@@ -91,7 +91,7 @@ auth |
 &#124;_ method | `"token"` or `"open"` (the default if no `"method"` is given).
 &#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
 placeholders | Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
-layergroup | the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig File Format](/cartodb-platform/maps-api/mapconfig/) for more info.
+layergroup | the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig File Format](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/) for more info.
 
 view (optional) | extra keys to specify the compelling area for the map. It can be used to have a static preview of a named map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
 --- | ---
