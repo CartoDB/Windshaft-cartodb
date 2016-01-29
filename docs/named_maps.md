@@ -12,7 +12,7 @@ The main two differences compared to anonymous maps are:
 
 Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
 
-**Note:** There is a limit of 4,096 named maps allowed per account. If you need to create more Named Maps, it is recommended to use templates.
+**Note:** There is a limit of 4,096 named maps allowed per account. If you need to create more Named maps, it is recommended to use templates.
 
 ## Create
 
