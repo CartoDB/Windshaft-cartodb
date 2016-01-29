@@ -1,4 +1,4 @@
-http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/# Named Maps
+# Named Maps
 
 Named maps are essentially the same as anonymous maps except the MapConfig is stored on the server, and the map is given a unique name. You can create named maps from private data, and users without an API Key can view your Named Map (while keeping your data private). The Named map workflow consists of making a call to your database, referencing a table, inserting your variables into the template where placeholders are defined, and creating custom queries.
 
