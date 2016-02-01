@@ -28,7 +28,7 @@ POST /api/v1/map
 }
 ```
 
-Should be a [Mapconfig](https://github.com/CartoDB/Windshaft/blob/0.44.1/doc/MapConfig-1.3.0.md).
+See [MapConfig File Formats](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/) for details.
 
 #### Response
 
