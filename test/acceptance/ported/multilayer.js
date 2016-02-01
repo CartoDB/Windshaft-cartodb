@@ -401,11 +401,26 @@ describe('multilayer', function() {
               assert.ok(body.layergroupid);
               expected_token = LayergroupToken.parse(body.layergroupid).token;
               assert.deepEqual(body.metadata, {
-                  layers: [
-                      { type: "mapnik", "meta":{} },
-                      { type: "mapnik", "meta":{} }
-                  ]
-              });
+                    layers: [{
+                        type: "mapnik",
+                        meta: {
+                            stats: [{
+                                type: "table",
+                                name: "public.test_table",
+                                features: -1
+                            }]
+                        }
+                    }, {
+                        type: "mapnik",
+                        meta: {
+                            stats: [{
+                                type: "table",
+                                name: "public.test_table",
+                                features: -1
+                            }]
+                        }
+                        }]
+                  });
               didRunJsonCallback = true;
           }
           eval(res.body);
@@ -1278,4 +1293,3 @@ describe('multilayer', function() {
     });
 
 });
-
