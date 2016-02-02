@@ -30,7 +30,7 @@ describe('req2params', function() {
         baseController = new BaseController(authApi, pgConnection);
     });
 
-    
+
     it('can be found in server_options', function(){
       assert.ok(_.isFunction(baseController.req2params));
     });
