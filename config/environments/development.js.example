@@ -267,7 +267,10 @@ var config = {
         // whether it should intercept tile render errors an act based on them, enabled by default.
         onTileErrorStrategy: true,
         // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
-        cdbQueryTablesFromPostgres: true
+        cdbQueryTablesFromPostgres: true,
+        // whether in mapconfig is available stats & metadata for each layer
+        layerMetadata: true
+
     }
 };
 
