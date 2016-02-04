@@ -128,6 +128,11 @@
       "from": "cartodb-redis@>=0.13.0 <0.14.0",
       "resolved": "https://registry.npmjs.org/cartodb-redis/-/cartodb-redis-0.13.0.tgz",
       "dependencies": {
+        "strftime": {
+          "version": "0.8.4",
+          "from": "strftime@>=0.8.2 <0.9.0",
+          "resolved": "https://registry.npmjs.org/strftime/-/strftime-0.8.4.tgz"
+        },
         "redis-mpool": {
           "version": "0.1.0",
           "from": "git://github.com/CartoDB/node-redis-mpool.git#0.1.0",
@@ -382,7 +387,7 @@
             },
             "mime-types": {
               "version": "2.1.9",
-              "from": "mime-types@>=2.1.9 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
               "dependencies": {
                 "mime-db": {
@@ -443,7 +448,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@>=2.0.0 <3.0.0",
+              "from": "inherits@>=2.0.1 <2.1.0",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -830,9 +835,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.8.1",
-      "from": "windshaft@1.8.1",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.8.1.tgz",
+      "version": "1.8.2",
+      "from": "windshaft@1.8.2",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.8.2.tgz",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb6",
