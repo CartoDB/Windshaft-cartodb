@@ -1,4 +1,3 @@
-var _ = require('underscore');
 var test_helper = require('../support/test_helper');
 
 var assert = require('../support/assert');
@@ -15,7 +14,7 @@ var step = require('step');
 var windshaft = require('windshaft');
 
 
-describe('overviews', function() {
+describe('overviews metadata', function() {
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 
@@ -87,20 +86,16 @@ describe('overviews', function() {
               assert.ifError(err);
               assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
               assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
-              assert.ok(mapConfig._cfg.layers[0].options.overviews);
-              assert.ok(mapConfig._cfg.layers[0].options.overviews.test_table_overviews);
-              assert.deepEqual(_.keys(mapConfig._cfg.layers[0].options.overviews), ['test_table_overviews']);
-              assert.equal(_.keys(mapConfig._cfg.layers[0].options.overviews.test_table_overviews).length, 2);
-              assert.ok(mapConfig._cfg.layers[0].options.overviews.test_table_overviews[1]);
-              assert.ok(mapConfig._cfg.layers[0].options.overviews.test_table_overviews[2]);
-              assert.equal(
-                  mapConfig._cfg.layers[0].options.overviews.test_table_overviews[1].table,
-                  '_vovw_1_test_table_overviews'
-              );
-              assert.equal(
-                  mapConfig._cfg.layers[0].options.overviews.test_table_overviews[2].table,
-                  '_vovw_2_test_table_overviews'
-              );
+              assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
+              var expected_data = {
+                overviews: {
+                  test_table_overviews: {
+                    1: { table: '_vovw_1_test_table_overviews' },
+                    2: { table: '_vovw_2_test_table_overviews' }
+                  }
+                }
+              };
+              assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
             });
 
             next(err);
