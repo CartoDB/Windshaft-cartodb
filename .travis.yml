@@ -11,6 +11,7 @@ addons:
     - libgif-dev
 
 before_install:
+  - npm install -g npm@2
   - createdb template_postgis
   - psql -c "CREATE EXTENSION postgis" template_postgis
 
