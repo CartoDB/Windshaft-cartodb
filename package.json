@@ -7,10 +7,7 @@
       "cartodb"
     ],
     "url": "https://github.com/CartoDB/Windshaft-cartodb",
-    "licenses": [{
-        "type": "BSD",
-        "url": "https://github.com/CartoDB/Windshaft-cartodb/blob/master/LICENCE"
-    }],
+    "license": "BSD-3-Clause",
     "repository": {
         "type": "git",
         "url": "git://github.com/CartoDB/Windshaft-cartodb.git"
