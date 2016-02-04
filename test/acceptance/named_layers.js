@@ -405,7 +405,7 @@ describe('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/api/v1/map?map_key=1234',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -443,7 +443,7 @@ describe('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/api/v1/map/' + layergroupId + '/0/0/0.png?map_key=1234',
+                        url: '/api/v1/map/' + layergroupId + '/0/0/0.png',
                         method: 'GET',
                         headers: {
                             host: 'localhost'
@@ -536,7 +536,7 @@ describe('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/api/v1/map?map_key=1234',
+                        url: '/api/v1/map',
                         method: 'POST',
                         headers: {
                             host: 'localhost',
@@ -574,7 +574,7 @@ describe('named_layers', function() {
                 var next = this;
                 assert.response(server,
                     {
-                        url: '/api/v1/map/' + layergroupId + '/0/0/0.png?map_key=1234',
+                        url: '/api/v1/map/' + layergroupId + '/0/0/0.png',
                         method: 'GET',
                         headers: {
                             host: 'localhost'
