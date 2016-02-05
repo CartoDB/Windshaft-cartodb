@@ -2,7 +2,10 @@
 
 ## 2.21.1
 
-Released 2016-mm-dd
+Released 2016-02-05
+
+Bug fixes:
+ - Added default config for geojson renderer
 
 
 ## 2.21.0
