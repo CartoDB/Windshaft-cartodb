@@ -1,119 +1,7 @@
 var assert = require('../../support/assert');
-var step = require('step');
-var qs = require('querystring');
-
-var helper = require('../../support/test_helper');
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
-
-var CartodbWindshaft = require('../../../lib/cartodb/server');
-var serverOptions = require('../../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-
+var TestClient = require('../../support/test-client');
 
 describe('widgets', function() {
-
-    var keysToDelete;
-
-    beforeEach(function() {
-        keysToDelete = {};
-    });
-
-    afterEach(function(done) {
-        helper.deleteRedisKeys(keysToDelete, done);
-    });
-
-    function getWidget(mapConfig, widgetName, params, callback) {
-        if (!callback) {
-            callback = params;
-            params = {};
-        }
-
-        var url = '/api/v1/map';
-        if (params && params.filters) {
-            url += '?' + qs.stringify({ filters: JSON.stringify(params.filters) });
-        }
-
-        var layergroupId;
-        step(
-            function createLayergroup() {
-                var next = this;
-                assert.response(server,
-                    {
-                        url: url,
-                        method: 'POST',
-                        headers: {
-                            host: 'localhost',
-                            'Content-Type': 'application/json'
-                        },
-                        data: JSON.stringify(mapConfig)
-                    },
-                    {
-                        status: 200,
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8'
-                        }
-                    },
-                    function(res, err) {
-                        if (err) {
-                            return next(err);
-                        }
-                        var parsedBody = JSON.parse(res.body);
-                        var expectedWidgetURLS = {
-                            http: "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
-                        };
-                        assert.ok(parsedBody.metadata.layers[0].widgets[widgetName]);
-                        assert.ok(
-                            parsedBody.metadata.layers[0].widgets[widgetName].url.http.match(expectedWidgetURLS.http)
-                        );
-                        return next(null, parsedBody.layergroupid);
-                    }
-                );
-            },
-            function getWidgetResult(err, _layergroupId) {
-                assert.ifError(err);
-
-                var next = this;
-                layergroupId = _layergroupId;
-
-                var urlParams = {
-                    own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
-                };
-                if (params && params.bbox) {
-                    urlParams.bbox = params.bbox;
-                }
-                url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName + '?' + qs.stringify(urlParams);
-
-                assert.response(server,
-                    {
-                        url: url,
-                        method: 'GET',
-                        headers: {
-                            host: 'localhost'
-                        }
-                    },
-                    {
-                        status: 200,
-                        headers: {
-                            'Content-Type': 'application/json; charset=utf-8'
-                        }
-                    },
-                    function(res, err) {
-                        if (err) {
-                            return next(err);
-                        }
-
-                        next(null, res);
-                    }
-                );
-            },
-            function finish(err, res) {
-                keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-                keysToDelete['user:localhost:mapviews:global'] = 5;
-                return callback(err, res);
-            }
-        );
-    }
-
 
     it("should expose layer list", function(done) {
 
@@ -139,7 +27,9 @@ describe('widgets', function() {
             ]
         };
 
-        getWidget(listWidgetMapConfig, 'names', function(err, res) {
+        var testClient = new TestClient(listWidgetMapConfig);
+
+        testClient.getWidget('names', function(err, res) {
             if (err) {
                 return done(err);
             }
@@ -153,7 +43,7 @@ describe('widgets', function() {
             ];
             assert.deepEqual(JSON.parse(res.body).rows, expectedList);
 
-            done();
+            testClient.drain(done);
         });
     });
 
@@ -179,7 +69,10 @@ describe('widgets', function() {
                 }
             ]
         };
-        getWidget(histogramMapConfig, 'pop_max', function(err, res) {
+
+        var testClient = new TestClient(histogramMapConfig);
+
+        testClient.getWidget('pop_max', function(err, res) {
             if (err) {
                 return done(err);
             }
@@ -187,7 +80,7 @@ describe('widgets', function() {
             var histogram = JSON.parse(res.body);
             assert.ok(histogram.bins.length);
 
-            done();
+            testClient.drain(done);
         });
     });
 
@@ -218,7 +111,8 @@ describe('widgets', function() {
             };
 
             it("should expose an aggregation", function(done) {
-                getWidget(aggregationMapConfig, 'country_places_count', { own_filter: 0 }, function(err, res) {
+                var testClient = new TestClient(aggregationMapConfig);
+                testClient.getWidget('country_places_count', { own_filter: 0 }, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -227,7 +121,7 @@ describe('widgets', function() {
                     assert.equal(aggregation.categories.length, 6);
                     assert.deepEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
 
-                    done();
+                    testClient.drain(done);
                 });
             });
 
@@ -239,7 +133,8 @@ describe('widgets', function() {
                         ]
                     }
                 };
-                getWidget(aggregationMapConfig, 'country_places_count', params, function(err, res) {
+                var testClient = new TestClient(aggregationMapConfig);
+                testClient.getWidget('country_places_count', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -248,7 +143,7 @@ describe('widgets', function() {
                     assert.equal(aggregation.categories.length, 1);
                     assert.deepEqual(aggregation.categories[0], { value: 256, category: 'CAN', agg: false });
 
-                    done();
+                    testClient.drain(done);
                 });
             });
         });
@@ -277,7 +172,8 @@ describe('widgets', function() {
             };
 
             it("should expose an histogram", function(done) {
-                getWidget(histogramMapConfig, 'country_places_histogram', { own_filter: 0 }, function(err, res) {
+                var testClient = new TestClient(histogramMapConfig);
+                testClient.getWidget('country_places_histogram', { own_filter: 0 }, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -289,7 +185,7 @@ describe('widgets', function() {
                         { bin: 0, freq: 6497, min: 0, max: 742572, avg: 113511.16823149147 }
                     );
 
-                    done();
+                    testClient.drain(done);
                 });
             });
 
@@ -303,7 +199,8 @@ describe('widgets', function() {
                         ]
                     }
                 };
-                getWidget(histogramMapConfig, 'country_places_histogram', params, function(err, res) {
+                var testClient = new TestClient(histogramMapConfig);
+                testClient.getWidget('country_places_histogram', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -318,7 +215,7 @@ describe('widgets', function() {
                         avg: 5815009.596774193
                     });
 
-                    done();
+                    testClient.drain(done);
                 });
             });
         });
@@ -363,7 +260,8 @@ describe('widgets', function() {
                         ]
                     }
                 };
-                getWidget(combinedWidgetsMapConfig, 'country_places_count', params, function(err, res) {
+                var testClient = new TestClient(combinedWidgetsMapConfig);
+                testClient.getWidget('country_places_count', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -378,7 +276,7 @@ describe('widgets', function() {
                         return sum + (row.category === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
-                    done();
+                    testClient.drain(done);
                 });
             });
 
@@ -393,7 +291,8 @@ describe('widgets', function() {
                         ]
                     }
                 };
-                getWidget(combinedWidgetsMapConfig, 'country_places_count', params, function(err, res) {
+                var testClient = new TestClient(combinedWidgetsMapConfig);
+                testClient.getWidget('country_places_count', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -408,7 +307,7 @@ describe('widgets', function() {
                         return sum + (row.category === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
-                    done();
+                    testClient.drain(done);
                 });
             });
 
@@ -423,7 +322,8 @@ describe('widgets', function() {
                     },
                     bbox: '-20,0,45,60'
                 };
-                getWidget(combinedWidgetsMapConfig, 'country_places_count', params, function(err, res) {
+                var testClient = new TestClient(combinedWidgetsMapConfig);
+                testClient.getWidget('country_places_count', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -438,7 +338,7 @@ describe('widgets', function() {
                         return sum + (row.category === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
-                    done();
+                    testClient.drain(done);
                 });
             });
 
@@ -454,7 +354,8 @@ describe('widgets', function() {
                     },
                     bbox: '-20,0,45,60'
                 };
-                getWidget(combinedWidgetsMapConfig, 'country_places_count', params, function(err, res) {
+                var testClient = new TestClient(combinedWidgetsMapConfig);
+                testClient.getWidget('country_places_count', params, function(err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -469,7 +370,7 @@ describe('widgets', function() {
                         return sum + (row.category === 'CHN' ? 1 : 0);
                     }, 0), 0);
 
-                    done();
+                    testClient.drain(done);
                 });
             });
         });
