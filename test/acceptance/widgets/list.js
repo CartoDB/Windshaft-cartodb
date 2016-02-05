@@ -1,7 +1,9 @@
+require('../../support/test_helper');
+
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('widget list', function() {
+describe('list widgets', function() {
 
     it("should expose layer list", function(done) {
 
