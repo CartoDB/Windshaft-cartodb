@@ -1,14 +1,13 @@
-var assert = require('../support/assert');
+var assert = require('../../support/assert');
 var step = require('step');
 var qs = require('querystring');
 
-var helper = require(__dirname + '/../support/test_helper');
-var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+var helper = require('../../support/test_helper');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
 
-var CartodbWindshaft = require('../../lib/cartodb/server');
-var serverOptions = require('../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../../lib/cartodb/server');
+var serverOptions = require('../../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 
 describe('widgets', function() {
