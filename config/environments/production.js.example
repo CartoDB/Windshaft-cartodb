@@ -13,7 +13,7 @@ var config = {
     // Base URLs for the APIs
     //
     // See http://github.com/CartoDB/Windshaft-cartodb/wiki/Unified-Map-API
-    // 
+    //
     // Base url for the Templated Maps API
     // "/api/v1/map/named" is the new API,
     // "/tiles/template" is for compatibility with versions up to 1.6.x
@@ -34,7 +34,7 @@ var config = {
     // Defaults to 7200 (2 hours)
     ,mapConfigTTL: 7200
     // idle socket timeout, in milliseconds
-    ,socket_timeout: 600000 
+    ,socket_timeout: 600000
     ,enable_cors: true
     ,cache_enabled: true
     ,log_format: ':req[X-Real-IP] :method :req[Host]:url :status :response-time ms -> :res[Content-Type] (:res[X-Tiler-Profiler])'
@@ -141,7 +141,24 @@ var config = {
               // memory. If we want to enforce this behaviour we have to implement a cache eviction policy for the
               // internal cache.
               cacheOnTimeout: true
+          },
+
+          geojson: {
+                dbPoolParams: {
+                      // maximum number of resources to create at any given time
+                      size: 16,
+                      // max milliseconds a resource can go unused before it should be destroyed
+                      idleTimeout: 3000,
+                      // frequency to check for idle resources
+                      reapInterval: 1000
+                },
+
+              // SQL queries will be wrapped with ST_ClipByBox2D
+              // Returning the portion of a geometry falling within a rectangle
+              // It will only work if snapToGrid is enabled
+              clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
           }
+
       },
       http: {
           timeout: 2000, // the timeout in ms for a http tile request
@@ -226,7 +243,7 @@ var config = {
         serviceId: 'wadus_service_id'
     }
     // If useProfiler is true every response will be served with an
-    // X-Tiler-Profile header containing elapsed timing for various 
+    // X-Tiler-Profile header containing elapsed timing for various
     // steps taken for producing the response.
     ,useProfiler:false
     ,serverMetadata: {
@@ -250,7 +267,9 @@ var config = {
         // whether it should intercept tile render errors an act based on them, enabled by default.
         onTileErrorStrategy: true,
         // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
-        cdbQueryTablesFromPostgres: true
+        cdbQueryTablesFromPostgres: true,
+        // whether in mapconfig is available stats & metadata for each layer
+        layerMetadata: false
     }
 };
 
