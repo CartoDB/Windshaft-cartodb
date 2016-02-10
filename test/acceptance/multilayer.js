@@ -576,7 +576,7 @@ describe(suiteName, function() {
         version: '1.0.0',
         layers: [
            { options: {
-               sql: 'select 1 as cartodb_id, !pixel_height! as h' +
+               sql: 'select 1 as cartodb_id, !pixel_height! as h,' +
                    'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
                cartocss: '#layer { polygon-fit:red; }',
                cartocss_version: '2.0.1'
@@ -617,7 +617,7 @@ describe(suiteName, function() {
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
-          assert.equal(res.statusCode, 404, res.statusCode + ": " + res.body);
+          assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           var msg = parsed.errors[0];
           assert.ok(msg.match(/bogus.*exist/), msg);

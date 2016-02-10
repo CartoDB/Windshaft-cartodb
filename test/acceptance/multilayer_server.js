@@ -332,13 +332,9 @@ describe('tests from old api translated to multilayer', function() {
 
                 assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
 
-                // TODO when affected tables query makes the request to fail layergroup should be removed
-                keysToDelete['map_cfg|4fb7bd7008322ce66f22d20aebba1ab0'] = 0;
-                keysToDelete['user:localhost:mapviews:global'] = 5;
-
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed, {
-                    errors: ["Error: could not fetch affected tables or last updated time: fake error message"]
+                    errors: ["could not get overviews metadata: fake error message"]
                 });
 
                 done();
