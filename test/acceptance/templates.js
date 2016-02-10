@@ -65,7 +65,7 @@ describe('template_api', function() {
              { options: {
                  sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, -5e6, 0) as the_geom_webmercator' +
                      ' from test_table limit 2 offset 2',
-                 cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                 cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                  cartocss_version: '2.0.2',
                  interactivity: 'cartodb_id'
                } }
@@ -326,8 +326,8 @@ describe('template_api', function() {
               headers: {host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(tmpl)
           };
-          assert.response(server, post_request, {}, function(res) { 
-            next(null, res); 
+          assert.response(server, post_request, {}, function(res) {
+            next(null, res);
           });
         },
         function testCORS() {
@@ -338,12 +338,12 @@ describe('template_api', function() {
               headers: {host: 'localhost', 'Content-Type': 'application/json' }
           },{
               status: 200
-          }, function(res) { 
+          }, function(res) {
             var parsed = JSON.parse(res.body);
             keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
             keysToDelete['user:localhost:mapviews:global'] = 5;
             assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
-            next(null); 
+            next(null);
           });
         },
         function deleteTemplate(err) {
@@ -720,7 +720,7 @@ describe('template_api', function() {
             layers: [
                { options: {
                    sql: "select * from test_table_private_1 LIMIT 0",
-                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                    cartocss_version: '2.0.2',
                    interactivity: 'cartodb_id'
                  } }
@@ -848,7 +848,7 @@ describe('template_api', function() {
         },
         function checkTile(err, res) {
             assert.ifError(err);
-          assert.equal(res.statusCode, 200, 
+          assert.equal(res.statusCode, 200,
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "image/png");
           return null;
@@ -869,7 +869,7 @@ describe('template_api', function() {
         },
         function checkForeignSignerError(err, res) {
             assert.ifError(err);
-          assert.equal(res.statusCode, 403, 
+          assert.equal(res.statusCode, 403,
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.hasOwnProperty('errors'),
@@ -1036,7 +1036,7 @@ describe('template_api', function() {
         },
         function checkTile_fetchOnRestart(err, res) {
             assert.ifError(err);
-          assert.equal(res.statusCode, 200, 
+          assert.equal(res.statusCode, 200,
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           var cc = res.headers['x-cache-channel'];
@@ -1056,7 +1056,7 @@ describe('template_api', function() {
         },
         function checkCacheChannel(err, res) {
             assert.ifError(err);
-          assert.equal(res.statusCode, 200, 
+          assert.equal(res.statusCode, 200,
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           var cc = res.headers['x-cache-channel'];
@@ -1112,7 +1112,7 @@ describe('template_api', function() {
             layers: [
                { options: {
                    sql: "select * from test_table_private_1 where cartodb_id in ( 5,6 )",
-                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                    cartocss_version: '2.0.2',
                    attributes: { id:'cartodb_id', columns: ['name', 'address'] }
                  } }
@@ -1224,7 +1224,7 @@ describe('template_api', function() {
         },
         function checkAttribute(err, res) {
             assert.ifError(err);
-          assert.equal(res.statusCode, 200, 
+          assert.equal(res.statusCode, 200,
             'Unexpected error for authorized getAttributes: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           return null;
@@ -1277,7 +1277,7 @@ describe('template_api', function() {
             layers: [
                { options: {
                    sql: "select * from test_table_private_1 LIMIT 0",
-                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                    cartocss_version: '2.0.2',
                    interactivity: 'cartodb_id'
                  } }
@@ -1347,7 +1347,7 @@ describe('template_api', function() {
             layers: [
                { options: {
                    sql: "select * from test_table_private_1 LIMIT 0",
-                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                    cartocss_version: '2.0.2',
                    interactivity: 'cartodb_id'
                  } }
@@ -1430,7 +1430,7 @@ describe('template_api', function() {
             layers: [
                { options: {
                    sql: "select * from test_table_private_1 LIMIT 0",
-                   cartocss: '#layer { marker-fill: <%= color %>; marker-allow-overlap:true; }', 
+                   cartocss: '#layer { marker-fill: <%= color %>; marker-allow-overlap:true; }',
                    cartocss_version: '2.0.2',
                    interactivity: 'cartodb_id'
                  } }
@@ -1503,8 +1503,8 @@ describe('template_api', function() {
            { options: {
                sql: 'select 1 as cartodb_id, !pixel_height! as h,' +
                    ' ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
-               cartocss: '#layer { polygon-fill:red; }', 
-               cartocss_version: '2.0.1' 
+               cartocss: '#layer { polygon-fill:red; }',
+               cartocss_version: '2.0.1'
              } }
         ]
       };
@@ -1516,7 +1516,7 @@ describe('template_api', function() {
       };
       var statskey = "user:localhost:mapviews";
       var redis_stats_client = redis.createClient(global.environment.redis.port);
-      var template_id; // will be set on template post 
+      var template_id; // will be set on template post
       var now = strftime("%Y%m%d", new Date());
       var errors = [];
       step(
@@ -1621,7 +1621,7 @@ describe('template_api', function() {
             layers: [
                { options: {
                    sql: "select * from test_table_private_1 LIMIT 0",
-                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }', 
+                   cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
                    cartocss_version: '2.0.2',
                    interactivity: 'cartodb_id'
                  } }

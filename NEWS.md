@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.22.0
+
+Released 2016-02-08
+
+Announcements:
+ - Upgrades windshaft to [1.8.3](https://github.com/CartoDB/Windshaft/releases/tag/1.8.3)
+
+
+## 2.21.1
+
+Released 2016-02-05
+
+Bug fixes:
+ - Added default config for geojson renderer
+
+
+## 2.21.0
+
+Released 2016-02-04
+
+Announcements:
+ - Upgrades windshaft to [1.8.2](https://github.com/CartoDB/Windshaft/releases/tag/1.8.2)
+
+
 ## 2.20.0
 
 Released 2016-01-20
@@ -819,7 +843,7 @@ Released 2014-03-10
 
 Enhancements:
 
- - Set statsd prefix for all endpoints 
+ - Set statsd prefix for all endpoints
  - Respond with a permission denied on attempt to access map tiles waiving
    signature of someone who had not left any (#170)
  - Do not log an error on GET / (#177)
@@ -859,7 +883,7 @@ Released 2014-02-27
 Enhancements:
 
  - Upgrades windshaft to 0.19.1 with many performance improvements,
-   See node_modules/windshaft/NEWS 
+   See node_modules/windshaft/NEWS
  - Improve speed of instanciating a map (#147, #159, #165)
  - Give meaningful error on attempts to use map tokens
    with attribute service (#156)
@@ -948,7 +972,7 @@ Bug fixes:
 
 Released 2014-01-30
 
-Bug fixes: 
+Bug fixes:
 
 * layergroup accept both map_key and api_key (#91)
 * Fix public instanciation of signed template accessing private data (#114)
@@ -1071,7 +1095,7 @@ Released 2013-10-03
   "[ zoom > 3]" CartoCSS snippets (note the space)
 * Fix backward compatibility handling of sqlapi.host configuration (#82)
 * Fix error for invalid text-name in CartoCSS (#81)
-* Do not let anonymous requests use authorized renderer caches 
+* Do not let anonymous requests use authorized renderer caches
 
 ## 1.3.4
 
@@ -1118,7 +1142,7 @@ NOTE: configuration sqlapi.host renamed to sqlapi.domain
 * Multilayer API changes
   * Layers passed by index in grid fetching url
   * Interactivity only specified in layergroup config
-  * Embed cache_buster within token 
+  * Embed cache_buster within token
   * Use ISO format for last_modified timestamp
 * Expected LZMA encoding changed to base64
 
@@ -1172,7 +1196,7 @@ Released DD//MM//YY
 
 Released DD//MM//YY
 
-* Reduce default extent to allow for consistent proj4 round-tripping 
+* Reduce default extent to allow for consistent proj4 round-tripping
 * Enhance reset_styles script to use full configuration (#62)
 * Have reset_styles script also drop extended keys (#58)
 * Fix example postgis parameter for simplifying input geoms (#63)
@@ -1222,7 +1246,7 @@ Released (30/10/12)
  * Autodetect target mapnik version and let config override it
  * Add tools/reset_styles script to batch-reset (and optionally convert) styles
 * Configurable logging format (#4)
-* Detailed error on missing user metadata 
+* Detailed error on missing user metadata
 * Properly handle unauthenticated requests for metadata
 * Accept "api_key" in addition to "map_key",
   both in query_string and POST body (#38)

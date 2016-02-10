@@ -111,6 +111,6 @@ describe('health checks', function () {
 
             done();
         });
-    }); 
+    });
 
 });

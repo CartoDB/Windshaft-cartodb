@@ -418,7 +418,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' }, 
+              headers: {'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },

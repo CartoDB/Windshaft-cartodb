@@ -1,6 +1,6 @@
 --
 -- Windshaft test database
--- 
+--
 -- To use run ../prepare_db.sh
 -- NOTE: requires a postgis template called template_postgis
 --
