@@ -1319,6 +1319,39 @@ describe(suiteName, function() {
         );
     });
 
+    it('should response to empty layers mapconfig', function(done) {
+        var layergroup =  {
+            layers: []
+        };
+
+        assert.response(
+            server,
+            {
+                url: '/api/v1/map',
+                method: 'POST',
+                headers: {
+                    host: 'localhost',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(layergroup)
+            },
+            {
+                status: 200
+            },
+            function(res, err) {
+                assert.ok(!err);
+
+                var parsedBody = JSON.parse(res.body);
+                assert.ok(parsedBody.layergroupid);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+
+                done();
+            }
+        );
+    });
+
 });
 
 });
