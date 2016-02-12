@@ -79,10 +79,19 @@ if test x"$PREPARE_PGSQL" = xyes; then
     psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
 
   psql -c "CREATE LANGUAGE plpythonu;" ${TEST_DB}
-  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/cdb/scripts-available/CDB_QueryStatements.sql -o sql/CDB_QueryStatements.sql
-  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/cdb/scripts-available/CDB_QueryTables.sql -o sql/CDB_QueryTables.sql
-  cat sql/CDB_QueryStatements.sql sql/CDB_QueryTables.sql |
+  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/CDB_QueryStatements.sql -o sql/CDB_QueryStatements.sql
+  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/CDB_QueryTables.sql -o sql/CDB_QueryTables.sql
+  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/CDB_TableMetadata.sql -o sql/CDB_TableMetadata.sql
+  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/CDB_ForeignTable.sql -o sql/CDB_ForeignTable.sql
+  cat sql/CDB_QueryStatements.sql |
+      psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+  cat sql/CDB_QueryTables.sql |
+      psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+  cat sql/CDB_TableMetadata.sql|
     psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+  cat sql/CDB_ForeignTable.sql|sed -e 's/cartodb\./public./g' \
+                                   -e "s/''cartodb''/''public''/g" |
+      psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
 
 fi
 
