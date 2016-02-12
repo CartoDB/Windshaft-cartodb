@@ -27,6 +27,7 @@
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
         "windshaft": "1.9.0",
+        "camshaft": "https://github.com/CartoDB/camshaft/tarball/master",
         "step": "~0.0.6",
         "queue-async": "~1.0.7",
         "request": "~2.62.0",
