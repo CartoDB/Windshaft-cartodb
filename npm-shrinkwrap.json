@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.23.1",
+  "version": "2.24.0",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -193,7 +193,7 @@
           "dependencies": {
             "mime-types": {
               "version": "2.1.9",
-              "from": "mime-types@>=2.1.6 <2.2.0",
+              "from": "mime-types@>=2.1.9 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
               "dependencies": {
                 "mime-db": {
@@ -382,7 +382,7 @@
             },
             "mime-types": {
               "version": "2.1.9",
-              "from": "mime-types@>=2.1.6 <2.2.0",
+              "from": "mime-types@>=2.1.9 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
               "dependencies": {
                 "mime-db": {
@@ -520,9 +520,9 @@
       "resolved": "https://registry.npmjs.org/request/-/request-2.62.0.tgz",
       "dependencies": {
         "bl": {
-          "version": "1.0.2",
+          "version": "1.0.3",
           "from": "bl@>=1.0.0 <1.1.0",
-          "resolved": "https://registry.npmjs.org/bl/-/bl-1.0.2.tgz",
+          "resolved": "https://registry.npmjs.org/bl/-/bl-1.0.3.tgz",
           "dependencies": {
             "readable-stream": {
               "version": "2.0.5",
@@ -585,7 +585,7 @@
           "dependencies": {
             "async": {
               "version": "1.5.2",
-              "from": "async@>=1.4.0 <2.0.0",
+              "from": "async@>=1.0.0 <2.0.0",
               "resolved": "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
             }
           }
@@ -597,7 +597,7 @@
         },
         "mime-types": {
           "version": "2.1.9",
-          "from": "mime-types@>=2.1.2 <2.2.0",
+          "from": "mime-types@>=2.1.9 <2.2.0",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
           "dependencies": {
             "mime-db": {
@@ -830,8 +830,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.9.0",
-      "from": "windshaft@1.9.0",
+      "version": "1.10.0",
+      "from": "windshaft@1.10.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.10.0.tgz",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb6",
