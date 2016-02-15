@@ -29,7 +29,8 @@ describe('QueryTablesApi', function() {
         queryTablesApi.getAffectedTablesAndLastUpdatedTime('localhost', query, function(err, result) {
             assert.ok(!err, err);
             assert.deepEqual(result, {
-                affectedTables: [{dbname: "test_windshaft_cartodb_user_1_db", schema_name: "public", "table_name": 'test_table', updated_at: new Date(1234567890123)}],
+                affectedTables: [{dbname: "test_windshaft_cartodb_user_1_db", schema_name: "public",
+                                  "table_name": 'test_table', updated_at: new Date(1234567890123)}],
                 lastUpdatedTime: 1234567890123
             });
 
@@ -43,7 +44,8 @@ describe('QueryTablesApi', function() {
             assert.ok(!err, err);
 
             assert.deepEqual(result, {
-                affectedTables: [{dbname: "test_windshaft_cartodb_user_1_db", schema_name: "public", "table_name": 'test_table_private_1', updated_at: new Date(1234567890123)}],
+                affectedTables: [{dbname: "test_windshaft_cartodb_user_1_db", schema_name: "public",
+                                  "table_name": 'test_table_private_1', updated_at: new Date(1234567890123)}],
                 lastUpdatedTime: 1234567890123
             });
 
