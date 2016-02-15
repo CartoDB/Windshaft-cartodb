@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.24.1
+
+Released 2016-mm-dd
+
+
 ## 2.24.0
 
 Released 2016-02-15
