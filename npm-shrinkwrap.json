@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.22.0",
+  "version": "2.23.1",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -85,7 +85,7 @@
             },
             "mime-types": {
               "version": "2.1.9",
-              "from": "mime-types@>=2.1.2 <2.2.0",
+              "from": "mime-types@>=2.1.9 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
               "dependencies": {
                 "mime-db": {
@@ -193,7 +193,7 @@
           "dependencies": {
             "mime-types": {
               "version": "2.1.9",
-              "from": "mime-types@>=2.1.9 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
               "dependencies": {
                 "mime-db": {
@@ -382,7 +382,7 @@
             },
             "mime-types": {
               "version": "2.1.9",
-              "from": "mime-types@>=2.1.9 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
               "dependencies": {
                 "mime-db": {
@@ -536,7 +536,7 @@
                 },
                 "inherits": {
                   "version": "2.0.1",
-                  "from": "inherits@>=2.0.0 <3.0.0",
+                  "from": "inherits@>=2.0.1 <2.1.0",
                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
                 },
                 "isarray": {
@@ -830,9 +830,8 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.8.3",
-      "from": "windshaft@1.8.3",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.8.3.tgz",
+      "version": "1.9.0",
+      "from": "windshaft@1.9.0",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb6",

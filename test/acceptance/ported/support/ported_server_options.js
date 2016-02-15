@@ -2,6 +2,10 @@ var _ = require('underscore');
 var serverOptions = require('../../../../lib/cartodb/server_options');
 var LayergroupToken = require('../../../../lib/cartodb/models/layergroup_token');
 var mapnik = require('windshaft').mapnik;
+var OverviewsQueryRewriter = require('../../../../lib/cartodb/utils/overviews_query_rewriter');
+var overviewsQueryRewriter = new OverviewsQueryRewriter({
+  zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'
+});
 
 module.exports = _.extend({}, serverOptions, {
     base_url: '/database/:dbname/table/:table',
@@ -26,7 +30,8 @@ module.exports = _.extend({}, serverOptions, {
             limits: {
                 render: 0,
                 cacheOnTimeout: true
-            }
+            },
+            queryRewriter: overviewsQueryRewriter
         },
         http: {
             timeout: 5000,

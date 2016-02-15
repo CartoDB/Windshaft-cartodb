@@ -1,8 +1,16 @@
 # Changelog
 
-## 2.22.1
+## 2.23.1
 
 Released 2016-mm-dd
+
+
+## 2.23.0
+
+Released 2016-02-10
+
+Improvements:
+- Support for overviews
 
 
 ## 2.22.0
