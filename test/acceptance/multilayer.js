@@ -262,9 +262,9 @@ describe(suiteName, function() {
           var parsedBody = JSON.parse(res.body);
           expected_token = parsedBody.layergroupid.split(':')[0];
           helper.checkCache(res);
-          helper.checkSurrogateKey(res, new TablesCacheEntry('test_windshaft_cartodb_user_1_db', [
-              'public.test_table',
-              'public.test_table_2'
+          helper.checkSurrogateKey(res, new TablesCacheEntry([
+            {dbname: "test_windshaft_cartodb_user_1_db", table_name: "test_table", schema_name: "public"},
+            {dbname: "test_windshaft_cartodb_user_1_db", table_name: "test_table_2", schema_name: "public"},
           ]).key().join(' '));
 
 
