@@ -1,18 +1,20 @@
 # Named Maps
 
-Named maps are essentially the same as anonymous maps except the MapConfig is stored on the server, and the map is given a unique name. You can create named maps from private data, and users without an API Key can view your Named Map (while keeping your data private). The Named map workflow consists of making a call to your database, referencing a table, inserting your variables into the template where placeholders are defined, and creating custom queries.
+Named Maps are essentially the same as Anonymous Maps except the MapConfig is stored on the server, and the map is given a unique name. You can create Named Maps from private data, and users without an API Key can view your Named Map (while keeping your data private). 
 
-The main two differences compared to anonymous maps are:
+The Named Map workflow consists of uploading a MapConfig file to CartoDB servers, to select data from your CartoDB user database by using SQL. The response back from the API provides the name of your MapConfig as a template map; which you can then use to create your Named Map details, or fetch XYZ tiles directly for Named Maps. You can use also the MapConfig that you uploaded to create a map using [CartoDB.js](#use-cartodbjs-to-create-named-maps) for Named Maps.
 
-- **auth layer**  
-  This allows you to control who is able to see the map based on a token auth
+The main differences, compared to Anonymous Maps, is that Named Maps include:
+
+- **auth token**  
+  This allows you to control who is able to see the map based on an auth token, and create a secure Named Map with password-protection.
 
 - **templates**  
-  Since the MapConfig is static it can contain some variables so the client can modify the map's appearance using those variables.
+  The MapConfig generated template map is static and contains placeholders, enabling you to modify your map's appearance by using variables. Templates maps are persistent with no preset expiration. They can only be created, or deleted, by a CartoDB user with a valid API KEY (See [auth argument](#arguments)).
 
-Template maps are persistent with no preset expiration. They can only be created or deleted by a CartoDB user with a valid API_KEY (see auth section).
+  Uploading a MapConfig produces a template map for your Named Maps. Such as MapConfigs are uploaded to the server, "template".json files are uploaded to the server for Named Maps.
 
-**Note:** There is a limit of 4,096 named maps allowed per account. If you need to create more Named maps, it is recommended to use templates.
+**Note:** There is a limit of 4,096 Named Maps allowed per account. If you need to create more Named Maps, it is recommended to use template maps instead of uploading multiple [Named Map MapConfigs](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#named-map-layer-options).
 
 ## Create
 
@@ -29,6 +31,8 @@ Params | Description
 api_key | is required
 
 #### template.json
+
+The response back from the API provides the name of your MapConfig as a template, enabling you to create the Named Map details by inserting your variables into the template where placeholders are defined, and create custom queries using SQL. The `name` argument defines how to name this "template_name".json. Note that there are some requirements for how to name a Named Map template. See the [`name`](#arguments) argument description for details.
 
 ```javascript
 {
@@ -84,16 +88,15 @@ api_key | is required
 
 Params | Description
 --- | ---
-name | There can be at most _one_ template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-) or underscores (_).
+name | There can only be _one_ template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-), or underscores (_). This is specific to the name of your Named Map [template.json](#templatejson).
 
 auth | 
 --- | ---
-&#124;_ method | `"token"` or `"open"` (the default if no `"method"` is given).
-&#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the named map.
-placeholders | Variables not listed here are not substituted. Variables not provided at instantiation time trigger an error. A default is required for optional variables. Type specification is used for quoting, to avoid injections see template format section below.
-layergroup | the layer list definition. This is the MapConfig explained in anonymous maps. See [MapConfig File Format](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/) for more info.
-
-view (optional) | extra keys to specify the compelling area for the map. It can be used to have a static preview of a named map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
+&#124;_ method | `"token"` or `"open"` (`"open"` is the default if no method is specified. Use `"token"` to password-protect your map).
+&#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.cartodb.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
+placeholders | Placeholders are variables that can be placed in your template.json file's SQL or CartoCSS.
+layergroup | the layergroup configurations, as specified in the MapConfig. See [MapConfig File Format](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/) for more information.
+view (optional) | extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
 --- | ---
 &#124;_ zoom | The zoom level to use
 
@@ -109,9 +112,9 @@ view (optional) | extra keys to specify the compelling area for the map. It can 
 &#124;_ &#124;_ east | UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
 &#124;_ &#124;_ north | UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
 
-### Template Format
+### Placeholder Format
 
-A templated `layergroup` allows the use of placeholders in the "cartocss" and "sql" elements of the "option" object in any "layer" of a `layergroup` configuration
+Placeholders are variables that can be placed in your MapConfig, and template.json file's, SQL or CartoCSS options. Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergoup configurations](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations).
 
 Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced.
 
@@ -121,7 +124,7 @@ Valid placeholder names start with a letter and can only contain letters, number
 <%= my_color %>
 ```
 
-The set of supported placeholders for a template will need to be explicitly defined with a specific type and default value for each.
+The set of supported placeholders for a template need to be explicitly defined with a specific type, and default value, for each placeholder.
 
 ### Placeholder Types
 
@@ -134,9 +137,9 @@ sql_ident | internal double-quotes will be sql-escaped
 number | can only contain numerical representation
 css_color | can only contain color names or hex-values
 
-Placeholder default values will be used whenever new values are not provided as options at the time of creation on the client. They can also be used to test the template by creating a default version with new options provided.
+Placeholder default values will be used whenever new values are not provided as options, at the time of creation on the client. They can also be used to test the template by creating a default version with new options provided.
 
-When using templates, be very careful about your selections as they can give broad access to your data if they are defined losely.
+When using templates, be very careful about your selections as they can give broad access to your data if they are defined loosely.
 
 #### Call
 
@@ -157,7 +160,7 @@ curl -X POST \
 
 ## Instantiate
 
-Instantiating a map allows you to get the information needed to fetch tiles. That temporal map is an anonymous map.
+Instantiating a map allows you to get the information needed to fetch tiles. That temporal map is an Anonymous Map.
 
 #### Definition
 
@@ -179,15 +182,15 @@ auth_token | optional, but required when `"method"` is set to `"token"`
 }
 ```
 
-The fields you pass as `params.json` depend on the variables allowed by the named map. If there are variables missing it will raise an error (HTTP 400)
+The fields you pass as `params.json` depend on the variables allowed by the Named Map. If there are variables missing it will raise an error (HTTP 400)
 
-- **auth_token** *optional* if the named map needs auth
+- **auth_token** *optional* if the Named Map needs password-protection
 
 ### Example
 
 You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/map/named/:template_name`.
 
-Valid credentials will be needed if required by the template.
+Valid credentials will be needed, if required by the template.
 
 
 #### Call
@@ -216,7 +219,7 @@ curl -X POST \
 }
 ```
 
-You can then use the `layergroupid` for fetching tiles and grids as you would normally (see anonymous map section). However you'll need to show the `auth_token`, if required by the template.
+You can then use the `layergroupid` for fetching tiles and grids as you would normally (see [Anonymous Maps](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/)). However, you will need to show the `auth_token`, if required by the template.
 
 ## Using JSONP
 
@@ -233,7 +236,7 @@ GET /api/v1/map/named/:template_name/jsonp
 Params | Description
 --- | ---
 auth_token | optional, but required when `"method"` is set to `"token"`
-config | Encoded JSON with the params for creating named maps (the variables defined in the template)
+config | Encoded JSON with the params for creating Named Maps (the variables defined in the template)
 lmza | This attribute contains the same as config but LZMA compressed. It cannot be used at the same time than `config`.
 callback | JSON callback name
 
@@ -290,9 +293,9 @@ api_key | is required
 
 Same as updating a map.
 
-### Other Info
+### Other Information
 
-Updating a named map removes all the named map instances so they need to be initialized again.
+Updating a Named Map removes all the Named Map instances, so they need to be initialized again.
 
 ### Example
 
@@ -325,7 +328,7 @@ If a template with the same name does NOT exist, a 400 HTTP response is generate
 
 ## Delete
 
-Delete the specified template map from the server and it disables any previously initialized versions of the map.
+Deletes the specified template map from the server, and disables any previously initialized versions of the map.
 
 #### Definition
 
@@ -425,7 +428,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 
 ```javascript
 {
-  "template": {...} // see template.json above
+  "template": {...} // see [template.json](#templatejson)
 }
 ```
 
@@ -438,7 +441,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 ```
 
 ## Use CartoDB.js to Create Named Maps
-Named maps can be used with CartoDB.js by specifying a named map in a layer source as follows. Named maps are treated almost the same as other layer source types in most other ways.
+Named Maps can be used with CartoDB.js, by specifying a Named Map in a layer source as follows. Named Maps are treated almost the same as other layer source types.
 
 ```js
 var layerSource = {
@@ -458,18 +461,18 @@ cartodb.createLayer('map_dom_id',layerSource)
 
 ```
 
-[CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js/) has methods for accessing your named maps.
+[CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js/) has methods for accessing your Named Maps.
 
 1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
 
-    **Note:** The CartoDB.js `layer.setParams()` function is not supported when using Named maps for Torque.
+    **Note:** The CartoDB.js `layer.setParams()` function is not supported when using Named Maps for Torque.
 
 2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
 
 ### Complete Examples of Named Maps created with CartoDB.js
 
-- [Named map selectors with interaction](http://bl.ocks.org/ohasselblad/515a8af1f99d5e690484)
+- [Named Map selectors with interaction](http://bl.ocks.org/ohasselblad/515a8af1f99d5e690484)
 
-- [Named map with interactivity and config file used to create it](http://bl.ocks.org/ohasselblad/d1a45b8ff5e7bd90cd68)
+- [Named Map with interactivity and config file used to create it](http://bl.ocks.org/ohasselblad/d1a45b8ff5e7bd90cd68)
 
 - [Toggling sublayers in a Named Map](http://bl.ocks.org/ohasselblad/c1a0f4913610eec53cd3)

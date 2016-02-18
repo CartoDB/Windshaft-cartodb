@@ -1,6 +1,6 @@
 # Anonymous Maps
 
-Anonymous maps allows you to instantiate a map given SQL and CartoCSS. It also allows you to add interaction capabilities using [UTF Grid.](https://github.com/mapbox/utfgrid-spec)
+Anonymous Maps allows you to instantiate a map given SQL and CartoCSS. It also allows you to add interaction capabilities using [UTF Grid.](https://github.com/mapbox/utfgrid-spec)
 
 
 ## Instantiate
@@ -161,7 +161,7 @@ GET /api/v1/map?callback=method
 
 Param | Description
 --- | ---
-config | Encoded JSON with the params for creating named maps (the variables defined in the template).
+config | Encoded JSON with the params for creating Named maps (the variables defined in the template).
 lmza | This attribute contains the same as config but LZMA compressed. It cannot be used at the same time as `config`.
 callback | JSON callback name.
 
@@ -189,4 +189,4 @@ callback({
 
 ## Remove
 
-Anonymous maps cannot be removed by an API call. They will expire after about five minutes but sometimes longer. If an anonymous map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time, returns to the map and attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.
+Anonymous Maps cannot be removed by an API call. They will expire after about five minutes but sometimes longer. If an Anonymous Map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time, returns to the map and attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.
