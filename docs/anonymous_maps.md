@@ -72,9 +72,11 @@ curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: applicatio
 
 ### Retrieve resources from the layergroup
 
-#### Mapnik tiles can be accessed using
+There are several resources for retrieving layergoup details, such as accessing Mapnik tiles, individual layers, accessing defined Attributes, and blending and layer selection.
 
-These tiles will get just the mapnik layers. To get individual layers see next section.
+#### Mapnik tiles
+
+These tiles will access just the mapnik layers. To get individual layers, see the following section.
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
@@ -189,4 +191,4 @@ callback({
 
 ## Remove
 
-Anonymous Maps cannot be removed by an API call. They will expire after about five minutes but sometimes longer. If an Anonymous Map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time, returns to the map and attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.
+Anonymous Maps cannot be removed by an API call. They will expire after about five minutes, or sometimes longer. If an Anonymous Map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time, returns to the map and attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.

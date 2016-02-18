@@ -2,7 +2,7 @@
 
 Named Maps are essentially the same as Anonymous Maps except the MapConfig is stored on the server, and the map is given a unique name. You can create Named Maps from private data, and users without an API Key can view your Named Map (while keeping your data private). 
 
-The Named Map workflow consists of uploading a MapConfig file to CartoDB servers, to select data from your CartoDB user database by using SQL. The response back from the API provides the name of your MapConfig as a template map; which you can then use to create your Named Map details, or fetch XYZ tiles directly for Named Maps. You can use also the MapConfig that you uploaded to create a map using [CartoDB.js](#use-cartodbjs-to-create-named-maps) for Named Maps.
+The Named Map workflow consists of uploading a MapConfig file to CartoDB servers, to select data from your CartoDB user database by using SQL. The response back from the API provides the name of your MapConfig as a template map; which you can then use to create your Named Map details, or [fetch XYZ tiles](#fetching-xyz-tiles-for-named-maps) directly for Named Maps. You can also use the MapConfig that you uploaded to create a map using [CartoDB.js](#use-cartodbjs-to-create-named-maps) for Named Maps.
 
 The main differences, compared to Anonymous Maps, is that Named Maps include:
 
@@ -92,7 +92,7 @@ name | There can only be _one_ template with the same name for any user. Valid n
 
 auth | 
 --- | ---
-&#124;_ method | `"token"` or `"open"` (`"open"` is the default if no method is specified. Use `"token"` to password-protect your map).
+&#124;_ method | `"token"` or `"open"` (`"open"` is the default if no method is specified. Use `"token"` to password-protect your map)
 &#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.cartodb.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
 placeholders | Placeholders are variables that can be placed in your template.json file's SQL or CartoCSS.
 layergroup | the layergroup configurations, as specified in the MapConfig. See [MapConfig File Format](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/) for more information.
@@ -111,6 +111,8 @@ view (optional) | extra keys to specify the view area for the map. It can be use
 &#124;_ &#124;_ south | LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
 &#124;_ &#124;_ east | UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
 &#124;_ &#124;_ north | UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
+
+{% comment %}writer note_csobier: Carla - Regarding view (optional) How do you see a Named Map without instantiating it via CartoDB.js/createLayer, is this referring to getting tiles via xyz url? Need an example here.{% endcomment %}
 
 ### Placeholder Format
 
@@ -143,6 +145,8 @@ When using templates, be very careful about your selections as they can give bro
 
 #### Call
 
+{% comment %}writer note_csobier: Carla - This section seems out of place. Should it come sooner or is it part of Placeholder Types? Also, why is the curl command shown here formatted differently than curl commands listed in the rest of the docs? Perhaps we can use this opportunity to ensure all curl commands in this section are correct?{% endcomment %}
+
 ```html
 curl -X POST \
    -H 'Content-Type: application/json' \
@@ -160,7 +164,9 @@ curl -X POST \
 
 ## Instantiate
 
-Instantiating a map allows you to get the information needed to fetch tiles. That temporal map is an Anonymous Map.
+Instantiating a Named Map allows you to fetch the map tiles. You can use the Maps API to instantiate, or use the CartoDB.js `createLayer()` function. The result is an Anonymous Map.
+
+{% comment %}writer note_csobier: Carla - When do you need to instantiate a named map and when don't you? For example, you don't need to instantiate a named map with cartodb.js if you're using xyz tiles? Are there other ways to instantiate without CartoDB.js? If so, why would you?{% endcomment %}
 
 #### Definition
 
@@ -172,25 +178,25 @@ POST /api/v1/map/named/:template_name
 
 Param | Description
 --- | ---
-auth_token | optional, but required when `"method"` is set to `"token"`
+auth_token | `"token"` or `"open"` (`"open"` is the default if not specified. Use `"token"` to password-protect your map)
 
 ```javascript
-// params.json
+// params.json, this is required
 {
  "color": "#ff0000",
  "cartodb_id": 3
 }
 ```
 
-The fields you pass as `params.json` depend on the variables allowed by the Named Map. If there are variables missing it will raise an error (HTTP 400)
+The fields you pass as `params.json` depend on the variables allowed by the Named Map. If there are variables missing, it will raise an error (HTTP 400).
 
-- **auth_token** *optional* if the Named Map needs password-protection
+**Note:** It is required that you include a `params.json` file to instantiate a Named Map, even if you have no fields to pass and the JSON is empty.
 
-### Example
+#### Example
 
 You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/map/named/:template_name`.
 
-Valid credentials will be needed, if required by the template.
+Valid auth token will be needed, if required by the template.
 
 
 #### Call
@@ -219,61 +225,7 @@ curl -X POST \
 }
 ```
 
-You can then use the `layergroupid` for fetching tiles and grids as you would normally (see [Anonymous Maps](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/)). However, you will need to show the `auth_token`, if required by the template.
-
-## Using JSONP
-
-There is also a special endpoint to be able to initialize a map using JSONP (for old browsers).
-
-#### Definition
-
-```bash
-GET /api/v1/map/named/:template_name/jsonp
-```
-
-#### Params
-
-Params | Description
---- | ---
-auth_token | optional, but required when `"method"` is set to `"token"`
-config | Encoded JSON with the params for creating Named Maps (the variables defined in the template)
-lmza | This attribute contains the same as config but LZMA compressed. It cannot be used at the same time than `config`.
-callback | JSON callback name
-
-#### Call
-
-```bash
-curl 'https://documentation.cartodb.com/api/v1/map/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=callback&config=template_params_json'
-```
-
-#### Response
-
-```javascript
-callback({
-  "layergroupid":"c01a54877c62831bb51720263f91fb33:0",
-  "last_updated":"1970-01-01T00:00:00.000Z"
-  "cdn_url": {
-    "http": "http://cdb.com",
-    "https": "https://cdb.com"
-  }
-})
-```
-
-This takes the `callback` function (required), `auth_token` if the template needs auth, and `config` which is the variable for the template (in cases where it has variables).
-
-```javascript
-url += "config=" + encodeURIComponent(
-JSON.stringify({ color: 'red' });
-```
-
-The response is in this format:
-
-```javascript
-callback({
-  layergroupid: "dev@744bd0ed9b047f953fae673d56a47b4d:1390844463021.1401",
-  last_updated: "2014-01-27T17:41:03.021Z"
-})
-```
+You can then use the `layergroupid` for fetching tiles and grids as you would normally (see [Anonymous Maps](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/)).
 
 ## Update
 
@@ -400,7 +352,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 }
 ```
 
-## Getting a Specific Template
+## Get Specific Templates
 
 This gets the definition of a template.
 
@@ -440,8 +392,63 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?a
 }
 ```
 
-## Use CartoDB.js to Create Named Maps
-Named Maps can be used with CartoDB.js, by specifying a Named Map in a layer source as follows. Named Maps are treated almost the same as other layer source types.
+## JSONP for Named Maps
+
+If using a [JSONP](https://en.wikipedia.org/wiki/JSONP) (for old browsers) request, there is a special endpoint used to initialize and create a Named Map.
+
+#### Definition
+
+```bash
+GET /api/v1/map/named/:template_name/jsonp
+```
+
+#### Params
+
+Params | Description
+--- | ---
+auth_token | `"token"` or `"open"` (`"open"` is the default if no method is specified. Use `"token"` to password-protect your map)
+params | Encoded JSON with the params (variables) needed for the Named Map
+lmza | You can use an LZMA compressed file instead of a params JSON file
+callback | JSON callback name
+
+#### Call
+
+```bash
+curl 'https://documentation.cartodb.com/api/v1/map/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=callback&config=template_params_json'
+```
+{% comment %}writer note_csobier: Carla - Michelle tested the above curl command and it did not work. Can you confirm if this is written correctly? Should it just be "=params_json" and not "=template_params_json"? Also, need you to confirm if the Response below is still correct.{% endcomment %}
+
+#### Response
+
+```javascript
+callback({
+  "layergroupid":"c01a54877c62831bb51720263f91fb33:0",
+  "last_updated":"1970-01-01T00:00:00.000Z"
+  "cdn_url": {
+    "http": "http://cdb.com",
+    "https": "https://cdb.com"
+  }
+})
+```
+
+This takes the `callback` function (required), `auth_token` if the template needs auth, and `config` which is the variable for the template (in cases where it has variables).
+
+```javascript
+url += "config=" + encodeURIComponent(
+JSON.stringify({ color: 'red' });
+```
+
+The response is in this format:
+
+```javascript
+callback({
+  layergroupid: "dev@744bd0ed9b047f953fae673d56a47b4d:1390844463021.1401",
+  last_updated: "2014-01-27T17:41:03.021Z"
+})
+```
+
+## CartoDB.js for Named Maps
+Named Maps can be used with CartoDB.js, by specifying a Named Map in a layer source as follows.
 
 ```js
 var layerSource = {
@@ -461,6 +468,8 @@ cartodb.createLayer('map_dom_id',layerSource)
 
 ```
 
+**Note:** Instantiating a Named Map over a `createLayer` does not require an API Key and by default, does not include auth tokens. _If_ you defined auth tokens for the Named Map configuration, then you will have to include them.
+
 [CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js/) has methods for accessing your Named Maps.
 
 1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
@@ -469,10 +478,60 @@ cartodb.createLayer('map_dom_id',layerSource)
 
 2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
 
-### Complete Examples of Named Maps created with CartoDB.js
+#### Examples of Named Maps created with CartoDB.js
 
 - [Named Map selectors with interaction](http://bl.ocks.org/ohasselblad/515a8af1f99d5e690484)
 
-- [Named Map with interactivity and config file used to create it](http://bl.ocks.org/ohasselblad/d1a45b8ff5e7bd90cd68)
+- [Named Map with interactivity](http://bl.ocks.org/ohasselblad/d1a45b8ff5e7bd90cd68)
 
 - [Toggling sublayers in a Named Map](http://bl.ocks.org/ohasselblad/c1a0f4913610eec53cd3)
+
+### Fetching XYZ tiles for Named Maps
+
+Optionally, you can fetch projected tiles for your Named Map. This does not require an API Key. There are several ways to fetch XYZ tiles.
+
+#### Get Template
+
+If fetching XYZ tiles with the [`function getTemplate`](https://github.com/CartoDB/Windshaft-cartodb/blob/9449642773ed284d3855b08f0358c634f6634d59/lib/cartodb/controllers/named_maps_admin.js#L103) call, _it requires an auth token_.
+
+```javascript
+function getTemplate(err, authenticated) {
+    ifUnauthenticated(authenticated, 'Only authenticated users can get template maps');
+```
+
+#### List Templates
+
+If fetching XYZ tiles with the [`function listTemplates`](https://github.com/CartoDB/Windshaft-cartodb/blob/9449642773ed284d3855b08f0358c634f6634d59/lib/cartodb/controllers/named_maps_admin.js#L166) call, _it requires an auth token_.
+
+```javascript
+function listTemplates(err, authenticated) {
+    ifUnauthenticated(authenticated, 'Only authenticated user can list templated maps');
+```
+
+#### Get Mapnik Retina Tiles
+
+This method of fetching XYZ tiles ignores the Named Map template name and obtains the [Layergroup `srid`](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations) as the key value used to initialize the map. Note that it obtains the retina tiles that are not related to basemaps.
+
+```javascript
+GET (?:/api/v1/map|/user/:user/api/v1/map|/tiles/layergroup)/:token/:z/:x/:y@:scale_factor?x.:format {:user(f),:token(f),:z(f),:x(f),:y(f),:scale_factor(t),:format(f)} (1) 
+Notes: Mapnik retina tiles [0]
+```
+**Tip:** This is the code defined as "Mapnik retina tiles" in the [Windshaft-cartodb Routes list](https://github.com/CartoDB/Windshaft-cartodb/blob/723dc59490f774c680efb74ab19fa2a556c66d9d/docs/Routes.md#routes-list).
+
+#### Fetch XYZ tiles directly
+
+This method uses XYZ-based URLs to fetch tiles directly, and instantiates the Named Map as part of the request to your application. You do not have to do any other steps to initialize your map. This is done with the [`NamedMapsController`](https://github.com/CartoDB/Windshaft-cartodb/blob/9449642773ed284d3855b08f0358c634f6634d59/lib/cartodb/controllers/named_maps.js#L31) base url value for your app.
+
+{% comment %}writer note_csobier: Carla - Is it true that if you're using xyz urls to get tiles, that does instantiation for you? so you don't need to do any other steps to instantiate?{% endcomment %}
+
+```javascript
+NamedMapsController.prototype.register = function(app) {
+app.get(app.base_url_templated +
+    '/:template_id/:layer/:z/:x/:y.(:format)', cors(), userMiddleware,
+    this.tile.bind(this));
+
+app.get(app.base_url_mapconfig +
+    '/static/named/:template_id/:width/:height.:format', cors(), userMiddleware,
+    this.staticMap.bind(this));
+};
+```
