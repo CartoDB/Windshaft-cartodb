@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.24.1",
+  "version": "2.25.0",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -84,14 +84,14 @@
               "resolved": "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
             },
             "mime-types": {
-              "version": "2.1.9",
+              "version": "2.1.10",
               "from": "mime-types@>=2.1.9 <2.2.0",
-              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {
-                  "version": "1.21.0",
-                  "from": "mime-db@>=1.21.0 <1.22.0",
-                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.21.0.tgz"
+                  "version": "1.22.0",
+                  "from": "mime-db@>=1.22.0 <1.23.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.22.0.tgz"
                 }
               }
             }
@@ -192,14 +192,14 @@
           "resolved": "https://registry.npmjs.org/accepts/-/accepts-1.2.13.tgz",
           "dependencies": {
             "mime-types": {
-              "version": "2.1.9",
+              "version": "2.1.10",
               "from": "mime-types@>=2.1.6 <2.2.0",
-              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {
-                  "version": "1.21.0",
-                  "from": "mime-db@>=1.21.0 <1.22.0",
-                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.21.0.tgz"
+                  "version": "1.22.0",
+                  "from": "mime-db@>=1.22.0 <1.23.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.22.0.tgz"
                 }
               }
             },
@@ -381,14 +381,14 @@
               "resolved": "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
             },
             "mime-types": {
-              "version": "2.1.9",
+              "version": "2.1.10",
               "from": "mime-types@>=2.1.6 <2.2.0",
-              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
+              "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {
-                  "version": "1.21.0",
-                  "from": "mime-db@>=1.21.0 <1.22.0",
-                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.21.0.tgz"
+                  "version": "1.22.0",
+                  "from": "mime-db@>=1.22.0 <1.23.0",
+                  "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.22.0.tgz"
                 }
               }
             }
@@ -443,7 +443,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@>=2.0.0 <3.0.0",
+              "from": "inherits@>=2.0.1 <2.1.0",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -596,14 +596,14 @@
           "resolved": "https://registry.npmjs.org/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz"
         },
         "mime-types": {
-          "version": "2.1.9",
+          "version": "2.1.10",
           "from": "mime-types@>=2.1.2 <2.2.0",
-          "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.9.tgz",
+          "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
           "dependencies": {
             "mime-db": {
-              "version": "1.21.0",
-              "from": "mime-db@>=1.21.0 <1.22.0",
-              "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.21.0.tgz"
+              "version": "1.22.0",
+              "from": "mime-db@>=1.22.0 <1.23.0",
+              "resolved": "https://registry.npmjs.org/mime-db/-/mime-db-1.22.0.tgz"
             }
           }
         },
@@ -777,9 +777,9 @@
               }
             },
             "is-my-json-valid": {
-              "version": "2.12.4",
+              "version": "2.13.0",
               "from": "is-my-json-valid@>=2.12.0 <3.0.0",
-              "resolved": "https://registry.npmjs.org/is-my-json-valid/-/is-my-json-valid-2.12.4.tgz",
+              "resolved": "https://registry.npmjs.org/is-my-json-valid/-/is-my-json-valid-2.13.0.tgz",
               "dependencies": {
                 "generate-function": {
                   "version": "2.0.0",
@@ -830,9 +830,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.10.1",
-      "from": "windshaft@1.10.1",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.10.1.tgz",
+      "version": "1.11.0",
+      "from": "windshaft@1.11.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.11.0.tgz",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb6",
