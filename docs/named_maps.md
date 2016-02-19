@@ -29,6 +29,7 @@ POST /api/v1/map/named
 Params | Description
 --- | ---
 api_key | is required
+MapConfig | a [Named Map MapConfig](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#named-map-layer-options) is required to create a Named Map
 
 #### template.json
 
@@ -352,7 +353,7 @@ curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
 }
 ```
 
-## Get Specific Templates
+## Get Specified Template Definition
 
 This gets the definition of a template.
 
@@ -448,26 +449,33 @@ callback({
 ```
 
 ## CartoDB.js for Named Maps
-Named Maps can be used with CartoDB.js, by specifying a Named Map in a layer source as follows.
+You can initialize your Named Map using CartoDB.js, by specifying a Named Map template in a [layer source object](http://docs.cartodb.com/cartodb-platform/cartodb-js/layer-source-object/#named-maps-layer-source-object-type-namedmap).
 
-```js
-var layerSource = {
-  user_name: '{your_user_name}',
-  type: 'namedmap',
+```javascript
+{
+  user_name: 'your_user_name', // Required
+  type: 'namedmap', // Required
   named_map: {
-    name: '{template_name}',
-	layers: [{
-	  layer_name: "layer1",
+    name: 'name_of_map', // Required
+    // Optional
+    layers: [{
+      layer_name: "sublayer0", // Optional
+      interactivity: "column1, column2, ..." // Optional
+    },
+    {
+      layer_name: "sublayer1",
       interactivity: "column1, column2, ..."
-	}]
+    },
+      ...
+    ],
+    // Optional
+    params: {
+      color: "hex_value",
+      num: 2
+    }
   }
 }
-
-cartodb.createLayer('map_dom_id',layerSource)
-  .addTo(map_object);
-
 ```
-
 **Note:** Instantiating a Named Map over a `createLayer` does not require an API Key and by default, does not include auth tokens. _If_ you defined auth tokens for the Named Map configuration, then you will have to include them.
 
 [CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js/) has methods for accessing your Named Maps.
