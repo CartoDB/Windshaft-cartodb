@@ -39,6 +39,22 @@ assert.imageBuffersAreSimilar = function(bufferA, bufferB, tolerance, callback) 
     imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };
 
+assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback) {
+    callback = callback || function(err) { assert.ifError(err); };
+
+    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
+
+    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
+
+    imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
+        if (err) {
+            var testImageFilePath = randomImagePath();
+            testImage.save(testImageFilePath);
+        }
+        callback(err);
+    });
+};
+
 function imagesAreSimilar(testImage, referenceImage, tolerance, callback) {
     if (testImage.width() !== referenceImage.width() || testImage.height() !== referenceImage.height()) {
         return callback(new Error('Images are not the same size'));
@@ -58,22 +74,6 @@ function imagesAreSimilar(testImage, referenceImage, tolerance, callback) {
         callback(null, similarity);
     }
 }
-
-assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback) {
-    callback = callback || function(err) { assert.ifError(err); };
-
-    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
-
-    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
-
-    imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
-        if (err) {
-            var testImageFilePath = randomImagePath();
-            testImage.save(testImageFilePath);
-        }
-        callback(err);
-    });
-};
 
 function randomImagePath() {
     return path.resolve('test/results/png/image-test-' + Date.now() + '.png');
