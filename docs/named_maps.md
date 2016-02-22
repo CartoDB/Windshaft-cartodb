@@ -33,7 +33,7 @@ MapConfig | a [Named Map MapConfig](http://docs.cartodb.com/cartodb-platform/map
 
 #### template.json
 
-The response back from the API provides the name of your MapConfig as a template, enabling you to create the Named Map details by inserting your variables into the template where placeholders are defined, and create custom queries using SQL. The `name` argument defines how to name this "template_name".json. Note that there are some requirements for how to name a Named Map template. See the [`name`](#arguments) argument description for details.
+The `name` argument defines how to name this "template_name".json. Note that there are some requirements for how to name a Named Map template. See the [`name`](#arguments) argument description for details.
 
 ```javascript
 {
@@ -156,6 +156,8 @@ curl -X POST \
 ```
 
 #### Response
+
+The response back from the API provides the name of your MapConfig as a template, enabling you to create the Named Map details by inserting your variables into the template where placeholders are defined, and create custom queries using SQL. 
 
 ```javascript
 {
