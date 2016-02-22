@@ -21,7 +21,7 @@ var assert = module.exports = exports = require('assert');
  * @param {function} callback Will call to home with null in case there is no error, otherwise with the error itself
  * @see FUZZY in http://www.imagemagick.org/script/command-line-options.php#metric
  */
-assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
+assert.imageBufferIsSimilarToFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
     callback = callback || function(err) { assert.ifError(err); };
 
     var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);

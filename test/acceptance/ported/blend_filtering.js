@@ -156,10 +156,12 @@ describe('blend layer filtering', function() {
 
         it('should filter on ' + layerFilter + '/1/0/0.png', function (done) {
             testClient.getTileLayer(mapConfig, tileRequest, function(err, res) {
-                assert.imageEqualsFile(res.body, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL, function(err) {
-                    assert.ok(!err);
-                    done();
-                });
+                assert.imageBufferIsSimilarToFile(res.body, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL,
+                    function(err) {
+                        assert.ok(!err);
+                        done();
+                    }
+                );
             });
         });
     });
