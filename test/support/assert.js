@@ -29,17 +29,17 @@ assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolera
     var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(buffer) ? buffer : new Buffer(buffer, 'binary'));
     var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
 
-    assert.imagesAreSimilar(testImage, referenceImage, tolerance, callback);
+    imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };
 
 assert.imageBuffersAreSimilar = function(bufferA, bufferB, tolerance, callback) {
     var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferA) ? bufferA : new Buffer(bufferA, 'binary'));
     var referenceImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferB) ? bufferB : new Buffer(bufferB, 'binary'));
 
-    assert.imagesAreSimilar(testImage, referenceImage, tolerance, callback);
+    imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };
 
-assert.imagesAreSimilar = function(testImage, referenceImage, tolerance, callback) {
+function imagesAreSimilar(testImage, referenceImage, tolerance, callback) {
     if (testImage.width() !== referenceImage.width() || testImage.height() !== referenceImage.height()) {
         return callback(new Error('Images are not the same size'));
     }
@@ -57,7 +57,7 @@ assert.imagesAreSimilar = function(testImage, referenceImage, tolerance, callbac
     } else {
         callback(null, similarity);
     }
-};
+}
 
 assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback) {
     callback = callback || function(err) { assert.ifError(err); };
@@ -66,7 +66,7 @@ assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath
 
     var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
 
-    assert.imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
+    imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
         if (err) {
             var testImageFilePath = randomImagePath();
             testImage.save(testImageFilePath);
