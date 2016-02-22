@@ -1,7 +1,6 @@
 // Cribbed from the ever prolific Konstantin Kaefer
 // https://github.com/mapbox/tilelive-mapnik/blob/master/test/support/assert.js
 
-var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
 var util = require('util');
@@ -51,37 +50,18 @@ function createImageFromBuffer(buffer, nameHint) {
 }
 
 function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance, callback) {
-    var resultFilePath = path.resolve(util.format('/tmp/windshaft-result-%s-diff.png', Date.now()));
-    var imageMagickCmd = util.format(
-        'compare -metric fuzz "%s" "%s" "%s"',
-        testImageFilePath, referenceImageFilePath, resultFilePath
-    );
+    testImageFilePath = path.resolve(testImageFilePath);
+    referenceImageFilePath = path.resolve(referenceImageFilePath);
 
-    exec(imageMagickCmd, function(err, stdout, stderr) {
+    var testImage = mapnik.Image.fromBytes(fs.readFileSync(testImageFilePath,  { encoding: null }));
+    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
+
+    assert.imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
         if (err) {
-            fs.unlinkSync(testImageFilePath);
-            callback(err);
-        } else {
-            stderr = stderr.trim();
-            var metrics = stderr.match(/([0-9]*) \((.*)\)/);
-            if ( ! metrics ) {
-                callback(new Error("No match for " + stderr));
-                return;
-            }
-            var similarity = parseFloat(metrics[2]),
-                tolerancePerMil = (tolerance / 1000);
-            if (similarity > tolerancePerMil) {
-                err = new Error(util.format(
-                        'Images %s and %s are not equal (got %d similarity, expected %d). Result %s',
-                        testImageFilePath, referenceImageFilePath, similarity, tolerancePerMil, resultFilePath)
-                );
-                err.similarity = similarity;
-                callback(err, similarity);
-            } else {
-                fs.unlinkSync(resultFilePath);
-                callback(null, similarity);
-            }
+            var testImageFilePath = randomImagePath();
+            testImage.save(testImageFilePath);
         }
+        callback(err);
     });
 }
 
