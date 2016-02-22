@@ -4,6 +4,8 @@
 
 Released 2016-mm-dd
 
+Bug fixes:
+ - Correct URLs for widgets in named maps #381
 
 
 ## 2.25.1
