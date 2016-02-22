@@ -257,7 +257,7 @@
           "dependencies": {
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@>=1.0.0 <1.1.0",
+              "from": "unpipe@1.0.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
@@ -724,14 +724,21 @@
               "resolved": "https://registry.npmjs.org/chalk/-/chalk-1.1.1.tgz",
               "dependencies": {
                 "ansi-styles": {
-                  "version": "2.1.0",
+                  "version": "2.2.0",
                   "from": "ansi-styles@>=2.1.0 <3.0.0",
-                  "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.1.0.tgz"
+                  "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.0.tgz",
+                  "dependencies": {
+                    "color-convert": {
+                      "version": "1.0.0",
+                      "from": "color-convert@>=1.0.0 <2.0.0",
+                      "resolved": "https://registry.npmjs.org/color-convert/-/color-convert-1.0.0.tgz"
+                    }
+                  }
                 },
                 "escape-string-regexp": {
-                  "version": "1.0.4",
+                  "version": "1.0.5",
                   "from": "escape-string-regexp@>=1.0.2 <2.0.0",
-                  "resolved": "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-1.0.4.tgz"
+                  "resolved": "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz"
                 },
                 "has-ansi": {
                   "version": "2.0.0",
@@ -746,9 +753,9 @@
                   }
                 },
                 "strip-ansi": {
-                  "version": "3.0.0",
+                  "version": "3.0.1",
                   "from": "strip-ansi@>=3.0.0 <4.0.0",
-                  "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.0.tgz",
+                  "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
                   "dependencies": {
                     "ansi-regex": {
                       "version": "2.0.0",
@@ -830,9 +837,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.11.0",
-      "from": "windshaft@1.11.0",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.11.0.tgz",
+      "version": "1.11.1",
+      "from": "windshaft@1.11.1",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.11.1.tgz",
       "dependencies": {
         "mapnik": {
           "version": "1.4.15-cdb6",
