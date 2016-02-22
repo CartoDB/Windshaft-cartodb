@@ -32,7 +32,7 @@ assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolera
     assert.imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };
 
-assert.imageBuffersAreEqual = function(bufferA, bufferB, tolerance, callback) {
+assert.imageBuffersAreSimilar = function(bufferA, bufferB, tolerance, callback) {
     var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferA) ? bufferA : new Buffer(bufferA, 'binary'));
     var referenceImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferB) ? bufferB : new Buffer(bufferB, 'binary'));
 
