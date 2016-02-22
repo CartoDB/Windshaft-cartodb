@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.25.2
+
+Released 2016-mm-dd
+
+
+
 ## 2.25.1
 
 Released 2016-02-22
