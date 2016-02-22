@@ -3,7 +3,7 @@ var _           = require('underscore');
 var redis       = require('redis');
 var step        = require('step');
 var strftime    = require('strftime');
-var QueryTables = require('node-cartodb-query-tables');
+var QueryTables = require('cartodb-query-tables');
 var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
 var redis_stats_db = 5;
 

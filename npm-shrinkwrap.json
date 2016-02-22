@@ -470,7 +470,7 @@
       "from": "lzma@>=1.3.7 <1.4.0",
       "resolved": "https://registry.npmjs.org/lzma/-/lzma-1.3.7.tgz"
     },
-    "node-cartodb-query-tables": {
+    "cartodb-query-tables": {
       "version": "0.1.0",
       "from": "https://github.com/CartoDB/node-cartodb-query-tables/tarball/master",
       "resolved": "https://github.com/CartoDB/node-cartodb-query-tables/tarball/master"

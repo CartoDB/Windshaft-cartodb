@@ -18,7 +18,7 @@ var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-var QueryTables = require('node-cartodb-query-tables');
+var QueryTables = require('cartodb-query-tables');
 
 ['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
 

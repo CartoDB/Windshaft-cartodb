@@ -7,7 +7,7 @@ var _ = require('underscore');
 var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
 
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
-var QueryTables = require('node-cartodb-query-tables');
+var QueryTables = require('cartodb-query-tables');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
