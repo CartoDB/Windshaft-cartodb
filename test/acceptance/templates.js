@@ -1477,7 +1477,7 @@ describe('template_api', function() {
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
           var expectedSurrogateKey = [
-            new QueryTables.DatabaseTableEntry([{dbname: 'test_windshaft_cartodb_user_1_db', schema_name: 'public',
+            new QueryTables.DatabaseTablesEntry([{dbname: 'test_windshaft_cartodb_user_1_db', schema_name: 'public',
                                    table_name: 'test_table_private_1'}]).key(),
               new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
           ].join(' ');
