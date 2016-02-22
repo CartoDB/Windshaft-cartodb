@@ -76,7 +76,7 @@ There are several resources for retrieving layergoup details, such as accessing 
 
 #### Mapnik tiles
 
-These tiles will access just the mapnik layers. To get individual layers, see the following section.
+These tiles will get just the Mapnik layers. To get individual layers, see the following section.
 
 ```bash
 https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
@@ -141,8 +141,8 @@ https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/
 Some notes about filtering:
 
   - Invalid index values or out of bounds indexes will end in `Invalid layer filtering` errors.
-  - Once a mapnik layer is selected, all mapnik layers will get blended. As this may change in the future **it is
-  recommended** to always select all mapnik layers if you want to select at least one so you will get a consistent
+  - Once a Mapnik layer is selected, all Mapnik layers will get blended. As this may change in the future **it is
+  recommended** to always select all Mapnik layers if you want to select at least one so you will get a consistent
   behavior in the future.
   - Ordering is not considered. So right now filtering layers 0,3,4 is the very same thing as filtering 3,4,0. As this
   may change in the future **it is recommended** to always select the layers in ascending order so you will get a
@@ -163,7 +163,7 @@ GET /api/v1/map?callback=method
 
 Param | Description
 --- | ---
-config | Encoded JSON with the params for creating Named maps (the variables defined in the template).
+config | Encoded JSON with the params for creating Named Maps (the variables defined in the template).
 lmza | This attribute contains the same as config but LZMA compressed. It cannot be used at the same time as `config`.
 callback | JSON callback name.
 
