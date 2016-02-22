@@ -7,6 +7,7 @@ var _ = require('underscore');
 var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
 
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
+var QueryTables = require('node-cartodb-query-tables');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
@@ -309,6 +310,7 @@ describe('tests from old api translated to multilayer', function() {
 
     it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
 
+
         var runQueryFn = PgQueryRunner.prototype.run;
         PgQueryRunner.prototype.run = function(username, query, callback) {
             return callback(new Error('fake error message'), []);
@@ -343,6 +345,7 @@ describe('tests from old api translated to multilayer', function() {
     });
 
     it("tile requests works when postgresql queries fail to figure affected tables in query",  function(done) {
+
         var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
         assert.response(server,
             {
@@ -360,9 +363,11 @@ describe('tests from old api translated to multilayer', function() {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
-                var runQueryFn = PgQueryRunner.prototype.run;
-                PgQueryRunner.prototype.run = function(username, query, callback) {
-                    return callback(new Error('failed to query database for affected tables'), []);
+                var affectedFn = QueryTables.getAffectedTablesFromQuery;
+                QueryTables.getAffectedTablesFromQuery = function(sql, username, query, callback) {
+                    affectedFn({query: function(query, callback) {
+                        return callback(new Error('fake error message'), []);
+                    }}, username, query, callback);
                 };
 
                 // reset internal cacheChannel cache
@@ -387,7 +392,7 @@ describe('tests from old api translated to multilayer', function() {
                     },
                     function(res) {
                         assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-                        PgQueryRunner.prototype.run = runQueryFn;
+                        QueryTables.getAffectedTablesFromQuery = affectedFn;
                         done();
                     }
                 );

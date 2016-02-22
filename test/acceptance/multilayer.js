@@ -18,7 +18,7 @@ var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-var TablesCacheEntry = require('../../lib/cartodb/cache/model/database_tables_entry');
+var QueryTables = require('node-cartodb-query-tables');
 
 ['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
 
@@ -262,7 +262,7 @@ describe(suiteName, function() {
           var parsedBody = JSON.parse(res.body);
           expected_token = parsedBody.layergroupid.split(':')[0];
           helper.checkCache(res);
-          helper.checkSurrogateKey(res, new TablesCacheEntry([
+          helper.checkSurrogateKey(res, new QueryTables.DatabaseTablesEntry([
             {dbname: "test_windshaft_cartodb_user_1_db", table_name: "test_table", schema_name: "public"},
             {dbname: "test_windshaft_cartodb_user_1_db", table_name: "test_table_2", schema_name: "public"},
           ]).key().join(' '));
