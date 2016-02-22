@@ -87,7 +87,7 @@ describe('raster', function() {
           assert.equal(res.statusCode, 200, res.body);
           assert.deepEqual(res.headers['content-type'], "image/png");
           var next = this;
-          assert.imageEqualsFile(res.body,
+          assert.imageBufferIsSimilarToFile(res.body,
             './test/fixtures/raster_gray_rect.png',
             IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
               try {

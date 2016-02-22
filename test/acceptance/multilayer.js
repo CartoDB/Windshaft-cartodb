@@ -122,7 +122,7 @@ describe(suiteName, function() {
                       ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
               }
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png',
+              assert.imageBufferIsSimilarToFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png',
                   IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
                       next(err);
                   }
@@ -404,7 +404,8 @@ describe(suiteName, function() {
                       ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
               }
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
+              var referenceImagePath = 'test/fixtures/test_multilayer_bbox.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err/*, similarity*/) {
                   next(err);
               });
@@ -443,7 +444,8 @@ describe(suiteName, function() {
                       ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
               }
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
+              var referenceImagePath = 'test/fixtures/test_multilayer_bbox.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err/*, similarity*/) {
                   next(err);
               });
@@ -1019,7 +1021,7 @@ describe(suiteName, function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png',
+              assert.imageBufferIsSimilarToFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png',
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
                       next(err);
                   }
