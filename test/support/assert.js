@@ -75,9 +75,8 @@ assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath
     });
 };
 
-function randomImagePath(nameHint) {
-    nameHint = nameHint || 'test';
-    return path.resolve('test/results/png/image-' + nameHint + '-' + Date.now() + '.png');
+function randomImagePath() {
+    return path.resolve('test/results/png/image-test-' + Date.now() + '.png');
 }
 
 // jshint maxcomplexity:9
