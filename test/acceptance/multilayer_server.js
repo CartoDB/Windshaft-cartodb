@@ -310,7 +310,6 @@ describe('tests from old api translated to multilayer', function() {
 
     it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
 
-
         var runQueryFn = PgQueryRunner.prototype.run;
         PgQueryRunner.prototype.run = function(username, query, callback) {
             return callback(new Error('fake error message'), []);
@@ -345,7 +344,6 @@ describe('tests from old api translated to multilayer', function() {
     });
 
     it("tile requests works when postgresql queries fail to figure affected tables in query",  function(done) {
-
         var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
         assert.response(server,
             {
