@@ -461,6 +461,9 @@ cartodb.createLayer('map_dom_id',layerSource)
 [CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js/) has methods for accessing your named maps.
 
 1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
+
+    **Note:** The CartoDB.js `layer.setParams()` function is not supported when using Named maps for Torque.
+
 2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
 
 ### Complete Examples of Named Maps created with CartoDB.js
