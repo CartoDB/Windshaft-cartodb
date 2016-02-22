@@ -12,7 +12,7 @@ var request = require('request');
 var assert = module.exports = exports = require('assert');
 
 /**
- * Takes an image data as an input and an image path and compare them using ImageMagick fuzz algorithm, if case the
+ * Takes an image data as an input and an image path and compare them using mapnik.Image.compare mechanism, in case the
  * similarity is not within the tolerance limit it will callback with an error.
  *
  * @param buffer The image data to compare from
