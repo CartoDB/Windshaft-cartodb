@@ -23,47 +23,21 @@ var assert = module.exports = exports = require('assert');
  */
 assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
     callback = callback || function(err) { assert.ifError(err); };
-    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath),
-        testImageFilePath = createImageFromBuffer(buffer, 'test');
 
-    imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance, function(err) {
-        fs.unlinkSync(testImageFilePath);
-        callback(err);
-    });
+    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
+
+    var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(buffer) ? buffer : new Buffer(buffer, 'binary'));
+    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
+
+    assert.imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };
 
 assert.imageBuffersAreEqual = function(bufferA, bufferB, tolerance, callback) {
-    var randStr = (Math.random() * 1e16).toString().substring(0, 8);
-    var imageFilePathA = createImageFromBuffer(bufferA, randStr + '-a'),
-        imageFilePathB = createImageFromBuffer(bufferB, randStr + '-b');
+    var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferA) ? bufferA : new Buffer(bufferA, 'binary'));
+    var referenceImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferB) ? bufferB : new Buffer(bufferB, 'binary'));
 
-    imageFilesAreEqual(imageFilePathA, imageFilePathB, tolerance, function(err, similarity) {
-        callback(err, [imageFilePathA, imageFilePathB], similarity);
-    });
+    assert.imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };
-
-function createImageFromBuffer(buffer, nameHint) {
-    var imageFilePath = path.resolve('test/results/png/image-' + nameHint + '-' + Date.now() + '.png');
-    var err = fs.writeFileSync(imageFilePath, buffer, 'binary');
-    assert.ifError(err);
-    return imageFilePath;
-}
-
-function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance, callback) {
-    testImageFilePath = path.resolve(testImageFilePath);
-    referenceImageFilePath = path.resolve(referenceImageFilePath);
-
-    var testImage = mapnik.Image.fromBytes(fs.readFileSync(testImageFilePath,  { encoding: null }));
-    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
-
-    assert.imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
-        if (err) {
-            var testImageFilePath = randomImagePath();
-            testImage.save(testImageFilePath);
-        }
-        callback(err);
-    });
-}
 
 assert.imagesAreSimilar = function(testImage, referenceImage, tolerance, callback) {
     if (testImage.width() !== referenceImage.width() || testImage.height() !== referenceImage.height()) {
