@@ -37,6 +37,13 @@ describe('named-maps widgets', function() {
                             cartocss: '#layer { marker-fill: blue; }',
                             cartocss_version: '2.3.0',
                             widgets: {
+                                pop_max_formula_sum: {
+                                    type: 'formula',
+                                    options: {
+                                        column: 'pop_max',
+                                        operation: 'sum'
+                                    }
+                                },
                                 country_places_count: {
                                     type: 'aggregation',
                                     options: {
@@ -212,8 +219,8 @@ describe('named-maps widgets', function() {
         });
 
         widgetsQueue.awaitAll(function(err, results) {
-            console.log(err, results);
-            done();
+            assert.equal(results.length, 3);
+            done(err);
         });
     });
 
