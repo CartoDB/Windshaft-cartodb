@@ -107,10 +107,12 @@ describe('wrap x coordinate', function() {
             var fixtureZxy = [testScenario.fixture.z, testScenario.fixture.x, testScenario.fixture.y];
             it('tile all/' + zxy.join('/') + '.png', function (done) {
                 testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res) {
-                    assert.imageEqualsFile(res.body, blendPngFixture(fixtureZxy), IMG_TOLERANCE_PER_MIL, function(err) {
-                        assert.ok(!err);
-                        done();
-                    });
+                    assert.imageBufferIsSimilarToFile(res.body, blendPngFixture(fixtureZxy), IMG_TOLERANCE_PER_MIL,
+                        function(err) {
+                            assert.ok(!err);
+                            done();
+                        }
+                    );
                 });
             });
         });

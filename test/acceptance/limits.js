@@ -292,7 +292,8 @@ describe('render limits', function() {
                                 if (err) {
                                     done(err);
                                 }
-                                assert.imageEqualsFile(res.body, './test/fixtures/render-timeout-fallback.png', 25,
+                                var referenceImagePath = './test/fixtures/render-timeout-fallback.png';
+                                assert.imageBufferIsSimilarToFile(res.body, referenceImagePath, 25,
                                     function(imgErr/*, similarity*/) {
                                         done(imgErr);
                                     }

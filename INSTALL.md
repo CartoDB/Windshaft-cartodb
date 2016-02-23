@@ -16,10 +16,6 @@ Make sure that you have the requirements needed. These are
   - CartoDB 0.9.5+ (for `CDB_QueryTables`)
   - Varnish (http://www.varnish-cache.org)
 
-- For running the testsuite
-  - ImageMagick (http://www.imagemagick.org)
-
-
 On Ubuntu 14.04 the dependencies can be installed with
 
 ```shell

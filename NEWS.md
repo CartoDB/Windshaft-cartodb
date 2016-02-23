@@ -1,9 +1,14 @@
 # Changelog
 
+## 2.25.3
+
+
 ## 2.25.2
 
-Released 2016-mm-dd
+Released 2016-02-22
 
+Bug fixes:
+ - Correct URLs for widgets in named maps #381
 
 
 ## 2.25.1

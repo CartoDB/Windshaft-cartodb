@@ -34,7 +34,9 @@ describe('server_gettile', function() {
             if (err) {
                 return done(err);
             }
-            assert.imageEqualsFile(res.body, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
+            assert.imageBufferIsSimilarToFile(
+                res.body, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done
+            );
         };
     }
 
@@ -113,12 +115,13 @@ describe('server_gettile', function() {
                 assert.ok(res.headers.hasOwnProperty('x-windshaft-cache'), "Did not hit renderer cache on second time");
                 assert.ok(res.headers['x-windshaft-cache'] >= 0);
 
-                assert.imageEqualsFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-
-                    finish(function(finishErr) {
-                        done(err || finishErr);
-                    });
-                });
+                assert.imageBufferIsSimilarToFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL,
+                    function(err) {
+                        finish(function(finishErr) {
+                            done(err || finishErr);
+                        });
+                    }
+                );
             });
         });
     });

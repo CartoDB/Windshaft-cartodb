@@ -1,6 +1,9 @@
 var assert = require('../../support/assert');
 var step = require('step');
 
+var url = require('url');
+var queue = require('queue-async');
+
 var helper = require('../../support/test_helper');
 
 var CartodbWindshaft = require('../../../lib/cartodb/server');
@@ -15,6 +18,7 @@ describe('named-maps widgets', function() {
     var widgetsTemplateName = 'widgets-template';
 
     var layergroupid;
+    var layergroup;
     var keysToDelete;
 
     beforeEach(function(done) {
@@ -33,6 +37,13 @@ describe('named-maps widgets', function() {
                             cartocss: '#layer { marker-fill: blue; }',
                             cartocss_version: '2.3.0',
                             widgets: {
+                                pop_max_formula_sum: {
+                                    type: 'formula',
+                                    options: {
+                                        column: 'pop_max',
+                                        operation: 'sum'
+                                    }
+                                },
                                 country_places_count: {
                                     type: 'aggregation',
                                     options: {
@@ -105,12 +116,11 @@ describe('named-maps widgets', function() {
             function fetchTile(err, res) {
                 assert.ifError(err);
 
-                var parsed = JSON.parse(res.body);
-                assert.ok(
-                    parsed.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from response body: " + res.body);
-                layergroupid = parsed.layergroupid;
+                layergroup = JSON.parse(res.body);
+                assert.ok(layergroup.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from: " + res.body);
+                layergroupid = layergroup.layergroupid;
 
-                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['map_cfg|' + LayergroupToken.parse(layergroup.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 return done();
@@ -170,6 +180,49 @@ describe('named-maps widgets', function() {
             }
         );
     }
+
+    it('should be able to retrieve widgets from all URLs', function(done) {
+        var widgetsPaths = layergroup.metadata.layers.reduce(function(paths, layer) {
+            var widgets = layer.widgets || {};
+            Object.keys(widgets).forEach(function(widget) {
+                paths.push(url.parse(widgets[widget].url.http).path);
+            });
+
+            return paths;
+        }, []);
+
+        var widgetsQueue = queue(widgetsPaths.length);
+
+        widgetsPaths.forEach(function(path) {
+            widgetsQueue.defer(function(path, done) {
+                assert.response(
+                    server,
+                    {
+                        url: path,
+                        method: 'GET',
+                        headers: {
+                            host: username
+                        }
+                    },
+                    {
+                        status: 200
+                    },
+                    function(res, err) {
+                        if (err) {
+                            return done(err);
+                        }
+                        var parsedBody = JSON.parse(res.body);
+                        return done(null, parsedBody);
+                    }
+                );
+            }, path);
+        });
+
+        widgetsQueue.awaitAll(function(err, results) {
+            assert.equal(results.length, 3);
+            done(err);
+        });
+    });
 
 
     it("should retrieve aggregation", function(done) {
