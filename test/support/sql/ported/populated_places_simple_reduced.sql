@@ -7385,3 +7385,8 @@ GRANT ALL ON TABLE populated_places_simple_reduced TO :TESTUSER;
 GRANT SELECT ON TABLE populated_places_simple_reduced TO :PUBLICUSER;
 
 VACUUM ANALYZE populated_places_simple_reduced;
+
+create table populated_places_simple_reduced_private AS
+select * from populated_places_simple_reduced;
+
+GRANT ALL ON TABLE populated_places_simple_reduced_private TO :TESTUSER;

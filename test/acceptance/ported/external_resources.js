@@ -57,7 +57,8 @@ describe('external resources', function() {
             if (err) {
                 return done(err);
             }
-            assert.imageEqualsFile(res.body, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
+            var referenceImagePath = './test/fixtures/' + fixture;
+            assert.imageBufferIsSimilarToFile(res.body, referenceImagePath, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         };
     }
 

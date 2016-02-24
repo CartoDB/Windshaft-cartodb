@@ -74,6 +74,14 @@ function checkSurrogateKey(res, expectedKey) {
     assert.deepEqual(keys, expectedKeys);
 }
 
+var redisClient;
+
+beforeEach(function() {
+    if (!redisClient) {
+        redisClient = redis.createClient(global.environment.redis.port);
+    }
+});
+
 //global afterEach to capture test suites that leave keys in redis
 afterEach(function(done) {
 
@@ -110,7 +118,6 @@ afterEach(function(done) {
     }
 
     Object.keys(databasesTasks).forEach(function(db) {
-        var redisClient = redis.createClient(global.environment.redis.port);
         redisClient.select(db, function() {
             // Check that we start with an empty redis db
             redisClient.keys("*", function(err, keys) {
@@ -137,6 +144,7 @@ function deleteRedisKeys(keysToDelete, callback) {
         var redisClient = redis.createClient(global.environment.redis.port);
         redisClient.select(keysToDelete[k], function() {
             redisClient.del(k, function(err, deletedKeysCount) {
+                redisClient.quit();
                 assert.notStrictEqual(deletedKeysCount, 0, 'No KEYS deleted for: [db=' + keysToDelete[k] + ']' + k);
                 taskDone(k);
             });

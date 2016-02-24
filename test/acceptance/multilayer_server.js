@@ -70,8 +70,7 @@ describe('tests from old api translated to multilayer', function() {
             },
             function(res) {
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.errors[0].match(/^style0/));
-                assert.ok(parsed.errors[0].match(/missing closing/));
+                assert.ok(parsed.errors[0].match(/<css input>:1:1: Unclosed block/));
                 done();
             }
         );

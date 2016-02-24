@@ -30,7 +30,8 @@ describe('overviews_queries', function() {
             if (err) {
                 return done(err);
             }
-            assert.imageEqualsFile(tile.body, './test/fixtures/' + fixture, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
+            var referenceImagePath = './test/fixtures/' + fixture;
+            assert.imageBufferIsSimilarToFile(tile.body, referenceImagePath, IMAGE_EQUALS_TOLERANCE_PER_MIL, done);
         };
     }
 
