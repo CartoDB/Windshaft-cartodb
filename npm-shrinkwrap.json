@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.26.1",
+  "version": "2.26.2",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -85,7 +85,7 @@
             },
             "mime-types": {
               "version": "2.1.10",
-              "from": "mime-types@>=2.1.2 <2.2.0",
+              "from": "mime-types@>=2.1.9 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {
@@ -595,7 +595,7 @@
           "dependencies": {
             "mime-types": {
               "version": "2.1.10",
-              "from": "mime-types@>=2.1.9 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {
@@ -784,7 +784,7 @@
             },
             "mime-types": {
               "version": "2.1.10",
-              "from": "mime-types@>=2.1.9 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {
@@ -999,7 +999,7 @@
         },
         "mime-types": {
           "version": "2.1.10",
-          "from": "mime-types@>=2.1.2 <2.2.0",
+          "from": "mime-types@>=2.1.9 <2.2.0",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
           "dependencies": {
             "mime-db": {
@@ -1239,9 +1239,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.13.0",
-      "from": "windshaft@1.13.0",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.13.0.tgz",
+      "version": "1.13.1",
+      "from": "windshaft@1.13.1",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.13.1.tgz",
       "dependencies": {
         "abaculus": {
           "version": "1.1.0-cdb4",
