@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.26.2",
+  "version": "2.26.3",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -987,7 +987,7 @@
           "dependencies": {
             "async": {
               "version": "1.5.2",
-              "from": "async@>=1.4.0 <2.0.0",
+              "from": "async@>=1.0.0 <2.0.0",
               "resolved": "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
             }
           }
@@ -1239,9 +1239,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.13.1",
-      "from": "windshaft@1.13.1",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.13.1.tgz",
+      "version": "1.13.2",
+      "from": "windshaft@1.13.2",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.13.2.tgz",
       "dependencies": {
         "abaculus": {
           "version": "1.1.0-cdb4",
@@ -4562,9 +4562,9 @@
                           "resolved": "https://registry.npmjs.org/jsbn/-/jsbn-0.1.0.tgz"
                         },
                         "tweetnacl": {
-                          "version": "0.14.0",
+                          "version": "0.14.1",
                           "from": "tweetnacl@>=0.13.0 <1.0.0",
-                          "resolved": "https://registry.npmjs.org/tweetnacl/-/tweetnacl-0.14.0.tgz"
+                          "resolved": "https://registry.npmjs.org/tweetnacl/-/tweetnacl-0.14.1.tgz"
                         },
                         "jodid25519": {
                           "version": "1.0.2",
