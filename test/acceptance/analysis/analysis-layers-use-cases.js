@@ -563,7 +563,8 @@ describe('analysis-layers use cases', function() {
         {
             skip: true,
             desc: 'III. Point in polygon',
-            mapConfig: mapConfig([
+            mapConfig: mapConfig(
+                [
                     {
                         type: 'cartodb',
                         options: {
