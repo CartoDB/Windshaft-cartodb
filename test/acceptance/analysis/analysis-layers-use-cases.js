@@ -482,7 +482,7 @@ describe('analysis-layers use cases', function() {
                 {
                     type: 'cartodb',
                     options: {
-                        "source": { id: "b2" },
+                        "source": { id: "a2" },
                         "cartocss": [
                             "#count_in_polygon {",
                             "  polygon-opacity: 1.0",
@@ -498,7 +498,7 @@ describe('analysis-layers use cases', function() {
                 {
                     type: 'cartodb',
                     options: {
-                        "source": { id: "b0" },
+                        "source": { id: "a0" },
                         "cartocss": DEFAULT_MULTITYPE_STYLE,
                         "cartocss_version": "2.3.0"
                     }
@@ -506,21 +506,21 @@ describe('analysis-layers use cases', function() {
             ],
             [
                 {
-                    id: 'b3',
+                    id: 'a3',
                     type: 'union',
                     params: {
                         join_on: 'cartodb_id',
                         source: {
-                            id: 'b2',
+                            id: 'a2',
                             type: 'estimated-population',
                             params: {
                                 columnName: 'estimated_people',
                                 source: {
-                                    id: 'b1',
+                                    id: 'a1',
                                     type: 'trade-area',
                                     params: {
                                         source: {
-                                            "id": "b0",
+                                            "id": "a0",
                                             "type": "source",
                                             "params": {
                                                 query: "select * from subway_stops"
