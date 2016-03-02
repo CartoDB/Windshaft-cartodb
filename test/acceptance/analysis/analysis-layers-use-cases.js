@@ -591,7 +591,7 @@ describe('analysis-layers use cases', function() {
                                 "id": 'a0',
                                 "type": "source",
                                 "params": {
-                                    query: "select the_geom, age, gender, income from analysis_rent_listings"
+                                    query: "select the_geom, age, gender, income from people"
                                 },
                                 dataviews: {
                                     age_histogram: {
