@@ -554,7 +554,7 @@ describe('analysis-layers use cases', function() {
                         total_population_formula: {
                             type: 'formula',
                             options: {
-                                column: 'estimated_people',
+                                column: 'total_population',
                                 operation: 'sum'
                             }
                         }
