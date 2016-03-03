@@ -524,7 +524,9 @@ describe('analysis-layers use cases', function() {
                                             "params": {
                                                 query: "select * from subway_stops"
                                             }
-                                        }
+                                        },
+                                        kind: 'walk',
+                                        time: 300
                                     },
                                     dataviews: {
                                         subway_line_category: {
