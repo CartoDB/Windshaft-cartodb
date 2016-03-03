@@ -334,7 +334,7 @@ describe('tests from old api translated to multilayer', function() {
 
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed, {
-                    errors: ["could not get overviews metadata: fake error message"]
+                    errors: ["fake error message"]
                 });
 
                 done();
