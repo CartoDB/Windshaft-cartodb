@@ -1,8 +1,16 @@
 # Changelog
 
-## 2.26.3
+## 2.26.4
 
 Released 2016-mm-dd
+
+
+## 2.26.3
+
+Released 2016-03-03
+
+Improvements:
+ - Optimize overviews queries for efficient spatial filtering in PostgreSQL
 
 
 ## 2.26.2
