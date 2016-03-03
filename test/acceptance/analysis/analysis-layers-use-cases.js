@@ -507,9 +507,8 @@ describe('analysis-layers use cases', function() {
             [
                 {
                     id: 'a3',
-                    type: 'union',
+                    type: 'total-population',
                     params: {
-                        join_on: 'cartodb_id',
                         source: {
                             id: 'a2',
                             type: 'estimated-population',
