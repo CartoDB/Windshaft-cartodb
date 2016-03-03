@@ -507,8 +507,10 @@ describe('analysis-layers use cases', function() {
             [
                 {
                     id: 'a3',
+                    // this will union the polygons, produce just one polygon, and calculate the total population for it
                     type: 'total-population',
                     params: {
+                        columnName: 'total_population',
                         source: {
                             id: 'a2',
                             type: 'estimated-population',
