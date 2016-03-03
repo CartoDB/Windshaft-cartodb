@@ -11,6 +11,9 @@ addons:
     - libjpeg8-dev
     - libgif-dev
 
+services:
+  - postgresql
+
 before_install:
   - npm install -g npm@2
   - createdb template_postgis
