@@ -41,10 +41,11 @@ describe('analysis-layers use cases', function() {
         });
     }
 
-    function mapConfig(layers, analysis) {
+    function mapConfig(layers, dataviews, analysis) {
         return {
             version: '1.5.0',
             layers: layers,
+            dataviews: dataviews || {},
             analysis: analysis || []
         };
     }
@@ -370,6 +371,7 @@ describe('analysis-layers use cases', function() {
             skip: true,
             desc: 'I. Distribution centers',
             mapConfig: mapConfig(
+                // layers
                 [
                     {
                         type: 'cartodb',
@@ -426,6 +428,31 @@ describe('analysis-layers use cases', function() {
                         }
                     }
                 ],
+                // dataviews
+                {
+                    distribution_center_name_category: {
+                        source: { id: 'b0' },
+                        type: 'aggregation',
+                        options: {
+                            column: 'name'
+                        }
+                    },
+                    time_histogram: {
+                        source: { id: 'a1' },
+                        type: 'histogram',
+                        options: {
+                            column: 'routing_time'
+                        }
+                    },
+                    distance_histogram: {
+                        source: { id: 'a1' },
+                        type: 'histogram',
+                        options: {
+                            column: 'routing_distance'
+                        }
+                    }
+                },
+                // analysis
                 [
                     {
                         id: 'a1',
@@ -438,14 +465,6 @@ describe('analysis-layers use cases', function() {
                                 type: 'source',
                                 params: {
                                     query: 'select * from distribution_centers'
-                                },
-                                dataviews: {
-                                    distribution_center_name_category: {
-                                        type: 'aggregation',
-                                        options: {
-                                            column: 'name'
-                                        }
-                                    }
                                 }
                             },
                             destinationSource: {
@@ -453,20 +472,6 @@ describe('analysis-layers use cases', function() {
                                 type: 'source',
                                 params: {
                                     query: 'select * from shops'
-                                }
-                            }
-                        },
-                        dataviews: {
-                            time_histogram: {
-                                type: 'histogram',
-                                options: {
-                                    column: 'routing_time'
-                                }
-                            },
-                            distance_histogram: {
-                                type: 'histogram',
-                                options: {
-                                    column: 'routing_distance'
                                 }
                             }
                         }
@@ -478,7 +483,9 @@ describe('analysis-layers use cases', function() {
         {
             skip: true,
             desc: 'II. Population analysis',
-            mapConfig: mapConfig([
+            mapConfig: mapConfig(
+            // layers
+            [
                 {
                     type: 'cartodb',
                     options: {
@@ -504,6 +511,32 @@ describe('analysis-layers use cases', function() {
                     }
                 }
             ],
+            // dataviews
+            {
+                total_population_formula: {
+                    "source": { id: "a3" },
+                    type: 'formula',
+                    options: {
+                        column: 'total_population',
+                        operation: 'sum'
+                    }
+                },
+                people_histogram: { // this injects a range filter at `a2` node output
+                    "source": { id: "a2" },
+                    type: 'histogram',
+                    options: {
+                        column: 'estimated_people'
+                    }
+                },
+                subway_line_category: { // this injects a category filter at `a0` node output
+                    "source": { id: "a0" },
+                    type: 'aggregation',
+                    options: {
+                        column: 'subway_line'
+                    }
+                }
+            },
+            // analysis
             [
                 {
                     id: 'a3',
@@ -529,33 +562,8 @@ describe('analysis-layers use cases', function() {
                                         },
                                         kind: 'walk',
                                         time: 300
-                                    },
-                                    dataviews: {
-                                        subway_line_category: {
-                                            type: 'aggregation',
-                                            options: {
-                                                column: 'subway_line'
-                                            }
-                                        }
                                     }
                                 }
-                            },
-                            dataviews: {
-                                people_histogram: {
-                                    type: 'histogram',
-                                    options: {
-                                        column: 'estimated_people'
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    dataviews: {
-                        total_population_formula: {
-                            type: 'formula',
-                            options: {
-                                column: 'total_population',
-                                operation: 'sum'
                             }
                         }
                     }
@@ -567,6 +575,7 @@ describe('analysis-layers use cases', function() {
             skip: true,
             desc: 'III. Point in polygon',
             mapConfig: mapConfig(
+                // layers
                 [
                     {
                         type: 'cartodb',
@@ -585,6 +594,31 @@ describe('analysis-layers use cases', function() {
                         }
                     }
                 ],
+                // dataviews
+                {
+                    age_histogram: {
+                        "source": { id: "a0" },
+                        type: 'histogram',
+                        options: {
+                            column: 'age'
+                        }
+                    },
+                    income_histogram: {
+                        "source": { id: "a0" },
+                        type: 'histogram',
+                        options: {
+                            column: 'income'
+                        }
+                    },
+                    gender_category: {
+                        "source": { id: "a0" },
+                        type: 'aggregation',
+                        options: {
+                            column: 'gender'
+                        }
+                    }
+                },
+                // analysis
                 [
                     {
                         "id": "a1",
@@ -596,26 +630,6 @@ describe('analysis-layers use cases', function() {
                                 "type": "source",
                                 "params": {
                                     query: "select the_geom, age, gender, income from people"
-                                },
-                                dataviews: {
-                                    age_histogram: {
-                                        type: 'histogram',
-                                        options: {
-                                            column: 'age'
-                                        }
-                                    },
-                                    income_histogram: {
-                                        type: 'histogram',
-                                        options: {
-                                            column: 'income'
-                                        }
-                                    },
-                                    gender_category: {
-                                        type: 'aggregation',
-                                        options: {
-                                            column: 'gender'
-                                        }
-                                    }
                                 }
                             },
                             "polygonsSource": {
