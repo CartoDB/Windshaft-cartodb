@@ -10,7 +10,7 @@ var PgConnection = require('../../lib/cartodb/backends/pg_connection');
 var QueryTables = require('cartodb-query-tables');
 
 
-describe('QueryTablesApi', function() {
+describe('QueryTables', function() {
 
     var connection;
 
