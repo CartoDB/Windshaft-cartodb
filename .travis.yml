@@ -1,9 +1,10 @@
-sudo: required
+sudo: false
 
 addons:
   postgresql: "9.4"
   apt:
     packages:
+    - postgresql-9.4
     - postgresql-plpython-9.4
     - pkg-config
     - libcairo2-dev
