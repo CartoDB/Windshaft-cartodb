@@ -57,15 +57,15 @@ describe('Overviews query rewriter', function() {
         }
     };
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
+
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
             SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
             SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 0\
-          )\
-        SELECT * FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -83,13 +83,12 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT * FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -110,8 +109,8 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM  (\
             SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
             SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
@@ -121,8 +120,7 @@ describe('Overviews query rewriter', function() {
             SELECT * FROM table1_ov3, _vovw_scale WHERE _vovw_z = 3\
             UNION ALL\
             SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 3\
-          )\
-        SELECT * FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -142,8 +140,8 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
             SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
             SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
@@ -151,8 +149,7 @@ describe('Overviews query rewriter', function() {
             SELECT * FROM table1_ov6, _vovw_scale WHERE _vovw_z > 1 AND _vovw_z <= 6\
             UNION ALL\
             SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 6\
-          )\
-        SELECT * FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -170,13 +167,12 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
             SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT * FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -194,13 +190,12 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
             SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT * FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
 
     assertSameSql(overviews_sql, expected_sql);
@@ -219,13 +214,12 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          \"_vovw_table 1\" AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
             SELECT * FROM public.\"table 1_ov2\", _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM public.\"table 1\", _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT * FROM \"_vovw_table 1\"\
+          ) AS \"_vovw_table 1\"\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -243,13 +237,12 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
             SELECT * FROM \"user-1\".table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM \"user-1\".table1, _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT * FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -269,13 +262,12 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          \"_vovw_table 1\" AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
             SELECT * FROM \"user-1\".\"table 1_ov2\", _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM \"user-1\".\"table 1\", _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT * FROM \"_vovw_table 1\"\
+          ) AS \"_vovw_table 1\"\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -294,44 +286,19 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT column1, column2, column3 FROM (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT column1, column2, column3 FROM _vovw_table1\
-    ";
-    assertSameSql(overviews_sql, expected_sql);
-    done();
-  });
-
-  it('generates query using overviews for queries with selected columns and all columns', function(done){
-    var sql = "SELECT table1.*, column1, column2, column3 FROM table1";
-    var data = {
-        overviews: {
-            table1: {
-              2: { table: 'table1_ov2' }
-            }
-        }
-    };
-    var overviews_sql = overviewsQueryRewriter.query(sql, data);
-    var expected_sql = "\
-        WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
-            SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-            UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT _vovw_table1.*, column1, column2, column3 FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
   });
 
   it('generates query using overviews for queries with a semicolon', function(done){
-    var sql = "SELECT table1.*, column1, column2, column3 FROM table1;";
+    var sql = "SELECT column1, column2, column3 FROM table1;";
     var data = {
         overviews: {
             table1: {
@@ -340,22 +307,22 @@ describe('Overviews query rewriter', function() {
         }
     };
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
+
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT column1, column2, column3 FROM (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT _vovw_table1.*, column1, column2, column3 FROM _vovw_table1;\
+          ) AS _vovw_table1;\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
   });
 
   it('generates query using overviews for queries with extra whitespace', function(done){
-    var sql = "  SELECT  table1.* , column1,column2,  column3 FROM  table1  ";
+    var sql = "  SELECT  column1,column2,  column3 FROM  table1  ";
     var data = {
         overviews: {
             table1: {
@@ -366,13 +333,12 @@ describe('Overviews query rewriter', function() {
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     var expected_sql = "\
         WITH\
-          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z ),\
-          _vovw_table1 AS (\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT column1,column2, column3 FROM (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
             SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-          )\
-        SELECT _vovw_table1.* , column1,column2, column3 FROM _vovw_table1\
+          ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
     done();
@@ -419,6 +385,10 @@ describe('Overviews query rewriter', function() {
                JOIN areas ON ST_Intersects(table1.the_geom, areas.the_geom) \
                WHERE areas.name='A' \
           ";
+    overviews_sql = overviewsQueryRewriter.query(sql, data);
+    assert.equal(overviews_sql, sql);
+
+    sql = "SELECT table1.*, column1, column2, column3 FROM table1";
     overviews_sql = overviewsQueryRewriter.query(sql, data);
     assert.equal(overviews_sql, sql);
 
