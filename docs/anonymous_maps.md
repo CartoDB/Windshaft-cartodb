@@ -72,7 +72,7 @@ curl 'https://documentation.cartodb.com/api/v1/map' -H 'Content-Type: applicatio
 
 ### Retrieve resources from the layergroup
 
-There are several resources for retrieving layergoup details, such as accessing Mapnik tiles, individual layers, accessing defined Attributes, and blending and layer selection.
+When you have a layergroup, there are several resources for retrieving layergoup details such as, accessing Mapnik tiles, getting individual layers, accessing defined Attributes, and blending and layer selection.
 
 #### Mapnik tiles
 
