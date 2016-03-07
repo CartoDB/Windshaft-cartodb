@@ -18,7 +18,7 @@ The main differences, compared to Anonymous Maps, is that Named Maps include:
 
   Uploading a MapConfig creates a Named Map. MapConfigs are uploaded to the server by sending the server a "template".json file, which contain the [MapConfig specifications](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/).
 
-**Note:** There is a limit of 4,096 Named Maps allowed per account. If you need to create more Named Maps, it is recommended to use template maps instead of uploading multiple [Named Map MapConfigs](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#named-map-layer-options).
+**Note:** There is a limit of 4,096 Named Maps allowed per account. If you need to create more Named Maps, it is recommended to use a single Named Map and change the variables using [placeholders](#placeholder-format), instead of uploading multiple [Named Map MapConfigs](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#named-map-layer-options).
 
 ## Create
 
@@ -498,48 +498,42 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
 
 ### Fetching XYZ tiles for Named Maps
 
-Optionally, you can fetch projected tiles for your Named Map. This does not require an API Key. There are several ways to fetch XYZ tiles.
+Optionally, authenticated users can fetch projected tiles (XYZ tiles or Mapnik Retina tiles) for your Named Map. This does not require an API Key. 
 
-#### Get Template
+#### Fetch XYZ tiles directly with a URL
 
-If fetching XYZ tiles with the `function getTemplate` call, _it requires an auth token_.
+Authenticated users, with an auth token, can use XYZ-based URLs to fetch tiles directly, and instantiate the Named Map as part of the request to your application. You do not have to do any other steps to initialize your map. 
 
-```javascript
-function getTemplate(err, authenticated) {
-    ifUnauthenticated(authenticated, 'Only authenticated users can get template maps');
-```
+To call a template_id in a URL:
 
-#### List Templates
+`/:template_id/:layer/:z/:x/:y.(:format)`
 
-If fetching XYZ tiles with the `function listTemplates` call, _it requires an auth token_.
+For example, a complete URL might appear as:
 
-```javascript
-function listTemplates(err, authenticated) {
-    ifUnauthenticated(authenticated, 'Only authenticated user can list templated maps');
-```
+"https://{your user name}.cartodb.com/api/v1/map/named/{template_id/{layer}/{z}/{x}/{y}.png"
+
+The placeholders indicate the following:
+
+- [`template_id`](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response)) is the response of your Named Map.
+- layers can be a number (referring to the # layer of your map), all layers of your map, or a list of layers.
+  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/`0`/{z}/{x}/{y}.png"
+  - To show the first layer, enter the number value `1` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/`1`/{z}/{x}/{y}.png"
+  - To show all layers, enter the value `all` for the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/all/{z}/{x}/{y}.png"
+  - To show a [list of layers](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as `0,1,2` in the layer placeholder. For example, to show the basemap and the first layer, "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/`0,1`/{z}/{x}/{y}.png"
+
 
 #### Get Mapnik Retina Tiles
 
-This method of fetching XYZ tiles ignores the Named Map template name and obtains the [Layergroup `srid`](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations) as the key value used to initialize the map. Note that it obtains the retina tiles that are not related to basemaps.
+Mapnik Retina tiles ignore the Named Map template_id and obtains the [Layergroup `srid`](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations) as the key value used to initialize the map. Note that it obtains the retina tiles that are not related to basemaps.
+
+ To get this layergroup token from your template_id, you need to instantiate the map with the JSONP call:
+
+ `:token/:z/:x/:y@:scale_factor?x.:format`
+
+For example, a complete JSONP call might appear as:
 
 ```javascript
-GET (?:/api/v1/map|/user/:user/api/v1/map|/tiles/layergroup)/:token/:z/:x/:y@:scale_factor?x.:format {:user(f),:token(f),:z(f),:x(f),:y(f),:scale_factor(t),:format(f)} (1) 
+GET (?:/api/v1/map|/user/:user/api/v1/map|/tiles/layergroup)/{token}/{z}/{x}/{y@:scale_factor?x.}{format}{:user(f),:token(f),:z(f),:x(f),:y(f),:scale_factor(t),:format(f)} (1) 
 Notes: Mapnik retina tiles [0]
 ```
 **Tip:** This is the code defined as "Mapnik retina tiles" in the [Windshaft-cartodb Routes list](https://github.com/CartoDB/Windshaft-cartodb/blob/723dc59490f774c680efb74ab19fa2a556c66d9d/docs/Routes.md#routes-list).
-
-#### Fetch XYZ tiles directly
-
-This method uses XYZ-based URLs to fetch tiles directly, and instantiates the Named Map as part of the request to your application. You do not have to do any other steps to initialize your map. This is done with the [`NamedMapsController`](https://github.com/CartoDB/Windshaft-cartodb/blob/9449642773ed284d3855b08f0358c634f6634d59/lib/cartodb/controllers/named_maps.js#L31) base url value for your app.
-
-```javascript
-NamedMapsController.prototype.register = function(app) {
-app.get(app.base_url_templated +
-    '/:template_id/:layer/:z/:x/:y.(:format)', cors(), userMiddleware,
-    this.tile.bind(this));
-
-app.get(app.base_url_mapconfig +
-    '/static/named/:template_id/:width/:height.:format', cors(), userMiddleware,
-    this.staticMap.bind(this));
-};
-```
