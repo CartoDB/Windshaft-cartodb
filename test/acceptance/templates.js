@@ -3,8 +3,8 @@ var _           = require('underscore');
 var redis       = require('redis');
 var step        = require('step');
 var strftime    = require('strftime');
+var QueryTables = require('cartodb-query-tables');
 var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
-var TablesCacheEntry = require('../../lib/cartodb/cache/model/database_tables_entry');
 var redis_stats_db = 5;
 
 // Pollute the PG environment to make sure
@@ -1405,7 +1405,8 @@ describe('template_api', function() {
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
           var expectedSurrogateKey = [
-              new TablesCacheEntry('test_windshaft_cartodb_user_1_db', ['public.test_table_private_1']).key(),
+            new QueryTables.DatabaseTablesEntry([{dbname: 'test_windshaft_cartodb_user_1_db', schema_name: 'public',
+                                   table_name: 'test_table_private_1'}]).key(),
               new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
           ].join(' ');
           helper.checkSurrogateKey(res, expectedSurrogateKey);
@@ -1488,7 +1489,8 @@ describe('template_api', function() {
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
           var expectedSurrogateKey = [
-              new TablesCacheEntry('test_windshaft_cartodb_user_1_db', ['public.test_table_private_1']).key(),
+            new QueryTables.DatabaseTablesEntry([{dbname: 'test_windshaft_cartodb_user_1_db', schema_name: 'public',
+                                   table_name: 'test_table_private_1'}]).key(),
               new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
           ].join(' ');
           helper.checkSurrogateKey(res, expectedSurrogateKey);

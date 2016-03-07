@@ -63,7 +63,15 @@ function checkCache(res) {
 
 function checkSurrogateKey(res, expectedKey) {
     assert.ok(res.headers.hasOwnProperty('surrogate-key'));
-    assert.equal(res.headers['surrogate-key'], expectedKey);
+
+    function createSet(keys, key) {
+        keys[key] = true;
+        return keys;
+    }
+    var keys = res.headers['surrogate-key'].split(' ').reduce(createSet, {});
+    var expectedKeys = expectedKey.split(' ').reduce(createSet, {});
+
+    assert.deepEqual(keys, expectedKeys);
 }
 
 var redisClient;

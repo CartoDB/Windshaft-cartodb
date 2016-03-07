@@ -78,9 +78,15 @@ if test x"$PREPARE_PGSQL" = xyes; then
     sed "s/:TESTPASS/${TESTPASS}/" |
     psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
 
-  curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/cdb/scripts-available/CDB_QueryTables.sql -o sql/CDB_QueryTables.sql
-  cat sql/CDB_QueryStatements.sql sql/CDB_QueryTables.sql sql/CDB_Overviews.sql |
-    psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+  cat sql/_CDB_QueryStatements.sql | psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+
+  SQL_SCRIPTS='CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_ZoomFromScale CDB_Overviews'
+  for i in ${SQL_SCRIPTS}
+  do
+    curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql -o sql/$i.sql
+    cat sql/$i.sql | sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" \
+        | psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+  done
 
 fi
 

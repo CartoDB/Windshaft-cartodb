@@ -7,20 +7,18 @@ var cartodbRedis = require('cartodb-redis');
 
 var PgConnection = require('../../lib/cartodb/backends/pg_connection');
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
-var QueryTablesApi = require('../../lib/cartodb/api/query_tables_api');
 var OverviewsMetadataApi = require('../../lib/cartodb/api/overviews_metadata_api');
 
 
 describe('OverviewsMetadataApi', function() {
 
-    var queryTablesApi, overviewsMetadataApi;
+    var overviewsMetadataApi;
 
     before(function() {
         var redisPool = new RedisPool(global.environment.redis);
         var metadataBackend = cartodbRedis({pool: redisPool});
         var pgConnection = new PgConnection(metadataBackend);
         var pgQueryRunner = new PgQueryRunner(pgConnection);
-        queryTablesApi = new QueryTablesApi(pgQueryRunner);
         overviewsMetadataApi = new OverviewsMetadataApi(pgQueryRunner);
     });
 
