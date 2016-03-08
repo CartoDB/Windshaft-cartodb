@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Announcements:
+ - Remove deprecated tools directory
+
 
 ## 2.26.3
 
