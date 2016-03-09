@@ -1,8 +1,14 @@
 # Changelog
 
-## 2.26.4
+## 2.27.0
 
-Released 2016-mm-dd
+Released 2016-03-09
+
+New features:
+ - Add [Surrogate-Key](https://github.com/CartoDB/cartodb/wiki/CartoDB-Surrogate-Keys) headers to responses
+
+Enhancements:
+ - Use new `node-cartodb-query-tables` library to obtain affected tables in queries
 
 Announcements:
  - Remove deprecated tools directory
