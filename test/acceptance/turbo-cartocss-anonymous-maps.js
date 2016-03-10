@@ -38,7 +38,7 @@ function makeMapconfig(cartocss) {
     };
 }
 
-describe('turbo-cartocss', function() {
+describe('turbo-cartocss for anonymous maps', function() {
     describe('parsing ramp function with colorbrewer for greens and mapnik renderer', function () {
         beforeEach(function () {
             var turboCartocss = '#layer { marker-fill: ramp([price], colorbrewer(Greens)); }';
