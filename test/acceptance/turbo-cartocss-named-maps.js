@@ -125,7 +125,6 @@ describe('turbo-cartocss for named maps', function() {
 
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
-                assert.deepEqual(parsedBody.metadata.layers[0].meta.cartocss, expectedCartocss);
 
                 return parsedBody.layergroupid;
             },
@@ -151,6 +150,28 @@ describe('turbo-cartocss for named maps', function() {
                 assert.equal(res.headers['content-type'], 'image/png');
 
                 testHelper.checkCache(res);
+
+                return null;
+            },
+            function getTemplate() {
+                var next = this;
+
+                assert.response(server, {
+                    url: '/api/v1/map/named/' + templateId + '?api_key=1234',
+                    method: 'GET',
+                    headers: { host: 'localhost' }
+                }, {},
+                function(res, err) {
+                    next(err, res);
+                });
+            },
+            function checkTemplate(err, res) {
+                assert.ifError(err);
+
+                assert.equal(res.statusCode, 200);
+
+                var bodyParsed = JSON.parse(res.body);
+                assert.equal(bodyParsed.template.layergroup.layers[0].options.cartocss, expectedCartocss);
 
                 return null;
             },
