@@ -18,6 +18,13 @@ describe('turbo-cartocss for named maps', function() {
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
+    var turboCartocss = [
+        '#layer {' +
+        '  marker-fill: ramp([price], colorbrewer(Reds));' +
+        '  marker-allow-overlap:true;' +
+        '}'
+    ].join('');
+
     var expectedCartocss = [
         '#layer {',
         '  marker-allow-overlap:true;',
@@ -26,6 +33,24 @@ describe('turbo-cartocss for named maps', function() {
         '  [ price > 10.75 ] {  marker-fill:#fb6a4a}',
         '  [ price > 11.5 ] {  marker-fill:#de2d26}',
         '  [ price > 16.5 ] {  marker-fill:#a50f15}',
+        '}'
+    ].join('');
+
+    var turboCartocssModified = [
+        '#layer {' +
+        '  marker-fill: ramp([price], colorbrewer(Blues));' +
+        '  marker-allow-overlap:true;' +
+        '}'
+    ].join('');
+
+    var expectedUpdatedCartocss = [
+        '#layer {',
+        '  marker-allow-overlap:true;',
+        '  marker-fill:#eff3ff;',
+        '  [ price > 10.25 ] {  marker-fill:#bdd7e7}',
+        '  [ price > 10.75 ] {  marker-fill:#6baed6}',
+        '  [ price > 11.5 ] {  marker-fill:#3182bd}',
+        '  [ price > 16.5 ] {  marker-fill:#08519c}',
         '}'
     ].join('');
 
@@ -52,12 +77,7 @@ describe('turbo-cartocss for named maps', function() {
                             '  SELECT 5, 21.00',
                             ') _prices ON _prices.cartodb_id = test_table.cartodb_id'
                         ].join('\n'),
-                        cartocss: [
-                            '#layer {' +
-                            '  marker-fill: ramp([price], colorbrewer(Reds));' +
-                            '  marker-allow-overlap:true;' +
-                            '}'
-                        ].join(''),
+                        cartocss: turboCartocss,
                         cartocss_version: '2.0.2'
                     }
                 }
@@ -172,6 +192,56 @@ describe('turbo-cartocss for named maps', function() {
 
                 var bodyParsed = JSON.parse(res.body);
                 assert.equal(bodyParsed.template.layergroup.layers[0].options.cartocss, expectedCartocss);
+
+                return null;
+            },
+            function updateTemplate() {
+                var next = this;
+
+                // clone the previous one and rename it
+                var changedTemplate = JSON.parse(JSON.stringify(template));
+                changedTemplate.layergroup.layers[0].options.cartocss = turboCartocssModified;
+
+                assert.response(server, {
+                    url: '/api/v1/map/named/' + templateId + '/?api_key=1234',
+                    method: 'PUT',
+                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                    data: JSON.stringify(changedTemplate)
+                }, {},
+                function (res, err) {
+                    next(err, res);
+                });
+            },
+            function checkUpdatedTemplate(err, res) {
+                assert.ifError(err);
+
+                assert.equal(res.statusCode, 200);
+
+                assert.deepEqual(JSON.parse(res.body), {
+                    template_id: templateId
+                });
+
+                return null;
+            },
+            function getUpdatedTemplate() {
+                var next = this;
+
+                assert.response(server, {
+                    url: '/api/v1/map/named/' + templateId + '?api_key=1234',
+                    method: 'GET',
+                    headers: { host: 'localhost' }
+                }, {},
+                function(res, err) {
+                    next(err, res);
+                });
+            },
+            function checkGetUpdatedTemplate(err, res) {
+                assert.ifError(err);
+
+                var bodyParsed = JSON.parse(res.body);
+
+                assert.equal(res.statusCode, 200);
+                assert.equal(bodyParsed.template.layergroup.layers[0].options.cartocss, expectedUpdatedCartocss);
 
                 return null;
             },
