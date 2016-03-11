@@ -6,7 +6,7 @@ var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 var mapnik = require('windshaft').mapnik;
-var IMAGE_TOLERANCE_PER_MIL = 1;
+var IMAGE_TOLERANCE_PER_MIL = 10;
 
 describe('turbo-cartocss for named maps', function() {
 
