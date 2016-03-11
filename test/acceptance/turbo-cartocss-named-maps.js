@@ -5,6 +5,8 @@ var testHelper = require(__dirname + '/../support/test_helper');
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
+var mapnik = require('windshaft').mapnik;
+var IMAGE_TOLERANCE_PER_MIL = 1;
 
 describe('turbo-cartocss for named maps', function() {
 
@@ -18,48 +20,18 @@ describe('turbo-cartocss for named maps', function() {
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
-    var turboCartocss = [
-        '#layer {' +
-        '  marker-fill: ramp([price], colorbrewer(Reds));' +
-        '  marker-allow-overlap:true;' +
-        '}'
-    ].join('');
-
-    var expectedCartocss = [
-        '#layer {',
-        '  marker-allow-overlap:true;',
-        '  marker-fill:#fee5d9;',
-        '  [ price > 10.25 ] {  marker-fill:#fcae91}',
-        '  [ price > 10.75 ] {  marker-fill:#fb6a4a}',
-        '  [ price > 11.5 ] {  marker-fill:#de2d26}',
-        '  [ price > 16.5 ] {  marker-fill:#a50f15}',
-        '}'
-    ].join('');
-
-    var turboCartocssModified = [
-        '#layer {' +
-        '  marker-fill: ramp([price], colorbrewer(Blues));' +
-        '  marker-allow-overlap:true;' +
-        '}'
-    ].join('');
-
-    var expectedUpdatedCartocss = [
-        '#layer {',
-        '  marker-allow-overlap:true;',
-        '  marker-fill:#eff3ff;',
-        '  [ price > 10.25 ] {  marker-fill:#bdd7e7}',
-        '  [ price > 10.75 ] {  marker-fill:#6baed6}',
-        '  [ price > 11.5 ] {  marker-fill:#3182bd}',
-        '  [ price > 16.5 ] {  marker-fill:#08519c}',
-        '}'
-    ].join('');
-
     var templateId = 'turbo-cartocss-template-1';
 
     var template = {
         version: '0.0.1',
         name: templateId,
         auth: { method: 'open' },
+        placeholders: {
+            color: {
+                type: "css_color",
+                default: "Reds"
+            }
+        },
         layergroup:  {
             version: '1.0.0',
                 layers: [{
@@ -77,7 +49,12 @@ describe('turbo-cartocss for named maps', function() {
                             '  SELECT 5, 21.00',
                             ') _prices ON _prices.cartodb_id = test_table.cartodb_id'
                         ].join('\n'),
-                        cartocss: turboCartocss,
+                        cartocss: [
+                            '#layer {',
+                            '  marker-fill: ramp([price], colorbrewer(<%= color %>));',
+                            '  marker-allow-overlap:true;',
+                            '}'
+                        ].join('\n'),
                         cartocss_version: '2.0.2'
                     }
                 }
@@ -85,15 +62,8 @@ describe('turbo-cartocss for named maps', function() {
         }
     };
 
-    var layergroup =  {
-        version: '1.3.0',
-        layers: [{
-            type: 'named',
-            options: {
-                name: templateId,
-            }
-        }]
-    };
+    var templateParamsReds = { color: 'Reds' };
+    var templateParamsBlues = { color: 'Blues' };
 
     it('should create a template with turbo-cartocss parsed properly', function (done) {
         step(
@@ -119,23 +89,26 @@ describe('turbo-cartocss for named maps', function() {
 
                 return null;
             },
-            function createLayergroup(err) {
+            function instantiateTemplateWithReds(err) {
                 assert.ifError(err);
 
                 var next = this;
-
                 assert.response(server, {
-                    url: '/api/v1/map',
+                    url: '/api/v1/map/named/' + templateId,
                     method: 'POST',
-                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(layergroup)
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(templateParamsReds)
                 }, {},
-                function (res, err) {
-                    next(err, res);
+                function(res, err) {
+                    return next(err, res);
                 });
             },
-            function checkLayergroup(err, res) {
+            function checkInstanciationWithReds(err, res) {
                 assert.ifError(err);
+
                 assert.equal(res.statusCode, 200);
 
                 var parsedBody = JSON.parse(res.body);
@@ -148,7 +121,7 @@ describe('turbo-cartocss for named maps', function() {
 
                 return parsedBody.layergroupid;
             },
-            function requestTile(err, layergroupId) {
+            function requestTileReds(err, layergroupId) {
                 assert.ifError(err);
 
                 var next = this;
@@ -163,87 +136,77 @@ describe('turbo-cartocss for named maps', function() {
                     next(err, res);
                 });
             },
-            function checkTile(err, res) {
+            function checkTileReds(err, res) {
                 assert.ifError(err);
+
+                var next = this;
 
                 assert.equal(res.statusCode, 200);
                 assert.equal(res.headers['content-type'], 'image/png');
 
-                testHelper.checkCache(res);
+                var fixturePath = './test/fixtures/turbo-cartocss-named-maps-reds.png';
+                var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
 
-                return null;
+                assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, next);
             },
-            function getTemplate() {
+            function instantiateTemplateWithBlues(err) {
+                assert.ifError(err);
+
+                var next = this;
+                assert.response(server, {
+                    url: '/api/v1/map/named/' + templateId,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(templateParamsBlues)
+                }, {},
+                function(res, err) {
+                    return next(err, res);
+                });
+            },
+            function checkInstanciationWithBlues(err, res) {
+                assert.ifError(err);
+                assert.equal(res.statusCode, 200);
+
+                var parsedBody = JSON.parse(res.body);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+
+                assert.ok(parsedBody.layergroupid);
+                assert.ok(parsedBody.last_updated);
+
+                return parsedBody.layergroupid;
+            },
+            function requestTileBlues(err, layergroupId) {
+                assert.ifError(err);
+
                 var next = this;
 
                 assert.response(server, {
-                    url: '/api/v1/map/named/' + templateId + '?api_key=1234',
+                    url: '/api/v1/map/' + layergroupId + '/0/0/0.png',
                     method: 'GET',
-                    headers: { host: 'localhost' }
+                    headers: { host: 'localhost' },
+                    encoding: 'binary'
                 }, {},
                 function(res, err) {
                     next(err, res);
                 });
             },
-            function checkTemplate(err, res) {
+            function checkTileBlues(err, res) {
                 assert.ifError(err);
 
-                assert.equal(res.statusCode, 200);
-
-                var bodyParsed = JSON.parse(res.body);
-                assert.equal(bodyParsed.template.layergroup.layers[0].options.cartocss, expectedCartocss);
-
-                return null;
-            },
-            function updateTemplate() {
                 var next = this;
 
-                // clone the previous one and rename it
-                var changedTemplate = JSON.parse(JSON.stringify(template));
-                changedTemplate.layergroup.layers[0].options.cartocss = turboCartocssModified;
-
-                assert.response(server, {
-                    url: '/api/v1/map/named/' + templateId + '/?api_key=1234',
-                    method: 'PUT',
-                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(changedTemplate)
-                }, {},
-                function (res, err) {
-                    next(err, res);
-                });
-            },
-            function checkUpdatedTemplate(err, res) {
-                assert.ifError(err);
-
                 assert.equal(res.statusCode, 200);
+                assert.equal(res.headers['content-type'], 'image/png');
 
-                assert.deepEqual(JSON.parse(res.body), {
-                    template_id: templateId
-                });
+                var fixturePath = './test/fixtures/turbo-cartocss-named-maps-blues.png';
+                var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
 
-                return null;
-            },
-            function getUpdatedTemplate() {
-                var next = this;
-
-                assert.response(server, {
-                    url: '/api/v1/map/named/' + templateId + '?api_key=1234',
-                    method: 'GET',
-                    headers: { host: 'localhost' }
-                }, {},
-                function(res, err) {
-                    next(err, res);
-                });
-            },
-            function checkGetUpdatedTemplate(err, res) {
-                assert.ifError(err);
-
-                var bodyParsed = JSON.parse(res.body);
-
-                assert.equal(res.statusCode, 200);
-                assert.equal(bodyParsed.template.layergroup.layers[0].options.cartocss, expectedUpdatedCartocss);
-
-                return null;
+                assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, next);
             },
             function deleteTemplate(err) {
                 assert.ifError(err);
