@@ -97,6 +97,9 @@ describe('analysis-layers', function() {
             testClient.getTile(tile.z, tile.x, tile.y, function(err, res, image) {
                 assert.ok(!err, err);
 
+                // To generate images use:
+                // image.save('/tmp/' + useCase.desc.replace(/\s/g, '-') + '.png');
+
                 var fixturePath = './test/fixtures/analysis/basic-source-id-mapnik-layer.png';
                 assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err, err);
