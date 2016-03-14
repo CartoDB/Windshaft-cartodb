@@ -524,8 +524,8 @@ The placeholders indicate the following:
 
 #### Get Mapnik Retina Tiles
 
-Mapnik Retina tiles are not directly supported for Named Maps, so you cannot use the Named Map template_id. To get Mapnik Retina tiles, use the [Layergroup `srid`](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations) as the key value used to initialize the map.
+Mapnik Retina tiles are not directly supported for Named Maps, so you cannot use the Named Map template_id. To fetch Mapnik Retina tiles, get the [layergroupid](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response-1) to initialize the map.
 
- To get this layergroup token from your template_id, you need to instantiate the map with this request:
+Instantiate the map by using the `layergroupid` as the token value:
 
  `:token/:z/:x/:y@:scale_factor?x.:format`
