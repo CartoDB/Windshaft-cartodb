@@ -168,7 +168,8 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             url = '/api/v1/map/' + layergroupId + '/';
 
             var layers = params.layers;
-            if (!!layers) {
+
+            if (layers !== undefined) {
                 layers = Array.isArray(layers) ? layers : [layers];
                 url += layers.join(',') + '/';
             }
@@ -190,7 +191,6 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             };
 
-
             var expectedResponse = {
                 status: 200,
                 headers: {
@@ -198,7 +198,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             };
 
-            var isPng = format === 'png';
+            var isPng = format === 'png' || format === 'torque.png';
 
             if (isPng) {
                 request.encoding = 'binary';
