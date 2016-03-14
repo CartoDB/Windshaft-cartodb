@@ -706,3 +706,5 @@ GRANT SELECT ON TABLE analysis_rent_listings TO :PUBLICUSER;
 -- PostgreSQL database dump complete
 --
 
+--
+GRANT SELECT, UPDATE, INSERT, DELETE ON cdb_analysis_catalog TO :TESTUSER;
