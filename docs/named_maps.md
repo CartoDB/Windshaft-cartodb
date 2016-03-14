@@ -516,24 +516,16 @@ The placeholders indicate the following:
 
 - [`template_id`](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response)) is the response of your Named Map.
 - layers can be a number (referring to the # layer of your map), all layers of your map, or a list of layers.
-  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/`0`/{z}/{x}/{y}.png"
-  - To show the first layer, enter the number value `1` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/`1`/{z}/{x}/{y}.png"
+  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/0/{z}/{x}/{y}.png"
+  - To show the first layer, enter the number value `1` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/1/{z}/{x}/{y}.png"
   - To show all layers, enter the value `all` for the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/all/{z}/{x}/{y}.png"
-  - To show a [list of layers](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as `0,1,2` in the layer placeholder. For example, to show the basemap and the first layer, "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/`0,1`/{z}/{x}/{y}.png"
+  - To show a [list of layers](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as 0,1,2 in the layer placeholder. For example, to show the basemap and the first layer, "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/0,1/{z}/{x}/{y}.png"
 
 
 #### Get Mapnik Retina Tiles
 
-Mapnik Retina tiles ignore the Named Map template_id and obtains the [Layergroup `srid`](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations) as the key value used to initialize the map. Note that it obtains the retina tiles that are not related to basemaps.
+Mapnik Retina tiles are not directly supported for Named Maps, so you cannot use the Named Map template_id. To get Mapnik Retina tiles, use the [Layergroup `srid`](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations) as the key value used to initialize the map.
 
- To get this layergroup token from your template_id, you need to instantiate the map with the JSONP call:
+ To get this layergroup token from your template_id, you need to instantiate the map with this request:
 
  `:token/:z/:x/:y@:scale_factor?x.:format`
-
-For example, a complete JSONP call might appear as:
-
-```javascript
-GET (?:/api/v1/map|/user/:user/api/v1/map|/tiles/layergroup)/{token}/{z}/{x}/{y@:scale_factor?x.}{format}{:user(f),:token(f),:z(f),:x(f),:y(f),:scale_factor(t),:format(f)} (1) 
-Notes: Mapnik retina tiles [0]
-```
-**Tip:** This is the code defined as "Mapnik retina tiles" in the [Windshaft-cartodb Routes list](https://github.com/CartoDB/Windshaft-cartodb/blob/723dc59490f774c680efb74ab19fa2a556c66d9d/docs/Routes.md#routes-list).
