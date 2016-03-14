@@ -225,6 +225,53 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
     );
 };
 
+TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
+    var self = this;
+
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+    }
+
+    var url = '/api/v1/map';
+
+    if (this.apiKey) {
+        url += '?' + qs.stringify({api_key: this.apiKey});
+    }
+
+    assert.response(server,
+        {
+            url: url,
+            method: 'POST',
+            headers: {
+                host: 'localhost',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(self.mapConfig)
+        },
+        expectedResponse,
+        function(res, err) {
+            if (err) {
+                return callback(err);
+            }
+
+            var parsedBody = JSON.parse(res.body);
+
+            if (parsedBody.layergroupid) {
+                self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupId).token] = 0;
+                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            }
+
+            return callback(null, parsedBody);
+        }
+    );
+};
+
 TestClient.prototype.drain = function(callback) {
     helper.deleteRedisKeys(this.keysToDelete, callback);
 };

@@ -109,4 +109,26 @@ describe('analysis-layers', function() {
             });
         });
     });
+
+    it('should fail for non-authenticated requests', function(done) {
+        var useCase = useCases[0];
+
+        // No API key here
+        var testClient = new TestClient(useCase.mapConfig);
+
+        var PERMISSION_DENIED_RESPONSE = {
+            status: 403,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+
+        testClient.getLayergroup(PERMISSION_DENIED_RESPONSE, function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.deepEqual(layergroupResult.errors, ["permission denied for relation cdb_tablemetadata"]);
+
+            done();
+        });
+    });
 });
