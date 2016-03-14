@@ -6,6 +6,7 @@ var dot = require('dot');
 
 describe('analysis-layers', function() {
 
+    var IMAGE_TOLERANCE_PER_MIL = 20;
 
     var multitypeStyleTemplate = dot.template([
         "#points['mapnik::geometry_type'=1] {",
@@ -86,7 +87,7 @@ describe('analysis-layers', function() {
         }
     ];
 
-    useCases.forEach(function(useCase, imageIdx) {
+    useCases.forEach(function(useCase) {
         it('should implement use case: "' + useCase.desc + '"', function(done) {
 
             var testClient = new TestClient(useCase.mapConfig, 1234);
@@ -96,11 +97,12 @@ describe('analysis-layers', function() {
             testClient.getTile(tile.z, tile.x, tile.y, function(err, res, image) {
                 assert.ok(!err, err);
 
-                image.save('/tmp/tests/' + imageIdx + '---' + useCase.desc.replace(/\s/g, '-') + '.png');
+                var fixturePath = './test/fixtures/analysis/basic-source-id-mapnik-layer.png';
+                assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                    assert.ok(!err, err);
 
-                assert.equal(image.width(), 256);
-
-                testClient.drain(done);
+                    testClient.drain(done);
+                });
             });
         });
     });
