@@ -526,6 +526,6 @@ The placeholders indicate the following:
 
 Mapnik Retina tiles are not directly supported for Named Maps, so you cannot use the Named Map template_id. To fetch Mapnik Retina tiles, get the [layergroupid](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response-1) to initialize the map.
 
-Instantiate the map by using the `layergroupid` as the token value:
+Instantiate the map by using your `layergroupid` in the token placeholder:
 
  `:token/:z/:x/:y@:scale_factor?x.:format`
