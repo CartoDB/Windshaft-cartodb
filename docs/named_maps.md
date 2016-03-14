@@ -498,7 +498,7 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
 
 ### Fetching XYZ tiles for Named Maps
 
-Optionally, authenticated users can fetch projected tiles (XYZ tiles or Mapnik Retina tiles) for your Named Map. This does not require an API Key. 
+Optionally, authenticated users can fetch projected tiles (XYZ tiles or Mapnik Retina tiles) for your Named Map.
 
 #### Fetch XYZ tiles directly with a URL
 
@@ -510,7 +510,7 @@ To call a template_id in a URL:
 
 For example, a complete URL might appear as:
 
-"https://{your user name}.cartodb.com/api/v1/map/named/{template_id/{layer}/{z}/{x}/{y}.png"
+"https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.png"
 
 The placeholders indicate the following:
 
