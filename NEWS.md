@@ -1,5 +1,13 @@
 # Changelog
 
+
+## 2.28.0
+
+Released 2016-03-14
+
+New features:
+ - Added [turbo-cartocss](https://github.com/CartoDB/turbo-cartocss) to preprocess CartoCSS.
+
 ## 2.27.0
 
 Released 2016-03-09
