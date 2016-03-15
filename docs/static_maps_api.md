@@ -1,10 +1,10 @@
 # Static Maps API
 
-The Static Maps API can be initiated using both named and anonymous maps using the 'layergroupid' token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
+The Static Maps API can be initiated using both Named and Anonymous Maps using the 'layergroupid' token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
 
 ## Maps API endpoints
 
-Begin by instantiating either a named or anonymous map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
+Begin by instantiating either a Named or Anonymous Map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
 
 ### Zoom + center
 
@@ -60,7 +60,7 @@ Note: you can see this endpoint as
 GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
 ```
 
-### Named map
+### Named Map
 
 #### Definition
 
@@ -72,7 +72,7 @@ GET /api/v1/map/static/named/:name/:width/:height.:format
 
 Param | Description
 --- | ---
-:name | the name of the named map
+:name | the name of the Named Map
 :width | the width in pixels for the output image
 :height | the height in pixels for the output image
 :height | the height in pixels for the output image
@@ -81,7 +81,7 @@ Param | Description
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
-A named maps static image will get its constraints from the [view in the template](#Arguments), if `view` is not present it will estimate the extent based on the involved tables otherwise it fallback to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
+A Named Maps static image will get its constraints from the [`view` argument of the Create Named Map function](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#arguments). If `view` is not defined, it will estimate the extent based on the involved tables, otherwise it fallbacks to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
 
 #### Layers
 

@@ -1,8 +1,8 @@
 # Quickstart
 
-## Anonymous maps
+## Anonymous Maps
 
-Here is an example of how to create an anonymous map with JavaScript:
+Here is an example of how to create an Anonymous Map with JavaScript:
 
 ```javascript
 var mapconfig = {
@@ -31,9 +31,9 @@ $.ajax({
 })
 ```
 
-## Named maps
+## Named Maps
 
-Let's create a named map using some private tables in a CartoDB account.
+Let's create a Named Map using some private tables in a CartoDB account.
 The following map config sets up a map of European countries that have a white fill color:
 
 ```javascript
@@ -56,7 +56,7 @@ The following map config sets up a map of European countries that have a white f
 }
 ```
 
-The map config needs to be sent to CartoDB's Map API using an authenticated call. Here we will use a command line tool called `curl`. For more info about this tool, see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl), or type `man curl` in bash. Using `curl`, and storing the config from above in a file `mapconfig.json`, the call would look like:
+The MapConfig needs to be sent to CartoDB's Map API using an authenticated call. Here we will use a command line tool called `curl`. For more info about this tool, see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl), or type `man curl` in bash. Using `curl`, and storing the config from above in a file `MapConfig.json`, the call would look like:
 
 #### Call
 
