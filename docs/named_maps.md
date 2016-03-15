@@ -496,11 +496,11 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
 
 - [Toggling sublayers in a Named Map](http://bl.ocks.org/ohasselblad/c1a0f4913610eec53cd3)
 
-### Fetching XYZ tiles for Named Maps
+## Fetching XYZ Tiles for Named Maps
 
 Optionally, authenticated users can fetch projected tiles (XYZ tiles or Mapnik Retina tiles) for your Named Map.
 
-#### Fetch XYZ tiles directly with a URL
+### Fetch XYZ Tiles Directly with a URL
 
 Authenticated users, with an auth token, can use XYZ-based URLs to fetch tiles directly, and instantiate the Named Map as part of the request to your application. You do not have to do any other steps to initialize your map. 
 
@@ -514,7 +514,7 @@ For example, a complete URL might appear as:
 
 The placeholders indicate the following:
 
-- [`template_id`](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response)) is the response of your Named Map.
+- [`template_id`](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response) is the response of your Named Map.
 - layers can be a number (referring to the # layer of your map), all layers of your map, or a list of layers.
   - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/0/{z}/{x}/{y}.png"
   - To show the first layer, enter the number value `1` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/1/{z}/{x}/{y}.png"
@@ -522,7 +522,7 @@ The placeholders indicate the following:
   - To show a [list of layers](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as 0,1,2 in the layer placeholder. For example, to show the basemap and the first layer, "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/0,1/{z}/{x}/{y}.png"
 
 
-#### Get Mapnik Retina Tiles
+### Get Mapnik Retina Tiles
 
 Mapnik Retina tiles are not directly supported for Named Maps, so you cannot use the Named Map template_id. To fetch Mapnik Retina tiles, get the [layergroupid](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response-1) to initialize the map.
 
