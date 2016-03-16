@@ -6,7 +6,7 @@ This specification describes an extension for
 
 # 2. Changes over specification
 
-This extension introduces a new layer type so it's possible to use a named map by its name as a layer.
+This extension introduces a new layer type so it's possible to use a Named Map by its name as a layer.
 
 ## 2.1 Named layers definition
 
@@ -21,18 +21,18 @@ This extension introduces a new layer type so it's possible to use a named map b
     options: {
 
         // REQUIRED
-        // string, the name for the named map to use
+        // string, the name for the Named Map to use
         name: "world_borders",
 
         // OPTIONAL
-        // object, the replacement values for the named map's template placeholders
+        // object, the replacement values for the Named Map's template placeholders
         // See https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/Map-API.md#instantiate-1 for more details
         config: {
             "color": "#000"
         },
 
         // OPTIONAL
-        // string array, the authorized tokens in case the named map has auth method set to `token`
+        // string array, the authorized tokens in case the Named Map has auth method set to `token`
         // See https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/Map-API.md#named-maps-1 for more details
         auth_tokens: [
             "token1",

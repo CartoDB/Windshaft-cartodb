@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.28.1",
+  "version": "2.30.1",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -244,9 +244,9 @@
               "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
             },
             "form-data": {
-              "version": "1.0.0-rc3",
+              "version": "1.0.0-rc4",
               "from": "form-data@>=1.0.0-rc3 <1.1.0",
-              "resolved": "https://registry.npmjs.org/form-data/-/form-data-1.0.0-rc3.tgz"
+              "resolved": "https://registry.npmjs.org/form-data/-/form-data-1.0.0-rc4.tgz"
             },
             "har-validator": {
               "version": "2.0.6",
@@ -695,7 +695,7 @@
           "dependencies": {
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@>=1.0.0 <1.1.0",
+              "from": "unpipe@1.0.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
@@ -1017,13 +1017,13 @@
           "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
         },
         "form-data": {
-          "version": "1.0.0-rc3",
+          "version": "1.0.0-rc4",
           "from": "form-data@>=1.0.0-rc1 <1.1.0",
-          "resolved": "https://registry.npmjs.org/form-data/-/form-data-1.0.0-rc3.tgz",
+          "resolved": "https://registry.npmjs.org/form-data/-/form-data-1.0.0-rc4.tgz",
           "dependencies": {
             "async": {
               "version": "1.5.2",
-              "from": "async@>=1.4.0 <2.0.0",
+              "from": "async@>=1.5.2 <2.0.0",
               "resolved": "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
             }
           }
@@ -1035,7 +1035,7 @@
         },
         "mime-types": {
           "version": "2.1.10",
-          "from": "mime-types@>=2.1.2 <2.2.0",
+          "from": "mime-types@>=2.1.10 <2.2.0",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
           "dependencies": {
             "mime-db": {
@@ -1497,13 +1497,13 @@
               "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
             },
             "form-data": {
-              "version": "1.0.0-rc3",
+              "version": "1.0.0-rc4",
               "from": "form-data@>=1.0.0-rc3 <1.1.0",
-              "resolved": "https://registry.npmjs.org/form-data/-/form-data-1.0.0-rc3.tgz",
+              "resolved": "https://registry.npmjs.org/form-data/-/form-data-1.0.0-rc4.tgz",
               "dependencies": {
                 "async": {
                   "version": "1.5.2",
-                  "from": "async@>=1.4.0 <2.0.0",
+                  "from": "async@>=1.5.2 <2.0.0",
                   "resolved": "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
                 }
               }
@@ -1798,9 +1798,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.13.2",
-      "from": "windshaft@1.13.2",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.13.2.tgz",
+      "version": "1.15.0",
+      "from": "windshaft@1.15.0",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.15.0.tgz",
       "dependencies": {
         "abaculus": {
           "version": "1.1.0-cdb4",

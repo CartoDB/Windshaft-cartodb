@@ -1,8 +1,24 @@
 # Changelog
 
-## 2.28.1
+## 2.30.1
 
 Released 2016-mm-dd
+
+
+## 2.30.0
+
+Released 2016-03-15
+
+Announcements:
+ - Upgrades windshaft to [1.15.0](https://github.com/CartoDB/Windshaft/releases/tag/1.15.0)
+
+
+## 2.29.0
+
+Released 2016-03-14
+
+Announcements:
+ - Upgrades windshaft to [1.14.0](https://github.com/CartoDB/Windshaft/releases/tag/1.14.0)
 
 
 ## 2.28.0
@@ -11,6 +27,7 @@ Released 2016-03-14
 
 New features:
  - Added [turbo-cartocss](https://github.com/CartoDB/turbo-cartocss) to preprocess CartoCSS.
+
 
 ## 2.27.0
 
