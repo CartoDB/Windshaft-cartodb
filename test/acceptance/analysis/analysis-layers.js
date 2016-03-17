@@ -53,11 +53,12 @@ describe('analysis-layers', function() {
 
     var DEFAULT_MULTITYPE_STYLE = cartocss();
 
-    var TILE_ANALYSIS_TABLES = { z: 14, x: 8023, y: 6177 };
+    var TILE_ANALYSIS_TABLES = { z: 0, x: 0, y: 0 };
 
     var useCases = [
         {
             desc: 'basic source-id mapnik layer',
+            fixture: 'basic-source-id-mapnik-layer.png',
             mapConfig: mapConfig(
                 [
                     {
@@ -67,8 +68,7 @@ describe('analysis-layers', function() {
                                 "id": "2570e105-7b37-40d2-bdf4-1af889598745"
                             },
                             "cartocss": DEFAULT_MULTITYPE_STYLE,
-                            "cartocss_version": "2.1.1",
-                            "interactivity": []
+                            "cartocss_version": "2.3.0"
                         }
                     }
                 ],
@@ -82,8 +82,44 @@ describe('analysis-layers', function() {
                         }
                     }
                 ]
-            ),
-            tile: { z: 0, x: 0, y: 0 }
+            )
+        },
+
+        {
+            desc: 'buffer over source',
+            fixture: 'buffer-over-source.png',
+            tile: { z: 7, x: 61, y: 47 },
+            mapConfig: mapConfig(
+                [
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "source": {
+                                "id": "HEAD"
+                            },
+                            "cartocss": DEFAULT_MULTITYPE_STYLE,
+                            "cartocss_version": "2.3.0"
+                        }
+                    }
+                ],
+                {},
+                [
+                    {
+                        "id": "HEAD",
+                        "type": "buffer",
+                        "params": {
+                            "source": {
+                                "id": "2570e105-7b37-40d2-bdf4-1af889598745",
+                                "type": "source",
+                                "params": {
+                                    "query": "select * from populated_places_simple_reduced"
+                                }
+                            },
+                            "radio": 50000
+                        }
+                    }
+                ]
+            )
         }
     ];
 
@@ -100,7 +136,7 @@ describe('analysis-layers', function() {
                 // To generate images use:
                 // image.save('/tmp/' + useCase.desc.replace(/\s/g, '-') + '.png');
 
-                var fixturePath = './test/fixtures/analysis/basic-source-id-mapnik-layer.png';
+                var fixturePath = './test/fixtures/analysis/' + useCase.fixture;
                 assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err, err);
 
@@ -110,8 +146,23 @@ describe('analysis-layers', function() {
         });
     });
 
-    it('should fail for non-authenticated requests', function(done) {
+    it('should NOT fail for non-authenticated requests when it is just source', function(done) {
         var useCase = useCases[0];
+
+        // No API key here
+        var testClient = new TestClient(useCase.mapConfig);
+
+        testClient.getLayergroup(function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.equal(layergroupResult.metadata.layers.length, 1);
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should fail for non-authenticated requests that has a node other than "source"', function(done) {
+        var useCase = useCases[1];
 
         // No API key here
         var testClient = new TestClient(useCase.mapConfig);
@@ -128,7 +179,7 @@ describe('analysis-layers', function() {
 
             assert.deepEqual(layergroupResult.errors, ["permission denied for relation cdb_tablemetadata"]);
 
-            done();
+            testClient.drain(done);
         });
     });
 });
