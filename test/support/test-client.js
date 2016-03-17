@@ -263,7 +263,7 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
             var parsedBody = JSON.parse(res.body);
 
             if (parsedBody.layergroupid) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupId).token] = 0;
+                self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
                 self.keysToDelete['user:localhost:mapviews:global'] = 5;
             }
 
