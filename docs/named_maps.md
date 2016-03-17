@@ -168,6 +168,21 @@ The response back from the API provides the name of your MapConfig as a template
 }
 ```
 
+**Tip:** The colon : in the command signifies where a placeholder variable should be added for an argument, it is not a literal part of the code. For example, a real response might appear as:
+
+```javascript
+{
+  "namedmap_tutorial",
+}
+```
+
+Note "namedmap_tutorial" is the variable that was used in place of the "template_id". See the [Named Map Tutorial](http://docs.cartodb.com/tutorials/named_maps/), from The Map Academy, for more information about this specific example. 
+
+#### Placeholder Errors
+
+As developers use many different methods to input placeholder variables, you may find placeholder examples with other symbols such as, <template_id>, {template_id}, $template_id, or @template_id; indicating that a placeholder variable should be added. If an error is raised, ensure that your placeholder variable appears without any added symbols.
+
+
 ## Instantiate
 
 Instantiating a Named Map allows you to fetch the map tiles. You can use the Maps API to instantiate, or use the CartoDB.js `createLayer()` function. The result is an Anonymous Map.
