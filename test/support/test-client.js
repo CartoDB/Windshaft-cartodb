@@ -198,7 +198,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             };
 
-            var isPng = format === 'png' || format === 'torque.png';
+            var isPng = format.match(/png$/);
 
             if (isPng) {
                 request.encoding = 'binary';
