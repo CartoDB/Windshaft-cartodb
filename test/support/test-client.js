@@ -138,8 +138,6 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
         url += '?' + qs.stringify(extraParams);
     }
 
-    console.log(url);
-
     var layergroupId;
     step(
         function createLayergroup() {
@@ -165,13 +163,13 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                         return next(err);
                     }
                     var parsedBody = JSON.parse(res.body);
-//                    var expectedWidgetURLS = {
-//                        http: "/api/v1/map/" + parsedBody.layergroupid + "/dataview/" + dataviewName
-//                    };
-//                    assert.ok(parsedBody.metadata.dataviews[dataviewName]);
-//                    assert.ok(
-//                        parsedBody.metadata.dataviews[dataviewName].url.http.match(expectedWidgetURLS.http)
-//                    );
+                    var expectedDataviewsURLS = {
+                        http: "/api/v1/map/" + parsedBody.layergroupid + "/dataview/" + dataviewName
+                    };
+                    assert.ok(parsedBody.metadata.dataviews[dataviewName]);
+                    assert.ok(
+                        parsedBody.metadata.dataviews[dataviewName].url.http.match(expectedDataviewsURLS.http)
+                    );
                     return next(null, parsedBody.layergroupid);
                 }
             );
