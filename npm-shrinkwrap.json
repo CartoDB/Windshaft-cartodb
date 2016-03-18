@@ -532,11 +532,6 @@
         }
       }
     },
-    "camshaft-reference": {
-      "version": "0.2.0",
-      "from": "camshaft-reference@0.2.0",
-      "resolved": "https://registry.npmjs.org/camshaft-reference/-/camshaft-reference-0.2.0.tgz"
-    },
     "cartodb-psql": {
       "version": "0.4.0",
       "from": "cartodb-psql@>=0.4.0 <0.5.0",
@@ -636,7 +631,7 @@
           "dependencies": {
             "mime-types": {
               "version": "2.1.10",
-              "from": "mime-types@>=2.1.10 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {
@@ -825,7 +820,7 @@
             },
             "mime-types": {
               "version": "2.1.10",
-              "from": "mime-types@>=2.1.10 <2.2.0",
+              "from": "mime-types@>=2.1.6 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {

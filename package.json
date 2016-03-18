@@ -33,7 +33,6 @@
         "cartodb-redis": "~0.13.0",
         "cartodb-psql": "~0.4.0",
         "camshaft": "https://github.com/CartoDB/camshaft/tarball/master",
-        "camshaft-reference": "0.2.0",
         "fastly-purge": "~1.0.1",
         "redis-mpool": "~0.4.0",
         "lru-cache": "2.6.5",
