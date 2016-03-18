@@ -121,4 +121,28 @@ describe('analysis-layers-dataviews', function() {
             testClient.drain(done);
         });
     });
+
+    it('should skip the filter when sending own_filter=0 for histogram dataview', function(done) {
+        var testClient = new TestClient(mapConfig, 1234);
+
+        var params = {
+            filters: {
+                dataviews: {
+                    pop_max_histogram: {
+                        min: 2e6
+                    }
+                }
+            },
+            own_filter: 0
+        };
+
+        testClient.getDataview('pop_max_histogram', params, function(err, dataview) {
+            assert.ok(!err, err);
+
+            assert.equal(dataview.type, 'histogram');
+            assert.equal(dataview.bins_start, 0);
+
+            testClient.drain(done);
+        });
+    });
 });
