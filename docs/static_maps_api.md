@@ -11,18 +11,18 @@ Begin by instantiating either a Named or Anonymous Map using the `layergroupid t
 #### Definition
 
 ```bash
-GET /api/v1/map/static/center/:token/:z/:lat/:lng/:width/:height.:format
+GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}
 ```
 
 #### Params
 
 Param | Description
 --- | ---
-:token | the layergroupid token from the map instantiation
-:z | the zoom level of the map
-:lat | the latitude for the center of the map
+token | the layergroupid token from the map instantiation
+z | the zoom level of the map
+lat | the latitude for the center of the map
 
-:format | the format for the image, supported types: `png`, `jpg`
+format | the format for the image, supported types: `png`, `jpg`
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
@@ -31,33 +31,33 @@ Param | Description
 #### Definition
 
 ```bash
-GET /api/v1/map/static/bbox/:token/:bbox/:width/:height.:format`
+GET /api/v1/map/static/bbox/{token}/{bbox}/{width}/{height}.{format}`
 ```
 
 #### Params
 
 Param | Description
 --- | ---
-:token | the layergroupid token from the map instantiation
+token | the layergroupid token from the map instantiation
 
-:bbox | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
+bbox | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
 --- | ---
  | LowerCorner longitude, in decimal degrees (aka most western)
  | LowerCorner latitude, in decimal degrees (aka most southern)
  | UpperCorner longitude, in decimal degrees (aka most eastern)
  | UpperCorner latitude, in decimal degrees (aka most northern)
-:width | the width in pixels for the output image
-:height | the height in pixels for the output image
-:format | the format for the image, supported types: `png`, `jpg`
+width | the width in pixels for the output image
+height | the height in pixels for the output image
+format | the format for the image, supported types: `png`, `jpg`
 
-:format | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
+format | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
 Note: you can see this endpoint as
 
 ```bash
-GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:format`
+GET /api/v1/map/static/bbox/{token}/{west,south,east,north}/{width}/{height}.{format}`
 ```
 
 ### Named Map
@@ -65,19 +65,18 @@ GET /api/v1/map/static/bbox/:token/:west,:south,:east,:north/:width/:height.:for
 #### Definition
 
 ```bash
-GET /api/v1/map/static/named/:name/:width/:height.:format
+GET /api/v1/map/static/named/{name}/{width}/{height}.{format}
 ```
 
 #### Params
 
 Param | Description
 --- | ---
-:name | the name of the Named Map
-:width | the width in pixels for the output image
-:height | the height in pixels for the output image
-:height | the height in pixels for the output image
+name | the name of the Named Map
+width | the width in pixels for the output image
+height | the height in pixels for the output image
 
-:format | the format for the image, supported types: `png`, `jpg`
+format | the format for the image, supported types: `png`, `jpg`
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
@@ -161,7 +160,7 @@ After instantiating a map from a CartoDB account:
 #### Call
 
 ```bash
- GET /api/v1/map/static/center/4b615ff367e498e770e7d05e99181873:1420231989550.8699/14/40.71502926732618/-73.96039009094238/600/400.png
+ GET /api/v1/map/static/center/{4b615ff367e498e770e7d05e99181873:1420231989550.8699/14/40.71502926732618/-73.96039009094238/600/400.png}
 ```
 
 #### Response

@@ -122,7 +122,7 @@ view (optional) | extra keys to specify the view area for the map. It can be use
 
 Placeholders are variables that can be placed in your template.json file. Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergoup configurations](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations).
 
-Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced.
+Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced inside the Named Maps API.
 
 #### Example
 
@@ -155,7 +155,7 @@ This is the call for creating the Named Map. It is sending the template.json fil
 curl -X POST \
    -H 'Content-Type: application/json' \
    -d @template.json \
-   'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
+   'https://{username}.cartodb.com/api/v1/map/named?api_key={api_key}'
 ```
 
 #### Response
@@ -164,23 +164,15 @@ The response back from the API provides the name of your MapConfig as a template
 
 ```javascript
 {
-  "template_id":"name",
+  "template_id":"name"
 }
 ```
-
-**Tip:** The colon : in the command signifies where a placeholder variable should be added for an argument, it is not a literal part of the code. For example, a real response might appear as:
-
-```javascript
-{
-  "namedmap_tutorial",
-}
-```
-
-Note "namedmap_tutorial" is the variable that was used in place of the "template_id". See the [Named Map Tutorial](http://docs.cartodb.com/tutorials/named_maps/), from The Map Academy, for more information about this specific example. 
 
 #### Placeholder Errors
 
-As developers use many different methods to input placeholder variables, you may find placeholder examples with other symbols such as, <template_id>, {template_id}, $template_id, or @template_id; indicating that a placeholder variable should be added. If an error is raised, ensure that your placeholder variable appears without any added symbols.
+As developers use many different methods to input placeholder variables, you may find external placeholder examples with other symbols such as, <template_id>, :template_id, $template_id, or @template_id; indicating that a placeholder variable should be added. For best practices and consistency, CartoDB uses curly brackets to represent placeholders in our examples. (Note that JSON **Response** examples show “{variable_name}”: “{value}", these are specific to how JSON files are formatted.
+
+If an error is raised during a request, ensure that your placeholder variables appear without any added symbols.
 
 
 ## Instantiate
@@ -190,7 +182,7 @@ Instantiating a Named Map allows you to fetch the map tiles. You can use the Map
 #### Definition
 
 ```html
-POST /api/v1/map/named/:template_name
+POST /api/v1/map/named/{template_name}
 ```
 
 #### Param
@@ -213,7 +205,7 @@ The fields you pass as `params.json` depend on the variables allowed by the Name
 
 #### Example
 
-You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/map/named/:template_name`.
+You can initialize a template map by passing all of the required parameters in a POST to `/api/v1/map/named/{template_name}`.
 
 Valid auth token will be needed, if required by the template.
 
@@ -224,7 +216,7 @@ Valid auth token will be needed, if required by the template.
 curl -X POST \
   -H 'Content-Type: application/json' \
   -d @params.json \
-  'https://documentation.cartodb.com/api/v1/map/named/@template_name?auth_token=AUTH_TOKEN'
+  'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
 ```
 
 #### Response
@@ -251,7 +243,7 @@ You can then use the `layergroupid` for fetching tiles and grids as you would no
 #### Definition
 
 ```bash
-PUT /api/v1/map/named/:template_name
+PUT /api/v1/map/named/{template_name}
 ```
 
 #### Params
@@ -276,7 +268,7 @@ Updating a Named Map removes all the Named Map instances, so they need to be ini
 curl -X PUT \
   -H 'Content-Type: application/json' \
   -d @template.json \
-  'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
+  'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -304,7 +296,7 @@ Deletes the specified template map from the server, and disables any previously 
 #### Definition
 
 ```bash
-DELETE /api/v1/map/named/:template_name
+DELETE /api/v1/map/named/{template_name}
 ```
 
 #### Params
@@ -318,7 +310,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X DELETE 'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
+curl -X DELETE 'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -352,7 +344,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X GET 'https://documentation.cartodb.com/api/v1/map/named?api_key=APIKEY'
+curl -X GET 'https://{documentation}.cartodb.com/api/v1/map/named?api_key={api_key}'
 ```
 
 #### Response
@@ -378,7 +370,7 @@ This gets the definition of a requested template.
 #### Definition
 
 ```bash
-GET /api/v1/map/named/:template_name
+GET /api/v1/map/named/{template_name}
 ```
 
 #### Params
@@ -392,7 +384,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X GET 'https://documentation.cartodb.com/api/v1/map/named/:template_name?api_key=APIKEY'
+curl -X GET 'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -418,7 +410,7 @@ If using a [JSONP](https://en.wikipedia.org/wiki/JSONP) (for old browsers) reque
 #### Definition
 
 ```bash
-GET /api/v1/map/named/:template_name/jsonp
+GET /api/v1/map/named/{template_name}/jsonp
 ```
 
 #### Params
@@ -433,7 +425,7 @@ callback | JSON callback name
 #### Call
 
 ```bash
-curl 'https://documentation.cartodb.com/api/v1/map/named/:template_name/jsonp?auth_token=AUTH_TOKEN&callback=callback&config=template_params_json'
+curl 'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config=template_params_json'
 ```
 
 #### Response
@@ -470,7 +462,7 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
 
 ```javascript
 {
-  user_name: '{your_user_name}', // Required
+  user_name: '{username}', // Required
   type: 'namedmap', // Required
   named_map: {
     name: '{name_of_map}', // Required, the 'name' of the Named Map that you have created
@@ -521,20 +513,20 @@ Authenticated users, with an auth token, can use XYZ-based URLs to fetch tiles d
 
 To call a template_id in a URL:
 
-`/:template_id/:layer/:z/:x/:y.(:format)`
+`/{template_id}/{layer}/{z}/{x}/{y}.{format}`
 
 For example, a complete URL might appear as:
 
-"https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.png"
+"https://{username}.cartodb.com/api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.png"
 
 The placeholders indicate the following:
 
 - [`template_id`](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response) is the response of your Named Map.
 - layers can be a number (referring to the # layer of your map), all layers of your map, or a list of layers.
-  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/0/{z}/{x}/{y}.png"
-  - To show the first layer, enter the number value `1` in the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/1/{z}/{x}/{y}.png"
-  - To show all layers, enter the value `all` for the layer placeholder "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/all/{z}/{x}/{y}.png"
-  - To show a [list of layers](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as 0,1,2 in the layer placeholder. For example, to show the basemap and the first layer, "https://{your user name}.cartodb.com/api/v1/map/named/{template_id}/0,1/{z}/{x}/{y}.png"
+  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/0/{z}/{x}/{y}.png"
+  - To show the first layer, enter the number value `1` in the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/1/{z}/{x}/{y}.png"
+  - To show all layers, enter the value `all` for the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/all/{z}/{x}/{y}.png"
+  - To show a [list of layers](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as 0,1,2 in the layer placeholder. For example, to show the basemap and the first layer, "https://{username}.cartodb.com/api/v1/map/named/{template_id}/0,1/{z}/{x}/{y}.png"
 
 
 ### Get Mapnik Retina Tiles
@@ -543,4 +535,4 @@ Mapnik Retina tiles are not directly supported for Named Maps, so you cannot use
 
 Instantiate the map by using your `layergroupid` in the token placeholder:
 
- `:token/:z/:x/:y@:scale_factor?x.:format`
+ `{token}/{z}/{x}/{y}@{scale_factor}?{x}.{format}`
