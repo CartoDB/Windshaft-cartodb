@@ -176,8 +176,8 @@ describe('analysis-layers', function() {
 
         testClient.getLayergroup(PERMISSION_DENIED_RESPONSE, function(err, layergroupResult) {
             assert.ok(!err, err);
-
-            assert.deepEqual(layergroupResult.errors, ["permission denied for relation cdb_tablemetadata"]);
+            // TODO add a better error message: Your requests requires API key as it needs write permissions.
+            assert.deepEqual(layergroupResult.errors, ["permission denied for relation cdb_analysis_catalog"]);
 
             testClient.drain(done);
         });
