@@ -57,7 +57,7 @@ format | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
 Note: you can see this endpoint as
 
 ```bash
-GET /api/v1/map/static/bbox/{token}/{west,south,east,north}/{width}/{height}.{format}`
+GET /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}`
 ```
 
 ### Named Map
@@ -160,7 +160,7 @@ After instantiating a map from a CartoDB account:
 #### Call
 
 ```bash
- GET /api/v1/map/static/center/{4b615ff367e498e770e7d05e99181873:1420231989550.8699/14/40.71502926732618/-73.96039009094238/600/400.png}
+ GET /api/v1/map/static/center/{layergroupid}/{z}/{x}/{y}/{width}/{height}.png
 ```
 
 #### Response

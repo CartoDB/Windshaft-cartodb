@@ -22,10 +22,10 @@ $.ajax({
   type: 'POST',
   dataType: 'json',
   contentType: 'application/json',
-  url: 'https://{documentation}.cartodb.com/api/v1/map',
+  url: 'https://{username}.cartodb.com/api/v1/map',
   data: JSON.stringify(mapconfig),
   success: function(data) {
-    var templateUrl = 'https://{documentation}.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
+    var templateUrl = 'https://{username}.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
     console.log(templateUrl);
   }
 })
@@ -96,5 +96,5 @@ Note: all `layers` in `metadata` will always have a `type` string and a `meta` d
 You can use the `layergroupid` to instantiate a URL template for accessing tiles on the client. Here we use the `layergroupid` from the example response above in this URL template:
 
 ```bash
-https://{documentation}.cartodb.com/api/v1/map/{c01a54877c62831bb51720263f91fb33:0}/{z}/{x}/{y}.png
+https://{username}.cartodb.com/api/v1/map/{layergroupid}/{z}/{x}/{y}.png
 ```

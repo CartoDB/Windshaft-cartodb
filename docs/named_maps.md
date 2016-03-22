@@ -168,13 +168,6 @@ The response back from the API provides the name of your MapConfig as a template
 }
 ```
 
-#### Placeholder Errors
-
-As developers use many different methods to input placeholder variables, you may find external placeholder examples with other symbols such as, <template_id>, :template_id, $template_id, or @template_id; indicating that a placeholder variable should be added. For best practices and consistency, CartoDB uses curly brackets to represent placeholders in our examples. (Note that JSON **Response** examples show “{variable_name}”: “{value}", these are specific to how JSON files are formatted.
-
-If an error is raised during a request, ensure that your placeholder variables appear without any added symbols.
-
-
 ## Instantiate
 
 Instantiating a Named Map allows you to fetch the map tiles. You can use the Maps API to instantiate, or use the CartoDB.js `createLayer()` function. The result is an Anonymous Map.
@@ -216,7 +209,7 @@ Valid auth token will be needed, if required by the template.
 curl -X POST \
   -H 'Content-Type: application/json' \
   -d @params.json \
-  'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
+  'https://{username}.cartodb.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
 ```
 
 #### Response
@@ -268,7 +261,7 @@ Updating a Named Map removes all the Named Map instances, so they need to be ini
 curl -X PUT \
   -H 'Content-Type: application/json' \
   -d @template.json \
-  'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+  'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -310,7 +303,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X DELETE 'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+curl -X DELETE 'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -344,7 +337,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X GET 'https://{documentation}.cartodb.com/api/v1/map/named?api_key={api_key}'
+curl -X GET 'https://{username}.cartodb.com/api/v1/map/named?api_key={api_key}'
 ```
 
 #### Response
@@ -384,7 +377,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X GET 'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+curl -X GET 'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -425,7 +418,7 @@ callback | JSON callback name
 #### Call
 
 ```bash
-curl 'https://{documentation}.cartodb.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config=template_params_json'
+curl 'https://{username}.cartodb.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config=template_params_json'
 ```
 
 #### Response
