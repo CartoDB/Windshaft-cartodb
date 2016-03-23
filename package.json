@@ -31,7 +31,7 @@
         "queue-async": "~1.0.7",
         "request": "~2.62.0",
         "cartodb-redis": "~0.13.0",
-        "cartodb-psql": "~0.4.0",
+        "cartodb-psql": "~0.6.1",
         "camshaft": "https://github.com/CartoDB/camshaft/tarball/master",
         "fastly-purge": "~1.0.1",
         "redis-mpool": "~0.4.0",
