@@ -18,7 +18,7 @@ var serverOptions = require('../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-var TablesCacheEntry = require('../../lib/cartodb/cache/model/database_tables_entry');
+var QueryTables = require('cartodb-query-tables');
 
 ['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
 
@@ -122,7 +122,7 @@ describe(suiteName, function() {
                       ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
               }
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png',
+              assert.imageBufferIsSimilarToFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.png',
                   IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
                       next(err);
                   }
@@ -190,38 +190,50 @@ describe(suiteName, function() {
     });
 
 
-    it("should include serverMedata in the response", function(done) {
-      global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } };
-      var layergroup =  {
-        version: '1.0.0',
-        layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator' +
-                   ' from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.1'
-             } }
-        ]
-      };
+    describe('server-metadata', function() {
+        var serverMetadata;
+        beforeEach(function() {
+            serverMetadata = global.environment.serverMetadata;
+            global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } };
+        });
 
-      step(
-        function do_create_get()
-        {
-          var next = this;
-          assert.response(server, {
-              url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
-              method: 'GET',
-              headers: {host: 'localhost'}
-          }, {}, function(res, err) { next(err, res); });
-        },
-        function do_check_create(err, res) {
-          var parsed = JSON.parse(res.body);
-          keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
-          keysToDelete['user:localhost:mapviews:global'] = 5;
-          assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
-          done();
-        }
-      );
+        afterEach(function() {
+            global.environment.serverMetadata = serverMetadata;
+        });
+
+        it("should include serverMedata in the response", function(done) {
+          var layergroup =  {
+            version: '1.0.0',
+            layers: [
+               { options: {
+                   sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator' +
+                       ' from test_table limit 2',
+                   cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                   cartocss_version: '2.0.1'
+                 } }
+            ]
+          };
+
+          step(
+            function do_create_get()
+            {
+              var next = this;
+              assert.response(server, {
+                  url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                  method: 'GET',
+                  headers: {host: 'localhost'}
+              }, {}, function(res, err) { next(err, res); });
+            },
+            function do_check_create(err, res) {
+              var parsed = JSON.parse(res.body);
+              keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+              keysToDelete['user:localhost:mapviews:global'] = 5;
+              assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
+              done();
+            }
+          );
+        });
+
     });
 
 
@@ -262,9 +274,9 @@ describe(suiteName, function() {
           var parsedBody = JSON.parse(res.body);
           expected_token = parsedBody.layergroupid.split(':')[0];
           helper.checkCache(res);
-          helper.checkSurrogateKey(res, new TablesCacheEntry('test_windshaft_cartodb_user_1_db', [
-              'public.test_table',
-              'public.test_table_2'
+          helper.checkSurrogateKey(res, new QueryTables.DatabaseTablesEntry([
+            {dbname: "test_windshaft_cartodb_user_1_db", table_name: "test_table", schema_name: "public"},
+            {dbname: "test_windshaft_cartodb_user_1_db", table_name: "test_table_2", schema_name: "public"},
           ]).key().join(' '));
 
 
@@ -392,7 +404,8 @@ describe(suiteName, function() {
                       ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
               }
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
+              var referenceImagePath = 'test/fixtures/test_multilayer_bbox.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err/*, similarity*/) {
                   next(err);
               });
@@ -431,7 +444,8 @@ describe(suiteName, function() {
                       ' WHERE m.tabname = any ((SELECT tablenames from querytables)::regclass[])');
               }
 
-              assert.imageEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
+              var referenceImagePath = 'test/fixtures/test_multilayer_bbox.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                 function(err/*, similarity*/) {
                   next(err);
               });
@@ -576,7 +590,7 @@ describe(suiteName, function() {
         version: '1.0.0',
         layers: [
            { options: {
-               sql: 'select 1 as cartodb_id, !pixel_height! as h' +
+               sql: 'select 1 as cartodb_id, !pixel_height! as h,' +
                    'ST_Buffer(!bbox!, -32*greatest(!pixel_width!,!pixel_height!)) as the_geom_webmercator',
                cartocss: '#layer { polygon-fit:red; }',
                cartocss_version: '2.0.1'
@@ -617,7 +631,7 @@ describe(suiteName, function() {
           headers: {host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
-          assert.equal(res.statusCode, 404, res.statusCode + ": " + res.body);
+          assert.equal(res.statusCode, 400, res.statusCode + ": " + res.body);
           var parsed = JSON.parse(res.body);
           var msg = parsed.errors[0];
           assert.ok(msg.match(/bogus.*exist/), msg);
@@ -1007,7 +1021,7 @@ describe(suiteName, function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png',
+              assert.imageBufferIsSimilarToFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png',
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
                       next(err);
                   }
@@ -1314,6 +1328,39 @@ describe(suiteName, function() {
             },
             function(res) {
                 assert.ok(res.body.match(/permission denied for relation test_table_private_1/));
+                done();
+            }
+        );
+    });
+
+    it('should response to empty layers mapconfig', function(done) {
+        var layergroup =  {
+            layers: []
+        };
+
+        assert.response(
+            server,
+            {
+                url: '/api/v1/map',
+                method: 'POST',
+                headers: {
+                    host: 'localhost',
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(layergroup)
+            },
+            {
+                status: 200
+            },
+            function(res, err) {
+                assert.ok(!err);
+
+                var parsedBody = JSON.parse(res.body);
+                assert.ok(parsedBody.layergroupid);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+
                 done();
             }
         );

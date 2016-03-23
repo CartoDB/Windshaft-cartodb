@@ -1,7 +1,6 @@
 // Cribbed from the ever prolific Konstantin Kaefer
 // https://github.com/mapbox/tilelive-mapnik/blob/master/test/support/assert.js
 
-var exec = require('child_process').exec;
 var fs = require('fs');
 var path = require('path');
 var util = require('util');
@@ -13,7 +12,7 @@ var request = require('request');
 var assert = module.exports = exports = require('assert');
 
 /**
- * Takes an image data as an input and an image path and compare them using ImageMagick fuzz algorithm, if case the
+ * Takes an image data as an input and an image path and compare them using mapnik.Image.compare mechanism, in case the
  * similarity is not within the tolerance limit it will callback with an error.
  *
  * @param buffer The image data to compare from
@@ -22,70 +21,39 @@ var assert = module.exports = exports = require('assert');
  * @param {function} callback Will call to home with null in case there is no error, otherwise with the error itself
  * @see FUZZY in http://www.imagemagick.org/script/command-line-options.php#metric
  */
-assert.imageEqualsFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
+assert.imageBufferIsSimilarToFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
     callback = callback || function(err) { assert.ifError(err); };
-    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath),
-        testImageFilePath = createImageFromBuffer(buffer, 'test');
 
-    imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance, function(err) {
-        fs.unlinkSync(testImageFilePath);
+    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
+    var referenceImageBuffer = fs.readFileSync(referenceImageFilePath, { encoding: null });
+
+    assert.imageBuffersAreSimilar(buffer, referenceImageBuffer, tolerance, callback);
+};
+
+assert.imageBuffersAreSimilar = function(bufferA, bufferB, tolerance, callback) {
+    var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferA) ? bufferA : new Buffer(bufferA, 'binary'));
+    var referenceImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferB) ? bufferB : new Buffer(bufferB, 'binary'));
+
+    imagesAreSimilar(testImage, referenceImage, tolerance, callback);
+};
+
+assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback) {
+    callback = callback || function(err) { assert.ifError(err); };
+
+    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
+
+    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
+
+    imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
+        if (err) {
+            var testImageFilePath = randomImagePath();
+            testImage.save(testImageFilePath);
+        }
         callback(err);
     });
 };
 
-assert.imageBuffersAreEqual = function(bufferA, bufferB, tolerance, callback) {
-    var randStr = (Math.random() * 1e16).toString().substring(0, 8);
-    var imageFilePathA = createImageFromBuffer(bufferA, randStr + '-a'),
-        imageFilePathB = createImageFromBuffer(bufferB, randStr + '-b');
-
-    imageFilesAreEqual(imageFilePathA, imageFilePathB, tolerance, function(err, similarity) {
-        callback(err, [imageFilePathA, imageFilePathB], similarity);
-    });
-};
-
-function createImageFromBuffer(buffer, nameHint) {
-    var imageFilePath = path.resolve('test/results/png/image-' + nameHint + '-' + Date.now() + '.png');
-    var err = fs.writeFileSync(imageFilePath, buffer, 'binary');
-    assert.ifError(err);
-    return imageFilePath;
-}
-
-function imageFilesAreEqual(testImageFilePath, referenceImageFilePath, tolerance, callback) {
-    var resultFilePath = path.resolve(util.format('/tmp/windshaft-result-%s-diff.png', Date.now()));
-    var imageMagickCmd = util.format(
-        'compare -metric fuzz "%s" "%s" "%s"',
-        testImageFilePath, referenceImageFilePath, resultFilePath
-    );
-
-    exec(imageMagickCmd, function(err, stdout, stderr) {
-        if (err) {
-            fs.unlinkSync(testImageFilePath);
-            callback(err);
-        } else {
-            stderr = stderr.trim();
-            var metrics = stderr.match(/([0-9]*) \((.*)\)/);
-            if ( ! metrics ) {
-                callback(new Error("No match for " + stderr));
-                return;
-            }
-            var similarity = parseFloat(metrics[2]),
-                tolerancePerMil = (tolerance / 1000);
-            if (similarity > tolerancePerMil) {
-                err = new Error(util.format(
-                        'Images %s and %s are not equal (got %d similarity, expected %d). Result %s',
-                        testImageFilePath, referenceImageFilePath, similarity, tolerancePerMil, resultFilePath)
-                );
-                err.similarity = similarity;
-                callback(err, similarity);
-            } else {
-                fs.unlinkSync(resultFilePath);
-                callback(null, similarity);
-            }
-        }
-    });
-}
-
-assert.imagesAreSimilar = function(testImage, referenceImage, tolerance, callback) {
+function imagesAreSimilar(testImage, referenceImage, tolerance, callback) {
     if (testImage.width() !== referenceImage.width() || testImage.height() !== referenceImage.height()) {
         return callback(new Error('Images are not the same size'));
     }
@@ -103,27 +71,10 @@ assert.imagesAreSimilar = function(testImage, referenceImage, tolerance, callbac
     } else {
         callback(null, similarity);
     }
-};
+}
 
-assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback) {
-    callback = callback || function(err) { assert.ifError(err); };
-
-    var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
-
-    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
-
-    assert.imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
-        if (err) {
-            var testImageFilePath = randomImagePath();
-            testImage.save(testImageFilePath);
-        }
-        callback(err);
-    });
-};
-
-function randomImagePath(nameHint) {
-    nameHint = nameHint || 'test';
-    return path.resolve('test/results/png/image-' + nameHint + '-' + Date.now() + '.png');
+function randomImagePath() {
+    return path.resolve('test/results/png/image-test-' + Date.now() + '.png');
 }
 
 // jshint maxcomplexity:9

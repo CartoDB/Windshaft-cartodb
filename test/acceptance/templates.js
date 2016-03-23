@@ -3,8 +3,8 @@ var _           = require('underscore');
 var redis       = require('redis');
 var step        = require('step');
 var strftime    = require('strftime');
+var QueryTables = require('cartodb-query-tables');
 var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
-var TablesCacheEntry = require('../../lib/cartodb/cache/model/database_tables_entry');
 var redis_stats_db = 5;
 
 // Pollute the PG environment to make sure
@@ -313,51 +313,63 @@ describe('template_api', function() {
       });
     });
 
-    it("instance endpoint should return server metadata", function(done){
-      global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } };
-      var tmpl = _.clone(template_acceptance1);
-      tmpl.name = "rambotemplate2";
+    describe('server-metadata', function() {
+        var serverMetadata;
+        beforeEach(function() {
+            serverMetadata = global.environment.serverMetadata;
+            global.environment.serverMetadata = { cdn_url : { http:'test', https: 'tests' } };
+        });
 
-      step(function postTemplate1() {
-          var next = this;
-          var post_request = {
-              url: '/api/v1/map/named?api_key=1234',
-              method: 'POST',
-              headers: {host: 'localhost', 'Content-Type': 'application/json' },
-              data: JSON.stringify(tmpl)
-          };
-          assert.response(server, post_request, {}, function(res) {
-            next(null, res);
-          });
-        },
-        function testCORS() {
-          var next = this;
-          assert.response(server, {
-              url: '/api/v1/map/named/' + tmpl.name,
-              method: 'POST',
-              headers: {host: 'localhost', 'Content-Type': 'application/json' }
-          },{
-              status: 200
-          }, function(res) {
-            var parsed = JSON.parse(res.body);
-            keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
-            keysToDelete['user:localhost:mapviews:global'] = 5;
-            assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
-            next(null);
-          });
-        },
-        function deleteTemplate(err) {
-            assert.ifError(err);
-          var del_request = {
-              url: '/api/v1/map/named/' + tmpl.name + '?api_key=1234',
-              method: 'DELETE',
-              headers: {host: 'localhost', 'Content-Type': 'application/json' }
-          };
-          assert.response(server, del_request, {}, function() {
-              done();
-          });
-        }
-      );
+        afterEach(function() {
+            global.environment.serverMetadata = serverMetadata;
+        });
+
+
+        it("instance endpoint should return server metadata", function(done){
+          var tmpl = _.clone(template_acceptance1);
+          tmpl.name = "rambotemplate2";
+
+          step(function postTemplate1() {
+              var next = this;
+              var post_request = {
+                  url: '/api/v1/map/named?api_key=1234',
+                  method: 'POST',
+                  headers: {host: 'localhost', 'Content-Type': 'application/json' },
+                  data: JSON.stringify(tmpl)
+              };
+              assert.response(server, post_request, {}, function(res) {
+                next(null, res);
+              });
+            },
+            function testCORS() {
+              var next = this;
+              assert.response(server, {
+                  url: '/api/v1/map/named/' + tmpl.name,
+                  method: 'POST',
+                  headers: {host: 'localhost', 'Content-Type': 'application/json' }
+              },{
+                  status: 200
+              }, function(res) {
+                var parsed = JSON.parse(res.body);
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+                assert.ok(_.isEqual(parsed.cdn_url, global.environment.serverMetadata.cdn_url));
+                next(null);
+              });
+            },
+            function deleteTemplate(err) {
+                assert.ifError(err);
+              var del_request = {
+                  url: '/api/v1/map/named/' + tmpl.name + '?api_key=1234',
+                  method: 'DELETE',
+                  headers: {host: 'localhost', 'Content-Type': 'application/json' }
+              };
+              assert.response(server, del_request, {}, function() {
+                  done();
+              });
+            }
+          );
+        });
     });
 
 
@@ -1393,7 +1405,8 @@ describe('template_api', function() {
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
           var expectedSurrogateKey = [
-              new TablesCacheEntry('test_windshaft_cartodb_user_1_db', ['public.test_table_private_1']).key(),
+            new QueryTables.DatabaseTablesEntry([{dbname: 'test_windshaft_cartodb_user_1_db', schema_name: 'public',
+                                   table_name: 'test_table_private_1'}]).key(),
               new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
           ].join(' ');
           helper.checkSurrogateKey(res, expectedSurrogateKey);
@@ -1476,7 +1489,8 @@ describe('template_api', function() {
           // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
           helper.checkCache(res);
           var expectedSurrogateKey = [
-              new TablesCacheEntry('test_windshaft_cartodb_user_1_db', ['public.test_table_private_1']).key(),
+            new QueryTables.DatabaseTablesEntry([{dbname: 'test_windshaft_cartodb_user_1_db', schema_name: 'public',
+                                   table_name: 'test_table_private_1'}]).key(),
               new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
           ].join(' ');
           helper.checkSurrogateKey(res, expectedSurrogateKey);

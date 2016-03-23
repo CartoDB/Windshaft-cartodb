@@ -67,3 +67,16 @@ Contributing
 ---
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Developing with a custom windshaft version
+
+If you plan or want to use a custom / not released yet version of windshaft (or any other dependency) the best option is
+to use `npm link`. You can read more about it at [npm-link: Symlink a package folder](https://docs.npmjs.com/cli/link).
+
+**Quick start**:
+
+```shell
+~/windshaft-directory $ npm install
+~/windshaft-directory $ npm link
+~/windshaft-cartodb-directory $ npm link windshaft
+```

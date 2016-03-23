@@ -1,5 +1,131 @@
 # Changelog
 
+## 2.31.1
+
+Released 2016-03-23
+
+Announcements:
+ - Upgrades windshaft to [1.16.1](https://github.com/CartoDB/Windshaft/releases/tag/1.16.1)
+
+
+## 2.31.0
+
+Released 2016-03-16
+
+Announcements:
+ - Upgrades windshaft to [1.16.0](https://github.com/CartoDB/Windshaft/releases/tag/1.16.0)
+
+
+## 2.30.0
+
+Released 2016-03-15
+
+Announcements:
+ - Upgrades windshaft to [1.15.0](https://github.com/CartoDB/Windshaft/releases/tag/1.15.0)
+
+
+## 2.29.0
+
+Released 2016-03-14
+
+Announcements:
+ - Upgrades windshaft to [1.14.0](https://github.com/CartoDB/Windshaft/releases/tag/1.14.0)
+
+
+## 2.28.0
+
+Released 2016-03-14
+
+New features:
+ - Added [turbo-cartocss](https://github.com/CartoDB/turbo-cartocss) to preprocess CartoCSS.
+
+
+## 2.27.0
+
+Released 2016-03-09
+
+New features:
+ - Add [Surrogate-Key](https://github.com/CartoDB/cartodb/wiki/CartoDB-Surrogate-Keys) headers to responses
+
+Enhancements:
+ - Use new `node-cartodb-query-tables` library to obtain affected tables in queries
+
+Announcements:
+ - Remove deprecated tools directory
+
+
+## 2.26.3
+
+Released 2016-03-03
+
+Improvements:
+ - Optimize overviews queries for efficient spatial filtering in PostgreSQL
+
+
+## 2.26.2
+
+Released 2016-02-25
+
+Announcements:
+ - Upgrades windshaft to [1.13.2](https://github.com/CartoDB/Windshaft/releases/tag/1.13.2)
+
+
+## 2.26.1
+
+Released 2016-02-24
+
+Announcements:
+ - Upgrades windshaft to [1.13.1](https://github.com/CartoDB/Windshaft/releases/tag/1.13.1)
+
+
+## 2.26.0
+
+Released 2016-02-24
+
+Announcements:
+ - Upgrades windshaft to [1.13.0](https://github.com/CartoDB/Windshaft/releases/tag/1.13.0)
+
+
+## 2.25.2
+
+Released 2016-02-22
+
+Bug fixes:
+ - Correct URLs for widgets in named maps #381
+
+
+## 2.25.1
+
+Released 2016-02-22
+
+Announcements:
+ - Upgrades windshaft to [1.11.1](https://github.com/CartoDB/Windshaft/releases/tag/1.11.1)
+
+
+## 2.25.0
+
+Released 2016-02-18
+
+Announcements:
+ - Upgrades windshaft to [1.11.0](https://github.com/CartoDB/Windshaft/releases/tag/1.11.0)
+
+
+## 2.24.0
+
+Released 2016-02-15
+
+Announcements:
+ - Upgrades windshaft to [1.10.1](https://github.com/CartoDB/Windshaft/releases/tag/1.10.1)
+
+
+## 2.23.0
+
+Released 2016-02-10
+
+Improvements:
+- Support for overviews
+
+
 ## 2.22.0
 
 Released 2016-02-08

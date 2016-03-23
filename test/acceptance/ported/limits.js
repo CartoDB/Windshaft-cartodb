@@ -84,11 +84,13 @@ describe.skip('render limits', function() {
         testClient.withLayergroup(slowQueryMapConfig, options, function(err, requestTile, finish) {
             var tileUrl = '/0/0/0.png';
             requestTile(tileUrl, options, function(err, res) {
-                assert.imageEqualsFile(res.body, fixtureImage, IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
-                    finish(function(finishErr) {
-                        done(err || finishErr);
-                    });
-                });
+                assert.imageBufferIsSimilarToFile(res.body, fixtureImage, IMAGE_EQUALS_TOLERANCE_PER_MIL,
+                    function(err) {
+                        finish(function(finishErr) {
+                            done(err || finishErr);
+                        });
+                    }
+                );
             });
         });
     });

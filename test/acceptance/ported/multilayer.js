@@ -117,7 +117,8 @@ describe('multilayer', function() {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
               checkCORSHeaders(res);
-              assert.imageEqualsFile(res.body, './test/fixtures/test_bigpoint_red.png', IMAGE_EQUALS_TOLERANCE_PER_MIL,
+              var referenceImagePath = './test/fixtures/test_bigpoint_red.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                   function(err) {
                   next(err);
               });
@@ -191,7 +192,8 @@ describe('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png',
+              var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -302,7 +304,8 @@ describe('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png',
+              var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -425,7 +428,8 @@ describe('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png',
+              var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -541,7 +545,8 @@ describe('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png',
+              var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -727,7 +732,8 @@ describe('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer2.png',
+              var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer2.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -761,7 +767,8 @@ describe('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer3.png',
+              var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer3.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -856,7 +863,8 @@ describe('multilayer', function() {
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
-              assert.imageEqualsFile(res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer4.png',
+              var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer4.png';
+              assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });
@@ -1259,7 +1267,7 @@ describe('multilayer', function() {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
               checkCORSHeaders(res);
-              assert.imageEqualsFile(res.body, './test/fixtures/test_bigpoint_red.png',
+              assert.imageBufferIsSimilarToFile(res.body, './test/fixtures/test_bigpoint_red.png',
                   IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err) {
                   next(err);
               });

@@ -1,18 +1,18 @@
 sudo: false
 
 addons:
-  postgresql: "9.4"
+  postgresql: "9.3"
   apt:
     packages:
-    - postgresql-plpython-9.4
-    - pkg-config
-    - libcairo2-dev
-    - libjpeg8-dev
-    - libgif-dev
+      - pkg-config
+      - libcairo2-dev
+      - libjpeg8-dev
+      - libgif-dev
 
 before_install:
   - npm install -g npm@2
   - createdb template_postgis
+  - createuser publicuser
   - psql -c "CREATE EXTENSION postgis" template_postgis
 
 env:
