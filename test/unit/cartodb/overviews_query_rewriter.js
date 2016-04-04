@@ -395,5 +395,32 @@ describe('Overviews query rewriter', function() {
     done();
   });
 
-
+  it('generates overviews for wrapped query', function(done){
+    var sql = "SELECT * FROM (SELECT * FROM table1) AS wrapped_query WHERE 1=1";
+    var data = {
+        overviews: {
+            table1: {
+              0: { table: 'table1_ov0' },
+              1: { table: 'table1_ov1' },
+              2: { table: 'table1_ov2' }
+            }
+        }
+    };
+    var overviews_sql = overviewsQueryRewriter.query(sql, data);
+    var expected_sql = "\
+        WITH\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (SELECT * FROM  (\
+            SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
+            UNION ALL\
+            SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
+            UNION ALL\
+            SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2\
+            UNION ALL\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+          ) AS _vovw_table1) AS wrapped_query WHERE 1=1\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
 });

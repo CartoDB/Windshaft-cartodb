@@ -22,10 +22,10 @@ $.ajax({
   type: 'POST',
   dataType: 'json',
   contentType: 'application/json',
-  url: 'https://documentation.cartodb.com/api/v1/map',
+  url: 'https://{username}.cartodb.com/api/v1/map',
   data: JSON.stringify(mapconfig),
   success: function(data) {
-    var templateUrl = 'https://documentation.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
+    var templateUrl = 'https://{username}.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
     console.log(templateUrl);
   }
 })
@@ -61,7 +61,7 @@ The MapConfig needs to be sent to CartoDB's Map API using an authenticated call.
 #### Call
 
 ```bash
-curl 'https://{account}.cartodb.com/api/v1/map/named?api_key=APIKEY' -H 'Content-Type: application/json' -d @mapconfig.json
+curl 'https://{username}.cartodb.com/api/v1/map/named?api_key={api_key}' -H 'Content-Type: application/json' -d @mapconfig.json
 ```
 
 To get the `URL` to fetch the tiles you need to instantiate the map, where `template_id` is the template name from the previous response.
@@ -69,7 +69,7 @@ To get the `URL` to fetch the tiles you need to instantiate the map, where `temp
 #### Call
 
 ```bash
-curl -X POST 'https://{account}.cartodb.com/api/v1/map/named/:template_id' -H 'Content-Type: application/json'
+curl -X POST 'https://{username}.cartodb.com/api/v1/map/named/{template_id}' -H 'Content-Type: application/json'
 ```
 
 The response will return JSON with properties for the `layergroupid`, the timestamp (`last_updated`) of the last data modification and some key/value pairs with `metadata` for the `layers`.
@@ -96,5 +96,5 @@ Note: all `layers` in `metadata` will always have a `type` string and a `meta` d
 You can use the `layergroupid` to instantiate a URL template for accessing tiles on the client. Here we use the `layergroupid` from the example response above in this URL template:
 
 ```bash
-https://documentation.cartodb.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/{z}/{x}/{y}.png
+https://{username}.cartodb.com/api/v1/map/{layergroupid}/{z}/{x}/{y}.png
 ```
