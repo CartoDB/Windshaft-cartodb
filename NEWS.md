@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.31.2
+
+Released 2016-04-04
+
+Bug fixes:
+ - Overviews integration for named layers #400
+ - Support wrapped queries in named layers #405
+
 ## 2.31.1
 
 Released 2016-03-23
