@@ -64,7 +64,7 @@ describe('Overviews query rewriter', function() {
           SELECT * FROM (\
             SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
             UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 0\
+            SELECT *, 1 AS _vovw_count FROM table1, _vovw_scale WHERE _vovw_z > 0\
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -87,7 +87,7 @@ describe('Overviews query rewriter', function() {
           SELECT * FROM (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM table1, _vovw_scale WHERE _vovw_z > 2\
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -119,7 +119,7 @@ describe('Overviews query rewriter', function() {
             UNION ALL\
             SELECT * FROM table1_ov3, _vovw_scale WHERE _vovw_z = 3\
             UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 3\
+            SELECT *, 1 AS _vovw_count FROM table1, _vovw_scale WHERE _vovw_z > 3\
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -148,7 +148,7 @@ describe('Overviews query rewriter', function() {
             UNION ALL\
             SELECT * FROM table1_ov6, _vovw_scale WHERE _vovw_z > 1 AND _vovw_z <= 6\
             UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 6\
+            SELECT *, 1 AS _vovw_count FROM table1, _vovw_scale WHERE _vovw_z > 6\
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -171,7 +171,7 @@ describe('Overviews query rewriter', function() {
           SELECT * FROM (\
             SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -194,10 +194,9 @@ describe('Overviews query rewriter', function() {
           SELECT * FROM (\
             SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
           ) AS _vovw_table1\
     ";
-
     assertSameSql(overviews_sql, expected_sql);
     done();
   });
@@ -218,7 +217,7 @@ describe('Overviews query rewriter', function() {
           SELECT * FROM (\
             SELECT * FROM public.\"table 1_ov2\", _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM public.\"table 1\", _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM public.\"table 1\", _vovw_scale WHERE _vovw_z > 2\
           ) AS \"_vovw_table 1\"\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -241,7 +240,7 @@ describe('Overviews query rewriter', function() {
           SELECT * FROM (\
             SELECT * FROM \"user-1\".table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM \"user-1\".table1, _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM \"user-1\".table1, _vovw_scale WHERE _vovw_z > 2\
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -266,7 +265,7 @@ describe('Overviews query rewriter', function() {
           SELECT * FROM (\
             SELECT * FROM \"user-1\".\"table 1_ov2\", _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM \"user-1\".\"table 1\", _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM \"user-1\".\"table 1\", _vovw_scale WHERE _vovw_z > 2\
           ) AS \"_vovw_table 1\"\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -290,7 +289,7 @@ describe('Overviews query rewriter', function() {
           SELECT column1, column2, column3 FROM (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM table1, _vovw_scale WHERE _vovw_z > 2\
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -314,7 +313,7 @@ describe('Overviews query rewriter', function() {
           SELECT column1, column2, column3 FROM (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM table1, _vovw_scale WHERE _vovw_z > 2\
           ) AS _vovw_table1;\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -337,7 +336,7 @@ describe('Overviews query rewriter', function() {
           SELECT column1,column2, column3 FROM (\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
             UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM table1, _vovw_scale WHERE _vovw_z > 2\
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
@@ -417,7 +416,7 @@ describe('Overviews query rewriter', function() {
             UNION ALL\
             SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2\
             UNION ALL\
-            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+            SELECT *, 1 AS _vovw_count FROM table1, _vovw_scale WHERE _vovw_z > 2\
           ) AS _vovw_table1) AS wrapped_query WHERE 1=1\
     ";
     assertSameSql(overviews_sql, expected_sql);
