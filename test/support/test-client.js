@@ -12,8 +12,30 @@ var helper = require('./test_helper');
 
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 
+function createServiceStub(result) {
+    return function(__, callback) {
+        return callback(null, result);
+    };
+}
+function AnalysisDatabaseServiceStub(/*dbParams, batchParams*/) {
+//    this.dbParams = dbParams;
+//    this.batchParams = batchParams;
+}
+AnalysisDatabaseServiceStub.prototype = {
+    run: createServiceStub({}),
+    getSchema: createServiceStub([]),
+    getColumnNames: createServiceStub([]),
+    getLastUpdatedTimeFromAffectedTables: createServiceStub([]),
+    setUpdatedAtForSources: createServiceStub([]),
+    registerAnalysisInCatalog: createServiceStub([]),
+    queueAnalysisOperations: createServiceStub([]),
+    trackAnalysis: createServiceStub([]),
+    enqueue: createServiceStub({})
+};
+serverOptions.analysis.batch.databaseService = AnalysisDatabaseServiceStub;
+
+var server = new CartodbWindshaft(serverOptions);
 
 function TestClient(mapConfig, apiKey) {
     this.mapConfig = mapConfig;
