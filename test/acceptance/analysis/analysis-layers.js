@@ -161,7 +161,7 @@ describe('analysis-layers', function() {
         });
     });
 
-    it.skip('should fail for non-authenticated requests that has a node other than "source"', function(done) {
+    it('should fail for non-authenticated requests that has a node other than "source"', function(done) {
         var useCase = useCases[1];
 
         // No API key here
