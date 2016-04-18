@@ -1,8 +1,6 @@
 var assert = require('../../support/assert');
 var step = require('step');
 
-//var mapnik = require('windshaft').mapnik;
-
 var helper = require('../../support/test_helper');
 
 var CartodbWindshaft = require('../../../lib/cartodb/server');
@@ -155,7 +153,7 @@ describe('named-maps analysis', function() {
         );
     });
 
-    it('should be able to retrieve widgets from all URLs', function(done) {
+    it('should be able to retrieve images from analysis', function(done) {
         assert.response(
             server,
             {
@@ -177,8 +175,6 @@ describe('named-maps analysis', function() {
                     return done(err);
                 }
 
-//                var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-//                assert.ok(image);
                 var fixturePath = './test/fixtures/analysis/named-map-buffer.png';
                 assert.imageBufferIsSimilarToFile(res.body, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
                     assert.ok(!err, err);
