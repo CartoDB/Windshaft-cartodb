@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.31.2",
+  "version": "2.32.1",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -836,9 +836,9 @@
           "resolved": "https://registry.npmjs.org/async/-/async-0.2.10.tgz"
         },
         "readable-stream": {
-          "version": "1.0.33",
+          "version": "1.0.34",
           "from": "readable-stream@>=1.0.2 <1.1.0",
-          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.33.tgz",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
           "dependencies": {
             "core-util-is": {
               "version": "1.0.2",
@@ -857,7 +857,7 @@
             },
             "inherits": {
               "version": "2.0.1",
-              "from": "inherits@>=2.0.1 <2.1.0",
+              "from": "inherits@>=2.0.0 <3.0.0",
               "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
             }
           }
@@ -1361,9 +1361,9 @@
           "resolved": "https://registry.npmjs.org/querystring/-/querystring-0.2.0.tgz"
         },
         "request": {
-          "version": "2.70.0",
+          "version": "2.72.0",
           "from": "request@>=2.67.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/request/-/request-2.70.0.tgz",
+          "resolved": "https://registry.npmjs.org/request/-/request-2.72.0.tgz",
           "dependencies": {
             "aws-sign2": {
               "version": "0.6.0",
@@ -1575,9 +1575,9 @@
                   }
                 },
                 "pinkie-promise": {
-                  "version": "2.0.0",
+                  "version": "2.0.1",
                   "from": "pinkie-promise@>=2.0.0 <3.0.0",
-                  "resolved": "https://registry.npmjs.org/pinkie-promise/-/pinkie-promise-2.0.0.tgz",
+                  "resolved": "https://registry.npmjs.org/pinkie-promise/-/pinkie-promise-2.0.1.tgz",
                   "dependencies": {
                     "pinkie": {
                       "version": "2.0.4",
@@ -1760,9 +1760,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "1.17.0",
-      "from": "windshaft@1.17.0",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.17.0.tgz",
+      "version": "1.17.1",
+      "from": "windshaft@1.17.1",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-1.17.1.tgz",
       "dependencies": {
         "abaculus": {
           "version": "1.1.0-cdb4",
