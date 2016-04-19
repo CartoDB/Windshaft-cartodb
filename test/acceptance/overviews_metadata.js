@@ -90,6 +90,7 @@ describe('overviews metadata', function() {
               var expected_data = {
                 overviews: {
                   test_table_overviews: {
+                    schema: 'public',
                     1: { table: '_vovw_1_test_table_overviews' },
                     2: { table: '_vovw_2_test_table_overviews' }
                   }

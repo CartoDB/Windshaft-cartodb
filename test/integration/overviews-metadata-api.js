@@ -40,6 +40,7 @@ describe('OverviewsMetadataApi', function() {
 
             assert.deepEqual(result, {
                 'test_table_overviews': {
+                  schema: 'public',
                   1: { table: '_vovw_1_test_table_overviews' },
                   2: { table: '_vovw_2_test_table_overviews' }
                 }

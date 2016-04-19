@@ -202,6 +202,78 @@ describe('Overviews query rewriter', function() {
     done();
   });
 
+  it('uses schema name from overviews', function(done){
+    var sql = "SELECT * FROM public.table1";
+    var data = {
+        overviews: {
+            'table1': {
+              schema: 'public',
+              2: { table: 'table1_ov2' }
+            }
+        }
+    };
+    var overviews_sql = overviewsQueryRewriter.query(sql, data);
+    var expected_sql = "\
+        WITH\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
+            SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+          ) AS _vovw_table1\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
+  it('ignores schema name from overviews if not necessary', function(done){
+    var sql = "SELECT * FROM table1";
+    var data = {
+        overviews: {
+            'table1': {
+              schema: 'public',
+              2: { table: 'table1_ov2' }
+            }
+        }
+    };
+    var overviews_sql = overviewsQueryRewriter.query(sql, data);
+    var expected_sql = "\
+        WITH\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
+            SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+          ) AS _vovw_table1\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
+  it('uses redundant schema information', function(done){
+    var sql = "SELECT * FROM public.table1";
+    var data = {
+        overviews: {
+            'public.table1': {
+              schema: 'public',
+              2: { table: 'table1_ov2' }
+            }
+        }
+    };
+    var overviews_sql = overviewsQueryRewriter.query(sql, data);
+    var expected_sql = "\
+        WITH\
+          _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+          SELECT * FROM (\
+            SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
+            UNION ALL\
+            SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
+          ) AS _vovw_table1\
+    ";
+    assertSameSql(overviews_sql, expected_sql);
+    done();
+  });
+
   it('generates query for a table that needs quoting with explicit schema', function(done){
     var sql = "SELECT * FROM public.\"table 1\"";
     var data = {
