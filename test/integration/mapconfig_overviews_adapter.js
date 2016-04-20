@@ -73,13 +73,13 @@ describe('MapConfigOverviewsAdapter', function() {
             assert.equal(layers[0].options.cartocss_version, cartocss_version);
             assert.ok(layers[0].options.query_rewrite_data);
             var expected_data = {
-              overviews: {
-                test_table_overviews: {
-                  schema: 'public',
-                  1: { table: '_vovw_1_test_table_overviews' },
-                  2: { table: '_vovw_2_test_table_overviews' }
+                overviews: {
+                    test_table_overviews: {
+                        schema: 'public',
+                        1: { table: '_vovw_1_test_table_overviews' },
+                        2: { table: '_vovw_2_test_table_overviews' }
+                    }
                 }
-              }
             };
             assert.deepEqual(layers[0].options.query_rewrite_data, expected_data);
             done();

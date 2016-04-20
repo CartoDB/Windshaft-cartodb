@@ -48,64 +48,64 @@ describe('overviews metadata', function() {
 
     it("layers with and without overviews", function(done) {
 
-      var layergroup =  {
-        version: '1.0.0',
-        layers: [overviews_layer, non_overviews_layer]
-      };
+        var layergroup =  {
+            version: '1.0.0',
+            layers: [overviews_layer, non_overviews_layer]
+        };
 
-      var layergroup_url = '/api/v1/map';
+        var layergroup_url = '/api/v1/map';
 
-      var expected_token;
-      step(
-        function do_post()
-        {
-          var next = this;
-          assert.response(server, {
-              url: layergroup_url,
-              method: 'POST',
-              headers: {host: 'localhost', 'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              var parsedBody = JSON.parse(res.body);
-              assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
-              expected_token = parsedBody.layergroupid;
-              next(null, res);
-          });
-        },
-        function do_get_mapconfig(err)
-        {
-            assert.ifError(err);
-            var next = this;
+        var expected_token;
+        step(
+            function do_post()
+            {
+              var next = this;
+              assert.response(server, {
+                  url: layergroup_url,
+                  method: 'POST',
+                  headers: {host: 'localhost', 'Content-Type': 'application/json' },
+                  data: JSON.stringify(layergroup)
+              }, {}, function(res) {
+                  assert.equal(res.statusCode, 200, res.body);
+                  var parsedBody = JSON.parse(res.body);
+                  assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+                  expected_token = parsedBody.layergroupid;
+                  next(null, res);
+              });
+            },
+            function do_get_mapconfig(err)
+            {
+                assert.ifError(err);
+                var next = this;
 
-            var mapStore  = new windshaft.storage.MapStore({
-                pool: redisPool,
-                expire_time: 500000
-            });
-            mapStore.load(LayergroupToken.parse(expected_token).token, function(err, mapConfig) {
-              assert.ifError(err);
-              assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
-              assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
-              assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
-              var expected_data = {
-                overviews: {
-                  test_table_overviews: {
-                    schema: 'public',
-                    1: { table: '_vovw_1_test_table_overviews' },
-                    2: { table: '_vovw_2_test_table_overviews' }
-                  }
-                }
-              };
-              assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
-            });
+                var mapStore  = new windshaft.storage.MapStore({
+                    pool: redisPool,
+                    expire_time: 500000
+                });
+                mapStore.load(LayergroupToken.parse(expected_token).token, function(err, mapConfig) {
+                    assert.ifError(err);
+                    assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
+                    assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
+                    assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
+                    var expected_data = {
+                        overviews: {
+                            test_table_overviews: {
+                                schema: 'public',
+                                1: { table: '_vovw_1_test_table_overviews' },
+                                2: { table: '_vovw_2_test_table_overviews' }
+                            }
+                        }
+                      };
+                    assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
+                  });
 
-            next(err);
-        },
-        function finish(err) {
-            keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
-            keysToDelete['user:localhost:mapviews:global'] = 5;
-            done(err);
-        }
-      );
+                  next(err);
+            },
+            function finish(err) {
+                keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+                done(err);
+            }
+        );
     });
 });
