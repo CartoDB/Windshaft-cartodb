@@ -17,7 +17,7 @@ function assertSameSql(sql1, sql2) {
 
 describe('Overviews query rewriter', function() {
 
-  it('does not alter queries if no overviews data is present', function(done){
+  it('does not alter queries if no overviews data is present', function(){
     var sql = "SELECT * FROM table1";
     var overviews_sql = overviewsQueryRewriter.query(sql);
     assert.equal(overviews_sql, sql);
@@ -25,11 +25,10 @@ describe('Overviews query rewriter', function() {
     assert.equal(overviews_sql, sql);
     overviews_sql = overviewsQueryRewriter.query(sql, { overviews: {} });
     assert.equal(overviews_sql, sql);
-    done();
   });
 
 
-  it('does not alter queries which don\'t use overviews', function(done){
+  it('does not alter queries which don\'t use overviews', function(){
     var sql = "SELECT * FROM table1";
     var data = {
         overviews: {
@@ -42,12 +41,11 @@ describe('Overviews query rewriter', function() {
     };
     var overviews_sql = overviewsQueryRewriter.query(sql, data);
     assert.equal(overviews_sql, sql);
-    done();
   });
 
   // jshint multistr:true
 
-  it('generates query with single overview layer for level 0', function(done){
+  it('generates query with single overview layer for level 0', function(){
     var sql = "SELECT * FROM table1";
     var data = {
         overviews: {
@@ -68,10 +66,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query with single overview layer for level >0', function(done){
+  it('generates query with single overview layer for level >0', function(){
     var sql = "SELECT * FROM table1";
     var data = {
         overviews: {
@@ -91,10 +88,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query with multiple overview layers for all levels up to N', function(done){
+  it('generates query with multiple overview layers for all levels up to N', function(){
     var sql = "SELECT * FROM table1";
     var data = {
         overviews: {
@@ -123,10 +119,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query with multiple overview layers for random levels', function(done){
+  it('generates query with multiple overview layers for random levels', function(){
     var sql = "SELECT * FROM table1";
     var data = {
         overviews: {
@@ -152,10 +147,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query for a table with explicit schema', function(done){
+  it('generates query for a table with explicit schema', function(){
     var sql = "SELECT * FROM public.table1";
     var data = {
         overviews: {
@@ -175,10 +169,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query for a table with explicit schema in the overviews info', function(done){
+  it('generates query for a table with explicit schema in the overviews info', function(){
     var sql = "SELECT * FROM public.table1";
     var data = {
         overviews: {
@@ -199,10 +192,9 @@ describe('Overviews query rewriter', function() {
     ";
 
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('uses schema name from overviews', function(done){
+  it('uses schema name from overviews', function(){
     var sql = "SELECT * FROM public.table1";
     var data = {
         overviews: {
@@ -223,10 +215,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('ignores schema name from overviews if not necessary', function(done){
+  it('ignores schema name from overviews if not necessary', function(){
     var sql = "SELECT * FROM table1";
     var data = {
         overviews: {
@@ -247,10 +238,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('uses redundant schema information', function(done){
+  it('uses redundant schema information', function(){
     var sql = "SELECT * FROM public.table1";
     var data = {
         overviews: {
@@ -271,10 +261,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query for a table that needs quoting with explicit schema', function(done){
+  it('generates query for a table that needs quoting with explicit schema', function(){
     var sql = "SELECT * FROM public.\"table 1\"";
     var data = {
         overviews: {
@@ -294,10 +283,9 @@ describe('Overviews query rewriter', function() {
           ) AS \"_vovw_table 1\"\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query for a table with explicit schema that needs quoting', function(done){
+  it('generates query for a table with explicit schema that needs quoting', function(){
     var sql = "SELECT * FROM \"user-1\".table1";
     var data = {
         overviews: {
@@ -317,11 +305,10 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
 
-  it('generates query for a table with explicit schema both needing quoting', function(done){
+  it('generates query for a table with explicit schema both needing quoting', function(){
     var sql = "SELECT * FROM \"user-1\".\"table 1\"";
     var data = {
         overviews: {
@@ -342,11 +329,10 @@ describe('Overviews query rewriter', function() {
           ) AS \"_vovw_table 1\"\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
 
-  it('generates query using overviews for queries with selected columns', function(done){
+  it('generates query using overviews for queries with selected columns', function(){
     var sql = "SELECT column1, column2, column3 FROM table1";
     var data = {
         overviews: {
@@ -366,10 +352,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query using overviews for queries with a semicolon', function(done){
+  it('generates query using overviews for queries with a semicolon', function(){
     var sql = "SELECT column1, column2, column3 FROM table1;";
     var data = {
         overviews: {
@@ -390,10 +375,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1;\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('generates query using overviews for queries with extra whitespace', function(done){
+  it('generates query using overviews for queries with extra whitespace', function(){
     var sql = "  SELECT  column1,column2,  column3 FROM  table1  ";
     var data = {
         overviews: {
@@ -413,10 +397,9 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 
-  it('does not alter queries which have not the simple supported form', function(done){
+  it('does not alter queries which have not the simple supported form', function(){
     var sql = "SELECT * FROM table1 WHERE column1='x'";
     var data = {
         overviews: {
@@ -463,11 +446,9 @@ describe('Overviews query rewriter', function() {
     sql = "SELECT table1.*, column1, column2, column3 FROM table1";
     overviews_sql = overviewsQueryRewriter.query(sql, data);
     assert.equal(overviews_sql, sql);
-
-    done();
   });
 
-  it('generates overviews for wrapped query', function(done){
+  it('generates overviews for wrapped query', function(){
     var sql = "SELECT * FROM (SELECT * FROM table1) AS wrapped_query WHERE 1=1";
     var data = {
         overviews: {
@@ -493,6 +474,5 @@ describe('Overviews query rewriter', function() {
           ) AS _vovw_table1) AS wrapped_query WHERE 1=1\
     ";
     assertSameSql(overviews_sql, expected_sql);
-    done();
   });
 });
