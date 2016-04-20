@@ -52,7 +52,7 @@ describe('named-maps analysis', function() {
                                     "query": "select * from populated_places_simple_reduced"
                                 }
                             },
-                            "radio": 50000
+                            "radius": 50000
                         }
                     }
                 ]

@@ -121,7 +121,7 @@ describe('analysis-layers use cases', function() {
                                         "query": "select * from analysis_banks"
                                     }
                                 },
-                                "radio": 250
+                                "radius": 250
                             }
                         }),
                         cartocss: cartocss('black', 0.5)
@@ -162,7 +162,7 @@ describe('analysis-layers use cases', function() {
                                                 "query": "select * from analysis_banks"
                                             }
                                         },
-                                        "radio": 250
+                                        "radius": 250
                                     }
                                 }
                             }
@@ -197,7 +197,7 @@ describe('analysis-layers use cases', function() {
                                                 "query": "select * from analysis_banks"
                                             }
                                         },
-                                        "radio": 250
+                                        "radius": 250
                                     }
                                 }
                             }
@@ -239,7 +239,7 @@ describe('analysis-layers use cases', function() {
                                         "query": "select * from analysis_banks"
                                     }
                                 },
-                                "radio": 300
+                                "radius": 300
                             }
                         }),
                         cartocss: cartocss('magenta', 0.5)
@@ -266,7 +266,7 @@ describe('analysis-layers use cases', function() {
                                                 "query": "select * from analysis_banks"
                                             }
                                         },
-                                        "radio": 300
+                                        "radius": 300
                                     }
                                 }
                             }
@@ -340,7 +340,7 @@ describe('analysis-layers use cases', function() {
                                                 query: "select * from analysis_banks"
                                             }
                                         },
-                                        "radio": 250
+                                        "radius": 250
                                     },
                                     dataviews: {
                                         bank_category: {
