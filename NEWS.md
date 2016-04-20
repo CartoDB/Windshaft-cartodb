@@ -2,7 +2,7 @@
 
 ## 2.33.0
 
-Released 2016-mm-dd
+Released 2016-04-20
 
 New features:
  - Adds experimental support for analysis and dataviews
