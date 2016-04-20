@@ -80,7 +80,7 @@
         },
         "type-is": {
           "version": "1.6.12",
-          "from": "type-is@>=1.6.10 <1.7.0",
+          "from": "type-is@>=1.6.6 <1.7.0",
           "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.6.12.tgz",
           "dependencies": {
             "media-typer": {
@@ -90,7 +90,7 @@
             },
             "mime-types": {
               "version": "2.1.10",
-              "from": "mime-types@>=2.1.10 <2.2.0",
+              "from": "mime-types@>=2.1.2 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.10.tgz",
               "dependencies": {
                 "mime-db": {
@@ -105,9 +105,9 @@
       }
     },
     "camshaft": {
-      "version": "0.4.0",
-      "from": "camshaft@0.4.0",
-      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.4.0.tgz",
+      "version": "0.5.0",
+      "from": "camshaft@0.5.0",
+      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.5.0.tgz",
       "dependencies": {
         "async": {
           "version": "1.5.2",
@@ -779,7 +779,7 @@
         },
         "type-is": {
           "version": "1.6.12",
-          "from": "type-is@>=1.6.10 <1.7.0",
+          "from": "type-is@>=1.6.6 <1.7.0",
           "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.6.12.tgz",
           "dependencies": {
             "media-typer": {
