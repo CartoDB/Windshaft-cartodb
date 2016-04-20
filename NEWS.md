@@ -1,8 +1,11 @@
 # Changelog
 
-## 2.32.1
+## 2.33.0
 
 Released 2016-mm-dd
+
+New features:
+ - Adds experimental support for analysis and dataviews
 
 Announcements:
  - Upgrades cartodb-psql to 0.6.1 version.
