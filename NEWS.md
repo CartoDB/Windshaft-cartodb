@@ -2,7 +2,10 @@
 
 ## 2.33.1
 
-Released 2016-mm-dd
+Released 2016-04-20
+
+Bug fixes:
+  - Support unneeded schema names in overviews queries #421
 
 
 ## 2.33.0
