@@ -12,8 +12,8 @@ var helper = require('./test_helper');
 
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
+serverOptions.analysis.batch.inlineExecution = true;
 var server = new CartodbWindshaft(serverOptions);
-
 
 function TestClient(mapConfig, apiKey) {
     this.mapConfig = mapConfig;
@@ -117,6 +117,111 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
     );
 };
 
+TestClient.prototype.getDataview = function(dataviewName, params, callback) {
+    var self = this;
+
+    if (!callback) {
+        callback = params;
+        params = {};
+    }
+
+    var extraParams = {};
+    if (this.apiKey) {
+        extraParams.api_key = this.apiKey;
+    }
+    if (params && params.filters) {
+        extraParams.filters = JSON.stringify(params.filters);
+    }
+
+    var url = '/api/v1/map';
+    if (Object.keys(extraParams).length > 0) {
+        url += '?' + qs.stringify(extraParams);
+    }
+
+    var layergroupId;
+    step(
+        function createLayergroup() {
+            var next = this;
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.mapConfig)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    var parsedBody = JSON.parse(res.body);
+                    var expectedDataviewsURLS = {
+                        http: "/api/v1/map/" + parsedBody.layergroupid + "/dataview/" + dataviewName
+                    };
+                    assert.ok(parsedBody.metadata.dataviews[dataviewName]);
+                    assert.ok(
+                        parsedBody.metadata.dataviews[dataviewName].url.http.match(expectedDataviewsURLS.http)
+                    );
+                    return next(null, parsedBody.layergroupid);
+                }
+            );
+        },
+        function getDataviewResult(err, _layergroupId) {
+            assert.ifError(err);
+
+            var next = this;
+            layergroupId = _layergroupId;
+
+            var urlParams = {
+                own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
+            };
+            if (params && params.bbox) {
+                urlParams.bbox = params.bbox;
+            }
+            if (self.apiKey) {
+                urlParams.api_key = self.apiKey;
+            }
+            url = '/api/v1/map/' + layergroupId + '/dataview/' + dataviewName + '?' + qs.stringify(urlParams);
+
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next(null, JSON.parse(res.body));
+                }
+            );
+        },
+        function finish(err, res) {
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            return callback(err, res);
+        }
+    );
+};
+
 TestClient.prototype.getTile = function(z, x, y, params, callback) {
     var self = this;
 
@@ -198,7 +303,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             };
 
-            var isPng = format === 'png' || format === 'torque.png';
+            var isPng = format.match(/png$/);
 
             if (isPng) {
                 request.encoding = 'binary';
@@ -221,6 +326,53 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
             return callback(err, res, image);
+        }
+    );
+};
+
+TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
+    var self = this;
+
+    if (!callback) {
+        callback = expectedResponse;
+        expectedResponse = {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+    }
+
+    var url = '/api/v1/map';
+
+    if (this.apiKey) {
+        url += '?' + qs.stringify({api_key: this.apiKey});
+    }
+
+    assert.response(server,
+        {
+            url: url,
+            method: 'POST',
+            headers: {
+                host: 'localhost',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(self.mapConfig)
+        },
+        expectedResponse,
+        function(res, err) {
+            if (err) {
+                return callback(err);
+            }
+
+            var parsedBody = JSON.parse(res.body);
+
+            if (parsedBody.layergroupid) {
+                self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            }
+
+            return callback(null, parsedBody);
         }
     );
 };

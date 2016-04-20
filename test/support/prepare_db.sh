@@ -71,6 +71,9 @@ if test x"$PREPARE_PGSQL" = xyes; then
   dropdb "${TEST_DB}"
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 
+  curl -L -s https://raw.githubusercontent.com/CartoDB/camshaft/master/test/fixtures/cdb_analysis_catalog.sql -o sql/cdb_analysis_catalog.sql
+  cat sql/cdb_analysis_catalog.sql | psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+
   cat sql/windshaft.test.sql sql/gadm4.sql |
     sed "s/:PUBLICUSER/${PUBLICUSER}/" |
     sed "s/:PUBLICPASS/${PUBLICPASS}/" |

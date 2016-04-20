@@ -191,6 +191,22 @@ var config = {
           }
       }
     }
+    // anything analyses related
+    ,analysis: {
+        // batch configuration
+        batch: {
+            // Inline execution avoid the use of SQL API as batch endpoint
+            // When set to true it will run all analysis queries in series, with a direct connection to the DB
+            // This might be useful for:
+            //  - testing
+            //  - running an standalone server without any dependency on external services
+            inlineExecution: false,
+            // where the SQL API is running, it will use a custom Host header to specify the username.
+            endpoint: 'http://127.0.0.1:8080/api/v2/sql/job',
+            // the template to use for adding the host header in the batch api requests
+            hostHeaderTemplate: '{{=it.username}}.localhost.lan'
+        }
+    }
     ,millstone: {
         // Needs to be writable by server user
         cache_basedir: '/tmp/cdb-tiler-dev/millstone-dev'
