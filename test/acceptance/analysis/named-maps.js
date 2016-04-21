@@ -40,6 +40,17 @@ describe('named-maps analysis', function() {
                         }
                     }
                 ],
+                dataviews: {
+                    pop_max_histogram: {
+                        source: {
+                            id: 'HEAD'
+                        },
+                        type: 'histogram',
+                        options: {
+                            column: 'pop_max'
+                        }
+                    }
+                },
                 analyses: [
                     {
                         "id": "HEAD",
@@ -181,6 +192,36 @@ describe('named-maps analysis', function() {
                     done();
                 });
 
+            }
+        );
+    });
+
+    it('should be able to retrieve dataviews from analysis', function(done) {
+        assert.response(
+            server,
+            {
+                url: '/api/v1/map/' + layergroupid + '/dataview/pop_max_histogram',
+                method: 'GET',
+                headers: {
+                    host: username
+                }
+            },
+            {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            },
+            function(res, err) {
+                if (err) {
+                    return done(err);
+                }
+
+                var dataview = JSON.parse(res.body);
+                assert.equal(dataview.type, 'histogram');
+                assert.equal(dataview.bins_start, 0);
+
+                done();
             }
         );
     });
