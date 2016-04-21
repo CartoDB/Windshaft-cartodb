@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.33.0
+
+Released 2016-04-20
+
+New features:
+ - Adds experimental support for analysis and dataviews
+
+Announcements:
+ - Upgrades cartodb-psql to 0.6.1 version.
+ - Upgrades windshaft to [1.17.1](https://github.com/CartoDB/Windshaft/releases/tag/1.17.1)
+
+
+## 2.32.0
+
+Released 2016-04-06
+
+New features:
+ - Added support for dynamic styling for widgets in named maps
+
+Announcements:
+ - Upgrades windshaft to [1.17.0](https://github.com/CartoDB/Windshaft/releases/tag/1.17.0)
+
+
 ## 2.31.2
 
 Released 2016-04-04
@@ -7,6 +30,7 @@ Released 2016-04-04
 Bug fixes:
  - Overviews integration for named layers #400
  - Support wrapped queries in named layers #405
+
 
 ## 2.31.1
 

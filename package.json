@@ -1,7 +1,7 @@
 {
     "private": true,
     "name": "windshaft-cartodb",
-    "version": "2.31.2",
+    "version": "2.33.0",
     "description": "A map tile server for CartoDB",
     "keywords": [
       "cartodb"
@@ -26,12 +26,13 @@
         "node-statsd": "~0.0.7",
         "underscore"  : "~1.6.0",
         "dot": "~1.0.2",
-        "windshaft": "1.16.1",
+        "windshaft": "1.17.1",
         "step": "~0.0.6",
         "queue-async": "~1.0.7",
         "request": "~2.62.0",
         "cartodb-redis": "~0.13.0",
-        "cartodb-psql": "~0.4.0",
+        "cartodb-psql": "~0.6.1",
+        "camshaft": "0.5.0",
         "fastly-purge": "~1.0.1",
         "redis-mpool": "~0.4.0",
         "lru-cache": "2.6.5",
