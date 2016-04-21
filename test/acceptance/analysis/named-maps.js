@@ -126,6 +126,22 @@ describe('named-maps analysis', function() {
                 assert.ok(layergroup.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from: " + res.body);
                 layergroupid = layergroup.layergroupid;
 
+                assert.ok(
+                    Array.isArray(layergroup.metadata.analyses),
+                    'Missing "analyses" array metadata from: ' + res.body
+                );
+                var analyses = layergroup.metadata.analyses;
+                assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+                var nodes = analyses[0].nodes;
+                var nodesIds = Object.keys(nodes);
+                assert.deepEqual(nodesIds, ['2570e105-7b37-40d2-bdf4-1af889598745', 'HEAD']);
+                nodesIds.forEach(function(nodeId) {
+                    var node = nodes[nodeId];
+                    assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
+                    assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
+                    assert.ok(!node.hasOwnProperty('query'), 'Unexpected "query" attribute in node');
+                });
+
                 keysToDelete['map_cfg|' + LayergroupToken.parse(layergroup.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 

@@ -184,4 +184,33 @@ describe('analysis-layers', function() {
             testClient.drain(done);
         });
     });
+
+    it('should retrieve enough metadata about analyses', function(done) {
+        var useCase = useCases[1];
+
+        // No API key here
+        var testClient = new TestClient(useCase.mapConfig, 1234);
+
+        testClient.getLayergroup(function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.ok(
+                Array.isArray(layergroupResult.metadata.analyses),
+                    'Missing "analyses" array metadata from: ' + JSON.stringify(layergroupResult)
+            );
+            var analyses = layergroupResult.metadata.analyses;
+            assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+            var nodes = analyses[0].nodes;
+            var nodesIds = Object.keys(nodes);
+            assert.deepEqual(nodesIds, ['2570e105-7b37-40d2-bdf4-1af889598745', 'HEAD']);
+            nodesIds.forEach(function(nodeId) {
+                var node = nodes[nodeId];
+                assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
+                assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
+                assert.ok(node.hasOwnProperty('query'), 'Missing "status" attribute in node');
+            });
+
+            testClient.drain(done);
+        });
+    });
 });
