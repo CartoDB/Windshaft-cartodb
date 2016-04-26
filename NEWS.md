@@ -1,11 +1,12 @@
 # Changelog
 
-## 2.33.2
+## 2.34.0
 
 Released 2016-mm-dd
 
 Enhancements:
  - Adds support to return multiple errors in BaseController.sendError #423
+ - Starts using turbo-carto dependency
 
 
 ## 2.33.1
