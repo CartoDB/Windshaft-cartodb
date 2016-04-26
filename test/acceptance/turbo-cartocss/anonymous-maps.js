@@ -1,5 +1,5 @@
-var assert = require('../support/assert');
-var TestClient = require('../support/test-client');
+var assert = require('../../support/assert');
+var TestClient = require('../../support/test-client');
 
 var IMAGE_TOLERANCE_PER_MIL = 20;
 
@@ -38,7 +38,7 @@ function makeMapconfig(cartocss) {
     };
 }
 
-describe('turbo-cartocss for anonymous maps', function() {
+describe('turbo-carto for anonymous maps', function() {
     describe('parsing ramp function with colorbrewer for greens and mapnik renderer', function () {
         beforeEach(function () {
             var turboCartocss = '#layer { marker-fill: ramp([price], colorbrewer(Greens)); }';
@@ -49,8 +49,8 @@ describe('turbo-cartocss for anonymous maps', function() {
             this.testClient.drain(done);
         });
 
-        it('should get a tile with turbo-cartocss parsed properly', function (done) {
-            var fixturePath = 'test_turbo_cartocss_greens_13_4011_3088.png';
+        it('should get a tile with turbo-carto parsed properly', function (done) {
+            var fixturePath = 'test_turbo_carto_greens_13_4011_3088.png';
             this.testClient.getTile(13, 4011, 3088, imageCompareFn(fixturePath, done));
         });
     });
@@ -65,8 +65,8 @@ describe('turbo-cartocss for anonymous maps', function() {
             this.testClient.drain(done);
         });
 
-        it('should get a tile with turbo-cartocss parsed properly', function (done) {
-            var fixtureFileName = 'test_turbo_cartocss_reds_13_4011_3088.png';
+        it('should get a tile with turbo-carto parsed properly', function (done) {
+            var fixtureFileName = 'test_turbo_carto_reds_13_4011_3088.png';
             this.testClient.getTile(13, 4011, 3088, imageCompareFn(fixtureFileName, done));
         });
     });
@@ -115,12 +115,12 @@ describe('turbo-cartocss for anonymous maps', function() {
             this.testClient.drain(done);
         });
 
-        it('should get a tile with turbo-cartocss parsed properly', function (done) {
+        it('should get a tile with turbo-carto parsed properly', function (done) {
             var z = 2;
             var x = 2;
             var y = 1;
 
-            var pngFixture = 'torque/populated_places_simple_reduced-turbo-cartocss-' + [z, x, y].join('.') + '.png';
+            var pngFixture = 'torque/populated_places_simple_reduced-turbo-carto-' + [z, x, y].join('.') + '.png';
 
             this.testClient.getTile(z, x, y, { layers: 0, format: 'torque.png' }, imageCompareFn(pngFixture, done));
         });
