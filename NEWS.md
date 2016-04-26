@@ -8,6 +8,9 @@ Enhancements:
  - Adds support to return multiple errors in BaseController.sendError #423
  - Starts using turbo-carto dependency
 
+Announcements:
+ - Upgrades windshaft to [1.17.2](https://github.com/CartoDB/Windshaft/releases/tag/1.17.2)
+
 
 ## 2.33.1
 
