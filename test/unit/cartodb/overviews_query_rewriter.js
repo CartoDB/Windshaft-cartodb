@@ -377,6 +377,42 @@ describe('Overviews query rewriter', function() {
         assertSameSql(overviews_sql, expected_sql);
     });
 
+    it('generates query using overviews for queries with simple where clauses', function(){
+        var sql = "SELECT column1, column2, column3 FROM table1 WHERE a=1;";
+        var data = {
+            overviews: {
+                table1: {
+                    2: { table: 'table1_ov2' }
+                }
+            }
+        };
+        var overviews_sql = overviewsQueryRewriter.query(sql, data);
+
+        var expected_sql = "\
+            WITH\
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+              SELECT column1, column2, column3 FROM (\
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
+                UNION ALL\
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+              ) AS _vovw_table1 WHERE a=1;\
+        ";
+        assertSameSql(overviews_sql, expected_sql);
+
+        sql = "SELECT column1, column2, column3 FROM table1 WHERE a < 10 AND b BETWEEN 100 AND 200;";
+        overviews_sql = overviewsQueryRewriter.query(sql, data);
+        expected_sql = "\
+            WITH\
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
+              SELECT column1, column2, column3 FROM (\
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
+                UNION ALL\
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
+              ) AS _vovw_table1 WHERE a < 10 AND b BETWEEN 100 AND 200;\
+        ";
+        assertSameSql(overviews_sql, expected_sql);
+    });
+
     it('generates query using overviews for queries with extra whitespace', function(){
         var sql = "  SELECT  column1,column2,  column3 FROM  table1  ";
         var data = {
@@ -400,7 +436,7 @@ describe('Overviews query rewriter', function() {
     });
 
     it('does not alter queries which have not the simple supported form', function(){
-        var sql = "SELECT * FROM table1 WHERE column1='x'";
+        var sql = "SELECT * FROM table1 WHERE table1.column1='x'";
         var data = {
             overviews: {
                 table1: {
@@ -431,7 +467,7 @@ describe('Overviews query rewriter', function() {
         overviews_sql = overviewsQueryRewriter.query(sql, data);
         assert.equal(overviews_sql, sql);
 
-        sql = "SELECT * FROM table1 WHERE a=1";
+        sql = "SELECT * FROM table1 WHERE table1.a=1";
         overviews_sql = overviewsQueryRewriter.query(sql, data);
         assert.equal(overviews_sql, sql);
 
