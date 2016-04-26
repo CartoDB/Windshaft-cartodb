@@ -114,6 +114,34 @@ describe('histogram widgets', function() {
                     testClient.drain(done);
                 });
             });
+
+            it("should expose a filtered histogram using dataviews for filtering", function(done) {
+                var params = {
+                    filters: {
+                        dataviews: {
+                            country_places_histogram: { min: 4000000 }
+                        }
+                    }
+                };
+                var testClient = new TestClient(histogramMapConfig);
+                testClient.getWidget('country_places_histogram', params, function(err, res) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    var histogram = JSON.parse(res.body);
+                    // notice min value
+                    assert.deepEqual(histogram.bins[0], {
+                        bin: 0,
+                        freq: 62,
+                        min: 4000000,
+                        max: 9276403,
+                        avg: 5815009.596774193
+                    });
+
+                    testClient.drain(done);
+                });
+            });
         });
     });
 
