@@ -313,13 +313,15 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             assert.response(server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
 
-                var image;
+                var obj;
 
                 if (isPng) {
-                    image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    obj = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                } else {
+                    obj = JSON.parse(res.body);
                 }
 
-                next(null, res, image);
+                next(null, res, obj);
             });
         },
         function finish(err, res, image) {
