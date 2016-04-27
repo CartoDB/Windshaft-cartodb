@@ -1,8 +1,12 @@
 # Changelog
 
-## 2.34.2
+## 2.35.0
 
 Released 2016-mm-dd
+
+Announcements:
+ - Upgrades windshaft to [1.18.0](https://github.com/CartoDB/Windshaft/releases/tag/1.18.0)
+ - Appends columns to layers from associated dataviews
 
 
 ## 2.34.1
