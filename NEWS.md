@@ -2,7 +2,7 @@
 
 ## 2.34.0
 
-Released 2016-mm-dd
+Released 2016-04-27
 
 Enhancements:
  - Adds support to return multiple errors in BaseController.sendError #423
