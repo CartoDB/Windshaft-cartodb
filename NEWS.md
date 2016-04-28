@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.36.1
+
+Released 2016-mm-dd
+
+
 ## 2.36.0
 
 Released 2016-04-28
