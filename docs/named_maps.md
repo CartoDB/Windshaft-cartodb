@@ -484,7 +484,7 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
 
 1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
 
-    **Note:** The CartoDB.js `layer.setParams()` function is not supported when using Named Maps for Torque.
+    **Note:** The CartoDB.js `layer.setParams()` function is not supported when using Named Maps for Torque. Alternatively, you can create a [Torque layer in a Named Map](http://bl.ocks.org/iriberri/de37be6406f9cc7cfe5a)
 
 2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
 
