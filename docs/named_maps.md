@@ -451,6 +451,7 @@ callback({
 ```
 
 ## CartoDB.js for Named Maps
+
 You can use a Named Map that you created (which is defined by its `name`), to create a map using CartoDB.js. This is achieved by adding the [`namedmap` type](http://docs.cartodb.com/cartodb-platform/cartodb-js/layer-source-object/#named-maps-layer-source-object-type-namedmap) layer source object to draw the Named Map.
 
 ```javascript
@@ -478,6 +479,7 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
   }
 }
 ```
+
 **Note:** Instantiating a Named Map over a `createLayer` does not require an API Key and by default, does not include auth tokens. _If_ you defined auth tokens for the Named Map configuration, then you will have to include them.
 
 [CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js/) has methods for accessing your Named Maps.
@@ -487,6 +489,37 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
     **Note:** The CartoDB.js `layer.setParams()` function is not supported when using Named Maps for Torque. Alternatively, you can create a [Torque layer in a Named Map](http://bl.ocks.org/iriberri/de37be6406f9cc7cfe5a)
 
 2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
+
+### Torque Layer in a Named Map
+
+If you are creating a Torque layer in a Named Map without using the Torque.js library, you can apply the Torque layer by applying the following code with CartoDBjs:
+
+```javascript
+ // add cartodb layer with one sublayer
+  cartodb.createLayer(map, {
+    user_name: '{username}',
+    type: 'torque',
+    order: 1,
+    options: {
+            query: "",
+            table_name: "named_map_tutorial_table",
+            user_name: "{username}",
+            tile_style: 'Map { -torque-frame-count:512; -torque-animation-duration:10; -torque-time-attribute:"cartodb_id"; -torque-aggregation-function:"count(cartodb_id)"; -torque-resolution:2; -torque-data-aggregation:linear; } #named_map_tutorial_table_copy{ comp-op: lighter; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1.5; marker-line-opacity: 1; marker-type: ellipse; marker-width: 6; marker-fill: #FF9900; } #named_map_tutorial_table_copy[frame-offset=1] { marker-width:8; marker-fill-opacity:0.45; } #named_map_tutorial_table_copy[frame-offset=2] { marker-width:10; marker-fill-opacity:0.225; }'      
+
+            },
+    named_map: {
+      name: "{namedmap_example}",
+      layers: [{
+        layer_name: "t"
+       }]
+     }
+    })
+    .addTo(map)
+    .done(function(layer) {
+  
+    });
+}
+```
 
 #### Examples of Named Maps created with CartoDB.js
 
