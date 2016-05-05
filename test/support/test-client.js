@@ -2,6 +2,7 @@
 
 var qs = require('querystring');
 var step = require('step');
+var urlParser = require('url');
 
 var mapnik = require('windshaft').mapnik;
 
@@ -375,6 +376,94 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
             }
 
             return callback(null, parsedBody);
+        }
+    );
+};
+
+TestClient.prototype.getNodeStatus = function(nodeName, callback) {
+    var self = this;
+
+    var url = '/api/v1/map';
+
+    if (this.apiKey) {
+        url += '?' + qs.stringify({api_key: this.apiKey});
+    }
+
+    var layergroupId;
+    var nodes = {};
+    step(
+        function createLayergroup() {
+            var next = this;
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.mapConfig)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    var parsedBody = JSON.parse(res.body);
+
+                    nodes = parsedBody.metadata.analyses.reduce(function(nodes, analysis) {
+                        return Object.keys(analysis.nodes).reduce(function(nodes, nodeName) {
+                            var node = analysis.nodes[nodeName];
+                            nodes[nodeName] = node.url.http;
+                            return nodes;
+                        }, nodes);
+                    }, nodes);
+
+                    return next(null, parsedBody.layergroupid);
+                }
+            );
+        },
+        function getNodeStatusResult(err, _layergroupId) {
+            assert.ifError(err);
+
+            var next = this;
+            layergroupId = _layergroupId;
+
+            url = urlParser.parse(nodes[nodeName]).path;
+
+            if (self.apiKey) {
+                url += '?' + qs.stringify({api_key: self.apiKey});
+            }
+
+            var request = {
+                url: url,
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            };
+
+            var expectedResponse = {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            };
+
+            assert.response(server, request, expectedResponse, function(res, err) {
+                assert.ifError(err);
+                next(null, res, JSON.parse(res.body));
+            });
+        },
+        function finish(err, res, image) {
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            return callback(err, res, image);
         }
     );
 };
