@@ -1,9 +1,11 @@
 # Changelog
 
-## 2.37.1
+## 2.38.0
 
-Released 2016-mm-dd
+Released 2016-05-05
 
+Announcements:
+ - Upgrades turbo-carto to [0.7.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.7.0)
 
 ## 2.37.0
 
