@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.39.0
+
+Released 2016-mm-dd
+
+Announcements:
+ - Upgrades step-profiler to 0.3.0 to avoid dots in json keys #438
+
+
 ## 2.38.1
 
 Released 2016-05-05
@@ -8,12 +16,14 @@ Announcements:
  - Fixes problem in turbo-carto dependency
  - Removes console usages
 
+
 ## 2.38.0
 
 Released 2016-05-05
 
 Announcements:
  - Upgrades turbo-carto to [0.7.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.7.0)
+
 
 ## 2.37.0
 
