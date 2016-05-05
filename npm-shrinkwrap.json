@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.38.0",
+  "version": "2.39.0",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -73,14 +73,14 @@
             },
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@1.0.0",
+              "from": "unpipe@>=1.0.0 <1.1.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
         },
         "type-is": {
           "version": "1.6.12",
-          "from": "type-is@>=1.6.10 <1.7.0",
+          "from": "type-is@>=1.6.6 <1.7.0",
           "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.6.12.tgz",
           "dependencies": {
             "media-typer": {
@@ -667,7 +667,7 @@
           "dependencies": {
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@1.0.0",
+              "from": "unpipe@>=1.0.0 <1.1.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
@@ -782,7 +782,7 @@
         },
         "type-is": {
           "version": "1.6.12",
-          "from": "type-is@>=1.6.10 <1.7.0",
+          "from": "type-is@>=1.6.6 <1.7.0",
           "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.6.12.tgz",
           "dependencies": {
             "media-typer": {
@@ -1234,9 +1234,9 @@
       "from": "step-profiler@>=0.3.0 <0.4.0"
     },
     "turbo-carto": {
-      "version": "0.7.0",
-      "from": "turbo-carto@0.7.0",
-      "resolved": "https://registry.npmjs.org/turbo-carto/-/turbo-carto-0.7.0.tgz",
+      "version": "0.7.1",
+      "from": "turbo-carto@0.7.1",
+      "resolved": "https://registry.npmjs.org/turbo-carto/-/turbo-carto-0.7.1.tgz",
       "dependencies": {
         "colorbrewer": {
           "version": "1.0.0",
@@ -1244,9 +1244,9 @@
           "resolved": "https://registry.npmjs.org/colorbrewer/-/colorbrewer-1.0.0.tgz"
         },
         "cartocolor": {
-          "version": "1.0.0",
-          "from": "cartocolor@1.0.0",
-          "resolved": "https://registry.npmjs.org/cartocolor/-/cartocolor-1.0.0.tgz"
+          "version": "1.0.2",
+          "from": "cartocolor@1.0.2",
+          "resolved": "https://registry.npmjs.org/cartocolor/-/cartocolor-1.0.2.tgz"
         },
         "es6-promise": {
           "version": "3.1.2",
