@@ -3,6 +3,7 @@ require('../../support/test_helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 var dot = require('dot');
+var debug = require('debug')('windshaft:cartodb:test');
 
 describe('analysis-layers use cases', function() {
 
@@ -649,7 +650,7 @@ describe('analysis-layers use cases', function() {
 
     useCases.forEach(function(useCase, imageIdx) {
         if (!!useCase.skip) {
-            console.log(JSON.stringify(useCase.mapConfig, null, 4));
+            debug(JSON.stringify(useCase.mapConfig, null, 4));
         }
         it.skip('should implement use case: "' + useCase.desc + '"', function(done) {
 

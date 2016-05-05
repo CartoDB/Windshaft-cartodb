@@ -14,6 +14,11 @@ if ( process.argv[2] ) {
     ENVIRONMENT = 'development';
 }
 
+// jshint undef:false
+var log = console.log.bind(console);
+var logError = console.error.bind(console);
+// jshint undef:true
+
 var availableEnvironments = {
     production: true,
     staging: true,
@@ -22,8 +27,8 @@ var availableEnvironments = {
 
 // sanity check
 if (!availableEnvironments[ENVIRONMENT]){
-    console.error('node app.js [environment]');
-    console.error('environments: %s', Object.keys(availableEnvironments).join(', '));
+    logError('node app.js [environment]');
+    logError('environments: %s', Object.keys(availableEnvironments).join(', '));
     process.exit(1);
 }
 
@@ -58,10 +63,10 @@ if ( global.environment.log_filename ) {
   // See cwd inlog4js.configure call below
   logdir = path.resolve(__dirname, logdir);
   if ( ! fs.existsSync(logdir) ) {
-    console.error("Log filename directory does not exist: " + logdir);
+    logError("Log filename directory does not exist: " + logdir);
     process.exit(1);
   }
-  console.log("Logs will be written to " + global.environment.log_filename);
+  log("Logs will be written to " + global.environment.log_filename);
   log4js_config.appenders.push(
     { type: "file", filename: global.environment.log_filename }
   );
@@ -94,7 +99,7 @@ var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, b
 var version = require("./package").version;
 
 listener.on('listening', function() {
-    console.log(
+    log(
         "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
         version, serverOptions.bind.host, serverOptions.bind.port, process.pid, ENVIRONMENT
     );
@@ -111,7 +116,7 @@ process.on('SIGHUP', function() {
     global.log4js.clearAndShutdownAppenders(function() {
         global.log4js.configure(log4js_config);
         global.logger = global.log4js.getLogger();
-        console.log('Log files reloaded');
+        log('Log files reloaded');
     });
 });
 
