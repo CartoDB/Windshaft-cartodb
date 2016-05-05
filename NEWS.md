@@ -6,6 +6,7 @@ Released 2016-mm-dd
 
 Announcements:
  - Upgrades step-profiler to 0.3.0 to avoid dots in json keys #438
+ - Use a more aggressive cache control header for node status endpoint
 
 
 ## 2.38.1
