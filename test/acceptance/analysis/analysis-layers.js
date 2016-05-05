@@ -304,4 +304,27 @@ describe('analysis-layers', function() {
             testClient.drain(done);
         });
     });
+
+    it('should response with custom cache headers for node status endpoints', function(done) {
+        var useCase = useCases[1];
+
+        // No API key here
+        var testClient = new TestClient(useCase.mapConfig, 1234);
+
+        testClient.getNodeStatus('HEAD', function(err, response, nodeStatus) {
+            assert.ok(!err, err);
+
+            assert.equal(nodeStatus.status, 'ready');
+
+            var headers = response.headers;
+
+            assert.equal(headers['cache-control'], 'public,max-age=5');
+
+            var lastModified = new Date(headers['last-modified']);
+            var tenSecondsInMs = 1e5;
+            assert.ok(Date.now() - lastModified.getTime() < tenSecondsInMs);
+
+            testClient.drain(done);
+        });
+    });
 });
