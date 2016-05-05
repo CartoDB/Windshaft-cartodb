@@ -42,7 +42,7 @@
     "windshaft": "1.19.0"
   },
   "devDependencies": {
-    "istanbul": "~0.3.6",
+    "istanbul": "~0.4.3",
     "jshint": "~2.6.0",
     "mocha": "~1.21.4",
     "nock": "~2.11.0",
