@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.38.1
+
+Released 2016-05-05
+
+Announcements:
+ - Fixes problem in turbo-carto dependency
+ - Removes console usages
+
 ## 2.38.0
 
 Released 2016-05-05
