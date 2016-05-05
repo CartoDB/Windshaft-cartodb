@@ -2,7 +2,7 @@
 
 ## 2.39.0
 
-Released 2016-mm-dd
+Released 2016-05-05
 
 Announcements:
  - Upgrades step-profiler to 0.3.0 to avoid dots in json keys #438
