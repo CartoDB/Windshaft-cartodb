@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.38.0",
+  "version": "2.38.1",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -1235,9 +1235,9 @@
       "resolved": "https://registry.npmjs.org/step-profiler/-/step-profiler-0.2.1.tgz"
     },
     "turbo-carto": {
-      "version": "0.7.0",
-      "from": "turbo-carto@0.7.0",
-      "resolved": "https://registry.npmjs.org/turbo-carto/-/turbo-carto-0.7.0.tgz",
+      "version": "0.7.1",
+      "from": "turbo-carto@0.7.1",
+      "resolved": "https://registry.npmjs.org/turbo-carto/-/turbo-carto-0.7.1.tgz",
       "dependencies": {
         "colorbrewer": {
           "version": "1.0.0",
@@ -1245,9 +1245,9 @@
           "resolved": "https://registry.npmjs.org/colorbrewer/-/colorbrewer-1.0.0.tgz"
         },
         "cartocolor": {
-          "version": "1.0.0",
-          "from": "cartocolor@1.0.0",
-          "resolved": "https://registry.npmjs.org/cartocolor/-/cartocolor-1.0.0.tgz"
+          "version": "1.0.2",
+          "from": "cartocolor@1.0.2",
+          "resolved": "https://registry.npmjs.org/cartocolor/-/cartocolor-1.0.2.tgz"
         },
         "es6-promise": {
           "version": "3.1.2",
