@@ -337,7 +337,7 @@ describe('analysis-layers', function() {
                         "source": {
                             "id": "2570e105-7b37-40d2-bdf4-1af889598745"
                         },
-                        "sql_wrap": "SELECT * FROM (<%= __analysis_query %>) __wrapped WHERE adm0cap = 1",
+                        "sql_wrap": "SELECT * FROM (<%= sql %>) __wrapped WHERE adm0cap = 1",
                         "cartocss": DEFAULT_MULTITYPE_STYLE,
                         "cartocss_version": "2.3.0"
                     }
