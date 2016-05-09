@@ -1,3 +1,4 @@
+var qs = require('querystring');
 var testHelper = require('../support/test_helper');
 var RedisPool = require('redis-mpool');
 
@@ -53,9 +54,17 @@ describe('named maps static view', function() {
         templateMaps.delTemplate(username, templateName, done);
     });
 
-    function getStaticMap(callback) {
+    function getStaticMap(params, callback) {
+        if (!callback) {
+            callback = params;
+            params = null;
+        }
 
         var url = '/api/v1/map/static/named/' + templateName + '/640/480.png';
+
+        if (params !== null) {
+            url += '?' + qs.stringify(params);
+        }
 
         var requestOptions = {
             url: url,
@@ -159,6 +168,32 @@ describe('named maps static view', function() {
             getStaticMap(function(err, img) {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('zoom-center'), IMAGE_TOLERANCE, done);
+            });
+        });
+    });
+
+    it('should return override zoom', function (done) {
+        var view = {
+            bounds: {
+                west: 0,
+                south: 0,
+                east: 45,
+                north: 45
+            },
+            zoom: 4,
+            center: {
+                lng: 40,
+                lat: 20
+            }
+        };
+        templateMaps.addTemplate(username, createTemplate(view), function (err) {
+            if (err) {
+                return done(err);
+            }
+            getStaticMap({ zoom: 3 }, function(err, img) {
+                assert.ok(!err);
+                img.save('/tmp/static.png');
+                assert.imageIsSimilarToFile(img, previewFixture('override-zoom'), IMAGE_TOLERANCE, done);
             });
         });
     });
