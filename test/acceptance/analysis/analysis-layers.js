@@ -327,4 +327,44 @@ describe('analysis-layers', function() {
             testClient.drain(done);
         });
     });
+
+    it('should wrap queries from analyses', function(done) {
+        var testClient = new TestClient(mapConfig(
+            [
+                {
+                    "type": "cartodb",
+                    "options": {
+                        "source": {
+                            "id": "2570e105-7b37-40d2-bdf4-1af889598745"
+                        },
+                        "sql_wrap": "SELECT * FROM (<%= sql %>) __wrapped WHERE adm0cap = 1",
+                        "cartocss": DEFAULT_MULTITYPE_STYLE,
+                        "cartocss_version": "2.3.0"
+                    }
+                }
+            ],
+            {},
+            [
+                {
+                    "id": "2570e105-7b37-40d2-bdf4-1af889598745",
+                    "type": "source",
+                    "params": {
+                        "query": "select * from populated_places_simple_reduced"
+                    }
+                }
+            ]
+        ), 1234);
+
+        var tile = TILE_ANALYSIS_TABLES;
+        testClient.getTile(tile.z, tile.x, tile.y, function(err, res, image) {
+            assert.ok(!err, err);
+
+            var fixturePath = './test/fixtures/analysis/adm0cap-source-id-mapnik-layer.png';
+            assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                assert.ok(!err, err);
+
+                testClient.drain(done);
+            });
+        });
+    });
 });
