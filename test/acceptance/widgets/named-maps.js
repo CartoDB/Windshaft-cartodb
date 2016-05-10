@@ -113,7 +113,7 @@ describe('named-maps widgets', function() {
                     }
                 );
             },
-            function fetchTile(err, res) {
+            function finish(err, res) {
                 assert.ifError(err);
 
                 layergroup = JSON.parse(res.body);

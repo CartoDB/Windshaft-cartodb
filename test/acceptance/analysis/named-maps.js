@@ -40,6 +40,17 @@ describe('named-maps analysis', function() {
                         }
                     }
                 ],
+                dataviews: {
+                    pop_max_histogram: {
+                        source: {
+                            id: 'HEAD'
+                        },
+                        type: 'histogram',
+                        options: {
+                            column: 'pop_max'
+                        }
+                    }
+                },
                 analyses: [
                     {
                         "id": "HEAD",
@@ -115,6 +126,22 @@ describe('named-maps analysis', function() {
                 assert.ok(layergroup.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from: " + res.body);
                 layergroupid = layergroup.layergroupid;
 
+                assert.ok(
+                    Array.isArray(layergroup.metadata.analyses),
+                    'Missing "analyses" array metadata from: ' + res.body
+                );
+                var analyses = layergroup.metadata.analyses;
+                assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+                var nodes = analyses[0].nodes;
+                var nodesIds = Object.keys(nodes);
+                assert.deepEqual(nodesIds, ['2570e105-7b37-40d2-bdf4-1af889598745', 'HEAD']);
+                nodesIds.forEach(function(nodeId) {
+                    var node = nodes[nodeId];
+                    assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
+                    assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
+                    assert.ok(!node.hasOwnProperty('query'), 'Unexpected "query" attribute in node');
+                });
+
                 keysToDelete['map_cfg|' + LayergroupToken.parse(layergroup.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
@@ -181,6 +208,36 @@ describe('named-maps analysis', function() {
                     done();
                 });
 
+            }
+        );
+    });
+
+    it('should be able to retrieve dataviews from analysis', function(done) {
+        assert.response(
+            server,
+            {
+                url: '/api/v1/map/' + layergroupid + '/dataview/pop_max_histogram',
+                method: 'GET',
+                headers: {
+                    host: username
+                }
+            },
+            {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            },
+            function(res, err) {
+                if (err) {
+                    return done(err);
+                }
+
+                var dataview = JSON.parse(res.body);
+                assert.equal(dataview.type, 'histogram');
+                assert.equal(dataview.bins_start, 0);
+
+                done();
             }
         );
     });

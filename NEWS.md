@@ -1,5 +1,104 @@
 # Changelog
 
+## 2.40.0
+
+Released 2016-05-10
+
+Enhancements:
+ - Use original query from source nodes #444
+
+New features:
+ - Allow override zoom+center or bbox for static named maps previews #443
+ - Analysis layers can have a sql_wrap option to wrap node queries #441
+
+
+## 2.39.0
+
+Released 2016-05-05
+
+Announcements:
+ - Upgrades step-profiler to 0.3.0 to avoid dots in json keys #438
+ - Use a more aggressive cache control header for node status endpoint
+
+
+## 2.38.1
+
+Released 2016-05-05
+
+Announcements:
+ - Fixes problem in turbo-carto dependency
+ - Removes console usages
+
+
+## 2.38.0
+
+Released 2016-05-05
+
+Announcements:
+ - Upgrades turbo-carto to [0.7.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.7.0)
+
+
+## 2.37.0
+
+Released 2016-05-03
+
+Announcements:
+ - Upgrades camshaft to [0.6.0](https://github.com/CartoDB/camshaft/releases/tag/0.6.0)
+
+
+## 2.36.1
+
+Released 2016-04-29
+
+Announcements:
+ - Upgrades camshaft to [0.5.1](https://github.com/CartoDB/camshaft/releases/tag/0.5.1)
+
+
+## 2.36.0
+
+Released 2016-04-28
+
+Announcements:
+ - Upgrades windshaft to [1.19.0](https://github.com/CartoDB/Windshaft/releases/tag/1.19.0)
+
+
+## 2.35.0
+
+Released 2016-04-27
+
+Announcements:
+ - Upgrades windshaft to [1.18.0](https://github.com/CartoDB/Windshaft/releases/tag/1.18.0)
+ - Appends columns to layers from associated dataviews
+
+
+## 2.34.1
+
+Released 2016-04-27
+
+Announcements:
+ - Upgrades windshaft to [1.17.3](https://github.com/CartoDB/Windshaft/releases/tag/1.17.3)
+
+
+## 2.34.0
+
+Released 2016-04-27
+
+Enhancements:
+ - Adds support to return multiple errors in BaseController.sendError #423
+ - Starts using turbo-carto dependency
+
+Announcements:
+ - Upgrades windshaft to [1.17.2](https://github.com/CartoDB/Windshaft/releases/tag/1.17.2)
+
+
+## 2.33.1
+
+Released 2016-04-20
+
+Bug fixes:
+  - Support unneeded schema names in overviews queries #421
+
+
 ## 2.33.0
 
 Released 2016-04-20

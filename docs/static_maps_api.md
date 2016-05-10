@@ -49,8 +49,6 @@ bbox | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
 width | the width in pixels for the output image
 height | the height in pixels for the output image
 format | the format for the image, supported types: `png`, `jpg`
-
-format | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 

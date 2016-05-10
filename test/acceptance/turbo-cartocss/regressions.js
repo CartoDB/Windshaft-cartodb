@@ -1,7 +1,7 @@
-require('../support/test_helper');
+require('../../support/test_helper');
 
-var assert = require('../support/assert');
-var TestClient = require('../support/test-client');
+var assert = require('../../support/assert');
+var TestClient = require('../../support/test-client');
 
 function makeMapconfig(cartocss) {
     return {
@@ -31,7 +31,7 @@ function makeMapconfig(cartocss) {
     };
 }
 
-describe('turbo-cartocss regressions', function() {
+describe('turbo-carto regressions', function() {
 
     var cartocss = [
         "/** simple visualization */",

@@ -1,14 +1,14 @@
-var assert = require('../support/assert');
+var assert = require('../../support/assert');
 var step = require('step');
-var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
-var testHelper = require(__dirname + '/../support/test_helper');
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
+var testHelper = require('../../support/test_helper');
+var CartodbWindshaft = require('../../../lib/cartodb/server');
+var serverOptions = require('../../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 10;
 
-describe('turbo-cartocss for named maps', function() {
+describe('turbo-carto for named maps', function() {
 
     var keysToDelete;
 
@@ -20,7 +20,7 @@ describe('turbo-cartocss for named maps', function() {
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
-    var templateId = 'turbo-cartocss-template-1';
+    var templateId = 'turbo-carto-template-1';
 
     var template = {
         version: '0.0.1',
@@ -65,7 +65,7 @@ describe('turbo-cartocss for named maps', function() {
     var templateParamsReds = { color: 'Reds' };
     var templateParamsBlues = { color: 'Blues' };
 
-    it('should create a template with turbo-cartocss parsed properly', function (done) {
+    it('should create a template with turbo-carto parsed properly', function (done) {
         step(
             function postTemplate() {
                 var next = this;
@@ -144,7 +144,7 @@ describe('turbo-cartocss for named maps', function() {
                 assert.equal(res.statusCode, 200);
                 assert.equal(res.headers['content-type'], 'image/png');
 
-                var fixturePath = './test/fixtures/turbo-cartocss-named-maps-reds.png';
+                var fixturePath = './test/fixtures/turbo-carto-named-maps-reds.png';
                 var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
 
                 assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, next);
@@ -203,7 +203,7 @@ describe('turbo-cartocss for named maps', function() {
                 assert.equal(res.statusCode, 200);
                 assert.equal(res.headers['content-type'], 'image/png');
 
-                var fixturePath = './test/fixtures/turbo-cartocss-named-maps-blues.png';
+                var fixturePath = './test/fixtures/turbo-carto-named-maps-blues.png';
                 var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
 
                 assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, next);

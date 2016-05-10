@@ -184,4 +184,187 @@ describe('analysis-layers', function() {
             testClient.drain(done);
         });
     });
+
+    it('should retrieve enough metadata about analyses', function(done) {
+        var useCase = useCases[1];
+
+        // No API key here
+        var testClient = new TestClient(useCase.mapConfig, 1234);
+
+        testClient.getLayergroup(function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.ok(
+                Array.isArray(layergroupResult.metadata.analyses),
+                    'Missing "analyses" array metadata from: ' + JSON.stringify(layergroupResult)
+            );
+            var analyses = layergroupResult.metadata.analyses;
+            assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+            var nodes = analyses[0].nodes;
+            var nodesIds = Object.keys(nodes);
+            assert.deepEqual(nodesIds, ['2570e105-7b37-40d2-bdf4-1af889598745', 'HEAD']);
+            nodesIds.forEach(function(nodeId) {
+                var node = nodes[nodeId];
+                assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
+                assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
+                assert.ok(node.hasOwnProperty('query'), 'Missing "status" attribute in node');
+            });
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should have analysis metadata when dataviews point to source node', function(done) {
+        var useCase = {
+            desc: 'basic source-id mapnik layer',
+            fixture: 'basic-source-id-mapnik-layer.png',
+            mapConfig: mapConfig(
+                [
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "sql": "select * from populated_places_simple_reduced",
+                            "cartocss": DEFAULT_MULTITYPE_STYLE,
+                            "cartocss_version": "2.3.0"
+                        }
+                    },
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "source": {
+                                "id": "2570e105-7b37-40d2-bdf4-1af889598745"
+                            },
+                            "cartocss": DEFAULT_MULTITYPE_STYLE,
+                            "cartocss_version": "2.3.0"
+                        }
+                    },
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "sql": "select * from populated_places_simple_reduced",
+                            "cartocss": DEFAULT_MULTITYPE_STYLE,
+                            "cartocss_version": "2.3.0"
+                        }
+                    }
+                ],
+                {
+                    pop_max_histogram: {
+                        source: {
+                            id: '2570e105-7b37-40d2-bdf4-1af889598745'
+                        },
+                        type: 'histogram',
+                        options: {
+                            column: 'pop_max'
+                        }
+                    },
+                    scalerank_histogram: {
+                        source: {
+                            id: '2570e105-7b37-40d2-bdf4-1af889598745'
+                        },
+                        type: 'histogram',
+                        options: {
+                            column: 'scalerank'
+                        }
+                    }
+                },
+                [
+                    {
+                        "id": "2570e105-7b37-40d2-bdf4-1af889598745",
+                        "type": "source",
+                        "params": {
+                            "query": "select * from populated_places_simple_reduced"
+                        }
+                    }
+                ]
+            )
+        };
+
+        var testClient = new TestClient(useCase.mapConfig, 1234);
+
+        testClient.getLayergroup(function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.ok(
+                Array.isArray(layergroupResult.metadata.analyses),
+                    'Missing "analyses" array metadata from: ' + JSON.stringify(layergroupResult)
+            );
+            var analyses = layergroupResult.metadata.analyses;
+            assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+            var nodes = analyses[0].nodes;
+
+            var nodesIds = Object.keys(nodes);
+            assert.deepEqual(nodesIds, ['2570e105-7b37-40d2-bdf4-1af889598745']);
+            nodesIds.forEach(function(nodeId) {
+                var node = nodes[nodeId];
+                assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
+                assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
+                assert.ok(node.hasOwnProperty('query'), 'Missing "status" attribute in node');
+            });
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should response with custom cache headers for node status endpoints', function(done) {
+        var useCase = useCases[1];
+
+        // No API key here
+        var testClient = new TestClient(useCase.mapConfig, 1234);
+
+        testClient.getNodeStatus('HEAD', function(err, response, nodeStatus) {
+            assert.ok(!err, err);
+
+            assert.equal(nodeStatus.status, 'ready');
+
+            var headers = response.headers;
+
+            assert.equal(headers['cache-control'], 'public,max-age=5');
+
+            var lastModified = new Date(headers['last-modified']);
+            var tenSecondsInMs = 1e5;
+            assert.ok(Date.now() - lastModified.getTime() < tenSecondsInMs);
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should wrap queries from analyses', function(done) {
+        var testClient = new TestClient(mapConfig(
+            [
+                {
+                    "type": "cartodb",
+                    "options": {
+                        "source": {
+                            "id": "2570e105-7b37-40d2-bdf4-1af889598745"
+                        },
+                        "sql_wrap": "SELECT * FROM (<%= sql %>) __wrapped WHERE adm0cap = 1",
+                        "cartocss": DEFAULT_MULTITYPE_STYLE,
+                        "cartocss_version": "2.3.0"
+                    }
+                }
+            ],
+            {},
+            [
+                {
+                    "id": "2570e105-7b37-40d2-bdf4-1af889598745",
+                    "type": "source",
+                    "params": {
+                        "query": "select * from populated_places_simple_reduced"
+                    }
+                }
+            ]
+        ), 1234);
+
+        var tile = TILE_ANALYSIS_TABLES;
+        testClient.getTile(tile.z, tile.x, tile.y, function(err, res, image) {
+            assert.ok(!err, err);
+
+            var fixturePath = './test/fixtures/analysis/adm0cap-source-id-mapnik-layer.png';
+            assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                assert.ok(!err, err);
+
+                testClient.drain(done);
+            });
+        });
+    });
 });
