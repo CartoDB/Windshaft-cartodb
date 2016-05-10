@@ -2,7 +2,7 @@
 
 ## 2.40.0
 
-Released 2016-mm-dd
+Released 2016-05-10
 
 Enhancements:
  - Use original query from source nodes #444
