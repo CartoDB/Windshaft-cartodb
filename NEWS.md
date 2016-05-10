@@ -1,8 +1,15 @@
 # Changelog
 
-## 2.39.1
+## 2.40.0
 
 Released 2016-mm-dd
+
+Enhancements:
+ - Use original query from source nodes #444
+
+New features:
+ - Allow override zoom+center or bbox for static named maps previews #443
+ - Analysis layers can have a sql_wrap option to wrap node queries #441
 
 
 ## 2.39.0
