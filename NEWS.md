@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.40.1
+## 2.41.0
 
 Released 2016-mm-dd
 
