@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Bug fixes:
+ - Nicer error message when missing sql from layer options #446
+
 
 ## 2.41.0
 
