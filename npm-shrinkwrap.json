@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.41.1",
+  "version": "2.42.0",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -105,13 +105,13 @@
       }
     },
     "camshaft": {
-      "version": "0.7.0",
-      "from": "camshaft@0.7.0",
-      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.7.0.tgz",
+      "version": "0.8.0",
+      "from": "camshaft@0.8.0",
+      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.8.0.tgz",
       "dependencies": {
         "async": {
           "version": "1.5.2",
-          "from": "async@>=1.0.0 <2.0.0",
+          "from": "async@>=1.5.2 <2.0.0",
           "resolved": "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
         },
         "request": {
@@ -584,7 +584,7 @@
           "dependencies": {
             "mime-types": {
               "version": "2.1.11",
-              "from": "mime-types@>=2.1.6 <2.2.0",
+              "from": "mime-types@>=2.1.10 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.11.tgz",
               "dependencies": {
                 "mime-db": {
@@ -763,7 +763,7 @@
         },
         "type-is": {
           "version": "1.6.12",
-          "from": "type-is@>=1.6.10 <1.7.0",
+          "from": "type-is@>=1.6.6 <1.7.0",
           "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.6.12.tgz",
           "dependencies": {
             "media-typer": {
@@ -773,7 +773,7 @@
             },
             "mime-types": {
               "version": "2.1.11",
-              "from": "mime-types@>=2.1.6 <2.2.0",
+              "from": "mime-types@>=2.1.10 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.11.tgz",
               "dependencies": {
                 "mime-db": {
@@ -988,7 +988,7 @@
         },
         "mime-types": {
           "version": "2.1.11",
-          "from": "mime-types@>=2.1.2 <2.2.0",
+          "from": "mime-types@>=2.1.10 <2.2.0",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.11.tgz",
           "dependencies": {
             "mime-db": {
@@ -1215,9 +1215,9 @@
       "from": "step-profiler@>=0.3.0 <0.4.0"
     },
     "turbo-carto": {
-      "version": "0.7.1",
-      "from": "turbo-carto@0.7.1",
-      "resolved": "https://registry.npmjs.org/turbo-carto/-/turbo-carto-0.7.1.tgz",
+      "version": "0.8.0",
+      "from": "turbo-carto@0.8.0",
+      "resolved": "https://registry.npmjs.org/turbo-carto/-/turbo-carto-0.8.0.tgz",
       "dependencies": {
         "colorbrewer": {
           "version": "1.0.0",
