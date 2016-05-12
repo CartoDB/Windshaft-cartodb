@@ -36,7 +36,7 @@ describe('MapConfigOverviewsAdapter', function() {
             }
         };
 
-        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], function(err, layers) {
+        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], [], function(err, layers) {
             assert.ok(!err);
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
@@ -64,7 +64,7 @@ describe('MapConfigOverviewsAdapter', function() {
             }
         };
 
-        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], function(err, layers) {
+        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], [], function(err, layers) {
             assert.ok(!err);
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
