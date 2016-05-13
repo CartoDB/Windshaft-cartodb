@@ -56,6 +56,7 @@ describe('turbo-carto error cases', function() {
 
             assert.ok(layergroup.hasOwnProperty('errors'));
             assert.equal(layergroup.errors.length, 1);
+            assert.ok(layergroup.errors[0].match(/^turbo-carto/));
             assert.ok(layergroup.errors[0].match(/invalid\sramp\slength/i));
 
             done();
@@ -69,7 +70,8 @@ describe('turbo-carto error cases', function() {
 
             assert.ok(layergroup.hasOwnProperty('errors'));
             assert.equal(layergroup.errors.length, 1);
-            assert.ok(layergroup.errors[0].match(/datasource/));
+            assert.ok(layergroup.errors[0].match(/^turbo-carto/));
+            assert.ok(layergroup.errors[0].match(/unable\sto\scompute\sramp/i));
             assert.ok(layergroup.errors[0].match(/wadus_column/));
 
             done();
@@ -83,6 +85,7 @@ describe('turbo-carto error cases', function() {
 
             assert.ok(layergroup.hasOwnProperty('errors'));
             assert.equal(layergroup.errors.length, 1);
+            assert.ok(!layergroup.errors[0].match(/^turbo-carto/));
             assert.ok(layergroup.errors[0].match(/invalid\scode/i));
 
             done();
