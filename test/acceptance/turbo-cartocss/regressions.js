@@ -67,8 +67,12 @@ describe('turbo-carto regressions', function() {
     });
 
     it('should accept // comments', function(done) {
-        this.testClient.getTile(0, 0, 0, function(err) {
+        this.testClient.getLayergroup(function(err, layergroup) {
             assert.ok(!err, err);
+
+            assert.ok(layergroup.hasOwnProperty('layergroupid'));
+            assert.ok(!layergroup.hasOwnProperty('errors'));
+
             done();
         });
     });

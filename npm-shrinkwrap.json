@@ -90,7 +90,7 @@
             },
             "mime-types": {
               "version": "2.1.11",
-              "from": "mime-types@>=2.1.10 <2.2.0",
+              "from": "mime-types@>=2.1.2 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.11.tgz",
               "dependencies": {
                 "mime-db": {
@@ -976,7 +976,7 @@
           "dependencies": {
             "async": {
               "version": "1.5.2",
-              "from": "async@>=1.0.0 <2.0.0",
+              "from": "async@>=1.5.2 <2.0.0",
               "resolved": "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
             }
           }
@@ -988,7 +988,7 @@
         },
         "mime-types": {
           "version": "2.1.11",
-          "from": "mime-types@>=2.1.10 <2.2.0",
+          "from": "mime-types@>=2.1.2 <2.2.0",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.11.tgz",
           "dependencies": {
             "mime-db": {
@@ -1215,9 +1215,9 @@
       "from": "step-profiler@>=0.3.0 <0.4.0"
     },
     "turbo-carto": {
-      "version": "0.8.0",
-      "from": "turbo-carto@0.8.0",
-      "resolved": "https://registry.npmjs.org/turbo-carto/-/turbo-carto-0.8.0.tgz",
+      "version": "0.9.0",
+      "from": "turbo-carto@0.9.0",
+      "resolved": "https://registry.npmjs.org/turbo-carto/-/turbo-carto-0.9.0.tgz",
       "dependencies": {
         "colorbrewer": {
           "version": "1.0.0",
