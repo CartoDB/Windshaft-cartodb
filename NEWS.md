@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Enhancements:
+ - Use split strategy for head/tails turbo-carto quantification
+
 Announcements:
  - Upgrades turbo-carto to [0.9.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.9.0)
 
