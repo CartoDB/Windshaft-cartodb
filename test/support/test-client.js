@@ -471,3 +471,41 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
 TestClient.prototype.drain = function(callback) {
     helper.deleteRedisKeys(this.keysToDelete, callback);
 };
+
+module.exports.getStaticMap = function getStaticMap(templateName, params, callback) {
+    if (!callback) {
+        callback = params;
+        params = null;
+    }
+
+    var url = '/api/v1/map/static/named/' + templateName + '/640/480.png';
+
+    if (params !== null) {
+        url += '?' + qs.stringify(params);
+    }
+
+    var requestOptions = {
+        url: url,
+        method: 'GET',
+        headers: {
+            host: 'localhost'
+        },
+        encoding: 'binary'
+    };
+
+    var expectedResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'image/png'
+        }
+    };
+
+    // this could be removed once named maps are invalidated, otherwise you hits the cache
+    var server = new CartodbWindshaft(serverOptions);
+
+    assert.response(server, requestOptions, expectedResponse, function (res, err) {
+        helper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, function() {
+            return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
+        });
+    });
+};
