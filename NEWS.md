@@ -2,7 +2,7 @@
 
 ## 2.42.0
 
-Released 2016-mm-dd
+Released 2016-05-16
 
 Bug fixes:
  - Fix named maps with analysis #453
