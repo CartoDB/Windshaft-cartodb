@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Bug fixes:
+ - Fix named maps with analysis #453
+
 Enhancements:
  - Use split strategy for head/tails turbo-carto quantification
 
