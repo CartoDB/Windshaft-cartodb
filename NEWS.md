@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+New features:
+ - turbo-carto: mapnik substitution tokens support #455
+
 
 ## 2.42.0
 
