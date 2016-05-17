@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.42.2
+
+Released 2016-mm-dd
+
 ## 2.42.1
 
 Released 2016-05-17
