@@ -2,7 +2,8 @@
 
 ## 2.42.1
 
-Released 2016-mm-dd
+Released 2016-05-17
+- Upgraded turbo-carto to fix reversed color scales
 
 
 ## 2.42.0
