@@ -58,6 +58,21 @@ describe('dataviews using tables without overviews', function() {
         });
     });
 
+    it("should admit a bbox", function(done) {
+        var params = {
+            bbox: "-170,-80,170,80"
+        };
+        var testClient = new TestClient(nonOverviewsMapConfig);
+        testClient.getDataview('country_places_count', params, function(err, formula_result) {
+            if (err) {
+                return done(err);
+            }
+            assert.deepEqual(formula_result, { operation: 'count', result: 7253, nulls: 0, type: 'formula' });
+
+            testClient.drain(done);
+        });
+    });
+
     describe('filters', function() {
 
         describe('category', function () {
