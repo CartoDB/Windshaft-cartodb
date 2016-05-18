@@ -1,11 +1,36 @@
 # Changelog
 
-## 2.42.0
+## 2.42.3
 
 Released 2016-mm-dd
 
+
+## 2.42.2
+
+Released 2016-05-17
+
+New features:
+ - turbo-carto: mapnik substitution tokens support #455
+
+
+## 2.42.1
+
+Released 2016-05-17
+- Upgraded turbo-carto to fix reversed color scales
+
+
+## 2.42.0
+
+Released 2016-05-16
+
+Bug fixes:
+ - Fix named maps with analysis #453
+
+Enhancements:
+ - Use split strategy for head/tails turbo-carto quantification
+
 Announcements:
- - Upgrades turbo-carto to [0.8.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.8.0)
+ - Upgrades turbo-carto to [0.9.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.9.0)
 
 
 ## 2.41.1
