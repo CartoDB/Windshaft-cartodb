@@ -5,7 +5,7 @@ var TestClient = require('../../support/test-client');
 
 describe('dataviews using tables without overviews', function() {
 
-    var countMapConfig =  {
+    var nonOverviewsMapConfig =  {
         version: '1.5.0',
         analyses: [
             { id: 'data-source',
@@ -47,7 +47,7 @@ describe('dataviews using tables without overviews', function() {
     };
 
     it("should expose a formula", function(done) {
-        var testClient = new TestClient(countMapConfig);
+        var testClient = new TestClient(nonOverviewsMapConfig);
         testClient.getDataview('country_places_count', { own_filter: 0 }, function(err, formula_result) {
             if (err) {
                 return done(err);
@@ -68,7 +68,7 @@ describe('dataviews using tables without overviews', function() {
                         dataviews: {country_categories: {accept: ['CAN']}}
                     }
                 };
-                var testClient = new TestClient(countMapConfig);
+                var testClient = new TestClient(nonOverviewsMapConfig);
                 testClient.getDataview('country_places_count', params, function (err, formula_result) {
                     if (err) {
                         return done(err);
@@ -84,7 +84,7 @@ describe('dataviews using tables without overviews', function() {
 
 describe('dataviews using tables with overviews', function() {
 
-    var sumMapConfig =  {
+    var overviewsMapConfig =  {
         version: '1.5.0',
         analyses: [
             { id: 'data-source',
@@ -111,6 +111,38 @@ describe('dataviews using tables with overviews', function() {
                     aggregation: 'count',
                     aggregationColumn: 'name',
                 }
+            },
+            test_avg: {
+                type: 'formula',
+                source: {id: 'data-source'},
+                options: {
+                    column: 'value',
+                    operation: 'avg'
+                }
+            },
+            test_count: {
+                type: 'formula',
+                source: {id: 'data-source'},
+                options: {
+                    column: 'value',
+                    operation: 'count'
+                }
+            },
+            test_min: {
+                type: 'formula',
+                source: {id: 'data-source'},
+                options: {
+                    column: 'value',
+                    operation: 'min'
+                }
+            },
+            test_max: {
+                type: 'formula',
+                source: {id: 'data-source'},
+                options: {
+                    column: 'value',
+                    operation: 'max'
+                }
             }
         },
         layers: [
@@ -126,13 +158,61 @@ describe('dataviews using tables with overviews', function() {
         ]
     };
 
-    it("should expose a formula", function(done) {
-        var testClient = new TestClient(sumMapConfig);
+    it("should expose a sum formula", function(done) {
+        var testClient = new TestClient(overviewsMapConfig);
         testClient.getDataview('test_sum', { own_filter: 0 }, function(err, formula_result) {
             if (err) {
                 return done(err);
             }
             assert.deepEqual(formula_result, {"operation":"sum","result":15,"nulls":0,"type":"formula"});
+
+            testClient.drain(done);
+        });
+    });
+
+    it("should expose an avg formula", function(done) {
+        var testClient = new TestClient(overviewsMapConfig);
+        testClient.getDataview('test_avg', { own_filter: 0 }, function(err, formula_result) {
+            if (err) {
+                return done(err);
+            }
+            assert.deepEqual(formula_result, {"operation":"avg","result":3,"nulls":0,"type":"formula"});
+
+            testClient.drain(done);
+        });
+    });
+
+    it("should expose a count formula", function(done) {
+        var testClient = new TestClient(overviewsMapConfig);
+        testClient.getDataview('test_count', { own_filter: 0 }, function(err, formula_result) {
+            if (err) {
+                return done(err);
+            }
+            assert.deepEqual(formula_result, {"operation":"count","result":5,"nulls":0,"type":"formula"});
+
+            testClient.drain(done);
+        });
+    });
+
+    it("should expose a max formula", function(done) {
+        var testClient = new TestClient(overviewsMapConfig);
+        testClient.getDataview('test_max', { own_filter: 0 }, function(err, formula_result) {
+            if (err) {
+                return done(err);
+            }
+            assert.deepEqual(formula_result, {"operation":"max","result":5,"nulls":0,"type":"formula"});
+
+            testClient.drain(done);
+        });
+    });
+
+    it("should expose a min formula", function(done) {
+        var testClient = new TestClient(overviewsMapConfig);
+        testClient.getDataview('test_min', { own_filter: 0 }, function(err, formula_result) {
+            if (err) {
+                return done(err);
+            }
+            assert.deepEqual(formula_result, {"operation":"min","result":1,"nulls":0,"type":"formula"});
 
             testClient.drain(done);
         });
@@ -148,7 +228,7 @@ describe('dataviews using tables with overviews', function() {
                         dataviews: {test_categories: {accept: ['Hawai']}}
                     }
                 };
-                var testClient = new TestClient(sumMapConfig);
+                var testClient = new TestClient(overviewsMapConfig);
                 testClient.getDataview('test_sum', params, function (err, formula_result) {
                     if (err) {
                         return done(err);
@@ -156,6 +236,55 @@ describe('dataviews using tables with overviews', function() {
                     assert.deepEqual(formula_result, {"operation":"sum","result":1,"nulls":0,"type":"formula"});
                     testClient.drain(done);
                 });
+
+                it("should expose an avg formula", function(done) {
+                    var testClient = new TestClient(overviewsMapConfig);
+                    testClient.getDataview('test_avg', { own_filter: 0 }, function(err, formula_result) {
+                        if (err) {
+                            return done(err);
+                        }
+                        assert.deepEqual(formula_result, {"operation":"avg","result":1,"nulls":0,"type":"formula"});
+
+                        testClient.drain(done);
+                    });
+                });
+
+                it("should expose a count formula", function(done) {
+                    var testClient = new TestClient(overviewsMapConfig);
+                    testClient.getDataview('test_count', { own_filter: 0 }, function(err, formula_result) {
+                        if (err) {
+                            return done(err);
+                        }
+                        assert.deepEqual(formula_result, {"operation":"count","result":1,"nulls":0,"type":"formula"});
+
+                        testClient.drain(done);
+                    });
+                });
+
+                it("should expose a max formula", function(done) {
+                    var testClient = new TestClient(overviewsMapConfig);
+                    testClient.getDataview('test_max', { own_filter: 0 }, function(err, formula_result) {
+                        if (err) {
+                            return done(err);
+                        }
+                        assert.deepEqual(formula_result, {"operation":"max","result":1,"nulls":0,"type":"formula"});
+
+                        testClient.drain(done);
+                    });
+                });
+
+                it("should expose a min formula", function(done) {
+                    var testClient = new TestClient(overviewsMapConfig);
+                    testClient.getDataview('test_min', { own_filter: 0 }, function(err, formula_result) {
+                        if (err) {
+                            return done(err);
+                        }
+                        assert.deepEqual(formula_result, {"operation":"min","result":1,"nulls":0,"type":"formula"});
+
+                        testClient.drain(done);
+                    });
+                });
+
             });
         });
 
