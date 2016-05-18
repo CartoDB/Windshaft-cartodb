@@ -475,4 +475,52 @@ describe('Overviews query rewriter', function() {
         ";
         assertSameSql(overviews_sql, expected_sql);
     });
+
+    it('generates query for specific Z level', function(){
+        var sql = "SELECT * FROM table1";
+        var data = {
+            overviews: {
+                table1: {
+                    0: { table: 'table1_ov0' },
+                    2: { table: 'table1_ov2' },
+                    3: { table: 'table1_ov3' }
+                }
+            }
+        };
+        var overviews_sql = overviewsQueryRewriter.query(sql, data, { zoom_level: 3 });
+        var expected_sql = "SELECT * FROM table1_ov3";
+        assertSameSql(overviews_sql, expected_sql);
+    });
+
+    it('generates query for specific nonpresent Z level', function(){
+        var sql = "SELECT * FROM table1";
+        var data = {
+            overviews: {
+                table1: {
+                    0: { table: 'table1_ov0' },
+                    2: { table: 'table1_ov2' },
+                    3: { table: 'table1_ov3' }
+                }
+            }
+        };
+        var overviews_sql = overviewsQueryRewriter.query(sql, data, { zoom_level: 1 });
+        var expected_sql = "SELECT * FROM table1_ov2";
+        assertSameSql(overviews_sql, expected_sql);
+    });
+
+    it('does not use overviews for specific out-of-range Z level', function(){
+        var sql = "SELECT * FROM table1";
+        var data = {
+            overviews: {
+                table1: {
+                    0: { table: 'table1_ov0' },
+                    2: { table: 'table1_ov2' },
+                    3: { table: 'table1_ov3' }
+                }
+            }
+        };
+        var overviews_sql = overviewsQueryRewriter.query(sql, data, { zoom_level: 4 });
+        var expected_sql = "SELECT * FROM table1";
+        assertSameSql(overviews_sql, expected_sql);
+    });
 });
