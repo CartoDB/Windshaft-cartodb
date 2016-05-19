@@ -4,7 +4,14 @@
 
 Released 2016-mm-dd
 
-Adds support for sql wrap in all layers
+Announcements:
+ - Upgrades turbo-carto to [0.10.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.10.0)
+
+New features:
+ - Adds support for sql wrap in all layers
+
+Bug fixes:
+ - Fail on turbo-carto invalid quantification methods
 
 
 ## 2.43.1
