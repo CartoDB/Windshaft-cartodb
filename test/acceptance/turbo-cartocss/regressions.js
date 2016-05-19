@@ -114,8 +114,6 @@ describe('turbo-carto regressions', function() {
             "}"
         ].join('\n');
 
-        console.log(cartocss);
-
         var sqlWrap = [
             'WITH hgrid AS (',
             '  SELECT CDB_HexagonGrid(',
