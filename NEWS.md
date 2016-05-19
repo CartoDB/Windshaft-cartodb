@@ -4,7 +4,11 @@
 
 Released 2016-mm-dd
 
-Adds support for sql wrap in all layers
+New features:
+ - Adds support for sql wrap in all layers
+
+Bug fixes:
+ - Fail on turbo-carto invalid quantification methods
 
 
 ## 2.43.1

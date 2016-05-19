@@ -53,6 +53,20 @@ describe('turbo-carto for anonymous maps', function() {
             var fixturePath = 'test_turbo_carto_greens_13_4011_3088.png';
             this.testClient.getTile(13, 4011, 3088, imageCompareFn(fixturePath, done));
         });
+
+        it('should work for different char case in quantification names', function(done) {
+            this.testClient = new TestClient(
+                makeMapconfig('#layer { marker-fill: ramp([price], colorbrewer(Greens, 3), jeNkS); }')
+            );
+            this.testClient.getLayergroup(function(err, layergroup) {
+                assert.ok(!err, err);
+
+                assert.ok(layergroup.hasOwnProperty('layergroupid'));
+                assert.ok(!layergroup.hasOwnProperty('errors'));
+
+                done();
+            });
+        });
     });
 
     describe('parsing ramp function with colorbrewer for reds and mapnik renderer', function () {
