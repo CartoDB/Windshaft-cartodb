@@ -153,7 +153,7 @@ describe('turbo-carto regressions', function() {
                     "id": "head",
                     "type": "source",
                     "params": {
-                        "query": "SELECT * FROM car_log_nurburgring_2013_05_30"
+                        "query": "SELECT * FROM populated_places_simple_reduced"
                     }
                 }
             ]
