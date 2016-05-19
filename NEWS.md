@@ -2,7 +2,10 @@
 
 ## 2.43.1
 
-Released 2016-mm-dd
+Released 2016-05-19
+
+Bug fixes:
+ - Dataview error when bbox present without query rewrite data #458
 
 
 ## 2.43.0
