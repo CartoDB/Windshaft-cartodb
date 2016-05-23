@@ -4,7 +4,7 @@ var assert = require('../support/assert');
 
 var _ = require('underscore');
 
-var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+var LayergroupToken = require('../support/layergroup-token');
 
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var QueryTables = require('cartodb-query-tables');

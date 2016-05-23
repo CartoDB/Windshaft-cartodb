@@ -5,7 +5,7 @@ var _             = require('underscore');
 var cartodbServer = require('../../../lib/cartodb/server');
 var getLayerTypeFn = require('windshaft').model.MapConfig.prototype.getType;
 var PortedServerOptions = require('./support/ported_server_options');
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
+var LayergroupToken = require('../../support/layergroup-token');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
 

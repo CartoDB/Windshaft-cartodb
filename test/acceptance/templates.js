@@ -23,7 +23,7 @@ var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+var LayergroupToken = require('../support/layergroup-token');
 
 describe('template_api', function() {
     server.layergroupAffectedTablesCache.cache.reset();
