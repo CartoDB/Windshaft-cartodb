@@ -7,7 +7,7 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
+var LayergroupToken = require('../../support/layergroup-token');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
