@@ -294,9 +294,9 @@ describe('named_layers datasources', function() {
 
     testScenarios.forEach(function(testScenario) {
         it('should return a list of layers ' + testScenario.desc, function(done) {
-            mapConfigNamedLayersAdapter.getLayers(username, testScenario.config.layers, pgConnection,
-                function(err, layers, datasource) {
-                    testScenario.test(err, layers, datasource, done);
+            mapConfigNamedLayersAdapter.getMapConfig(username, testScenario.config, pgConnection,
+                function(err, mapConfig, datasource) {
+                    testScenario.test(err, mapConfig.layers, datasource, done);
                 }
             );
         });
