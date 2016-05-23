@@ -147,10 +147,10 @@ describe('mapconfig-named-layers-adapter', function() {
         var missingNamedMapLayerConfig = makeNamedMapLayerConfig({
             config: {}
         });
-        mapConfigNamedLayersAdapter.getLayers(username, missingNamedMapLayerConfig.layers, pgConnection,
-            function(err, layers, datasource) {
+        mapConfigNamedLayersAdapter.getMapConfig(username, missingNamedMapLayerConfig, pgConnection,
+            function(err, mapConfig, datasource) {
                 assert.ok(err);
-                assert.ok(!layers);
+                assert.ok(!mapConfig);
                 assert.ok(!datasource);
                 assert.equal(err.message, 'Missing Named Map `name` in layer options');
 
@@ -164,10 +164,10 @@ describe('mapconfig-named-layers-adapter', function() {
         var nonExistentNamedMapLayerConfig = makeNamedMapLayerConfig({
             name: missingTemplateName
         });
-        mapConfigNamedLayersAdapter.getLayers(username, nonExistentNamedMapLayerConfig.layers, pgConnection,
-            function(err, layers, datasource) {
+        mapConfigNamedLayersAdapter.getMapConfig(username, nonExistentNamedMapLayerConfig, pgConnection,
+            function(err, mapConfig, datasource) {
                 assert.ok(err);
-                assert.ok(!layers);
+                assert.ok(!mapConfig);
                 assert.ok(!datasource);
                 assert.equal(
                     err.message, "Template '" + missingTemplateName + "' of user '" + username + "' not found"
@@ -187,10 +187,10 @@ describe('mapconfig-named-layers-adapter', function() {
             var nonAuthTokensNamedMapLayerConfig = makeNamedMapLayerConfig({
                 name: tokenAuthTemplateName
             });
-            mapConfigNamedLayersAdapter.getLayers(username, nonAuthTokensNamedMapLayerConfig.layers, pgConnection,
-                function(err, layers, datasource) {
+            mapConfigNamedLayersAdapter.getMapConfig(username, nonAuthTokensNamedMapLayerConfig, pgConnection,
+                function(err, mapConfig, datasource) {
                     assert.ok(err);
-                    assert.ok(!layers);
+                    assert.ok(!mapConfig);
                     assert.ok(!datasource);
                     assert.equal(err.message, "Unauthorized '" + tokenAuthTemplateName + "' template instantiation");
 
@@ -209,10 +209,10 @@ describe('mapconfig-named-layers-adapter', function() {
             var nestedNamedMapLayerConfig = makeNamedMapLayerConfig({
                 name: nestedNamedMapTemplateName
             });
-            mapConfigNamedLayersAdapter.getLayers(username, nestedNamedMapLayerConfig.layers, pgConnection,
-                function(err, layers, datasource) {
+            mapConfigNamedLayersAdapter.getMapConfig(username, nestedNamedMapLayerConfig, pgConnection,
+                function(err, mapConfig, datasource) {
                     assert.ok(err);
-                    assert.ok(!layers);
+                    assert.ok(!mapConfig);
                     assert.ok(!datasource);
                     assert.equal(err.message, 'Nested named layers are not allowed');
 
@@ -226,9 +226,10 @@ describe('mapconfig-named-layers-adapter', function() {
         var validNamedMapMapLayerConfig = makeNamedMapLayerConfig({
             name: templateName
         });
-        mapConfigNamedLayersAdapter.getLayers(username, validNamedMapMapLayerConfig.layers, pgConnection,
-            function(err, layers, datasource) {
+        mapConfigNamedLayersAdapter.getMapConfig(username, validNamedMapMapLayerConfig, pgConnection,
+            function(err, mapConfig, datasource) {
                 assert.ok(!err);
+                var layers = mapConfig.layers;
                 assert.ok(layers.length, 1);
                 assert.ok(layers[0].type, 'cartodb');
                 assert.notEqual(datasource.getLayerDatasource(0), undefined);
@@ -248,9 +249,10 @@ describe('mapconfig-named-layers-adapter', function() {
                 name: tokenAuthTemplateName,
                 auth_tokens: ['valid1']
             });
-            mapConfigNamedLayersAdapter.getLayers(username, validAuthTokensNamedMapLayerConfig.layers, pgConnection,
-                function(err, layers, datasource) {
+            mapConfigNamedLayersAdapter.getMapConfig(username, validAuthTokensNamedMapLayerConfig, pgConnection,
+                function(err, mapConfig, datasource) {
                     assert.ok(!err);
+                    var layers = mapConfig.layers;
                     assert.equal(layers.length, 1);
                     assert.notEqual(datasource.getLayerDatasource(0), undefined);
 
@@ -270,9 +272,10 @@ describe('mapconfig-named-layers-adapter', function() {
                 name: multipleLayersTemplateName,
                 auth_tokens: ['valid2']
             });
-            mapConfigNamedLayersAdapter.getLayers(username, multipleLayersNamedMapLayerConfig.layers, pgConnection,
-                function(err, layers, datasource) {
+            mapConfigNamedLayersAdapter.getMapConfig(username, multipleLayersNamedMapLayerConfig, pgConnection,
+                function(err, mapConfig, datasource) {
                     assert.ok(!err);
+                    var layers = mapConfig.layers;
                     assert.equal(layers.length, 2);
 
                     assert.equal(layers[0].type, 'mapnik');
@@ -306,9 +309,10 @@ describe('mapconfig-named-layers-adapter', function() {
                 },
                 auth_tokens: ['valid2']
             });
-            mapConfigNamedLayersAdapter.getLayers(username, multipleLayersNamedMapLayerConfig.layers, pgConnection,
-                function(err, layers, datasource) {
+            mapConfigNamedLayersAdapter.getMapConfig(username, multipleLayersNamedMapLayerConfig, pgConnection,
+                function(err, mapConfig, datasource) {
                     assert.ok(!err);
+                    var layers = mapConfig.layers;
                     assert.equal(layers.length, 2);
 
                     assert.equal(layers[0].type, 'mapnik');
