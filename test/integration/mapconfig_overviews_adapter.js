@@ -33,8 +33,13 @@ describe('MapConfigOverviewsAdapter', function() {
             }
         };
 
-        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], [], function(err, layers) {
+        var _mapConfig = {
+            layers: [layer_without_overviews]
+        };
+
+        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, [], function(err, mapConfig) {
             assert.ok(!err);
+            var layers = mapConfig.layers;
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
             assert.equal(layers[0].options.sql, sql);
@@ -52,7 +57,7 @@ describe('MapConfigOverviewsAdapter', function() {
         var sql = 'SELECT * FROM test_table_overviews';
         var cartocss = '#layer { marker-fill: black; }';
         var cartocss_version = '2.3.0';
-        var layer_without_overviews = {
+        var layer_with_overviews = {
             type: 'cartodb',
             options: {
                 sql: sql,
@@ -61,8 +66,13 @@ describe('MapConfigOverviewsAdapter', function() {
             }
         };
 
-        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], [], function(err, layers) {
+        var _mapConfig = {
+            layers: [layer_with_overviews]
+        };
+
+        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, [], function(err, mapConfig) {
             assert.ok(!err);
+            var layers = mapConfig.layers;
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
             assert.equal(layers[0].options.sql, sql);
