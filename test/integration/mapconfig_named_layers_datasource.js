@@ -297,7 +297,7 @@ describe('named_layers datasources', function() {
             var params = {};
             var context = {};
             mapConfigNamedLayersAdapter.getMapConfig(username, testScenario.config, params, context,
-                function(err, mapConfig, datasource) {
+                function(err, mapConfig) {
                     testScenario.test(err, mapConfig.layers, context.datasource, done);
                 }
             );
