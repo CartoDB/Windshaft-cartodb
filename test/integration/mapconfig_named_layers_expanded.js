@@ -4,9 +4,9 @@ var assert = require('assert');
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
-var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig_named_layers_adapter');
+var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-named-layers-adapter');
 
-describe('mapconfig_named_layers_adapter', function() {
+describe('mapconfig-named-layers-adapter', function() {
 
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
