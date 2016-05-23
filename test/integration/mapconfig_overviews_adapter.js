@@ -9,10 +9,6 @@ var OverviewsMetadataApi = require('../../lib/cartodb/api/overviews_metadata_api
 var FilterStatsApi = require('../../lib/cartodb/api/filter_stats_api');
 var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-overviews-adapter');
 
-// configure redis pool instance to use in tests
-var redisPool = new RedisPool(global.environment.redis);
-var pgConnection = new PgConnection(require('cartodb-redis')({ pool: redisPool }));
-
 var redisPool = new RedisPool(global.environment.redis);
 var metadataBackend = cartodbRedis({pool: redisPool});
 var pgConnection = new PgConnection(metadataBackend);
