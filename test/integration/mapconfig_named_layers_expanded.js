@@ -150,10 +150,10 @@ describe('mapconfig-named-layers-adapter', function() {
             config: {}
         });
         mapConfigNamedLayersAdapter.getMapConfig(username, missingNamedMapLayerConfig, params, context,
-            function(err, mapConfig, datasource) {
+            function(err, mapConfig) {
                 assert.ok(err);
                 assert.ok(!mapConfig);
-                assert.ok(!datasource);
+                assert.ok(!context.datasource);
                 assert.equal(err.message, 'Missing Named Map `name` in layer options');
 
                 done();
@@ -167,10 +167,10 @@ describe('mapconfig-named-layers-adapter', function() {
             name: missingTemplateName
         });
         mapConfigNamedLayersAdapter.getMapConfig(username, nonExistentNamedMapLayerConfig, params, context,
-            function(err, mapConfig, datasource) {
+            function(err, mapConfig) {
                 assert.ok(err);
                 assert.ok(!mapConfig);
-                assert.ok(!datasource);
+                assert.ok(!context.datasource);
                 assert.equal(
                     err.message, "Template '" + missingTemplateName + "' of user '" + username + "' not found"
                 );
@@ -190,10 +190,10 @@ describe('mapconfig-named-layers-adapter', function() {
                 name: tokenAuthTemplateName
             });
             mapConfigNamedLayersAdapter.getMapConfig(username, nonAuthTokensNamedMapLayerConfig, params, context,
-                function(err, mapConfig, datasource) {
+                function(err, mapConfig) {
                     assert.ok(err);
                     assert.ok(!mapConfig);
-                    assert.ok(!datasource);
+                    assert.ok(!context.datasource);
                     assert.equal(err.message, "Unauthorized '" + tokenAuthTemplateName + "' template instantiation");
 
                     templateMaps.delTemplate(username, tokenAuthTemplateName, done);
@@ -212,10 +212,10 @@ describe('mapconfig-named-layers-adapter', function() {
                 name: nestedNamedMapTemplateName
             });
             mapConfigNamedLayersAdapter.getMapConfig(username, nestedNamedMapLayerConfig, params, context,
-                function(err, mapConfig, datasource) {
+                function(err, mapConfig) {
                     assert.ok(err);
                     assert.ok(!mapConfig);
-                    assert.ok(!datasource);
+                    assert.ok(!context.datasource);
                     assert.equal(err.message, 'Nested named layers are not allowed');
 
                     templateMaps.delTemplate(username, nestedNamedMapTemplateName, done);
@@ -229,12 +229,12 @@ describe('mapconfig-named-layers-adapter', function() {
             name: templateName
         });
         mapConfigNamedLayersAdapter.getMapConfig(username, validNamedMapMapLayerConfig, params, context,
-            function(err, mapConfig, datasource) {
+            function(err, mapConfig) {
                 assert.ok(!err);
                 var layers = mapConfig.layers;
                 assert.ok(layers.length, 1);
                 assert.ok(layers[0].type, 'cartodb');
-                assert.notEqual(datasource.getLayerDatasource(0), undefined);
+                assert.notEqual(context.datasource.getLayerDatasource(0), undefined);
 
                 done();
             }
@@ -252,11 +252,11 @@ describe('mapconfig-named-layers-adapter', function() {
                 auth_tokens: ['valid1']
             });
             mapConfigNamedLayersAdapter.getMapConfig(username, validAuthTokensNamedMapLayerConfig, params, context,
-                function(err, mapConfig, datasource) {
+                function(err, mapConfig) {
                     assert.ok(!err);
                     var layers = mapConfig.layers;
                     assert.equal(layers.length, 1);
-                    assert.notEqual(datasource.getLayerDatasource(0), undefined);
+                    assert.notEqual(context.datasource.getLayerDatasource(0), undefined);
 
                     templateMaps.delTemplate(username, tokenAuthTemplateName, done);
                 }
@@ -275,18 +275,18 @@ describe('mapconfig-named-layers-adapter', function() {
                 auth_tokens: ['valid2']
             });
             mapConfigNamedLayersAdapter.getMapConfig(username, multipleLayersNamedMapLayerConfig, params, context,
-                function(err, mapConfig, datasource) {
+                function(err, mapConfig) {
                     assert.ok(!err);
                     var layers = mapConfig.layers;
                     assert.equal(layers.length, 2);
 
                     assert.equal(layers[0].type, 'mapnik');
                     assert.equal(layers[0].options.cartocss, '#layer { polygon-fill: green; }');
-                    assert.notEqual(datasource.getLayerDatasource(0), undefined);
+                    assert.notEqual(context.datasource.getLayerDatasource(0), undefined);
 
                     assert.equal(layers[1].type, 'cartodb');
                     assert.equal(layers[1].options.cartocss, '#layer { marker-fill: red; }');
-                    assert.notEqual(datasource.getLayerDatasource(1), undefined);
+                    assert.notEqual(context.datasource.getLayerDatasource(1), undefined);
 
                     templateMaps.delTemplate(username, multipleLayersTemplateName, done);
                 }
@@ -312,18 +312,18 @@ describe('mapconfig-named-layers-adapter', function() {
                 auth_tokens: ['valid2']
             });
             mapConfigNamedLayersAdapter.getMapConfig(username, multipleLayersNamedMapLayerConfig, params, context,
-                function(err, mapConfig, datasource) {
+                function(err, mapConfig) {
                     assert.ok(!err);
                     var layers = mapConfig.layers;
                     assert.equal(layers.length, 2);
 
                     assert.equal(layers[0].type, 'mapnik');
                     assert.equal(layers[0].options.cartocss, '#layer { polygon-fill: ' + polygonColor + '; }');
-                    assert.notEqual(datasource.getLayerDatasource(0), undefined);
+                    assert.notEqual(context.datasource.getLayerDatasource(0), undefined);
 
                     assert.equal(layers[1].type, 'cartodb');
                     assert.equal(layers[1].options.cartocss, '#layer { marker-fill: ' + color + '; }');
-                    assert.notEqual(datasource.getLayerDatasource(1), undefined);
+                    assert.notEqual(context.datasource.getLayerDatasource(1), undefined);
 
                     templateMaps.delTemplate(username, multipleLayersTemplateName, done);
                 }
