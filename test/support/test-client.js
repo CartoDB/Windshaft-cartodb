@@ -6,7 +6,7 @@ var urlParser = require('url');
 
 var mapnik = require('windshaft').mapnik;
 
-var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+var LayergroupToken = require('./layergroup-token');
 
 var assert = require('./assert');
 var helper = require('./test_helper');

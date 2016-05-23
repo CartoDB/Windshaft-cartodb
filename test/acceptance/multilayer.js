@@ -6,7 +6,7 @@ var strftime    = require('strftime');
 var redis_stats_db = 5;
 
 var helper = require(__dirname + '/../support/test_helper');
-var LayergroupToken = require('../../lib/cartodb/models/layergroup_token');
+var LayergroupToken = require('../support/layergroup-token');
 
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 

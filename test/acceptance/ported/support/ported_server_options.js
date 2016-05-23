@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var serverOptions = require('../../../../lib/cartodb/server_options');
-var LayergroupToken = require('../../../../lib/cartodb/models/layergroup_token');
+var LayergroupToken = require('../../../support/layergroup-token');
 var mapnik = require('windshaft').mapnik;
 var OverviewsQueryRewriter = require('../../../../lib/cartodb/utils/overviews_query_rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
