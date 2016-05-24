@@ -37,7 +37,10 @@ describe('MapConfigOverviewsAdapter', function() {
             layers: [layer_without_overviews]
         };
 
-        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, [], function(err, mapConfig) {
+        var params = {};
+        var context = {};
+
+        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function(err, mapConfig) {
             assert.ok(!err);
             var layers = mapConfig.layers;
             assert.equal(layers.length, 1);
@@ -70,7 +73,10 @@ describe('MapConfigOverviewsAdapter', function() {
             layers: [layer_with_overviews]
         };
 
-        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, [], function(err, mapConfig) {
+        var params = {};
+        var context = {};
+
+        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function(err, mapConfig) {
             assert.ok(!err);
             var layers = mapConfig.layers;
             assert.equal(layers.length, 1);

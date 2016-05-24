@@ -14,7 +14,7 @@ var templateMaps = new TemplateMaps(redisPool, {
     max_user_templates: global.environment.maxUserTemplates
 });
 
-var mapConfigNamedLayersAdapter = new MapConfigNamedLayersAdapter(templateMaps);
+var mapConfigNamedLayersAdapter = new MapConfigNamedLayersAdapter(templateMaps, pgConnection);
 
 var wadusSql = 'select 1 wadusLayer, null::geometry the_geom_webmercator';
 var wadusLayer = {
@@ -294,9 +294,11 @@ describe('named_layers datasources', function() {
 
     testScenarios.forEach(function(testScenario) {
         it('should return a list of layers ' + testScenario.desc, function(done) {
-            mapConfigNamedLayersAdapter.getMapConfig(username, testScenario.config, pgConnection,
-                function(err, mapConfig, datasource) {
-                    testScenario.test(err, mapConfig.layers, datasource, done);
+            var params = {};
+            var context = {};
+            mapConfigNamedLayersAdapter.getMapConfig(username, testScenario.config, params, context,
+                function(err, mapConfig) {
+                    testScenario.test(err, mapConfig.layers, context.datasource, done);
                 }
             );
         });
