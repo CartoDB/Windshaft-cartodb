@@ -3,7 +3,7 @@ require('../../support/test_helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-function makeMapconfig(cartocss) {
+function makeMapconfig(sql, cartocss) {
     return {
         "version": "1.4.0",
         "layers": [
@@ -11,19 +11,7 @@ function makeMapconfig(cartocss) {
                 "type": 'mapnik',
                 "options": {
                     "cartocss_version": '2.3.0',
-                    "sql": [
-                        'SELECT test_table.*, _prices.price FROM test_table JOIN (' +
-                        '  SELECT 1 AS cartodb_id, 10.00 AS price',
-                        '  UNION',
-                        '  SELECT 2, 10.50',
-                        '  UNION',
-                        '  SELECT 3, 11.00',
-                        '  UNION',
-                        '  SELECT 4, 12.00',
-                        '  UNION',
-                        '  SELECT 5, 21.00',
-                        ') _prices ON _prices.cartodb_id = test_table.cartodb_id'
-                    ].join('\n'),
+                    "sql": sql,
                     "cartocss": cartocss
                 }
             }
@@ -33,42 +21,84 @@ function makeMapconfig(cartocss) {
 
 describe('turbo-carto regressions', function() {
 
-    var cartocss = [
-        "/** simple visualization */",
-        "",
-        "Map {",
-        "  buffer-size: 256;",
-        "}",
-        "",
-        "#county_points_with_population{",
-        "  marker-fill-opacity: 0.1;",
-        "  marker-line-color:#FFFFFF;//#CF1C90;",
-        "  marker-line-width: 0;",
-        "  marker-line-opacity: 0.3;",
-        "  marker-placement: point;",
-        "  marker-type: ellipse;",
-        "  //marker-comp-op: overlay;",
-        "  marker-width: [price];",
-        "  [zoom=5]{marker-width: [price]*2;}",
-        "  [zoom=6]{marker-width: [price]*4;}",
-        "  marker-fill: #000000;",
-        "  marker-allow-overlap: true;",
-        "  ",
-        "",
-        "}"
-    ].join('\n');
-
-    beforeEach(function () {
-        this.testClient = new TestClient(makeMapconfig(cartocss));
-    });
-
     afterEach(function (done) {
-        this.testClient.drain(done);
+        if (this.testClient) {
+            this.testClient.drain(done);
+        }
     });
 
     it('should accept // comments', function(done) {
-        this.testClient.getTile(0, 0, 0, function(err) {
+        var cartocss = [
+            "/** simple visualization */",
+            "",
+            "Map {",
+            "  buffer-size: 256;",
+            "}",
+            "",
+            "#county_points_with_population{",
+            "  marker-fill-opacity: 0.1;",
+            "  marker-line-color:#FFFFFF;//#CF1C90;",
+            "  marker-line-width: 0;",
+            "  marker-line-opacity: 0.3;",
+            "  marker-placement: point;",
+            "  marker-type: ellipse;",
+            "  //marker-comp-op: overlay;",
+            "  marker-width: [cartodb_id];",
+            "  [zoom=5]{marker-width: [cartodb_id]*2;}",
+            "  [zoom=6]{marker-width: [cartodb_id]*4;}",
+            "  marker-fill: #000000;",
+            "  marker-allow-overlap: true;",
+            "  ",
+            "",
+            "}"
+        ].join('\n');
+
+        this.testClient = new TestClient(makeMapconfig('SELECT * FROM populated_places_simple_reduced', cartocss));
+        this.testClient.getLayergroup(function(err, layergroup) {
             assert.ok(!err, err);
+
+            assert.ok(layergroup.hasOwnProperty('layergroupid'));
+            assert.ok(!layergroup.hasOwnProperty('errors'));
+
+            done();
+        });
+    });
+
+    it('should work with mapnik substitution tokens', function(done) {
+        var cartocss = [
+            "#layer {",
+            "  line-width: 2;",
+            "  line-color: #3B3B58;",
+            "  line-opacity: 1;",
+            "  polygon-opacity: 0.7;",
+            "  polygon-fill: ramp([points_count], (#E5F5F9,#99D8C9,#2CA25F))",
+            "}"
+        ].join('\n');
+
+        var sql = [
+            'WITH hgrid AS (',
+            '  SELECT CDB_HexagonGrid(',
+            '    ST_Expand(!bbox!, greatest(!pixel_width!,!pixel_height!) * 100),',
+            '    greatest(!pixel_width!,!pixel_height!) * 100',
+            '  ) as cell',
+            ')',
+            'SELECT',
+            '  hgrid.cell as the_geom_webmercator,',
+            '  count(1) as points_count,',
+            '  count(1)/power(100 * CDB_XYZ_Resolution(CDB_ZoomFromScale(!scale_denominator!)), 2) as points_density,',
+            '  1 as cartodb_id',
+            'FROM hgrid, (SELECT * FROM populated_places_simple_reduced) i',
+            'where ST_Intersects(i.the_geom_webmercator, hgrid.cell)',
+            'GROUP BY hgrid.cell'
+        ].join('\n');
+
+        this.testClient = new TestClient(makeMapconfig(sql, cartocss));
+        this.testClient.getLayergroup(function(err, layergroup) {
+            assert.ok(!err, err);
+
+            assert.ok(layergroup.hasOwnProperty('layergroupid'));
+            assert.ok(!layergroup.hasOwnProperty('errors'));
+
             done();
         });
     });

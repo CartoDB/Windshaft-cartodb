@@ -1,5 +1,68 @@
 # Changelog
 
+## 2.43.1
+
+Released 2016-05-19
+
+Bug fixes:
+ - Dataview error when bbox present without query rewrite data #458
+
+
+## 2.43.0
+
+Released 2016-05-18
+
+New features:
+ - Overviews now support dataviews and filtering #449
+
+
+## 2.42.2
+
+Released 2016-05-17
+
+New features:
+ - turbo-carto: mapnik substitution tokens support #455
+
+
+## 2.42.1
+
+Released 2016-05-17
+- Upgraded turbo-carto to fix reversed color scales
+
+
+## 2.42.0
+
+Released 2016-05-16
+
+Bug fixes:
+ - Fix named maps with analysis #453
+
+Enhancements:
+ - Use split strategy for head/tails turbo-carto quantification
+
+Announcements:
+ - Upgrades turbo-carto to [0.9.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.9.0)
+
+
+## 2.41.1
+
+Released 2016-05-11
+
+Announcements:
+ - Upgrades camshaft to [0.8.0](https://github.com/CartoDB/camshaft/releases/tag/0.8.0)
+
+Bug fixes:
+ - Nicer error message when missing sql from layer options #446
+
+
+## 2.41.0
+
+Released 2016-05-11
+
+Announcements:
+ - Upgrades camshaft to [0.7.0](https://github.com/CartoDB/camshaft/releases/tag/0.7.0)
+
+
 ## 2.40.0
 
 Released 2016-05-10

@@ -6,6 +6,7 @@ var cartodbRedis = require('cartodb-redis');
 var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var OverviewsMetadataApi = require('../../lib/cartodb/api/overviews_metadata_api');
+var FilterStatsApi = require('../../lib/cartodb/api/filter_stats_api');
 var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig_overviews_adapter');
 
 // configure redis pool instance to use in tests
@@ -17,9 +18,9 @@ var metadataBackend = cartodbRedis({pool: redisPool});
 var pgConnection = new PgConnection(metadataBackend);
 var pgQueryRunner = new PgQueryRunner(pgConnection);
 var overviewsMetadataApi = new OverviewsMetadataApi(pgQueryRunner);
+var filterStatsApi = new FilterStatsApi(pgQueryRunner);
 
-
-var mapConfigOverviewsAdapter = new MapConfigOverviewsAdapter(overviewsMetadataApi);
+var mapConfigOverviewsAdapter = new MapConfigOverviewsAdapter(overviewsMetadataApi, filterStatsApi);
 
 describe('MapConfigOverviewsAdapter', function() {
 
@@ -36,7 +37,7 @@ describe('MapConfigOverviewsAdapter', function() {
             }
         };
 
-        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], function(err, layers) {
+        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], [], function(err, layers) {
             assert.ok(!err);
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
@@ -64,7 +65,7 @@ describe('MapConfigOverviewsAdapter', function() {
             }
         };
 
-        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], function(err, layers) {
+        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], [], function(err, layers) {
             assert.ok(!err);
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
