@@ -2,11 +2,11 @@
 
 Named Maps are essentially the same as Anonymous Maps except the MapConfig is stored on the server, and the map is given a unique name. You can create Named Maps from private data, and users without an API Key can view your Named Map (while keeping your data private). 
 
-The Named Map workflow consists of uploading a MapConfig file to CartoDB servers, to select data from your CartoDB user database by using SQL, and specifying the CartoCSS for your map. 
+The Named Map workflow consists of uploading a MapConfig file to Carto servers, to select data from your Carto user database by using SQL, and specifying the CartoCSS for your map. 
 
 The response back from the API provides the template_id of your Named Map as the `name` (the identifier of your Named Map), which is the name that you specified in the MapConfig. You can  which you can then use to create your Named Map details, or [fetch XYZ tiles](#fetching-xyz-tiles-for-named-maps) directly for Named Maps. 
 
-**Tip:** You can also use a Named Map that you created (which is defined by its `name`), to create a map using CartoDB.js. This is achieved by adding the [`namedmap` type](http://docs.cartodb.com/cartodb-platform/cartodb-js/layer-source-object/#named-maps-layer-source-object-type-namedmap) layer source object to draw the Named Map.
+**Tip:** You can also use a Named Map that you created (which is defined by its `name`), to create a map using Carto.js. This is achieved by adding the [`namedmap` type](http://docs.carto.com/carto-engine/carto-js/layer-source-object/#named-maps-layer-source-object-type-namedmap) layer source object to draw the Named Map.
 
 The main differences, compared to Anonymous Maps, is that Named Maps include:
 
@@ -14,11 +14,11 @@ The main differences, compared to Anonymous Maps, is that Named Maps include:
   This allows you to control who is able to see the map based on an auth token, and create a secure Named Map with password-protection.
 
 - **template map**  
-  The template map is static and may contain placeholders, enabling you to modify your maps appearance by using variables. Templates maps are persistent with no preset expiration. They can only be created, or deleted, by a CartoDB user with a valid API KEY (See [auth argument](#arguments)).
+  The template map is static and may contain placeholders, enabling you to modify your maps appearance by using variables. Templates maps are persistent with no preset expiration. They can only be created, or deleted, by a Carto user with a valid API KEY (See [auth argument](#arguments)).
 
-  Uploading a MapConfig creates a Named Map. MapConfigs are uploaded to the server by sending the server a "template".json file, which contain the [MapConfig specifications](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/).
+  Uploading a MapConfig creates a Named Map. MapConfigs are uploaded to the server by sending the server a "template".json file, which contain the [MapConfig specifications](http://docs.carto.com/carto-engine/maps-api/mapconfig/).
 
-**Note:** There is a limit of 4,096 Named Maps allowed per account. If you need to create more Named Maps, it is recommended to use a single Named Map and change the variables using [placeholders](#placeholder-format), instead of uploading multiple [Named Map MapConfigs](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#named-map-layer-options).
+**Note:** There is a limit of 4,096 Named Maps allowed per account. If you need to create more Named Maps, it is recommended to use a single Named Map and change the variables using [placeholders](#placeholder-format), instead of uploading multiple [Named Map MapConfigs](http://docs.carto.com/carto-engine/maps-api/mapconfig/#named-map-layer-options).
 
 ## Create
 
@@ -33,7 +33,7 @@ POST /api/v1/map/named
 Params | Description
 --- | ---
 api_key | is required
-MapConfig | a [Named Map MapConfig](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#named-map-layer-options) is required to create a Named Map
+MapConfig | a [Named Map MapConfig](http://docs.carto.com/carto-engine/maps-api/mapconfig/#named-map-layer-options) is required to create a Named Map
 
 #### template.json
 
@@ -55,7 +55,7 @@ The `name` argument defines how to name this "template_name".json. Note that the
       "type": "css_color",
       "default": "red"
     },
-    "cartodb_id": {
+    "carto_id": {
       "type": "number",
       "default": 1
     }
@@ -64,11 +64,11 @@ The `name` argument defines how to name this "template_name".json. Note that the
     "version": "1.0.1",
     "layers": [
       {
-        "type": "cartodb",
+        "type": "carto",
         "options": {
           "cartocss_version": "2.1.1",
           "cartocss": "#layer { polygon-fill: <%= color %>; }",
-          "sql": "select * from european_countries_e WHERE cartodb_id = <%= cartodb_id %>"
+          "sql": "select * from european_countries_e WHERE carto_id = <%= carto_id %>"
         }
       }
     ]
@@ -98,9 +98,9 @@ name | There can only be _one_ template with the same name for any user. Valid n
 auth | 
 --- | ---
 &#124;_ method | `"token"` or `"open"` (`"open"` is the default if no method is specified. Use `"token"` to password-protect your map)
-&#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.cartodb.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
+&#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.carto.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
 placeholders | Placeholders are variables that can be placed in your template.json file's SQL or CartoCSS.
-layergroup | the layergroup configurations, as specified in the template. See [MapConfig File Format](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/) for more information.
+layergroup | the layergroup configurations, as specified in the template. See [MapConfig File Format](http://docs.carto.com/carto-engine/maps-api/mapconfig/) for more information.
 view (optional) | extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
 --- | ---
 &#124;_ zoom | The zoom level to use
@@ -120,7 +120,7 @@ view (optional) | extra keys to specify the view area for the map. It can be use
 
 ### Placeholder Format
 
-Placeholders are variables that can be placed in your template.json file. Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergoup configurations](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/#layergroup-configurations).
+Placeholders are variables that can be placed in your template.json file. Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergoup configurations](http://docs.carto.com/carto-engine/maps-api/mapconfig/#layergroup-configurations).
 
 Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced inside the Named Maps API.
 
@@ -155,7 +155,7 @@ This is the call for creating the Named Map. It is sending the template.json fil
 curl -X POST \
    -H 'Content-Type: application/json' \
    -d @template.json \
-   'https://{username}.cartodb.com/api/v1/map/named?api_key={api_key}'
+   'https://{username}.carto.com/api/v1/map/named?api_key={api_key}'
 ```
 
 #### Response
@@ -170,7 +170,7 @@ The response back from the API provides the name of your MapConfig as a template
 
 ## Instantiate
 
-Instantiating a Named Map allows you to fetch the map tiles. You can use the Maps API to instantiate, or use the CartoDB.js `createLayer()` function. The result is an Anonymous Map.
+Instantiating a Named Map allows you to fetch the map tiles. You can use the Maps API to instantiate, or use the Carto.js `createLayer()` function. The result is an Anonymous Map.
 
 #### Definition
 
@@ -188,7 +188,7 @@ auth_token | `"token"` or `"open"` (`"open"` is the default if not specified. Us
 // params.json, this is required if the Named Map allows variables (if placeholders were defined in the template.json by the user)
 {
  "color": "#ff0000",
- "cartodb_id": 3
+ "carto_id": 3
 }
 ```
 
@@ -209,7 +209,7 @@ Valid auth token will be needed, if required by the template.
 curl -X POST \
   -H 'Content-Type: application/json' \
   -d @params.json \
-  'https://{username}.cartodb.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
+  'https://{username}.carto.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
 ```
 
 #### Response
@@ -229,7 +229,7 @@ curl -X POST \
 }
 ```
 
-You can then use the `layergroupid` for fetching tiles and grids as you would normally (see [Anonymous Maps](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/)).
+You can then use the `layergroupid` for fetching tiles and grids as you would normally (see [Anonymous Maps](http://docs.carto.com/carto-engine/maps-api/anonymous-maps/)).
 
 ## Update
 
@@ -261,7 +261,7 @@ Updating a Named Map removes all the Named Map instances, so they need to be ini
 curl -X PUT \
   -H 'Content-Type: application/json' \
   -d @template.json \
-  'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+  'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -303,7 +303,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X DELETE 'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+curl -X DELETE 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -337,7 +337,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X GET 'https://{username}.cartodb.com/api/v1/map/named?api_key={api_key}'
+curl -X GET 'https://{username}.carto.com/api/v1/map/named?api_key={api_key}'
 ```
 
 #### Response
@@ -377,7 +377,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X GET 'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+curl -X GET 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -418,7 +418,7 @@ callback | JSON callback name
 #### Call
 
 ```bash
-curl 'https://{username}.cartodb.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config=template_params_json'
+curl 'https://{username}.carto.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config=template_params_json'
 ```
 
 #### Response
@@ -428,8 +428,8 @@ callback({
   "layergroupid":"c01a54877c62831bb51720263f91fb33:0",
   "last_updated":"1970-01-01T00:00:00.000Z"
   "cdn_url": {
-    "http": "http://cdb.com",
-    "https": "https://cdb.com"
+    "http": "http://carto.com",
+    "https": "https://carto.com"
   }
 })
 ```
@@ -450,9 +450,9 @@ callback({
 })
 ```
 
-## CartoDB.js for Named Maps
+## Carto.js for Named Maps
 
-You can use a Named Map that you created (which is defined by its `name`), to create a map using CartoDB.js. This is achieved by adding the [`namedmap` type](http://docs.cartodb.com/cartodb-platform/cartodb-js/layer-source-object/#named-maps-layer-source-object-type-namedmap) layer source object to draw the Named Map.
+You can use a Named Map that you created (which is defined by its `name`), to create a map using Carto.js. This is achieved by adding the [`namedmap` type](http://docs.carto.com/carto-engine/carto-js/layer-source-object/#named-maps-layer-source-object-type-namedmap) layer source object to draw the Named Map.
 
 ```javascript
 {
@@ -482,21 +482,21 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
 
 **Note:** Instantiating a Named Map over a `createLayer` does not require an API Key and by default, does not include auth tokens. _If_ you defined auth tokens for the Named Map configuration, then you will have to include them.
 
-[CartoDB.js](http://docs.cartodb.com/cartodb-platform/cartodb-js/) has methods for accessing your Named Maps.
+[Carto.js](http://docs.carto.com/carto-engine/carto-js/) has methods for accessing your Named Maps.
 
-1. [layer.setParams()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
+1. [layer.setParams()](http://docs.carto.com/carto-engine/carto-js/api-methods/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
 
-    **Note:** The CartoDB.js `layer.setParams()` function is not supported when using Named Maps for Torque. Alternatively, you can create a [Torque layer in a Named Map](http://bl.ocks.org/iriberri/de37be6406f9cc7cfe5a)
+    **Note:** The Carto.js `layer.setParams()` function is not supported when using Named Maps for Torque. Alternatively, you can create a [Torque layer in a Named Map](http://bl.ocks.org/iriberri/de37be6406f9cc7cfe5a)
 
-2. [layer.setAuthToken()](http://docs.cartodb.com/cartodb-platform/cartodb-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
+2. [layer.setAuthToken()](http://docs.carto.com/carto-engine/carto-js/api-methods/#layersetauthtokenauthtoken) allows you to set the auth tokens to create the layer
 
 ### Torque Layer in a Named Map
 
-If you are creating a Torque layer in a Named Map without using the Torque.js library, you can apply the Torque layer by applying the following code with CartoDBjs:
+If you are creating a Torque layer in a Named Map without using the Torque.js library, you can apply the Torque layer by applying the following code with Carto.js:
 
 ```javascript
- // add cartodb layer with one sublayer
-  cartodb.createLayer(map, {
+ // add carto layer with one sublayer
+  carto.createLayer(map, {
     user_name: '{username}',
     type: 'torque',
     order: 1,
@@ -504,7 +504,7 @@ If you are creating a Torque layer in a Named Map without using the Torque.js li
             query: "",
             table_name: "named_map_tutorial_table",
             user_name: "{username}",
-            tile_style: 'Map { -torque-frame-count:512; -torque-animation-duration:10; -torque-time-attribute:"cartodb_id"; -torque-aggregation-function:"count(cartodb_id)"; -torque-resolution:2; -torque-data-aggregation:linear; } #named_map_tutorial_table_copy{ comp-op: lighter; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1.5; marker-line-opacity: 1; marker-type: ellipse; marker-width: 6; marker-fill: #FF9900; } #named_map_tutorial_table_copy[frame-offset=1] { marker-width:8; marker-fill-opacity:0.45; } #named_map_tutorial_table_copy[frame-offset=2] { marker-width:10; marker-fill-opacity:0.225; }'      
+            tile_style: 'Map { -torque-frame-count:512; -torque-animation-duration:10; -torque-time-attribute:"carto_id"; -torque-aggregation-function:"count(carto_id)"; -torque-resolution:2; -torque-data-aggregation:linear; } #named_map_tutorial_table_copy{ comp-op: lighter; marker-fill-opacity: 0.9; marker-line-color: #FFF; marker-line-width: 1.5; marker-line-opacity: 1; marker-type: ellipse; marker-width: 6; marker-fill: #FF9900; } #named_map_tutorial_table_copy[frame-offset=1] { marker-width:8; marker-fill-opacity:0.45; } #named_map_tutorial_table_copy[frame-offset=2] { marker-width:10; marker-fill-opacity:0.225; }'      
 
             },
     named_map: {
@@ -521,7 +521,7 @@ If you are creating a Torque layer in a Named Map without using the Torque.js li
 }
 ```
 
-#### Examples of Named Maps created with CartoDB.js
+#### Examples of Named Maps created with Carto.js
 
 - [Named Map selectors with interaction](http://bl.ocks.org/ohasselblad/515a8af1f99d5e690484)
 
@@ -543,21 +543,21 @@ To call a template_id in a URL:
 
 For example, a complete URL might appear as:
 
-"https://{username}.cartodb.com/api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.png"
+"https://{username}.carto.com/api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.png"
 
 The placeholders indicate the following:
 
-- [`template_id`](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response) is the response of your Named Map.
+- [`template_id`](http://docs.carto.com/carto-engine/maps-api/named-maps/#response) is the response of your Named Map.
 - layers can be a number (referring to the # layer of your map), all layers of your map, or a list of layers.
-  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/0/{z}/{x}/{y}.png"
-  - To show the first layer, enter the number value `1` in the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/1/{z}/{x}/{y}.png"
-  - To show all layers, enter the value `all` for the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/all/{z}/{x}/{y}.png"
-  - To show a [list of layers](http://docs.cartodb.com/cartodb-platform/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as 0,1,2 in the layer placeholder. For example, to show the basemap and the first layer, "https://{username}.cartodb.com/api/v1/map/named/{template_id}/0,1/{z}/{x}/{y}.png"
+  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{username}.carto.com/api/v1/map/named/{template_id}/0/{z}/{x}/{y}.png"
+  - To show the first layer, enter the number value `1` in the layer placeholder "https://{username}.carto.com/api/v1/map/named/{template_id}/1/{z}/{x}/{y}.png"
+  - To show all layers, enter the value `all` for the layer placeholder "https://{username}.carto.com/api/v1/map/named/{template_id}/all/{z}/{x}/{y}.png"
+  - To show a [list of layers](http://docs.carto.com/carto-engine/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as 0,1,2 in the layer placeholder. For example, to show the basemap and the first layer, "https://{username}.carto.com/api/v1/map/named/{template_id}/0,1/{z}/{x}/{y}.png"
 
 
 ### Get Mapnik Retina Tiles
 
-Mapnik Retina tiles are not directly supported for Named Maps, so you cannot use the Named Map template_id. To fetch Mapnik Retina tiles, get the [layergroupid](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#response-1) to initialize the map.
+Mapnik Retina tiles are not directly supported for Named Maps, so you cannot use the Named Map template_id. To fetch Mapnik Retina tiles, get the [layergroupid](http://docs.carto.com/carto-engine/maps-api/named-maps/#response-1) to initialize the map.
 
 Instantiate the map by using your `layergroupid` in the token placeholder:
 
