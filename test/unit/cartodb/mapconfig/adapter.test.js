@@ -28,75 +28,57 @@ describe('MapConfigAdapter', function() {
     var IncValMapConfigAdapter = createAdapter(function(val) { return val + 1; });
     var Mul2ValMapConfigAdapter = createAdapter(function(val) { return val * 2; });
 
-    function validateMapConfig(adapter, expectedNumAdapters, validatorFn, callback) {
+    function validateMapConfig(adapter, expectedNumAdapters, expectedVal, callback) {
         assert.equal(adapter.adapters.length, expectedNumAdapters);
         adapter.getMapConfig(user, requestMapConfig(), params(), context(), function(err, mapConfig) {
-            validatorFn(mapConfig);
+            assert.equal(mapConfig.val, expectedVal);
             return callback(err);
         });
     }
 
     it('works with no adapters', function(done) {
         var adapter = new MapConfigAdapter();
-        validateMapConfig(adapter, 0, function(mapConfig) {
-            assert.equal(mapConfig.val, 0);
-        }, done);
+        validateMapConfig(adapter, 0, 0, done);
     });
 
     it('works with no adapters as empty array', function(done) {
         var adapter = new MapConfigAdapter([]);
-        validateMapConfig(adapter, 0, function(mapConfig) {
-            assert.equal(mapConfig.val, 0);
-        }, done);
+        validateMapConfig(adapter, 0, 0, done);
     });
 
     it('works with basic adapter', function(done) {
         var adapter = new MapConfigAdapter(new IncValMapConfigAdapter());
-        validateMapConfig(adapter, 1, function(mapConfig) {
-            assert.equal(mapConfig.val, 1);
-        }, done);
+        validateMapConfig(adapter, 1, 1, done);
     });
 
     it('works with basic adapter as array', function(done) {
         var adapter = new MapConfigAdapter([new IncValMapConfigAdapter()]);
-        validateMapConfig(adapter, 1, function(mapConfig) {
-            assert.equal(mapConfig.val, 1);
-        }, done);
+        validateMapConfig(adapter, 1, 1, done);
     });
 
     it('works with several adapters', function(done) {
         var adapter = new MapConfigAdapter(new IncValMapConfigAdapter(), new IncValMapConfigAdapter());
-        validateMapConfig(adapter, 2, function(mapConfig) {
-            assert.equal(mapConfig.val, 2);
-        }, done);
+        validateMapConfig(adapter, 2, 2, done);
     });
 
     it('works with several adapters as array', function(done) {
         var adapter = new MapConfigAdapter([new IncValMapConfigAdapter(), new IncValMapConfigAdapter()]);
-        validateMapConfig(adapter, 2, function(mapConfig) {
-            assert.equal(mapConfig.val, 2);
-        }, done);
+        validateMapConfig(adapter, 2, 2, done);
     });
 
     it('should execute in order 1', function(done) {
         var adapter = new MapConfigAdapter([new Mul2ValMapConfigAdapter(), new IncValMapConfigAdapter()]);
-        validateMapConfig(adapter, 2, function(mapConfig) {
-            assert.equal(mapConfig.val, 1);
-        }, done);
+        validateMapConfig(adapter, 2, 1, done);
     });
 
     it('should execute in order 2', function(done) {
         var adapter = new MapConfigAdapter([new IncValMapConfigAdapter(), new Mul2ValMapConfigAdapter()]);
-        validateMapConfig(adapter, 2, function(mapConfig) {
-            assert.equal(mapConfig.val, 2);
-        }, done);
+        validateMapConfig(adapter, 2, 2, done);
     });
 
     it('should execute in order 3', function(done) {
         var adapter = new MapConfigAdapter([new Mul2ValMapConfigAdapter(), new Mul2ValMapConfigAdapter()]);
-        validateMapConfig(adapter, 2, function(mapConfig) {
-            assert.equal(mapConfig.val, 0);
-        }, done);
+        validateMapConfig(adapter, 2, 0, done);
     });
 
     it('should execute in order 4', function(done) {
@@ -106,8 +88,6 @@ describe('MapConfigAdapter', function() {
             new Mul2ValMapConfigAdapter(),
             new Mul5ValMapConfigAdapter()
         );
-        validateMapConfig(adapter, 3, function(mapConfig) {
-            assert.equal(mapConfig.val, 10);
-        }, done);
+        validateMapConfig(adapter, 3, 10, done);
     });
 });
