@@ -17,12 +17,16 @@ describe('MapConfigAdapter', function() {
         return {};
     }
 
-    function IncValMapConfigAdapter() {
-        this.getMapConfig = function(user, requestMapConfig, params, context, callback) {
-            requestMapConfig.val += 1;
-            return callback(null, requestMapConfig);
+    function createAdapter(valOperatorFn) {
+        return function ValMapConfigAdapter() {
+            this.getMapConfig = function(user, requestMapConfig, params, context, callback) {
+                requestMapConfig.val = valOperatorFn(requestMapConfig.val);
+                return callback(null, requestMapConfig);
+            };
         };
     }
+    var IncValMapConfigAdapter = createAdapter(function(val) { return val + 1; });
+    var Mul2ValMapConfigAdapter = createAdapter(function(val) { return val * 2; });
 
     function validateMapConfig(adapter, expectedNumAdapters, validatorFn, callback) {
         assert.equal(adapter.adapters.length, expectedNumAdapters);
@@ -71,6 +75,39 @@ describe('MapConfigAdapter', function() {
         var adapter = new MapConfigAdapter([new IncValMapConfigAdapter(), new IncValMapConfigAdapter()]);
         validateMapConfig(adapter, 2, function(mapConfig) {
             assert.equal(mapConfig.val, 2);
+        }, done);
+    });
+
+    it('should execute in order 1', function(done) {
+        var adapter = new MapConfigAdapter([new Mul2ValMapConfigAdapter(), new IncValMapConfigAdapter()]);
+        validateMapConfig(adapter, 2, function(mapConfig) {
+            assert.equal(mapConfig.val, 1);
+        }, done);
+    });
+
+    it('should execute in order 2', function(done) {
+        var adapter = new MapConfigAdapter([new IncValMapConfigAdapter(), new Mul2ValMapConfigAdapter()]);
+        validateMapConfig(adapter, 2, function(mapConfig) {
+            assert.equal(mapConfig.val, 2);
+        }, done);
+    });
+
+    it('should execute in order 3', function(done) {
+        var adapter = new MapConfigAdapter([new Mul2ValMapConfigAdapter(), new Mul2ValMapConfigAdapter()]);
+        validateMapConfig(adapter, 2, function(mapConfig) {
+            assert.equal(mapConfig.val, 0);
+        }, done);
+    });
+
+    it('should execute in order 4', function(done) {
+        var Mul5ValMapConfigAdapter = createAdapter(function(val) { return val * 5; });
+        var adapter = new MapConfigAdapter(
+            new IncValMapConfigAdapter(),
+            new Mul2ValMapConfigAdapter(),
+            new Mul5ValMapConfigAdapter()
+        );
+        validateMapConfig(adapter, 3, function(mapConfig) {
+            assert.equal(mapConfig.val, 10);
         }, done);
     });
 });
