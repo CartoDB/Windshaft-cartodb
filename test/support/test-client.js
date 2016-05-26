@@ -62,6 +62,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                         return next(err);
                     }
                     var parsedBody = JSON.parse(res.body);
+
                     var expectedWidgetURLS = {
                         http: "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
                     };
@@ -69,6 +70,15 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                     assert.ok(
                         parsedBody.metadata.layers[0].widgets[widgetName].url.http.match(expectedWidgetURLS.http)
                     );
+
+                    var expectedDataviewsURLS = {
+                        http: "/api/v1/map/" + parsedBody.layergroupid + "/dataview/" + widgetName
+                    };
+                    assert.ok(parsedBody.metadata.dataviews[widgetName]);
+                    assert.ok(
+                        parsedBody.metadata.dataviews[widgetName].url.http.match(expectedDataviewsURLS.http)
+                    );
+
                     return next(null, parsedBody.layergroupid);
                 }
             );
