@@ -7,7 +7,7 @@ var serverOptions = require('../../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 var TestClient = require('../../support/test-client');
 
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup_token');
+var LayergroupToken = require('../../support/layergroup-token');
 
 describe('named-maps analysis', function() {
 

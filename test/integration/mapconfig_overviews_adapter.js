@@ -7,11 +7,7 @@ var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connectio
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var OverviewsMetadataApi = require('../../lib/cartodb/api/overviews_metadata_api');
 var FilterStatsApi = require('../../lib/cartodb/api/filter_stats_api');
-var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig_overviews_adapter');
-
-// configure redis pool instance to use in tests
-var redisPool = new RedisPool(global.environment.redis);
-var pgConnection = new PgConnection(require('cartodb-redis')({ pool: redisPool }));
+var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-overviews-adapter');
 
 var redisPool = new RedisPool(global.environment.redis);
 var metadataBackend = cartodbRedis({pool: redisPool});
@@ -37,8 +33,16 @@ describe('MapConfigOverviewsAdapter', function() {
             }
         };
 
-        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], [], function(err, layers) {
+        var _mapConfig = {
+            layers: [layer_without_overviews]
+        };
+
+        var params = {};
+        var context = {};
+
+        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function(err, mapConfig) {
             assert.ok(!err);
+            var layers = mapConfig.layers;
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
             assert.equal(layers[0].options.sql, sql);
@@ -56,7 +60,7 @@ describe('MapConfigOverviewsAdapter', function() {
         var sql = 'SELECT * FROM test_table_overviews';
         var cartocss = '#layer { marker-fill: black; }';
         var cartocss_version = '2.3.0';
-        var layer_without_overviews = {
+        var layer_with_overviews = {
             type: 'cartodb',
             options: {
                 sql: sql,
@@ -65,8 +69,16 @@ describe('MapConfigOverviewsAdapter', function() {
             }
         };
 
-        mapConfigOverviewsAdapter.getLayers('localhost', [layer_without_overviews], [], function(err, layers) {
+        var _mapConfig = {
+            layers: [layer_with_overviews]
+        };
+
+        var params = {};
+        var context = {};
+
+        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function(err, mapConfig) {
             assert.ok(!err);
+            var layers = mapConfig.layers;
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
             assert.equal(layers[0].options.sql, sql);
