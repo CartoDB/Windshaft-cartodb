@@ -71,16 +71,15 @@ if test x"$PREPARE_PGSQL" = xyes; then
   dropdb "${TEST_DB}"
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 
-  echo '\c' > .remote-sql-urls.txt
+  LOCAL_SQL_SCRIPTS='_CDB_QueryStatements windshaft.test gadm4 ported/populated_places_simple_reduced'
   REMOTE_SQL_SCRIPTS='CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_AnalysisCatalog CDB_ZoomFromScale CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ'
+
+  CURL_ARGS=""
   for i in ${REMOTE_SQL_SCRIPTS}
   do
-    echo "\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql" >> .remote-sql-urls.txt
+    CURL_ARGS="${CURL_ARGS}\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql "
   done
-  cat .remote-sql-urls.txt | xargs curl -L -s
-  rm .remote-sql-urls.txt
-
-  LOCAL_SQL_SCRIPTS='_CDB_QueryStatements windshaft.test gadm4 ported/populated_places_simple_reduced'
+  echo ${CURL_ARGS} | xargs curl -L -s
 
   ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
   for i in ${ALL_SQL_SCRIPTS}
