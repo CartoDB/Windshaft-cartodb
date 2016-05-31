@@ -88,6 +88,7 @@ if test x"$PREPARE_PGSQL" = xyes; then
     echo ${CURL_ARGS} | xargs curl -L -s
   fi
 
+  psql -c "CREATE EXTENSION IF NOT EXISTS plpythonu;" ${TEST_DB}
   ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
   for i in ${ALL_SQL_SCRIPTS}
   do
