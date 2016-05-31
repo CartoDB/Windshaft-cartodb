@@ -123,7 +123,11 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
         function finish(err, res) {
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
-            return callback(err, res);
+            var widget;
+            if (!err && res.body) {
+                widget = JSON.parse(res.body);
+            }
+            return callback(err, res, widget);
         }
     );
 };
