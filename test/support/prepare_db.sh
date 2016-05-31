@@ -12,6 +12,7 @@
 
 PREPARE_REDIS=yes
 PREPARE_PGSQL=yes
+DOWNLOAD_SQL_FILES=yes
 
 while [ -n "$1" ]; do
   if test "$1" = "--skip-pg"; then
@@ -19,6 +20,9 @@ while [ -n "$1" ]; do
     shift; continue
   elif test "$1" = "--skip-redis"; then
     PREPARE_REDIS=no
+    shift; continue
+  elif test "$1" = "--no-sql-download"; then
+    DOWNLOAD_SQL_FILES=no
     shift; continue
   fi
 done
@@ -79,7 +83,10 @@ if test x"$PREPARE_PGSQL" = xyes; then
   do
     CURL_ARGS="${CURL_ARGS}\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql "
   done
-  echo ${CURL_ARGS} | xargs curl -L -s
+  if test x"$DOWNLOAD_SQL_FILES" = xyes; then
+    echo "Downloading and updating: ${REMOTE_SQL_SCRIPTS}"
+    echo ${CURL_ARGS} | xargs curl -L -s
+  fi
 
   ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
   for i in ${ALL_SQL_SCRIPTS}
