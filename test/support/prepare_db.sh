@@ -71,20 +71,28 @@ if test x"$PREPARE_PGSQL" = xyes; then
   dropdb "${TEST_DB}"
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 
-  SQL_SCRIPTS='CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_AnalysisCatalog CDB_ZoomFromScale CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ'
-  for i in ${SQL_SCRIPTS}
+  echo '\c' > .remote-sql-urls.txt
+  REMOTE_SQL_SCRIPTS='CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_AnalysisCatalog CDB_ZoomFromScale CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ'
+  for i in ${REMOTE_SQL_SCRIPTS}
   do
-    curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql -o sql/$i.sql
-    cat sql/$i.sql | sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" \
-        | psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+    echo "\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql" >> .remote-sql-urls.txt
   done
+  cat .remote-sql-urls.txt | xargs curl -L -s
+  rm .remote-sql-urls.txt
 
-  cat sql/_CDB_QueryStatements.sql sql/windshaft.test.sql sql/gadm4.sql sql/ported/populated_places_simple_reduced.sql |
-    sed "s/:PUBLICUSER/${PUBLICUSER}/" |
-    sed "s/:PUBLICPASS/${PUBLICPASS}/" |
-    sed "s/:TESTUSER/${TESTUSER}/" |
-    sed "s/:TESTPASS/${TESTPASS}/" |
-    psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+  LOCAL_SQL_SCRIPTS='_CDB_QueryStatements windshaft.test gadm4 ported/populated_places_simple_reduced'
+
+  ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
+  for i in ${ALL_SQL_SCRIPTS}
+  do
+    cat sql/${i}.sql |
+      sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
+      sed "s/:PUBLICUSER/${PUBLICUSER}/" |
+      sed "s/:PUBLICPASS/${PUBLICPASS}/" |
+      sed "s/:TESTUSER/${TESTUSER}/" |
+      sed "s/:TESTPASS/${TESTPASS}/" |
+      PGOPTIONS='--client-min-messages=WARNING' psql -q -v ON_ERROR_STOP=1 ${TEST_DB} > /dev/null || exit 1
+  done
 fi
 
 if test x"$PREPARE_REDIS" = xyes; then
