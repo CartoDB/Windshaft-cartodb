@@ -1,12 +1,17 @@
 # Changelog
 
-## 2.44.0
+## 2.44.1
 
 Released 2016-mm-dd
 
+
+## 2.44.0
+
+Released 2016-05-31
+
 Announcements:
- - Upgrades camshaft to [0.10.0](https://github.com/CartoDB/camshaft/releases/tag/0.10.0)
- - Upgrades turbo-carto to [0.11.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.11.0)
+ - Upgrades camshaft to [0.11.0](https://github.com/CartoDB/camshaft/releases/tag/0.11.0)
+ - Upgrades turbo-carto to [0.10.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.10.0)
 
 New features:
  - Adds support for sql wrap in all layers

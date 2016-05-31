@@ -5,6 +5,7 @@ OPT_CREATE_PGSQL=yes # create the PostgreSQL test environment
 OPT_DROP_REDIS=yes   # drop the redis test environment
 OPT_DROP_PGSQL=yes   # drop the PostgreSQL test environment
 OPT_COVERAGE=no      # run tests with coverage
+OPT_DOWNLOAD_SQL=yes # download a fresh copy of sql files
 
 export PGAPPNAME=cartodb_tiler_tester
 
@@ -73,6 +74,10 @@ while [ -n "$1" ]; do
                 OPT_CREATE_REDIS=no
                 shift
                 continue
+        elif test "$1" = "--no-sql-download"; then
+                OPT_DOWNLOAD_SQL=no
+                shift
+                continue
         elif test "$1" = "--with-coverage"; then
                 OPT_COVERAGE=yes
                 shift
@@ -112,6 +117,9 @@ if test x"$OPT_CREATE_PGSQL" != xyes; then
 fi
 if test x"$OPT_CREATE_REDIS" != xyes; then
   PREPARE_DB_OPTS="$PREPARE_DB_OPTS --skip-redis"
+fi
+if test x"$OPT_DOWNLOAD_SQL" != xyes; then
+  PREPARE_DB_OPTS="$PREPARE_DB_OPTS --no-sql-download"
 fi
 
 echo "Preparing the environment"
