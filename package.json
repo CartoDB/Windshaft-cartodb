@@ -39,7 +39,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.10.1",
     "underscore": "~1.6.0",
-    "windshaft": "1.19.0"
+    "windshaft": "https://github.com/CartoDB/Windshaft/tarball/retina"
   },
   "devDependencies": {
     "istanbul": "~0.4.3",
