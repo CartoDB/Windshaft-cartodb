@@ -92,9 +92,12 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
             var urlParams = {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
             };
-            if (params && params.bbox) {
-                urlParams.bbox = params.bbox;
-            }
+            ['bbox', 'bins', 'start', 'end'].forEach(function(extraParam) {
+                if (params.hasOwnProperty(extraParam)) {
+                    urlParams[extraParam] = params[extraParam];
+                }
+            });
+
             url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName + '?' + qs.stringify(urlParams);
 
             assert.response(server,
