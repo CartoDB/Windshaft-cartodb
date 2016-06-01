@@ -2,7 +2,11 @@
 
 ## 2.44.1
 
-Released 2016-mm-dd
+Released 2016-06-01
+
+Improvements:
+ - Extend overviews support to histogram and aggregation dataviews
+ - Test improvements
 
 
 ## 2.44.0
