@@ -132,6 +132,115 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
     );
 };
 
+TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, callback) {
+    var self = this;
+
+    if (!callback) {
+        callback = params;
+        params = {};
+    }
+
+    var url = '/api/v1/map';
+    if (params && params.filters) {
+        url += '?' + qs.stringify({ filters: JSON.stringify(params.filters) });
+    }
+
+    var layergroupId;
+    step(
+        function createLayergroup() {
+            var next = this;
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.mapConfig)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    var parsedBody = JSON.parse(res.body);
+
+                    var expectedWidgetURLS = {
+                        http: "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
+                    };
+                    assert.ok(parsedBody.metadata.layers[0].widgets[widgetName]);
+                    assert.ok(
+                        parsedBody.metadata.layers[0].widgets[widgetName].url.http.match(expectedWidgetURLS.http)
+                    );
+
+                    var expectedDataviewsURLS = {
+                        http: "/api/v1/map/" + parsedBody.layergroupid + "/dataview/" + widgetName
+                    };
+                    assert.ok(parsedBody.metadata.dataviews[widgetName]);
+                    assert.ok(
+                        parsedBody.metadata.dataviews[widgetName].url.http.match(expectedDataviewsURLS.http)
+                    );
+
+                    return next(null, parsedBody.layergroupid);
+                }
+            );
+        },
+        function getWidgetSearchResult(err, _layergroupId) {
+            assert.ifError(err);
+
+            var next = this;
+            layergroupId = _layergroupId;
+
+            var urlParams = {
+                q: userQuery,
+                own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
+            };
+            if (params && params.bbox) {
+                urlParams.bbox = params.bbox;
+            }
+            url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName + '/search?' + qs.stringify(urlParams);
+
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next(null, res);
+                }
+            );
+        },
+        function finish(err, res) {
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            var searchResult;
+            if (!err && res.body) {
+                searchResult = JSON.parse(res.body);
+            }
+            return callback(err, res, searchResult);
+        }
+    );
+};
+
 TestClient.prototype.getDataview = function(dataviewName, params, callback) {
     var self = this;
 
