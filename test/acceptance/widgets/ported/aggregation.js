@@ -15,7 +15,6 @@ describe('widgets', function() {
             }
         });
 
-
         var aggregationMapConfig = {
             version: '1.5.0',
             layers: [
