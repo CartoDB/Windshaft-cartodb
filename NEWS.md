@@ -5,6 +5,8 @@
 Released 2016-mm-dd
 
 Announcements:
+ - Upgrades windshaft to [2.0.1](https://github.com/CartoDB/camshaft/releases/tag/2.0.1 )
+ - Upgrades camshaft to [0.12.1](https://github.com/CartoDB/camshaft/releases/tag/0.12.1)
  - Upgrades turbo-carto to [0.10.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.10.1)
 
 

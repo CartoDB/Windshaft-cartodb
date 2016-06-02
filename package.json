@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "body-parser": "~1.14.0",
-    "camshaft": "0.11.0",
+    "camshaft": "0.12.1",
     "cartodb-psql": "~0.6.1",
     "cartodb-query-tables": "~0.1.0",
     "cartodb-redis": "~0.13.0",
@@ -39,7 +39,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.10.1",
     "underscore": "~1.6.0",
-    "windshaft": "1.19.0"
+    "windshaft": "2.0.1"
   },
   "devDependencies": {
     "istanbul": "~0.4.3",
