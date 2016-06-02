@@ -428,8 +428,8 @@ callback({
   "layergroupid":"c01a54877c62831bb51720263f91fb33:0",
   "last_updated":"1970-01-01T00:00:00.000Z"
   "cdn_url": {
-    "http": "http://cartodb.com",
-    "https": "https://cartodb.com"
+    "http": "http://cdb.com",
+    "https": "https://cdb.com"
   }
 })
 ```

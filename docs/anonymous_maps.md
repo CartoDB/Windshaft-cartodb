@@ -64,8 +64,8 @@ curl 'https://{username}.cartodb.com/api/v1/map' -H 'Content-Type: application/j
     ]
   },
   "cdn_url": {
-    "http": "http://cartodb.com",
-    "https": "https://cartodb.com"
+    "http": "http://cdb.com",
+    "https": "https://cdb.com"
   }
 }
 ```
@@ -181,8 +181,8 @@ curl "https://{username}.cartodb.com/api/v1/map?callback=callback&config=%7B%22v
 callback({
   layergroupid: "d9034c133262dfb90285cea26c5c7ad7:0",
   cdn_url: {
-    "http": "http://cartodb.com",
-    "https": "https://cartodb.com"
+    "http": "http://cdb.com",
+    "https": "https://cdb.com"
   },
   last_updated: "1970-01-01T00:00:00.000Z"
 })
