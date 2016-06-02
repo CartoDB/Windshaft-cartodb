@@ -1,11 +1,21 @@
 # Changelog
 
-## 2.44.1
+## 2.44.2
 
 Released 2016-mm-dd
 
 Announcements:
  - Upgrades camshaft to [0.12.1](https://github.com/CartoDB/camshaft/releases/tag/0.12.1)
+ - Upgrades turbo-carto to [0.10.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.10.1)
+
+
+## 2.44.1
+
+Released 2016-06-01
+
+Improvements:
+ - Extend overviews support to histogram and aggregation dataviews
+ - Test improvements
 
 
 ## 2.44.0
