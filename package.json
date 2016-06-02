@@ -39,7 +39,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.10.1",
     "underscore": "~1.6.0",
-    "windshaft": "2.0.0"
+    "windshaft": "2.0.1"
   },
   "devDependencies": {
     "istanbul": "~0.4.3",
