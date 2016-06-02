@@ -162,6 +162,62 @@ describe('widgets', function() {
             });
         });
 
+        it('should work when there is a mix of layers with and without widgets', function(done) {
+
+            var aggregationSumMapConfig = {
+                version: '1.5.0',
+                layers: [
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                            cartocss_version: '2.0.1',
+                            widgets: {
+                                adm0name: {
+                                    type: 'aggregation',
+                                    options: {
+                                        column: 'adm0name',
+                                        aggregation: 'sum',
+                                        aggregationColumn: 'pop_max'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced limit 100',
+                            cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
+                            cartocss_version: '2.0.1'
+                        }
+                    }
+                ]
+            };
+
+            this.testClient = new TestClient(aggregationSumMapConfig);
+            this.testClient.getWidget('adm0name', { own_filter: 0 }, function (err, res, aggregation) {
+                assert.ok(!err, err);
+                assert.ok(aggregation);
+                assert.equal(aggregation.type, 'aggregation');
+
+                assert.equal(aggregation.categories.length, 6);
+
+                assert.deepEqual(
+                    aggregation.categories[0],
+                    { category: 'China', value: 374537585, agg: false }
+                );
+
+                assert.deepEqual(
+                    aggregation.categories[aggregation.categories.length - 1],
+                    { category: 'Other', value: 1412626289, agg: true }
+                );
+
+                done();
+            });
+        });
+
         var filteredCategoriesSumScenarios = [
             { accept: [], values: [] },
             { accept: ['Canada'], values: [23955084] },
