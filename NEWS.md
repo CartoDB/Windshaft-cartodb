@@ -2,7 +2,7 @@
 
 ## 2.45.0
 
-Released 2016-mm-dd
+Released 2016-06-02
 
 Improvements:
  - Removes Windshaft's widgets dependency.
