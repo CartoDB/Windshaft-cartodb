@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.45.1
+
+Released 2016-mm-dd
+
+
 ## 2.45.0
 
 Released 2016-06-02
