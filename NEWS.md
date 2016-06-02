@@ -1,8 +1,13 @@
 # Changelog
 
-## 2.44.2
+## 2.45.0
 
 Released 2016-mm-dd
+
+Improvements:
+ - Removes Windshaft's widgets dependency.
+ - Makes widgets/dataviews endpoint compatible, but all using dataviews backend instead of widgets from Windshaft.
+ - Keeps adding widgets metadata in map instantiations for old clients.
 
 Announcements:
  - Upgrades windshaft to [2.0.1](https://github.com/CartoDB/camshaft/releases/tag/2.0.1 )
