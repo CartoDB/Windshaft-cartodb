@@ -221,4 +221,123 @@ describe('use only needed columns', function() {
         });
     });
 
+    it('should skip empty and null columns for geojson tiles', function(done) {
+
+        var mapConfig = {
+            "analyses": [
+                {
+                    "id": "a0",
+                    "params": {
+                        "query": "SELECT * FROM test_table"
+                    },
+                    "type": "source"
+                }
+            ],
+            "dataviews": {
+                "4e7b0e07-6d21-4b83-9adb-6d7e17eea6ca": {
+                    "options": {
+                        "aggregationColumn": null,
+                        "column": "cartodb_id",
+                        "operation": "avg"
+                    },
+                    "source": {
+                        "id": "a0"
+                    },
+                    "type": "formula"
+                },
+                "74f590f8-625c-4e95-922f-34ad3e9919c0": {
+                    "options": {
+                        "aggregation": "sum",
+                        "aggregationColumn": "cartodb_id",
+                        "column": "name"
+                    },
+                    "source": {
+                        "id": "a0"
+                    },
+                    "type": "aggregation"
+                },
+                "98a75757-3006-400a-b028-fb613a6c0b69": {
+                    "options": {
+                        "aggregationColumn": null,
+                        "column": "cartodb_id",
+                        "operation": "sum"
+                    },
+                    "source": {
+                        "id": "a0"
+                    },
+                    "type": "formula"
+                },
+                "ebbc97b2-87d2-4895-9e1f-2f012df3679d": {
+                    "options": {
+                        "aggregationColumn": null,
+                        "bins": "12",
+                        "column": "cartodb_id"
+                    },
+                    "source": {
+                        "id": "a0"
+                    },
+                    "type": "histogram"
+                },
+                "ebc0653f-3581-469c-8b31-c969e440a865": {
+                    "options": {
+                        "aggregationColumn": null,
+                        "column": "cartodb_id",
+                        "operation": "avg"
+                    },
+                    "source": {
+                        "id": "a0"
+                    },
+                    "type": "formula"
+                }
+            },
+            "layers": [
+                {
+                    "options": {
+                        "subdomains": "abcd",
+                        "urlTemplate": "http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
+                    },
+                    "type": "http"
+                },
+                {
+                    "options": {
+                        "attributes": {
+                            "columns": [
+                                "name",
+                                "address"
+                            ],
+                            "id": "cartodb_id"
+                        },
+                        "cartocss": "#layer { marker-width: 10; marker-fill: red; }",
+                        "cartocss_version": "2.3.0",
+                        "interactivity": "cartodb_id",
+                        "layer_name": "wadus",
+                        "source": {
+                            "id": "a0"
+                        }
+                    },
+                    "type": "cartodb"
+                },
+                {
+                    "options": {
+                        "subdomains": "abcd",
+                        "urlTemplate": "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png"
+                    },
+                    "type": "http"
+                }
+            ]
+        };
+
+        this.testClient = new TestClient(mapConfig);
+        this.testClient.getTile(0, 0, 0, { format: 'geojson', layer: 0 }, function(err, res, geojson) {
+            assert.ok(!err, err);
+
+            assert.ok(geojson);
+            assert.equal(geojson.features.length, 5);
+
+            assert.deepEqual(Object.keys(geojson.features[0].properties), ['cartodb_id', 'name']);
+
+            done();
+        });
+    });
+
 });

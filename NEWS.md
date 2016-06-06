@@ -14,6 +14,7 @@ Announcements:
  - Upgrades turbo-carto to [0.11.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.11.0)
 
 Bug fixes:
+ - Column provided for geojson renderer should not be null #476
  - Dataviews/widgets adapter working with non sql, non source, and non widgets layers
 
 
