@@ -310,9 +310,13 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             var urlParams = {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
             };
-            if (params && params.bbox) {
-                urlParams.bbox = params.bbox;
-            }
+
+            ['bbox', 'bins', 'start', 'end'].forEach(function(extraParam) {
+                if (params.hasOwnProperty(extraParam)) {
+                    urlParams[extraParam] = params[extraParam];
+                }
+            });
+
             if (self.apiKey) {
                 urlParams.api_key = self.apiKey;
             }
@@ -341,10 +345,10 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 }
             );
         },
-        function finish(err, res) {
+        function finish(err, dataview) {
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
-            return callback(err, res);
+            return callback(err, dataview);
         }
     );
 };
