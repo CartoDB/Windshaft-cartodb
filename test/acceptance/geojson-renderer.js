@@ -168,4 +168,57 @@ describe('use only needed columns', function() {
         });
     });
 
+    it('should work with mapnik substitution tokens', function(done) {
+        var cartocss = [
+            "#layer {",
+            "  line-width: 2;",
+            "  line-color: #3B3B58;",
+            "  line-opacity: 1;",
+            "  polygon-opacity: 0.7;",
+            "  polygon-fill: ramp([points_count], (#E5F5F9,#99D8C9,#2CA25F))",
+            "}"
+        ].join('\n');
+
+        var sql = [
+            'WITH hgrid AS (',
+            '  SELECT CDB_HexagonGrid(',
+            '    ST_Expand(!bbox!, greatest(!pixel_width!,!pixel_height!) * 100),',
+            '    greatest(!pixel_width!,!pixel_height!) * 100',
+            '  ) as cell',
+            ')',
+            'SELECT',
+            '  hgrid.cell as the_geom_webmercator,',
+            '  count(1) as points_count,',
+            '  count(1)/power(100 * CDB_XYZ_Resolution(CDB_ZoomFromScale(!scale_denominator!)), 2) as points_density,',
+            '  1 as cartodb_id',
+            'FROM hgrid, (SELECT * FROM populated_places_simple_reduced) i',
+            'where ST_Intersects(i.the_geom_webmercator, hgrid.cell)',
+            'GROUP BY hgrid.cell'
+        ].join('\n');
+
+        var mapConfig = {
+            "version": "1.4.0",
+            "layers": [
+                {
+                    "type": 'mapnik',
+                    "options": {
+                        "cartocss_version": '2.3.0',
+                        "sql": sql,
+                        "cartocss": cartocss
+                    }
+                }
+            ]
+        };
+
+        this.testClient = new TestClient(mapConfig);
+        this.testClient.getTile(0, 0, 0, { format: 'geojson', layer: 0 }, function(err, res, geojson) {
+            assert.ok(!err, err);
+
+            assert.ok(geojson);
+            assert.equal(geojson.features.length, 5);
+
+            done();
+        });
+    });
+
 });
