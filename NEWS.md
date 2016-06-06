@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Bug fixes:
+ - Dataviews/widgets adapter working with non sql, non source, and non widgets layers
+
 
 ## 2.45.0
 
