@@ -4,6 +4,10 @@
 
 Released 2016-mm-dd
 
+Announcements:
+ - Upgrades camshaft to [0.13.0](https://github.com/CartoDB/camshaft/releases/tag/0.13.0)
+ - Upgrades turbo-carto to [0.11.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.11.0)
+
 Bug fixes:
  - Dataviews/widgets adapter working with non sql, non source, and non widgets layers
 
