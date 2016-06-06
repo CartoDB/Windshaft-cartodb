@@ -1,8 +1,11 @@
 # Changelog
 
-## 2.45.1
+## 2.46.0
 
 Released 2016-mm-dd
+
+Improvements:
+ - Warn on application start about non-matching dependencies
 
 Announcements:
  - Upgrades camshaft to [0.13.0](https://github.com/CartoDB/camshaft/releases/tag/0.13.0)
