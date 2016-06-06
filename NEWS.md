@@ -5,9 +5,11 @@
 Released 2016-mm-dd
 
 Improvements:
+ - Support for substitution tokens in geojson tiles
  - Warn on application start about non-matching dependencies
 
 Announcements:
+ - Upgrades windshaft to [2.1.0](https://github.com/CartoDB/camshaft/releases/tag/2.1.0)
  - Upgrades camshaft to [0.13.0](https://github.com/CartoDB/camshaft/releases/tag/0.13.0)
  - Upgrades turbo-carto to [0.11.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.11.0)
 
