@@ -9,7 +9,7 @@ Improvements:
  - Warn on application start about non-matching dependencies
 
 Announcements:
- - Upgrades windshaft to [2.2.0](https://github.com/CartoDB/camshaft/releases/tag/2.2.0)
+ - Upgrades windshaft to [2.3.0](https://github.com/CartoDB/camshaft/releases/tag/2.3.0)
  - Upgrades camshaft to [0.13.0](https://github.com/CartoDB/camshaft/releases/tag/0.13.0)
  - Upgrades turbo-carto to [0.11.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.11.0)
 
