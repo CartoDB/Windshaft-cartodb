@@ -2,7 +2,7 @@
 
 ## 2.46.0
 
-Released 2016-mm-dd
+Released 2016-06-09
 
 Improvements:
  - Support for substitution tokens in geojson tiles
