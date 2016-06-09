@@ -12,6 +12,7 @@
 
 PREPARE_REDIS=yes
 PREPARE_PGSQL=yes
+DOWNLOAD_SQL_FILES=yes
 
 while [ -n "$1" ]; do
   if test "$1" = "--skip-pg"; then
@@ -19,6 +20,9 @@ while [ -n "$1" ]; do
     shift; continue
   elif test "$1" = "--skip-redis"; then
     PREPARE_REDIS=no
+    shift; continue
+  elif test "$1" = "--no-sql-download"; then
+    DOWNLOAD_SQL_FILES=no
     shift; continue
   fi
 done
@@ -71,26 +75,31 @@ if test x"$PREPARE_PGSQL" = xyes; then
   dropdb "${TEST_DB}"
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 
-  curl -L -s https://raw.githubusercontent.com/CartoDB/camshaft/master/test/fixtures/cdb_analysis_catalog.sql -o sql/cdb_analysis_catalog.sql
-  cat sql/cdb_analysis_catalog.sql | psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+  LOCAL_SQL_SCRIPTS='windshaft.test gadm4 ported/populated_places_simple_reduced'
+  REMOTE_SQL_SCRIPTS='CDB_QueryStatements CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_AnalysisCatalog CDB_ZoomFromScale CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ'
 
-  cat sql/windshaft.test.sql sql/gadm4.sql |
-    sed "s/:PUBLICUSER/${PUBLICUSER}/" |
-    sed "s/:PUBLICPASS/${PUBLICPASS}/" |
-    sed "s/:TESTUSER/${TESTUSER}/" |
-    sed "s/:TESTPASS/${TESTPASS}/" |
-    psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
-
-  cat sql/_CDB_QueryStatements.sql | psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
-
-  SQL_SCRIPTS='CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_ZoomFromScale CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ'
-  for i in ${SQL_SCRIPTS}
+  CURL_ARGS=""
+  for i in ${REMOTE_SQL_SCRIPTS}
   do
-    curl -L -s https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql -o sql/$i.sql
-    cat sql/$i.sql | sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" \
-        | psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
+    CURL_ARGS="${CURL_ARGS}\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql "
   done
+  if test x"$DOWNLOAD_SQL_FILES" = xyes; then
+    echo "Downloading and updating: ${REMOTE_SQL_SCRIPTS}"
+    echo ${CURL_ARGS} | xargs curl -L -s
+  fi
 
+  psql -c "CREATE EXTENSION IF NOT EXISTS plpythonu;" ${TEST_DB}
+  ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
+  for i in ${ALL_SQL_SCRIPTS}
+  do
+    cat sql/${i}.sql |
+      sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
+      sed "s/:PUBLICUSER/${PUBLICUSER}/" |
+      sed "s/:PUBLICPASS/${PUBLICPASS}/" |
+      sed "s/:TESTUSER/${TESTUSER}/" |
+      sed "s/:TESTPASS/${TESTPASS}/" |
+      PGOPTIONS='--client-min-messages=WARNING' psql -q -v ON_ERROR_STOP=1 ${TEST_DB} > /dev/null || exit 1
+  done
 fi
 
 if test x"$PREPARE_REDIS" = xyes; then
@@ -122,17 +131,3 @@ EOF
 fi
 
 echo "Finished preparing data. Ready to run tests"
-
-
-############################ WINDSHAFT TESTS ############################
-
-echo "...Configuring Windshaft test database"
-
-cat sql/ported/populated_places_simple_reduced.sql |
-    sed "s/:PUBLICUSER/${PUBLICUSER}/" |
-    sed "s/:PUBLICPASS/${PUBLICPASS}/" |
-    sed "s/:TESTUSER/${TESTUSER}/" |
-    sed "s/:TESTPASS/${TESTPASS}/" |
-    psql -v ON_ERROR_STOP=1 ${TEST_DB} || exit 1
-
-echo "...Test database configuration complete"

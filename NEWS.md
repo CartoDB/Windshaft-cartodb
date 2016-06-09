@@ -1,5 +1,62 @@
 # Changelog
 
+## 2.46.0
+
+Released 2016-06-09
+
+Improvements:
+ - Support for substitution tokens in geojson tiles
+ - Warn on application start about non-matching dependencies
+
+Announcements:
+ - Upgrades windshaft to [2.3.0](https://github.com/CartoDB/camshaft/releases/tag/2.3.0)
+ - Upgrades camshaft to [0.13.0](https://github.com/CartoDB/camshaft/releases/tag/0.13.0)
+ - Upgrades turbo-carto to [0.11.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.11.0)
+
+Bug fixes:
+ - Column provided for geojson renderer should not be null #476
+ - Dataviews/widgets adapter working with non sql, non source, and non widgets layers
+
+
+## 2.45.0
+
+Released 2016-06-02
+
+Improvements:
+ - Removes Windshaft's widgets dependency.
+ - Makes widgets/dataviews endpoint compatible, but all using dataviews backend instead of widgets from Windshaft.
+ - Keeps adding widgets metadata in map instantiations for old clients.
+
+Announcements:
+ - Upgrades windshaft to [2.0.1](https://github.com/CartoDB/camshaft/releases/tag/2.0.1 )
+ - Upgrades camshaft to [0.12.1](https://github.com/CartoDB/camshaft/releases/tag/0.12.1)
+ - Upgrades turbo-carto to [0.10.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.10.1)
+
+
+## 2.44.1
+
+Released 2016-06-01
+
+Improvements:
+ - Extend overviews support to histogram and aggregation dataviews
+ - Test improvements
+
+
+## 2.44.0
+
+Released 2016-05-31
+
+Announcements:
+ - Upgrades camshaft to [0.11.0](https://github.com/CartoDB/camshaft/releases/tag/0.11.0)
+ - Upgrades turbo-carto to [0.10.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.10.0)
+
+New features:
+ - Adds support for sql wrap in all layers
+
+Bug fixes:
+ - Fail on turbo-carto invalid quantification methods
+
+
 ## 2.43.1
 
 Released 2016-05-19
