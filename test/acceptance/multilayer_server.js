@@ -228,7 +228,7 @@ describe('tests from old api translated to multilayer', function() {
                 },
                 function(res) {
                     var parsed = JSON.parse(res.body);
-                    assert.deepEqual(parsed, { errors: [ 'Unexpected token W' ] });
+                    assert.deepEqual(parsed.errors, [ 'Unexpected token W' ]);
 
                     done();
                 }
@@ -334,9 +334,7 @@ describe('tests from old api translated to multilayer', function() {
                 assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
 
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed, {
-                    errors: ["fake error message"]
-                });
+                assert.deepEqual(parsed.errors, ["fake error message"]);
 
                 done();
             }

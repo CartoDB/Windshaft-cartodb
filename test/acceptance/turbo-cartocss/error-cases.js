@@ -114,14 +114,25 @@ describe('turbo-carto error cases', function() {
 
             assert.ok(layergroup.hasOwnProperty('errors'));
             assert.equal(layergroup.errors_with_context.length, 1);
+            assert.equal(layergroup.errors_with_context[0].type, 'turbo-carto');
             assert.ok(layergroup.errors_with_context[0].message.match(/^turbo-carto/));
             assert.ok(layergroup.errors_with_context[0].message.match(/unable\sto\scompute\sramp/i));
             assert.ok(layergroup.errors_with_context[0].message.match(/wadus_column/));
 
-            assert.equal(layergroup.errors_with_context[0].context.type, 'turbo-carto');
             assert.equal(layergroup.errors_with_context[0].context.layer.index, 0);
             assert.equal(layergroup.errors_with_context[0].context.layer.type, 'mapnik');
 
+            assert.equal(layergroup.errors_with_context[0].context.selector, '#populated_places_simple_reduced');
+            assert.deepEqual(layergroup.errors_with_context[0].context.source, {
+                start: {
+                    line: 10,
+                    column: 3
+                },
+                end: {
+                    line: 10,
+                    column: 56
+                }
+            });
             done();
         });
     });

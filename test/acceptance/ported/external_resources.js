@@ -119,12 +119,11 @@ describe('external resources', function() {
         var mapConfig = testClient.defaultTableMapConfig('test_table_3', style);
 
         testClient.createLayergroup(mapConfig, { statusCode: 400 }, function(err, res) {
-            assert.deepEqual(JSON.parse(res.body), {
-                errors: ["Unable to download '" + url + "' for 'style0' (server returned 404)"]
-            });
+            assert.deepEqual(JSON.parse(res.body).errors, [
+                "Unable to download '" + url + "' for 'style0' (server returned 404)"]
+            );
             done();
         });
     });
 
 });
-

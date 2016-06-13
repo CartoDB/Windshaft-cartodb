@@ -54,7 +54,7 @@ describe('histogram-dataview', function() {
         this.testClient.getLayergroup(ERROR_RESPONSE, function(err, errObj) {
             assert.ok(!err, err);
 
-            assert.deepEqual(errObj, { errors: [ '"dataviews" must be a valid JSON object: "string" type found' ] });
+            assert.deepEqual(errObj.errors, [ '"dataviews" must be a valid JSON object: "string" type found' ]);
 
             done();
         });
@@ -66,7 +66,7 @@ describe('histogram-dataview', function() {
         this.testClient.getLayergroup(ERROR_RESPONSE, function(err, errObj) {
             assert.ok(!err, err);
 
-            assert.deepEqual(errObj, { errors: [ '"dataviews" must be a valid JSON object: "array" type found' ] });
+            assert.deepEqual(errObj.errors, [ '"dataviews" must be a valid JSON object: "array" type found' ]);
 
             done();
         });
