@@ -116,7 +116,7 @@ describe('analysis-layers error cases', function() {
                 'Analysis requires authentication with API key: permission denied.'
             );
 
-            assert.equal(layergroupResult.errors_with_context[0].context.type, 'camshaft');
+            assert.equal(layergroupResult.errors_with_context[0].context.type, 'analysis');
             assert.equal(layergroupResult.errors_with_context[0].context.analysis.index, 0);
             assert.equal(layergroupResult.errors_with_context[0].context.analysis.id, 'HEAD');
             assert.equal(layergroupResult.errors_with_context[0].context.analysis.type, 'buffer');
@@ -169,7 +169,7 @@ describe('analysis-layers error cases', function() {
                 'Missing required param "radius"'
             );
 
-            assert.equal(layergroupResult.errors_with_context[0].context.type, 'camshaft');
+            assert.equal(layergroupResult.errors_with_context[0].context.type, 'analysis');
             assert.equal(layergroupResult.errors_with_context[0].context.analysis.index, 0);
             assert.equal(layergroupResult.errors_with_context[0].context.analysis.id, 'HEAD');
             assert.equal(layergroupResult.errors_with_context[0].context.analysis.type, 'buffer');
