@@ -148,11 +148,10 @@ describe('raster', function() {
                 assert.ok(!err);
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                assert.deepEqual(parsedBody, { errors: [ 'Mapnik raster layers do not support interactivity' ] });
+                assert.deepEqual(parsedBody.errors, [ 'Mapnik raster layers do not support interactivity' ]);
                 done();
             }
         );
     });
 
 });
-

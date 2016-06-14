@@ -231,7 +231,11 @@ describe('attributes', function() {
                 assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 assert.equal(
                     res.body,
-                    '/**/ typeof test === \'function\' && test({"errors":["Layer 0 has no exposed attributes"]});'
+                    '/**/ typeof test === \'function\' && ' +
+                    'test({"errors":["Layer 0 has no exposed attributes"],' +
+                    '"errors_with_context":[{' +
+                    '"type":"unknown","message":"Layer 0 has no exposed attributes","context":"unknown"' +
+                    '}]});'
                 );
                 return null;
             },

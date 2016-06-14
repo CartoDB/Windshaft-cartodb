@@ -29,7 +29,7 @@ describe('regressions', function() {
                 contentType: 'application/json; charset=utf-8'
             };
             requestTile('/0/0/0.png?testUnexpectedError=1', options, function(err, res) {
-                assert.deepEqual(JSON.parse(res.body), { "errors": ["test unexpected error"] });
+                assert.deepEqual(JSON.parse(res.body).errors, ["test unexpected error"]);
                 finish(done);
             });
         });

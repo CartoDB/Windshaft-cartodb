@@ -20,6 +20,13 @@ describe('analysis-layers error cases', function() {
         }
     };
 
+    var AUTH_ERROR_RESPONSE = {
+        status: 403,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
     it('should handle missing analysis nodes for layers', function(done) {
         var mapConfig = createMapConfig(
             [
@@ -64,4 +71,112 @@ describe('analysis-layers error cases', function() {
             testClient.drain(done);
         });
     });
+
+    it('camshaft: should return error missing analysis nodes for layers with some context', function(done) {
+        var mapConfig = createMapConfig(
+            [
+                {
+                    "type": "cartodb",
+                    "options": {
+                        "source": {
+                            "id": "HEAD"
+                        },
+                        "cartocss": '#polygons { polygon-fill: red; }',
+                        "cartocss_version": "2.3.0"
+                    }
+                }
+            ],
+            {},
+            [
+                {
+                    "id": "HEAD",
+                    "type": "buffer",
+                    "params": {
+                        "source": {
+                            "id": "HEAD",
+                            "type": "source",
+                            "params": {
+                                "query": "select * from populated_places_simple_reduced"
+                            }
+                        },
+                        "radius": 50000
+                    }
+                }
+            ]
+        );
+
+        var testClient = new TestClient(mapConfig, 11111);
+
+        testClient.getLayergroup(AUTH_ERROR_RESPONSE, function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.equal(layergroupResult.errors.length, 1);
+            assert.equal(
+                layergroupResult.errors[0],
+                'Analysis requires authentication with API key: permission denied.'
+            );
+
+            assert.equal(layergroupResult.errors_with_context[0].context.type, 'analysis');
+            assert.equal(layergroupResult.errors_with_context[0].context.analysis.index, 0);
+            assert.equal(layergroupResult.errors_with_context[0].context.analysis.id, 'HEAD');
+            assert.equal(layergroupResult.errors_with_context[0].context.analysis.type, 'buffer');
+
+            testClient.drain(done);
+        });
+    });
+
+
+    it('camshaft: should return error: Missing required param "radius"; with context', function(done) {
+        var mapConfig = createMapConfig(
+            [
+                {
+                    "type": "cartodb",
+                    "options": {
+                        "source": {
+                            "id": "HEAD"
+                        },
+                        "cartocss": '#polygons { polygon-fill: red; }',
+                        "cartocss_version": "2.3.0"
+                    }
+                }
+            ],
+            {},
+            [
+                {
+                    "id": "HEAD",
+                    "type": "buffer",
+                    "params": {
+                        "source": {
+                            "id": "HEAD",
+                            "type": "source",
+                            "params": {
+                                "query": "select * from populated_places_simple_reduced"
+                            }
+                        }
+                    }
+                }
+            ]
+        );
+
+        var testClient = new TestClient(mapConfig, 1234);
+
+        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.equal(layergroupResult.errors.length, 1);
+            assert.equal(
+                layergroupResult.errors[0],
+                'Missing required param "radius"'
+            );
+
+            assert.equal(layergroupResult.errors_with_context[0].context.type, 'analysis');
+            assert.equal(layergroupResult.errors_with_context[0].context.analysis.index, 0);
+            assert.equal(layergroupResult.errors_with_context[0].context.analysis.id, 'HEAD');
+            assert.equal(layergroupResult.errors_with_context[0].context.analysis.type, 'buffer');
+
+            testClient.drain(done);
+        });
+    });
+
+
 });

@@ -1927,9 +1927,8 @@ describe('template_api', function() {
                 if (err) {
                     return done(err);
                 }
-                assert.deepEqual(JSON.parse(res.body), {
-                    errors: ["Invalid or nonexistent map configuration token '" + nonexistentToken + "'"]
-                });
+                assert.deepEqual(JSON.parse(res.body).errors,
+                    ["Invalid or nonexistent map configuration token '" + nonexistentToken + "'"]);
 
                 done();
             };
