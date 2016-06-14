@@ -2,10 +2,11 @@
 
 ## 2.48.0
 
-Released 2016-mm-dd
+Released 2016-06-14
 
 Announcements:
  - Upgrades camshaft to [0.15.1](https://github.com/CartoDB/camshaft/releases/tag/0.15.1)
+ - Responses with more context info if analysis or turbo-carto fails during map creation.
 
 ## 2.47.1
 
