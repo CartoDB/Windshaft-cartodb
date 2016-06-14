@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.48.1
+
+Released 2016-mm-dd
+
 ## 2.48.0
 
 Released 2016-06-14
