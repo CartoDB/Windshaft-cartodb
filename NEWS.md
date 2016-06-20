@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.49.2
+
+Released 2016-mm-dd
+
+
 ## 2.49.1
 
 Released 2016-06-20
