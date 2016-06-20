@@ -24,6 +24,8 @@ describe('turbo-carto regressions', function() {
     afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
+        } else {
+            done();
         }
     });
 
@@ -167,4 +169,83 @@ describe('turbo-carto regressions', function() {
             done();
         });
     });
+
+    describe('empty datasource results', function() {
+
+        afterEach(function (done) {
+            if (this.testClient) {
+                this.testClient.drain(done);
+            } else {
+                done();
+            }
+        });
+
+        function emptyResultMapConfig(markerFillRule) {
+            var cartocss = [
+                "#county_points_with_population {",
+                "  marker-placement: point;",
+                "  marker-allow-overlap: true;",
+                "  marker-fill-opacity: 1.0;",
+                "  marker-fill: " + markerFillRule + ';',
+                "  marker-line-width: 0;",
+                "}"
+            ].join('\n');
+
+            return {
+                "version": "1.5.0",
+                "layers": [
+                    {
+                        "type": 'mapnik',
+                        "options": {
+                            "cartocss_version": '2.3.0',
+                            "source": {
+                                "id": "head"
+                            },
+                            "cartocss": cartocss
+                        }
+                    }
+                ],
+                "analyses": [
+                    {
+                        "id": "head",
+                        "type": "source",
+                        "params": {
+                            "query": "SELECT * FROM populated_places_simple_reduced limit 0"
+                        }
+                    }
+                ]
+            };
+        }
+
+        it('should work for numeric ramps', function(done) {
+
+            var makerFillRule = 'ramp([pop_max], (#E5F5F9,#99D8C9,#2CA25F), jenks)';
+
+            this.testClient = new TestClient(emptyResultMapConfig(makerFillRule), 1234);
+            this.testClient.getLayergroup(function(err, layergroup) {
+                assert.ok(!err, err);
+
+                assert.ok(layergroup.hasOwnProperty('layergroupid'));
+                assert.ok(!layergroup.hasOwnProperty('errors'));
+
+                done();
+            });
+        });
+
+        it('should work for category ramps', function(done) {
+
+            var makerFillRule = 'ramp([adm0name], (#E5F5F9,#99D8C9,#2CA25F), category)';
+
+            this.testClient = new TestClient(emptyResultMapConfig(makerFillRule), 1234);
+            this.testClient.getLayergroup(function(err, layergroup) {
+                assert.ok(!err, err);
+
+                assert.ok(layergroup.hasOwnProperty('layergroupid'));
+                assert.ok(!layergroup.hasOwnProperty('errors'));
+
+                done();
+            });
+        });
+    });
+
 });
