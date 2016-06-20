@@ -4,7 +4,13 @@
 
 Released 2016-mm-dd
 
- - Upgrades turbo-carto to [0.12.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.12.1)
+Announcements:
+ - Upgrades turbo-carto to [0.12.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.12.1).
+
+Bug fixes:
+ - Use an empty array as default value for falsy ramps #512.
+ - Use the_geom for intermediate dataviews #511.
+ - Pick last update time for layergroupid from analyses results #510.
 
 
 ## 2.49.0
