@@ -7,6 +7,9 @@ Released 2016-mm-dd
 New features:
  - Add support for min, max, and avg operations in aggregation dataview #513.
 
+Announcements:
+ - Upgrades camshaft to [0.18.0](https://github.com/CartoDB/camshaft/releases/tag/0.18.0)
+
 
 ## 2.49.1
 
