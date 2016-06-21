@@ -6,6 +6,7 @@ Released 2016-mm-dd
 
 Enhancements:
  - Split turbo-carto adapter substitutions tokens query.
+ - Now errors with context have the same schema. #519
 
 
 ## 2.50.0
