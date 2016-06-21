@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Bug fixes:
+ - Pixel size query for turbo-carto adapter using radians and degrees instead of meters.
+
 New features:
  - Add support for min, max, and avg operations in aggregation dataview #513.
 
