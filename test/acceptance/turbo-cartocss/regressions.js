@@ -66,6 +66,57 @@ describe('turbo-carto regressions', function() {
         });
     });
 
+    it('should fail for private tables', function(done) {
+        var cartocss = [
+            "#private_table {",
+            "  marker-placement: point;",
+            "  marker-allow-overlap: true;",
+            "  marker-line-width: 0;",
+            "  marker-fill-opacity: 1.0;",
+            "  marker-width: ramp([cartodb_id], 10, 20);",
+            "  marker-fill: red;",
+            "}"
+        ].join('\n');
+
+        this.testClient = new TestClient(makeMapconfig('SELECT * FROM test_table_private_1', cartocss));
+        this.testClient.getLayergroup(TestClient.RESPONSE.ERROR, function(err, layergroup) {
+            assert.ok(!err, err);
+
+            assert.ok(!layergroup.hasOwnProperty('layergroupid'));
+            assert.ok(layergroup.hasOwnProperty('errors'));
+
+            var turboCartoError = layergroup.errors_with_context[0];
+            assert.ok(turboCartoError);
+            assert.equal(turboCartoError.type, 'turbo-carto');
+            assert.ok(turboCartoError.message.match(/permission\sdenied\sfor\srelation\stest_table_private_1/));
+
+            done();
+        });
+    });
+
+    it('should work for private tables with api key', function(done) {
+        var cartocss = [
+            "#private_table {",
+            "  marker-placement: point;",
+            "  marker-allow-overlap: true;",
+            "  marker-line-width: 0;",
+            "  marker-fill-opacity: 1.0;",
+            "  marker-width: ramp([cartodb_id], 10, 20);",
+            "  marker-fill: red;",
+            "}"
+        ].join('\n');
+
+        this.testClient = new TestClient(makeMapconfig('SELECT * FROM test_table_private_1', cartocss), 1234);
+        this.testClient.getLayergroup(function(err, layergroup) {
+            assert.ok(!err, err);
+
+            assert.ok(layergroup.hasOwnProperty('layergroupid'));
+            assert.ok(!layergroup.hasOwnProperty('errors'));
+
+            done();
+        });
+    });
+
     it('should work with mapnik substitution tokens', function(done) {
         var cartocss = [
             "#layer {",

@@ -24,6 +24,15 @@ function TestClient(mapConfig, apiKey) {
 
 module.exports = TestClient;
 
+module.exports.RESPONSE = {
+    ERROR: {
+        status: 400,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    }
+};
+
 TestClient.prototype.getWidget = function(widgetName, params, callback) {
     var self = this;
 
