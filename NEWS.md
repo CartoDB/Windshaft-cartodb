@@ -2,7 +2,7 @@
 
 ## 2.50.0
 
-Released 2016-mm-dd
+Released 2016-06-21
 
 Bug fixes:
  - Pixel size query for turbo-carto adapter using radians and degrees instead of meters.
@@ -11,7 +11,7 @@ New features:
  - Add support for min, max, and avg operations in aggregation dataview #513.
 
 Announcements:
- - Upgrades camshaft to [0.18.0](https://github.com/CartoDB/camshaft/releases/tag/0.18.0)
+ - Upgrades camshaft to [0.19.0](https://github.com/CartoDB/camshaft/releases/tag/0.19.0)
 
 
 ## 2.49.1
