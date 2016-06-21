@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Enhancements:
+ - Split turbo-carto adapter substitutions tokens query.
+
 
 ## 2.50.0
 
