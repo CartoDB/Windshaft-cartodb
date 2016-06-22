@@ -8,6 +8,9 @@ Enhancements:
  - Split turbo-carto adapter substitutions tokens query.
  - Now errors with context have the same schema. #519
 
+Announcements:
+ - Upgrades camshaft to [0.20.0](https://github.com/CartoDB/camshaft/releases/tag/0.20.0)
+
 
 ## 2.50.0
 
