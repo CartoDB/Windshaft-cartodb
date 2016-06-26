@@ -234,7 +234,7 @@ describe('attributes', function() {
                     '/**/ typeof test === \'function\' && ' +
                     'test({"errors":["Layer 0 has no exposed attributes"],' +
                     '"errors_with_context":[{' +
-                    '"type":"unknown","message":"Layer 0 has no exposed attributes","context":"unknown"' +
+                    '"type":"unknown","message":"Layer 0 has no exposed attributes"' +
                     '}]});'
                 );
                 return null;

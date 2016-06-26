@@ -204,9 +204,8 @@ describe('analysis-layers error cases', function() {
                 layergroupResult.errors_with_context[0].message,
                 'Analysis requires authentication with API key: permission denied.'
             );
-            assert.equal(layergroupResult.errors_with_context[0].context.layer.index, 0);
-            assert.equal(layergroupResult.errors_with_context[0].context.layer.id, 'HEAD');
-            assert.equal(layergroupResult.errors_with_context[0].context.layer.type, 'buffer');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
 
             testClient.drain(done);
         });
@@ -258,9 +257,8 @@ describe('analysis-layers error cases', function() {
 
             assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
             assert.equal(layergroupResult.errors_with_context[0].message, 'Missing required param "radius"');
-            assert.equal(layergroupResult.errors_with_context[0].context.layer.index, 0);
-            assert.equal(layergroupResult.errors_with_context[0].context.layer.id, 'HEAD');
-            assert.equal(layergroupResult.errors_with_context[0].context.layer.type, 'buffer');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
 
             testClient.drain(done);
         });
