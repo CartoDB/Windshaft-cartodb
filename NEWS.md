@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.53.2
+
+Released 2016-mm-dd
+
+
 ## 2.53.1
 
 Released 2016-06-28
