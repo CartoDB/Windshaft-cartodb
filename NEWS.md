@@ -2,7 +2,7 @@
 
 ## 2.53.5
 
-Released 2016-mm-dd
+Released 2016-06-29
 
 Bug fixes:
  - Uses node list so identical nodes are not de-duplicated and can be used with different ids #528.
