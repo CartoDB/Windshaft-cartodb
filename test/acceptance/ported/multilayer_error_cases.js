@@ -61,7 +61,7 @@ describe('multilayer error cases', function() {
                 '/**/ typeof test === \'function\' && ' +
                 'test({"errors":["Missing layers array from layergroup config"],' +
                 '"errors_with_context":[{"type":"unknown",' +
-                '"message":"Missing layers array from layergroup config","context":"unknown"}]});'
+                '"message":"Missing layers array from layergroup config"}]});'
             );
             done();
         });

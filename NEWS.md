@@ -68,6 +68,7 @@ Released 2016-06-21
 Enhancements:
  - Split turbo-carto adapter substitutions tokens query.
  - Now errors with context have the same schema. #519
+ - Responses with error now return the layer-id to give more info to the user.
 
 Announcements:
  - Upgrades camshaft to [0.20.0](https://github.com/CartoDB/camshaft/releases/tag/0.20.0)
