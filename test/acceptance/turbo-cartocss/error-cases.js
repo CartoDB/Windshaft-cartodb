@@ -115,10 +115,12 @@ describe('turbo-carto error cases', function() {
             assert.ok(layergroup.hasOwnProperty('errors'));
             assert.equal(layergroup.errors_with_context.length, 1);
             assert.equal(layergroup.errors_with_context[0].type, 'layer');
+            assert.equal(layergroup.errors_with_context[0].subtype, 'turbo-carto');
             assert.ok(layergroup.errors_with_context[0].message.match(/^turbo-carto/));
             assert.ok(layergroup.errors_with_context[0].message.match(/unable\sto\scompute\sramp/i));
             assert.ok(layergroup.errors_with_context[0].message.match(/wadus_column/));
 
+            assert.equal(layergroup.errors_with_context[0].layer.id, 'layer0');
             assert.equal(layergroup.errors_with_context[0].layer.index, 0);
             assert.equal(layergroup.errors_with_context[0].layer.type, 'mapnik');
 
