@@ -7,6 +7,7 @@ Released 2016-mm-dd
 Enhancements:
  - Split turbo-carto adapter substitutions tokens query.
  - Now errors with context have the same schema. #519
+ - Responses with error now returns the layer-id to give more info to the user.
 
 
 ## 2.50.0
