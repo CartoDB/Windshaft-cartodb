@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Improvements:
+ - Errors with context: replaced `turbo-carto` error type by `layer` type.
+
 Announcements:
  - Upgrades camshaft to [0.23.0](https://github.com/CartoDB/camshaft/releases/tag/0.23.0)
 
