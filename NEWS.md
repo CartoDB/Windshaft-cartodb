@@ -2,7 +2,7 @@
 
 ## 2.54.0
 
-Released 2016-mm-dd
+Released 2016-06-30
 
 Improvements:
  - Errors with context: replaced `turbo-carto` error type by `layer` type.
