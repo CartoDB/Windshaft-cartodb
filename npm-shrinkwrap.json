@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.54.1",
+  "version": "2.55.0",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -105,9 +105,9 @@
       }
     },
     "camshaft": {
-      "version": "0.23.0",
-      "from": "camshaft@0.23.0",
-      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.23.0.tgz",
+      "version": "0.25.0",
+      "from": "camshaft@0.25.0",
+      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.25.0.tgz",
       "dependencies": {
         "async": {
           "version": "1.5.2",
@@ -1029,7 +1029,7 @@
         },
         "mime-types": {
           "version": "2.1.11",
-          "from": "mime-types@>=2.1.2 <2.2.0",
+          "from": "mime-types@>=2.1.11 <2.2.0",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.11.tgz",
           "dependencies": {
             "mime-db": {
@@ -3031,15 +3031,15 @@
                       "from": "boom@>=2.0.0 <3.0.0",
                       "resolved": "https://registry.npmjs.org/boom/-/boom-2.10.1.tgz"
                     },
-                    "caseless": {
-                      "version": "0.11.0",
-                      "from": "caseless@>=0.11.0 <0.12.0",
-                      "resolved": "https://registry.npmjs.org/caseless/-/caseless-0.11.0.tgz"
-                    },
                     "brace-expansion": {
                       "version": "1.1.4",
                       "from": "brace-expansion@>=1.0.0 <2.0.0",
                       "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.4.tgz"
+                    },
+                    "caseless": {
+                      "version": "0.11.0",
+                      "from": "caseless@>=0.11.0 <0.12.0",
+                      "resolved": "https://registry.npmjs.org/caseless/-/caseless-0.11.0.tgz"
                     },
                     "chalk": {
                       "version": "1.1.3",
@@ -3306,15 +3306,15 @@
                       "from": "minimatch@>=2.0.0 <3.0.0||>=3.0.0 <4.0.0",
                       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.0.tgz"
                     },
-                    "mkdirp": {
-                      "version": "0.5.1",
-                      "from": "mkdirp@>=0.5.0 <0.6.0",
-                      "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz"
-                    },
                     "minimist": {
                       "version": "0.0.8",
                       "from": "minimist@0.0.8",
                       "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz"
+                    },
+                    "mkdirp": {
+                      "version": "0.5.1",
+                      "from": "mkdirp@>=0.5.0 <0.6.0",
+                      "resolved": "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz"
                     },
                     "ms": {
                       "version": "0.7.1",
@@ -3346,15 +3346,15 @@
                       "from": "once@>=1.3.0 <2.0.0",
                       "resolved": "https://registry.npmjs.org/once/-/once-1.3.3.tgz"
                     },
-                    "path-is-absolute": {
-                      "version": "1.0.0",
-                      "from": "path-is-absolute@>=1.0.0 <2.0.0",
-                      "resolved": "https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.0.tgz"
-                    },
                     "pinkie": {
                       "version": "2.0.4",
                       "from": "pinkie@>=2.0.0 <3.0.0",
                       "resolved": "https://registry.npmjs.org/pinkie/-/pinkie-2.0.4.tgz"
+                    },
+                    "path-is-absolute": {
+                      "version": "1.0.0",
+                      "from": "path-is-absolute@>=1.0.0 <2.0.0",
+                      "resolved": "https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.0.tgz"
                     },
                     "pinkie-promise": {
                       "version": "2.0.1",
@@ -3451,15 +3451,15 @@
                       "from": "util-deprecate@>=1.0.1 <1.1.0",
                       "resolved": "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
                     },
-                    "wrappy": {
-                      "version": "1.0.1",
-                      "from": "wrappy@>=1.0.0 <2.0.0",
-                      "resolved": "https://registry.npmjs.org/wrappy/-/wrappy-1.0.1.tgz"
-                    },
                     "verror": {
                       "version": "1.3.6",
                       "from": "verror@1.3.6",
                       "resolved": "https://registry.npmjs.org/verror/-/verror-1.3.6.tgz"
+                    },
+                    "wrappy": {
+                      "version": "1.0.1",
+                      "from": "wrappy@>=1.0.0 <2.0.0",
+                      "resolved": "https://registry.npmjs.org/wrappy/-/wrappy-1.0.1.tgz"
                     },
                     "xtend": {
                       "version": "4.0.1",
@@ -3514,18 +3514,6 @@
                         }
                       }
                     },
-                    "tar-pack": {
-                      "version": "3.1.3",
-                      "from": "tar-pack@>=3.1.0 <3.2.0",
-                      "resolved": "https://registry.npmjs.org/tar-pack/-/tar-pack-3.1.3.tgz",
-                      "dependencies": {
-                        "readable-stream": {
-                          "version": "2.0.6",
-                          "from": "readable-stream@>=2.0.4 <2.1.0",
-                          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz"
-                        }
-                      }
-                    },
                     "sshpk": {
                       "version": "1.8.3",
                       "from": "sshpk@>=1.7.0 <2.0.0",
@@ -3535,6 +3523,18 @@
                           "version": "1.0.0",
                           "from": "assert-plus@>=1.0.0 <2.0.0",
                           "resolved": "https://registry.npmjs.org/assert-plus/-/assert-plus-1.0.0.tgz"
+                        }
+                      }
+                    },
+                    "tar-pack": {
+                      "version": "3.1.3",
+                      "from": "tar-pack@>=3.1.0 <3.2.0",
+                      "resolved": "https://registry.npmjs.org/tar-pack/-/tar-pack-3.1.3.tgz",
+                      "dependencies": {
+                        "readable-stream": {
+                          "version": "2.0.6",
+                          "from": "readable-stream@>=2.0.4 <2.1.0",
+                          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.0.6.tgz"
                         }
                       }
                     }
