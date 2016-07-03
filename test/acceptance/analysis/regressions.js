@@ -3,8 +3,8 @@ require('../../support/test_helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('analysis-layers error cases', function() {
-    it('should handle missing analysis nodes for layers', function(done) {
+describe('analysis-layers regressions', function() {
+    it('should return a complete list of nodes from analysis', function(done) {
         var mapConfig = {
             "version": "1.5.0",
             "layers": [
@@ -98,7 +98,12 @@ describe('analysis-layers error cases', function() {
             var analyses = layergroupResult.metadata.analyses;
             assert.ok(analyses);
             assert.equal(analyses.length, 1);
-            assert.equal(Object.keys(analyses[0].nodes).length, 5);
+
+            var expectedIds = ['customer_home_locations', 'b0', 'b1', 'a2', 'a3', 'a4'];
+            assert.equal(Object.keys(analyses[0].nodes).length, expectedIds.length);
+            expectedIds.forEach(function(expectedId) {
+                analyses[0].nodes.hasOwnProperty(expectedId);
+            });
 
             testClient.drain(done);
         });
