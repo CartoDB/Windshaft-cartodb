@@ -268,33 +268,21 @@ describe('turbo-carto regressions', function() {
             };
         }
 
-        it('should work for numeric ramps', function(done) {
+        var methods = ['quantiles', 'equal', 'jenks', 'headtails', 'category'];
 
-            var makerFillRule = 'ramp([pop_max], (#E5F5F9,#99D8C9,#2CA25F), jenks)';
+        methods.forEach(function(method) {
+            it('should work for "' + method+ '" method', function(done) {
+                var makerFillRule = 'ramp([pop_max], (#E5F5F9,#99D8C9,#2CA25F), ' + method + ')';
 
-            this.testClient = new TestClient(emptyResultMapConfig(makerFillRule), 1234);
-            this.testClient.getLayergroup(function(err, layergroup) {
-                assert.ok(!err, err);
+                this.testClient = new TestClient(emptyResultMapConfig(makerFillRule), 1234);
+                this.testClient.getLayergroup(function(err, layergroup) {
+                    assert.ok(!err, err);
 
-                assert.ok(layergroup.hasOwnProperty('layergroupid'));
-                assert.ok(!layergroup.hasOwnProperty('errors'));
+                    assert.ok(layergroup.hasOwnProperty('layergroupid'));
+                    assert.ok(!layergroup.hasOwnProperty('errors'));
 
-                done();
-            });
-        });
-
-        it('should work for category ramps', function(done) {
-
-            var makerFillRule = 'ramp([adm0name], (#E5F5F9,#99D8C9,#2CA25F), category)';
-
-            this.testClient = new TestClient(emptyResultMapConfig(makerFillRule), 1234);
-            this.testClient.getLayergroup(function(err, layergroup) {
-                assert.ok(!err, err);
-
-                assert.ok(layergroup.hasOwnProperty('layergroupid'));
-                assert.ok(!layergroup.hasOwnProperty('errors'));
-
-                done();
+                    done();
+                });
             });
         });
     });
