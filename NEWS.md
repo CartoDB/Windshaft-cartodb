@@ -1,8 +1,11 @@
 # Changelog
 
-## 2.55.1
+## 2.56.0
 
-Released 2016-mm-dd
+Released 2016-07-04
+
+Announcements:
+ - Upgrades camshaft to [0.27.0](https://github.com/CartoDB/camshaft/releases/tag/0.27.0).
 
 
 ## 2.55.0
