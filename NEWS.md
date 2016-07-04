@@ -6,7 +6,7 @@ Released 2016-mm-dd
 
 Announcements:
  - Uses new configuration for camshaft: analysis node has an associated user/owner.
- - Upgrades camshaft to [0.25.0](https://github.com/CartoDB/camshaft/releases/tag/0.25.0).
+ - Upgrades camshaft to [0.26.0](https://github.com/CartoDB/camshaft/releases/tag/0.26.0).
 
 
 ## 2.54.0
