@@ -155,7 +155,7 @@ This is the call for creating the Named Map. It is sending the template.json fil
 curl -X POST \
    -H 'Content-Type: application/json' \
    -d @template.json \
-   'https://{username}.cartodb.com/api/v1/map/named?api_key={api_key}'
+   'https://{username}.carto.com/api/v1/map/named?api_key={api_key}'
 ```
 
 #### Response
@@ -209,7 +209,7 @@ Valid auth token will be needed, if required by the template.
 curl -X POST \
   -H 'Content-Type: application/json' \
   -d @params.json \
-  'https://{username}.cartodb.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
+  'https://{username}.carto.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
 ```
 
 #### Response
@@ -261,7 +261,7 @@ Updating a Named Map removes all the Named Map instances, so they need to be ini
 curl -X PUT \
   -H 'Content-Type: application/json' \
   -d @template.json \
-  'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+  'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -303,7 +303,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X DELETE 'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+curl -X DELETE 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -337,7 +337,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X GET 'https://{username}.cartodb.com/api/v1/map/named?api_key={api_key}'
+curl -X GET 'https://{username}.carto.com/api/v1/map/named?api_key={api_key}'
 ```
 
 #### Response
@@ -377,7 +377,7 @@ api_key | is required
 #### Call
 
 ```bash
-curl -X GET 'https://{username}.cartodb.com/api/v1/map/named/{template_name}?api_key={api_key}'
+curl -X GET 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
 ```
 
 #### Response
@@ -418,7 +418,7 @@ callback | JSON callback name
 #### Call
 
 ```bash
-curl 'https://{username}.cartodb.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config=template_params_json'
+curl 'https://{username}.carto.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config=template_params_json'
 ```
 
 #### Response
@@ -543,16 +543,16 @@ To call a template_id in a URL:
 
 For example, a complete URL might appear as:
 
-"https://{username}.cartodb.com/api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.png"
+"https://{username}.carto.com/api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.png"
 
 The placeholders indicate the following:
 
 - [`template_id`](http://docs.carto.com/carto-engine/maps-api/named-maps/#response) is the response of your Named Map.
 - layers can be a number (referring to the # layer of your map), all layers of your map, or a list of layers.
-  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/0/{z}/{x}/{y}.png"
-  - To show the first layer, enter the number value `1` in the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/1/{z}/{x}/{y}.png"
-  - To show all layers, enter the value `all` for the layer placeholder "https://{username}.cartodb.com/api/v1/map/named/{template_id}/all/{z}/{x}/{y}.png"
-  - To show a [list of layers](http://docs.carto.com/carto-engine/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as 0,1,2 in the layer placeholder. For example, to show the basemap and the first layer, "https://{username}.cartodb.com/api/v1/map/named/{template_id}/0,1/{z}/{x}/{y}.png"
+  - To show just the basemap layer, enter the number value `0` in the layer placeholder "https://{username}.carto.com/api/v1/map/named/{template_id}/0/{z}/{x}/{y}.png"
+  - To show the first layer, enter the number value `1` in the layer placeholder "https://{username}.carto.com/api/v1/map/named/{template_id}/1/{z}/{x}/{y}.png"
+  - To show all layers, enter the value `all` for the layer placeholder "https://{username}.carto.com/api/v1/map/named/{template_id}/all/{z}/{x}/{y}.png"
+  - To show a [list of layers](http://docs.carto.com/carto-engine/maps-api/anonymous-maps/#blending-and-layer-selection), enter the comma separated layer value as 0,1,2 in the layer placeholder. For example, to show the basemap and the first layer, "https://{username}.carto.com/api/v1/map/named/{template_id}/0,1/{z}/{x}/{y}.png"
 
 
 ### Get Mapnik Retina Tiles
