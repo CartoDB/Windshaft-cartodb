@@ -2,7 +2,7 @@
 
 ## 2.55.0
 
-Released 2016-mm-dd
+Released 2016-07-04
 
 Enhancements:
  - Skip null values for quantification methods generating null values.
