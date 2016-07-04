@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Enhancements:
+ - Skip null values for quantification methods generating null values.
+
 Announcements:
  - Uses new configuration for camshaft: analysis node has an associated user/owner.
  - Upgrades camshaft to [0.26.0](https://github.com/CartoDB/camshaft/releases/tag/0.26.0).
