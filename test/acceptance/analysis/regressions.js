@@ -100,10 +100,13 @@ describe('analysis-layers regressions', function() {
             assert.equal(analyses.length, 1);
 
             var expectedIds = ['customer_home_locations', 'b0', 'b1', 'a2', 'a3', 'a4'];
-            assert.equal(Object.keys(analyses[0].nodes).length, expectedIds.length, Object.keys(analyses[0].nodes));
             expectedIds.forEach(function(expectedId) {
-                analyses[0].nodes.hasOwnProperty(expectedId);
+                assert.ok(
+                    analyses[0].nodes.hasOwnProperty(expectedId),
+                    'Missing "' + expectedId + '" from node list.'
+                );
             });
+            assert.equal(Object.keys(analyses[0].nodes).length, expectedIds.length, Object.keys(analyses[0].nodes));
 
             testClient.drain(done);
         });

@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Bug fixes:
+ - Return full list of nodes in response metadata.
+
 
 ## 2.57.0
 
