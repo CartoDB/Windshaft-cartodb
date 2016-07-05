@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.57.1
+## 2.58.0
 
 Released 2016-mm-dd
 
