@@ -7,6 +7,9 @@ Released 2016-mm-dd
 Announcements:
  - Upgrades camshaft to [0.29.2](https://github.com/CartoDB/camshaft/releases/tag/0.29.2).
 
+Bug fixes:
+ - Return full list of nodes in response metadata.
+
 
 ## 2.57.0
 
