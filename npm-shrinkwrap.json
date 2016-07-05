@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.59.1",
+  "version": "2.59.2",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",

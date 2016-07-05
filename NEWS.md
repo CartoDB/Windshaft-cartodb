@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.59.2
+
+Released 2016-mm-dd
+
+
 ## 2.59.1
 
 Released 2016-07-05
