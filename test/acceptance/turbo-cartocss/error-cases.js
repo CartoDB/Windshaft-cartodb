@@ -138,4 +138,53 @@ describe('turbo-carto error cases', function() {
             done();
         });
     });
+
+    it('should return multiple errors', function(done) {
+
+        var multipleErrorsMapConfig = {
+            "version": "1.4.0",
+            "layers": [
+                {
+                    "type": 'mapnik',
+                    "options": {
+                        "cartocss_version": '2.3.0',
+                        "sql": 'SELECT * FROM populated_places_simple_reduced',
+                        "cartocss": createCartocss(null, 'ramp([wadus_column], (red, green, blue))')
+                    }
+                },
+                {
+                    "type": 'mapnik',
+                    "options": {
+                        "cartocss_version": '2.3.0',
+                        "sql": 'SELECT * FROM populated_places_simple_reduced',
+                        "cartocss": createCartocss('ramp([invalid_column], (red, green, blue))')
+                    }
+                }
+            ]
+        };
+
+        this.testClient = new TestClient(multipleErrorsMapConfig);
+        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroup) {
+            assert.ok(!err, err);
+
+            assert.ok(layergroup.hasOwnProperty('errors'));
+            assert.equal(layergroup.errors_with_context.length, 2);
+
+            assert.equal(layergroup.errors_with_context[0].type, 'layer');
+            assert.equal(layergroup.errors_with_context[0].subtype, 'turbo-carto');
+            assert.ok(layergroup.errors_with_context[0].message.match(/^turbo-carto/));
+            assert.ok(layergroup.errors_with_context[0].message.match(/unable\sto\scompute\sramp/i));
+            assert.ok(layergroup.errors_with_context[0].message.match(/wadus_column/));
+            assert.equal(layergroup.errors_with_context[0].layer.id, 'layer0');
+
+            assert.equal(layergroup.errors_with_context[1].type, 'layer');
+            assert.equal(layergroup.errors_with_context[1].subtype, 'turbo-carto');
+            assert.ok(layergroup.errors_with_context[1].message.match(/^turbo-carto/));
+            assert.ok(layergroup.errors_with_context[1].message.match(/unable\sto\scompute\sramp/i));
+            assert.ok(layergroup.errors_with_context[1].message.match(/invalid_column/));
+            assert.equal(layergroup.errors_with_context[1].layer.id, 'layer1');
+
+            done();
+        });
+    });
 });
