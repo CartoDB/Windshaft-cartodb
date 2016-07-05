@@ -202,7 +202,7 @@ describe('analysis-layers', function() {
             assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
             var nodes = analyses[0].nodes;
             var nodesIds = Object.keys(nodes);
-            assert.deepEqual(nodesIds, ['2570e105-7b37-40d2-bdf4-1af889598745', 'HEAD']);
+            assert.deepEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
             nodesIds.forEach(function(nodeId) {
                 var node = nodes[nodeId];
                 assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
