@@ -2,7 +2,7 @@
 
 ## 2.61.1
 
-Released 2016-mm-dd
+Released 2016-07-06
 
 Enhancements:
  - Dataviews use mapconfig to store/retrieve their queries instead of instantiating analyses again.
