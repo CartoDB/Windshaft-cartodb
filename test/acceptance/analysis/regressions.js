@@ -46,9 +46,9 @@ describe('analysis-layers regressions', function() {
             "analyses": [
                 {
                     "id": "a4",
-                    "type": "intersection",
+                    "type": "point-in-polygon",
                     "params": {
-                        "source": {
+                        "polygons_source": {
                             "id": "a3",
                             "type": "buffer",
                             "params": {
@@ -76,7 +76,7 @@ describe('analysis-layers regressions', function() {
                                 "radius": 200000
                             }
                         },
-                        "target": {
+                        "points_source": {
                             "id": "customer_home_locations",
                             "type": "source",
                             "params": {

@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.60.1
+## 2.61.0
 
 Released 2016-mm-dd
 
@@ -10,6 +10,7 @@ Enhancements:
 
 Announcements:
  - Upgrades turbo-carto to [0.14.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.14.0).
+ - Upgrades camshaft to [0.33.2](https://github.com/CartoDB/camshaft/releases/tag/0.33.2).
 
 
 ## 2.60.0
