@@ -5,10 +5,11 @@
 Released 2016-mm-dd
 
 Enhancements:
+ - More clear turbo-carto error messages: no context in message.
  - Return multiple turbo-carto errors #541.
 
 Announcements:
- - Upgrades turbo-carto to [0.13.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.13.0).
+ - Upgrades turbo-carto to [0.14.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.14.0).
 
 
 ## 2.60.0
