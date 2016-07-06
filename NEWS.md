@@ -2,7 +2,7 @@
 
 ## 2.61.0
 
-Released 2016-mm-dd
+Released 2016-07-06
 
 Enhancements:
  - More clear turbo-carto error messages: no context in message.
