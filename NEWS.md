@@ -5,6 +5,7 @@
 Released 2016-mm-dd
 
 Enhancements:
+ - More clear turbo-carto error messages: no context in message.
  - Return multiple turbo-carto errors #541.
 
 Announcements:
