@@ -527,7 +527,7 @@ describe('Overviews query rewriter', function() {
     it('generates query with filters', function(){
         var sql = "SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name\
                    FROM (SELECT *\
-                   FROM (select * from table1) _camshaft_category_filter\
+                   FROM (select * from table1) _analysis_category_filter\
                    WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query";
         var data = {
             overviews: {
@@ -555,7 +555,7 @@ describe('Overviews query rewriter', function() {
                   SELECT * FROM table1_ov3, _vovw_scale WHERE _vovw_z = 3\
                   UNION ALL\
                   SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 3\
-                ) AS _vovw_table1) _camshaft_category_filter\
+                ) AS _vovw_table1) _analysis_category_filter\
              WHERE name IN ($escape_0$X$escape_0$)\
         ";
         assertSameSql(overviews_sql, expected_sql);
@@ -564,7 +564,7 @@ describe('Overviews query rewriter', function() {
     it('generates query with filters for specific zoom level', function(){
         var sql = "SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name\
                    FROM (SELECT *\
-                   FROM (select * from table1) _camshaft_category_filter\
+                   FROM (select * from table1) _analysis_category_filter\
                    WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query";
         var data = {
             overviews: {
@@ -581,7 +581,7 @@ describe('Overviews query rewriter', function() {
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data, { zoom_level: 2 });
         var expected_sql = "\
-            SELECT * FROM (SELECT * FROM table1_ov2) _camshaft_category_filter\
+            SELECT * FROM (SELECT * FROM table1_ov2) _analysis_category_filter\
             WHERE name IN ($escape_0$X$escape_0$)\
         ";
         assertSameSql(overviews_sql, expected_sql);
@@ -590,7 +590,7 @@ describe('Overviews query rewriter', function() {
     it('does not generates query with aggressive filtering', function(){
         var sql = "SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name\
                    FROM (SELECT *\
-                   FROM (select * from table1) _camshaft_category_filter\
+                   FROM (select * from table1) _analysis_category_filter\
                    WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query";
         var data = {
             overviews: {
