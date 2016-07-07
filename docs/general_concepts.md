@@ -4,7 +4,7 @@ The following concepts are the same for every endpoint in the API except when it
 
 ## Auth
 
-By default, users do not have access to private tables in CartoDB. In order to instantiate a map from private table data an API Key is required. Additionally, to include some endpoints, an API Key must be included (e.g. creating a Named Map).
+By default, users do not have access to private tables in CARTO. In order to instantiate a map from private table data an API Key is required. Additionally, to include some endpoints, an API Key must be included (e.g. creating a Named Map).
 
 To execute an authorized request, `api_key=YOURAPIKEY` should be added to the request URL. The param can be also passed as POST param. Using HTTPS is mandatory when you are performing requests that include your `api_key`.
 

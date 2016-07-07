@@ -78,7 +78,7 @@ format | the format for the image, supported types: `png`, `jpg`
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
-A Named Maps static image will get its constraints from the [`view` argument of the Create Named Map function](http://docs.cartodb.com/cartodb-platform/maps-api/named-maps/#arguments). If `view` is not defined, it will estimate the extent based on the involved tables, otherwise it fallbacks to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
+A Named Maps static image will get its constraints from the [`view` argument of the Create Named Map function](http://docs.carto.com/carto-engine/maps-api/named-maps/#arguments). If `view` is not defined, it will estimate the extent based on the involved tables, otherwise it fallbacks to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
 
 #### Layers
 
@@ -122,9 +122,9 @@ By manipulating the `"urlTemplate"` custom basemaps can be used in generating st
 },
 ```
 
-**CartoDB**
+**CARTO**
 
-As described in the [MapConfig File Format](http://docs.cartodb.com/cartodb-platform/maps-api/mapconfig/), a "cartodb" type layer is now just an alias to a "mapnik" type layer as above, intended for backwards compatibility.
+As described in the [MapConfig File Format](http://docs.carto.com/carto-engine/maps-api/mapconfig/), a "cartodb" type layer is now just an alias to a "mapnik" type layer as above, intended for backwards compatibility.
 
 ```javascript
 {
@@ -142,18 +142,18 @@ Additionally, static images from Torque maps and other map layers can be used to
 
 ### Caching
 
-It is important to note that generated images are cached from the live data referenced with the `layergroupid token` on the specified CartoDB account. This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. To obtain a static snapshot of the map as it is today and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
+It is important to note that generated images are cached from the live data referenced with the `layergroupid token` on the specified CARTO account. This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. To obtain a static snapshot of the map as it is today and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
 
 ### Limits
 
 * While images can encompass an entirety of a map, the default limit for pixel range is 8192 x 8192.
 * Image resolution by default is set to 72 DPI
 * JPEG quality by default is 85%
-* Timeout limits for generating static maps are the same across the CartoDB Editor and Platform. It is important to ensure timely processing of queries.
+* Timeout limits for generating static maps are the same across the CARTO Editor and CARTO Engine. It is important to ensure timely processing of queries.
 
 ## Examples
 
-After instantiating a map from a CartoDB account:
+After instantiating a map from a CARTO account:
 
 #### Call
 
