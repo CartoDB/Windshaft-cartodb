@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Announcements:
+ - Upgrades lzma to 2.3.2.
+
 
 ## 2.62.0
 
