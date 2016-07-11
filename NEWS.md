@@ -4,7 +4,11 @@
 
 Released 2016-mm-dd
 
+Enhancements:
+ - Return last error message for failed nodes on map creation.
+
 Announcements:
+ - Upgrades camshaft to [0.35.0](https://github.com/CartoDB/camshaft/releases/tag/0.35.0).
  - Upgrades lzma to 2.3.2.
 
 
