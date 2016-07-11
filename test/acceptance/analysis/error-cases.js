@@ -233,7 +233,7 @@ describe('analysis-layers error cases', function() {
                     "type": "buffer",
                     "params": {
                         "source": {
-                            "id": "HEAD",
+                            "id": "HEAD2",
                             "type": "source",
                             "params": {
                                 "query": "select * from populated_places_simple_reduced"
@@ -259,6 +259,115 @@ describe('analysis-layers error cases', function() {
             assert.equal(layergroupResult.errors_with_context[0].message, 'Missing required param "radius"');
             assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
             assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should return missing param error of outer node indicating the node_id and context', function(done) {
+        var mapConfig = createMapConfig([{
+            "type": "cartodb",
+            "options": {
+                "source": {
+                    "id": "HEAD"
+                },
+                "cartocss": '#polygons { polygon-fill: red; }',
+                "cartocss_version": "2.3.0"
+            }
+        }], {}, [{
+            "id": "HEAD",
+            "type": "buffer",
+            "params": {
+                "source": {
+                    "id": "HEAD2",
+                    "type": "buffer",
+                    "params": {
+                        "source": {
+                            "id": "HEAD3",
+                            "type": "source",
+                            "params": {
+                                "query": "select * from populated_places_simple_reduced"
+                            }
+                        },
+                        "radius": 10
+                    }
+                }
+            }
+            // radius: 'missing'
+        }]);
+
+        var testClient = new TestClient(mapConfig, 1234);
+
+        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.equal(layergroupResult.errors.length, 1);
+            assert.equal(
+                layergroupResult.errors[0],
+                'Missing required param "radius"'
+            );
+
+            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
+            assert.equal(layergroupResult.errors_with_context[0].message, 'Missing required param "radius"');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD');
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should return invalid param type error of inner node indicating the node_id and context', function(done) {
+        var mapConfig = createMapConfig([{
+            "type": "cartodb",
+            "options": {
+                "source": {
+                    "id": "HEAD"
+                },
+                "cartocss": '#polygons { polygon-fill: red; }',
+                "cartocss_version": "2.3.0"
+            }
+        }], {}, [{
+            "id": "HEAD",
+            "type": "buffer",
+            "params": {
+                "source": {
+                    "id": "HEAD2",
+                    "type": "buffer",
+                    "params": {
+                        "source": {
+                            "id": "HEAD3",
+                            "type": "source",
+                            "params": {
+                                "query": "select * from populated_places_simple_reduced"
+                            }
+                        },
+                        "radius": 'invalid_radius'
+                    }
+                },
+                "radius": 10
+            }
+        }]);
+
+        var testClient = new TestClient(mapConfig, 1234);
+
+        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.equal(layergroupResult.errors.length, 1);
+            assert.equal(
+                layergroupResult.errors[0],
+                'Invalid type for param "radius", expects "number" type, got `"invalid_radius"`'
+            );
+
+            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
+            assert.equal(
+                layergroupResult.errors_with_context[0].message,
+                'Invalid type for param "radius", expects "number" type, got `"invalid_radius"`'
+            );
+            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD2');
 
             testClient.drain(done);
         });
