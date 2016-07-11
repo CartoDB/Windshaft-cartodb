@@ -2,7 +2,7 @@
 
 ## 2.63.0
 
-Released 2016-mm-dd
+Released 2016-07-11
 
 Enhancements:
  - Return last error message for failed nodes on map creation.
