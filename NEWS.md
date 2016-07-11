@@ -1,8 +1,20 @@
 # Changelog
 
-## 2.62.1
+## 2.63.1
 
 Released 2016-mm-dd
+
+
+## 2.63.0
+
+Released 2016-07-11
+
+Enhancements:
+ - Return last error message for failed nodes on map creation.
+
+Announcements:
+ - Upgrades camshaft to [0.35.0](https://github.com/CartoDB/camshaft/releases/tag/0.35.0).
+ - Upgrades lzma to 2.3.2.
 
 
 ## 2.62.0
