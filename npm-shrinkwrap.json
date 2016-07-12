@@ -105,9 +105,9 @@
       }
     },
     "camshaft": {
-      "version": "0.35.0",
-      "from": "camshaft@0.35.0",
-      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.35.0.tgz",
+      "version": "0.36.0",
+      "from": "camshaft@0.36.0",
+      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.36.0.tgz",
       "dependencies": {
         "async": {
           "version": "1.5.2",
@@ -2986,10 +2986,15 @@
                       "from": "ansi-regex@>=2.0.0 <3.0.0",
                       "resolved": "https://registry.npmjs.org/ansi-regex/-/ansi-regex-2.0.0.tgz"
                     },
-                    "are-we-there-yet": {
-                      "version": "1.1.2",
-                      "from": "are-we-there-yet@>=1.1.2 <1.2.0",
-                      "resolved": "https://registry.npmjs.org/are-we-there-yet/-/are-we-there-yet-1.1.2.tgz"
+                    "async": {
+                      "version": "1.5.2",
+                      "from": "async@>=1.5.2 <2.0.0",
+                      "resolved": "https://registry.npmjs.org/async/-/async-1.5.2.tgz"
+                    },
+                    "aws-sign2": {
+                      "version": "0.6.0",
+                      "from": "aws-sign2@>=0.6.0 <0.7.0",
+                      "resolved": "https://registry.npmjs.org/aws-sign2/-/aws-sign2-0.6.0.tgz"
                     },
                     "asn1": {
                       "version": "0.2.3",
@@ -3101,6 +3106,11 @@
                       "from": "escape-string-regexp@>=1.0.2 <2.0.0",
                       "resolved": "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz"
                     },
+                    "extsprintf": {
+                      "version": "1.0.2",
+                      "from": "extsprintf@1.0.2",
+                      "resolved": "https://registry.npmjs.org/extsprintf/-/extsprintf-1.0.2.tgz"
+                    },
                     "extend": {
                       "version": "3.0.0",
                       "from": "extend@>=3.0.0 <3.1.0",
@@ -3191,10 +3201,10 @@
                       "from": "http-signature@>=1.1.0 <1.2.0",
                       "resolved": "https://registry.npmjs.org/http-signature/-/http-signature-1.1.1.tgz"
                     },
-                    "inflight": {
-                      "version": "1.0.4",
-                      "from": "inflight@>=1.0.4 <2.0.0",
-                      "resolved": "https://registry.npmjs.org/inflight/-/inflight-1.0.4.tgz"
+                    "hoek": {
+                      "version": "2.16.3",
+                      "from": "hoek@>=2.0.0 <3.0.0",
+                      "resolved": "https://registry.npmjs.org/hoek/-/hoek-2.16.3.tgz"
                     },
                     "inherits": {
                       "version": "2.0.1",
@@ -3215,6 +3225,11 @@
                       "version": "1.0.2",
                       "from": "is-property@>=1.0.0 <2.0.0",
                       "resolved": "https://registry.npmjs.org/is-property/-/is-property-1.0.2.tgz"
+                    },
+                    "glob": {
+                      "version": "7.0.3",
+                      "from": "glob@>=7.0.0 <8.0.0",
+                      "resolved": "https://registry.npmjs.org/glob/-/glob-7.0.3.tgz"
                     },
                     "is-typedarray": {
                       "version": "1.0.0",
@@ -3306,11 +3321,6 @@
                       "from": "minimatch@>=2.0.0 <3.0.0||>=3.0.0 <4.0.0",
                       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.0.tgz"
                     },
-                    "minimist": {
-                      "version": "0.0.8",
-                      "from": "minimist@0.0.8",
-                      "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz"
-                    },
                     "mkdirp": {
                       "version": "0.5.1",
                       "from": "mkdirp@>=0.5.0 <0.6.0",
@@ -3351,10 +3361,10 @@
                       "from": "path-is-absolute@>=1.0.0 <2.0.0",
                       "resolved": "https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.0.tgz"
                     },
-                    "pinkie": {
-                      "version": "2.0.4",
-                      "from": "pinkie@>=2.0.0 <3.0.0",
-                      "resolved": "https://registry.npmjs.org/pinkie/-/pinkie-2.0.4.tgz"
+                    "npmlog": {
+                      "version": "2.0.3",
+                      "from": "npmlog@>=2.0.0 <2.1.0",
+                      "resolved": "https://registry.npmjs.org/npmlog/-/npmlog-2.0.3.tgz"
                     },
                     "pinkie-promise": {
                       "version": "2.0.1",
