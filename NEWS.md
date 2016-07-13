@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Announcements:
+ - Upgrades cartodb-redis to 0.13.1.
+
 
 ## 2.64.0
 
