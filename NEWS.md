@@ -1,11 +1,12 @@
 # Changelog
 
-## 2.64.1
+## 2.65.0
 
-Released 2016-mm-dd
+Released 2016-07-15
 
 Announcements:
  - Upgrades cartodb-redis to 0.13.1.
+ - Upgrades camshaft to [0.37.0](https://github.com/CartoDB/camshaft/releases/tag/0.37.0).
 
 
 ## 2.64.0
