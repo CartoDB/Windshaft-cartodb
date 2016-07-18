@@ -56,8 +56,8 @@ describe('turbo-carto error cases', function() {
 
             assert.ok(layergroup.hasOwnProperty('errors'));
             assert.equal(layergroup.errors.length, 1);
-            assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/));
-            assert.ok(layergroup.errors[0].match(/invalid\sramp\slength/i));
+            assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/), layergroup.errors[0]);
+            assert.ok(layergroup.errors[0].match(/invalid\sramp\slength/i), layergroup.errors[0]);
 
             done();
         });
