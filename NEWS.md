@@ -1,8 +1,12 @@
 # Changelog
 
-## 2.65.1
+## 2.66.0
 
-Released 2016-mm-dd
+Released 2016-07-18
+
+Announcements:
+ - Available new endpoint to check user analyses.
+ - Upgrades camshaft to [0.37.1](https://github.com/CartoDB/camshaft/releases/tag/0.37.1).
 
 
 ## 2.65.0
