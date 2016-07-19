@@ -50,14 +50,14 @@ describe('turbo-carto error cases', function() {
     });
 
     it('should return invalid number of ramp error', function(done) {
-        this.testClient = new TestClient(makeMapconfig('ramp([pop_max], (8,24,96), (8,24,96,128))'));
+        this.testClient = new TestClient(makeMapconfig('ramp([pop_max], 8, 96, 3, (8,24,96,128))'));
         this.testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroup) {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
             assert.equal(layergroup.errors.length, 1);
-            assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/));
-            assert.ok(layergroup.errors[0].match(/invalid\sramp\slength/i));
+            assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/), layergroup.errors[0]);
+            assert.ok(layergroup.errors[0].match(/invalid\sramp\slength/i), layergroup.errors[0]);
 
             done();
         });

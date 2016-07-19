@@ -287,4 +287,97 @@ describe('turbo-carto regressions', function() {
         });
     });
 
+    var scenarios = [
+        {
+            desc: 'numeric datasource',
+            cartocss: [
+                "#points {",
+                "  marker-fill: ramp([scalerank], colorbrewer(Reds), category);",
+                "}"
+            ].join('\n'),
+            expected: [
+                '#points {',
+                '  marker-fill: #fee5d9;',
+                '  [ scalerank = 6 ] {',
+                '    marker-fill: #fcae91',
+                '  }',
+                '  [ scalerank = 8 ] {',
+                '    marker-fill: #fb6a4a',
+                '  }',
+                '  [ scalerank = 4 ] {',
+                '    marker-fill: #de2d26',
+                '  }',
+                '  [ scalerank = 10 ] {',
+                '    marker-fill: #a50f15',
+                '  }',
+                '}',
+            ].join('\n')
+        },
+        {
+            desc: 'string datasource',
+            cartocss: [
+                "#points {",
+                "  marker-fill: ramp([adm0name], colorbrewer(Reds), category);",
+                "}"
+            ].join('\n'),
+            expected: [
+                '#points {',
+                '  marker-fill: #fee5d9;',
+                '  [ adm0name = "Russia" ] {',
+                '    marker-fill: #fcae91',
+                '  }',
+                '  [ adm0name = "China" ] {',
+                '    marker-fill: #fb6a4a',
+                '  }',
+                '  [ adm0name = "Brazil" ] {',
+                '    marker-fill: #de2d26',
+                '  }',
+                '  [ adm0name = "Canada" ] {',
+                '    marker-fill: #a50f15',
+                '  }',
+                '}',
+            ].join('\n')
+        },
+        {
+            desc: 'numeric manual',
+            cartocss: [
+                "#points {",
+                "  marker-fill: ramp([scalerank], colorbrewer(Reds), (-1, 6, 8, 4, 10), category);",
+                "}"
+            ].join('\n'),
+            expected: [
+                '#points {',
+                '  marker-fill: #fee5d9;',
+                '  [ scalerank = 6 ] {',
+                '    marker-fill: #fcae91',
+                '  }',
+                '  [ scalerank = 8 ] {',
+                '    marker-fill: #fb6a4a',
+                '  }',
+                '  [ scalerank = 4 ] {',
+                '    marker-fill: #de2d26',
+                '  }',
+                '  [ scalerank = 10 ] {',
+                '    marker-fill: #a50f15',
+                '  }',
+                '}',
+            ].join('\n')
+        }
+    ];
+
+    scenarios.forEach(function(scenario) {
+        it('category ramps should use original type: ' + scenario.desc, function(done) {
+            var mapConfig = makeMapconfig('SELECT * FROM populated_places_simple_reduced', scenario.cartocss);
+            this.testClient = new TestClient(mapConfig);
+            this.testClient.getLayergroup(function(err, layergroup) {
+                assert.ok(!err, err);
+
+                assert.ok(layergroup.hasOwnProperty('layergroupid'));
+                assert.deepEqual(layergroup.metadata.layers[0].meta.cartocss, scenario.expected);
+
+                done();
+            });
+        });
+    });
+
 });
