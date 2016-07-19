@@ -37,7 +37,7 @@
     "request": "~2.62.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
-    "turbo-carto": "0.14.0",
+    "turbo-carto": "0.15.0",
     "underscore": "~1.6.0",
     "windshaft": "2.4.0"
   },
