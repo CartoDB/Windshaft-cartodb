@@ -28,7 +28,7 @@
     "dot": "~1.0.2",
     "express": "~4.13.3",
     "fastly-purge": "~1.0.1",
-    "log4js": "https://github.com/CartoDB/log4js-node/tarball/cdb",
+    "log4js": "cartodb/log4js-node#cdb",
     "lru-cache": "2.6.5",
     "lzma": "~2.3.2",
     "node-statsd": "~0.0.7",
