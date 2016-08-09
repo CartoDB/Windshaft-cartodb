@@ -15,8 +15,7 @@ before_install:
   - sudo apt-add-repository --yes ppa:cartodb/postgresql-9.5
   - sudo apt-add-repository --yes ppa:cartodb/gis
   - sudo apt-get update
-  - sudo apt-get install -q --force-yes postgresql-9.5-postgis-2.2
-  - sudo apt-get install -q postgresql-plpython-9.5
+  - sudo apt-get install -q --force-yes postgresql-9.5-postgis-2.2 postgresql-plpython-9.5
   - echo -e "local\tall\tall\ttrust\nhost\tall\tall\t127.0.0.1/32\ttrust\nhost\tall\tall\t::1/128\ttrust" |sudo tee /etc/postgresql/9.5/main/pg_hba.conf
   - sudo service postgresql restart
   - createdb template_postgis
