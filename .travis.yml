@@ -9,7 +9,6 @@ addons:
 before_install:
   - npm install -g npm@2
   - lsb_release -a
-  - sudo mv /etc/apt/sources.list.d/pgdg-source.list* /tmp
   - sudo apt-get -qq purge postgis* postgresql*
   - sudo rm -Rf /var/lib/postgresql /etc/postgresql
   - sudo apt-add-repository --yes ppa:cartodb/postgresql-9.5
