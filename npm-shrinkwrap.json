@@ -80,7 +80,7 @@
         },
         "type-is": {
           "version": "1.6.13",
-          "from": "type-is@>=1.6.6 <1.7.0",
+          "from": "type-is@>=1.6.10 <1.7.0",
           "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.6.13.tgz",
           "dependencies": {
             "media-typer": {
@@ -612,7 +612,7 @@
           "dependencies": {
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@1.0.0",
+              "from": "unpipe@>=1.0.0 <1.1.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
@@ -993,7 +993,7 @@
         },
         "mime-types": {
           "version": "2.1.11",
-          "from": "mime-types@>=2.1.2 <2.2.0",
+          "from": "mime-types@>=2.1.11 <2.2.0",
           "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.11.tgz",
           "dependencies": {
             "mime-db": {
@@ -1282,19 +1282,19 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "2.4.0",
-      "from": "windshaft@2.4.0",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-2.4.0.tgz",
+      "version": "2.4.2",
+      "from": "windshaft@2.4.2",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-2.4.2.tgz",
       "dependencies": {
         "abaculus": {
-          "version": "1.1.0-cdb5",
-          "from": "https://github.com/CartoDB/abaculus/tarball/1.1.0-cdb5",
-          "resolved": "https://github.com/CartoDB/abaculus/tarball/1.1.0-cdb5"
+          "version": "1.1.0-cdb7",
+          "from": "cartodb/abaculus#1.1.0-cdb7",
+          "resolved": "git://github.com/cartodb/abaculus.git#49e73cf3dbc023af5cb575dffb09384907dc7ed1"
         },
         "canvas": {
           "version": "1.2.7-cdb1",
-          "from": "https://github.com/CartoDB/node-canvas/tarball/1.2.7-cdb1",
-          "resolved": "https://github.com/CartoDB/node-canvas/tarball/1.2.7-cdb1",
+          "from": "cartodb/node-canvas#1.2.7-cdb1",
+          "resolved": "git://github.com/cartodb/node-canvas.git#f17f99d1bf757c230cda2169f1b4a94fd6eff97d",
           "dependencies": {
             "nan": {
               "version": "1.9.0",
@@ -1305,8 +1305,8 @@
         },
         "carto": {
           "version": "0.15.1-cdb1",
-          "from": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb2",
-          "resolved": "https://github.com/CartoDB/carto/tarball/0.15.1-cdb2",
+          "from": "cartodb/carto#0.15.1-cdb2",
+          "resolved": "git://github.com/cartodb/carto.git#673cf381215948269827052afa152e485b01e2f0",
           "dependencies": {
             "mapnik-reference": {
               "version": "6.0.5",
@@ -3140,15 +3140,15 @@
                       "from": "has-unicode@>=2.0.0 <3.0.0",
                       "resolved": "https://registry.npmjs.org/has-unicode/-/has-unicode-2.0.0.tgz"
                     },
-                    "hawk": {
-                      "version": "3.1.3",
-                      "from": "hawk@>=3.1.3 <3.2.0",
-                      "resolved": "https://registry.npmjs.org/hawk/-/hawk-3.1.3.tgz"
-                    },
                     "hoek": {
                       "version": "2.16.3",
                       "from": "hoek@>=2.0.0 <3.0.0",
                       "resolved": "https://registry.npmjs.org/hoek/-/hoek-2.16.3.tgz"
+                    },
+                    "hawk": {
+                      "version": "3.1.3",
+                      "from": "hawk@>=3.1.3 <3.2.0",
+                      "resolved": "https://registry.npmjs.org/hawk/-/hawk-3.1.3.tgz"
                     },
                     "http-signature": {
                       "version": "1.1.1",
@@ -3285,15 +3285,15 @@
                       "from": "ms@0.7.1",
                       "resolved": "https://registry.npmjs.org/ms/-/ms-0.7.1.tgz"
                     },
-                    "node-uuid": {
-                      "version": "1.4.7",
-                      "from": "node-uuid@>=1.4.7 <1.5.0",
-                      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
-                    },
                     "nopt": {
                       "version": "3.0.6",
                       "from": "nopt@>=3.0.1 <3.1.0",
                       "resolved": "https://registry.npmjs.org/nopt/-/nopt-3.0.6.tgz"
+                    },
+                    "node-uuid": {
+                      "version": "1.4.7",
+                      "from": "node-uuid@>=1.4.7 <1.5.0",
+                      "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.7.tgz"
                     },
                     "npmlog": {
                       "version": "2.0.3",
@@ -3305,15 +3305,15 @@
                       "from": "oauth-sign@>=0.8.1 <0.9.0",
                       "resolved": "https://registry.npmjs.org/oauth-sign/-/oauth-sign-0.8.2.tgz"
                     },
-                    "once": {
-                      "version": "1.3.3",
-                      "from": "once@>=1.3.0 <2.0.0",
-                      "resolved": "https://registry.npmjs.org/once/-/once-1.3.3.tgz"
-                    },
                     "path-is-absolute": {
                       "version": "1.0.0",
                       "from": "path-is-absolute@>=1.0.0 <2.0.0",
                       "resolved": "https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.0.tgz"
+                    },
+                    "once": {
+                      "version": "1.3.3",
+                      "from": "once@>=1.3.0 <2.0.0",
+                      "resolved": "https://registry.npmjs.org/once/-/once-1.3.3.tgz"
                     },
                     "pinkie": {
                       "version": "2.0.4",
@@ -3360,15 +3360,15 @@
                       "from": "sntp@>=1.0.0 <2.0.0",
                       "resolved": "https://registry.npmjs.org/sntp/-/sntp-1.0.9.tgz"
                     },
-                    "stringstream": {
-                      "version": "0.0.5",
-                      "from": "stringstream@>=0.0.4 <0.1.0",
-                      "resolved": "https://registry.npmjs.org/stringstream/-/stringstream-0.0.5.tgz"
-                    },
                     "string_decoder": {
                       "version": "0.10.31",
                       "from": "string_decoder@>=0.10.0 <0.11.0",
                       "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz"
+                    },
+                    "stringstream": {
+                      "version": "0.0.5",
+                      "from": "stringstream@>=0.0.4 <0.1.0",
+                      "resolved": "https://registry.npmjs.org/stringstream/-/stringstream-0.0.5.tgz"
                     },
                     "strip-ansi": {
                       "version": "3.0.1",
@@ -3543,9 +3543,9 @@
           }
         },
         "mapnik": {
-          "version": "1.4.15-cdb8",
-          "from": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb8",
-          "resolved": "https://github.com/CartoDB/node-mapnik/tarball/1.4.15-cdb8",
+          "version": "1.4.15-cdb10",
+          "from": "https://s3.amazonaws.com/cartodb-node-binary/mapnik/v1.4.15-cdb10/1.4.15-cdb10.tgz",
+          "resolved": "https://s3.amazonaws.com/cartodb-node-binary/mapnik/v1.4.15-cdb10/1.4.15-cdb10.tgz",
           "dependencies": {
             "nan": {
               "version": "1.2.0",
@@ -3962,14 +3962,14 @@
           }
         },
         "tilelive-bridge": {
-          "version": "1.3.0-cdb5",
-          "from": "https://github.com/CartoDB/tilelive-bridge/tarball/1.3.0-cdb5",
-          "resolved": "https://github.com/CartoDB/tilelive-bridge/tarball/1.3.0-cdb5",
+          "version": "1.3.0-cdb7",
+          "from": "cartodb/tilelive-bridge#1.3.0-cdb7",
+          "resolved": "git://github.com/cartodb/tilelive-bridge.git#36e4dc3b1bd8094ebc1da6446509a6f5334a3cc9",
           "dependencies": {
             "mapnik-pool": {
-              "version": "0.1.1-cdb5",
-              "from": "https://github.com/CartoDB/mapnik-pool/tarball/0.1.1-cdb5",
-              "resolved": "https://github.com/CartoDB/mapnik-pool/tarball/0.1.1-cdb5",
+              "version": "0.1.1-cdb7",
+              "from": "cartodb/mapnik-pool#0.1.1-cdb7",
+              "resolved": "git://github.com/cartodb/mapnik-pool.git#2d5c709d1351aa583e6e6138a2a08aba5da287c4",
               "dependencies": {
                 "generic-pool": {
                   "version": "2.1.1",
@@ -3986,9 +3986,9 @@
           }
         },
         "tilelive-mapnik": {
-          "version": "0.6.15-cdb7",
-          "from": "https://github.com/CartoDB/tilelive-mapnik/tarball/0.6.15-cdb7",
-          "resolved": "https://github.com/CartoDB/tilelive-mapnik/tarball/0.6.15-cdb7",
+          "version": "0.6.15-cdb9",
+          "from": "cartodb/tilelive-mapnik#0.6.15-cdb9",
+          "resolved": "git://github.com/cartodb/tilelive-mapnik.git#925067ed5537d73b5e6cc6067f2708172a774a42",
           "dependencies": {
             "generic-pool": {
               "version": "2.1.1",

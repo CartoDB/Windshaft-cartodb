@@ -4,6 +4,9 @@
 
 Released 2016-mm-dd
 
+Announcements:
+ - Upgrades windshaft to [2.4.2](https://github.com/CartoDB/camshaft/releases/tag/2.4.2).
+
 
 ## 2.69.0
 
