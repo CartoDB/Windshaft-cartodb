@@ -22,10 +22,10 @@ $.ajax({
   type: 'POST',
   dataType: 'json',
   contentType: 'application/json',
-  url: 'https://{username}.cartodb.com/api/v1/map',
+  url: 'https://{username}.carto.com/api/v1/map',
   data: JSON.stringify(mapconfig),
   success: function(data) {
-    var templateUrl = 'https://{username}.cartodb.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
+    var templateUrl = 'https://{username}.carto.com/api/v1/map/' + data.layergroupid + '/{z}/{x}/{y}.png'
     console.log(templateUrl);
   }
 })
@@ -33,7 +33,7 @@ $.ajax({
 
 ## Named Maps
 
-Let's create a Named Map using some private tables in a CartoDB account.
+Let's create a Named Map using some private tables in a CARTO account.
 The following map config sets up a map of European countries that have a white fill color:
 
 ```javascript
@@ -56,12 +56,12 @@ The following map config sets up a map of European countries that have a white f
 }
 ```
 
-The MapConfig needs to be sent to CartoDB's Map API using an authenticated call. Here we will use a command line tool called `curl`. For more info about this tool, see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl), or type `man curl` in bash. Using `curl`, and storing the config from above in a file `MapConfig.json`, the call would look like:
+The MapConfig needs to be sent to CARTO's Map API using an authenticated call. Here we will use a command line tool called `curl`. For more info about this tool, see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl), or type `man curl` in bash. Using `curl`, and storing the config from above in a file `MapConfig.json`, the call would look like:
 
 #### Call
 
 ```bash
-curl 'https://{username}.cartodb.com/api/v1/map/named?api_key={api_key}' -H 'Content-Type: application/json' -d @mapconfig.json
+curl 'https://{username}.carto.com/api/v1/map/named?api_key={api_key}' -H 'Content-Type: application/json' -d @mapconfig.json
 ```
 
 To get the `URL` to fetch the tiles you need to instantiate the map, where `template_id` is the template name from the previous response.
@@ -69,7 +69,7 @@ To get the `URL` to fetch the tiles you need to instantiate the map, where `temp
 #### Call
 
 ```bash
-curl -X POST 'https://{username}.cartodb.com/api/v1/map/named/{template_id}' -H 'Content-Type: application/json'
+curl -X POST 'https://{username}.carto.com/api/v1/map/named/{template_id}' -H 'Content-Type: application/json'
 ```
 
 The response will return JSON with properties for the `layergroupid`, the timestamp (`last_updated`) of the last data modification and some key/value pairs with `metadata` for the `layers`.
@@ -96,5 +96,5 @@ Note: all `layers` in `metadata` will always have a `type` string and a `meta` d
 You can use the `layergroupid` to instantiate a URL template for accessing tiles on the client. Here we use the `layergroupid` from the example response above in this URL template:
 
 ```bash
-https://{username}.cartodb.com/api/v1/map/{layergroupid}/{z}/{x}/{y}.png
+https://{username}.carto.com/api/v1/map/{layergroupid}/{z}/{x}/{y}.png
 ```

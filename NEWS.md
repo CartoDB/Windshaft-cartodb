@@ -1,5 +1,355 @@
 # Changelog
 
+## 2.71.0
+
+Released 2016-08-17
+
+Announcements:
+ - Upgrades windshaft to [2.5.0](https://github.com/CartoDB/windshaft/releases/tag/2.5.0).
+
+
+## 2.70.0
+
+Released 2016-08-16
+
+Announcements:
+ - Upgrades camshaft to [0.40.0](https://github.com/CartoDB/camshaft/releases/tag/0.40.0).
+
+
+## 2.69.1
+
+Released 2016-08-12
+
+Announcements:
+ - Upgrades windshaft to [2.4.2](https://github.com/CartoDB/windshaft/releases/tag/2.4.2).
+
+
+## 2.69.0
+
+Released 2016-08-11
+
+Announcements:
+ - Upgrades camshaft to [0.39.0](https://github.com/CartoDB/camshaft/releases/tag/0.39.0).
+
+
+## 2.68.0
+
+Released 2016-07-21
+
+Announcements:
+ - Upgrades turbo-carto to [0.16.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.16.0).
+
+
+## 2.67.1
+
+Released 2016-07-21
+
+Announcements:
+ - Upgrades camshaft to [0.38.1](https://github.com/CartoDB/camshaft/releases/tag/0.38.1).
+
+
+## 2.67.0
+
+Released 2016-07-21
+
+Announcements:
+ - Upgrades camshaft to [0.38.0](https://github.com/CartoDB/camshaft/releases/tag/0.38.0).
+
+
+## 2.66.2
+
+Released 2016-07-20
+
+Announcements:
+ - Upgrades turbo-carto to [0.15.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.15.1).
+
+
+## 2.66.1
+
+Released 2016-07-20
+
+Announcements:
+ - Upgrades turbo-carto to [0.15.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.15.0).
+
+
+## 2.66.0
+
+Released 2016-07-18
+
+Announcements:
+ - Available new endpoint to check user analyses.
+ - Upgrades camshaft to [0.37.1](https://github.com/CartoDB/camshaft/releases/tag/0.37.1).
+
+
+## 2.65.0
+
+Released 2016-07-15
+
+Announcements:
+ - Upgrades cartodb-redis to 0.13.1.
+ - Upgrades camshaft to [0.37.0](https://github.com/CartoDB/camshaft/releases/tag/0.37.0).
+
+
+## 2.64.0
+
+Released 2016-07-12
+
+Announcements:
+ - Upgrades camshaft to [0.36.0](https://github.com/CartoDB/camshaft/releases/tag/0.36.0).
+
+
+## 2.63.0
+
+Released 2016-07-11
+
+Enhancements:
+ - Return last error message for failed nodes on map creation.
+
+Announcements:
+ - Upgrades camshaft to [0.35.0](https://github.com/CartoDB/camshaft/releases/tag/0.35.0).
+ - Upgrades lzma to 2.3.2.
+
+
+## 2.62.0
+
+Released 2016-07-07
+
+Announcements:
+ - Upgrades camshaft to [0.34.0](https://github.com/CartoDB/camshaft/releases/tag/0.34.0).
+
+
+## 2.61.2
+
+Released 2016-07-07
+
+Announcements:
+ - Limit analysis creation concurrency.
+ - Upgrades camshaft to [0.33.3](https://github.com/CartoDB/camshaft/releases/tag/0.33.3).
+
+
+## 2.61.1
+
+Released 2016-07-06
+
+Enhancements:
+ - Dataviews use mapconfig to store/retrieve their queries instead of instantiating analyses again.
+
+
+## 2.61.0
+
+Released 2016-07-06
+
+Enhancements:
+ - More clear turbo-carto error messages: no context in message.
+ - Return multiple turbo-carto errors #541.
+
+Announcements:
+ - Upgrades turbo-carto to [0.14.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.14.0).
+ - Upgrades camshaft to [0.33.2](https://github.com/CartoDB/camshaft/releases/tag/0.33.2).
+
+
+## 2.60.0
+
+Released 2016-07-05
+
+Announcements:
+ - Upgrades camshaft to [0.32.0](https://github.com/CartoDB/camshaft/releases/tag/0.32.0).
+
+
+## 2.59.1
+
+Released 2016-07-05
+
+Announcements:
+ - Upgrades camshaft to [0.31.0](https://github.com/CartoDB/camshaft/releases/tag/0.31.0).
+
+
+## 2.59.0
+
+Released 2016-07-05
+
+Announcements:
+ - Upgrades camshaft to [0.30.0](https://github.com/CartoDB/camshaft/releases/tag/0.30.0).
+
+
+## 2.58.0
+
+Released 2016-07-05
+
+Announcements:
+ - Upgrades camshaft to [0.29.2](https://github.com/CartoDB/camshaft/releases/tag/0.29.2).
+
+Bug fixes:
+ - Return full list of nodes in response metadata.
+
+
+## 2.57.0
+
+Released 2016-07-04
+
+Announcements:
+ - Upgrades camshaft to [0.28.1](https://github.com/CartoDB/camshaft/releases/tag/0.28.1).
+
+
+## 2.56.0
+
+Released 2016-07-04
+
+Announcements:
+ - Upgrades camshaft to [0.27.0](https://github.com/CartoDB/camshaft/releases/tag/0.27.0).
+
+
+## 2.55.0
+
+Released 2016-07-04
+
+Enhancements:
+ - Skip null values for quantification methods generating null values.
+
+Announcements:
+ - Uses new configuration for camshaft: analysis node has an associated user/owner.
+ - Upgrades camshaft to [0.26.0](https://github.com/CartoDB/camshaft/releases/tag/0.26.0).
+
+
+## 2.54.0
+
+Released 2016-06-30
+
+Improvements:
+ - Errors with context: replaced `turbo-carto` error type by `layer` type.
+
+Announcements:
+ - Upgrades camshaft to [0.23.0](https://github.com/CartoDB/camshaft/releases/tag/0.23.0)
+
+
+## 2.53.5
+
+Released 2016-06-29
+
+Bug fixes:
+ - Uses node list so identical nodes are not de-duplicated and can be used with different ids #528.
+
+
+## 2.53.4
+
+Released 2016-06-28
+
+Announcements:
+ - Upgrades camshaft to [0.22.4](https://github.com/CartoDB/camshaft/releases/tag/0.22.4)
+
+
+## 2.53.3
+
+Released 2016-06-28
+
+Announcements:
+ - Upgrades camshaft to [0.22.3](https://github.com/CartoDB/camshaft/releases/tag/0.22.3)
+
+
+## 2.53.2
+
+Released 2016-06-28
+
+Announcements:
+ - Upgrades camshaft to [0.22.2](https://github.com/CartoDB/camshaft/releases/tag/0.22.2)
+
+
+## 2.53.1
+
+Released 2016-06-28
+
+Announcements:
+ - Upgrades camshaft to [0.22.1](https://github.com/CartoDB/camshaft/releases/tag/0.22.1)
+
+
+## 2.53.0
+
+Released 2016-06-24
+
+Announcements:
+ - Upgrades camshaft to [0.22.0](https://github.com/CartoDB/camshaft/releases/tag/0.22.0)
+
+
+## 2.52.0
+
+Released 2016-06-23
+
+Announcements:
+ - Upgrades camshaft to [0.21.0](https://github.com/CartoDB/camshaft/releases/tag/0.21.0)
+
+
+## 2.51.0
+
+Released 2016-06-21
+
+Enhancements:
+ - Split turbo-carto adapter substitutions tokens query.
+ - Now errors with context have the same schema. #519
+ - Responses with error now return the layer-id to give more info to the user.
+
+Announcements:
+ - Upgrades camshaft to [0.20.0](https://github.com/CartoDB/camshaft/releases/tag/0.20.0)
+
+
+## 2.50.0
+
+Released 2016-06-21
+
+Bug fixes:
+ - Pixel size query for turbo-carto adapter using radians and degrees instead of meters.
+
+New features:
+ - Add support for min, max, and avg operations in aggregation dataview #513.
+
+Announcements:
+ - Upgrades camshaft to [0.19.0](https://github.com/CartoDB/camshaft/releases/tag/0.19.0)
+
+
+## 2.49.1
+
+Released 2016-06-20
+
+Announcements:
+ - Upgrades turbo-carto to [0.12.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.12.1).
+
+Bug fixes:
+ - Use an empty array as default value for falsy ramps #512.
+ - Use the_geom for intermediate dataviews #511.
+ - Pick last update time for layergroupid from analyses results #510.
+
+
+## 2.49.0
+
+Released 2016-06-15
+
+Announcements:
+ - Upgrades camshaft to [0.17.1](https://github.com/CartoDB/camshaft/releases/tag/0.17.1)
+
+
+## 2.48.0
+
+Released 2016-06-14
+
+Announcements:
+ - Upgrades camshaft to [0.15.1](https://github.com/CartoDB/camshaft/releases/tag/0.15.1)
+ - Responses with more context info if analysis or turbo-carto fails during map creation.
+
+## 2.47.1
+
+Released 2016-06-13
+
+Announcements:
+ - Upgrades camshaft to [0.14.1](https://github.com/CartoDB/camshaft/releases/tag/0.14.1)
+
+
+## 2.47.0
+
+Released 2016-06-10
+
+Announcements:
+ - Upgrades camshaft to [0.14.0](https://github.com/CartoDB/camshaft/releases/tag/0.14.0)
+
+
 ## 2.46.0
 
 Released 2016-06-09

@@ -124,8 +124,8 @@ describe('named maps provider cache', function() {
                         getNamedTile({ statusCode: 404 }, function(err, res) {
                             assert.ok(!err);
                             assert.deepEqual(
-                                JSON.parse(res.body),
-                                { errors: ["Template 'template_with_color' of user 'localhost' not found"] }
+                                JSON.parse(res.body).errors,
+                                ["Template 'template_with_color' of user 'localhost' not found"]
                             );
 
                             // add template again so it's clean in afterEach

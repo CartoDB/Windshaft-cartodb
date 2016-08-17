@@ -138,11 +138,9 @@ describe('blend http fallback', function() {
         testClient.getTileLayer(mapConfig, tileRequest, expectedResponse, function(err, res) {
             assert.ok(!err);
             var parsedBody = JSON.parse(res.body);
-            assert.deepEqual(parsedBody, {
-                errors: [
-                    "Unable to fetch http tile: http://127.0.0.1:8033/error404/1/0/0.png [404]"
-                ]
-            });
+            assert.deepEqual(parsedBody.errors, [
+                "Unable to fetch http tile: http://127.0.0.1:8033/error404/1/0/0.png [404]"
+            ]);
             done();
         });
     });

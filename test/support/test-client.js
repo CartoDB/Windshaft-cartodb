@@ -24,6 +24,48 @@ function TestClient(mapConfig, apiKey) {
 
 module.exports = TestClient;
 
+module.exports.RESPONSE = {
+    ERROR: {
+        status: 400,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    }
+};
+
+module.exports.CARTOCSS = {
+    POINTS: [
+        '#layer{',
+        '  marker-placement: point;',
+        '  marker-allow-overlap: true;',
+        '  marker-line-opacity: 0.2;',
+        '  marker-line-width: 0.5;',
+        '  marker-opacity: 1;',
+        '  marker-width: 5;',
+        '  marker-fill: red;',
+        '}'
+    ].join('\n'),
+
+    LINES: [
+        '#lines {',
+        '  line-color: black;',
+        '  line-width: 1;',
+        '  line-opacity: 1;',
+        '}'
+    ].join('\n'),
+
+    POLYGONS: [
+        '#layer {',
+        '  polygon-fill: red;',
+        '  polygon-opacity: 0.6;',
+        '  polygon-opacity: 0.7;',
+        '  line-color: #FFF;',
+        '  line-width: 0.5;',
+        '  line-opacity: 1;',
+        '}'
+    ].join('\n')
+};
+
 TestClient.prototype.getWidget = function(widgetName, params, callback) {
     var self = this;
 

@@ -112,7 +112,7 @@ describe('server', function() {
             }
         };
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, expectedResponse, function(err, res) {
-            assert.deepEqual(JSON.parse(res.body), {"errors":["Tileset has no interactivity"]});
+            assert.deepEqual(JSON.parse(res.body).errors, ["Tileset has no interactivity"]);
             done();
         });
     });
