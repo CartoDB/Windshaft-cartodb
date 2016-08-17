@@ -1,8 +1,11 @@
 # Changelog
 
-## 2.70.1
+## 2.71.0
 
-Released 2016-mm-dd
+Released 2016-08-17
+
+Announcements:
+ - Upgrades windshaft to [2.5.0](https://github.com/CartoDB/windshaft/releases/tag/2.5.0).
 
 
 ## 2.70.0
@@ -18,7 +21,7 @@ Announcements:
 Released 2016-08-12
 
 Announcements:
- - Upgrades windshaft to [2.4.2](https://github.com/CartoDB/camshaft/releases/tag/2.4.2).
+ - Upgrades windshaft to [2.4.2](https://github.com/CartoDB/windshaft/releases/tag/2.4.2).
 
 
 ## 2.69.0
