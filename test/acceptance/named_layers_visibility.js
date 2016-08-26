@@ -31,6 +31,15 @@ describe('named_layers', function() {
         }
     };
 
+    var notVisibileLayer = {
+        type: 'cartodb',
+        options: {
+            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
+            cartocss: '#layer { marker-fill: <%= color %>; }',
+            cartocss_version: '2.3.0',
+            visibility: false
+        }
+    };
 
     var templateName = 'valid_template';
     var template = {
@@ -48,7 +57,7 @@ describe('named_layers', function() {
         layergroup: {
             layers: [
                 wadusLayer,
-                wadusLayer
+                notVisibileLayer
             ]
         }
     };
@@ -61,17 +70,6 @@ describe('named_layers', function() {
             auth_tokens: []
         }
     };
-
-    var notVisibileLayer = {
-        type: 'cartodb',
-        options: {
-            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
-            cartocss: '#layer { marker-fill: <%= color %>; }',
-            cartocss_version: '2.3.0',
-            visibility: false
-        }
-    };
-
 
     var keysToDelete;
 
@@ -108,18 +106,7 @@ describe('named_layers', function() {
                 method: 'open'
             },
             layergroup: {
-                layers: [
-                    namedMapLayer,
-                    {
-                        type: 'mapnik',
-                        options: {
-                            sql: 'select * from test_table_private_1',
-                            cartocss: '#layer { marker-fill: #cc3300; }',
-                            cartocss_version: '2.3.0'
-                        }
-                    },
-                    notVisibileLayer
-                ]
+                layers: [ namedMapLayer ]
             }
         };
 
@@ -156,11 +143,13 @@ describe('named_layers', function() {
                 }
 
                 var parsedBody = JSON.parse(response.body);
+
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
 
+                assert.equal(parsedBody.metadata.layers.length, 1);
+                assert.equal(parsedBody.metadata.layers[0].id, 'layer0');
                 assert.equal(parsedBody.metadata.layers[0].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
