@@ -31,6 +31,16 @@ describe('named_layers', function() {
         }
     };
 
+    var visibileLayer = {
+        type: 'cartodb',
+        options: {
+            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
+            cartocss: '#layer { marker-fill: <%= color %>; }',
+            cartocss_version: '2.3.0',
+            visibility: true,
+        }
+    };
+
     var notVisibileLayer = {
         type: 'cartodb',
         options: {
@@ -57,6 +67,7 @@ describe('named_layers', function() {
         layergroup: {
             layers: [
                 wadusLayer,
+                visibileLayer,
                 notVisibileLayer
             ]
         }
@@ -147,9 +158,12 @@ describe('named_layers', function() {
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
 
-                assert.equal(parsedBody.metadata.layers.length, 1);
+                assert.equal(parsedBody.metadata.layers.length, 2);
+
                 assert.equal(parsedBody.metadata.layers[0].id, 'layer0');
                 assert.equal(parsedBody.metadata.layers[0].type, 'mapnik');
+                assert.equal(parsedBody.metadata.layers[1].id, 'layer1');
+                assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
