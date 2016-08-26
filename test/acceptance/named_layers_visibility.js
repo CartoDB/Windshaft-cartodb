@@ -31,26 +31,6 @@ describe('named_layers', function() {
         }
     };
 
-    var visibileLayer = {
-        type: 'cartodb',
-        options: {
-            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
-            cartocss: '#layer { marker-fill: <%= color %>; }',
-            cartocss_version: '2.3.0',
-            visibility: true,
-        }
-    };
-
-    var notVisibileLayer = {
-        type: 'cartodb',
-        options: {
-            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
-            cartocss: '#layer { marker-fill: <%= color %>; }',
-            cartocss_version: '2.3.0',
-            visibility: false
-        }
-    };
-
     var templateName = 'valid_template';
     var template = {
         version: '0.0.1',
@@ -67,9 +47,14 @@ describe('named_layers', function() {
         layergroup: {
             layers: [
                 wadusLayer,
-                visibileLayer,
-                notVisibileLayer
+                wadusLayer,
+                wadusLayer
             ]
+        },
+        layer_visibility: {
+            // "0" = true by default
+            "1": false,
+            "2": true
         }
     };
 
@@ -99,7 +84,7 @@ describe('named_layers', function() {
         });
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
         templateMaps.delTemplate(username, templateName, function(err) {
             return done(err);

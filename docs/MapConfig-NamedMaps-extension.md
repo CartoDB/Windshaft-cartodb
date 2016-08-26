@@ -32,13 +32,6 @@ This extension introduces a new layer type so it's possible to use a Named Map b
         },
 
         // OPTIONAL
-        // object, which own properties can be a layer id or the corresponding layer index of the layergroup.
-        // the values for these keys can be true or false and indicates if the layer is available (or not) to instantiate the named map.
-        layer_visibility: {
-          [ {layer.id} | {layerIndex} ]: [ true | false ];
-        },
-
-        // OPTIONAL
         // string array, the authorized tokens in case the Named Map has auth method set to `token`
         // See https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/Map-API.md#named-maps-1 for more details
         auth_tokens: [
