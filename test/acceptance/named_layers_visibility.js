@@ -30,6 +30,15 @@ describe('named_layers', function() {
             cartocss_version: '2.3.0'
         }
     };
+    var wadusLayerWithId = {
+        type: 'cartodb',
+        id: 'layer3',
+        options: {
+            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
+            cartocss: '#layer { marker-fill: <%= color %>; }',
+            cartocss_version: '2.3.0'
+        }
+    };
 
     var templateName = 'valid_template';
     var template = {
@@ -48,13 +57,15 @@ describe('named_layers', function() {
             layers: [
                 wadusLayer,
                 wadusLayer,
-                wadusLayer
+                wadusLayer,
+                wadusLayerWithId
             ]
         },
         layer_visibility: {
             // "0" = true by default
             "1": false,
-            "2": true
+            "2": true,
+            "layer3": false
         }
     };
 
