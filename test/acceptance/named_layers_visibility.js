@@ -86,6 +86,14 @@ describe('layers visibility for previews', function() {
         },
         layers: threeLayerPointDistintColor
     }, {
+        name: 'preview_layers_orange',
+        layerPerview: {
+            '0': false,
+            '1': true,
+            'layer2': false
+        },
+        layers: threeLayerPointDistintColor
+    }, {
         name: 'preview_layers_blue',
         layerPerview: {
             '0': false,
@@ -94,11 +102,11 @@ describe('layers visibility for previews', function() {
         },
         layers: threeLayerPointDistintColor
     }, {
-        name: 'preview_layers_orange',
+        name: 'preview_layers_orange_blue',
         layerPerview: {
             '0': false,
             '1': true,
-            'layer2': false
+            'layer2': true
         },
         layers: threeLayerPointDistintColor
     }];
