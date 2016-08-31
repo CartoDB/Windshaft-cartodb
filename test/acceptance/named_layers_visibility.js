@@ -1,3 +1,4 @@
+var step = require('step');
 var test_helper = require('../support/test_helper');
 
 var assert = require('../support/assert');
@@ -5,211 +6,154 @@ var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 
-var LayergroupToken = require('../support/layergroup-token');
-
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
+var mapnik = require('windshaft').mapnik;
 
-var step = require('step');
+var IMAGE_TOLERANCE = 20;
 
-describe('named_layers', function() {
+describe('layers visibility for previews', function() {
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
-
     var templateMaps = new TemplateMaps(redisPool, {
         max_user_templates: global.environment.maxUserTemplates
     });
 
     var username = 'localhost';
 
-    var wadusLayer = {
-        type: 'cartodb',
-        options: {
-            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
-            cartocss: '#layer { marker-fill: <%= color %>; }',
-            cartocss_version: '2.3.0'
-        }
-    };
-    var wadusLayerWithId = {
-        type: 'cartodb',
-        id: 'layer3',
-        options: {
-            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
-            cartocss: '#layer { marker-fill: <%= color %>; }',
-            cartocss_version: '2.3.0'
-        }
-    };
-
-    var templateName = 'valid_template';
-    var template = {
-        version: '0.0.1',
-        name: templateName,
-        auth: {
-            method: 'open'
-        },
-        "placeholders": {
-            "color": {
-                "type": "css_color",
-                "default": "#cc3300"
+    function createLayer (color, layerId) {
+        return {
+            type: 'mapnik',
+            id: layerId,
+            options: {
+                sql: 'select * from populated_places_simple_reduced where cartodb_id % 2 = 1',
+                cartocss: '#layer { marker-fill: ' + color + '; }',
+                cartocss_version: '2.3.0'
             }
-        },
-        layergroup: {
-            layers: [
-                wadusLayer,
-                wadusLayer,
-                wadusLayer,
-                wadusLayerWithId
-            ]
-        },
-        layer_visibility: {
-            // "0" = true by default
-            "1": false,
-            "2": true,
-            "layer3": false
-        }
-    };
+        };
+    }
 
-    var namedMapLayer = {
-        type: 'named',
-        options: {
-            name: templateName,
-            config: {},
-            auth_tokens: []
-        }
-    };
-
-    var keysToDelete;
-
-    beforeEach(function() {
-        keysToDelete = {};
-    });
-
-    afterEach(function(done) {
-        test_helper.deleteRedisKeys(keysToDelete, done);
-    });
-
-    beforeEach(function(done) {
-        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: true};
-        templateMaps.addTemplate(username, template, function(err) {
-            return done(err);
-        });
-    });
-
-    afterEach(function (done) {
-        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
-        templateMaps.delTemplate(username, templateName, function(err) {
-            return done(err);
-        });
-    });
-
-
-    it('should work with visibility tiles', function(done) {
-
-        var namedTilesTemplateName = 'named_tiles_template';
-        var namedTilesTemplate = {
+    function createTemplate(context) {
+        return {
             version: '0.0.1',
-            name: namedTilesTemplateName,
+            name: context.name,
             auth: {
                 method: 'open'
             },
+            view: {
+                bounds: {
+                    west: 0,
+                    south: 0,
+                    east: 45,
+                    north: 45
+                },
+                zoom: 4,
+                center: {
+                    lng: 40,
+                    lat: 20
+                }
+            },
             layergroup: {
-                layers: [ namedMapLayer ]
-            }
+                layers: context.layers
+            },
+            preview_layers: context.layerPerview
         };
+    }
 
-        step(
-            function createTemplate() {
-                templateMaps.addTemplate(username, namedTilesTemplate, this);
-            },
-            function createLayergroup(err) {
-                if (err) {
-                    throw err;
-                }
 
-                var next = this;
-                assert.response(server,
-                    {
-                        url: '/api/v1/map/named/' + namedTilesTemplateName + '?api_key=1234',
-                        method: 'POST',
-                        headers: {
-                            host: 'localhost',
-                            'Content-Type': 'application/json'
-                        }
-                    },
-                    {
-                        status: 200
-                    },
-                    function(res, err) {
-                        next(err, res);
-                    }
-                );
-            },
-            function checkLayergroup(err, response) {
-                if (err) {
-                    throw err;
-                }
+    afterEach(function (done) {
+        test_helper.deleteRedisKeys({
+            'user:localhost:mapviews:global': 5
+        }, done);
+    });
 
-                var parsedBody = JSON.parse(response.body);
+    function previewFixture(version) {
+        return './test/fixtures/previews/populated_places_simple_reduced-' + version + '.png';
+    }
 
-                assert.ok(parsedBody.layergroupid);
-                assert.ok(parsedBody.last_updated);
+    var threeLayerPointDistintColor = [
+        createLayer('red'),
+        createLayer('orange'),
+        createLayer('blue', 'layer2')
+    ];
 
-                assert.equal(parsedBody.metadata.layers.length, 2);
+    var scenarios = [{
+        name: 'preview_layers_red',
+        layerPerview: {
+            '0': true,
+            '1': false,
+            'layer2': false
+        },
+        layers: threeLayerPointDistintColor
+    }, {
+        name: 'preview_layers_blue',
+        layerPerview: {
+            '0': false,
+            '1': false,
+            'layer2': true
+        },
+        layers: threeLayerPointDistintColor
+    }, {
+        name: 'preview_layers_orange',
+        layerPerview: {
+            '0': false,
+            '1': true,
+            'layer2': false
+        },
+        layers: threeLayerPointDistintColor
+    }];
 
-                assert.equal(parsedBody.metadata.layers[0].id, 'layer0');
-                assert.equal(parsedBody.metadata.layers[0].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[1].id, 'layer1');
-                assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
+    scenarios.forEach(function (scenario) {
+        it('should filter layers for template: ' + scenario.name, function (done) {
+            step(
+                function addTemplate () {
+                    var next = this;
+                    var template = createTemplate(scenario);
 
-                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
-                keysToDelete['user:localhost:mapviews:global'] = 5;
+                    templateMaps.addTemplate(username, template, next);
+                },
+                function requestPreview (err) {
+                    assert.ifError(err);
 
-                return parsedBody.layergroupid;
-            },
-            function requestTile(err, layergroupId) {
-                if (err) {
-                    throw err;
-                }
+                    var next = this;
 
-                var next = this;
-                assert.response(server,
-                    {
-                        url: '/api/v1/map/' + layergroupId + '/all/0/0/0.png',
+                    assert.response(server, {
+                        url: '/api/v1/map/static/named/' + scenario.name + '/640/480.png',
                         method: 'GET',
                         headers: {
                             host: 'localhost'
                         },
                         encoding: 'binary'
-                    },
-                    {
+                    }, {
                         status: 200,
                         headers: {
                             'content-type': 'image/png'
                         }
-                    },
-                    function(res, err) {
+                    }, function (res, err) {
                         next(err, res);
-                    }
-                );
-            },
-            function handleTileResponse(err, res) {
-                if (err) {
-                    throw err;
-                }
-                test_helper.checkCache(res);
-                return true;
-            },
-            function deleteTemplate(err) {
-                var next = this;
-                templateMaps.delTemplate(username, namedTilesTemplateName, function(/*delErr*/) {
-                    // ignore deletion error
-                    next(err);
-                });
-            },
-            function finish(err) {
-                done(err);
-            }
-        );
+                    });
+                },
+                function checkPreview (err, res) {
+                    assert.ifError(err);
 
+                    var next = this;
+                    var img = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    var previewFixturePath = previewFixture(scenario.name);
+
+                    assert.imageIsSimilarToFile(img, previewFixturePath, IMAGE_TOLERANCE, next);
+                },
+                function deleteTemplate(err) {
+                    assert.ifError(err);
+
+                    var next = this;
+
+                    templateMaps.delTemplate(username, scenario.name, next);
+                },
+                function finish (err) {
+                    done(err);
+                }
+            );
+        });
     });
+
 });
