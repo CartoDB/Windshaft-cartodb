@@ -73,7 +73,7 @@ The `name` argument defines how to name this "template_name".json. Note that the
       }
     ]
   },
-  "layer_visibility": {
+  "preview_layers": {
     "0": true,
     "layer1": false
   },
