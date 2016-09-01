@@ -22,21 +22,33 @@ describe('layers visibility for previews', function() {
     var username = 'localhost';
 
     function createLayer (color, layerId) {
+        var mod;
+
+        if (color === 'red') {
+            mod = 0;
+        } else if (color === 'orange') {
+            mod = 1;
+        } else if (color === 'blue') {
+            mod = 2;
+        } else {
+            mod = 0;
+        }
+
         return {
             type: 'mapnik',
             id: layerId,
             options: {
-                sql: 'select * from populated_places_simple_reduced where cartodb_id % 2 = 1',
+                sql: 'select * from populated_places_simple_reduced where cartodb_id % 3 = ' + mod,
                 cartocss: '#layer { marker-fill: ' + color + '; }',
                 cartocss_version: '2.3.0'
             }
         };
     }
 
-    function createTemplate(context) {
+    function createTemplate(scenario) {
         return {
             version: '0.0.1',
-            name: context.name,
+            name: scenario.name,
             auth: {
                 method: 'open'
             },
@@ -51,15 +63,14 @@ describe('layers visibility for previews', function() {
                 center: {
                     lng: 40,
                     lat: 20
-                }
+                },
+                preview_layers: scenario.layerPerview
             },
             layergroup: {
-                layers: context.layers
-            },
-            preview_layers: context.layerPerview
+                layers: scenario.layers
+            }
         };
     }
-
 
     afterEach(function (done) {
         test_helper.deleteRedisKeys({
@@ -102,12 +113,44 @@ describe('layers visibility for previews', function() {
         },
         layers: threeLayerPointDistintColor
     }, {
+        name: 'preview_layers_red_orange',
+        layerPerview: {
+            '0': true,
+            '1': true,
+            'layer2': false
+        },
+        layers: threeLayerPointDistintColor
+    }, {
+        name: 'preview_layers_red_blue',
+        layerPerview: {
+            '0': true,
+            '1': false,
+            'layer2': true
+        },
+        layers: threeLayerPointDistintColor
+    }, {
         name: 'preview_layers_orange_blue',
         layerPerview: {
             '0': false,
             '1': true,
             'layer2': true
         },
+        layers: threeLayerPointDistintColor
+    }, {
+        name: 'preview_layers_red_orange_blue',
+        layerPerview: {
+            '0': true,
+            '1': true,
+            'layer2': true
+        },
+        layers: threeLayerPointDistintColor
+    }, {
+        name: 'preview_layers_all',
+        layerPerview: {},
+        layers: threeLayerPointDistintColor
+    },  {
+        name: 'preview_layers_undefined',
+        layerPerview: undefined,
         layers: threeLayerPointDistintColor
     }];
 
