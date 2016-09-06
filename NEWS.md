@@ -1,8 +1,11 @@
 # Changelog
 
-## 2.73.2
+## 2.74.0
 
-Released 2016-mm-dd
+Released 2016-09-06
+
+Enhancements:
+ - Layers in previews can be shown or hidden using `preview_layers` property in template map
 
 
 ## 2.73.1
