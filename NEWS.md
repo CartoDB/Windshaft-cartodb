@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.73.1
+
+Released 2016-09-06
+
+Bug fixes:
+ - Fixes missing column in fixture table `cdb_analysis_catalog`.
+
+
 ## 2.73.0
 
 Released 2016-09-06
