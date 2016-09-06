@@ -1,10 +1,10 @@
 # Named Maps
 
-Named Maps are essentially the same as Anonymous Maps except the MapConfig is stored on the server, and the map is given a unique name. You can create Named Maps from private data, and users without an API Key can view your Named Map (while keeping your data private). 
+Named Maps are essentially the same as Anonymous Maps except the MapConfig is stored on the server, and the map is given a unique name. You can create Named Maps from private data, and users without an API Key can view your Named Map (while keeping your data private).
 
-The Named Map workflow consists of uploading a MapConfig file to CARTO servers, to select data from your CARTO user database by using SQL, and specifying the CartoCSS for your map. 
+The Named Map workflow consists of uploading a MapConfig file to CARTO servers, to select data from your CARTO user database by using SQL, and specifying the CartoCSS for your map.
 
-The response back from the API provides the template_id of your Named Map as the `name` (the identifier of your Named Map), which is the name that you specified in the MapConfig. You can  which you can then use to create your Named Map details, or [fetch XYZ tiles](#fetching-xyz-tiles-for-named-maps) directly for Named Maps. 
+The response back from the API provides the template_id of your Named Map as the `name` (the identifier of your Named Map), which is the name that you specified in the MapConfig. You can  which you can then use to create your Named Map details, or [fetch XYZ tiles](#fetching-xyz-tiles-for-named-maps) directly for Named Maps.
 
 **Tip:** You can also use a Named Map that you created (which is defined by its `name`), to create a map using CARTO.js. This is achieved by adding the [`namedmap` type](http://docs.carto.com/carto-engine/carto-js/layer-source-object/#named-maps-layer-source-object-type-namedmap) layer source object to draw the Named Map.
 
@@ -73,6 +73,10 @@ The `name` argument defines how to name this "template_name".json. Note that the
       }
     ]
   },
+  "preview_layers": {
+    "0": true,
+    "layer1": false
+  },
   "view": {
     "zoom": 4,
     "center": {
@@ -95,7 +99,7 @@ Params | Description
 --- | ---
 name | There can only be _one_ template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-), or underscores (_). _This is specific to the name of your Named Map that is specified in the `name` property of the template file_.
 
-auth | 
+auth |
 --- | ---
 &#124;_ method | `"token"` or `"open"` (`"open"` is the default if no method is specified. Use `"token"` to password-protect your map)
 &#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.carto.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
@@ -105,12 +109,12 @@ view (optional) | extra keys to specify the view area for the map. It can be use
 --- | ---
 &#124;_ zoom | The zoom level to use
 
-&#124;_ center | 
+&#124;_ center |
 --- | ---
 &#124;_ &#124;_ lng | The longitude to use for the center
 &#124;_ &#124;_ lat | The latitude to use for the center
 
-&#124;_ bounds | 
+&#124;_ bounds |
 --- | ---
 &#124;_ &#124;_ west | LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
 &#124;_ &#124;_ south | LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
@@ -160,7 +164,7 @@ curl -X POST \
 
 #### Response
 
-The response back from the API provides the name of your MapConfig as a template, enabling you to edit the Named Map details by inserting your variables into the template where placeholders are defined, and create custom queries using SQL. 
+The response back from the API provides the name of your MapConfig as a template, enabling you to edit the Named Map details by inserting your variables into the template where placeholders are defined, and create custom queries using SQL.
 
 ```javascript
 {
@@ -516,7 +520,7 @@ If you are creating a Torque layer in a Named Map without using the Torque.js li
     })
     .addTo(map)
     .done(function(layer) {
-  
+
     });
 }
 ```
@@ -535,7 +539,7 @@ Optionally, authenticated users can fetch projected tiles (XYZ tiles or Mapnik R
 
 ### Fetch XYZ Tiles Directly with a URL
 
-Authenticated users, with an auth token, can use XYZ-based URLs to fetch tiles directly, and instantiate the Named Map as part of the request to your application. You do not have to do any other steps to initialize your map. 
+Authenticated users, with an auth token, can use XYZ-based URLs to fetch tiles directly, and instantiate the Named Map as part of the request to your application. You do not have to do any other steps to initialize your map.
 
 To call a template_id in a URL:
 
