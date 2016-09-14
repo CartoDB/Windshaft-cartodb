@@ -5,6 +5,11 @@ var fs = require('fs');
 
 var _ = require('underscore');
 
+// jshint undef:false
+var log = console.log.bind(console);
+var logError = console.error.bind(console);
+// jshint undef:true
+
 var argv = require('yargs')
     .usage('Usage: $0 <environment> [options]')
     .help('h')
@@ -21,18 +26,13 @@ var argv = require('yargs')
 var environmentArg = argv._[0] || process.env.NODE_ENV || 'development';
 var configurationFile = path.resolve(argv.config || './config/environments/' + environmentArg + '.js');
 if (!fs.existsSync(configurationFile)) {
-    console.error('Configuration file "%s" does not exist', configurationFile);
+    logError('Configuration file "%s" does not exist', configurationFile);
     process.exit(1);
 }
 
 global.environment = require(configurationFile);
 var ENVIRONMENT = argv._[0] || process.env.NODE_ENV || global.environment.environment;
 process.env.NODE_ENV = ENVIRONMENT;
-
-// jshint undef:false
-var log = console.log.bind(console);
-var logError = console.error.bind(console);
-// jshint undef:true
 
 var availableEnvironments = {
     production: true,
