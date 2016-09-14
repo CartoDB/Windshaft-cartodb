@@ -7,7 +7,6 @@ addons:
       - libgif-dev
 
 before_install:
-  - npm install -g npm@2
   - lsb_release -a
   - sudo apt-get -qq purge postgis* postgresql*
   - sudo rm -Rf /var/lib/postgresql /etc/postgresql
