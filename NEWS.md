@@ -4,6 +4,10 @@
 
 Released 2016-mm-dd
 
+New features:
+ - Allow to use `--config /path/to/config.js` to specify configuration file.
+   - Environment will be loaded from config file if `environment` key is present, otherwise it keeps current behaviour.
+
 Bug fixes:
  - Allow to use absolute paths for log files #570.
 
