@@ -5,14 +5,29 @@ var fs = require('fs');
 
 var _ = require('underscore');
 
-var ENVIRONMENT;
-if ( process.argv[2] ) {
-    ENVIRONMENT = process.argv[2];
-} else if ( process.env.NODE_ENV ) {
-    ENVIRONMENT = process.env.NODE_ENV;
-} else {
-    ENVIRONMENT = 'development';
+var argv = require('yargs')
+    .usage('Usage: $0 <environment> [options]')
+    .help('h')
+    .example(
+    '$0 production -c /etc/sql-api/config.js',
+    'start server in production environment with /etc/sql-api/config.js as config file'
+)
+    .alias('h', 'help')
+    .alias('c', 'config')
+    .nargs('c', 1)
+    .describe('c', 'Load configuration from path')
+    .argv;
+
+var environmentArg = argv._[0] || process.env.NODE_ENV || 'development';
+var configurationFile = path.resolve(argv.config || './config/environments/' + environmentArg + '.js');
+if (!fs.existsSync(configurationFile)) {
+    console.error('Configuration file "%s" does not exist', configurationFile);
+    process.exit(1);
 }
+
+global.environment = require(configurationFile);
+var ENVIRONMENT = argv._[0] || process.env.NODE_ENV || global.environment.environment;
+process.env.NODE_ENV = ENVIRONMENT;
 
 // jshint undef:false
 var log = console.log.bind(console);
@@ -33,10 +48,6 @@ if (!availableEnvironments[ENVIRONMENT]){
 }
 
 process.env.NODE_ENV = ENVIRONMENT;
-
-// set environment specific variables
-global.environment = require('./config/environments/' + ENVIRONMENT);
-
 if (global.environment.uv_threadpool_size) {
     process.env.UV_THREADPOOL_SIZE = global.environment.uv_threadpool_size;
 }
@@ -99,6 +110,7 @@ var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, b
 var version = require("./package").version;
 
 listener.on('listening', function() {
+    log('Using configuration file "%s"', configurationFile);
     log(
         "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
         version, serverOptions.bind.host, serverOptions.bind.port, process.pid, ENVIRONMENT
