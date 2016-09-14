@@ -37,12 +37,6 @@ process.env.NODE_ENV = ENVIRONMENT;
 // set environment specific variables
 global.environment = require('./config/environments/' + ENVIRONMENT);
 
-global.log4js = require('log4js');
-var log4js_config = {
-  appenders: [],
-  replaceConsole: true
-};
-
 if (global.environment.uv_threadpool_size) {
     process.env.UV_THREADPOOL_SIZE = global.environment.uv_threadpool_size;
 }
@@ -58,25 +52,31 @@ var agentOptions = _.defaults(global.environment.httpAgent || {}, {
 http.globalAgent = new http.Agent(agentOptions);
 https.globalAgent = new https.Agent(agentOptions);
 
+
+global.log4js = require('log4js');
+var log4jsConfig = {
+    appenders: [],
+    replaceConsole: true
+};
+
 if ( global.environment.log_filename ) {
-  var logdir = path.dirname(global.environment.log_filename);
-  // See cwd inlog4js.configure call below
-  logdir = path.resolve(__dirname, logdir);
-  if ( ! fs.existsSync(logdir) ) {
-    logError("Log filename directory does not exist: " + logdir);
-    process.exit(1);
-  }
-  log("Logs will be written to " + global.environment.log_filename);
-  log4js_config.appenders.push(
-    { type: "file", filename: global.environment.log_filename }
-  );
+    var logFilename = path.resolve(global.environment.log_filename);
+    var logDirectory = path.dirname(logFilename);
+    if (!fs.existsSync(logDirectory)) {
+        logError("Log filename directory does not exist: " + logDirectory);
+        process.exit(1);
+    }
+    log("Logs will be written to " + logFilename);
+    log4jsConfig.appenders.push(
+        { type: "file", absolute: true, filename: logFilename }
+    );
 } else {
-  log4js_config.appenders.push(
-    { type: "console", layout: { type:'basic' } }
-  );
+    log4jsConfig.appenders.push(
+        { type: "console", layout: { type:'basic' } }
+    );
 }
 
-global.log4js.configure(log4js_config, { cwd: __dirname });
+global.log4js.configure(log4jsConfig);
 global.logger = global.log4js.getLogger();
 
 global.environment.api_hostname = require('os').hostname().split('.')[0];
@@ -114,7 +114,7 @@ setInterval(function() {
 
 process.on('SIGHUP', function() {
     global.log4js.clearAndShutdownAppenders(function() {
-        global.log4js.configure(log4js_config);
+        global.log4js.configure(log4jsConfig);
         global.logger = global.log4js.getLogger();
         log('Log files reloaded');
     });

@@ -4,7 +4,8 @@
 
 Released 2016-mm-dd
 
-
+Bug fixes:
+ - Allow to use absolute paths for log files #570.
 
 ## 2.75.0
 
