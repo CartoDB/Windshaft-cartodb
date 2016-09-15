@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.75.1
+## 2.76.0
 
-Released 2016-mm-dd
+Released 2016-09-15
 
 New features:
  - Allow to use `--config /path/to/config.js` to specify configuration file.
@@ -10,6 +10,7 @@ New features:
 
 Bug fixes:
  - Allow to use absolute paths for log files #570.
+
 
 ## 2.75.0
 
