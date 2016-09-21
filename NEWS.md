@@ -1,8 +1,11 @@
 # Changelog
 
-## 2.76.1
+## 2.77.0
 
 Released 2016-mm-dd
+
+New features:
+ - Add metadata about processed turbo-carto rules.
 
 
 ## 2.76.0
