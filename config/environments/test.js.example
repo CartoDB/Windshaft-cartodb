@@ -210,7 +210,7 @@ var config = {
             // If filename is given logs comming from analysis client  will be written
             // there, in append mode. Otherwise 'log_filename' is used. Otherwise stdout is used (default).
             // Log file will be re-opened on receiving the HUP signal
-            filename: 'logs/analysis.log'
+            filename: 'node-windshaft.log'
         }
     }
     ,millstone: {
