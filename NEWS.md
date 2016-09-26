@@ -1,11 +1,12 @@
 # Changelog
 
-## 2.76.1
+## 2.77.0
 
-Released 2016-mm-dd
+Released 2016-09-26
 
 Announcements:
  - Upgrades camshaft to [0.44.0](https://github.com/CartoDB/camshaft/releases/tag/0.44.0).
+ - Adds a new configuration for camshaft: logger stream.
 
 
 ## 2.76.0
