@@ -7,6 +7,9 @@ Released 2016-mm-dd
 New features:
  - Add metadata about processed turbo-carto rules.
 
+Announcements:
+ - Upgrades turbo-carto to [0.17.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.17.0).
+
 
 ## 2.76.0
 
