@@ -1,7 +1,6 @@
 # Changelog
 
-## 2.77.0
-
+## 2.78.0
 Released 2016-mm-dd
 
 New features:
@@ -9,6 +8,23 @@ New features:
 
 Announcements:
  - Upgrades turbo-carto to [0.17.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.17.0).
+
+
+## 2.77.1
+
+Released 2016-09-28
+
+Announcements:
+ - Upgrades camshaft to [0.44.1](https://github.com/CartoDB/camshaft/releases/tag/0.44.1).
+
+
+## 2.77.0
+
+Released 2016-09-26
+
+Announcements:
+ - Upgrades camshaft to [0.44.0](https://github.com/CartoDB/camshaft/releases/tag/0.44.0).
+ - Adds a new configuration for camshaft: logger stream.
 
 
 ## 2.76.0

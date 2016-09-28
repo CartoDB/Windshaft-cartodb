@@ -210,6 +210,12 @@ var config = {
             endpoint: 'http://127.0.0.1:8080/api/v2/sql/job',
             // the template to use for adding the host header in the batch api requests
             hostHeaderTemplate: '{{=it.username}}.localhost.lan'
+        },
+        logger: {
+            // If filename is given logs comming from analysis client  will be written
+            // there, in append mode. Otherwise 'log_filename' is used. Otherwise stdout is used (default).
+            // Log file will be re-opened on receiving the HUP signal
+            filename: '/tmp/analysis.log'
         }
     }
     ,millstone: {
