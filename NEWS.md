@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.78.0
-Released 2016-mm-dd
+Released 2016-09-29
 
 New features:
  - Add metadata about processed turbo-carto rules.
