@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.78.2
+## 2.79.0
 Released 2016-mm-dd
 
 New features:
