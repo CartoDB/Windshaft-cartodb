@@ -7,6 +7,7 @@ New features:
  - Retrieve analysis limits and pass them into camshaft.
 
 Announcements:
+ - Upgrades turbo-carto to [0.18.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.18.0).
  - Upgrades camshaft to [0.45.0](https://github.com/CartoDB/camshaft/releases/tag/0.45.0).
 
 
