@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.79.0
-Released 2016-mm-dd
+Released 2016-10-11
 
 New features:
  - Retrieve analysis limits and pass them into camshaft.
