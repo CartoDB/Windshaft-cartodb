@@ -1,7 +1,10 @@
 # Changelog
 
-## 2.79.1
+## 2.80.0
 Released 2016-mm-dd
+
+New features:
+ - Default analyses limits can be defined in configuration.
 
 
 ## 2.79.0
