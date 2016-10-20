@@ -211,6 +211,12 @@ var config = {
             // there, in append mode. Otherwise 'log_filename' is used. Otherwise stdout is used (default).
             // Log file will be re-opened on receiving the HUP signal
             filename: 'node-windshaft.log'
+        },
+        // Define max execution time in ms for analyses or tags
+        // If analysis or tag are not found in redis this values will be used as default.
+        limits: {
+            moran: 120000,
+            cpu2x: 60000
         }
     }
     ,millstone: {
