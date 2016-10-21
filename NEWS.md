@@ -1,5 +1,120 @@
 # Changelog
 
+## 2.80.0
+Released 2016-10-20
+
+Announcements:
+ - Upgrades camshaft to [0.46.0](https://github.com/CartoDB/camshaft/releases/tag/0.46.0).
+
+New features:
+ - Default analyses limits can be defined in configuration.
+
+
+## 2.79.0
+Released 2016-10-11
+
+New features:
+ - Retrieve analysis limits and pass them into camshaft.
+
+Announcements:
+ - Upgrades turbo-carto to [0.18.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.18.0).
+ - Upgrades camshaft to [0.45.0](https://github.com/CartoDB/camshaft/releases/tag/0.45.0).
+
+
+## 2.78.1
+Released 2016-09-30
+
+Announcements:
+ - Upgrades camshaft to [0.44.2](https://github.com/CartoDB/camshaft/releases/tag/0.44.2).
+
+
+## 2.78.0
+Released 2016-09-29
+
+New features:
+ - Add metadata about processed turbo-carto rules.
+
+Announcements:
+ - Upgrades turbo-carto to [0.17.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.17.1).
+
+
+## 2.77.1
+
+Released 2016-09-28
+
+Announcements:
+ - Upgrades camshaft to [0.44.1](https://github.com/CartoDB/camshaft/releases/tag/0.44.1).
+
+
+## 2.77.0
+
+Released 2016-09-26
+
+Announcements:
+ - Upgrades camshaft to [0.44.0](https://github.com/CartoDB/camshaft/releases/tag/0.44.0).
+ - Adds a new configuration for camshaft: logger stream.
+
+
+## 2.76.0
+
+Released 2016-09-15
+
+New features:
+ - Allow to use `--config /path/to/config.js` to specify configuration file.
+   - Environment will be loaded from config file if `environment` key is present, otherwise it keeps current behaviour.
+
+Bug fixes:
+ - Allow to use absolute paths for log files #570.
+
+
+## 2.75.0
+
+Released 2016-09-14
+
+Announcements:
+ - Upgrades camshaft to [0.43.0](https://github.com/CartoDB/camshaft/releases/tag/0.43.0).
+
+
+## 2.74.1
+
+Released 2016-09-07
+
+Announcements:
+ - Upgrades camshaft to [0.42.1](https://github.com/CartoDB/camshaft/releases/tag/0.42.1).
+
+
+## 2.74.0
+
+Released 2016-09-06
+
+Enhancements:
+ - Layers in previews can be shown or hidden using `preview_layers` property in template map
+
+
+## 2.73.1
+
+Released 2016-09-06
+
+Bug fixes:
+ - Fixes missing column in fixture table `cdb_analysis_catalog`.
+
+
+## 2.73.0
+
+Released 2016-09-06
+
+Announcements:
+ - Upgrades camshaft to [0.42.0](https://github.com/CartoDB/camshaft/releases/tag/0.42.0).
+
+
+## 2.72.0
+
+Released 2016-08-23
+
+Announcements:
+ - Upgrades camshaft to [0.41.0](https://github.com/CartoDB/camshaft/releases/tag/0.41.0).
+
+
 ## 2.71.0
 
 Released 2016-08-17

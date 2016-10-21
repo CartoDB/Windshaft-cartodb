@@ -1,22 +1,17 @@
+dist: trusty # only environment that supports Postgres 9.5 at this time
+sudo: required
 addons:
+  postgresql: "9.5"
   apt:
     packages:
+      - postgresql-plpython-9.5
       - pkg-config
       - libcairo2-dev
       - libjpeg8-dev
       - libgif-dev
+      - libpango1.0-dev
 
 before_install:
-  - npm install -g npm@2
-  - lsb_release -a
-  - sudo apt-get -qq purge postgis* postgresql*
-  - sudo rm -Rf /var/lib/postgresql /etc/postgresql
-  - sudo apt-add-repository --yes ppa:cartodb/postgresql-9.5
-  - sudo apt-add-repository --yes ppa:cartodb/gis
-  - sudo apt-get update
-  - sudo apt-get install -q --force-yes postgresql-9.5-postgis-2.2 postgresql-plpython-9.5
-  - echo -e "local\tall\tall\ttrust\nhost\tall\tall\t127.0.0.1/32\ttrust\nhost\tall\tall\t::1/128\ttrust" |sudo tee /etc/postgresql/9.5/main/pg_hba.conf
-  - sudo service postgresql restart
   - createdb template_postgis
   - createuser publicuser
   - psql -c "CREATE EXTENSION postgis" template_postgis

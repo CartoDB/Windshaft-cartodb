@@ -26,5 +26,7 @@ CREATE TABLE IF NOT EXISTS
 -- last job modifying the node
     last_modified_by uuid,
 -- store error message for failures
-    last_error_message text
+    last_error_message text,
+-- cached tables involved in the analysis
+    cache_tables regclass[] NOT NULL DEFAULT '{}'
 );
