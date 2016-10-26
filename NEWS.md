@@ -3,6 +3,9 @@
 ## 2.80.2
 Released 2016-mm-dd
 
+Bug fixes:
+ - Fix order in categories query to get ramps
+
 
 ## 2.80.1
 Released 2016-10-25
