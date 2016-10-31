@@ -257,7 +257,7 @@ describe('multilayer error cases', function() {
             layers: [
                 { options: {
                     sql: 'select * from test_table limit 1',
-                    cartocss: '#test_table::outline[address="one"], [address="two"] { marker-fill: red; }',
+                    cartocss: '#test_table::outline[nonexistent="one"], [nonexistent="two"] { marker-fill: red; }',
                     cartocss_version: '2.0.2',
                     interactivity: [ 'cartodb_id' ],
                     geom_column: 'the_geom'
@@ -282,7 +282,7 @@ describe('multilayer error cases', function() {
             var parsed = JSON.parse(res.body);
             assert.equal(parsed.errors.length, 1);
             var error = parsed.errors[0];
-            assert.ok(error.match(/column "address" does not exist/m), error);
+            assert.ok(error.match(/column "nonexistent" does not exist/m), error);
             done();
         });
     });
