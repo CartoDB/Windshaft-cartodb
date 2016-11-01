@@ -1,7 +1,13 @@
 # Changelog
 
-## 2.80.3
+## 2.81.0
 Released 2016-mm-dd
+
+Enhancements:
+ - Returns errors with context when query layer does not retrieve geometry column
+
+Announcements:
+ - Upgrades windshaft to [2.6.1](https://github.com/CartoDB/windshaft/releases/tag/2.6.1).
 
 
 ## 2.80.2
