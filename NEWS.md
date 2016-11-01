@@ -8,6 +8,7 @@ Enhancements:
 
 Announcements:
  - Upgrades windshaft to [2.6.1](https://github.com/CartoDB/windshaft/releases/tag/2.6.1).
+ - Upgrades camshaft to [0.46.2](https://github.com/CartoDB/camshaft/releases/tag/0.46.2).
 
 
 ## 2.80.2

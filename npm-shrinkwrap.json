@@ -105,9 +105,9 @@
       }
     },
     "camshaft": {
-      "version": "0.46.1",
-      "from": "https://registry.npmjs.org/camshaft/-/camshaft-0.46.1.tgz",
-      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.46.1.tgz",
+      "version": "0.46.2",
+      "from": "camshaft@0.46.2",
+      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.46.2.tgz",
       "dependencies": {
         "async": {
           "version": "1.5.2",
