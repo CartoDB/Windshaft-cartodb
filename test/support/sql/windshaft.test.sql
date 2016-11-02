@@ -634,7 +634,8 @@ GRANT SELECT ON TABLE analysis_rent_listings TO :PUBLICUSER;
 --
 GRANT SELECT, UPDATE, INSERT, DELETE ON cdb_analysis_catalog TO :TESTUSER;
 
-create schema cdb_crankshaft;
+DROP EXTENSION IF EXISTS crankshaft;
+CREATE SCHEMA IF NOT EXISTS cdb_crankshaft;
 GRANT USAGE ON SCHEMA cdb_crankshaft TO :TESTUSER;
 CREATE TYPE kmeans_type as (cartodb_id numeric, cluster_no numeric);
 CREATE OR REPLACE FUNCTION cdb_crankshaft.CDB_KMeans(query text, no_clusters integer,no_init integer default 20)

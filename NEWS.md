@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.81.0
+Released 2016-11-02
+
+Enhancements:
+ - Returns errors with context when query layer does not retrieve geometry column
+
+Announcements:
+ - Upgrades windshaft to [2.6.1](https://github.com/CartoDB/windshaft/releases/tag/2.6.1).
+ - Upgrades camshaft to [0.46.2](https://github.com/CartoDB/camshaft/releases/tag/0.46.2).
+
+
+## 2.80.2
+Released 2016-10-26
+
+Bug fixes:
+ - Fix order in categories query to get ramps
+
+
+## 2.80.1
+Released 2016-10-25
+
+Announcements:
+ - Upgrades camshaft to [0.46.1](https://github.com/CartoDB/camshaft/releases/tag/0.46.1).
+
+
 ## 2.80.0
 Released 2016-10-20
 
