@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.81.0
-Released 2016-mm-dd
+Released 2016-11-02
 
 Enhancements:
  - Returns errors with context when query layer does not retrieve geometry column
