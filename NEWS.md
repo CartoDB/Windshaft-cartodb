@@ -3,6 +3,10 @@
 ## 2.81.1
 Released 2016-mm-dd
 
+Announcements:
+ - Upgrades windshaft to [2.6.2](https://github.com/CartoDB/windshaft/releases/tag/2.6.2).
+ - Upgrades camshaft to [0.46.3](https://github.com/CartoDB/camshaft/releases/tag/0.46.3).
+
 
 ## 2.81.0
 Released 2016-11-02
