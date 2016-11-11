@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.83.2
+Released 2016-11-10
+
+
 ## 2.83.1
 Released 2016-11-10
 
