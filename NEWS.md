@@ -1,7 +1,10 @@
 # Changelog
 
-## 2.83.2
-Released 2016-11-10
+## 2.84.0
+Released 2016-11-11
+
+New features:
+ - Analyses limit configuration allows to set other limits than timeout.
 
 
 ## 2.83.1
