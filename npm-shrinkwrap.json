@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.82.0",
+  "version": "2.84.1",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -105,9 +105,9 @@
       }
     },
     "camshaft": {
-      "version": "0.48.0",
-      "from": "camshaft@0.48.0",
-      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.48.0.tgz",
+      "version": "0.48.1",
+      "from": "camshaft@0.48.1",
+      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.48.1.tgz",
       "dependencies": {
         "async": {
           "version": "1.5.2",
@@ -4352,7 +4352,7 @@
           "dependencies": {
             "strip-ansi": {
               "version": "3.0.1",
-              "from": "strip-ansi@>=3.0.1 <4.0.0",
+              "from": "strip-ansi@>=3.0.0 <4.0.0",
               "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
               "dependencies": {
                 "ansi-regex": {
@@ -4622,7 +4622,7 @@
             },
             "strip-ansi": {
               "version": "3.0.1",
-              "from": "strip-ansi@>=3.0.1 <4.0.0",
+              "from": "strip-ansi@>=3.0.0 <4.0.0",
               "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
               "dependencies": {
                 "ansi-regex": {

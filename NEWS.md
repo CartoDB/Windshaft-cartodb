@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.84.1
+Released 2016-mm-dd
+
+
+## 2.84.0
+Released 2016-11-11
+
+New features:
+ - Analyses limit configuration allows to set other limits than timeout.
+
+
+## 2.83.1
+Released 2016-11-10
+
+Announcements:
+ - Upgrades camshaft to [0.48.1](https://github.com/CartoDB/camshaft/releases/tag/0.48.1).
+
+
+## 2.83.0
+Released 2016-11-10
+
+Announcements:
+ - Upgrades camshaft to [0.48.0](https://github.com/CartoDB/camshaft/releases/tag/0.48.0).
+
+
 ## 2.82.0
 Released 2016-11-08
 
