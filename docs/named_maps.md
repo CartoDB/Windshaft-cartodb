@@ -73,10 +73,6 @@ The `name` argument defines how to name this "template_name".json. Note that the
       }
     ]
   },
-  "preview_layers": {
-    "0": true,
-    "layer1": false
-  },
   "view": {
     "zoom": 4,
     "center": {
@@ -88,6 +84,10 @@ The `name` argument defines how to name this "template_name".json. Note that the
       "south": -45,
       "east": 45,
       "north": 45
+    },
+    "preview_layers": {
+      "0": true,
+      "layer1": false
     }
   }
 }
@@ -105,7 +105,7 @@ auth |
 &#124;_ valid_tokens | when `"method"` is set to `"token"`, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.carto.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
 placeholders | Placeholders are variables that can be placed in your template.json file's SQL or CartoCSS.
 layergroup | the layergroup configurations, as specified in the template. See [MapConfig File Format](http://docs.carto.com/carto-engine/maps-api/mapconfig/) for more information.
-view (optional) | extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box.
+view (optional) | extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box. Also it is possible to choose which layers are visible or not with `preview_layers` indicating its visibility by layer index or id (visible by default).
 --- | ---
 &#124;_ zoom | The zoom level to use
 
