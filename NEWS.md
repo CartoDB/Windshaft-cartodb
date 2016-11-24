@@ -1,7 +1,10 @@
 # Changelog
 
-## 2.84.3
+## 2.85.0
 Released 2016-mm-dd
+
+New features:
+ - Allow to set resource URL templates with substitution tokens #594.
 
 
 ## 2.84.2
