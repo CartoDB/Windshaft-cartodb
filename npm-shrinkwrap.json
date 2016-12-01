@@ -73,7 +73,7 @@
             },
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@1.0.0",
+              "from": "unpipe@>=1.0.0 <1.1.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
@@ -90,7 +90,7 @@
             },
             "mime-types": {
               "version": "2.1.13",
-              "from": "mime-types@>=2.1.2 <2.2.0",
+              "from": "mime-types@>=2.1.13 <2.2.0",
               "resolved": "https://registry.npmjs.org/mime-types/-/mime-types-2.1.13.tgz",
               "dependencies": {
                 "mime-db": {
@@ -712,7 +712,7 @@
           "dependencies": {
             "unpipe": {
               "version": "1.0.0",
-              "from": "unpipe@1.0.0",
+              "from": "unpipe@>=1.0.0 <1.1.0",
               "resolved": "https://registry.npmjs.org/unpipe/-/unpipe-1.0.0.tgz"
             }
           }
@@ -1396,9 +1396,9 @@
       "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
     },
     "windshaft": {
-      "version": "2.6.2",
-      "from": "windshaft@2.6.2",
-      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-2.6.2.tgz",
+      "version": "2.6.3",
+      "from": "windshaft@2.6.3",
+      "resolved": "https://registry.npmjs.org/windshaft/-/windshaft-2.6.3.tgz",
       "dependencies": {
         "abaculus": {
           "version": "1.1.0-cdb7",
@@ -1447,9 +1447,9 @@
           }
         },
         "grainstore": {
-          "version": "1.2.0",
-          "from": "grainstore@1.2.0",
-          "resolved": "https://registry.npmjs.org/grainstore/-/grainstore-1.2.0.tgz",
+          "version": "1.3.0",
+          "from": "grainstore@1.3.0",
+          "resolved": "https://registry.npmjs.org/grainstore/-/grainstore-1.3.0.tgz",
           "dependencies": {
             "carto": {
               "version": "0.9.5-cdb2",
@@ -1496,6 +1496,11 @@
                   }
                 }
               }
+            },
+            "generic-pool": {
+              "version": "2.2.2",
+              "from": "generic-pool@>=2.2.0 <2.3.0",
+              "resolved": "https://registry.npmjs.org/generic-pool/-/generic-pool-2.2.2.tgz"
             },
             "millstone": {
               "version": "0.6.16",
@@ -4352,7 +4357,7 @@
           "dependencies": {
             "strip-ansi": {
               "version": "3.0.1",
-              "from": "strip-ansi@>=3.0.0 <4.0.0",
+              "from": "strip-ansi@>=3.0.1 <4.0.0",
               "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
               "dependencies": {
                 "ansi-regex": {
@@ -4622,7 +4627,7 @@
             },
             "strip-ansi": {
               "version": "3.0.1",
-              "from": "strip-ansi@>=3.0.0 <4.0.0",
+              "from": "strip-ansi@>=3.0.1 <4.0.0",
               "resolved": "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
               "dependencies": {
                 "ansi-regex": {
