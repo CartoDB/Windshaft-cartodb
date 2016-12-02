@@ -1,7 +1,10 @@
 # Changelog
 
 ## 2.86.1
-Released 2016-mm-dd
+Released 2016-12-02
+
+Bug fixes:
+ - Maps with analyses and `sql_wrap` were broken #599.
 
 
 ## 2.86.0
