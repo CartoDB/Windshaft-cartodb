@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.86.0
-Released 2016-mm-dd
+Released 2016-12-02
 
 Announcements:
  - Upgrades windshaft to [2.6.3](https://github.com/CartoDB/Windshaft/releases/tag/2.6.3).
