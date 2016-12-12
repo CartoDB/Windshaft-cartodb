@@ -1,7 +1,7 @@
 # Changelog
 
-## 2.86.2
-Released 2016-mm-dd
+## 2.87.0
+Released 2016-12-12
 
 Enhancements:
  - Upgrade turbo-carto dependency to version 0.19.0.
