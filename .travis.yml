@@ -4,7 +4,7 @@ addons:
   postgresql: "9.5"
   apt:
     packages:
-      - postgresql-9.5-postgis-2.2
+      - postgresql-9.5-postgis-2.3
       - postgresql-plpython-9.5
       - pkg-config
       - libcairo2-dev
