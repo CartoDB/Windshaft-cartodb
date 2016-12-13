@@ -3,6 +3,12 @@
 ## 2.87.1
 Released 2016-mm-dd
 
+Announcements:
+ - Upgrades windshaft to [2.6.4](https://github.com/CartoDB/Windshaft/releases/tag/2.6.4).
+ - Upgrades request dependency.
+ - Regenerate npm-shrinkwrap.json: missing dependency updates.
+
+
 ## 2.87.0
 Released 2016-12-12
 
