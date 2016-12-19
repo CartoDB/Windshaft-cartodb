@@ -1,8 +1,13 @@
 # Changelog
 
-## 2.87.2
-Released 2016-mm-dd
+## 2.87.3
+Released yyyy-mm-dd
 
+
+## 2.87.2
+Released 2016-12-19
+
+- Use exception safe Dataservices API functions. See https://github.com/CartoDB/dataservices-api/issues/314 and https://github.com/CartoDB/camshaft/issues/242
 
 ## 2.87.1
 Released 2016-12-13
