@@ -19,7 +19,7 @@ describe('windshaft', function() {
 
     it('can spawn a new server on the global listen port', function(done){
         var ws = cartodbServer(serverOptions);
-        var server = ws.listen(global.environment.windshaft_port, function() {
+        var server = ws.listen(global.environment.port, function() {
             assert.ok(ws);
             server.close(done); /* allow proper tear down */
         });
