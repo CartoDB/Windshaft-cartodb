@@ -1,7 +1,10 @@
 # Changelog
 
 ## 2.87.3
-Released yyyy-mm-dd
+Released 2016-12-19
+
+Bug fixes:
+ - Fix overviews-related dataviews problems. See https://github.com/CartoDB/Windshaft-cartodb/pull/604
 
 
 ## 2.87.2
