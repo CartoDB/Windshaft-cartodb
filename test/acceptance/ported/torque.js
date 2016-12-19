@@ -370,7 +370,7 @@ describe('torque', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup?dbport=1234567',
+              url: '/database/windshaft_test/layergroup?dbport=54777',
               method: 'POST',
               headers: {'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
