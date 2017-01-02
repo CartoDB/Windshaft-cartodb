@@ -318,7 +318,8 @@ describe('analysis-layers', function() {
 
             var headers = response.headers;
 
-            assert.equal(headers['cache-control'], 'public,max-age=5');
+            assert.equal(headers['cache-control'], 'no-cache');
+            assert.equal(headers['surrogate-control'], 'max-age=5');
 
             var lastModified = new Date(headers['last-modified']);
             var tenSecondsInMs = 1e5;

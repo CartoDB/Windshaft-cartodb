@@ -1265,7 +1265,8 @@ describe(suiteName, function() {
 
         assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
             function(res) {
-                assert.equal(res.headers['cache-control'], 'public,max-age=86400,must-revalidate');
+                assert.equal(res.headers['cache-control'], 'no-cache');
+                assert.equal(res.headers['surrogate-control'], 'max-age=86400');
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
@@ -1280,7 +1281,8 @@ describe(suiteName, function() {
 
         assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
             function(res) {
-                assert.equal(res.headers['cache-control'], 'public,max-age=' + layergroupTtl + ',must-revalidate');
+                assert.equal(res.headers['cache-control'], 'no-cache');
+                assert.equal(res.headers['surrogate-control'], 'max-age=' + layergroupTtl);
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
