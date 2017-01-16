@@ -3,7 +3,7 @@ require('../../support/test_helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('aggregations', function() {
+describe('aggregations happy cases', function() {
 
     afterEach(function(done) {
         if (this.testClient) {
@@ -13,9 +13,10 @@ describe('aggregations', function() {
         }
     });
 
-    function aggregationOperationMapConfig(operation, column, aggregationColumn) {
+    function aggregationOperationMapConfig(operation, query, column, aggregationColumn) {
         column = column || 'adm0name';
         aggregationColumn = aggregationColumn || 'pop_max';
+        query = query || 'select * from populated_places_simple_reduced';
 
         var mapConfig = {
             version: '1.5.0',
@@ -23,7 +24,7 @@ describe('aggregations', function() {
                 {
                     type: 'mapnik',
                     options: {
-                        sql: 'select * from populated_places_simple_reduced',
+                        sql: query,
                         cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
                         cartocss_version: '2.0.1',
                         widgets: {}
@@ -62,25 +63,34 @@ describe('aggregations', function() {
         });
     });
 
-    it('should count NULL category', function (done) {
-        this.testClient = new TestClient(aggregationOperationMapConfig('count', 'namepar'));
-        this.testClient.getDataview('namepar', { own_filter: 0 }, function (err, aggregation) {
-            assert.ifError(err);
+    var query = [
+        'select 1 as val, \'a\' as cat, ST_Transform(ST_SetSRID(ST_MakePoint(0,0),4326),3857) as the_geom_webmercator',
+        'select null, \'b\', ST_Transform(ST_SetSRID(ST_MakePoint(0,1),4326),3857)',
+        'select null, \'b\', ST_Transform(ST_SetSRID(ST_MakePoint(1,0),4326),3857)',
+        'select null, null, ST_Transform(ST_SetSRID(ST_MakePoint(1,1),4326),3857)'
+    ].join(' UNION ALL ');
 
-            assert.ok(aggregation);
-            assert.equal(aggregation.type, 'aggregation');
-            assert.ok(aggregation.categories);
+    operations.forEach(function (operation) {
+        it('should handle NULL values in category and aggregation columns using "' + operation + '" as aggregation operation', function (done) {
+            this.testClient = new TestClient(aggregationOperationMapConfig(operation, query, 'cat', 'val'));
+            this.testClient.getDataview('cat', { own_filter: 0 }, function (err, aggregation) {
+                assert.ifError(err);
 
-            var hasNullCategory = false;
-            aggregation.categories.forEach(function (category) {
-                if (category.category === null) {
-                    assert.ok(category.value > 0);
-                    hasNullCategory = true;
-                }
+                assert.ok(aggregation);
+                assert.equal(aggregation.type, 'aggregation');
+                assert.ok(aggregation.categories);
+
+                var hasNullCategory = false;
+                aggregation.categories.forEach(function (category) {
+                    if (category.category === null) {
+                        assert.ok(category.value > 0);
+                        hasNullCategory = true;
+                    }
+                });
+                assert.ok(hasNullCategory, 'there is no category NULL');
+
+                done();
             });
-            assert.ok(hasNullCategory, 'there is no category NULL');
-
-            done();
         });
     });
 });
