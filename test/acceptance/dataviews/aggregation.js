@@ -71,7 +71,14 @@ describe('aggregations happy cases', function() {
     ].join(' UNION ALL ');
 
     operations.forEach(function (operation) {
-        it('should handle NULL values in category and aggregation columns using "' + operation + '" as aggregation operation', function (done) {
+        var not = operation === 'count' ? ' not ' : ' ';
+        var description = 'should' +
+            not +
+            'handle NULL values in category and aggregation columns using "' +
+            operation +
+            '" as aggregation operation';
+
+        it(description, function (done) {
             this.testClient = new TestClient(aggregationOperationMapConfig(operation, query, 'cat', 'val'));
             this.testClient.getDataview('cat', { own_filter: 0 }, function (err, aggregation) {
                 assert.ifError(err);
@@ -79,15 +86,22 @@ describe('aggregations happy cases', function() {
                 assert.ok(aggregation);
                 assert.equal(aggregation.type, 'aggregation');
                 assert.ok(aggregation.categories);
+                assert.equal(aggregation.categoriesCount, 3);
+                assert.equal(aggregation.count, 4);
+                assert.equal(aggregation.nulls, 1);
 
                 var hasNullCategory = false;
                 aggregation.categories.forEach(function (category) {
                     if (category.category === null) {
-                        assert.ok(category.value > 0);
                         hasNullCategory = true;
                     }
                 });
-                assert.ok(hasNullCategory, 'there is no category NULL');
+
+                if (operation === 'count') {
+                    assert.ok(hasNullCategory, 'aggregation has not a category NULL');
+                } else {
+                    assert.ok(!hasNullCategory, 'aggregation has category NULL');
+                }
 
                 done();
             });
