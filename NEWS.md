@@ -1,7 +1,10 @@
 # Changelog
 
 ## 2.87.4
-Released 2016-mm-dd
+Released 2017-01-20
+
+Bug fixes:
+ - Be able to not compute NULL categories and null values  in aggregation dataviews #617.
 
 
 ## 2.87.3
