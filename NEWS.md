@@ -3,6 +3,9 @@
 ## 2.87.5
 Released 2017-mm-dd
 
+Bug fixes:
+ - Cast dataview override values to Number or throw error.
+
 
 ## 2.87.4
 Released 2017-01-20
