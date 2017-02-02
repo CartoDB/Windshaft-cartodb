@@ -77,4 +77,24 @@ describe('histogram-dataview', function() {
             done();
         });
     });
+
+    it('should cast all overridable params to numbers', function(done) {
+        var params = {
+            bins: '256 AS other, (select 256 * 2) AS bins_number--',
+            start: 1e3,
+            end: 0,
+            response: TestClient.RESPONSE.ERROR
+        };
+
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('pop_max_histogram', params, function(err, res) {
+            assert.ok(!err, err);
+
+            assert.ok(res.errors);
+            assert.equal(res.errors.length, 1);
+            assert.ok(res.errors[0].match(/Invalid number format for parameter 'bins'/));
+
+            done();
+        });
+    });
 });
