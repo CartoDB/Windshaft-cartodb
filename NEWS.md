@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.87.5
-Released 2017-mm-dd
+Released 2017-02-02
 
 Bug fixes:
  - Cast dataview override values to Number or throw error.
