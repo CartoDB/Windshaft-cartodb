@@ -1,8 +1,34 @@
 # Changelog
 
-## 2.87.2
-Released 2016-mm-dd
+## 2.87.6
+Released 2017-mm-dd
 
+
+## 2.87.5
+Released 2017-02-02
+
+Bug fixes:
+ - Cast dataview override values to Number or throw error.
+
+
+## 2.87.4
+Released 2017-01-20
+
+Bug fixes:
+ - Be able to not compute NULL categories and null values  in aggregation dataviews #617.
+
+
+## 2.87.3
+Released 2016-12-19
+
+Bug fixes:
+ - Fix overviews-related dataviews problems. See https://github.com/CartoDB/Windshaft-cartodb/pull/604
+
+
+## 2.87.2
+Released 2016-12-19
+
+- Use exception safe Dataservices API functions. See https://github.com/CartoDB/dataservices-api/issues/314 and https://github.com/CartoDB/camshaft/issues/242
 
 ## 2.87.1
 Released 2016-12-13

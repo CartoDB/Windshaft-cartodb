@@ -307,6 +307,13 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
         url += '?' + qs.stringify(extraParams);
     }
 
+    var expectedResponse = params.response || {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
     var layergroupId;
     step(
         function createLayergroup() {
@@ -372,12 +379,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                         host: 'localhost'
                     }
                 },
-                {
-                    status: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    }
-                },
+                expectedResponse,
                 function(res, err) {
                     if (err) {
                         return next(err);
