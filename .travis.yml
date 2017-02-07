@@ -2,6 +2,8 @@ dist: trusty
 addons:
   postgresql: "9.5"
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - postgresql-9.5-postgis-2.3
       - postgresql-plpython-9.5
