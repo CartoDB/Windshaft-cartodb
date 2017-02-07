@@ -7,7 +7,7 @@ all:
 	@$(SHELL) ./scripts/install.sh
 
 clean:
-	rm -rf node_modules/*
+	rm -rf node_modules/
 
 distclean: clean
 	rm config.status*
