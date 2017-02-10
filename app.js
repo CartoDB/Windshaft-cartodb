@@ -110,6 +110,7 @@ var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, b
 var version = require("./package").version;
 
 listener.on('listening', function() {
+    log("Using Node.js %s", process.version);
     log('Using configuration file "%s"', configurationFile);
     log(
         "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
