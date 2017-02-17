@@ -228,7 +228,9 @@ describe('tests from old api translated to multilayer', function() {
                 },
                 function(res) {
                     var parsed = JSON.parse(res.body);
-                    assert.deepEqual(parsed.errors, [ 'Unexpected token W in JSON at position 0' ]);
+                    assert.ok(parsed.errors);
+                    assert.equal(parsed.errors.length, 1);
+                    assert.ok(parsed.errors[0].match(/^Unexpected token W/));
 
                     done();
                 }

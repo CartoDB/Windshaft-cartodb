@@ -419,7 +419,9 @@ describe('multilayer error cases', function() {
             },
             function(res) {
                 var parsedBody = JSON.parse(res.body);
-                assert.deepEqual(parsedBody, { errors: ['SyntaxError: Unexpected token { in JSON at position 1'] });
+                assert.ok(parsedBody.errors);
+                assert.equal(parsedBody.errors.length, 1);
+                assert.ok(parsedBody.errors[0].match(/^SyntaxError: Unexpected token {/));
                 done();
             }
         );
