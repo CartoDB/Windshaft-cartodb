@@ -3,6 +3,7 @@ config.status*
 config/environments/*.js
 .idea
 .vscode
+.nvmrc
 tools/munin/windshaft.conf
 logs/
 pids/

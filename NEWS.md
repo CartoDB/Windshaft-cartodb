@@ -1,8 +1,21 @@
 # Changelog
 
-## 2.87.6
+## 2.88.2
 Released 2017-mm-dd
 
+## 2.88.1
+Released 2017-02-21
+
+Announcements:
+- Upgrades camshaft to [0.50.1](https://github.com/CartoDB/camshaft/releases/tag/0.50.1)
+
+## 2.88.0
+Released 2017-02-21
+
+Announcements:
+ - Upgrades camshaft to [0.50.0](https://github.com/CartoDB/camshaft/releases/tag/0.50.0).
+ - Upgrades cartodb-psql to [0.7.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.7.1).
+ - Upgrades windshaft to [2.7.0](https://github.com/CartoDB/windshaft/releases/tag/2.7.0).
 
 ## 2.87.5
 Released 2017-02-02
@@ -17,13 +30,11 @@ Released 2017-01-20
 Bug fixes:
  - Be able to not compute NULL categories and null values  in aggregation dataviews #617.
 
-
 ## 2.87.3
 Released 2016-12-19
 
 Bug fixes:
  - Fix overviews-related dataviews problems. See https://github.com/CartoDB/Windshaft-cartodb/pull/604
-
 
 ## 2.87.2
 Released 2016-12-19
