@@ -4,8 +4,7 @@
 4. Recreate npm-shrinkwrap.json with: `make shrinkwrap`
 5. Commit package.json, npm-shrinwrap.json, NEWS
 6. git tag -a Major.Minor.Patch # use NEWS section as content
-7. Announce on cartodb@googlegroups.com
-8. Stub NEWS/package for next version
+7. Stub NEWS/package for next version
 
 Versions:
 
