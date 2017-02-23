@@ -1,7 +1,7 @@
 # Changelog
 
 ## 2.88.2
-Released 2017-mm-dd
+Released 2017-02-23
 
 Announcements:
  - Upgrades camshaft to [0.50.2](https://github.com/CartoDB/camshaft/releases/tag/0.50.2).
