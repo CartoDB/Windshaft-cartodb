@@ -1,5 +1,5 @@
 require('../../support/test_helper');
-
+var _ = require('underscore');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
@@ -102,6 +102,39 @@ describe('aggregations happy cases', function() {
                 } else {
                     assert.ok(!hasNullCategory, 'aggregation has category NULL');
                 }
+
+                done();
+            });
+        });
+    });
+
+    var operations_and_values = {'count': 9, 'sum': 45, 'avg': 5, 'max': 9, 'min': 1};
+
+    var query_other = [
+        'select generate_series(1,3) as val, \'other_a\' as cat, NULL as the_geom_webmercator',
+        'select generate_series(4,6) as val, \'other_b\' as cat, NULL as the_geom_webmercator',
+        'select generate_series(7,9) as val, \'other_c\' as cat, NULL as the_geom_webmercator',
+        'select generate_series(10,12) as val, md5(generate_series(0,4)::text) as cat, NULL as the_geom_webmercator'
+    ].join(' UNION ALL ');
+
+    _.keys(operations_and_values).forEach(function (operation) {
+        var description = 'should aggregate OTHER category using "' + operation + '"';
+
+        it(description, function (done) {
+            this.testClient = new TestClient(aggregationOperationMapConfig(operation, query_other, 'cat', 'val'));
+            this.testClient.getDataview('cat', { own_filter: 0 }, function (err, aggregation) {
+                assert.ifError(err);
+
+                assert.ok(aggregation);
+                assert.equal(aggregation.type, 'aggregation');
+                assert.ok(aggregation.categories);
+                assert.equal(aggregation.categoriesCount, 8);
+                assert.equal(aggregation.count, 24);
+                assert.equal(aggregation.nulls, 0);
+
+                var other_category = _.find(aggregation.categories,
+                                            function(category){ return category.category === 'Other'; });
+                assert.equal(other_category.value, operations_and_values[operation]);
 
                 done();
             });
