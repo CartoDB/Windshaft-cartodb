@@ -1,5 +1,4 @@
 require('../../support/test_helper');
-var _ = require('underscore');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
@@ -117,7 +116,7 @@ describe('aggregations happy cases', function() {
         'select generate_series(10,12) as val, md5(generate_series(0,4)::text) as cat, NULL as the_geom_webmercator'
     ].join(' UNION ALL ');
 
-    _.keys(operations_and_values).forEach(function (operation) {
+    Object.keys(operations_and_values).forEach(function (operation) {
         var description = 'should aggregate OTHER category using "' + operation + '"';
 
         it(description, function (done) {
@@ -132,9 +131,11 @@ describe('aggregations happy cases', function() {
                 assert.equal(aggregation.count, 24);
                 assert.equal(aggregation.nulls, 0);
 
-                var other_category = _.find(aggregation.categories,
-                                            function(category){ return category.category === 'Other'; });
-                assert.equal(other_category.value, operations_and_values[operation]);
+                var aggregated_categories = aggregation.categories.filter( function(category) {
+                    return category.agg === true;
+                });
+                assert.equal(aggregated_categories.length, 1);
+                assert.equal(aggregated_categories.shift().value, operations_and_values[operation]);
 
                 done();
             });
