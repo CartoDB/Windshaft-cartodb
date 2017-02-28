@@ -139,7 +139,7 @@ describe('aggregations happy cases', function() {
                     return category.agg === true;
                 });
                 assert.equal(aggregated_categories.length, 1);
-                assert.equal(aggregated_categories.shift().value, operations_and_values[operation]);
+                assert.equal(aggregated_categories[0].value, operations_and_values[operation]);
 
                 done();
             });
