@@ -113,7 +113,11 @@ describe('aggregations happy cases', function() {
         'select generate_series(1,3) as val, \'other_a\' as cat, NULL as the_geom_webmercator',
         'select generate_series(4,6) as val, \'other_b\' as cat, NULL as the_geom_webmercator',
         'select generate_series(7,9) as val, \'other_c\' as cat, NULL as the_geom_webmercator',
-        'select generate_series(10,12) as val, md5(generate_series(0,4)::text) as cat, NULL as the_geom_webmercator'
+        'select generate_series(10,12) as val, \'category_1\' as cat, NULL as the_geom_webmercator',
+        'select generate_series(10,12) as val, \'category_2\' as cat, NULL as the_geom_webmercator',
+        'select generate_series(10,12) as val, \'category_3\' as cat, NULL as the_geom_webmercator',
+        'select generate_series(10,12) as val, \'category_4\' as cat, NULL as the_geom_webmercator',
+        'select generate_series(10,12) as val, \'category_5\' as cat, NULL as the_geom_webmercator'
     ].join(' UNION ALL ');
 
     Object.keys(operations_and_values).forEach(function (operation) {
