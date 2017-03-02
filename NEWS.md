@@ -1,8 +1,10 @@
 # Changelog
 
 ## 2.88.3
-Released 2017-mm-dd
+Released 2017-03-02
 
+Bug fixes:
+- Category dataviews now uses the proper aggregation function for the 'Other' category. See https://github.com/CartoDB/Windshaft-cartodb/issues/628
 
 ## 2.88.2
 Released 2017-02-23
