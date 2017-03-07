@@ -148,7 +148,7 @@ describe('use only needed columns', function() {
                     cartocss: '#layer0 { marker-fill: red; marker-width: 10; }' +
                         '#layer0 { marker-width: 14; [name="Madrid"] { marker-width: 20; } }' +
                         '#layer0[pop_max>1000] { marker-width: 14; [name="Madrid"] { marker-width: 20; } }' +
-                        '#layer0[adm0name="Turkey"] { marker-width: 14; [name="Madrid"] { marker-width: 20; } }',
+                        '#layer0[adm0name=~".*Turkey*"] { marker-width: 14; [name="Madrid"] { marker-width: 20; } }',
                     cartocss_version: '2.0.1',
                     interactivity: 'cartodb_id'
                 }
