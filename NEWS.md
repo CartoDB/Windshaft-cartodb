@@ -1,5 +1,146 @@
 # Changelog
 
+## 2.88.3
+Released 2017-03-02
+
+Bug fixes:
+- Category dataviews now uses the proper aggregation function for the 'Other' category. See https://github.com/CartoDB/Windshaft-cartodb/issues/628
+
+## 2.88.2
+Released 2017-02-23
+
+Announcements:
+ - Upgrades camshaft to [0.50.2](https://github.com/CartoDB/camshaft/releases/tag/0.50.2).
+
+
+## 2.88.1
+Released 2017-02-21
+
+Announcements:
+ - Upgrades camshaft to [0.50.1](https://github.com/CartoDB/camshaft/releases/tag/0.50.1)
+
+
+## 2.88.0
+Released 2017-02-21
+
+Announcements:
+ - Upgrades camshaft to [0.50.0](https://github.com/CartoDB/camshaft/releases/tag/0.50.0).
+ - Upgrades cartodb-psql to [0.7.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.7.1).
+ - Upgrades windshaft to [2.7.0](https://github.com/CartoDB/windshaft/releases/tag/2.7.0).
+
+
+## 2.87.5
+Released 2017-02-02
+
+Bug fixes:
+ - Cast dataview override values to Number or throw error.
+
+
+## 2.87.4
+Released 2017-01-20
+
+Bug fixes:
+ - Be able to not compute NULL categories and null values  in aggregation dataviews #617.
+
+
+## 2.87.3
+Released 2016-12-19
+
+Bug fixes:
+ - Fix overviews-related dataviews problems. See https://github.com/CartoDB/Windshaft-cartodb/pull/604
+
+
+## 2.87.2
+Released 2016-12-19
+
+- Use exception safe Dataservices API functions. See https://github.com/CartoDB/dataservices-api/issues/314 and https://github.com/CartoDB/camshaft/issues/242
+
+
+## 2.87.1
+Released 2016-12-13
+
+Announcements:
+ - Upgrades windshaft to [2.6.4](https://github.com/CartoDB/Windshaft/releases/tag/2.6.4).
+ - Upgrades request dependency.
+ - Regenerate npm-shrinkwrap.json: missing dependency updates.
+
+
+## 2.87.0
+Released 2016-12-12
+
+Enhancements:
+ - Upgrade turbo-carto dependency to version 0.19.0.
+
+## 2.86.1
+Released 2016-12-02
+
+Bug fixes:
+ - Maps with analyses and `sql_wrap` were broken #599.
+
+
+## 2.86.0
+Released 2016-12-02
+
+Announcements:
+ - Upgrades windshaft to [2.6.3](https://github.com/CartoDB/Windshaft/releases/tag/2.6.3).
+
+
+## 2.85.1
+Released 2016-11-30
+
+Announcements:
+ - Upgrades camshaft to [0.48.4](https://github.com/CartoDB/camshaft/releases/tag/0.48.4).
+
+
+## 2.85.0
+Released 2016-11-24
+
+New features:
+ - Allow to set resource URL templates with substitution tokens #594.
+
+
+## 2.84.2
+Released 2016-11-23
+
+Announcements:
+ - Upgrades camshaft to [0.48.3](https://github.com/CartoDB/camshaft/releases/tag/0.48.3).
+
+
+## 2.84.1
+Released 2016-11-23
+
+Announcements:
+ - Upgrades camshaft to [0.48.2](https://github.com/CartoDB/camshaft/releases/tag/0.48.2).
+
+
+## 2.84.0
+Released 2016-11-11
+
+New features:
+ - Analyses limit configuration allows to set other limits than timeout.
+
+
+## 2.83.1
+Released 2016-11-10
+
+Announcements:
+ - Upgrades camshaft to [0.48.1](https://github.com/CartoDB/camshaft/releases/tag/0.48.1).
+
+
+## 2.83.0
+Released 2016-11-10
+
+Announcements:
+ - Upgrades camshaft to [0.48.0](https://github.com/CartoDB/camshaft/releases/tag/0.48.0).
+
+
+## 2.82.0
+Released 2016-11-08
+
+Announcements:
+ - Upgrades camshaft to [0.47.0](https://github.com/CartoDB/camshaft/releases/tag/0.47.0).
+
+
 ## 2.81.1
 Released 2016-11-05
 
