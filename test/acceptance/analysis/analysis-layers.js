@@ -146,6 +146,36 @@ describe('analysis-layers', function() {
         });
     });
 
+    it('should have empty affected tables if it has only "source" node', function(done) {
+        var useCase = useCases[0];
+
+        var testClient = new TestClient(useCase.mapConfig, 1234);
+
+        testClient.getLayergroup(function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            var affected_tables = layergroupResult.metadata.layers[0].meta.affected_tables;
+            assert.equal(affected_tables.length, 0);
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should have empty affected tables if it has a node other than "source"', function(done) {
+        var useCase = useCases[1];
+
+        var testClient = new TestClient(useCase.mapConfig, 1234);
+
+        testClient.getLayergroup(function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            var affected_tables = layergroupResult.metadata.layers[0].meta.affected_tables;
+            assert.equal(affected_tables[0], 'public.populated_places_simple_reduced');
+
+            testClient.drain(done);
+        });
+    });
+
     it('should NOT fail for non-authenticated requests when it is just source', function(done) {
         var useCase = useCases[0];
 
