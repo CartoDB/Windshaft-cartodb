@@ -28,6 +28,7 @@ describe('get requests x-cache-channel', function() {
     var mapConfigs = [
         {
             "description": "header should be present",
+            "x_cache_channel": "test_windshaft_cartodb_user_1_db:public.test_table",
             "data":
                 {
                     version: '1.4.0',
@@ -63,6 +64,9 @@ describe('get requests x-cache-channel', function() {
         },
         {
             "description": "header should be present and be composed with source table name",
+            "x_cache_channel": "test_windshaft_cartodb_user_1_db:" +
+                               "public.analysis_2f13a3dbd7_9eb239903a1afd8a69130d1ece0fc8b38de8592d" +
+                               ",public.test_table",
             "data":
             {
                 version: '1.5.0',
@@ -181,8 +185,9 @@ describe('get requests x-cache-channel', function() {
     mapConfigs.forEach(function(mapConfigData) {
         describe(mapConfigData.description, function() {
             var mapConfig = mapConfigData.data;
+            var expectedCacheChannel = mapConfigData.x_cache_channel;
             it('/api/v1/map Map instantiation', function(done) {
-                var testFn = validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table');
+                var testFn = validateXCacheChannel(done, expectedCacheChannel);
                 withLayergroupId(mapConfig, function(err, layergroupId, res) {
                     testFn(res);
                 });
@@ -192,8 +197,8 @@ describe('get requests x-cache-channel', function() {
                 withLayergroupId(mapConfig, function(err, layergroupId) {
                     assert.response(
                         server,
-                        getRequest('/api/v1/map/' + layergroupId + '/0/0/0@2x.png'),
-                        validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table')
+                        getRequest('/api/v1/map/' + layergroupId + '/0/0/0@2x.png', true),
+                        validateXCacheChannel(done, expectedCacheChannel)
                     );
                 });
             });
@@ -202,8 +207,8 @@ describe('get requests x-cache-channel', function() {
                 withLayergroupId(mapConfig, function(err, layergroupId) {
                     assert.response(
                         server,
-                        getRequest('/api/v1/map/' + layergroupId + '/0/0/0.png'),
-                        validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table')
+                        getRequest('/api/v1/map/' + layergroupId + '/0/0/0.png', true),
+                        validateXCacheChannel(done, expectedCacheChannel)
                     );
                 });
             });
@@ -212,8 +217,8 @@ describe('get requests x-cache-channel', function() {
                 withLayergroupId(mapConfig, function(err, layergroupId) {
                     assert.response(
                         server,
-                        getRequest('/api/v1/map/' + layergroupId + '/0/0/0/0.png'),
-                        validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table')
+                        getRequest('/api/v1/map/' + layergroupId + '/0/0/0/0.png', true),
+                        validateXCacheChannel(done, expectedCacheChannel)
                     );
                 });
             });
@@ -222,8 +227,8 @@ describe('get requests x-cache-channel', function() {
                 withLayergroupId(mapConfig, function(err, layergroupId) {
                     assert.response(
                         server,
-                        getRequest('/api/v1/map/' + layergroupId + '/0/attributes/1'),
-                        validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table')
+                        getRequest('/api/v1/map/' + layergroupId + '/0/attributes/1', true),
+                        validateXCacheChannel(done, expectedCacheChannel)
                     );
                 });
             });
@@ -232,8 +237,8 @@ describe('get requests x-cache-channel', function() {
                 withLayergroupId(mapConfig, function(err, layergroupId) {
                     assert.response(
                         server,
-                        getRequest('/api/v1/map/static/center/' + layergroupId + '/0/0/0/400/300.png'),
-                        validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table')
+                        getRequest('/api/v1/map/static/center/' + layergroupId + '/0/0/0/400/300.png', true),
+                        validateXCacheChannel(done, expectedCacheChannel)
                     );
                 });
             });
@@ -242,8 +247,8 @@ describe('get requests x-cache-channel', function() {
                 withLayergroupId(mapConfig, function(err, layergroupId) {
                     assert.response(
                         server,
-                        getRequest('/api/v1/map/static/bbox/' + layergroupId + '/-45,-45,45,45/400/300.png'),
-                        validateXCacheChannel(done, 'test_windshaft_cartodb_user_1_db:public.test_table')
+                        getRequest('/api/v1/map/static/bbox/' + layergroupId + '/-45,-45,45,45/400/300.png', true),
+                        validateXCacheChannel(done, expectedCacheChannel)
                     );
                 });
             });
