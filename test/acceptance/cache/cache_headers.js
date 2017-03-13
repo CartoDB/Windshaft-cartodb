@@ -1,16 +1,16 @@
-var testHelper = require('../support/test_helper');
+var testHelper = require('../../support/test_helper');
 
-var assert = require('../support/assert');
+var assert = require('../../support/assert');
 var qs = require('querystring');
 
-var CartodbWindshaft = require('../../lib/cartodb/server');
-var serverOptions = require('../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../../lib/cartodb/server');
+var serverOptions = require('../../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 server.setMaxListeners(0);
 
-var LayergroupToken = require('../support/layergroup-token');
+var LayergroupToken = require('../../support/layergroup-token');
 
-describe('get requests x-cache-channel', function() {
+describe('get requests with cache headers', function() {
 
     var keysToDelete;
     beforeEach(function() {
@@ -27,11 +27,14 @@ describe('get requests x-cache-channel', function() {
 
     var mapConfigs = [
         {
-            "description": "header should be present",
-            "x_cache_channel": "test_windshaft_cartodb_user_1_db:public.test_table",
+            "description": "cache headers should be present",
+            "cache_headers": {
+                "x_cache_channel": "test_windshaft_cartodb_user_1_db:public.test_table",
+                "surrogate_keys": "t:77pJnX"
+            },
             "data":
                 {
-                    version: '1.4.0',
+                    version: '1.5.0',
                     layers: [
                         {
                             options: {
@@ -63,10 +66,13 @@ describe('get requests x-cache-channel', function() {
                 },
         },
         {
-            "description": "header should be present and be composed with source table name",
-            "x_cache_channel": "test_windshaft_cartodb_user_1_db:" +
-                               "public.analysis_2f13a3dbd7_9eb239903a1afd8a69130d1ece0fc8b38de8592d" +
-                               ",public.test_table",
+            "description": "cache headers should be present and be composed with source table name",
+            "cache_headers": {
+                "x_cache_channel": "test_windshaft_cartodb_user_1_db:" +
+                                "public.analysis_2f13a3dbd7_9eb239903a1afd8a69130d1ece0fc8b38de8592d" +
+                                ",public.test_table",
+                "surrogate_keys": "t:77pJnX t:iL4eth"
+            },
             "data":
             {
                 version: '1.5.0',
@@ -136,22 +142,24 @@ describe('get requests x-cache-channel', function() {
         };
     }
 
-    function validateXCacheChannel(done, expectedCacheChannel) {
+    function validateCacheHeaders(done, expectedCacheHeaders) {
         return function(res, err) {
             if (err) {
                 return done(err);
             }
 
             assert.ok(res.headers['x-cache-channel']);
-            if (expectedCacheChannel) {
-                assert.equal(res.headers['x-cache-channel'], expectedCacheChannel);
+            assert.ok(res.headers['surrogate-key']);
+            if (expectedCacheHeaders) {
+                assert.equal(res.headers['x-cache-channel'], expectedCacheHeaders.x_cache_channel);
+                assert.equal(res.headers['surrogate-key'], expectedCacheHeaders.surrogate_keys);
             }
 
             done();
         };
     }
 
-    function noXCacheChannelHeader(done) {
+    function noCacheHeaders(done) {
         return function(res, err) {
             if (err) {
                 return done(err);
@@ -160,6 +168,10 @@ describe('get requests x-cache-channel', function() {
             assert.ok(
                 !res.headers['x-cache-channel'],
                 'did not expect x-cache-channel header, got: `' + res.headers['x-cache-channel'] + '`'
+            );
+            assert.ok(
+                !res.headers['surrogate-key'],
+                'did not expect surrogate-key header, got: `' + res.headers['surrogate-key'] + '`'
             );
             done();
         };
@@ -185,9 +197,9 @@ describe('get requests x-cache-channel', function() {
     mapConfigs.forEach(function(mapConfigData) {
         describe(mapConfigData.description, function() {
             var mapConfig = mapConfigData.data;
-            var expectedCacheChannel = mapConfigData.x_cache_channel;
+            var expectedCacheHeaders = mapConfigData.cache_headers;
             it('/api/v1/map Map instantiation', function(done) {
-                var testFn = validateXCacheChannel(done, expectedCacheChannel);
+                var testFn = validateCacheHeaders(done, expectedCacheHeaders);
                 withLayergroupId(mapConfig, function(err, layergroupId, res) {
                     testFn(res);
                 });
@@ -198,7 +210,7 @@ describe('get requests x-cache-channel', function() {
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0@2x.png', true),
-                        validateXCacheChannel(done, expectedCacheChannel)
+                        validateCacheHeaders(done, expectedCacheHeaders)
                     );
                 });
             });
@@ -208,7 +220,7 @@ describe('get requests x-cache-channel', function() {
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0.png', true),
-                        validateXCacheChannel(done, expectedCacheChannel)
+                        validateCacheHeaders(done, expectedCacheHeaders)
                     );
                 });
             });
@@ -218,7 +230,7 @@ describe('get requests x-cache-channel', function() {
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0/0.png', true),
-                        validateXCacheChannel(done, expectedCacheChannel)
+                        validateCacheHeaders(done, expectedCacheHeaders)
                     );
                 });
             });
@@ -228,7 +240,7 @@ describe('get requests x-cache-channel', function() {
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/attributes/1', true),
-                        validateXCacheChannel(done, expectedCacheChannel)
+                        validateCacheHeaders(done, expectedCacheHeaders)
                     );
                 });
             });
@@ -238,7 +250,7 @@ describe('get requests x-cache-channel', function() {
                     assert.response(
                         server,
                         getRequest('/api/v1/map/static/center/' + layergroupId + '/0/0/0/400/300.png', true),
-                        validateXCacheChannel(done, expectedCacheChannel)
+                        validateCacheHeaders(done, expectedCacheHeaders)
                     );
                 });
             });
@@ -248,21 +260,21 @@ describe('get requests x-cache-channel', function() {
                     assert.response(
                         server,
                         getRequest('/api/v1/map/static/bbox/' + layergroupId + '/-45,-45,45,45/400/300.png', true),
-                        validateXCacheChannel(done, expectedCacheChannel)
+                        validateCacheHeaders(done, expectedCacheHeaders)
                     );
                 });
             });
         });
     });
 
-    describe('header should NOT be present', function() {
+    describe('cache headers should NOT be present', function() {
 
         it('/', function(done) {
             assert.response(
                 server,
                 getRequest('/'),
                 statusOkResponse,
-                noXCacheChannelHeader(done)
+                noCacheHeaders(done)
             );
         });
 
@@ -271,7 +283,7 @@ describe('get requests x-cache-channel', function() {
                 server,
                 getRequest('/version'),
                 statusOkResponse,
-                noXCacheChannelHeader(done)
+                noCacheHeaders(done)
             );
         });
 
@@ -280,7 +292,7 @@ describe('get requests x-cache-channel', function() {
                 server,
                 getRequest('/health'),
                 statusOkResponse,
-                noXCacheChannelHeader(done)
+                noCacheHeaders(done)
             );
         });
 
@@ -289,7 +301,7 @@ describe('get requests x-cache-channel', function() {
                 server,
                 getRequest('/api/v1/map/named', true),
                 statusOkResponse,
-                noXCacheChannelHeader(done)
+                noCacheHeaders(done)
             );
         });
 
@@ -352,7 +364,7 @@ describe('get requests x-cache-channel', function() {
                     server,
                     getRequest('/api/v1/map/named/' + templateName, true),
                     statusOkResponse,
-                    noXCacheChannelHeader(done)
+                    noCacheHeaders(done)
                 );
             });
 
@@ -361,7 +373,7 @@ describe('get requests x-cache-channel', function() {
                     server,
                     getRequest('/api/v1/map/named/' + templateName, true, 'cb'),
                     statusOkResponse,
-                    noXCacheChannelHeader(done)
+                    noCacheHeaders(done)
                 );
             });
         });
