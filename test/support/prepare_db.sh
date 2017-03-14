@@ -75,7 +75,7 @@ if test x"$PREPARE_PGSQL" = xyes; then
   dropdb "${TEST_DB}"
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 
-  LOCAL_SQL_SCRIPTS='analysis_catalog windshaft.test gadm4 ported/populated_places_simple_reduced cdb_analysis_check'
+  LOCAL_SQL_SCRIPTS='analysis_catalog windshaft.test gadm4 ported/populated_places_simple_reduced cdb_analysis_check cdb_invalidate_varnish'
   REMOTE_SQL_SCRIPTS='CDB_QueryStatements CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_ZoomFromScale CDB_OverviewsSupport CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ'
 
   CURL_ARGS=""
