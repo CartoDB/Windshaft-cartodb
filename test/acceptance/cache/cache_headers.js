@@ -29,7 +29,10 @@ describe('get requests with cache headers', function() {
         {
             "description": "cache headers should be present",
             "cache_headers": {
-                "x_cache_channel": "test_windshaft_cartodb_user_1_db:public.test_table",
+                "x_cache_channel": {
+                    "db_name": "test_windshaft_cartodb_user_1_db",
+                    "tables": ["public.test_table"]
+                },
                 "surrogate_keys": "t:77pJnX"
             },
             "data":
@@ -68,9 +71,11 @@ describe('get requests with cache headers', function() {
         {
             "description": "cache headers should be present and be composed with source table name",
             "cache_headers": {
-                "x_cache_channel": "test_windshaft_cartodb_user_1_db:" +
-                                "public.analysis_2f13a3dbd7_9eb239903a1afd8a69130d1ece0fc8b38de8592d" +
-                                ",public.test_table",
+                "x_cache_channel": {
+                    "db_name": "test_windshaft_cartodb_user_1_db",
+                    "tables": ["public.analysis_2f13a3dbd7_9eb239903a1afd8a69130d1ece0fc8b38de8592d",
+                               "public.test_table"]
+                },
                 "surrogate_keys": "t:77pJnX t:iL4eth"
             },
             "data":
@@ -151,12 +156,19 @@ describe('get requests with cache headers', function() {
             assert.ok(res.headers['x-cache-channel']);
             assert.ok(res.headers['surrogate-key']);
             if (expectedCacheHeaders) {
-                assert.equal(res.headers['x-cache-channel'], expectedCacheHeaders.x_cache_channel);
+                validateXChannelHeaders(res.headers, expectedCacheHeaders);
                 assert.equal(res.headers['surrogate-key'], expectedCacheHeaders.surrogate_keys);
             }
 
             done();
         };
+    }
+
+    function validateXChannelHeaders(headers, expectedCacheHeaders) {
+        var dbName = headers['x-cache-channel'].split(':')[0];
+        var tables = headers['x-cache-channel'].split(':')[1].split(',').sort();
+        assert.equal(dbName, expectedCacheHeaders.x_cache_channel.db_name);
+        assert.deepEqual(tables, expectedCacheHeaders.x_cache_channel.tables.sort());
     }
 
     function noCacheHeaders(done) {
