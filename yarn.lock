@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-abaculus@cartodb/abaculus#2.0.3-cdb1:
+"abaculus@github:cartodb/abaculus#2.0.3-cdb1":
   version "2.0.3-cdb1"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/f5f34e1c80cdd8d49edd1d6fe3b2220ab2e23aaf"
   dependencies:
@@ -198,7 +198,7 @@ camshaft@0.50.2:
     dot "^1.0.3"
     request "^2.69.0"
 
-canvas@cartodb/node-canvas#1.6.2-cdb2:
+"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -216,21 +216,21 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@cartodb/carto#0.15.1-cdb3:
+carto@CartoDB/carto#0.15.1-cdb1:
+  version "0.15.1-cdb1"
+  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  dependencies:
+    mapnik-reference "~6.0.2"
+    optimist "~0.6.0"
+    underscore "~1.6.0"
+
+"carto@github:cartodb/carto#0.15.1-cdb3":
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "1.8.3"
-
-"carto@github:cartodb/carto#0.15.1-cdb1":
-  version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
-  dependencies:
-    mapnik-reference "~6.0.2"
-    optimist "~0.6.0"
-    underscore "~1.6.0"
 
 cartocolor@4.0.0:
   version "4.0.0"
@@ -774,7 +774,7 @@ graceful-fs@~2.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-grainstore@1.6.0:
+grainstore@~1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.6.0.tgz#6de188c686f168992b4b384af2448a8f14f167bc"
   dependencies:
@@ -1448,7 +1448,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "~1.0.0"
 
-"pg@github:cartodb/node-postgres#6.1.2-cdb1":
+pg@cartodb/node-postgres#6.1.2-cdb1:
   version "6.1.2"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3c81aea432ce58d20a795786c58bbb14f68f9689"
   dependencies:
@@ -1988,7 +1988,7 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tilelive-bridge@cartodb/tilelive-bridge#2.3.1-cdb1:
+"tilelive-bridge@github:cartodb/tilelive-bridge#2.3.1-cdb1":
   version "2.3.1-cdb1"
   resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/3f76c278c782e93d79045870387a0a06bace720b"
   dependencies:
@@ -1996,7 +1996,7 @@ tilelive-bridge@cartodb/tilelive-bridge#2.3.1-cdb1:
     mapnik-pool "~0.1.3"
     sphericalmercator "1.0.x"
 
-tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb1:
+"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb1":
   version "0.6.18-cdb1"
   resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/cf7e5b4633db653a889a6c6e6a5ddcbcf4ddc3b5"
   dependencies:
@@ -2152,9 +2152,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@cartodb/windshaft#mapnik-migration:
-  version "2.7.1"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/97e813e40d6857b71feaf030fcb53601f428da64"
+windshaft@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-3.0.0.tgz#45e2e0b755e3f984fa26bf5f03ee97dcc4484183"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
@@ -2162,7 +2162,7 @@ windshaft@cartodb/windshaft#mapnik-migration:
     cartodb-psql "0.7.1"
     debug "~2.2.0"
     dot "~1.0.2"
-    grainstore "1.6.0"
+    grainstore "~1.6.0"
     mapnik "3.5.14"
     queue-async "~1.0.7"
     redis-mpool "0.4.1"
