@@ -145,7 +145,7 @@ describe('named_layers datasources', function() {
 
                 assert.equal(layers[0].type, 'cartodb');
                 assert.equal(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.equal(datasource.getLayerDatasource(0), undefined);
 
                 done();
             }
@@ -160,7 +160,7 @@ describe('named_layers datasources', function() {
 
                 assert.equal(layers[0].type, 'cartodb');
                 assert.equal(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.equal(datasource.getLayerDatasource(0), undefined);
 
                 assert.equal(layers[1].type, 'cartodb');
                 assert.equal(layers[1].options.sql, wadusTemplateSql);
@@ -181,7 +181,7 @@ describe('named_layers datasources', function() {
 
                 assert.equal(layers[0].type, 'cartodb');
                 assert.equal(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.equal(datasource.getLayerDatasource(0), undefined);
 
                 assert.equal(layers[1].type, 'mapnik');
                 assert.equal(layers[1].options.sql, wadusMapnikSql);
@@ -263,7 +263,7 @@ describe('named_layers datasources', function() {
 
                 assert.equal(layers[3].type, 'cartodb');
                 assert.equal(layers[3].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(3), {});
+                assert.equal(datasource.getLayerDatasource(3), undefined);
 
                 assert.equal(layers[4].type, 'cartodb');
                 assert.equal(layers[4].options.sql, wadusTemplateSql);
@@ -273,7 +273,7 @@ describe('named_layers datasources', function() {
 
                 assert.equal(layers[5].type, 'cartodb');
                 assert.equal(layers[5].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(5), {});
+                assert.equal(datasource.getLayerDatasource(5), undefined);
 
                 assert.equal(layers[6].type, 'mapnik');
                 assert.equal(layers[6].options.sql, wadusMapnikSql);
@@ -298,7 +298,6 @@ describe('named_layers datasources', function() {
             var context = {};
             mapConfigNamedLayersAdapter.getMapConfig(username, testScenario.config, params, context,
                 function(err, mapConfig) {
-                    assert.ifError(err);
                     testScenario.test(err, mapConfig.layers, context.datasource, done);
                 }
             );
