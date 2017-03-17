@@ -39,7 +39,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.0",
     "underscore": "~1.6.0",
-    "windshaft": "2.7.0",
+    "windshaft": "2.8.0",
     "yargs": "~5.0.0",
     "zipfile": "cartodb/node-zipfile#0.5.11-cdb1"
   },
