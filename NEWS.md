@@ -11,6 +11,7 @@ Announcements:
  - Upgrades cartodb-redis to 0.13.2
  - Upgrades redis-mpool to 0.4.1
 
+**Note**: Due to this [issue](https://github.com/npm/npm/issues/15713), Windshaft-cartodb must be installed with `yarn` instead of `npm` providing just a `yarn.lock` to get consistent installs across machines.
 
 ## 2.89.0
 Released 2017-03-17
