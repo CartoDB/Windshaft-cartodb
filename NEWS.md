@@ -10,7 +10,6 @@ Announcements:
  - Upgrades cartodb-query-tables to 0.2.0
  - Upgrades cartodb-redis to 0.13.2
  - Upgrades redis-mpool to 0.4.1
- - Upgrades redis (dev-dependecy) to 0.12.1
 
 
 ## 2.89.0
