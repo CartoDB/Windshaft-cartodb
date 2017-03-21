@@ -43,7 +43,7 @@ psql -d template_postgis -c 'CREATE EXTENSION postgis;'
 To fetch and build all node-based dependencies, run:
 
 ```
-yarn [install]
+yarn
 ```
 
 Note that the ```yarn``` step will populate the node_modules/
