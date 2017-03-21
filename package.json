@@ -22,8 +22,8 @@
     "body-parser": "~1.14.0",
     "camshaft": "0.50.3",
     "cartodb-psql": "~0.7.1",
-    "cartodb-query-tables": "~0.1.0",
-    "cartodb-redis": "0.13.1",
+    "cartodb-query-tables": "0.2.0",
+    "cartodb-redis": "0.13.2",
     "debug": "~2.2.0",
     "dot": "~1.0.2",
     "express": "~4.13.3",
@@ -33,22 +33,21 @@
     "lzma": "~2.3.2",
     "node-statsd": "~0.0.7",
     "queue-async": "~1.0.7",
-    "redis-mpool": "~0.4.0",
+    "redis-mpool": "0.4.1",
     "request": "~2.79.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.0",
     "underscore": "~1.6.0",
-    "windshaft": "2.8.0",
-    "yargs": "~5.0.0",
-    "zipfile": "cartodb/node-zipfile#0.5.11-cdb1"
+    "windshaft": "3.0.0",
+    "yargs": "~5.0.0"
   },
   "devDependencies": {
     "istanbul": "~0.4.3",
     "jshint": "~2.6.0",
     "mocha": "~1.21.4",
     "nock": "~2.11.0",
-    "redis": "~0.8.6",
+    "redis": "~0.12.1",
     "semver": "~1.1.4",
     "strftime": "~0.8.2"
   },
@@ -57,7 +56,7 @@
     "test": "make test-all"
   },
   "engines": {
-    "node": ">=0.8 <0.11",
-    "npm": ">=2.14.16"
+    "node": ">=6.9",
+    "npm": ">=3.10"
   }
 }

@@ -139,13 +139,15 @@ describe('server_gettile', function() {
             13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
-    // See http://github.com/CartoDB/Windshaft/issues/99
-    it("unused directives are tolerated",  function(done){
-        var style = "#test_table{point-transform: 'scale(100)';}";
-        var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
-        testClient.getTile(testClient.singleLayerMapConfig(sql, style), 0, 0, 0,
-            imageCompareFn('test_default_mapnik_point.png', done));
-    });
+    if ( semver.satisfies(mapnik.versions.mapnik, '2.3.x') ) {
+        // See http://github.com/CartoDB/Windshaft/issues/99
+        it("unused directives are tolerated",  function(done){
+            var style = "#test_table{point-transform: 'scale(100)';}";
+            var sql = "SELECT 1 as cartodb_id, 'SRID=4326;POINT(0 0)'::geometry as the_geom";
+            testClient.getTile(testClient.singleLayerMapConfig(sql, style), 0, 0, 0,
+                imageCompareFn('test_default_mapnik_point.png', done));
+        });
+    }
 
     // See http://github.com/CartoDB/Windshaft/issues/100
     var test_strictness = function(done) {
@@ -168,51 +170,53 @@ describe('server_gettile', function() {
       // Strictness handling changed in 2.3.x, possibly a bug: see http://github.com/mapnik/mapnik/issues/2301
       it.skip('[skipped due to http://github.com/mapnik/mapnik/issues/2301]' + test_strict_lbl,  test_strictness);
     }
-    else {
+    else  if (!semver.satisfies(mapnik.versions.mapnik, '3.0.x')) {
       it(test_strict_lbl,  test_strictness);
     }
 
-    it('high cpu regression with mapnik <2.3.x', function(done) {
-        var sql = [
-            "SELECT 'my polygon name here' AS name,",
-            "st_envelope(st_buffer(st_transform(",
-            "st_setsrid(st_makepoint(-26.6592894004,49.7990296995),4326),3857),10000000)) AS the_geom",
-            "FROM generate_series(-6,6) x",
-            "UNION ALL",
-            "SELECT 'my marker name here' AS name,",
-            "       st_transform(st_setsrid(st_makepoint(49.6042060319,-49.0522997372),4326),3857) AS the_geom",
-            "FROM generate_series(-6,6) x"
-        ].join(' ');
+    if ( semver.satisfies(mapnik.versions.mapnik, '2.3.x') ) {
 
-        var style = [
-            '#test_table {marker-fill:#ff7;',
-            '    marker-max-error:0.447492761618;',
-            '    marker-line-opacity:0.659371340628;',
-            '    marker-allow-overlap:true;',
-            '    polygon-fill:green;',
-            '    marker-spacing:0.0;',
-            '    marker-width:4.0;',
-            '    marker-height:18.0;',
-            '    marker-opacity:0.942312062822;',
-            '    line-color:green;',
-            '    line-gamma:0.945973211092;',
-            '    line-cap:square;',
-            '    polygon-opacity:0.12576055992;',
-            '    marker-type:arrow;',
-            '    polygon-gamma:0.46354913107;',
-            '    line-dasharray:33,23;',
-            '    line-join:bevel;',
-            '    marker-placement:line;',
-            '    line-width:1.0;',
-            '    marker-line-color:#ff7;',
-            '    line-opacity:0.39403752154;',
-            '    marker-line-width:3.0;',
-            '}'
-        ].join('');
+        it('high cpu regression with mapnik <2.3.x', function(done) {
+            var sql = [
+                "SELECT 'my polygon name here' AS name,",
+                "st_envelope(st_buffer(st_transform(",
+                "st_setsrid(st_makepoint(-26.6592894004,49.7990296995),4326),3857),10000000)) AS the_geom",
+                "FROM generate_series(-6,6) x",
+                "UNION ALL",
+                "SELECT 'my marker name here' AS name,",
+                "       st_transform(st_setsrid(st_makepoint(49.6042060319,-49.0522997372),4326),3857) AS the_geom",
+                "FROM generate_series(-6,6) x"
+            ].join(' ');
 
-        testClient.getTile(testClient.singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
-    });
+            var style = [
+                '#test_table {marker-fill:#ff7;',
+                '    marker-max-error:0.447492761618;',
+                '    marker-line-opacity:0.659371340628;',
+                '    marker-allow-overlap:true;',
+                '    polygon-fill:green;',
+                '    marker-spacing:0.0;',
+                '    marker-width:4.0;',
+                '    marker-height:18.0;',
+                '    marker-opacity:0.942312062822;',
+                '    line-color:green;',
+                '    line-gamma:0.945973211092;',
+                '    line-cap:square;',
+                '    polygon-opacity:0.12576055992;',
+                '    marker-type:arrow;',
+                '    polygon-gamma:0.46354913107;',
+                '    line-dasharray:33,23;',
+                '    line-join:bevel;',
+                '    marker-placement:line;',
+                '    line-width:1.0;',
+                '    marker-line-color:#ff7;',
+                '    line-opacity:0.39403752154;',
+                '    marker-line-width:3.0;',
+                '}'
+            ].join('');
 
+            testClient.getTile(testClient.singleLayerMapConfig(sql, style), 13, 4011, 3088, done);
+        });
+    }
     // https://github.com/CartoDB/Windshaft-cartodb/issues/316
     it('should return errors with better formatting', function(done) {
         var mapConfig = {
