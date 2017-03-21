@@ -2152,9 +2152,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-3.0.0.tgz#45e2e0b755e3f984fa26bf5f03ee97dcc4484183"
+windshaft@3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-3.0.1.tgz#d06b4673704fe8f8f2e87c1f590c836659ab46f3"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
