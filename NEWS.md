@@ -1,7 +1,7 @@
 # Changelog
 
 ## 3.0.0
-Released 2017-mm-dd
+Released 2017-03-21
 
 Announcements:
  - Supports Node v6.9.x
