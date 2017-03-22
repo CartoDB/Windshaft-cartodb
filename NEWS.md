@@ -1,7 +1,10 @@
 # Changelog
 
-## 3.0.3
-Released 2017-mm-dd
+## 3.1.0
+Released 2017-03-22
+
+Features:
+ - Generate URLs for resources based on CDN and template rules
 
 
 ## 3.0.2
