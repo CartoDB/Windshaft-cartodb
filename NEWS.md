@@ -1,7 +1,12 @@
 # Changelog
 
 ## 3.0.2
-Released 2017-mm-dd
+Released 2017-03-22
+
+Bug fixes:
+ - Upgrade dependencies
+ - Improve docs: remove mentions to NPM and use yarn instead
+ - Remove script to generate npm-shrinkwrap file
 
 
 ## 3.0.1
