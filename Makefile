@@ -9,12 +9,6 @@ all:
 clean:
 	rm -rf node_modules/
 
-shrinkwrap: clean
-	rm npm-shrinkwrap.json
-	npm install --no-shrinkwrap --production
-	npm prune
-	npm shrinkwrap
-
 distclean: clean
 	rm config.status*
 
