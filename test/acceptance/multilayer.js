@@ -574,7 +574,7 @@ describe(suiteName, function() {
             if ( err ) {
               return done(err);
             }
-            // trip epoch
+            // strip epoch
             expected_token = expected_token.split(':')[0];
             keysToDelete['map_cfg|' + expected_token] = 0;
             keysToDelete['user:localhost:mapviews:global'] = 5;

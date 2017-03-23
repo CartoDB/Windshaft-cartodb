@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.89.1
+Released 2017-mm-dd
+
+
+## 2.89.0
+Released 2017-03-17
+
+**Deprecation warning**: v2.89.0 is the last release that supports Node v0.10.x. Next mayor release will support Node v6.9.x and further versions.
+
+Announcements:
+ - Upgrades windshaft to [2.8.0](https://github.com/CartoDB/windshaft/releases/tag/2.8.0).
+
+Bug fixes:
+ - Histogram column type discovery query uses non-filtered query #637
+
+
 ## 2.88.4
 Released 2017-03-10
 

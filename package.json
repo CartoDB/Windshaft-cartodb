@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "2.88.4",
+  "version": "2.89.1",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -39,7 +39,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.0",
     "underscore": "~1.6.0",
-    "windshaft": "2.7.0",
+    "windshaft": "cartodb/windshaft#v2.x",
     "yargs": "~5.0.0",
     "zipfile": "cartodb/node-zipfile#0.5.11-cdb1"
   },

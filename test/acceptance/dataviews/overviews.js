@@ -144,6 +144,22 @@ describe('dataviews using tables with overviews', function() {
                     aggregationColumn: 'name',
                 }
             },
+            test_histogram: {
+                type: 'histogram',
+                source: {id: 'data-source'},
+                options: {
+                    column: 'value',
+                    bins: 2
+                }
+            },
+            test_histogram_date: {
+                type: 'histogram',
+                source: {id: 'data-source'},
+                options: {
+                    column: 'updated_at',
+                    bins: 2
+                }
+            },
             test_avg: {
                 type: 'formula',
                 source: {id: 'data-source'},
@@ -265,7 +281,82 @@ describe('dataviews using tables with overviews', function() {
         });
     });
 
+    it("should expose a histogram", function (done) {
+        var testClient = new TestClient(overviewsMapConfig);
+        testClient.getDataview('test_histogram', function (err, histogram) {
+            if (err) {
+                return done(err);
+            }
+            assert.ok(histogram);
+            assert.equal(histogram.type, 'histogram');
+            assert.ok(Array.isArray(histogram.bins));
+            testClient.drain(done);
+        });
+    });
+
     describe('filters', function() {
+
+        describe('histogram', function () {
+
+            it("should expose a filtered histogram", function (done) {
+                var params = {
+                    filters: {
+                        dataviews: { test_histogram: { min: 2 } }
+                    }
+                };
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_histogram', params, function (err, histogram) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.ok(histogram);
+                    assert.equal(histogram.type, 'histogram');
+                    assert.ok(Array.isArray(histogram.bins));
+                    assert.equal(histogram.bins.length, 4);
+                    testClient.drain(done);
+                });
+            });
+
+            it("should expose a filtered histogram with no results", function (done) {
+                var params = {
+                    filters: {
+                        dataviews: { test_histogram: { max: -1 } }
+                    }
+                };
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_histogram', params, function (err, histogram) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.ok(histogram);
+                    assert.equal(histogram.type, 'histogram');
+                    assert.ok(Array.isArray(histogram.bins));
+                    assert.equal(histogram.bins.length, 0);
+                    testClient.drain(done);
+                });
+            });
+
+            it("should expose a filtered date histogram with no results", function (done) {
+                // This most likely works because the overviews will pass
+                // the responsibility to the normal dataviews.
+                var params = {
+                    filters: {
+                        dataviews: { test_histogram_date: { max: -1 } }
+                    }
+                };
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_histogram_date', params, function (err, histogram) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.ok(histogram);
+                    assert.equal(histogram.type, 'histogram');
+                    assert.ok(Array.isArray(histogram.bins));
+                    assert.equal(histogram.bins.length, 0);
+                    testClient.drain(done);
+                });
+            });
+        });
 
         describe('category', function () {
 
