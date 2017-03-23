@@ -1,5 +1,13 @@
 # Changelog
 
+
+## 3.1.1
+Released 2017-03-23
+
+Bug fixes:
+ - Use crc32 instead of md5 for computing subdomain candidate #642
+
+
 ## 3.1.0
 Released 2017-03-22
 
