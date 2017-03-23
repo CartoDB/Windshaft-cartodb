@@ -1,6 +1,10 @@
 # Changelog
 
 
+## 3.1.2
+Released 2017-mm-dd
+
+
 ## 3.1.1
 Released 2017-03-23
 
