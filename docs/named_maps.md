@@ -124,7 +124,7 @@ view (optional) | extra keys to specify the view area for the map. It can be use
 
 ### Placeholder Format
 
-Placeholders are variables that can be placed in your template.json file. Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergoup configurations](http://docs.carto.com/carto-engine/maps-api/mapconfig/#layergroup-configurations).
+Placeholders are variables that can be placed in your template.json file. Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergroup configurations](http://docs.carto.com/carto-engine/maps-api/mapconfig/#layergroup-configurations).
 
 Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced inside the Named Maps API.
 
