@@ -2,8 +2,16 @@ var http = require('http');
 var https = require('https');
 var path = require('path');
 var fs = require('fs');
-
 var _ = require('underscore');
+var semver = require('semver');
+
+var ver = process.versions.node;
+ver = ver.split('-')[0]; // explode and truncate tag from version #511
+
+if (!semver.satisfies(ver, '>6.9.0')) {
+    console.log('Node version ' + ver + ' is not supported, please use Node.js 6.9 or higher.');
+    process.exit(1);
+}
 
 // jshint undef:false
 var log = console.log.bind(console);
