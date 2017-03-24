@@ -527,11 +527,11 @@ If you are creating a Torque layer in a Named Map without using the Torque.js li
 
 #### Examples of Named Maps created with CARTO.js
 
-- [Named Map selectors with interaction](http://bl.ocks.org/ohasselblad/515a8af1f99d5e690484)
+- [Named Map selectors with interaction](http://bl.ocks.org/andy-esch/515a8af1f99d5e690484)
 
-- [Named Map with interactivity](http://bl.ocks.org/ohasselblad/d1a45b8ff5e7bd90cd68)
+- [Named Map with interactivity](http://bl.ocks.org/andy-esch/d1a45b8ff5e7bd90cd68)
 
-- [Toggling sublayers in a Named Map](http://bl.ocks.org/ohasselblad/c1a0f4913610eec53cd3)
+- [Toggling sublayers in a Named Map](http://bl.ocks.org/andy-esch/c1a0f4913610eec53cd3)
 
 ## Fetching XYZ Tiles for Named Maps
 
