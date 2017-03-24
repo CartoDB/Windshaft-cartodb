@@ -124,7 +124,7 @@ view (optional) | extra keys to specify the view area for the map. It can be use
 
 ### Placeholder Format
 
-Placeholders are variables that can be placed in your template.json file. Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergoup configurations](http://docs.carto.com/carto-engine/maps-api/mapconfig/#layergroup-configurations).
+Placeholders are variables that can be placed in your template.json file. Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergroup configurations](http://docs.carto.com/carto-engine/maps-api/mapconfig/#layergroup-configurations).
 
 Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced inside the Named Maps API.
 
@@ -527,11 +527,11 @@ If you are creating a Torque layer in a Named Map without using the Torque.js li
 
 #### Examples of Named Maps created with CARTO.js
 
-- [Named Map selectors with interaction](http://bl.ocks.org/ohasselblad/515a8af1f99d5e690484)
+- [Named Map selectors with interaction](http://bl.ocks.org/andy-esch/515a8af1f99d5e690484)
 
-- [Named Map with interactivity](http://bl.ocks.org/ohasselblad/d1a45b8ff5e7bd90cd68)
+- [Named Map with interactivity](http://bl.ocks.org/andy-esch/d1a45b8ff5e7bd90cd68)
 
-- [Toggling sublayers in a Named Map](http://bl.ocks.org/ohasselblad/c1a0f4913610eec53cd3)
+- [Toggling sublayers in a Named Map](http://bl.ocks.org/andy-esch/c1a0f4913610eec53cd3)
 
 ## Fetching XYZ Tiles for Named Maps
 
