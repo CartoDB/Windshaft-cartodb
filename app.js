@@ -8,12 +8,12 @@ var semver = require('semver');
 var ver = process.versions.node;
 ver = ver.split('-')[0]; // explode and truncate tag from version
 
+// jshint undef:false
 if (!semver.satisfies(ver, '~0.10')) {
     console.log('Node version ' + ver + ' is not supported, please use Node.js 0.10.');
     process.exit(1);
 }
 
-// jshint undef:false
 var log = console.log.bind(console);
 var logError = console.error.bind(console);
 // jshint undef:true
