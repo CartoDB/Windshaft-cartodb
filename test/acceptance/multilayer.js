@@ -5,6 +5,9 @@ var step        = require('step');
 var strftime    = require('strftime');
 var redis_stats_db = 5;
 
+var mapnik = require('windshaft').mapnik;
+var semver = require('semver');
+
 var helper = require(__dirname + '/../support/test_helper');
 var LayergroupToken = require('../support/layergroup-token');
 
@@ -574,7 +577,7 @@ describe(suiteName, function() {
             if ( err ) {
               return done(err);
             }
-            // trip epoch
+            // strip epoch
             expected_token = expected_token.split(':')[0];
             keysToDelete['map_cfg|' + expected_token] = 0;
             keysToDelete['user:localhost:mapviews:global'] = 5;
@@ -973,70 +976,72 @@ describe(suiteName, function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/93
-    it("accepts unused directives", function(done) {
-      var layergroup =  {
-        version: '1.0.0',
-        layers: [
-           { options: {
-               sql: "select 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator",
-               cartocss: '#layer { point-transform:"scale(20)"; }',
-               cartocss_version: '2.0.1'
-             } }
-        ]
-      };
-      var expected_token; // = "e34dd7e235138a062f8ba7ad051aa3a7";
-      step(
-        function do_post()
-        {
-          var next = this;
-          assert.response(server, {
-              url: layergroup_url,
-              method: 'POST',
-              headers: {host: 'localhost', 'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              var parsedBody = JSON.parse(res.body);
-              if ( expected_token ) {
-                assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
-                assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
-              }
-              else {
-                var token_components = parsedBody.layergroupid.split(':');
-                expected_token = token_components[0];
-                expected_last_updated_epoch = token_components[1];
-              }
-              next(null, res);
-          });
-        },
-        function do_get_tile(err)
-        {
-            assert.ifError(err);
-          var next = this;
-          assert.response(server, {
-              url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png',
-              method: 'GET',
-              headers: {host: 'localhost' },
-              encoding: 'binary'
-          }, {}, function(res) {
-              assert.equal(res.statusCode, 200, res.body);
-              assert.equal(res.headers['content-type'], "image/png");
-              assert.imageBufferIsSimilarToFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png',
-                  IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
-                      next(err);
+    if (semver.satisfies(mapnik.versions.mapnik, '2.3.x')) {
+        it("accepts unused directives", function(done) {
+          var layergroup =  {
+            version: '1.0.0',
+            layers: [
+               { options: {
+                   sql: "select 'SRID=3857;POINT(0 0)'::geometry as the_geom_webmercator",
+                   cartocss: '#layer { point-transform:"scale(20)"; }',
+                   cartocss_version: '2.0.1'
+                 } }
+            ]
+          };
+          var expected_token; // = "e34dd7e235138a062f8ba7ad051aa3a7";
+          step(
+            function do_post()
+            {
+              var next = this;
+              assert.response(server, {
+                  url: layergroup_url,
+                  method: 'POST',
+                  headers: {host: 'localhost', 'Content-Type': 'application/json' },
+                  data: JSON.stringify(layergroup)
+              }, {}, function(res) {
+                  assert.equal(res.statusCode, 200, res.body);
+                  var parsedBody = JSON.parse(res.body);
+                  if ( expected_token ) {
+                    assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                    assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                   }
-              );
-          });
-        },
-        function finish(err) {
-            keysToDelete['user:localhost:mapviews:global'] = 5;
-            keysToDelete['map_cfg|' + expected_token] = 0;
+                  else {
+                    var token_components = parsedBody.layergroupid.split(':');
+                    expected_token = token_components[0];
+                    expected_last_updated_epoch = token_components[1];
+                  }
+                  next(null, res);
+              });
+            },
+            function do_get_tile(err)
+            {
+                assert.ifError(err);
+              var next = this;
+              assert.response(server, {
+                  url: layergroup_url + "/" + expected_token + ':cb0/0/0/0.png',
+                  method: 'GET',
+                  headers: {host: 'localhost' },
+                  encoding: 'binary'
+              }, {}, function(res) {
+                  assert.equal(res.statusCode, 200, res.body);
+                  assert.equal(res.headers['content-type'], "image/png");
+                  assert.imageBufferIsSimilarToFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png',
+                      IMAGE_EQUALS_TOLERANCE_PER_MIL, function(err/*, similarity*/) {
+                          next(err);
+                      }
+                  );
+              });
+            },
+            function finish(err) {
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+                keysToDelete['map_cfg|' + expected_token] = 0;
 
-            done(err);
-        }
-      );
-    });
-
+                done(err);
+            }
+          );
+        });
+    }
+    
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/91
     // and https://github.com/CartoDB/Windshaft-cartodb/issues/38
     it("tiles for private tables can be fetched with api_key", function(done) {

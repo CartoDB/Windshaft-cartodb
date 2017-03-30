@@ -110,6 +110,7 @@ var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, b
 var version = require("./package").version;
 
 listener.on('listening', function() {
+    log("Using Node.js %s", process.version);
     log('Using configuration file "%s"', configurationFile);
     log(
         "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
@@ -135,3 +136,17 @@ process.on('SIGHUP', function() {
 process.on('uncaughtException', function(err) {
     global.logger.error('Uncaught exception: ' + err.stack);
 });
+
+if (global.gc) {
+    var gcInterval = Number.isFinite(global.environment.gc_interval) ?
+        global.environment.gc_interval :
+        10000;
+
+    if (gcInterval > 0) {
+        setInterval(function gcForcedCycle() {
+            var start = Date.now();
+            global.gc();
+            global.statsClient.timing('windshaft.gc', Date.now() - start);
+        }, gcInterval);
+    }
+}

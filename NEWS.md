@@ -1,7 +1,70 @@
 # Changelog
 
-## 2.88.5
+## 3.2.1
 Released 2017-mm-dd
+
+
+## 3.2.0
+Released 2017-03-30
+
+Announcements:
+ - Upgrades windshaft to [3.1.0](https://github.com/CartoDB/windshaft/releases/tag/3.1.0).
+ - Active GC interval.
+
+
+## 3.1.1
+Released 2017-03-23
+
+Bug fixes:
+ - Use crc32 instead of md5 for computing subdomain candidate #642
+
+
+## 3.1.0
+Released 2017-03-22
+
+Features:
+ - Generate URLs for resources based on CDN and template rules
+
+
+## 3.0.2
+Released 2017-03-22
+
+Bug fixes:
+ - Upgrade dependencies
+ - Improve docs: remove mentions to NPM and use yarn instead
+ - Remove script to generate npm-shrinkwrap file
+
+
+## 3.0.1
+Released 2017-03-21
+
+Announcements:
+ - Upgrades windshaft to [3.0.1](https://github.com/CartoDB/windshaft/releases/tag/3.0.1).
+
+
+## 3.0.0
+Released 2017-03-21
+
+Announcements:
+ - Supports Node v6.9.x
+ - Drops support for Node v0.10.x
+ - Upgrades windshaft to 3.0.0
+ - Upgrades cartodb-query-tables to 0.2.0
+ - Upgrades cartodb-redis to 0.13.2
+ - Upgrades redis-mpool to 0.4.1
+
+**Note**: Due to this [issue](https://github.com/npm/npm/issues/15713), Windshaft-cartodb must be installed with `yarn` instead of `npm` providing just a `yarn.lock` to get consistent installs across machines.
+
+## 2.89.0
+Released 2017-03-17
+
+**Deprecation warning**: v2.89.0 is the last release that supports Node v0.10.x. Next mayor release will support Node v6.9.x and further versions.
+
+Announcements:
+ - Upgrades windshaft to [2.8.0](https://github.com/CartoDB/windshaft/releases/tag/2.8.0).
+
+Bug fixes:
+ - Histogram column type discovery query uses non-filtered query #637
 
 
 ## 2.88.4

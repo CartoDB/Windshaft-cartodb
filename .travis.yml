@@ -2,6 +2,8 @@ dist: trusty
 addons:
   postgresql: "9.5"
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - postgresql-9.5-postgis-2.3
       - postgresql-plpython-9.5
@@ -10,6 +12,7 @@ addons:
       - libjpeg8-dev
       - libgif-dev
       - libpango1.0-dev
+      - g++-4.9
 
 before_install:
   - createdb template_postgis
@@ -17,8 +20,8 @@ before_install:
   - psql -c "CREATE EXTENSION postgis" template_postgis
 
 env:
-  - NPROCS=1 JOBS=1 PGUSER=postgres
+  - NPROCS=1 JOBS=1 PGUSER=postgres CXX=g++-4.9
 
 language: node_js
 node_js:
-  - "0.10"
+  - "6"

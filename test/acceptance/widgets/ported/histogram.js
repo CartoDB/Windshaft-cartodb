@@ -304,6 +304,37 @@ describe('widgets', function() {
                 });
             });
 
+            it('can use a datetime filtered column with no results', function(done) {
+                this.testClient = new TestClient(histogramsMapConfig({
+                    updated_at: {
+                        type: 'histogram',
+                        options: {
+                            column: 'updated_at'
+                        }
+                    }
+                }));
+                var params = {
+                    own_filter: 1,
+                    filters: {
+                        layers: [{
+                            updated_at: {
+                                // this will remove all results
+                                max: -1
+                            }
+                        }]
+                    }
+                };
+                this.testClient.getWidget('updated_at', params, function (err, res, histogram) {
+                    assert.ok(!err, err);
+                    assert.ok(histogram);
+                    assert.equal(histogram.type, 'histogram');
+
+                    assert.equal(histogram.bins.length, 0);
+
+                    done();
+                });
+            });
+
             it('can getTile with datetime filtered column', function(done) {
                 this.testClient = new TestClient(histogramsMapConfig({
                     updated_at: {
