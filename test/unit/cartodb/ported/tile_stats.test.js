@@ -26,12 +26,14 @@ describe('tile stats', function() {
         var layergroupController = new LayergroupController();
 
         var reqMock = {
+            profiler: { toJSONString:function() {} },
             params: {
                 format: invalidFormat
             }
         };
         var resMock = {
             status: function() { return this; },
+            set: function() {},
             json: function() {},
             jsonp: function() {},
             send: function() {}
@@ -54,12 +56,14 @@ describe('tile stats', function() {
             }
         });
         var reqMock = {
+            profiler: { toJSONString:function() {} },
             params: {
                 format: validFormat
             }
         };
         var resMock = {
             status: function() { return this; },
+            set: function() {},
             json: function() {},
             jsonp: function() {},
             send: function() {}
