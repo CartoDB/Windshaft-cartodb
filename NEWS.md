@@ -1,11 +1,15 @@
 # Changelog
 
+## 3.2.1
+Released 2017-mm-dd
+
 
 ## 3.2.0
 Released 2017-03-30
 
 Announcements:
  - Upgrades windshaft to [3.1.0](https://github.com/CartoDB/windshaft/releases/tag/3.1.0).
+ - Active GC interval.
 
 
 ## 3.1.1

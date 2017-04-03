@@ -21,7 +21,7 @@ describe('named maps static view', function() {
 
     var IMAGE_TOLERANCE = 20;
 
-    function createTemplate(view) {
+    function createTemplate(view, layers) {
         return {
             version: '0.0.1',
             name: templateName,
@@ -36,7 +36,7 @@ describe('named maps static view', function() {
             },
             view: view,
             layergroup: {
-                layers: [
+                layers: layers || [
                     {
                         type: 'mapnik',
                         options: {
@@ -194,6 +194,45 @@ describe('named maps static view', function() {
                 assert.ok(!err);
                 img.save('/tmp/static.png');
                 assert.imageIsSimilarToFile(img, previewFixture('override-zoom'), IMAGE_TOLERANCE, done);
+            });
+        });
+    });
+
+    it('should allow to select the layers to render', function (done) {
+        var view = {
+            bounds: {
+                west: 0,
+                south: 0,
+                east: 45,
+                north: 45
+            }
+        };
+
+        var layers = [
+            {
+                type: 'mapnik',
+                options: {
+                    sql: 'select * from populated_places_simple_reduced',
+                    cartocss: '#layer { marker-fill: <%= color %>; }',
+                    cartocss_version: '2.3.0'
+                }
+            },
+            {
+                type: 'mapnik',
+                options: {
+                    sql: 'select ST_Transform(ST_MakeEnvelope(-45, -45, 45, 45, 4326), 3857) the_geom_webmercator',
+                    cartocss: '#layer { polygon-fill: <%= color %>; }',
+                    cartocss_version: '2.3.0'
+                }
+            }
+        ];
+        templateMaps.addTemplate(username, createTemplate(view, layers), function (err) {
+            if (err) {
+                return done(err);
+            }
+            getStaticMap({ layer: 0 }, function(err, img) {
+                assert.ok(!err);
+                assert.imageIsSimilarToFile(img, previewFixture('bounds'), IMAGE_TOLERANCE, done);
             });
         });
     });
