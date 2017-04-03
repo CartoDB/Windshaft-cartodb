@@ -1,7 +1,10 @@
 # Changelog
 
-## 3.2.1
+## 3.3.0
 Released 2017-mm-dd
+
+New features:
+ - Static map endpoints allow specifying the layers to render #653.
 
 
 ## 3.2.0
