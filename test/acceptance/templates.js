@@ -1052,8 +1052,9 @@ describe('template_api', function() {
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           var cc = res.headers['x-cache-channel'];
+          var expectedCC = 'test_windshaft_cartodb_user_1_db:public.test_table_private_1';
           assert.ok(cc);
-          assert.ok(cc.match, /ciao/, cc);
+          assert.equal(cc, expectedCC);
           // hack simulating restart...
           server.layergroupAffectedTablesCache.cache.reset(); // need to clean channel cache
           var get_request = {
@@ -1072,8 +1073,9 @@ describe('template_api', function() {
             'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
           assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
           var cc = res.headers['x-cache-channel'];
+          var expectedCC = 'test_windshaft_cartodb_user_1_db:public.test_table_private_1';
           assert.ok(cc, "Missing X-Cache-Channel on fetch-after-restart");
-          assert.ok(cc.match, /ciao/, cc);
+          assert.equal(cc, expectedCC);
           return null;
         },
         function deleteTemplate(err)
