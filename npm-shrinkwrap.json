@@ -105,9 +105,9 @@
       }
     },
     "camshaft": {
-      "version": "0.52.1",
-      "from": "cartodb/camshaft#add_affected_tables",
-      "resolved": "git://github.com/cartodb/camshaft.git#cb5ebc468ceb33e18a908ff80980228742140b73",
+      "version": "0.53.0",
+      "from": "camshaft@0.53.0",
+      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.53.0.tgz",
       "dependencies": {
         "async": {
           "version": "1.5.2",
@@ -794,9 +794,9 @@
           "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
         },
         "form-data": {
-          "version": "2.1.2",
+          "version": "2.1.4",
           "from": "form-data@>=2.1.1 <2.2.0",
-          "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.1.2.tgz",
+          "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.1.4.tgz",
           "dependencies": {
             "asynckit": {
               "version": "0.4.0",
@@ -1693,9 +1693,9 @@
                                       "resolved": "https://registry.npmjs.org/delegates/-/delegates-1.0.0.tgz"
                                     },
                                     "readable-stream": {
-                                      "version": "2.2.8",
+                                      "version": "2.2.9",
                                       "from": "readable-stream@>=2.0.0 <3.0.0||>=1.1.13 <2.0.0",
-                                      "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.8.tgz",
+                                      "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.9.tgz",
                                       "dependencies": {
                                         "buffer-shims": {
                                           "version": "1.0.0",
@@ -1886,9 +1886,9 @@
                                   "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
                                 },
                                 "form-data": {
-                                  "version": "2.1.2",
+                                  "version": "2.1.4",
                                   "from": "form-data@>=2.1.1 <2.2.0",
-                                  "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.1.2.tgz",
+                                  "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.1.4.tgz",
                                   "dependencies": {
                                     "asynckit": {
                                       "version": "0.4.0",
@@ -1903,9 +1903,9 @@
                                   "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-4.2.1.tgz",
                                   "dependencies": {
                                     "ajv": {
-                                      "version": "4.11.5",
+                                      "version": "4.11.6",
                                       "from": "ajv@>=4.9.1 <5.0.0",
-                                      "resolved": "https://registry.npmjs.org/ajv/-/ajv-4.11.5.tgz",
+                                      "resolved": "https://registry.npmjs.org/ajv/-/ajv-4.11.6.tgz",
                                       "dependencies": {
                                         "co": {
                                           "version": "4.6.0",
@@ -2233,7 +2233,7 @@
                                 },
                                 "inherits": {
                                   "version": "2.0.3",
-                                  "from": "inherits@>=2.0.0 <3.0.0",
+                                  "from": "inherits@>=2.0.1 <2.1.0",
                                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz"
                                 }
                               }
@@ -2321,9 +2321,9 @@
                                   }
                                 },
                                 "readable-stream": {
-                                  "version": "2.2.8",
+                                  "version": "2.2.9",
                                   "from": "readable-stream@>=2.1.4 <3.0.0",
-                                  "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.8.tgz",
+                                  "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.9.tgz",
                                   "dependencies": {
                                     "buffer-shims": {
                                       "version": "1.0.0",
@@ -4197,9 +4197,9 @@
                       "resolved": "https://registry.npmjs.org/delegates/-/delegates-1.0.0.tgz"
                     },
                     "readable-stream": {
-                      "version": "2.2.8",
+                      "version": "2.2.9",
                       "from": "readable-stream@>=2.0.0 <3.0.0||>=1.1.13 <2.0.0",
-                      "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.8.tgz",
+                      "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.9.tgz",
                       "dependencies": {
                         "buffer-shims": {
                           "version": "1.0.0",
@@ -4390,9 +4390,9 @@
                   "resolved": "https://registry.npmjs.org/forever-agent/-/forever-agent-0.6.1.tgz"
                 },
                 "form-data": {
-                  "version": "2.1.2",
+                  "version": "2.1.4",
                   "from": "form-data@>=2.1.1 <2.2.0",
-                  "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.1.2.tgz",
+                  "resolved": "https://registry.npmjs.org/form-data/-/form-data-2.1.4.tgz",
                   "dependencies": {
                     "asynckit": {
                       "version": "0.4.0",
@@ -4407,9 +4407,9 @@
                   "resolved": "https://registry.npmjs.org/har-validator/-/har-validator-4.2.1.tgz",
                   "dependencies": {
                     "ajv": {
-                      "version": "4.11.5",
+                      "version": "4.11.6",
                       "from": "ajv@>=4.9.1 <5.0.0",
-                      "resolved": "https://registry.npmjs.org/ajv/-/ajv-4.11.5.tgz",
+                      "resolved": "https://registry.npmjs.org/ajv/-/ajv-4.11.6.tgz",
                       "dependencies": {
                         "co": {
                           "version": "4.6.0",
@@ -4813,9 +4813,9 @@
                   }
                 },
                 "readable-stream": {
-                  "version": "2.2.8",
+                  "version": "2.2.9",
                   "from": "readable-stream@>=2.1.4 <3.0.0",
-                  "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.8.tgz",
+                  "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.9.tgz",
                   "dependencies": {
                     "buffer-shims": {
                       "version": "1.0.0",
