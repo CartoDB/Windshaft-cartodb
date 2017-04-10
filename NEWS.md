@@ -1,10 +1,13 @@
 # Changelog
 
 ## 3.5.0
-Released 2017-mm-dd
+Released 2017-04-10
+
+Bug fixes:
+ - Fix invalidation of cache for maps with analyses #638.
 
 Announcements:
- - Upgrades camshaft to [0.52.0](https://github.com/CartoDB/camshaft/releases/tag/0.52.0).
+ - Upgrades camshaft to [0.53.0](https://github.com/CartoDB/camshaft/releases/tag/0.53.0).
 
 
 ## 3.4.0
