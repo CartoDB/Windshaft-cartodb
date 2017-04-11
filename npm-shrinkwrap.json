@@ -1,6 +1,6 @@
 {
   "name": "windshaft-cartodb",
-  "version": "2.89.1",
+  "version": "2.90.1",
   "dependencies": {
     "body-parser": {
       "version": "1.14.2",
@@ -105,9 +105,9 @@
       }
     },
     "camshaft": {
-      "version": "0.53.0",
-      "from": "camshaft@0.53.0",
-      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.53.0.tgz",
+      "version": "0.53.1",
+      "from": "camshaft@0.53.1",
+      "resolved": "https://registry.npmjs.org/camshaft/-/camshaft-0.53.1.tgz",
       "dependencies": {
         "async": {
           "version": "1.5.2",
@@ -2233,7 +2233,7 @@
                                 },
                                 "inherits": {
                                   "version": "2.0.3",
-                                  "from": "inherits@>=2.0.1 <2.1.0",
+                                  "from": "inherits@>=2.0.0 <3.0.0",
                                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz"
                                 }
                               }
@@ -4665,7 +4665,7 @@
                     },
                     "minimatch": {
                       "version": "3.0.3",
-                      "from": "minimatch@>=3.0.2 <4.0.0",
+                      "from": "minimatch@>=3.0.0 <4.0.0",
                       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.3.tgz",
                       "dependencies": {
                         "brace-expansion": {
@@ -4737,7 +4737,7 @@
                 },
                 "inherits": {
                   "version": "2.0.3",
-                  "from": "inherits@>=2.0.1 <2.1.0",
+                  "from": "inherits@>=2.0.0 <3.0.0",
                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz"
                 }
               }
@@ -4834,7 +4834,7 @@
                     },
                     "inherits": {
                       "version": "2.0.3",
-                      "from": "inherits@>=2.0.1 <2.1.0",
+                      "from": "inherits@>=2.0.0 <3.0.0",
                       "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz"
                     },
                     "process-nextick-args": {
