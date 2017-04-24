@@ -485,6 +485,13 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 expectedResponse.headers['Content-Type'] = 'image/png';
             }
 
+            var isMvt = format.match(/mvt$/);
+
+            if (isMvt) {
+                request.encoding = 'binary';
+                expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
+            }
+
             assert.response(server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
 
@@ -492,7 +499,13 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
                 if (isPng) {
                     obj = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                } else {
+                }
+                else if (isMvt) {
+                    obj = new mapnik.VectorTile(z, x, y);
+                    obj.setDataSync(new Buffer(res.body, 'binary'));
+                } 
+                
+                else {
                     obj = JSON.parse(res.body);
                 }
 
