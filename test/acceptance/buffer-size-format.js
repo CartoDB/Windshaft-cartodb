@@ -47,7 +47,7 @@ function createMapConfig (bufferSize) {
     };
 }
 
-describe.only('buffer size per format', function () {
+describe('buffer size per format', function () {
     var testCases = [
         {
             desc: 'should get png tile using buffer-size 1',
