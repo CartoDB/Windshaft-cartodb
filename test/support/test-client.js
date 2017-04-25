@@ -16,9 +16,10 @@ var serverOptions = require('../../lib/cartodb/server_options');
 serverOptions.analysis.batch.inlineExecution = true;
 var server = new CartodbWindshaft(serverOptions);
 
-function TestClient(mapConfig, apiKey) {
+function TestClient(mapConfig, apiKey, template) {
     this.mapConfig = mapConfig;
     this.apiKey = apiKey;
+    this.template = template;
     this.keysToDelete = {};
 }
 
@@ -695,4 +696,166 @@ module.exports.getStaticMap = function getStaticMap(templateName, params, callba
             return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
         });
     });
+};
+
+TestClient.prototype.getNamedTile = function(z, x, y, params, callback) {
+    if (!this.template) {
+        throw new Error('Template is not defined');
+    }
+
+    var self = this;
+
+    if (!callback) {
+        callback = params;
+        params = {};
+    }
+
+    if (!params.placeholders) {
+        params.placeholder = {};
+    }
+
+    var urlNamed = '/api/v1/map/named';
+    var url = '/api/v1/map';
+
+
+    if (this.apiKey) {
+        url += '?' + qs.stringify({api_key: this.apiKey});
+    }
+
+    var templateName;
+    var layergroupId;
+    step(
+        function createTemplate () {
+            var next = this;
+            console.log(urlNamed +  '?' + qs.stringify({api_key: self.apiKey}))
+            assert.response(server,
+                {
+                    url: urlNamed + '?' + qs.stringify({api_key: self.apiKey}),
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.template)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function (res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    return next(null, JSON.parse(res.body).template_id);
+                }
+            );
+        },
+        function createLayergroup(err, templateId) {
+            var next = this;
+            console.log(urlNamed + '/' + templateId  + '?' + qs.stringify({api_key: self.apiKey}))
+            assert.response(server,
+                {
+                    url: urlNamed + '/' + templateId  + '?' + qs.stringify({api_key: self.apiKey}),
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(params.placeholders)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    return next(null, JSON.parse(res.body).layergroupid);
+                }
+            );
+        },
+        function getTileResult(err, _layergroupId) {
+            assert.ifError(err);
+
+            var next = this;
+            layergroupId = _layergroupId;
+
+            url = '/api/v1/map/' + layergroupId + '/';
+
+            var layers = params.layers;
+
+            if (layers !== undefined) {
+                layers = Array.isArray(layers) ? layers : [layers];
+                url += layers.join(',') + '/';
+            }
+
+            var format = params.format || 'png';
+
+            url += [z,x,y].join('/');
+            url += '.' + format;
+
+            if (self.apiKey) {
+                url += '?' + qs.stringify({api_key: self.apiKey});
+            }
+
+            var request = {
+                url: url,
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            };
+
+            var expectedResponse = {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            };
+
+            var isPng = format.match(/png$/);
+
+            if (isPng) {
+                request.encoding = 'binary';
+                expectedResponse.headers['Content-Type'] = 'image/png';
+            }
+
+            var isMvt = format.match(/mvt$/);
+
+            if (isMvt) {
+                request.encoding = 'binary';
+                expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
+            }
+
+            assert.response(server, request, expectedResponse, function(res, err) {
+                assert.ifError(err);
+
+                var obj;
+
+                if (isPng) {
+                    obj = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                }
+                else if (isMvt) {
+                    obj = new mapnik.VectorTile(z, x, y);
+                    obj.setDataSync(new Buffer(res.body, 'binary'));
+                } 
+                
+                else {
+                    obj = JSON.parse(res.body);
+                }
+
+                next(null, res, obj);
+            });
+        },
+        function finish(err, res, image) {
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            return callback(err, res, image);
+        }
+    );
 };
