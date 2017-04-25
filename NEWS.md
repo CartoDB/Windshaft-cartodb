@@ -3,6 +3,9 @@
 ## 3.6.3
 Released 2017-mm-dd
 
+Announcements:
+ - Upgrades windshaft to [3.1.1](https://github.com/CartoDB/windshaft/releases/tag/3.1.1).
+
 
 ## 3.6.2
 Released 2017-04-24
