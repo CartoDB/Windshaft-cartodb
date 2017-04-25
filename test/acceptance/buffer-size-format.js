@@ -118,7 +118,7 @@ describe('buffer size per format', function () {
             testClient.getTile(coords.z, coords.x, coords.y, { format: test.format }, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
-                tile.save(test.fixturePath);
+                // tile.save(test.fixturePath);
                 test.assert(tile, function () {
                     testClient.drain(done);
                 });
@@ -159,14 +159,25 @@ function createBufferSizeTemplate (name, cartocss) {
     }
 }
 
-describe.only('buffer size per format for named maps', function () {
+describe('buffer size per format for named maps', function () {
     var testCases = [
         {
-            desc: 'should get png tile using buffer-size 0',
+            desc: 'should get png tile using buffer-size 0 (default value in template)',
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
-            template: createBufferSizeTemplate('named-buffer-size'),
+            template: createBufferSizeTemplate('named-default-buffer-size'),
+            assert: function (tile, callback) {
+                assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
+            }
+        },
+        {
+            desc: 'should get png tile using buffer-size 128 (placehoder value)',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'png',
+            placeholders: { buffersize: 128 },
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.png',
+            template: createBufferSizeTemplate('named-custom-buffer-size'),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
@@ -177,7 +188,11 @@ describe.only('buffer size per format for named maps', function () {
         it(test.desc, function (done) {
             var testClient = new TestClient(undefined, 1234, test.template);
             var coords = test.coords;
-            testClient.getNamedTile(coords.z, coords.x, coords.y, { format: test.format }, function (err, res, tile) {
+            var options = { 
+                format: test.format, 
+                placeholders: test.placeholders 
+            }
+            testClient.getNamedTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
                 // tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-64.png');
