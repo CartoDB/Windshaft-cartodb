@@ -3,7 +3,6 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 var IMAGE_TOLERANCE_PER_MIL = 5;
-var mapnik = require('windshaft').mapnik;
 
 var CARTOCSS_LABELS = [
     '#layer {',
@@ -83,12 +82,7 @@ describe('buffer size per format', function () {
                 var tileJSON = tile.toJSON();
                 var features = tileJSON[0].features;
                 assert.equal(features.length, 1);
-
-                var map = new mapnik.Map(256, 256);
-                tile.render(map, new mapnik.Image(256, 256), function (err, image) {
-                    assert.ifError(err);
-                    assert.imageIsSimilarToFile(image, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
-                }.bind(this));
+                callback();
             }
         },
         {
@@ -101,12 +95,7 @@ describe('buffer size per format', function () {
                 var tileJSON = tile.toJSON();
                 var features = tileJSON[0].features;
                 assert.equal(features.length, 9);
-
-                var map = new mapnik.Map(256, 256);
-                tile.render(map, new mapnik.Image(256, 256), function (err, image) {
-                    assert.ifError(err);
-                    assert.imageIsSimilarToFile(image, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
-                }.bind(this));
+                callback();
             }
         }
     ];
@@ -119,7 +108,8 @@ describe('buffer size per format', function () {
                 assert.ifError(err);
                 // To generate images use:
                 // tile.save(test.fixturePath);
-                test.assert(tile, function () {
+                test.assert(tile, function (err) {
+                    assert.ifError(err);
                     testClient.drain(done);
                 });
             });
