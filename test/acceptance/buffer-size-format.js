@@ -140,7 +140,7 @@ function createBufferSizeTemplate (name, buffersize, placeholders, cartocss) {
             }
         },
         "layergroup": createMapConfig(buffersize)
-    }
+    };
 }
 
 describe('buffer size per format for named maps', function () {
