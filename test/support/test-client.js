@@ -504,8 +504,8 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 else if (isMvt) {
                     obj = new mapnik.VectorTile(z, x, y);
                     obj.setDataSync(new Buffer(res.body, 'binary'));
-                } 
-                
+                }
+
                 else {
                     obj = JSON.parse(res.body);
                 }
@@ -711,7 +711,7 @@ TestClient.prototype.getNamedTile = function(z, x, y, params, callback) {
     }
 
     if (!params.placeholders) {
-        params.placeholder = {};
+        params.placeholders = {};
     }
 
     var urlNamed = '/api/v1/map/named';
@@ -843,8 +843,8 @@ TestClient.prototype.getNamedTile = function(z, x, y, params, callback) {
                 else if (isMvt) {
                     obj = new mapnik.VectorTile(z, x, y);
                     obj.setDataSync(new Buffer(res.body, 'binary'));
-                } 
-                
+                }
+
                 else {
                     obj = JSON.parse(res.body);
                 }

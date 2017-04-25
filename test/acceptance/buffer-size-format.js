@@ -2,7 +2,7 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
-var IMAGE_TOLERANCE_PER_MIL = 0;
+var IMAGE_TOLERANCE_PER_MIL = 5;
 var mapnik = require('windshaft').mapnik;
 
 var CARTOCSS_LABELS = [
@@ -46,7 +46,7 @@ function createMapConfig (bufferSize, cartocss) {
                 cartocss: cartocss,
                 cartocss_version: '2.3.0',
                 interactivity: 'cartodb_id'
-            } 
+            }
         }]
     };
 }
@@ -136,21 +136,21 @@ function createBufferSizeTemplate (name, buffersize, placeholders, cartocss) {
         "placeholders": placeholders || {
             "buffersize": {
                 "type": "number",
-                "default": "0"
+                "default": 0
             }
         },
         "layergroup": createMapConfig(buffersize)
     }
 }
 
-describe.only('buffer size per format for named maps', function () {
+describe('buffer size per format for named maps', function () {
     var testCases = [
         {
             desc: 'should get png tile using buffer-size 0 (default value in template)',
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
-            template: createBufferSizeTemplate('named-default-buffer-size'),
+            template: createBufferSizeTemplate('named-default-buffer-size', '<%= buffersize %>'),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
@@ -161,7 +161,7 @@ describe.only('buffer size per format for named maps', function () {
             format: 'png',
             placeholders: { buffersize: 128 },
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.png',
-            template: createBufferSizeTemplate('named-custom-buffer-size'),
+            template: createBufferSizeTemplate('named-custom-buffer-size', '<%= buffersize %>'),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
@@ -170,9 +170,10 @@ describe.only('buffer size per format for named maps', function () {
             desc: 'should get png tile using buffer-size 0 (default value in template by format)',
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
+            placeholders: { buffersize_png: 0 },
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
-            template: createBufferSizeTemplate('named-default-buffer-size-by-format', { 
-                png: '<%= buffersize_png %>' 
+            template: createBufferSizeTemplate('named-default-buffer-size-by-format', {
+                png: '<%= buffersize_png %>'
             }, {
                 "buffersize_png": {
                     "type": "number",
@@ -187,10 +188,10 @@ describe.only('buffer size per format for named maps', function () {
             desc: 'should get png tile using buffer-size 128 (placehoder value in template by format)',
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
-            placeholders: { buffersize: 128 },
+            placeholders: { buffersize_png: 128 },
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.png',
-            template: createBufferSizeTemplate('named-custom-buffer-size-by-format', { 
-                png: '<%= buffersize_png %>' 
+            template: createBufferSizeTemplate('named-custom-buffer-size-by-format', {
+                png: '<%= buffersize_png %>'
             }, {
                 "buffersize_png": {
                     "type": "number",
@@ -207,15 +208,16 @@ describe.only('buffer size per format for named maps', function () {
         it(test.desc, function (done) {
             var testClient = new TestClient(undefined, 1234, test.template);
             var coords = test.coords;
-            var options = { 
-                format: test.format, 
-                placeholders: test.placeholders 
-            }
+            var options = {
+                format: test.format,
+                placeholders: test.placeholders
+            };
             testClient.getNamedTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
-                // tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-64.png');
-                test.assert(tile, function () {
+                //tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-0-test.png');
+                test.assert(tile, function (err) {
+                    assert.ifError(err);
                     testClient.drain(done);
                 });
             });
