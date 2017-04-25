@@ -50,11 +50,11 @@ function createMapConfig (bufferSize) {
 describe('buffer size per format', function () {
     var testCases = [
         {
-            desc: 'should get png tile using buffer-size 1',
+            desc: 'should get png tile using buffer-size 0',
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
-            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-1.png',
-            mapConfig: createMapConfig({ png: 1, 'grid.json': 1 }),
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
+            mapConfig: createMapConfig({ png: 0, 'grid.json': 0 }),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
@@ -70,11 +70,11 @@ describe('buffer size per format', function () {
             }
         },
         {
-            desc: 'should get mvt tile using buffer-size 1',
+            desc: 'should get mvt tile using buffer-size 0',
             coords: { z: 7, x: 64, y: 48 },
             format: 'mvt',
-            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-1.png',
-            mapConfig: createMapConfig({ mvt: 1 }),
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
+            mapConfig: createMapConfig({ mvt: 0 }),
             assert: function (tile, callback) {
                 var tileJSON = tile.toJSON();
                 var features = tileJSON[0].features;
