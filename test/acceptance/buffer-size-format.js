@@ -196,13 +196,13 @@ describe('buffer size per format for named maps', function () {
 
     testCases.forEach(function (test) {
         it(test.desc, function (done) {
-            var testClient = new TestClient(undefined, 1234, test.template);
+            var testClient = new TestClient(test.template, 1234);
             var coords = test.coords;
             var options = {
                 format: test.format,
                 placeholders: test.placeholders
             };
-            testClient.getNamedTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
                 //tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-0-test.png');
