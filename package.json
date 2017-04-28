@@ -28,6 +28,7 @@
     "dot": "~1.0.2",
     "express": "~4.13.3",
     "fastly-purge": "~1.0.1",
+    "gc-stats": "~1.0.0",
     "log4js": "cartodb/log4js-node#cdb",
     "lru-cache": "2.6.5",
     "lzma": "~2.3.2",
