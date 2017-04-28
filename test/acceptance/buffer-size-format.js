@@ -140,7 +140,7 @@ describe('buffer size per format for named maps', function () {
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
-            template: createBufferSizeTemplate('named-default-buffer-size', '<%= buffersize %>'),
+            template: createBufferSizeTemplate('named-default-buffer-size', {png: '<%= buffersize %>'}),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
