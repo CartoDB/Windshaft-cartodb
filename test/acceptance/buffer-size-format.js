@@ -1,7 +1,9 @@
 require('../support/test_helper');
 
+var fs = require('fs');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
+var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 5;
 
 var CARTOCSS_LABELS = [
@@ -76,7 +78,7 @@ describe('buffer size per format', function () {
             desc: 'should get mvt tile using buffer-size 0',
             coords: { z: 7, x: 64, y: 48 },
             format: 'mvt',
-            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.mvt',
             mapConfig: createMapConfig({ mvt: 0 }),
             assert: function (tile, callback) {
                 var tileJSON = tile.toJSON();
@@ -89,7 +91,7 @@ describe('buffer size per format', function () {
             desc: 'should get mvt tile using buffer-size 128',
             coords: { z: 7, x: 64, y: 48 },
             format: 'mvt',
-            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.png',
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.mvt',
             mapConfig: createMapConfig({ mvt: 128 }),
             assert: function (tile, callback) {
                 var tileJSON = tile.toJSON();
@@ -140,7 +142,7 @@ describe('buffer size per format for named maps', function () {
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
-            template: createBufferSizeTemplate('named-default-buffer-size', '<%= buffersize %>'),
+            template: createBufferSizeTemplate('named-default-buffer-size', {png: '<%= buffersize %>'}),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
@@ -151,7 +153,7 @@ describe('buffer size per format for named maps', function () {
             format: 'png',
             placeholders: { buffersize: 128 },
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.png',
-            template: createBufferSizeTemplate('named-custom-buffer-size', '<%= buffersize %>'),
+            template: createBufferSizeTemplate('named-custom-buffer-size', { png: '<%= buffersize %>'}),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
@@ -206,6 +208,178 @@ describe('buffer size per format for named maps', function () {
                 assert.ifError(err);
                 // To generate images use:
                 //tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-0-test.png');
+                test.assert(tile, function (err) {
+                    assert.ifError(err);
+                    testClient.drain(done);
+                });
+            });
+        });
+    });
+});
+
+
+describe('buffer size per format for named maps w/o placeholders', function () {
+    var testCases = [
+        {
+            desc: 'should get png tile using buffer-size 0 overriden by template params',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'png',
+            placeholders: { 
+                buffersize: {
+                    png: 0
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
+            template: createBufferSizeTemplate('named-no-buffer-size-png-0', {}, {}),
+            assert: function (tile, callback) {
+                assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
+            }
+        },
+        {
+            desc: 'should get png tile using buffer-size 128 overriden by template params',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'png',
+            placeholders: { 
+                buffersize: {
+                    png: 128
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.png',
+            template: createBufferSizeTemplate('named-no-buffer-size-png-128', {}, {}),
+            assert: function (tile, callback) {
+                assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
+            }
+        },
+        {
+            desc: 'should get mvt tile using buffer-size 0 overriden by template params',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'mvt',
+            placeholders: { 
+                buffersize: {
+                    mvt: 0
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-mvt-7.64.48-buffer-size-0.mvt',
+            template: createBufferSizeTemplate('named-no-buffer-size-mvt', {}, {}),
+            assert: function (tile, callback) {
+                var tileJSON = tile.toJSON();
+                var features = tileJSON[0].features;
+
+                var dataFixture = fs.readFileSync(this.fixturePath);
+                var vtile = new mapnik.VectorTile(this.coords.z, this.coords.x, this.coords.y);
+                vtile.setDataSync(dataFixture);
+                var vtileJSON = vtile.toJSON();
+                var vtileFeatures = vtileJSON[0].features;
+
+                assert.equal(features.length, vtileFeatures.length);
+                callback();
+            }
+        },
+        {
+            desc: 'should get mvt tile using buffer-size 128 overriden by template params',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'mvt',
+            placeholders: { 
+                buffersize: {
+                    mvt: 128
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-mvt-7.64.48-buffer-size-128.mvt',
+            template: createBufferSizeTemplate('named-no-buffer-size-mvt-128', {}, {}),
+            assert: function (tile, callback) {
+                var tileJSON = tile.toJSON();
+                var features = tileJSON[0].features;
+
+                var dataFixture = fs.readFileSync(this.fixturePath);
+                var vtile = new mapnik.VectorTile(this.coords.z, this.coords.x, this.coords.y);
+                vtile.setDataSync(dataFixture);
+                var vtileJSON = vtile.toJSON();
+                var vtileFeatures = vtileJSON[0].features;
+
+                assert.equal(features.length, vtileFeatures.length);
+                callback();
+            }
+        },
+        {
+            desc: 'should get geojson tile using buffer-size 0 overriden by template params',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'geojson',
+            placeholders: { 
+                buffersize: {
+                    geojson: 0
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-mvt-7.64.48-buffer-size-0.geojson',
+            template: createBufferSizeTemplate('named-no-buffer-size-geojson-0', {}, {}),
+            assert: function (tile, callback) {
+                var dataFixture = JSON.parse(fs.readFileSync(this.fixturePath));
+                assert.equal(tile.features.length, dataFixture.features.length);
+                callback();
+            }
+        },
+        {
+            desc: 'should get geojson tile using buffer-size 128 overriden by template params',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'geojson',
+            placeholders: { 
+                buffersize: {
+                    geojson: 128
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.geojson',
+            template: createBufferSizeTemplate('named-no-buffer-size-geojson-128', {}, {}),
+            assert: function (tile, callback) {
+                var dataFixture = JSON.parse(fs.readFileSync(this.fixturePath));
+                assert.equal(tile.features.length, dataFixture.features.length);
+                callback();
+            }
+        },
+        {
+            desc: 'should get grid.json tile using buffer-size 0 overriden by template params',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'grid.json',
+            placeholders: { 
+                buffersize: {
+                    'grid.json': 0
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-grid.json.7.64.48-buffer-size-0.grid.json',
+            template: createBufferSizeTemplate('named-no-buffer-size-grid-json-0', {}, {}),
+            assert: function (tile, callback) {
+                assert.utfgridEqualsFile(tile, this.fixturePath, 2,callback);
+            }
+        },
+        {
+            desc: 'should get grid.json tile using buffer-size 128 overriden by template params',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'grid.json',
+            placeholders: { 
+                buffersize: {
+                    'grid.json': 128
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.grid.json',
+            template: createBufferSizeTemplate('named-no-buffer-size-grid-json-128', {}, {}),
+            assert: function (tile, callback) {
+                assert.utfgridEqualsFile(tile, this.fixturePath, 2, callback);
+            }
+        },
+    ];
+
+    testCases.forEach(function (test) {
+        it(test.desc, function (done) {
+            var testClient = new TestClient(test.template, 1234);
+            var coords = test.coords;
+            var options = {
+                format: test.format,
+                placeholders: test.placeholders
+            };
+            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+                assert.ifError(err);
+                // To generate images use:
+                //tile.save(test.fixturePath);
+                // require('fs').writeFileSync(test.fixturePath, JSON.stringify(tile));
+                // require('fs').writeFileSync(test.fixturePath, tile.getDataSync());
                 test.assert(tile, function (err) {
                     assert.ifError(err);
                     testClient.drain(done);

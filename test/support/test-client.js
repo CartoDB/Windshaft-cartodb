@@ -545,6 +545,20 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
             }
 
+            var isGeojson = format.match(/geojson$/);
+
+            if (isGeojson) {
+                request.encoding = 'utf-8';
+                expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
+            }
+
+            var isGridJSON = format.match(/grid.json$/);
+
+            if (isGridJSON) {
+                request.encoding = 'utf-8';
+                expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
+            }
+
             assert.response(server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
 
@@ -557,7 +571,6 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                     obj = new mapnik.VectorTile(z, x, y);
                     obj.setDataSync(new Buffer(res.body, 'binary'));
                 }
-
                 else {
                     obj = JSON.parse(res.body);
                 }
