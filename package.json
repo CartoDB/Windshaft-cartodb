@@ -20,8 +20,8 @@
   ],
   "dependencies": {
     "body-parser": "~1.14.0",
-    "camshaft": "0.54.1",
-    "cartodb-psql": "~0.7.1",
+    "camshaft": "0.54.2",
+    "cartodb-psql": "0.8.0",
     "cartodb-query-tables": "0.2.0",
     "cartodb-redis": "0.13.2",
     "debug": "~2.2.0",
@@ -39,7 +39,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.0",
     "underscore": "~1.6.0",
-    "windshaft": "3.1.1",
+    "windshaft": "3.1.2",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
