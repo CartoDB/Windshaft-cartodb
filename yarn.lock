@@ -194,13 +194,13 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.54.1:
-  version "0.54.1"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.54.1.tgz#0eea25ee9e5a1cf32b0f59fef48f8f3590ebfe17"
+camshaft@0.54.2:
+  version "0.54.2"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.54.2.tgz#eb9f2b8b6e948aed492d206bc32ff774dcfd29c2"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
-    cartodb-psql "0.7.1"
+    cartodb-psql "0.8.0"
     debug "^2.2.0"
     dot "^1.0.3"
     request "^2.69.0"
@@ -245,9 +245,9 @@ cartocolor@4.0.0:
   dependencies:
     colorbrewer "1.0.0"
 
-cartodb-psql@0.7.1, cartodb-psql@~0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/cartodb-psql/-/cartodb-psql-0.7.1.tgz#578ce04db9262f1296845dec643461105a594e22"
+cartodb-psql@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/cartodb-psql/-/cartodb-psql-0.8.0.tgz#d3811f706dae2c3bc82365c5d25af13c4235ba37"
   dependencies:
     debug "~2.2.0"
     pg cartodb/node-postgres#6.1.2-cdb1
@@ -2269,14 +2269,14 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-3.1.1.tgz#5e1b20fa9bcc6f4e04f67738b18a35cb19cadbd1"
+windshaft@3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-3.1.2.tgz#78c257bafe63c41df8cd7e4aa7ea6ea72ed1a5bd"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
     carto cartodb/carto#0.15.1-cdb3
-    cartodb-psql "0.7.1"
+    cartodb-psql "0.8.0"
     debug "~2.2.0"
     dot "~1.0.2"
     grainstore "~1.6.0"
