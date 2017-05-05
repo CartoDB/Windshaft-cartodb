@@ -6,6 +6,9 @@ var config = {
     // Its default size is 4, but it can be changed at startup time (the absolute maximum is 128).
     // See http://docs.libuv.org/en/latest/threadpool.html
     ,uv_threadpool_size: undefined
+    // Time in milliseconds to force GC cycle.
+    // Disable by using <=0 value.
+    ,gc_interval: 10000
     // Regular expression pattern to extract username
     // from hostname. Must have a single grabbing block.
     ,user_from_host: '^(.*)\\.localhost'
