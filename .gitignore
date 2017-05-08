@@ -11,3 +11,4 @@ redis.pid
 test.log
 npm-debug.log
 coverage/
+.DS_Store
