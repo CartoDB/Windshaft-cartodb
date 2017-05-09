@@ -1041,7 +1041,7 @@ describe(suiteName, function() {
           );
         });
     }
-    
+
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/91
     // and https://github.com/CartoDB/Windshaft-cartodb/issues/38
     it("tiles for private tables can be fetched with api_key", function(done) {

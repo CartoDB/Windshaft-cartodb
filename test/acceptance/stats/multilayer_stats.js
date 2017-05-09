@@ -49,8 +49,10 @@ describe('multilayer stats disabled', function() {
 
     var cartocssVersion = '2.3.0';
     var cartocss = '#layer { line-width:16; }';
-    var sql = "select 1 as i, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 3857) as the_geom_webmercator";
-    var sqlWadus = "select 1 as wadus, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 3857) as the_geom_webmercator";
+    var sql = "select 1 as i, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom, " +
+              "st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 3857) as the_geom_webmercator";
+    var sqlWadus = "select 1 as wadus, st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 4326) as the_geom, " +
+                   "st_setsrid('LINESTRING(0 0, 1 0)'::geometry, 3857) as the_geom_webmercator";
 
     var httpLayer = {
         type: 'http',

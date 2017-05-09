@@ -53,6 +53,7 @@
     "strftime": "~0.8.2"
   },
   "scripts": {
+    "lint": "jshint lib test",
     "preinstall": "make pre-install",
     "test": "make test-all"
   },
