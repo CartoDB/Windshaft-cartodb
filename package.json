@@ -39,8 +39,8 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.0",
     "underscore": "~1.6.0",
-    "windshaft": "cartodb/windshaft#548-vector-buffer-size",
-    "windshaft-stats": "0.0.1",
+    "windshaft": "cartodb/windshaft#644_layergroup_stats",
+    "windshaft-stats": "cartodb/windshaft-stats#adapt_existing_code",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
