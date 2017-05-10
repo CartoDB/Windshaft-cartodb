@@ -101,30 +101,6 @@ describe('buffer size per format', function () {
             }
         },
         {
-            desc: 'should get geojson tile using buffer-size 0 overriden by template params',
-            coords: { z: 7, x: 64, y: 48 },
-            format: 'geojson',
-            fixturePath: './test/fixtures/buffer-size/tile-mvt-7.64.48-buffer-size-0.geojson',
-            mapConfig: createMapConfig({ geojson: 0 }),
-            assert: function (tile, callback) {
-                var dataFixture = JSON.parse(fs.readFileSync(this.fixturePath));
-                assert.equal(tile.features.length, dataFixture.features.length);
-                callback();
-            }
-        },
-        {
-            desc: 'should get geojson tile using buffer-size 128 overriden by template params',
-            coords: { z: 7, x: 64, y: 48 },
-            format: 'geojson',
-            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.geojson',
-            mapConfig: createMapConfig({ geojson: 128 }),
-            assert: function (tile, callback) {
-                var dataFixture = JSON.parse(fs.readFileSync(this.fixturePath));
-                assert.equal(tile.features.length, dataFixture.features.length);
-                callback();
-            }
-        },
-        {
             desc: 'should get grid.json tile using buffer-size 0 overriden by template params',
             coords: { z: 7, x: 64, y: 48 },
             format: 'grid.json',
@@ -236,46 +212,6 @@ describe('buffer size per format for named maps', function () {
             }),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
-            }
-        },
-        {
-            desc: 'should get geojson tile using buffer-size 0 overriden by template params',
-            coords: { z: 7, x: 64, y: 48 },
-            format: 'geojson',
-            placeholders: { buffersize_geojson: 0 },
-            fixturePath: './test/fixtures/buffer-size/tile-mvt-7.64.48-buffer-size-0.geojson',
-            template: createBufferSizeTemplate('named-default-buffer-size-by-format-geojson', {
-                geojson: '<%= buffersize_geojson %>'
-            }, {
-                "buffersize_geojson": {
-                    "type": "number",
-                    "default": "0"
-                }
-            }),
-            assert: function (tile, callback) {
-                var dataFixture = JSON.parse(fs.readFileSync(this.fixturePath));
-                assert.equal(tile.features.length, dataFixture.features.length);
-                callback();
-            }
-        },
-        {
-            desc: 'should get geojson tile using buffer-size 128 overriden by template params',
-            coords: { z: 7, x: 64, y: 48 },
-            format: 'geojson',
-            placeholders: { buffersize_geojson: 128 },
-            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.geojson',
-            template: createBufferSizeTemplate('named-custom-buffer-size-by-format-geojson', {
-                geojson: '<%= buffersize_geojson %>'
-            }, {
-                "buffersize_geojson": {
-                    "type": "number",
-                    "default": "0"
-                }
-            }),
-            assert: function (tile, callback) {
-                var dataFixture = JSON.parse(fs.readFileSync(this.fixturePath));
-                assert.equal(tile.features.length, dataFixture.features.length);
-                callback();
             }
         },
         {
@@ -417,40 +353,6 @@ describe('buffer size per format for named maps w/o placeholders', function () {
                 var vtileFeatures = vtileJSON[0].features;
 
                 assert.equal(features.length, vtileFeatures.length);
-                callback();
-            }
-        },
-        {
-            desc: 'should get geojson tile using buffer-size 0 overriden by template params',
-            coords: { z: 7, x: 64, y: 48 },
-            format: 'geojson',
-            placeholders: {
-                buffersize: {
-                    geojson: 0
-                }
-            },
-            fixturePath: './test/fixtures/buffer-size/tile-mvt-7.64.48-buffer-size-0.geojson',
-            template: createBufferSizeTemplate('named-no-buffer-size-geojson-0', {}, {}),
-            assert: function (tile, callback) {
-                var dataFixture = JSON.parse(fs.readFileSync(this.fixturePath));
-                assert.equal(tile.features.length, dataFixture.features.length);
-                callback();
-            }
-        },
-        {
-            desc: 'should get geojson tile using buffer-size 128 overriden by template params',
-            coords: { z: 7, x: 64, y: 48 },
-            format: 'geojson',
-            placeholders: {
-                buffersize: {
-                    geojson: 128
-                }
-            },
-            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.geojson',
-            template: createBufferSizeTemplate('named-no-buffer-size-geojson-128', {}, {}),
-            assert: function (tile, callback) {
-                var dataFixture = JSON.parse(fs.readFileSync(this.fixturePath));
-                assert.equal(tile.features.length, dataFixture.features.length);
                 callback();
             }
         },
