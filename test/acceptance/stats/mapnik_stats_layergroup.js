@@ -6,11 +6,14 @@ var TestClient = require('../../support/test-client');
 describe('Create mapnik layergroup', function() {
     before(function() {
         this.layerMetadataConfig = global.environment.enabledFeatures.layerMetadata;
+        this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
         global.environment.enabledFeatures.layerMetadata = true;
+        global.environment.enabledFeatures.layerStats = true;
     });
 
     after(function() {
         global.environment.enabledFeatures.layerMetadata = this.layerMetadataConfig;
+        global.environment.enabledFeatures.layerStats = this.layerStatsConfig;
     });
 
     var cartocssVersion = '2.3.0';

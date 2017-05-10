@@ -6,11 +6,15 @@ var TestClient = require('../../support/test-client');
 describe('multilayer stats disabled', function() {
 
     before(function () {
-        global.environment.enabledFeatures.layerMetadata = false;
+        this.layerMetadataConfig = global.environment.enabledFeatures.layerMetadata;
+        this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
+        global.environment.enabledFeatures.layerMetadata = true;
+        global.environment.enabledFeatures.layerStats = false;
     });
 
     after(function () {
-        global.environment.enabledFeatures.layerMetadata = true;
+        global.environment.enabledFeatures.layerMetadata = this.layerMetadataConfig;
+        global.environment.enabledFeatures.layerStats = this.layerStatsConfig;
     });
 
 
@@ -28,9 +32,9 @@ describe('multilayer stats disabled', function() {
                 assert.ifError(err);
                 layergroup.metadata.layers.forEach(function (layer) {
                     if (layer.type !== 'torque' && layer.type !== 'mapnik') {
-                        assert.ok('stats' in layer.meta);
+                        assert.ok(!('stats' in layer.meta));
                     } else if (layer.type !== 'torque') {
-                        assert.ok('stats' in layer.meta);
+                        assert.ok(!('stats' in layer.meta));
                         assert.ok('cartocss' in layer.meta);
                     } else {
                         assert.ok('cartocss' in layer.meta);
