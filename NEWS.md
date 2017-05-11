@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.6.7
+Released 2017-mm-dd
+
+
 ## 3.6.6
 Released 2017-05-11
 
