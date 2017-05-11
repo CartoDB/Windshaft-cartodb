@@ -2261,15 +2261,15 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft-stats@0.0.1:
+windshaft-stats@cartodb/windshaft-stats#0d269b812b7665e9b2fd3fee4deaa37fb7c80f95:
   version "0.0.1"
-  resolved "https://registry.yarnpkg.com/windshaft-stats/-/windshaft-stats-0.0.1.tgz#5af57a2ea71c67cdf6d8628941c88b826100d7cb"
+  resolved "https://codeload.github.com/cartodb/windshaft-stats/tar.gz/0d269b812b7665e9b2fd3fee4deaa37fb7c80f95"
   dependencies:
     debug "~2.2.0"
 
-windshaft@cartodb/windshaft#548-vector-buffer-size:
+windshaft@cartodb/windshaft#f91c03e888ab774af6443f04970f6a74ff12a1ef:
   version "3.1.1"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/09493bfff94371989532bef6dff734e4cd5cf058"
+  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/f91c03e888ab774af6443f04970f6a74ff12a1ef"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
