@@ -163,6 +163,21 @@ describe('tt-query-map-config-adapter', function() {
                 type: 'numeric'
             });
 
+            assert.equal(mapConfig.layers[0].options.sql, [
+                'SELECT * FROM TT_TileData(',
+                '  TT_populated_places_simple_reduced,',
+                '  !bbox!,',
+                '  ARRAY[\'{"min":8,"max":12,"type":"range","column":"rank_max"}\',' +
+                '\'{"accept":["USA","IND"],"type":"category","column":"adm0_a3"}\']::json[],',
+                '  ARRAY[\'{"aggregate_function":"count","aggregate_column":"*","type":"numeric"}\']::json[],',
+                '  @zoom',
+                ') AS tiledata (',
+                '  cartodb_id int,',
+                '  the_geom_webmercator geometry,',
+                '  count_vals numeric',
+                ')'
+            ].join('\n'));
+
             done();
         });
     });
