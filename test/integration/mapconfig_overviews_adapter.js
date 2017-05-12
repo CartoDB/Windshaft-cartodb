@@ -7,7 +7,7 @@ var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connectio
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var OverviewsMetadataApi = require('../../lib/cartodb/api/overviews_metadata_api');
 var FilterStatsApi = require('../../lib/cartodb/api/filter_stats_api');
-var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-overviews-adapter');
+var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig/adapter/overviews');
 
 var redisPool = new RedisPool(global.environment.redis);
 var metadataBackend = cartodbRedis({pool: redisPool});
