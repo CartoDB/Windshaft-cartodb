@@ -254,6 +254,15 @@ cartodb-psql@0.7.1, cartodb-psql@~0.7.1:
     step "~0.0.6"
     underscore "~1.6.0"
 
+cartodb-psql@~0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/cartodb-psql/-/cartodb-psql-0.8.0.tgz#d3811f706dae2c3bc82365c5d25af13c4235ba37"
+  dependencies:
+    debug "~2.2.0"
+    pg cartodb/node-postgres#6.1.2-cdb1
+    step "~0.0.6"
+    underscore "~1.6.0"
+
 cartodb-query-tables@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.2.0.tgz#b4d672accde04da5b890a5d56a87b761fa7eec44"
@@ -402,6 +411,10 @@ d3-queue@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/d3-queue/-/d3-queue-2.0.3.tgz#07fbda3acae5358a9c5299aaf880adf0953ed2c2"
 
+d3-queue@~3.0.5:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/d3-queue/-/d3-queue-3.0.7.tgz#c93a2e54b417c0959129d7d73f6cf7d4292e7618"
+
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/dashdash/-/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
@@ -429,6 +442,12 @@ debug@^1.0.4:
   resolved "https://registry.yarnpkg.com/debug/-/debug-1.0.4.tgz#5b9c256bd54b6ec02283176fa8a0ede6d154cbf8"
   dependencies:
     ms "0.6.2"
+
+debug@~2.6.6:
+  version "2.6.6"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.6.tgz#a9fa6fbe9ca43cf1e79f73b75c0189cbb7d6db5a"
+  dependencies:
+    ms "0.7.3"
 
 decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
@@ -1293,6 +1312,10 @@ ms@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
 
+ms@0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.3.tgz#708155a5e44e33f5fd0fc53e81d0d40a91be1fff"
+
 mv@~2:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/mv/-/mv-2.1.1.tgz#ae6ce0d6f6d5e0a4f7d893798d03c1ea9559b6a2"
@@ -1509,7 +1532,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "~1.0.0"
 
-pg@cartodb/node-postgres#6.1.2-cdb1:
+pg@cartodb/node-postgres#6.1.2-cdb1, "pg@github:cartodb/node-postgres#6.1.2-cdb1":
   version "6.1.2"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3c81aea432ce58d20a795786c58bbb14f68f9689"
   dependencies:
@@ -2261,15 +2284,17 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft-stats@cartodb/windshaft-stats#0d269b812b7665e9b2fd3fee4deaa37fb7c80f95:
+windshaft-stats@cartodb/windshaft-stats#16a973ba9addf88312ba92047e41108be2c3434f:
   version "0.0.1"
-  resolved "https://codeload.github.com/cartodb/windshaft-stats/tar.gz/0d269b812b7665e9b2fd3fee4deaa37fb7c80f95"
+  resolved "https://codeload.github.com/cartodb/windshaft-stats/tar.gz/16a973ba9addf88312ba92047e41108be2c3434f"
   dependencies:
-    debug "~2.2.0"
+    cartodb-psql "~0.8.0"
+    d3-queue "~3.0.5"
+    debug "~2.6.6"
 
-windshaft@cartodb/windshaft#f91c03e888ab774af6443f04970f6a74ff12a1ef:
+windshaft@cartodb/windshaft#0675de5edcb2a24179dcd6224c3f309b68f17bbd:
   version "3.1.1"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/f91c03e888ab774af6443f04970f6a74ff12a1ef"
+  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/0675de5edcb2a24179dcd6224c3f309b68f17bbd"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
