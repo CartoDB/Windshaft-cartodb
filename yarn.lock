@@ -2288,18 +2288,18 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft-stats@cartodb/windshaft-stats#0d269b812b7665e9b2fd3fee4deaa37fb7c80f95:
+windshaft-stats@cartodb/windshaft-stats#5f41e0a69763692f45f76cbae7f1e784186e1e7d:
   version "0.0.1"
-  resolved "https://codeload.github.com/cartodb/windshaft-stats/tar.gz/0d269b812b7665e9b2fd3fee4deaa37fb7c80f95"
+  resolved "https://codeload.github.com/cartodb/windshaft-stats/tar.gz/5f41e0a69763692f45f76cbae7f1e784186e1e7d"
   dependencies:
     cartodb-psql "~0.8.0"
     d3-queue "~3.0.5"
     debug "~2.6.6"
     step "~1.0.0"
 
-windshaft@cartodb/windshaft#f91c03e888ab774af6443f04970f6a74ff12a1ef:
+windshaft@cartodb/windshaft#0675de5edcb2a24179dcd6224c3f309b68f17bbd:
   version "3.1.1"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/f91c03e888ab774af6443f04970f6a74ff12a1ef"
+  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/0675de5edcb2a24179dcd6224c3f309b68f17bbd"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
