@@ -19,7 +19,7 @@
 --
 -- SELECT * FROM TT_TileData(
 --   'tttable',
---   '{"minx": -20037508.3, "minx": 20037508.29613578, "maxx": -20037508.29613578, "maxy": 20037508.3 }',
+--   '{"minx": -20037508.3, "miny": 20037508.29613578, "maxx": -20037508.29613578, "maxy": 20037508.3 }',
 --   ARRAY['{"type":"category", "column":"value3", "accept":["xx"]}']::json[],
 --   ARRAY['{"aggregate_function":"sum", "aggregate_column":"value1", "type":"numeric"}',
 --         '{"aggregate_function":"avg", "aggregate_column":"value2", "type":"numeric"}' ],
@@ -39,9 +39,9 @@ DECLARE
   maxx double precision;
   miny double precision;
   maxy double precision;
-  conds text;
+  conditions text;
   aggr_columns text;
-  filter_conds text;
+  filter_conditions text;
 BEGIN
   -- zoom_level will be used to choose the spatial aggregation granularity
 
@@ -52,13 +52,24 @@ BEGIN
   miny := bbox->'miny';
   maxy := bbox->'maxy';
 
-  conds := Format(
+  conditions := Format(
     'the_geom_webmercator && ST_MakeEnvelope(%1$s,%2$s,%3$s,%4$s)',
-    minx, miny, maxx, maxy
+    minx, minx, maxx, maxy
   );
 
-  -- TODO: add other filters to conds
-  filter_conds := '1 = 1';
+  WITH filter_conds AS (
+    SELECT CASE (filter->'type')::text
+    WHEN 'range' THEN
+      Format('%1$s BETWEEN %2$s AND %3$s', filter->'column', filter->'min', filter->'max')
+    WHEN 'category' THEN
+      -- TODO: handle reject
+      Format('%1$s IN (%2$s)', filter->'column', filter->'accept', filter->'reject')
+    END AS filter_def FROM unnest(filters) as filter
+  ) SELECT string_agg(filter_conds.filter_def, ' AND ') FROM filter_conds INTO filter_conditions;
+
+  IF NOT (filter_conditions = '') THEN
+    conditions := conditions || ' AND ' || filter_conditions;
+  END IF;
 
   WITH cols AS (
     SELECT Format(
@@ -76,6 +87,6 @@ BEGIN
       %2$s
     FROM %1$s
     WHERE %3$s;',
-  tt_table::regclass::text, aggr_columns, filter_conds);
+  tt_table::regclass::text, aggr_columns, conditions);
 END;
 $$ LANGUAGE PLPGSQL;
