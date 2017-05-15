@@ -34,6 +34,17 @@
 CREATE OR REPLACE FUNCTION TT_TileData(tt_table TEXT, bbox JSON, filters JSON[], aggregations JSON[], zoom_level INT)
 RETURNS SETOF RECORD
 AS $$
+BEGIN
+  -- Fallback to regular dataset/PostGIS
+  RETURN _table_TileData(tt_table, bbox, filters, aggregations, zoom_level);
+END;
+$$ LANGUAGE PLPGSQL;
+
+-- Get data for regular table
+-- zoom_level is not used, since there's no data aggregation here; results are exact
+CREATE OR REPLACE FUNCTION _table_TileData(tt_table TEXT, bbox JSON, filters JSON[], aggregations JSON[], zoom_level INT)
+RETURNS SETOF RECORD
+AS $$
 DECLARE
   minx double precision;
   maxx double precision;
@@ -43,10 +54,6 @@ DECLARE
   aggr_columns text;
   filter_conditions text;
 BEGIN
-  -- zoom_level will be used to choose the spatial aggregation granularity
-
-  -- Fallback to regular dataset/PostGIS
-
   minx := bbox->'minx';
   maxx := bbox->'maxx';
   miny := bbox->'miny';
@@ -90,3 +97,4 @@ BEGIN
   tt_table::regclass::text, aggr_columns, conditions);
 END;
 $$ LANGUAGE PLPGSQL;
+
