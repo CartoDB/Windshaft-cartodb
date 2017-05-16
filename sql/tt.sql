@@ -54,10 +54,10 @@ DECLARE
   aggr_columns text;
   filter_conditions text;
 BEGIN
-  minx := bbox->'minx';
-  maxx := bbox->'maxx';
-  miny := bbox->'miny';
-  maxy := bbox->'maxy';
+  minx := bbox->>0;
+  maxx := bbox->>2;
+  miny := bbox->>1;
+  maxy := bbox->>3;
 
   conditions := Format(
     'the_geom_webmercator && ST_MakeEnvelope(%1$s,%2$s,%3$s,%4$s)',

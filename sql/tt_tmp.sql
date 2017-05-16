@@ -17,10 +17,10 @@ DECLARE
   dy double precision;
   dt double precision;
 BEGIN
-  minx := bbox->'minx';
-  maxx := bbox->'maxx';
-  miny := bbox->'miny';
-  maxy := bbox->'maxy';
+  minx := bbox->>0;
+  maxx := bbox->>2;
+  miny := bbox->>1;
+  maxy := bbox->>3;
 
   -- TODO compute dx, dy, dt (group by dt only if t in filters?)
 
@@ -92,10 +92,10 @@ DECLARE
   aggr_qt_level INT;
 BEGIN
 
-  minx := bbox->'minx';
-  maxx := bbox->'maxx';
-  miny := bbox->'miny';
-  maxy := bbox->'maxy';
+  minx := bbox->>0;
+  maxx := bbox->>2;
+  miny := bbox->>1;
+  maxy := bbox->>3;
 
   -- compute quad level, dt (group by dt only if t in filters?)
   -- compute min_q, max_q fo quad_level; gq is truncated quad
