@@ -39,7 +39,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.0",
     "underscore": "~1.6.0",
-    "windshaft": "cartodb/windshaft#0675de5edcb2a24179dcd6224c3f309b68f17bbd",
+    "windshaft": "cartodb/windshaft#515efb2d9237a1511b81a61fd6f7524184df38ea",
     "windshaft-stats": "cartodb/windshaft-stats#5f41e0a69763692f45f76cbae7f1e784186e1e7d",
     "yargs": "~5.0.0"
   },
