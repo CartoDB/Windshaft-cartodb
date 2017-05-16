@@ -143,7 +143,7 @@ BEGIN
 
   -- TODO: select time  aggregation level using zoom
   -- TODO avoid t-grouping if no t
-  dt := ...;
+  -- dt := ...;
 
   EXECUTE Format('
     WITH grouped AS (
