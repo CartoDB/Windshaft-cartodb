@@ -1532,7 +1532,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "~1.0.0"
 
-pg@cartodb/node-postgres#6.1.2-cdb1:
+pg@cartodb/node-postgres#6.1.2-cdb1, "pg@github:cartodb/node-postgres#6.1.2-cdb1":
   version "6.1.2"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3c81aea432ce58d20a795786c58bbb14f68f9689"
   dependencies:
@@ -2288,14 +2288,13 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft-stats@cartodb/windshaft-stats#5f41e0a69763692f45f76cbae7f1e784186e1e7d:
+windshaft-stats@cartodb/windshaft-stats#16a973ba9addf88312ba92047e41108be2c3434f:
   version "0.0.1"
-  resolved "https://codeload.github.com/cartodb/windshaft-stats/tar.gz/5f41e0a69763692f45f76cbae7f1e784186e1e7d"
+  resolved "https://codeload.github.com/cartodb/windshaft-stats/tar.gz/16a973ba9addf88312ba92047e41108be2c3434f"
   dependencies:
     cartodb-psql "~0.8.0"
     d3-queue "~3.0.5"
     debug "~2.6.6"
-    step "~1.0.0"
 
 windshaft@cartodb/windshaft#515efb2d9237a1511b81a61fd6f7524184df38ea:
   version "3.1.3"
