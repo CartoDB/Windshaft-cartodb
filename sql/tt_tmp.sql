@@ -84,6 +84,7 @@ DECLARE
   maxx double precision;
   miny double precision;
   maxy double precision;
+  filter_conditions text;
   spatial_conditions text;
   aggr_columns text;
   conditions text;
