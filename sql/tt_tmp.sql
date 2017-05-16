@@ -15,7 +15,7 @@ DECLARE
   filter_conditions text;
   dx double precision;
   dy double precision;
-  dt double precision
+  dt double precision;
 BEGIN
   minx := bbox->'minx';
   maxx := bbox->'maxx';
@@ -112,7 +112,7 @@ BEGIN
       '(qt BETWEEN %1$s AND %2$s)',
       tiles.qt_min, tiles.qt_max
     ) AS cond FROM tiles
-  ),
+  )
   SELECT string_agg(cols.col_def, ',') FROM tile_filters.cond INTO conditions;
 
   WITH filter_conds AS (
