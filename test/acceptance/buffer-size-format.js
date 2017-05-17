@@ -104,6 +104,7 @@ describe('buffer size per format', function () {
             desc: 'should get grid.json tile using buffer-size 0 overriden by template params',
             coords: { z: 7, x: 64, y: 48 },
             format: 'grid.json',
+            layers: [0],
             fixturePath: './test/fixtures/buffer-size/tile-grid.json.7.64.48-buffer-size-0.grid.json',
             mapConfig: createMapConfig({ 'grid.json': 0 }),
             assert: function (tile, callback) {
@@ -114,6 +115,7 @@ describe('buffer size per format', function () {
             desc: 'should get grid.json tile using buffer-size 128 overriden by template params',
             coords: { z: 7, x: 64, y: 48 },
             format: 'grid.json',
+            layers: [0],
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.grid.json',
             mapConfig: createMapConfig({ 'grid.json': 128 }),
             assert: function (tile, callback) {
@@ -126,7 +128,11 @@ describe('buffer size per format', function () {
         it(test.desc, function (done) {
             var testClient = new TestClient(test.mapConfig, 1234);
             var coords = test.coords;
-            testClient.getTile(coords.z, coords.x, coords.y, { format: test.format }, function (err, res, tile) {
+            var options = {
+                format: test.format,
+                layers: test.layers
+            };
+            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
                 // tile.save(test.fixturePath);
@@ -218,6 +224,7 @@ describe('buffer size per format for named maps', function () {
             desc: 'should get grid.json tile using buffer-size 0 overriden by template params',
             coords: { z: 7, x: 64, y: 48 },
             format: 'grid.json',
+            layers: [0],
             placeholders: { buffersize_gridjson: 0 },
             fixturePath: './test/fixtures/buffer-size/tile-grid.json.7.64.48-buffer-size-0.grid.json',
             template: createBufferSizeTemplate('named-default-buffer-size-by-format-gridjson', {
@@ -236,6 +243,7 @@ describe('buffer size per format for named maps', function () {
             desc: 'should get grid.json tile using buffer-size 128 overriden by template params',
             coords: { z: 7, x: 64, y: 48 },
             format: 'grid.json',
+            layers: [0],
             placeholders: { buffersize_gridjson: 128 },
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.grid.json',
             template: createBufferSizeTemplate('named-custom-buffer-size-by-format-gridjson', {
@@ -258,7 +266,8 @@ describe('buffer size per format for named maps', function () {
             var coords = test.coords;
             var options = {
                 format: test.format,
-                placeholders: test.placeholders
+                placeholders: test.placeholders,
+                layers: test.layers
             };
             testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
@@ -360,6 +369,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
             desc: 'should get grid.json tile using buffer-size 0 overriden by template params',
             coords: { z: 7, x: 64, y: 48 },
             format: 'grid.json',
+            layers: [0],
             placeholders: {
                 buffersize: {
                     'grid.json': 0
@@ -375,6 +385,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
             desc: 'should get grid.json tile using buffer-size 128 overriden by template params',
             coords: { z: 7, x: 64, y: 48 },
             format: 'grid.json',
+            layers: [0],
             placeholders: {
                 buffersize: {
                     'grid.json': 128
@@ -394,7 +405,8 @@ describe('buffer size per format for named maps w/o placeholders', function () {
             var coords = test.coords;
             var options = {
                 format: test.format,
-                placeholders: test.placeholders
+                placeholders: test.placeholders,
+                layers: test.layers
             };
             testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
