@@ -22,8 +22,8 @@ accepts@~1.2.12:
     negotiator "0.5.3"
 
 ajv@^4.9.1:
-  version "4.11.7"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.7.tgz#8655a5d86d0824985cc471a1d913fb6729a0ec48"
+  version "4.11.8"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-4.11.8.tgz#82ffb02b29e662ae53bdc20af15947706739c536"
   dependencies:
     co "^4.6.0"
     json-stable-stringify "^1.0.1"
@@ -150,7 +150,7 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
-brace-expansion@^1.0.0:
+brace-expansion@^1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.7.tgz#3effc3c50e000531fb720eaff80f0ae8ef23cf59"
   dependencies:
@@ -194,9 +194,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.54.4:
-  version "0.54.4"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.54.4.tgz#3e1e96cda36661ebc01b64dadcc6387b02d69739"
+camshaft@cartodb/camshaft#query-variables:
+  version "0.54.5"
+  resolved "https://codeload.github.com/cartodb/camshaft/tar.gz/0591c92e4dac35a9cff7ff6734196db6d980c5e2"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
@@ -223,14 +223,6 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@CartoDB/carto#0.15.1-cdb1:
-  version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
-  dependencies:
-    mapnik-reference "~6.0.2"
-    optimist "~0.6.0"
-    underscore "~1.6.0"
-
 carto@cartodb/carto#0.15.1-cdb3:
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
@@ -238,6 +230,14 @@ carto@cartodb/carto#0.15.1-cdb3:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "1.8.3"
+
+"carto@github:cartodb/carto#0.15.1-cdb1":
+  version "0.15.1-cdb1"
+  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  dependencies:
+    mapnik-reference "~6.0.2"
+    optimist "~0.6.0"
+    underscore "~1.6.0"
 
 cartocolor@4.0.0:
   version "4.0.0"
@@ -254,9 +254,9 @@ cartodb-psql@0.8.0:
     step "~0.0.6"
     underscore "~1.6.0"
 
-cartodb-query-tables@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.2.0.tgz#b4d672accde04da5b890a5d56a87b761fa7eec44"
+cartodb-query-tables@cartodb/node-cartodb-query-tables#query-variables:
+  version "0.2.1"
+  resolved "https://codeload.github.com/cartodb/node-cartodb-query-tables/tar.gz/fa58323723ab496f9591e00ab37bb5ee3e856fd4"
 
 cartodb-redis@0.13.2:
   version "0.13.2"
@@ -445,8 +445,8 @@ deep-equal@^1.0.0:
   resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
 
 deep-extend@~0.4.0:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.4.1.tgz#efe4113d08085f4e6f9687759810f807469e2253"
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.4.2.tgz#48b699c27e334bf89f10892be432f6e4c7d34a7f"
 
 deep-is@~0.1.3:
   version "0.1.3"
@@ -612,8 +612,8 @@ express@~4.13.3:
     vary "~1.0.1"
 
 extend@~3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.0.tgz#5a474353b9f3353ddd8176dfd37b91c83a46f1d4"
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.1.tgz#a755ea7bc1adfcc5a31ce7e762dbaadc5e636444"
 
 extsprintf@1.0.2:
   version "1.0.2"
@@ -686,7 +686,7 @@ fstream@^1.0.0, fstream@^1.0.10, fstream@^1.0.2:
     mkdirp ">=0.5 0"
     rimraf "2"
 
-gauge@~2.7.1:
+gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
   dependencies:
@@ -733,8 +733,8 @@ get-caller-file@^1.0.1:
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
 
 getpass@^0.1.1:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.6.tgz#283ffd9fc1256840875311c1b60e8c40187110e6"
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.7.tgz#5eff8e3e684d569ae4cb2b1282604e8ba62149fa"
   dependencies:
     assert-plus "^1.0.0"
 
@@ -808,8 +808,8 @@ growl@1.8.1:
   resolved "https://registry.yarnpkg.com/growl/-/growl-1.8.1.tgz#4b2dec8d907e93db336624dcec0183502f8c9428"
 
 handlebars@^4.0.1:
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.6.tgz#2ce4484850537f9c97a8026d5399b935c4ed4ed7"
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.0.8.tgz#22b875cd3f0e6cbea30314f144e82bc7a72ff420"
   dependencies:
     async "^1.4.0"
     optimist "^0.6.1"
@@ -935,7 +935,7 @@ is-arrayish@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
 
-is-buffer@^1.0.2:
+is-buffer@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.5.tgz#1f3b26ef613b214b88cbca23cc6c01d87961eecc"
 
@@ -1025,8 +1025,8 @@ js-base64@^2.1.9:
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.1.9.tgz#f0e80ae039a4bd654b5f281fc93f04a914a7fcce"
 
 js-yaml@3.x, js-yaml@^3.4.6:
-  version "3.8.3"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.8.3.tgz#33a05ec481c850c8875929166fe1beb61c728766"
+  version "3.8.4"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.8.4.tgz#520b4564f86573ba96662af85a8cafa7b4b5a6f6"
   dependencies:
     argparse "^1.0.7"
     esprima "^3.1.1"
@@ -1080,10 +1080,10 @@ jsprim@^1.2.2:
     verror "1.3.6"
 
 kind-of@^3.0.2:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.1.0.tgz#475d698a5e49ff5e53d14e3e732429dc8bf4cf47"
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"
   dependencies:
-    is-buffer "^1.0.2"
+    is-buffer "^1.1.5"
 
 lazy-cache@^1.0.3:
   version "1.0.4"
@@ -1166,9 +1166,9 @@ mapnik-vector-tile@~1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/mapnik-vector-tile/-/mapnik-vector-tile-1.2.2.tgz#42795ca211dd274a9a4af5bf6cfe3b0bfe0ba243"
 
-mapnik@3.5.14, mapnik@~3.5.0:
+mapnik@3.5.14, mapnik@cartodb/node-mapnik#3.5.x-grid-variables, mapnik@~3.5.0:
   version "3.5.14"
-  resolved "https://registry.yarnpkg.com/mapnik/-/mapnik-3.5.14.tgz#632bd6635c72c0214a707549309ba416594afff7"
+  resolved "https://codeload.github.com/cartodb/node-mapnik/tar.gz/7888167b56ba6ab0e765957741dd96ebf3031efe"
   dependencies:
     mapnik-vector-tile "~1.2.2"
     nan "~2.4.0"
@@ -1228,10 +1228,10 @@ minimatch@1.0.x:
     sigmund "~1.0.0"
 
 "minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.3.tgz#2a4e4090b96b2db06a9d7df01055a62a77c9b774"
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   dependencies:
-    brace-expansion "^1.0.0"
+    brace-expansion "^1.1.7"
 
 minimatch@~0.2.11:
   version "0.2.14"
@@ -1256,13 +1256,13 @@ mkdirp@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.3.0.tgz#1bbf5ab1ba827af23575143490426455f481fe1e"
 
-mkdirp@0.5.0:
+mkdirp@0.5.0, mkdirp@0.5.x, mkdirp@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.0.tgz#1d73076a6df986cd9344e15e71fcc05a4c9abf12"
   dependencies:
     minimist "0.0.8"
 
-mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
+"mkdirp@>=0.5 0", mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
@@ -1373,12 +1373,12 @@ normalize-package-data@^2.3.2:
     validate-npm-package-license "^3.0.1"
 
 npmlog@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.0.2.tgz#d03950e0e78ce1527ba26d2a7592e9348ac3e75f"
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.1.0.tgz#dc59bee85f64f00ed424efb2af0783df25d1c0b5"
   dependencies:
     are-we-there-yet "~1.1.2"
     console-control-strings "~1.1.0"
-    gauge "~2.7.1"
+    gauge "~2.7.3"
     set-blocking "~2.0.0"
 
 number-is-nan@^1.0.0:
@@ -1509,7 +1509,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "~1.0.0"
 
-pg@cartodb/node-postgres#6.1.2-cdb1:
+"pg@github:cartodb/node-postgres#6.1.2-cdb1":
   version "6.1.2"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3c81aea432ce58d20a795786c58bbb14f68f9689"
   dependencies:
@@ -1820,13 +1820,17 @@ safe-json-stringify@~1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/safe-json-stringify/-/safe-json-stringify-1.0.4.tgz#81a098f447e4bbc3ff3312a243521bc060ef5911"
 
-"semver@2 || 3 || 4 || 5", semver@^5.1.0, semver@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
+"semver@2 || 3 || 4 || 5", semver@~5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
 
 semver@4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.2.tgz#c7a07158a80bedd052355b770d82d6640f803be7"
+
+semver@^5.1.0, semver@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
 
 semver@~1.1.4:
   version "1.1.4"
@@ -1835,10 +1839,6 @@ semver@~1.1.4:
 semver@~4.3.3:
   version "4.3.6"
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
-
-semver@~5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
 
 send@0.13.1:
   version "0.13.1"
@@ -2098,9 +2098,9 @@ tilelive-bridge@cartodb/tilelive-bridge#2.3.1-cdb2:
     mapnik-pool "~0.1.3"
     sphericalmercator "1.0.x"
 
-tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb2:
+tilelive-mapnik@cartodb/tilelive-mapnik#query-variables:
   version "0.6.18-cdb2"
-  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/46f1adefee90f3f46c0ede5e0833f8522634a858"
+  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/2cfd33460a1042dc63d433482f0121eb746b5ca5"
   dependencies:
     generic-pool "~2.4.0"
     mapnik "3.5.14"
@@ -2176,8 +2176,8 @@ type-is@~1.6.10, type-is@~1.6.6:
     mime-types "~2.1.15"
 
 uglify-js@^2.6:
-  version "2.8.22"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.22.tgz#d54934778a8da14903fa29a326fb24c0ab51a1a0"
+  version "2.8.26"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.26.tgz#3a1db8ae0a0aba7f92e1ddadadbd0293d549f90e"
   dependencies:
     source-map "~0.5.1"
     yargs "~3.10.0"
@@ -2248,10 +2248,10 @@ which@^1.1.1:
     isexe "^2.0.0"
 
 wide-align@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/wide-align/-/wide-align-1.1.0.tgz#40edde802a71fea1f070da3e62dcda2e7add96ad"
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/wide-align/-/wide-align-1.1.2.tgz#571e0f1b0604636ebc0dfc21b0339bbe31341710"
   dependencies:
-    string-width "^1.0.1"
+    string-width "^1.0.2"
 
 window-size@0.1.0:
   version "0.1.0"
@@ -2263,7 +2263,7 @@ window-size@^0.2.0:
 
 windshaft@cartodb/windshaft#query-variables:
   version "3.2.1"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/9e22d03bbd644750a60ab3ab54a1022e1fb32f32"
+  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/ad1ae19a22643d4bfab844d6f3da99efd0cc871b"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
@@ -2272,7 +2272,7 @@ windshaft@cartodb/windshaft#query-variables:
     debug "~2.2.0"
     dot "~1.0.2"
     grainstore "~1.6.0"
-    mapnik "3.5.14"
+    mapnik cartodb/node-mapnik#3.5.x-grid-variables
     queue-async "~1.0.7"
     redis-mpool "0.4.1"
     request "~2.79.0"
@@ -2281,7 +2281,7 @@ windshaft@cartodb/windshaft#query-variables:
     step "~0.0.6"
     tilelive "5.12.2"
     tilelive-bridge cartodb/tilelive-bridge#2.3.1-cdb2
-    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb2
+    tilelive-mapnik cartodb/tilelive-mapnik#query-variables
     torque.js "~2.11.0"
     underscore "~1.6.0"
 

@@ -20,9 +20,9 @@
   ],
   "dependencies": {
     "body-parser": "~1.14.0",
-    "camshaft": "0.54.4",
+    "camshaft": "cartodb/camshaft#query-variables",
     "cartodb-psql": "0.8.0",
-    "cartodb-query-tables": "0.2.0",
+    "cartodb-query-tables": "cartodb/node-cartodb-query-tables#query-variables",
     "cartodb-redis": "0.13.2",
     "debug": "~2.2.0",
     "dot": "~1.0.2",
