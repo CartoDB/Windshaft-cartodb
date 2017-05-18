@@ -1,7 +1,10 @@
 # Changelog
 
 ## 3.7.1
-Released 2017-mm-dd
+Released 2017-05-18
+
+Bug fixes:
+ - Fix buffersize assignment when is not defined in requested mapconfig.
 
 
 ## 3.7.0
