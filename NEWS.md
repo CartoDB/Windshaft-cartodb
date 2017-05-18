@@ -1,7 +1,55 @@
 # Changelog
 
-## 3.6.0
+## 3.6.7
 Released 2017-mm-dd
+
+
+## 3.6.6
+Released 2017-05-11
+
+Announcements:
+ - Upgrades camshaft to [0.54.4](https://github.com/CartoDB/camshaft/releases/tag/0.54.4).
+
+
+## 3.6.5
+Released 2017-05-09
+
+Announcements:
+ - Upgrades camshaft to [0.54.3](https://github.com/CartoDB/camshaft/releases/tag/0.54.3).
+
+
+## 3.6.4
+Released 2017-05-05
+
+Announcements:
+ - Upgrade cartodb-psql to [0.8.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.8.0).
+ - Upgrades camshaft to [0.54.2](https://github.com/CartoDB/camshaft/releases/tag/0.54.2).
+ - Upgrades windshaft to [3.1.2](https://github.com/CartoDB/windshaft/releases/tag/3.1.2).
+
+
+## 3.6.3
+Released 2017-04-25
+
+Announcements:
+ - Upgrades windshaft to [3.1.1](https://github.com/CartoDB/windshaft/releases/tag/3.1.1).
+
+
+## 3.6.2
+Released 2017-04-24
+
+Announcements:
+ - Upgrades grainstore to [1.6.3](https://github.com/CartoDB/grainstore/releases/tag/1.6.3).
+
+
+## 3.6.1
+Released 2017-04-24
+
+Announcements:
+ - Upgrades camshaft to [0.54.1](https://github.com/CartoDB/camshaft/releases/tag/0.54.1).
+
+
+## 3.6.0
+Released 2017-04-20
 
 Announcements:
  - Upgrades camshaft to [0.54.0](https://github.com/CartoDB/camshaft/releases/tag/0.54.0).

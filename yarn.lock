@@ -194,13 +194,13 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.54.0:
-  version "0.54.0"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.54.0.tgz#9cb23b827dee0f54d0a39b8af3213692f11adf62"
+camshaft@0.54.4:
+  version "0.54.4"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.54.4.tgz#3e1e96cda36661ebc01b64dadcc6387b02d69739"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
-    cartodb-psql "0.7.1"
+    cartodb-psql "0.8.0"
     debug "^2.2.0"
     dot "^1.0.3"
     request "^2.69.0"
@@ -245,9 +245,9 @@ cartocolor@4.0.0:
   dependencies:
     colorbrewer "1.0.0"
 
-cartodb-psql@0.7.1, cartodb-psql@~0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/cartodb-psql/-/cartodb-psql-0.7.1.tgz#578ce04db9262f1296845dec643461105a594e22"
+cartodb-psql@0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/cartodb-psql/-/cartodb-psql-0.8.0.tgz#d3811f706dae2c3bc82365c5d25af13c4235ba37"
   dependencies:
     debug "~2.2.0"
     pg cartodb/node-postgres#6.1.2-cdb1
@@ -1403,9 +1403,13 @@ oauth-sign@~0.8.1:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
 
-object-assign@4.1.0, object-assign@^4.1.0:
+object-assign@4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.0.tgz#7a3b3d0e98063d43f4c03f2e8ae6cd51a86883a0"
+
+object-assign@^4.1.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
 object-keys@~0.4.0:
   version "0.4.0"
@@ -2282,7 +2286,7 @@ windshaft@cartodb/windshaft#548-vector-buffer-size:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
     carto cartodb/carto#0.15.1-cdb3
-    cartodb-psql "0.7.1"
+    cartodb-psql "0.8.0"
     debug "~2.2.0"
     dot "~1.0.2"
     grainstore "~1.6.0"
