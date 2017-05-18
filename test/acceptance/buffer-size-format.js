@@ -396,7 +396,24 @@ describe('buffer size per format for named maps w/o placeholders', function () {
             assert: function (tile, callback) {
                 assert.utfgridEqualsFile(tile, this.fixturePath, 2, callback);
             }
-        }
+        },
+        {
+            desc: 'should get png tile using buffer-size 0' +
+                  ' overriden by template params with no buffersize in mapconfig',
+            coords: { z: 7, x: 64, y: 48 },
+            format: 'png',
+            placeholders: {
+                buffersize: {
+                    png: 0
+                }
+            },
+            fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
+            template: createBufferSizeTemplate('named-no-buffer-size-mapconfig-png-0', undefined, {}),
+            assert: function (tile, callback) {
+                assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
+            }
+        },
+
     ];
 
     testCases.forEach(function (test) {
