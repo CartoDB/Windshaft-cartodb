@@ -283,7 +283,7 @@ describe('buffer size per format for named maps', function () {
 });
 
 
-describe.only('buffer size per format for named maps w/o placeholders', function () {
+describe('buffer size per format for named maps w/o placeholders', function () {
     var testCases = [
         {
             desc: 'should get png tile using buffer-size 0 overriden by template params',
@@ -398,7 +398,8 @@ describe.only('buffer size per format for named maps w/o placeholders', function
             }
         },
         {
-            desc: 'should get png tile using buffer-size 0 overriden by template params with no buffersize in mapconfig',
+            desc: 'should get png tile using buffer-size 0' +
+                  ' overriden by template params with no buffersize in mapconfig',
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
             placeholders: {
