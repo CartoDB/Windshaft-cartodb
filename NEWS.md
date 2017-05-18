@@ -1,7 +1,34 @@
 # Changelog
 
+## 3.7.0
+Released 2017-05-18
+
+Announcements:
+- Manage multiple values of buffer-size for different formats
+- Upgrades windshaft to [3.2.0](https://github.com/CartoDB/windshaft/releases/tag/3.2.0).
+
+
+## 3.6.6
+Released 2017-05-11
+
+Announcements:
+ - Upgrades camshaft to [0.54.4](https://github.com/CartoDB/camshaft/releases/tag/0.54.4).
+
+
+## 3.6.5
+Released 2017-05-09
+
+Announcements:
+ - Upgrades camshaft to [0.54.3](https://github.com/CartoDB/camshaft/releases/tag/0.54.3).
+
+
 ## 3.6.4
-Released 2017-mm-dd
+Released 2017-05-05
+
+Announcements:
+ - Upgrade cartodb-psql to [0.8.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.8.0).
+ - Upgrades camshaft to [0.54.2](https://github.com/CartoDB/camshaft/releases/tag/0.54.2).
+ - Upgrades windshaft to [3.1.2](https://github.com/CartoDB/windshaft/releases/tag/3.1.2).
 
 
 ## 3.6.3

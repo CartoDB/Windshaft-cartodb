@@ -16,13 +16,22 @@ var serverOptions = require('../../lib/cartodb/server_options');
 serverOptions.analysis.batch.inlineExecution = true;
 var server = new CartodbWindshaft(serverOptions);
 
-function TestClient(mapConfig, apiKey) {
-    this.mapConfig = mapConfig;
+function TestClient(config, apiKey) {
+    this.mapConfig = isMapConfig(config) ? config : null;
+    this.template = isTemplate(config) ? config : null;
     this.apiKey = apiKey;
     this.keysToDelete = {};
 }
 
 module.exports = TestClient;
+
+function isMapConfig(config) {
+    return config && config.layers;
+}
+
+function isTemplate(config) {
+    return config && config.layergroup;
+}
 
 module.exports.RESPONSE = {
     ERROR: {
@@ -406,6 +415,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
     }
 
     var url = '/api/v1/map';
+    var urlNamed = url + '/named';
 
     if (this.apiKey) {
         url += '?' + qs.stringify({api_key: this.apiKey});
@@ -413,17 +423,60 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
     var layergroupId;
     step(
-        function createLayergroup() {
+        function createTemplate () {
             var next = this;
+
+            if (!self.template) {
+                return next();
+            }
+
+            if (!self.apiKey) {
+                return next(new Error('apiKey param is mandatory to create a new template'));
+            }
+
+            params.placeholders = params.placeholders || {};
+        
             assert.response(server,
                 {
-                    url: url,
+                    url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
                     method: 'POST',
                     headers: {
                         host: 'localhost',
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(self.mapConfig)
+                    data: JSON.stringify(self.template)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function (res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    return next(null, JSON.parse(res.body).template_id);
+                }
+            );
+        },
+        function createLayergroup(err, templateId) {
+            var next = this;
+
+            var data = templateId ? params.placeholders : self.mapConfig
+            var path  = templateId ?
+                urlNamed + '/' + templateId  + '?' + qs.stringify({api_key: self.apiKey}) :
+                url;
+
+            assert.response(server,
+                {
+                    url: path,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(data)
                 },
                 {
                     status: 200,
@@ -485,6 +538,27 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 expectedResponse.headers['Content-Type'] = 'image/png';
             }
 
+            var isMvt = format.match(/mvt$/);
+
+            if (isMvt) {
+                request.encoding = 'binary';
+                expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
+            }
+
+            var isGeojson = format.match(/geojson$/);
+
+            if (isGeojson) {
+                request.encoding = 'utf-8';
+                expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
+            }
+
+            var isGridJSON = format.match(/grid.json$/);
+
+            if (isGridJSON) {
+                request.encoding = 'utf-8';
+                expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
+            }
+
             assert.response(server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
 
@@ -492,7 +566,12 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
                 if (isPng) {
                     obj = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                } else {
+                }
+                else if (isMvt) {
+                    obj = new mapnik.VectorTile(z, x, y);
+                    obj.setDataSync(new Buffer(res.body, 'binary'));
+                }
+                else {
                     obj = JSON.parse(res.body);
                 }
 
