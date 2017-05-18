@@ -1,7 +1,11 @@
 # Changelog
 
-## 3.6.7
-Released 2017-mm-dd
+## 3.7.0
+Released 2017-05-18
+
+Announcements:
+- Manage multiple values of buffer-size for different formats
+- Upgrades windshaft to [3.2.0](https://github.com/CartoDB/windshaft/releases/tag/3.2.0).
 
 
 ## 3.6.6
