@@ -8,6 +8,5 @@ tools/munin/windshaft.conf
 logs/
 pids/
 redis.pid
-test.log
-npm-debug.log
+*.log
 coverage/

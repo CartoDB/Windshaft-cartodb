@@ -1,5 +1,27 @@
 # Changelog
 
+## 3.7.1
+Released 2017-05-18
+
+Bug fixes:
+ - Fix buffersize assignment when is not defined in requested mapconfig.
+
+
+## 3.7.0
+Released 2017-05-18
+
+Announcements:
+- Manage multiple values of buffer-size for different formats
+- Upgrades windshaft to [3.2.0](https://github.com/CartoDB/windshaft/releases/tag/3.2.0).
+
+
+## 3.6.6
+Released 2017-05-11
+
+Announcements:
+ - Upgrades camshaft to [0.54.4](https://github.com/CartoDB/camshaft/releases/tag/0.54.4).
+
+
 ## 3.6.5
 Released 2017-05-09
 
