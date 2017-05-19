@@ -55,16 +55,7 @@ BEGIN
     minx, minx, maxx, maxy
   );
 
-  WITH filter_conds AS (
-    SELECT CASE filter->>'type'
-    WHEN 'range' THEN
-      _tt_range_filter(filter)
-    WHEN 'category' THEN
-      _tt_category_filter(filter)
-    ELSE
-      _tt_invalid_filter(filter->>'type', filter)
-    END AS filter_def FROM unnest(filters) as filter
-  ) SELECT string_agg(filter_conds.filter_def, ' AND ') FROM filter_conds INTO filter_conditions;
+  filter_conditions := _tt_filter_conditions(filters);
 
   IF NOT (filter_conditions = '') THEN
     conditions := conditions || ' AND ' || filter_conditions;
@@ -179,4 +170,49 @@ AS $$
   BEGIN
     RAISE EXCEPTION 'Unknown filter type %', filter_type;
   END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION _tt_filter_conditions(filters JSON[])
+RETURNS TEXT
+AS $$
+DECLARE
+  filter_conditions text;
+BEGIN
+  WITH filter_conds AS (
+    SELECT CASE filter->>'type'
+    WHEN 'range' THEN
+      _tt_range_filter(filter)
+    WHEN 'category' THEN
+      _tt_category_filter(filter)
+    ELSE
+      _tt_invalid_filter(filter->>'type', filter)
+    END AS filter_def FROM unnest(filters) as filter
+  ) SELECT string_agg(filter_conds.filter_def, ' AND ') FROM filter_conds INTO filter_conditions;
+  RETURN filter_conditions;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION _tt_columns(aggregations JSON[], aggregated BOOLEAN DEFAULT 't')
+RETURNS TEXT
+AS $$
+DECLARE
+  column_format TEXT;
+  columns AS TEXT;
+BEGIN
+  IF aggregated THEN
+    column_format := '%1$s(%2$s)::%3$s AS %2$s';
+  ELSE
+    column_format := '%2$s::%3$s';
+  END IF;
+
+  WITH cols AS (
+    SELECT Format(
+      column_format,
+      aggr->'aggregate_function',
+      aggr->'aggregate_column',
+      aggr->'type'
+    ) AS col_def FROM unnest(aggregations) as aggr
+  ) SELECT string_agg(cols.col_def, ',') FROM cols INTO columns;
+  RETURN columns;
+END;
 $$ LANGUAGE PLPGSQL;

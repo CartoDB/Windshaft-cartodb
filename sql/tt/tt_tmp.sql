@@ -1,6 +1,12 @@
 -- WIP TT SQL query functions using directly accessible tables (e.g. FDW tables)
 -- Using a connection to the external DB will require plpython implementation
 
+-- Aggregated TT queries (for rendering)
+
+
+
+
+
 -- Tile data implementation for a TT table with X, Y coordinaates and time t
 CREATE OR REPLACE FUNCTION _tt_xy__TileData(tt_table TEXT, bbox JSON, filters JSON[], aggregations JSON[], zoom_level INT)
 RETURNS SETOF RECORD
@@ -24,20 +30,15 @@ BEGIN
 
   -- TODO compute dx, dy, dt (group by dt only if t in filters?)
 
+
+
   conditions := Format(
     'x BETWEEN %1$s AND %3$s AND y BETWEEN %2$s AND %4$s',
     minx, minx, maxx, maxy
   );
 
-  WITH filter_conds AS (
-    SELECT CASE (filter->'type')::text
-    WHEN 'range' THEN
-      Format('%1$s BETWEEN %2$s AND %3$s', filter->'column', filter->'min', filter->'max')
-    WHEN 'category' THEN
-      -- TODO: handle reject
-      Format('%1$s IN (%2$s)', filter->'column', filter->'accept', filter->'reject')
-    END AS filter_def FROM unnest(filters) as filter
-  ) SELECT string_agg(filter_conds.filter_def, ' AND ') FROM filter_conds INTO filter_conditions;
+  -- compute filters
+  filter_conditions := _tt_filter_conditions(filters);
 
   IF NOT (filter_conditions = '') THEN
     conditions := conditions || ' AND ' || filter_conditions;
@@ -74,9 +75,9 @@ BEGIN
 END;
 $$ LANGUAGE PLPGSQL;
 
--- Tile data implementation for a TT table with quadtree index and time t
--- using QT extension: https://gist.github.com/jgoizueta/bd111fe377f0dc85762685350cc4dfd8
-CREATE OR REPLACE FUNCTION _tt_q_TileData(tt_table TEXT, bbox JSON, filters JSON[], aggregations JSON[], zoom_level INT)
+-- Tile data implementation for a TT table with quadkey index and time t
+-- using QK extension: https://gist.github.com/jgoizueta/bd111fe377f0dc85762685350cc4dfd8
+CREATE OR REPLACE FUNCTION _tt_qk_TileData(tt_table TEXT, bbox JSON, filters JSON[], aggregations JSON[], zoom_level INT)
 RETURNS SETOF RECORD
 AS $$
 DECLARE
@@ -88,43 +89,37 @@ DECLARE
   spatial_conditions text;
   aggr_columns text;
   conditions text;
-  max_qt_level INT;
-  aggr_qt_level INT;
+  max_qk_level INT;
+  aggr_qk_level INT;
+  filter_level INT;
+  group_level INT;
 BEGIN
-
   minx := bbox->>0;
   maxx := bbox->>2;
   miny := bbox->>1;
   maxy := bbox->>3;
 
-  -- compute quad level, dt (group by dt only if t in filters?)
-  -- compute min_q, max_q fo quad_level; gq is truncated quad
-  -- compute also gt (groupbing time), but only if time in filters?
+  -- set both filtering and grouping detail to pixel level
+  filter_level = zoom_level + 8;
+  group_level = zoom_level + 8;
+  -- TODO: limit to max level (31)
 
-  -- TODO: select max selection level using zoom
-  max_qt_level := zoom;
-
+  -- create spatial filter using quad key ranges; the number of ranges could be large
+  -- as an alternative we could query each range separately, then combine the results
   WITH tiles AS (
     SELECT
-      qt_first(qt_code) AS qt_min, qt_last(qt_code) AS qt_max
-     FROM qt_intersecting_tiles(BOX2D(minx, miny, maxx, maxy), max_level)
+      qk_first(qk_code) AS qk_min, qk_last(qk_code) AS qk_max
+     FROM qk_intersecting_tiles(BOX2D(minx, miny, maxx, maxy), filter_level)
   ), tile_filters AS (
     SELECT Format(
-      '(qt BETWEEN %1$s AND %2$s)',
-      tiles.qt_min, tiles.qt_max
+      '(qk BETWEEN %1$s AND %2$s)',
+      tiles.qk_min, tiles.qk_max
     ) AS cond FROM tiles
   )
   SELECT string_agg(cols.col_def, ',') FROM tile_filters.cond INTO conditions;
 
-  WITH filter_conds AS (
-    SELECT CASE (filter->'type')::text
-    WHEN 'range' THEN
-      Format('%1$s BETWEEN %2$s AND %3$s', filter->'column', filter->'min', filter->'max')
-    WHEN 'category' THEN
-      -- TODO: handle reject
-      Format('%1$s IN (%2$s)', filter->'column', filter->'accept', filter->'reject')
-    END AS filter_def FROM unnest(filters) as filter
-  ) SELECT string_agg(filter_conds.filter_def, ' AND ') FROM filter_conds INTO filter_conditions;
+  -- compute filters
+  filter_conditions := _tt_filter_conditions(filters);
 
   IF NOT (filter_conditions = '') THEN
     conditions := conditions || ' AND ' || filter_conditions;
@@ -140,7 +135,7 @@ BEGIN
   ) SELECT string_agg(cols.col_def, ',') FROM cols INTO aggr_columns;
 
   -- TODO: select aggregation level using zoom
-  aggr_qt_level := zoom;
+  aggr_qk_level := zoom;
 
   -- TODO: select time  aggregation level using zoom
   -- TODO avoid t-grouping if no t
@@ -150,11 +145,11 @@ BEGIN
     WITH grouped AS (
       SELECT
         %2$s,
-        qt_qt_apply_prefix_mask(qt, qt_prefix_mask(%$1s)) AS qt,
+        qk_qk_apply_prefix_mask(qk, qk_prefix_mask(%$1s)) AS qk,
         Floor(t/%2$s)::int AS gt,
         gq, gt, $(columns) FROM ...
       GROUP BY
-        qt_qt_apply_prefix_mask(qt, qt_prefix_mask(%$1s)),
+        qk_apply_prefix_mask(qk, qk_prefix_mask(%$1s)),
         ROUND(...gt
         FROM %1$s f
         WHERE %6$s -- HAVING? separate handling of t conditions?
@@ -163,10 +158,10 @@ BEGIN
     )
     SELECT
       ... AS cartodb_id,
-      qt_center(qt, %$1s) AS the_geom_webmercator,
+      qk_center(qk, %$1s) AS the_geom_webmercator,
       ... t
       ... aggregated columns
-  ', aggr_qt_level, aggr_columns);
+  ', aggr_qk_level, aggr_columns);
 
 END;
 $$ LANGUAGE PLPGSQL;
