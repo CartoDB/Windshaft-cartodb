@@ -199,8 +199,8 @@ camelcase@^3.0.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
 camshaft@cartodb/camshaft#query-variables:
-  version "0.54.5"
-  resolved "https://codeload.github.com/cartodb/camshaft/tar.gz/0591c92e4dac35a9cff7ff6734196db6d980c5e2"
+  version "0.55.1"
+  resolved "https://codeload.github.com/cartodb/camshaft/tar.gz/72fd3e7a5aa3c8894d75225b8dc8322e943a967d"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
@@ -1835,17 +1835,13 @@ safe-json-stringify@~1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/safe-json-stringify/-/safe-json-stringify-1.0.4.tgz#81a098f447e4bbc3ff3312a243521bc060ef5911"
 
-"semver@2 || 3 || 4 || 5", semver@~5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
+"semver@2 || 3 || 4 || 5", semver@^5.1.0, semver@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
 
 semver@4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.2.tgz#c7a07158a80bedd052355b770d82d6640f803be7"
-
-semver@^5.1.0, semver@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
 
 semver@~1.1.4:
   version "1.1.4"
@@ -1854,6 +1850,10 @@ semver@~1.1.4:
 semver@~4.3.3:
   version "4.3.6"
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.6.tgz#300bc6e0e86374f7ba61068b5b1ecd57fc6532da"
+
+semver@~5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
 
 send@0.13.1:
   version "0.13.1"
@@ -2156,9 +2156,9 @@ tunnel-agent@~0.4.1:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.4.3.tgz#6373db76909fe570e08d73583365ed828a74eeeb"
 
-turbo-carto@0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.19.0.tgz#83fb1932acd42acb426312eef216b5f6ac34708e"
+turbo-carto@0.19.1:
+  version "0.19.1"
+  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.19.1.tgz#c32af073936a4e8f197dfea918e7441c949d7865"
   dependencies:
     cartocolor "4.0.0"
     colorbrewer "1.0.0"
