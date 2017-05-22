@@ -16,13 +16,13 @@ describe('server_png8_format', function() {
     var serverOptionsPng32 = ServerOptions;
     serverOptionsPng32.grainstore = _.clone(ServerOptions.grainstore);
     serverOptionsPng32.grainstore.mapnik_tile_format = 'png32';
-    var serverPng32 = new cartodbServer(serverOptionsPng32);
+    var serverPng32 = cartodbServer(serverOptionsPng32);
     serverPng32.setMaxListeners(0);
 
     var serverOptionsPng8 = ServerOptions;
     serverOptionsPng8.grainstore = _.clone(ServerOptions.grainstore);
     serverOptionsPng8.grainstore.mapnik_tile_format = 'png8:m=h';
-    var serverPng8 = new cartodbServer(serverOptionsPng8);
+    var serverPng8 = cartodbServer(serverOptionsPng8);
     serverPng8.setMaxListeners(0);
 
 
