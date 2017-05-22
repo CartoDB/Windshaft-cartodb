@@ -5,6 +5,7 @@ Released 2017-mm-dd
 
 Announcements:
  - Upgrades camshaft to [0.55.0](https://github.com/CartoDB/camshaft/releases/tag/0.55.0).
+ - Upgrades turbo-carto to [0.19.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.1)
 
 
 ## 3.7.1
