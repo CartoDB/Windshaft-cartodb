@@ -21,7 +21,8 @@ var mapConfigAdapter = new MapConfigAdapter(
     new adapter.Filters(),
     new adapter.DataviewsFilters(),
     new adapter.Analysis(analysisBackend),
-    new adapter.TTQuery()
+    new adapter.Datasources(),
+    new adapter.ReplaceSources()
 );
 
 describe('tt-query-map-config-adapter', function() {
@@ -126,19 +127,24 @@ describe('tt-query-map-config-adapter', function() {
         };
 
         var TTName = 'TT_populated_places_simple_reduced';
-        var getTTNameFn = adapter.TTQuery.prototype.getTTName;
-        adapter.TTQuery.prototype.getTTName = function(query, callback) {
-            return callback(null, TTName);
+        var shouldAdaptFn = adapter.Datasources.datasource.TTDatasource.shouldAdapt;
+        adapter.Datasources.datasource.TTDatasource.shouldAdapt = function () {
+            return true;
+        };
+        var getTTNameFn = adapter.Datasources.datasource.TTDatasource.prototype.getTTName;
+        adapter.Datasources.datasource.TTDatasource.prototype.getTTName = function() {
+            return TTName;
         };
 
         mapConfigAdapter.getMapConfig(USER, _mapConfig, params, context, function(err, mapConfig) {
-            adapter.TTQuery.prototype.getTTName = getTTNameFn;
+            adapter.Datasources.datasource.TTDatasource.prototype.getTTName = getTTNameFn;
+            adapter.Datasources.datasource.TTDatasource.shouldAdapt = shouldAdaptFn;
 
             assert.ok(!err, err);
             assert.ok(Array.isArray(mapConfig.layers));
             assert.equal(mapConfig.layers.length, 1);
 
-            var tt = mapConfig.layers[0].options.tt;
+            var tt = mapConfig.layers[0].options.meta;
 
             assert.equal(tt.table, TTName);
 
