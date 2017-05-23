@@ -18,6 +18,7 @@ var MapConfigAdapter = require('../../lib/cartodb/models/mapconfig/map-config-ad
 var adapter = require('../../lib/cartodb/models/mapconfig/adapter');
 
 var mapConfigAdapter = new MapConfigAdapter(
+    new adapter.Datasources(),
     new adapter.Analysis(analysisBackend),
     new adapter.TTQuery()
 );
