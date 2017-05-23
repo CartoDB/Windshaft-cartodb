@@ -84,7 +84,11 @@ describe('overviews metadata', function() {
                 });
                 mapStore.load(LayergroupToken.parse(expected_token).token, function(err, mapConfig) {
                     assert.ifError(err);
-                    assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
+                    var layer = mapConfig._cfg.layers[1];
+                    assert.equal(layer.type, non_overviews_layer.type);
+                    Object.keys(non_overviews_layer.options).forEach(function(k) {
+                        assert.equal(non_overviews_layer.options[k], layer.options[k]);
+                    });
                     assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
                     var expected_data = {
