@@ -4,7 +4,7 @@
 Released 2017-mm-dd
 
 Announcements:
- - Upgrades camshaft to [0.55.1](https://github.com/CartoDB/camshaft/releases/tag/0.55.1).
+ - Upgrades camshaft to [0.55.2](https://github.com/CartoDB/camshaft/releases/tag/0.55.2).
  - Remove promise polyfill from turbo-carto adapter
 
 
