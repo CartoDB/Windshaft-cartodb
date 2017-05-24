@@ -17,6 +17,8 @@ var analysisBackend = new AnalysisBackend(metadataBackend, serverOptions.analysi
 var MapConfigAdapter = require('../../lib/cartodb/models/mapconfig/map-config-adapter');
 var adapter = require('../../lib/cartodb/models/mapconfig/adapter');
 
+var TTDatasource = require('../../lib/cartodb/models/datasource/tt');
+
 var mapConfigAdapter = new MapConfigAdapter(
     new adapter.Filters(),
     new adapter.DataviewsFilters(),
@@ -127,18 +129,18 @@ describe('tt-query-map-config-adapter', function() {
         };
 
         var TTName = 'TT_populated_places_simple_reduced';
-        var shouldAdaptFn = adapter.Datasources.datasource.TTDatasource.shouldAdapt;
-        adapter.Datasources.datasource.TTDatasource.shouldAdapt = function () {
+        var shouldAdaptFn = TTDatasource.shouldAdapt;
+        TTDatasource.shouldAdapt = function () {
             return true;
         };
-        var getTTNameFn = adapter.Datasources.datasource.TTDatasource.prototype.getTTName;
-        adapter.Datasources.datasource.TTDatasource.prototype.getTTName = function() {
+        var getTTNameFn = TTDatasource.prototype.getTTName;
+        TTDatasource.prototype.getTTName = function() {
             return TTName;
         };
 
         mapConfigAdapter.getMapConfig(USER, _mapConfig, params, context, function(err, mapConfig) {
-            adapter.Datasources.datasource.TTDatasource.prototype.getTTName = getTTNameFn;
-            adapter.Datasources.datasource.TTDatasource.shouldAdapt = shouldAdaptFn;
+            TTDatasource.prototype.getTTName = getTTNameFn;
+            TTDatasource.shouldAdapt = shouldAdaptFn;
 
             assert.ok(!err, err);
             assert.ok(Array.isArray(mapConfig.layers));
