@@ -188,8 +188,8 @@ describe('tt-query-map-config-adapter', function() {
                 '  @zoom',
                 ') AS tiledata (',
                 '  cartodb_id int,',
-                '  the_geom_webmercator geometry,',
-                '  count_vals numeric',
+                '  the_geom_webmercator geometry',
+                '  ',
                 ')'
             ].join('\n'));
 
