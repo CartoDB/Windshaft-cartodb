@@ -617,18 +617,20 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
         },
         expectedResponse,
         function(res, err) {
+            // If there is a response, we are still interested in catching the created keys
+            // to be able to delete them on the .drain() method.
+            if (res) {
+                var parsedBody = JSON.parse(res.body);
+                if (parsedBody.layergroupid) {
+                    self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                    self.keysToDelete['user:localhost:mapviews:global'] = 5;
+                }
+            }
             if (err) {
                 return callback(err);
             }
 
-            var parsedBody = JSON.parse(res.body);
-
-            if (parsedBody.layergroupid) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
-            }
-
-            return callback(null, parsedBody);
+            return callback(null, JSON.parse(res.body));
         }
     );
 };
