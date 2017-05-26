@@ -126,22 +126,25 @@ assert.response = function(server, req, res, callback) {
                 // Assert response body
                 if (res.body) {
                     var eql = res.body instanceof RegExp ? res.body.test(response.body) : res.body === response.body;
-                    assert.ok(
-                        eql,
-                        colorize('[red]{Invalid response body.}\n' +
+                    if (!eql) {
+                        return callback(response, new Error(colorize(
+                            '[red]{Invalid response body.}\n' +
                             '     Expected: [green]{' + res.body + '}\n' +
-                            '     Got: [red]{' + response.body + '}')
-                    );
+                            '     Got: [red]{' + response.body + '}'))
+                        );
+                    }
                 }
 
                 // Assert response status
                 if (typeof status === 'number') {
-                    assert.equal(response.statusCode, status,
-                        colorize('[red]{Invalid response status code.}\n' +
+                    if (response.statusCode != status) {
+                        return callback(response, new Error(colorize(
+                            '[red]{Invalid response status code.}\n' +
                             '     Expected: [green]{' + status + '}\n' +
                             '     Got: [red]{' + response.statusCode + '}\n' +
-                            '     Body: ' + response.body)
-                    );
+                            '     Body: ' + response.body))
+                        );
+                    }
                 }
 
                 // Assert response headers
@@ -152,11 +155,13 @@ assert.response = function(server, req, res, callback) {
                             actual = response.headers[name.toLowerCase()],
                             expected = res.headers[name],
                             headerEql = expected instanceof RegExp ? expected.test(actual) : expected === actual;
-                        assert.ok(headerEql,
-                            colorize('Invalid response header [bold]{' + name + '}.\n' +
+                        if (!headerEql) {
+                            return callback(response, new Error(colorize(
+                                'Invalid response header [bold]{' + name + '}.\n' +
                                 '     Expected: [green]{' + expected + '}\n' +
-                                '     Got: [red]{' + actual + '}')
-                        );
+                                '     Got: [red]{' + actual + '}'))
+                            );
+                        }
                     }
                 }
 
