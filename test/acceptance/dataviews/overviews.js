@@ -148,16 +148,14 @@ describe('dataviews using tables with overviews', function() {
                 type: 'histogram',
                 source: {id: 'data-source'},
                 options: {
-                    column: 'value',
-                    bins: 2
+                    column: 'value'
                 }
             },
             test_histogram_date: {
                 type: 'histogram',
                 source: {id: 'data-source'},
                 options: {
-                    column: 'updated_at',
-                    bins: 2
+                    column: 'updated_at'
                 }
             },
             test_avg: {
@@ -205,6 +203,13 @@ describe('dataviews using tables with overviews', function() {
             }
         ]
     };
+
+    afterEach(function(done) {
+        if (this.testClient) {
+            return this.testClient.drain(done);
+        }
+        return done();
+    });
 
     it("should expose a sum formula", function(done) {
         var testClient = new TestClient(overviewsMapConfig);
@@ -282,15 +287,16 @@ describe('dataviews using tables with overviews', function() {
     });
 
     it("should expose a histogram", function (done) {
-        var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_histogram', function (err, histogram) {
+        this.testClient = new TestClient(overviewsMapConfig);
+        this.testClient.getDataview('test_histogram', function (err, histogram) {
             if (err) {
                 return done(err);
             }
             assert.ok(histogram);
             assert.equal(histogram.type, 'histogram');
             assert.ok(Array.isArray(histogram.bins));
-            testClient.drain(done);
+            assert.deepEqual(histogram.bins, [{ bin: 0, min: 3, max: 3, avg: 3, freq: 5 }]);
+            return done();
         });
     });
 
