@@ -171,13 +171,12 @@ describe('tt-query-map-config-adapter', function() {
             });
 
             assert.ok(Array.isArray(tt.aggregations));
-            // let's assume only aggregation dataviews get here
-            assert.equal(tt.aggregations.length, 1);
-            assert.deepEqual(tt.aggregations[0], {
-                aggregate_function: 'count',
-                aggregate_column: 'cartodb_id',
-                type: 'numeric'
-            });
+            // assert.equal(tt.aggregations.length, 1);
+            // assert.deepEqual(tt.aggregations[0], {
+            //     aggregate_function: 'count',
+            //     aggregate_column: 'cartodb_id',
+            //     type: 'numeric'
+            // });
 
             assert.equal(mapConfig.layers[0].options.sql, [
                 'SELECT * FROM TT_TileData(',
@@ -185,7 +184,7 @@ describe('tt-query-map-config-adapter', function() {
                 '  \'@bbox\'::json,',
                 '  ARRAY[\'{"min":8,"max":12,"type":"range","column":"rank_max"}\',' +
                 '\'{"accept":["USA","IND"],"type":"category","column":"adm0_a3"}\']::json[],',
-                '  ARRAY[\'{"aggregate_function":"count","aggregate_column":"cartodb_id","type":"numeric"}\']::json[],',
+                '  ARRAY[]::json[],',
                 '  @zoom',
                 ') AS tiledata (',
                 '  cartodb_id int,',
