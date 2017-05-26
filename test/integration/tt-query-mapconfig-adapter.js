@@ -34,6 +34,7 @@ describe('tt-query-map-config-adapter', function() {
     before(function(done) {
         var self = this;
         var config = {};
+        this.config = config;
 
         pgConnection.setDBConn(USER, config, function(err) {
             assert.ok(!err);
@@ -122,6 +123,11 @@ describe('tt-query-map-config-adapter', function() {
         };
 
         var params = {
+            dbuser: this.config.dbuser,
+            dbpassword: this.config.dbpassword,
+            dbhost: this.config.dbhost,
+            dbport: this.config.dbport,
+            dbname: this.config.dbname,
             filters: JSON.stringify(filters)
         };
         var context = {
