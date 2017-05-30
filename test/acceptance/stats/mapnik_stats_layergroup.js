@@ -5,14 +5,11 @@ var TestClient = require('../../support/test-client');
 
 describe('Create mapnik layergroup', function() {
     before(function() {
-        this.layerMetadataConfig = global.environment.enabledFeatures.layerMetadata;
         this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
-        global.environment.enabledFeatures.layerMetadata = true;
         global.environment.enabledFeatures.layerStats = true;
     });
 
     after(function() {
-        global.environment.enabledFeatures.layerMetadata = this.layerMetadataConfig;
         global.environment.enabledFeatures.layerStats = this.layerStatsConfig;
     });
 
@@ -252,6 +249,30 @@ describe('Create mapnik layergroup', function() {
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             // we don't care about stats here as is an aliased column
             assert.ok(layergroup.metadata.layers[0].meta.stats.hasOwnProperty('estimatedFeatureCount'));
+            testClient.drain(done);
+        });
+    });
+
+    it('should not include the stats part if the FF is disabled', function(done) {
+        global.environment.enabledFeatures.layerStats = false;
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                httpLayer,
+                mapnikLayer1,
+                httpLayer
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ok(!err);
+            assert.equal(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
+            assert.equal(layergroup.metadata.layers[0].type, 'http');
+            assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[1].type, 'mapnik');
+            assert.ok(!layergroup.metadata.layers[1].meta.hasOwnProperty('stats'));
+            assert.equal(layergroup.metadata.layers[2].id, typeLayerId('http', 1));
+            assert.equal(layergroup.metadata.layers[2].type, 'http');
             testClient.drain(done);
         });
     });
