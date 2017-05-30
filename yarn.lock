@@ -712,7 +712,7 @@ generate-object-property@^1.1.0:
   dependencies:
     is-property "^1.0.0"
 
-generic-pool@2.4.3:
+generic-pool@2.4.3, generic-pool@~2.4.0, generic-pool@~2.4.1:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.4.3.tgz#780c36f69dfad05a5a045dd37be7adca11a4f6ff"
 
@@ -723,10 +723,6 @@ generic-pool@~2.1.1:
 generic-pool@~2.2.0, generic-pool@~2.2.1:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.2.2.tgz#7a89f491d575b42f9f069a0e8e2c6dbaa3c241be"
-
-generic-pool@~2.4.0, generic-pool@~2.4.1:
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.4.6.tgz#f1b55e572167dba2fe75d5aa91ebb1e9f72642d7"
 
 get-caller-file@^1.0.1:
   version "1.0.2"
@@ -1519,14 +1515,14 @@ pg-pool@1.*:
     object-assign "4.1.0"
 
 pg-types@1.*:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/pg-types/-/pg-types-1.11.0.tgz#aae91a82d952b633bb88d006350a166daaf6ea90"
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/pg-types/-/pg-types-1.12.0.tgz#8ad3b7b897e3fd463e62de241ad5fc640b4a66f0"
   dependencies:
     ap "~0.2.0"
     postgres-array "~1.0.0"
     postgres-bytea "~1.0.0"
     postgres-date "~1.0.0"
-    postgres-interval "~1.0.0"
+    postgres-interval "^1.1.0"
 
 "pg@github:cartodb/node-postgres#6.1.2-cdb1":
   version "6.1.2"
@@ -1605,9 +1601,9 @@ postgres-date@~1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/postgres-date/-/postgres-date-1.0.3.tgz#e2d89702efdb258ff9d9cee0fe91bd06975257a8"
 
-postgres-interval@~1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/postgres-interval/-/postgres-interval-1.0.2.tgz#7261438d862b412921c6fdb7617668424b73a6ed"
+postgres-interval@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/postgres-interval/-/postgres-interval-1.1.0.tgz#1031e7bac34564132862adc9eb6c6d2f3aa75bb4"
   dependencies:
     xtend "^4.0.0"
 
@@ -1957,9 +1953,13 @@ speedometer@~0.1.2:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/speedometer/-/speedometer-0.1.4.tgz#9876dbd2a169d3115402d48e6ea6329c8816a50d"
 
-sphericalmercator@1.0.4, sphericalmercator@1.0.x, sphericalmercator@~1.0.1, sphericalmercator@~1.0.4:
+sphericalmercator@1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/sphericalmercator/-/sphericalmercator-1.0.4.tgz#baad4e34187f06e87f2e92fc1280199fa1b01d4e"
+
+sphericalmercator@1.0.x, sphericalmercator@~1.0.1, sphericalmercator@~1.0.4, sphericalmercator@~1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/sphericalmercator/-/sphericalmercator-1.0.5.tgz#ddc5a049e360e000d0fad9fc22c4071882584980"
 
 split@^1.0.0:
   version "1.0.0"
