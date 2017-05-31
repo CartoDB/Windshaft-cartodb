@@ -10,3 +10,4 @@ pids/
 redis.pid
 *.log
 coverage/
+.DS_Store

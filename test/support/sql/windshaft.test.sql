@@ -649,3 +649,5 @@ CREATE OR REPLACE FUNCTION cdb_crankshaft.CDB_KMeans(query text, no_clusters int
     END;
 $$ LANGUAGE plpgsql;
 GRANT ALL ON FUNCTION cdb_crankshaft.CDB_KMeans(text, integer, integer) TO :TESTUSER;
+
+ANALYZE;

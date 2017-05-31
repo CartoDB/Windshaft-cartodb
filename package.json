@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "3.8.1",
+  "version": "3.9.0",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -39,7 +39,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.1",
     "underscore": "~1.6.0",
-    "windshaft": "3.2.0",
+    "windshaft": "3.2.1",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
@@ -52,6 +52,7 @@
     "strftime": "~0.8.2"
   },
   "scripts": {
+    "lint": "jshint lib test",
     "preinstall": "make pre-install",
     "test": "make test-all"
   },
