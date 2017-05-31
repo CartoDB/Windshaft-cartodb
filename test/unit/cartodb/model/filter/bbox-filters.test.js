@@ -111,6 +111,23 @@ describe('Bounding box filter', function() {
                 createRef([-180, -45, 0, 45])
             );
         });
+
+        it('generating multiple bbox', function() {
+            var bbox = [90, -45, 190, 45];
+            var bboxFilter = createFilter(bbox);
+
+            assert.equal(bboxFilter.bboxes.length, 2);
+
+            assert.deepEqual(
+                bboxFilter.bboxes[0],
+                createRef([90, -45, 180, 45])
+            );
+            assert.deepEqual(
+                bboxFilter.bboxes[1],
+                createRef([-180, -45, -170, 45])
+            );
+        });
+
     });
 
     describe('out of bounds', function() {
