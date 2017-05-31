@@ -5,6 +5,7 @@ var step = require('step');
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
+var TestClient = require('../../support/test-client');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
 
@@ -21,6 +22,14 @@ describe('multilayer error cases', function() {
 
     after(function() {
         BaseController.prototype.req2params = req2paramsFn;
+    });
+
+    // var client = null;
+    afterEach(function(done) {
+        if (this.client) {
+            return this.client.drain(done);
+        }
+        return done();
     });
 
     it("post layergroup with wrong Content-Type", function(done) {
@@ -153,24 +162,16 @@ describe('multilayer error cases', function() {
         ]
       };
       ServerOptions.afterLayergroupCreateCalls = 0;
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
-        try {
-          assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
-          // See http://github.com/CartoDB/Windshaft/issues/159
-          assert.equal(ServerOptions.afterLayergroupCreateCalls, 0);
-          var parsed = JSON.parse(res.body);
-          assert.ok(parsed);
-          assert.equal(parsed.errors.length, 1);
-          var error = parsed.errors[0];
-          assert.ok(error.match(/column "missing" does not exist/m), error);
-          // TODO: check which layer introduced the problem ?
-          done();
-        } catch (err) { done(err); }
+      this.client = new TestClient(layergroup);
+      this.client.getLayergroup({status: 400}, function(err, parsed) {
+        assert.ok(!err, err);
+        // See http://github.com/CartoDB/Windshaft/issues/159
+        assert.equal(ServerOptions.afterLayergroupCreateCalls, 0);
+        assert.ok(parsed);
+        assert.equal(parsed.errors.length, 1);
+        var error = parsed.errors[0];
+        assert.ok(error.match(/column "missing" does not exist/m), error);
+        done();
       });
     });
 
