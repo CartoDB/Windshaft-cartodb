@@ -160,12 +160,14 @@ describe('tt-query-map-config-adapter', function() {
             assert.equal(tt.filters.length, 2);
             assert.deepEqual(tt.filters[0], {
                 type: 'range',
+                dataview: 'rank_max_histogram',
                 column: 'rank_max',
                 min: 8,
                 max: 12
             });
             assert.deepEqual(tt.filters[1], {
                 type: 'category',
+                dataview: 'adm0_a3_count',
                 column: 'adm0_a3',
                 accept: ['USA', 'IND']
             });
