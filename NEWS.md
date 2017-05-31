@@ -1,9 +1,10 @@
 # Changelog
 
-## 3.8.1
+## 3.9.0
 Released 2017-mm-dd
 
 Announcements:
+ - Add support to retrieve info about layer stats in map instantiation.
  - Upgrades camshaft to [0.55.1](https://github.com/CartoDB/camshaft/releases/tag/0.55.1).
  - Remove promise polyfill from turbo-carto adapter
 
