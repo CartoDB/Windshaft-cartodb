@@ -1348,8 +1348,8 @@ nock@~2.11.0:
     propagate "0.3.x"
 
 node-pre-gyp@~0.6.27, node-pre-gyp@~0.6.30, node-pre-gyp@~0.6.31:
-  version "0.6.34"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.34.tgz#94ad1c798a11d7fc67381b50d47f8cc18d9799f7"
+  version "0.6.36"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.36.tgz#db604112cb74e0d477554e9b505b17abddfab786"
   dependencies:
     mkdirp "^0.5.1"
     nopt "^4.0.1"
@@ -2283,8 +2283,8 @@ window-size@^0.2.0:
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
 windshaft@cartodb/windshaft#query-variables:
-  version "3.2.1"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/f95041deeae56c990b9d60110d6035f32dfb027a"
+  version "3.2.2"
+  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/3d4989a7f65a01df886aa5fbceecb982259fdab5"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
