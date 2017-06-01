@@ -369,7 +369,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
             };
 
-            ['bbox', 'bins', 'start', 'end'].forEach(function(extraParam) {
+            ['bbox', 'bins', 'start', 'end', 'aggregation'].forEach(function(extraParam) {
                 if (params.hasOwnProperty(extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }
@@ -435,7 +435,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             }
 
             params.placeholders = params.placeholders || {};
-        
+
             assert.response(server,
                 {
                     url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
