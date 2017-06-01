@@ -1,5 +1,23 @@
 # Changelog
 
+## 3.9.0
+Released 2017-05-31
+
+Announcements:
+ - Upgrades windshaft to [3.2.1](https://github.com/CartoDB/windshaft/releases/tag/3.2.1).
+ - Add support to retrieve info about layer stats in map instantiation.
+ - Upgrades camshaft to [0.55.2](https://github.com/CartoDB/camshaft/releases/tag/0.55.2).
+ - Remove promise polyfill from turbo-carto adapter
+
+
+## 3.8.0
+Released 2017-05-22
+
+Announcements:
+ - Upgrades camshaft to [0.55.0](https://github.com/CartoDB/camshaft/releases/tag/0.55.0).
+ - Upgrades turbo-carto to [0.19.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.1)
+
+
 ## 3.7.1
 Released 2017-05-18
 
