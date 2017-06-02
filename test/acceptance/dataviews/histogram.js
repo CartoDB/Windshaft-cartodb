@@ -186,7 +186,7 @@ describe('histogram-dataview for date column type', function() {
 
     it('should override start and end', function (done) {
         var params = {
-            start: 1180659600, // 2007-06-01 00:00:00
+            start: 1180659600, // 2007-06-01 01:00:00
             end: 1193792400 // 2007-10-31 01:00:00
         };
 
