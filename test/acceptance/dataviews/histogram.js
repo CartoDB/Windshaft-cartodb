@@ -130,7 +130,8 @@ describe('histogram-dataview for date column type', function() {
                 type: 'histogram',
                 options: {
                     column: 'd',
-                    aggregation: 'month'
+                    aggregation: 'month',
+                    timezone: -7200
                 }
             }
         },
@@ -195,7 +196,7 @@ describe('histogram-dataview for date column type', function() {
             assert.ok(!err, err);
             assert.equal(dataview.type, 'histogram');
             assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-            assert.equal(dataview.bins.length, 5);
+            assert.equal(dataview.bins.length, 6);
             dataview.bins.forEach(function(bin) {
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });
@@ -204,9 +205,9 @@ describe('histogram-dataview for date column type', function() {
         });
     });
 
-    it.skip('should aggregate respecting timezone', function (done) {
+    it('should aggregate respecting timezone', function (done) {
         var params = {
-            timezone: -7200 // GMT -2h
+            timezone: 7200 // GMT +2h
         };
 
         this.testClient = new TestClient(mapConfig, 1234);
@@ -214,7 +215,7 @@ describe('histogram-dataview for date column type', function() {
             assert.ok(!err, err);
             assert.equal(dataview.type, 'histogram');
             assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-            assert.equal(dataview.bins.length, 5);
+            assert.equal(dataview.bins.length, 15);
             dataview.bins.forEach(function(bin) {
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });
