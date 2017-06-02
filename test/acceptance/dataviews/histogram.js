@@ -204,4 +204,22 @@ describe('histogram-dataview for date column type', function() {
         });
     });
 
+    it.skip('should aggregate respecting timezone', function (done) {
+        var params = {
+            timezone: -7200 // GMT -2h
+        };
+
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('date_histogram', params, function(err, dataview) {
+            assert.ok(!err, err);
+            assert.equal(dataview.type, 'histogram');
+            assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
+            assert.equal(dataview.bins.length, 5);
+            dataview.bins.forEach(function(bin) {
+                assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
+            });
+
+            done();
+        });
+    });
 });
