@@ -307,4 +307,46 @@ describe('histogram-dataview for date column type', function() {
             done();
         });
     });
+
+    it('should aggregate histogram using "quarter" aggregation', function (done) {
+        var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
+        var TIMEZONE_UTC_IN_MINUTES = 0 * 60; // UTC
+        var params = {
+            timezone: TIMEZONE_UTC_IN_SECONDS,
+            aggregation: 'quarter'
+        };
+
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('date_histogram', params, function(err, dataview) {
+            assert.ok(!err, err);
+            assert.equal(dataview.type, 'histogram');
+            assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
+            assert.equal(dataview.bins.length, 6);
+
+            var initialTimestamp = '2007-01-01T00:00:00Z'; // UTC midnight
+            var binsStartInMilliseconds = dataview.bins_start * 1000;
+            var binsStartFormatted = moment.utc(binsStartInMilliseconds)
+                .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                .format();
+            assert.equal(binsStartFormatted, initialTimestamp);
+
+            dataview.bins.forEach(function(bin, index) {
+                var binTimestampExpected = moment.utc(initialTimestamp)
+                    .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                    .add(index * 3, 'month')
+                    .format();
+                var binsTimestampInMilliseconds = bin.timestamp * 1000;
+                var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
+                    .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                    .format();
+
+                assert.equal(binTimestampFormatted, binTimestampExpected);
+                assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
+                assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
+            });
+
+            done();
+        });
+    });
+
 });
