@@ -132,7 +132,7 @@ describe('histogram-dataview for date column type', function() {
                 options: {
                     column: 'd',
                     aggregation: 'month',
-                    timezone: -7200
+                    timezone: -14400 // EDT Eastern Daylight Time (GMT-4) in seconds
                 }
             }
         },
@@ -153,13 +153,35 @@ describe('histogram-dataview for date column type', function() {
     );
 
     it('should create a date histogram aggregated in months', function (done) {
+        var TIMEZONE_EDT_IN_MINUTES = -4 * 60; // EDT Eastern Daylight Time (GMT-4) in minutes
+
         this.testClient = new TestClient(mapConfig, 1234);
+
         this.testClient.getDataview('date_histogram', {}, function(err, dataview) {
             assert.ok(!err, err);
             assert.equal(dataview.type, 'histogram');
             assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
             assert.equal(dataview.bins.length, 15);
-            dataview.bins.forEach(function(bin) {
+
+            var initialTimestamp = '2007-02-01T00:00:00-04:00'; // EDT midnight
+            var binsStartInMilliseconds = dataview.bins_start * 1000;
+            var binsStartFormatted = moment.utc(binsStartInMilliseconds)
+                .utcOffset(TIMEZONE_EDT_IN_MINUTES)
+                .format();
+            assert.equal(binsStartFormatted, initialTimestamp);
+
+            dataview.bins.forEach(function(bin, index) {
+                var binTimestampExpected = moment.utc(initialTimestamp)
+                    .utcOffset(TIMEZONE_EDT_IN_MINUTES)
+                    .add(index, 'month')
+                    .format();
+                var binsTimestampInMilliseconds = bin.timestamp * 1000;
+                var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
+                    .utcOffset(TIMEZONE_EDT_IN_MINUTES)
+                    .format();
+
+                assert.equal(binTimestampFormatted, binTimestampExpected);
+                assert.ok(bin.timestamp <= bin.min && 'bin timestamp < bin min: ' + JSON.stringify(bin));
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });
 
@@ -222,13 +244,20 @@ describe('histogram-dataview for date column type', function() {
 
             var initialTimestamp = '2007-02-01T00:00:00+02:00';
             var binsStartInMilliseconds = dataview.bins_start * 1000;
-            var binsStartFormatted = moment.utc(binsStartInMilliseconds).utcOffset(TIMEZONE_CEST_IN_MINUTES).format();
+            var binsStartFormatted = moment.utc(binsStartInMilliseconds)
+                .utcOffset(TIMEZONE_CEST_IN_MINUTES)
+                .format();
             assert.equal(binsStartFormatted, initialTimestamp);
 
             dataview.bins.forEach(function(bin, index) {
-                var binTimestampExpected = moment.utc(initialTimestamp).utcOffset(TIMEZONE_CEST_IN_MINUTES).add(index, 'month').format();
+                var binTimestampExpected = moment.utc(initialTimestamp)
+                    .utcOffset(TIMEZONE_CEST_IN_MINUTES)
+                    .add(index, 'month')
+                    .format();
                 var binsTimestampInMilliseconds = bin.timestamp * 1000;
-                var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds).utcOffset(TIMEZONE_CEST_IN_MINUTES).format();
+                var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
+                    .utcOffset(TIMEZONE_CEST_IN_MINUTES)
+                    .format();
 
                 assert.equal(binTimestampFormatted, binTimestampExpected);
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
