@@ -181,7 +181,7 @@ describe('histogram-dataview for date column type', function() {
                     .format();
 
                 assert.equal(binTimestampFormatted, binTimestampExpected);
-                assert.ok(bin.timestamp <= bin.min && 'bin timestamp < bin min: ' + JSON.stringify(bin));
+                assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });
 
@@ -260,6 +260,7 @@ describe('histogram-dataview for date column type', function() {
                     .format();
 
                 assert.equal(binTimestampFormatted, binTimestampExpected);
+                assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });
 
