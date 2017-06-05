@@ -152,7 +152,7 @@ describe('histogram-dataview for date column type', function() {
         ]
     );
 
-    it('should create a date histogram aggregated in months', function (done) {
+    it('should create a date histogram aggregated in months (EDT)', function (done) {
         var TIMEZONE_EDT_IN_MINUTES = -4 * 60; // EDT Eastern Daylight Time (GMT-4) in minutes
 
         this.testClient = new TestClient(mapConfig, 1234);
@@ -228,7 +228,7 @@ describe('histogram-dataview for date column type', function() {
         });
     });
 
-    it('should aggregate respecting timezone', function (done) {
+    it('should aggregate histogram overriding default timezone to CEST', function (done) {
         var TIMEZONE_CEST_IN_SECONDS = 2 * 3600; // Central European Summer Time (Daylight Saving Time)
         var TIMEZONE_CEST_IN_MINUTES = 2 * 60; // Central European Summer Time (Daylight Saving Time)
         var params = {
@@ -242,7 +242,7 @@ describe('histogram-dataview for date column type', function() {
             assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
             assert.equal(dataview.bins.length, 15);
 
-            var initialTimestamp = '2007-02-01T00:00:00+02:00';
+            var initialTimestamp = '2007-02-01T00:00:00+02:00'; // CEST midnight
             var binsStartInMilliseconds = dataview.bins_start * 1000;
             var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                 .utcOffset(TIMEZONE_CEST_IN_MINUTES)
