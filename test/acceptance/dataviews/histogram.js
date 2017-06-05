@@ -227,11 +227,10 @@ describe('histogram-dataview for date column type', function() {
 
             dataview.bins.forEach(function(bin, index) {
                 var binTimestampExpected = moment.utc(initialTimestamp).utcOffset(TIMEZONE_CEST_IN_MINUTES).add(index, 'month').format();
-                console.log(binTimestampExpected);
                 var binsTimestampInMilliseconds = bin.timestamp * 1000;
                 var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds).utcOffset(TIMEZONE_CEST_IN_MINUTES).format();
-                assert.equal(binTimestampFormatted, binTimestampExpected);
 
+                assert.equal(binTimestampFormatted, binTimestampExpected);
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });
 
