@@ -2,6 +2,7 @@ require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
+var moment = require('moment');
 
 function createMapConfig(layers, dataviews, analysis) {
     return {
@@ -206,8 +207,10 @@ describe('histogram-dataview for date column type', function() {
     });
 
     it('should aggregate respecting timezone', function (done) {
+        var TIMEZONE_CEST_IN_SECONDS = 2 * 3600; // Central European Summer Time (Daylight Saving Time)
+        var TIMEZONE_CEST_IN_MINUTES = 2 * 60; // Central European Summer Time (Daylight Saving Time)
         var params = {
-            timezone: 7200 // GMT +2h
+            timezone: TIMEZONE_CEST_IN_SECONDS
         };
 
         this.testClient = new TestClient(mapConfig, 1234);
@@ -216,7 +219,19 @@ describe('histogram-dataview for date column type', function() {
             assert.equal(dataview.type, 'histogram');
             assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
             assert.equal(dataview.bins.length, 15);
-            dataview.bins.forEach(function(bin) {
+
+            var initialTimestamp = '2007-02-01T00:00:00+02:00';
+            var binsStartInMilliseconds = dataview.bins_start * 1000;
+            var binsStartFormatted = moment.utc(binsStartInMilliseconds).utcOffset(TIMEZONE_CEST_IN_MINUTES).format();
+            assert.equal(binsStartFormatted, initialTimestamp);
+
+            dataview.bins.forEach(function(bin, index) {
+                var binTimestampExpected = moment.utc(initialTimestamp).utcOffset(TIMEZONE_CEST_IN_MINUTES).add(index, 'month').format();
+                console.log(binTimestampExpected);
+                var binsTimestampInMilliseconds = bin.timestamp * 1000;
+                var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds).utcOffset(TIMEZONE_CEST_IN_MINUTES).format();
+                assert.equal(binTimestampFormatted, binTimestampExpected);
+
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });
 
