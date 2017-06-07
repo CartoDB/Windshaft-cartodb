@@ -198,9 +198,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.55.2:
-  version "0.55.2"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.55.2.tgz#ee756633b7cde16891874c3441b48b5178ff55a2"
+camshaft@0.55.3:
+  version "0.55.3"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.55.3.tgz#45fc7fa7b779b5ad19ad92cce16fca4e4cf5a3ec"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
@@ -1745,7 +1745,7 @@ repeat-string@^1.5.2:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
 
-request@2.x, request@^2.55.0, request@^2.69.0, request@~2.79.0:
+request@2.x, request@^2.55.0, request@~2.79.0:
   version "2.79.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
   dependencies:
@@ -1770,7 +1770,7 @@ request@2.x, request@^2.55.0, request@^2.69.0, request@~2.79.0:
     tunnel-agent "~0.4.1"
     uuid "^3.0.0"
 
-request@^2.81.0:
+request@^2.69.0, request@^2.81.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
