@@ -71,7 +71,7 @@ describe('formula-dataview: special float valuer', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('val_formula', {}, function(err, dataview) {
             assert.ok(!err, err);
-            assert.equal(dataview.result, 501)
+            assert.equal(dataview.result, 501);
             assert.ok(dataview.infinities === (250 + 250));
             assert.ok(dataview.nans === 250);
             done();
