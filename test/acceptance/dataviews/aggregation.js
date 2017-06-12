@@ -217,14 +217,16 @@ describe.only('aggregation-dataview: special float values', function() {
         ]
     );
 
-    it('should filter infinities out and count them in the summary', function(done) {
-        this.testClient = new TestClient(mapConfig, 1234);
-        this.testClient.getDataview('val_aggregation', {}, function(err, dataview) {
-            assert.ifError(err);
-            assert.equal(dataview.result, 501);
-            assert.ok(dataview.infinities === (250 + 250));
-            assert.ok(dataview.nans === 250);
-            done();
+    [{ own_filter: 0 }, {}].forEach(function (filter) {
+        it('should handle special float values using filter: ' + JSON.stringify(filter), function(done) {
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview('val_aggregation', { own_filter: 0 }, function(err, dataview) {
+                assert.ifError(err);
+                assert.equal(dataview.result, 501);
+                assert.ok(dataview.infinities === (250 + 250));
+                assert.ok(dataview.nans === 250);
+                done();
+            });
         });
-    });
+    })
 });
