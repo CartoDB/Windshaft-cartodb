@@ -217,7 +217,8 @@ describe.only('aggregation-dataview: special float values', function() {
         ]
     );
 
-    [{ own_filter: 0 }, {}].forEach(function (filter) {
+    var filters = [{ own_filter: 0 }, {}];
+    filters.forEach(function (filter) {
         it('should handle special float values using filter: ' + JSON.stringify(filter), function(done) {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('val_aggregation', { own_filter: 0 }, function(err, dataview) {
