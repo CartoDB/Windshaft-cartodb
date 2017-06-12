@@ -147,7 +147,7 @@ describe('aggregations happy cases', function() {
     });
 });
 
-describe.only('aggregation-dataview: special float values', function() {
+describe('aggregation-dataview: special float values', function() {
 
     afterEach(function(done) {
         if (this.testClient) {
