@@ -146,3 +146,85 @@ describe('aggregations happy cases', function() {
         });
     });
 });
+
+describe.only('aggregation-dataview: special float values', function() {
+
+    afterEach(function(done) {
+        if (this.testClient) {
+            this.testClient.drain(done);
+        } else {
+            done();
+        }
+    });
+
+    function createMapConfig(layers, dataviews, analysis) {
+        return {
+            version: '1.5.0',
+            layers: layers,
+            dataviews: dataviews || {},
+            analyses: analysis || []
+        };
+    }
+
+    var mapConfig = createMapConfig(
+        [
+            {
+                "type": "cartodb",
+                "options": {
+                    "source": {
+                        "id": "a0"
+                    },
+                    "cartocss": "#points { marker-width: 10; marker-fill: red; }",
+                    "cartocss_version": "2.3.0"
+                }
+            }
+        ],
+        {
+            val_aggregation: {
+                source: {
+                    id: 'a0'
+                },
+                type: 'aggregation',
+                options: {
+                    column: 'cat',
+                    aggregation: 'sum',
+                    aggregationColumn: 'val'
+                }
+            }
+        },
+        [
+            {
+                "id": "a0",
+                "type": "source",
+                "params": {
+                    "query": [
+                        'SELECT',
+                        '  null::geometry the_geom_webmercator,',
+                        '  CASE',
+                        '    WHEN x % 4 = 0 THEN \'infinity\'::float',
+                        '    WHEN x % 4 = 1 THEN \'-infinity\'::float',
+                        '    WHEN x % 4 = 2 THEN \'NaN\'::float',
+                        '    ELSE x',
+                        '  END AS val,',
+                        '  CASE',
+                        '    WHEN x % 2 = 0 THEN \'category_1\'',
+                        '    ELSE \'category_2\'',
+                        '  END AS cat',
+                        'FROM generate_series(1, 1000) x'
+                    ].join('\n')
+                }
+            }
+        ]
+    );
+
+    it('should filter infinities out and count them in the summary', function(done) {
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('val_aggregation', {}, function(err, dataview) {
+            assert.ifError(err);
+            assert.equal(dataview.result, 501);
+            assert.ok(dataview.infinities === (250 + 250));
+            assert.ok(dataview.nans === 250);
+            done();
+        });
+    });
+});
