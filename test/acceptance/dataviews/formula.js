@@ -11,7 +11,7 @@ function createMapConfig(layers, dataviews, analysis) {
     };
 }
 
-describe('formula-dataview: special float valuer', function() {
+describe('formula-dataview: special float values', function() {
 
     afterEach(function(done) {
         if (this.testClient) {
