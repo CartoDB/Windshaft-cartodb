@@ -187,7 +187,7 @@ describe.only('aggregation-dataview: special float values', function() {
                 type: 'aggregation',
                 options: {
                     column: 'cat',
-                    aggregation: 'sum',
+                    aggregation: 'avg',
                     aggregationColumn: 'val'
                 }
             }
@@ -217,15 +217,34 @@ describe.only('aggregation-dataview: special float values', function() {
         ]
     );
 
+    // the_geom_webmercator  |    val    |    cat
+    // ----------------------+-----------+------------
+    //                       | -Infinity | category_2
+    //                       |       NaN | category_1
+    //                       |         3 | category_2
+    //                       |  Infinity | category_1
+    //                       | -Infinity | category_2
+    //                       |       NaN | category_1
+    //                       |         7 | category_2
+    //                       |  Infinity | category_1
+    //                       | -Infinity | category_2
+    //                       |       NaN | category_1
+    //                       |        11 | category_2
+    //                       |         " |          "
+
     var filters = [{ own_filter: 0 }, {}];
     filters.forEach(function (filter) {
         it('should handle special float values using filter: ' + JSON.stringify(filter), function(done) {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('val_aggregation', { own_filter: 0 }, function(err, dataview) {
                 assert.ifError(err);
-                assert.equal(dataview.result, 501);
                 assert.ok(dataview.infinities === (250 + 250));
                 assert.ok(dataview.nans === 250);
+                assert.ok(dataview.categories.length === 1);
+                dataview.categories.forEach(function (category) {
+                    assert.ok(category.category === 'category_2');
+                    assert.ok(category.value === 501);
+                })
                 done();
             });
         });
