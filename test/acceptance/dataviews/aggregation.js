@@ -244,9 +244,9 @@ describe.only('aggregation-dataview: special float values', function() {
                 dataview.categories.forEach(function (category) {
                     assert.ok(category.category === 'category_2');
                     assert.ok(category.value === 501);
-                })
+                });
                 done();
             });
         });
-    })
+    });
 });
