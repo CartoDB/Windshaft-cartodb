@@ -124,6 +124,13 @@ describe('dataviews using tables with overviews', function() {
                 params: {
                   query: 'select * from test_table_overviews'
                 }
+            },
+            {
+                id: 'data-source-special-float-values',
+                type: 'source',
+                params: {
+                  query: 'select * from test_special_float_values_table_overviews'
+                }
             }
         ],
         dataviews:  {
@@ -142,6 +149,17 @@ describe('dataviews using tables with overviews', function() {
                     column: 'name',
                     aggregation: 'count',
                     aggregationColumn: 'name',
+                }
+            },
+            test_categories_special_values: {
+                type: 'aggregation',
+                source: {
+                    id: 'data-source-special-float-values'
+                },
+                options: {
+                    column: 'name',
+                    aggregation: 'sum',
+                    aggregationColumn: 'value',
                 }
             },
             test_histogram: {
@@ -201,6 +219,17 @@ describe('dataviews using tables with overviews', function() {
                     cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
                     cartocss_version: '2.3.0',
                     source: { id: 'data-source' }
+                }
+            },
+            {
+                type: 'mapnik',
+                options: {
+                    sql: 'select * from test_special_float_values_table_overviews',
+                    cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                    cartocss_version: '2.3.0',
+                    source: {
+                        id: 'data-source-special-float-values'
+                    }
                 }
             }
         ]
@@ -473,5 +502,34 @@ describe('dataviews using tables with overviews', function() {
 
         });
 
+        describe('aggregation special float values', function () {
+            var params = {};
+
+            it("should expose an aggregation dataview", function (done) {
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_categories_special_values', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.deepEqual(dataview, {
+                        aggregation: 'sum',
+                        count: 5,
+                        nulls: 0,
+                        nans: 1,
+                        infinities: 1,
+                        min: 6,
+                        max: 6,
+                        categoriesCount: 3,
+                        categories:[
+                            { category: 'El Rey del Tallarín', value: null, agg: false },
+                            { category: 'El Lacón', value: null, agg: false },
+                            { category: 'Hawai', value: 6, agg: false }
+                        ],
+                        type: 'aggregation'
+                    });
+                    testClient.drain(done);
+                });
+            });
+        });
     });
 });
