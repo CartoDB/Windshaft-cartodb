@@ -505,7 +505,7 @@ describe('dataviews using tables with overviews', function() {
         describe('aggregation special float values', function () {
             var params = {};
 
-            it("should expose an aggregation dataview", function (done) {
+            it("should expose an aggregation dataview filtering special float values out", function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
                 testClient.getDataview('test_categories_special_values', params, function (err, dataview) {
                     if (err) {
@@ -519,12 +519,8 @@ describe('dataviews using tables with overviews', function() {
                         infinities: 1,
                         min: 6,
                         max: 6,
-                        categoriesCount: 3,
-                        categories:[
-                            { category: 'El Rey del Tallarín', value: null, agg: false },
-                            { category: 'El Lacón', value: null, agg: false },
-                            { category: 'Hawai', value: 6, agg: false }
-                        ],
+                        categoriesCount: 1,
+                        categories: [ { category: 'Hawai', value: 6, agg: false } ],
                         type: 'aggregation'
                     });
                     testClient.drain(done);
