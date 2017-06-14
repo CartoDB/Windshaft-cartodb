@@ -196,7 +196,7 @@ describe('dataviews using tables with overviews', function() {
                     operation: 'avg'
                 }
             },
-            test_sum_special_values: {
+            test_formula_sum_special_values: {
                 type: 'formula',
                 source: {
                     id: 'data-source-special-float-values'
@@ -261,7 +261,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"sum","result":15,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation":"sum",
+                "result":15,
+                "infinities": 0,
+                "nans": 0,
+                "nulls":0,
+                "type":"formula"
+            });
 
             testClient.drain(done);
         });
@@ -273,7 +280,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"avg","result":3,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation":"avg",
+                "result":3,
+                "nulls":0,
+                "type":"formula",
+                "infinities": 0,
+                "nans": 0
+            });
 
             testClient.drain(done);
         });
@@ -285,7 +299,12 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"count","result":5,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation":"count",
+                "result":5,
+                "nulls":0,
+                "type":"formula"
+            });
 
             testClient.drain(done);
         });
@@ -338,7 +357,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"sum","result":15,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation":"sum",
+                "result":15,
+                "nulls":0,
+                "infinities": 0,
+                "nans": 0,
+                "type":"formula"
+            });
 
             testClient.drain(done);
         });
@@ -435,7 +461,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"sum","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation":"sum",
+                        "result":1,
+                        "nulls":0,
+                        "infinities": 0,
+                        "nans": 0,
+                        "type":"formula"
+                    });
                     testClient.drain(done);
                 });
             });
@@ -446,7 +479,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"avg","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation":"avg",
+                        "result":1,
+                        "nulls":0,
+                        "infinities": 0,
+                        "nans": 0,
+                        "type":"formula"
+                    });
 
                     testClient.drain(done);
                 });
@@ -514,7 +554,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"sum","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation":"sum",
+                        "result":1,
+                        "nulls":0,
+                        "infinities": 0,
+                        "nans": 0,
+                        "type":"formula"
+                    });
                     testClient.drain(done);
                 });
             });
@@ -570,7 +617,7 @@ describe('dataviews using tables with overviews', function() {
 
             it('should expose a formula (sum) dataview filtering special float values out', function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_sum_special_values', params, function (err, dataview) {
+                testClient.getDataview('test_formula_sum_special_values', params, function (err, dataview) {
                     if (err) {
                         return done(err);
                     }
