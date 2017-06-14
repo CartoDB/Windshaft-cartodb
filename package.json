@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "body-parser": "~1.14.0",
-    "camshaft": "cartodb/camshaft#query-variables",
+    "camshaft": "cartodb/camshaft#tt-agg-intersection",
     "cartodb-psql": "0.8.0",
     "cartodb-query-tables": "cartodb/node-cartodb-query-tables#query-variables",
     "cartodb-redis": "0.13.2",
