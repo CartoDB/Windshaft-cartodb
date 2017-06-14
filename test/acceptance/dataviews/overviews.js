@@ -178,6 +178,16 @@ describe('dataviews using tables with overviews', function() {
                     bins: 2
                 }
             },
+            test_histogram_special_values: {
+                type: 'histogram',
+                source: {
+                    id: 'data-source-special-float-values'
+                },
+                options: {
+                    column: 'value',
+                    bins: 2
+                }
+            },
             test_avg: {
                 type: 'formula',
                 source: {id: 'data-source'},
@@ -522,6 +532,27 @@ describe('dataviews using tables with overviews', function() {
                         categoriesCount: 1,
                         categories: [ { category: 'Hawai', value: 6, agg: false } ],
                         type: 'aggregation'
+                    });
+                    testClient.drain(done);
+                });
+            });
+
+            it('should expose a histogram dataview filtering special float values out', function (done) {
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_histogram_special_values', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.deepEqual(dataview, {
+                        bin_width: 0,
+                        bins_count: 1,
+                        bins_start: 3,
+                        nulls: 0,
+                        infinities: 1,
+                        nans: 1,
+                        avg: 3,
+                        bins: [ { bin: 0, min: 3, max: 3, avg: 3, freq: 2 } ],
+                        type: 'histogram'
                     });
                     testClient.drain(done);
                 });
