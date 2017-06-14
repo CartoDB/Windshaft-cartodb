@@ -196,6 +196,16 @@ describe('dataviews using tables with overviews', function() {
                     operation: 'avg'
                 }
             },
+            test_sum_special_values: {
+                type: 'formula',
+                source: {
+                    id: 'data-source-special-float-values'
+                },
+                options: {
+                    column: 'value',
+                    operation: 'sum'
+                }
+            },
             test_count: {
                 type: 'formula',
                 source: {id: 'data-source'},
@@ -553,6 +563,24 @@ describe('dataviews using tables with overviews', function() {
                         avg: 3,
                         bins: [ { bin: 0, min: 3, max: 3, avg: 3, freq: 2 } ],
                         type: 'histogram'
+                    });
+                    testClient.drain(done);
+                });
+            });
+
+            it('should expose a formula (sum) dataview filtering special float values out', function (done) {
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_sum_special_values', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.deepEqual(dataview, {
+                        operation: 'sum',
+                        result: 6,
+                        nulls: 0,
+                        nans: 1,
+                        infinities: 1,
+                        type: 'formula'
                     });
                     testClient.drain(done);
                 });
