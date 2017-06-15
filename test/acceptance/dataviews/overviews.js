@@ -303,7 +303,9 @@ describe('dataviews using tables with overviews', function() {
                 "operation":"count",
                 "result":5,
                 "nulls":0,
-                "type":"formula"
+                "type":"formula",
+                "infinities": 0,
+                "nans": 0
             });
 
             testClient.drain(done);
@@ -498,7 +500,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"count","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation":"count",
+                        "result":1,
+                        "infinities": 0,
+                        "nans": 0,
+                        "nulls":0,
+                        "type":"formula"
+                    });
 
                     testClient.drain(done);
                 });
