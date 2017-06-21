@@ -190,6 +190,17 @@ describe('aggregation-dataview: special float values', function() {
                     aggregation: 'avg',
                     aggregationColumn: 'val'
                 }
+            },
+            sum_aggregation_numeric: {
+                source: {
+                    id: 'a1'
+                },
+                type: 'aggregation',
+                options: {
+                    column: 'cat',
+                    aggregation: 'sum',
+                    aggregationColumn: 'val'
+                }
             }
         },
         [
@@ -213,10 +224,31 @@ describe('aggregation-dataview: special float values', function() {
                         'FROM generate_series(1, 1000) x'
                     ].join('\n')
                 }
+            }, {
+                "id": "a1",
+                "type": "source",
+                "params": {
+                    "query": [
+                        'SELECT',
+                        '  null::geometry the_geom_webmercator,',
+                        '  CASE',
+                        '    WHEN x % 3 = 0 THEN \'NaN\'::numeric',
+                        '    WHEN x % 3 = 1 THEN x',
+                        '    ELSE x',
+                        '  END AS val,',
+                        '  CASE',
+                        '    WHEN x % 2 = 0 THEN \'category_1\'',
+                        '    ELSE \'category_2\'',
+                        '  END AS cat',
+                        'FROM generate_series(1, 1000) x'
+                    ].join('\n')
+                }
             }
         ]
     );
 
+    // Source a0
+    // -----------------------------------------------
     // the_geom_webmercator  |    val    |    cat
     // ----------------------+-----------+------------
     //                       | -Infinity | category_2
@@ -248,5 +280,19 @@ describe('aggregation-dataview: special float values', function() {
                 done();
             });
         });
+
+        it('should handle special numeric values using filter: ' + JSON.stringify(filter), function(done) {
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview('sum_aggregation_numeric', { own_filter: 0 }, function(err, dataview) {
+                assert.ifError(err);
+                assert.ok(dataview.nans === 333);
+                assert.ok(dataview.categories.length === 2);
+                dataview.categories.forEach(function (category) {
+                    assert.ok(category.value !== null);
+                });
+                done();
+            });
+        });
+
     });
 });
