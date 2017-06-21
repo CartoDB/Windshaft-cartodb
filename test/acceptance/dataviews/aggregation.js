@@ -293,6 +293,5 @@ describe('aggregation-dataview: special float values', function() {
                 done();
             });
         });
-
     });
 });
