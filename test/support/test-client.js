@@ -435,7 +435,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             }
 
             params.placeholders = params.placeholders || {};
-        
+
             assert.response(server,
                 {
                     url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
