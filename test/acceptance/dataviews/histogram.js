@@ -380,5 +380,49 @@ describe('histogram-dataview for date column type', function() {
                 done();
             });
         });
+
+        it('bins_count should be equal to bins array length filtered by start and end ' + test.desc, function (done) {
+            var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
+            var TIMEZONE_UTC_IN_MINUTES = 0 * 60; // UTC
+            var params = {
+                timezone: TIMEZONE_UTC_IN_SECONDS,
+                aggregation: 'quarter',
+                start: 1167609600, // 2007-01-01T00:00:00Z, first bin start
+                end: 1214870399 // 2008-06-30T23:59:59Z, last bin end
+            };
+
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
+                assert.ifError(err);
+
+                assert.equal(dataview.type, 'histogram');
+                assert.equal(dataview.bins.length, 6);
+                assert.equal(dataview.bins_count, 6);
+                assert.equal(dataview.bins_count, dataview.bins.length);
+                done();
+            });
+        });
+
+        it('bins_count should be greater than bins array length filtered by start and end ' + test.desc, function (done) {
+            var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
+            var TIMEZONE_UTC_IN_MINUTES = 0 * 60; // UTC
+            var params = {
+                timezone: TIMEZONE_UTC_IN_SECONDS,
+                aggregation: 'quarter',
+                start: 1167609600, // 2007-01-01T00:00:00Z, first bin start
+                end: 1214870400 // 2008-07-01T00:00:00Z, start the next bin to the last
+            };
+
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
+                assert.ifError(err);
+
+                assert.equal(dataview.type, 'histogram');
+                assert.equal(dataview.bins.length, 6);
+                assert.equal(dataview.bins_count, 7);
+                assert.ok(dataview.bins_count > dataview.bins.length);
+                done();
+            });
+        });
     });
 });
