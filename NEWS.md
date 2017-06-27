@@ -1,7 +1,7 @@
 # Changelog
 
 ## 3.9.5
-Released 2017-mm-dd
+Released 2017-06-27
 
  - Dataviews: support special numeric values (±Infinity, NaN) #700
 
