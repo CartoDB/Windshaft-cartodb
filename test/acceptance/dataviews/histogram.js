@@ -381,9 +381,8 @@ describe('histogram-dataview for date column type', function() {
             });
         });
 
-        it('bins_count should be equal to bins array length filtered by start and end ' + test.desc, function (done) {
+        it('bins_count should be equal to bins length filtered by start and end ' + test.desc, function (done) {
             var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
-            var TIMEZONE_UTC_IN_MINUTES = 0 * 60; // UTC
             var params = {
                 timezone: TIMEZONE_UTC_IN_SECONDS,
                 aggregation: 'quarter',
@@ -403,9 +402,8 @@ describe('histogram-dataview for date column type', function() {
             });
         });
 
-        it('bins_count should be greater than bins array length filtered by start and end ' + test.desc, function (done) {
+        it('bins_count should be greater than bins length filtered by start and end ' + test.desc, function (done) {
             var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
-            var TIMEZONE_UTC_IN_MINUTES = 0 * 60; // UTC
             var params = {
                 timezone: TIMEZONE_UTC_IN_SECONDS,
                 aggregation: 'quarter',
