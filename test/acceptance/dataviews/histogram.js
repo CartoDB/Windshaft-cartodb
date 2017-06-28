@@ -145,6 +145,15 @@ describe('histogram-dataview for date column type', function() {
                     aggregation: 'month',
                     timezone: -14400 // EDT Eastern Daylight Time (GMT-4) in seconds
                 }
+            },
+            date_histogram_automatic: {
+                source: {
+                    id: 'date-histogram-source'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'd'
+                }
             }
         },
         [
@@ -421,6 +430,19 @@ describe('histogram-dataview for date column type', function() {
                 assert.ok(dataview.bins_count > dataview.bins.length);
                 done();
             });
+        });
+    });
+
+    it('automatic mode', function (done) {
+        var params = {};
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('date_histogram_automatic', params, function (err, dataview) {
+            assert.ifError(err);
+            assert.equal(dataview.type, 'histogram');
+            assert.equal(dataview.aggregation, 'week');
+            assert.equal(dataview.bins.length, 61);
+            assert.equal(dataview.bins_count, 61);
+            done();
         });
     });
 });
