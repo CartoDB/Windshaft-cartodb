@@ -116,7 +116,7 @@ describe('histogram-dataview for date column type', function() {
                 "type": "cartodb",
                 "options": {
                     "source": {
-                        "id": "date-histogram-source"
+                        "id": "datetime-histogram-source"
                     },
                     "cartocss": "#points { marker-width: 10; marker-fill: red; }",
                     "cartocss_version": "2.3.0"
@@ -124,9 +124,9 @@ describe('histogram-dataview for date column type', function() {
             }
         ],
         {
-            date_histogram: {
+            datetime_histogram: {
                 source: {
-                    id: 'date-histogram-source'
+                    id: 'datetime-histogram-source'
                 },
                 type: 'histogram',
                 options: {
@@ -135,15 +135,34 @@ describe('histogram-dataview for date column type', function() {
                     timezone: -14400 // EDT Eastern Daylight Time (GMT-4) in seconds
                 }
             },
-            date_histogram_tz: {
+            datetime_histogram_tz: {
                 source: {
-                    id: 'date-histogram-source-tz'
+                    id: 'datetime-histogram-source-tz'
                 },
                 type: 'histogram',
                 options: {
                     column: 'd',
                     aggregation: 'month',
                     timezone: -14400 // EDT Eastern Daylight Time (GMT-4) in seconds
+                }
+            },
+            datetime_histogram_automatic: {
+                source: {
+                    id: 'datetime-histogram-source'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'd'
+                }
+            },
+            date_histogram: {
+                source: {
+                    id: 'date-histogram-source'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'd',
+                    aggregation: 'year'
                 }
             },
             date_histogram_automatic: {
@@ -158,7 +177,7 @@ describe('histogram-dataview for date column type', function() {
         },
         [
             {
-                "id": "date-histogram-source",
+                "id": "datetime-histogram-source",
                 "type": "source",
                 "params": {
                     "query": [
@@ -170,7 +189,7 @@ describe('histogram-dataview for date column type', function() {
                 }
             },
             {
-                "id": "date-histogram-source-tz",
+                "id": "datetime-histogram-source-tz",
                 "type": "source",
                 "params": {
                     "query": [
@@ -180,16 +199,28 @@ describe('histogram-dataview for date column type', function() {
                         ") date"
                     ].join(' ')
                 }
+            },
+            {
+                "id": "date-histogram-source",
+                "type": "source",
+                "params": {
+                    "query": [
+                        "select null::geometry the_geom_webmercator, date::date AS d",
+                        "from generate_series(",
+                            "'2007-02-15'::date, '2008-04-09'::date, '1 day'::interval",
+                        ") date"
+                    ].join(' ')
+                }
             }
         ]
     );
 
     var dateHistogramsUseCases = [{
         desc: 'supporting timestamp with timezone',
-        dataviewId: 'date_histogram_tz'
+        dataviewId: 'datetime_histogram_tz'
     }, {
         desc: 'supporting timestamp without timezone',
-        dataviewId: 'date_histogram'
+        dataviewId: 'datetime_histogram'
     }];
 
     dateHistogramsUseCases.forEach(function (test) {
@@ -433,7 +464,34 @@ describe('histogram-dataview for date column type', function() {
         });
     });
 
-    it('automatic mode', function (done) {
+    it('should find the best aggregation (automatic mode) to build the histogram', function (done) {
+        var params = {};
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('datetime_histogram_automatic', params, function (err, dataview) {
+            assert.ifError(err);
+            assert.equal(dataview.type, 'histogram');
+            assert.equal(dataview.aggregation, 'week');
+            assert.equal(dataview.bins.length, 61);
+            assert.equal(dataview.bins_count, 61);
+            done();
+        });
+    });
+
+    it('should work with dates', function (done) {
+        var params = {};
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('date_histogram', params, function (err, dataview) {
+            assert.ifError(err);
+            assert.equal(dataview.type, 'histogram');
+            assert.equal(dataview.aggregation, 'year');
+            assert.equal(dataview.bins.length, 2);
+            assert.equal(dataview.bins_count, 2);
+            done();
+        });
+    });
+
+
+    it('should find the best aggregation (automatic mode) to build the histogram with dates', function (done) {
         var params = {};
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('date_histogram_automatic', params, function (err, dataview) {
