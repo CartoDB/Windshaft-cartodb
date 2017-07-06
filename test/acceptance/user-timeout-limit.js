@@ -50,8 +50,6 @@ function createMapConfig (cartocss) {
     };
 }
 
-
-
 describe('user timeout limits', function () {
     var redisClient = redis.createClient(global.environment.redis.port);
 
