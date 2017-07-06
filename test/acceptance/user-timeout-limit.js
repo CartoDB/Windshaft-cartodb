@@ -71,11 +71,10 @@ describe('user timeout limits', function () {
 
             var mapConfig = createMapConfig(TestClient.CARTOCSS.POINTS);
             var testClient = new TestClient(mapConfig, 1234);
-            testClient.getTile(4, 4, 4, {}, function (err, res, tile) {
+            testClient.getTile(4, 4, 4, {}, function (err, /* res, tile */) {
                 assert.ok(err, err);
                 // TODO: check timeout tile
-
-                testClient.drain(done)
+                testClient.drain(done);
             });
         });
     });
