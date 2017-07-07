@@ -322,6 +322,25 @@ describe('widgets', function() {
                     });
                 });
             });
+
+            [adm0name].forEach(function(userQuery) {
+                it('should search with sum aggregation: ' + userQuery, function(done) {
+                    this.testClient = new TestClient(aggregationSumMapConfig);
+                    this.testClient.widgetSearch('adm0name', userQuery, function (err, res, searchResult) {
+                        assert.ok(!err, err);
+                        assert.ok(searchResult);
+                        assert.equal(searchResult.type, 'aggregation');
+
+                        assert.equal(searchResult.categories.length, 1);
+                        assert.deepEqual(
+                            searchResult.categories,
+                            [{ category:"Argentina", value:28015640 }]
+                        );
+
+                        done();
+                    });
+                });
+            });
         });
 
     });
