@@ -1,7 +1,9 @@
 # Changelog
 
 ## 3.9.6
-Released 2017-mm-dd
+Released 2017-07-11
+
+ - Dataviews: support for aggregation in search results #708
 
 
 ## 3.9.5
