@@ -1,5 +1,42 @@
 # Changelog
 
+## 3.9.6
+Released 2017-07-11
+
+ - Dataviews: support for aggregation in search results #708
+
+
+## 3.9.5
+Released 2017-06-27
+
+ - Dataviews: support special numeric values (±Infinity, NaN) #700
+
+
+## 3.9.4
+Released 2017-06-22
+
+Announcements:
+ - Upgrades camshaft to [0.55.6](https://github.com/CartoDB/camshaft/releases/tag/0.55.6).
+
+## 3.9.3
+Released 2017-06-16
+
+Announcements:
+ - Upgrades camshaft to [0.55.5](https://github.com/CartoDB/camshaft/releases/tag/0.55.5).
+
+## 3.9.2
+Released 2017-06-16
+
+Announcements:
+ - Upgrades camshaft to [0.55.4](https://github.com/CartoDB/camshaft/releases/tag/0.55.4).
+
+## 3.9.1
+Released 2017-06-06
+
+Announcements:
+ - Upgrades camshaft to [0.55.3](https://github.com/CartoDB/camshaft/releases/tag/0.55.3).
+
+
 ## 3.9.0
 Released 2017-05-31
 
