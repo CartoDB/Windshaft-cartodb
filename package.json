@@ -16,7 +16,8 @@
   "contributors": [
     "Simon Tokumine <simon@vizzuality.com>",
     "Javi Santana <jsantana@vizzuality.com>",
-    "Sandro Santilli <strk@vizzuality.com>"
+    "Sandro Santilli <strk@vizzuality.com>",
+    "Carlos Matallín <matallo@carto.com>"
   ],
   "dependencies": {
     "body-parser": "~1.14.0",

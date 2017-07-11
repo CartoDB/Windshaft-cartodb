@@ -145,6 +145,35 @@ describe('aggregations happy cases', function() {
             });
         });
     });
+
+    var widgetSearchExpects = {
+        'count': [ { category: 'other_a', value: 3 } ],
+        'sum': [ { category: 'other_a', value: 6 } ],
+        'avg': [ { category: 'other_a', value: 2 } ],
+        'max': [ { category: 'other_a', value: 3 } ],
+        'min': [ { category: 'other_a', value: 1 } ]
+    };
+
+    Object.keys(operations_and_values).forEach(function (operation) {
+        var description = 'should search OTHER category using "' + operation + '"';
+
+        it(description, function (done) {
+            this.testClient = new TestClient(aggregationOperationMapConfig(operation, query_other, 'cat', 'val'));
+            this.testClient.widgetSearch('cat', 'other_a', function (err, res, searchResult) {
+                assert.ifError(err);
+
+                assert.ok(searchResult);
+                assert.equal(searchResult.type, 'aggregation');
+
+                assert.equal(searchResult.categories.length, 1);
+                assert.deepEqual(
+                    searchResult.categories,
+                    widgetSearchExpects[operation]
+                );
+                done();
+            });
+        });
+    });
 });
 
 describe('aggregation-dataview: special float values', function() {
