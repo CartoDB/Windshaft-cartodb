@@ -547,4 +547,137 @@ describe('histogram-dataview for date column type', function() {
             done();
         });
     });
+
+    it('should not apply timezone for a histogram aggregated by minutes', function (done) {
+        var self = this;
+        var params = {
+            timezone: '-3600'
+        };
+
+        self.testClient = new TestClient(mapConfig, 1234);
+
+        self.testClient.getDataview('minute_histogram', {}, function (err, dataview) {
+            assert.ifError(err);
+            self.testClient.getDataview('minute_histogram', params, function (err, dataviewWithTimezone) {
+                assert.ifError(err);
+
+                assert.deepEqual(dataview, dataviewWithTimezone);
+                done();
+            });
+        });
+    });
+
+    it('should filter by "start" & "end" for a histogram aggregated by minutes', function (done) {
+        var self = this;
+        var paramsWithFilter = {
+            start: 1171583400, // 2007-02-15 23:50:00 = min(date_colum)
+            end: 1171584600 // 2007-02-16 00:10:00 = max(date_colum)
+        };
+
+        var paramsWithTimezone = {
+            start: 1171583400, // 2007-02-15 23:50:00 = min(date_colum)
+            end: 1171584600, // 2007-02-16 00:10:00 = max(date_colum)
+            timezone: '-3600'
+        };
+
+        self.testClient = new TestClient(mapConfig, 1234);
+        self.testClient.getDataview('minute_histogram', paramsWithFilter, function (err, dataview) {
+            assert.ifError(err);
+
+            self.testClient.getDataview('minute_histogram', paramsWithFilter, function (err, filteredDataview) {
+                assert.ifError(err);
+
+                assert.deepEqual(dataview, filteredDataview);
+
+                self.testClient.getDataview('minute_histogram', paramsWithTimezone,
+                function (err, filteredWithTimezoneDataview) {
+                    assert.ifError(err);
+
+                    assert.deepEqual(filteredDataview, filteredWithTimezoneDataview);
+                    done();
+                });
+            });
+        });
+    });
+
+
+    it('should return an histogram aggregated by days', function (done) {
+        var self = this;
+        var paramsWithDailyAgg = {
+            aggregation: 'day',
+        };
+
+        // data: from 2007-02-15 23:50:00 to 2007-02-16 00:10:00
+
+        var dataviewWithDailyAggFixture = {
+            aggregation: 'day',
+            bin_width: 600,
+            bins_count: 2,
+            bins_start: 1171497600,
+            nulls: 0,
+            bins:
+            [{
+                bin: 0,
+                timestamp: 1171497600,
+                min: 1171583400,
+                max: 1171583940,
+                avg: 1171583670,
+                freq: 10
+            },
+            {
+                bin: 1,
+                timestamp: 1171584000,
+                min: 1171584000,
+                max: 1171584600,
+                avg: 1171584300,
+                freq: 11
+            }],
+            type: 'histogram'
+        };
+
+        self.testClient = new TestClient(mapConfig, 1234);
+        self.testClient.getDataview('minute_histogram', paramsWithDailyAgg, function (err, dataview) {
+            assert.ifError(err);
+
+            assert.deepEqual(dataview, dataviewWithDailyAggFixture);
+            done();
+        });
+    });
+
+    it('should return a histogram aggregated by days with timezone', function (done) {
+        var self = this;
+
+        var paramsWithDailyAggAndTimezone = {
+            aggregation: 'day',
+            timezone: '-3600'
+        };
+
+        // data (UTC): from 2007-02-15 23:50:00 to 2007-02-16 00:10:00
+
+        var dataviewWithDailyAggAndTimezoneFixture = {
+            aggregation: 'day',
+            bin_width: 1200,
+            bins_count: 1,
+            bins_start: 1171501200,
+            nulls: 0,
+            bins:
+            [{
+                bin: 0,
+                timestamp: 1171501200,
+                min: 1171583400,
+                max: 1171584600,
+                avg: 1171584000,
+                freq: 21
+            }],
+            type: 'histogram'
+        };
+
+        self.testClient = new TestClient(mapConfig, 1234);
+        self.testClient.getDataview('minute_histogram', paramsWithDailyAggAndTimezone, function (err, dataview) {
+            assert.ifError(err);
+
+            assert.deepEqual(dataview, dataviewWithDailyAggAndTimezoneFixture);
+            done();
+        });
+    });
 });
