@@ -173,6 +173,16 @@ describe('histogram-dataview for date column type', function() {
                 options: {
                     column: 'd'
                 }
+            },
+            minute_histogram: {
+                source: {
+                    id: 'minute-histogram-source'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'd',
+                    aggregation: 'minute'
+                }
             }
         },
         [
@@ -208,6 +218,18 @@ describe('histogram-dataview for date column type', function() {
                         "select null::geometry the_geom_webmercator, date::date AS d",
                         "from generate_series(",
                             "'2007-02-15'::date, '2008-04-09'::date, '1 day'::interval",
+                        ") date"
+                    ].join(' ')
+                }
+            },
+            {
+                "id": "minute-histogram-source",
+                "type": "source",
+                "params": {
+                    "query": [
+                        "select null::geometry the_geom_webmercator, date AS d",
+                        "from generate_series(",
+                            "'2007-02-15 23:50:00'::timestamp, '2007-02-16 00:10:00'::timestamp, '1 minute'::interval",
                         ") date"
                     ].join(' ')
                 }
@@ -282,8 +304,8 @@ describe('histogram-dataview for date column type', function() {
 
         it('should override start and end ' + test.desc, function (done) {
             var params = {
-                start: 1180659600, // 2007-06-01 01:00:00
-                end: 1193792400 // 2007-10-31 01:00:00
+                start: 1180659600, // 2007-06-01 01:00:00 UTC => '2007-05-31T21:00:00-04:00'
+                end: 1193792400 // 2007-10-31 01:00:00 UTC
             };
 
             this.testClient = new TestClient(mapConfig, 1234);
@@ -299,6 +321,28 @@ describe('histogram-dataview for date column type', function() {
                 done();
             });
         });
+
+
+        it('should return same histogram ' + test.desc, function (done) {
+            var params = {
+                start: 1171501200, // 2007-02-15 01:00:00 = min(date_colum)
+                end: 1207702800 // 2008-04-09 01:00:00 = max(date_colum)
+            };
+
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview(test.dataviewId, {}, function (err, dataview) {
+                assert.ok(!err, err);
+
+                this.testClient = new TestClient(mapConfig, 1234);
+                this.testClient.getDataview(test.dataviewId, params, function (err, filteredDataview) {
+                    assert.ok(!err, err);
+
+                    assert.deepEqual(dataview, filteredDataview);
+                    done();
+                });
+            });
+        });
+
 
         it('should aggregate histogram overriding default timezone to CEST ' + test.desc, function (done) {
             var TIMEZONE_CEST_IN_SECONDS = 2 * 3600; // Central European Summer Time (Daylight Saving Time)
