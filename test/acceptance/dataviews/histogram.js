@@ -561,6 +561,8 @@ describe('histogram-dataview for date column type', function() {
             self.testClient.getDataview('minute_histogram', params, function (err, dataviewWithTimezone) {
                 assert.ifError(err);
 
+                assert.notEqual(dataview.timezone, dataviewWithTimezone.timezone);
+                dataview.timezone = dataviewWithTimezone.timezone;
                 assert.deepEqual(dataview, dataviewWithTimezone);
                 done();
             });
@@ -593,7 +595,9 @@ describe('histogram-dataview for date column type', function() {
                 function (err, filteredWithTimezoneDataview) {
                     assert.ifError(err);
 
-                    assert.deepEqual(filteredDataview, filteredWithTimezoneDataview);
+                    assert.notEqual(filteredWithTimezoneDataview.timezone, filteredDataview.timezone);
+                    filteredWithTimezoneDataview.timezone = filteredDataview.timezone;
+                    assert.deepEqual(filteredWithTimezoneDataview, filteredDataview);
                     done();
                 });
             });
@@ -614,6 +618,7 @@ describe('histogram-dataview for date column type', function() {
             bin_width: 600,
             bins_count: 2,
             bins_start: 1171497600,
+            timezone: 0,
             nulls: 0,
             bins:
             [{
@@ -660,6 +665,7 @@ describe('histogram-dataview for date column type', function() {
             bins_count: 1,
             bins_start: 1171501200,
             nulls: 0,
+            timezone: -3600,
             bins:
             [{
                 bin: 0,
