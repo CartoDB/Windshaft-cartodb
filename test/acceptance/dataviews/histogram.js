@@ -618,6 +618,7 @@ describe('histogram-dataview for date column type', function() {
             bin_width: 600,
             bins_count: 2,
             bins_start: 1171497600,
+            timestamp_start: 1171497600,
             timezone: 0,
             nulls: 0,
             bins:
@@ -664,6 +665,7 @@ describe('histogram-dataview for date column type', function() {
             bin_width: 1200,
             bins_count: 1,
             bins_start: 1171501200,
+            timestamp_start: 1171497600,
             nulls: 0,
             timezone: -3600,
             bins:
