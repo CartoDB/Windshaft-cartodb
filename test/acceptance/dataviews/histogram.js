@@ -132,7 +132,7 @@ describe('histogram-dataview for date column type', function() {
                 options: {
                     column: 'd',
                     aggregation: 'month',
-                    timezone: -14400 // EDT Eastern Daylight Time (GMT-4) in seconds
+                    offset: -14400 // EDT Eastern Daylight Time (GMT-4) in seconds
                 }
             },
             datetime_histogram_tz: {
@@ -143,7 +143,7 @@ describe('histogram-dataview for date column type', function() {
                 options: {
                     column: 'd',
                     aggregation: 'month',
-                    timezone: -14400 // EDT Eastern Daylight Time (GMT-4) in seconds
+                    offset: -14400 // EDT Eastern Daylight Time (GMT-4) in seconds
                 }
             },
             datetime_histogram_automatic: {
@@ -238,16 +238,16 @@ describe('histogram-dataview for date column type', function() {
     );
 
     var dateHistogramsUseCases = [{
-        desc: 'supporting timestamp with timezone',
+        desc: 'supporting timestamp with offset',
         dataviewId: 'datetime_histogram_tz'
     }, {
-        desc: 'supporting timestamp without timezone',
+        desc: 'supporting timestamp without offset',
         dataviewId: 'datetime_histogram'
     }];
 
     dateHistogramsUseCases.forEach(function (test) {
         it('should create a date histogram aggregated in months (EDT) ' + test.desc, function (done) {
-            var TIMEZONE_EDT_IN_MINUTES = -4 * 60; // EDT Eastern Daylight Time (GMT-4) in minutes
+            var OFFSET_EDT_IN_MINUTES = -4 * 60; // EDT Eastern Daylight Time (GMT-4) in minutes
 
             this.testClient = new TestClient(mapConfig, 1234);
 
@@ -260,18 +260,18 @@ describe('histogram-dataview for date column type', function() {
                 var initialTimestamp = '2007-02-01T00:00:00-04:00'; // EDT midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
-                    .utcOffset(TIMEZONE_EDT_IN_MINUTES)
+                    .utcOffset(OFFSET_EDT_IN_MINUTES)
                     .format();
                 assert.equal(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function(bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
-                        .utcOffset(TIMEZONE_EDT_IN_MINUTES)
+                        .utcOffset(OFFSET_EDT_IN_MINUTES)
                         .add(index, 'month')
                         .format();
                     var binsTimestampInMilliseconds = bin.timestamp * 1000;
                     var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
-                        .utcOffset(TIMEZONE_EDT_IN_MINUTES)
+                        .utcOffset(OFFSET_EDT_IN_MINUTES)
                         .format();
 
                     assert.equal(binTimestampFormatted, binTimestampExpected);
@@ -344,11 +344,11 @@ describe('histogram-dataview for date column type', function() {
         });
 
 
-        it('should aggregate histogram overriding default timezone to CEST ' + test.desc, function (done) {
-            var TIMEZONE_CEST_IN_SECONDS = 2 * 3600; // Central European Summer Time (Daylight Saving Time)
-            var TIMEZONE_CEST_IN_MINUTES = 2 * 60; // Central European Summer Time (Daylight Saving Time)
+        it('should aggregate histogram overriding default offset to CEST ' + test.desc, function (done) {
+            var OFFSET_CEST_IN_SECONDS = 2 * 3600; // Central European Summer Time (Daylight Saving Time)
+            var OFFSET_CEST_IN_MINUTES = 2 * 60; // Central European Summer Time (Daylight Saving Time)
             var params = {
-                timezone: TIMEZONE_CEST_IN_SECONDS
+                offset: OFFSET_CEST_IN_SECONDS
             };
 
             this.testClient = new TestClient(mapConfig, 1234);
@@ -361,18 +361,18 @@ describe('histogram-dataview for date column type', function() {
                 var initialTimestamp = '2007-02-01T00:00:00+02:00'; // CEST midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
-                    .utcOffset(TIMEZONE_CEST_IN_MINUTES)
+                    .utcOffset(OFFSET_CEST_IN_MINUTES)
                     .format();
                 assert.equal(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
-                        .utcOffset(TIMEZONE_CEST_IN_MINUTES)
+                        .utcOffset(OFFSET_CEST_IN_MINUTES)
                         .add(index, 'month')
                         .format();
                     var binsTimestampInMilliseconds = bin.timestamp * 1000;
                     var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
-                        .utcOffset(TIMEZONE_CEST_IN_MINUTES)
+                        .utcOffset(OFFSET_CEST_IN_MINUTES)
                         .format();
 
                     assert.equal(binTimestampFormatted, binTimestampExpected);
@@ -384,11 +384,11 @@ describe('histogram-dataview for date column type', function() {
             });
         });
 
-        it('should aggregate histogram overriding default timezone to UTC/GMT ' + test.desc, function (done) {
-            var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
-            var TIMEZONE_UTC_IN_MINUTES = 0 * 60; // UTC
+        it('should aggregate histogram overriding default offset to UTC/GMT ' + test.desc, function (done) {
+            var OFFSET_UTC_IN_SECONDS = 0 * 3600; // UTC
+            var OFFSET_UTC_IN_MINUTES = 0 * 60; // UTC
             var params = {
-                timezone: TIMEZONE_UTC_IN_SECONDS
+                offset: OFFSET_UTC_IN_SECONDS
             };
 
             this.testClient = new TestClient(mapConfig, 1234);
@@ -401,18 +401,18 @@ describe('histogram-dataview for date column type', function() {
                 var initialTimestamp = '2007-02-01T00:00:00Z'; // UTC midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
-                    .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                    .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
                 assert.equal(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
-                        .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                        .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .add(index, 'month')
                         .format();
                     var binsTimestampInMilliseconds = bin.timestamp * 1000;
                     var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
-                        .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                        .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
                     assert.equal(binTimestampFormatted, binTimestampExpected);
@@ -425,10 +425,10 @@ describe('histogram-dataview for date column type', function() {
         });
 
         it('should aggregate histogram using "quarter" aggregation ' + test.desc, function (done) {
-            var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
-            var TIMEZONE_UTC_IN_MINUTES = 0 * 60; // UTC
+            var OFFSET_UTC_IN_SECONDS = 0 * 3600; // UTC
+            var OFFSET_UTC_IN_MINUTES = 0 * 60; // UTC
             var params = {
-                timezone: TIMEZONE_UTC_IN_SECONDS,
+                offset: OFFSET_UTC_IN_SECONDS,
                 aggregation: 'quarter'
             };
 
@@ -442,18 +442,18 @@ describe('histogram-dataview for date column type', function() {
                 var initialTimestamp = '2007-01-01T00:00:00Z'; // UTC midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
-                    .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                    .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
                 assert.equal(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
-                        .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                        .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .add(index * 3, 'month')
                         .format();
                     var binsTimestampInMilliseconds = bin.timestamp * 1000;
                     var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
-                        .utcOffset(TIMEZONE_UTC_IN_MINUTES)
+                        .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
                     assert.equal(binTimestampFormatted, binTimestampExpected);
@@ -466,9 +466,9 @@ describe('histogram-dataview for date column type', function() {
         });
 
         it('bins_count should be equal to bins length filtered by start and end ' + test.desc, function (done) {
-            var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
+            var OFFSET_UTC_IN_SECONDS = 0 * 3600; // UTC
             var params = {
-                timezone: TIMEZONE_UTC_IN_SECONDS,
+                offset: OFFSET_UTC_IN_SECONDS,
                 aggregation: 'quarter',
                 start: 1167609600, // 2007-01-01T00:00:00Z, first bin start
                 end: 1214870399 // 2008-06-30T23:59:59Z, last bin end
@@ -487,9 +487,9 @@ describe('histogram-dataview for date column type', function() {
         });
 
         it('bins_count should be greater than bins length filtered by start and end ' + test.desc, function (done) {
-            var TIMEZONE_UTC_IN_SECONDS = 0 * 3600; // UTC
+            var OFFSET_UTC_IN_SECONDS = 0 * 3600; // UTC
             var params = {
-                timezone: TIMEZONE_UTC_IN_SECONDS,
+                offset: OFFSET_UTC_IN_SECONDS,
                 aggregation: 'quarter',
                 start: 1167609600, // 2007-01-01T00:00:00Z, first bin start
                 end: 1214870400 // 2008-07-01T00:00:00Z, start the next bin to the last
@@ -548,22 +548,22 @@ describe('histogram-dataview for date column type', function() {
         });
     });
 
-    it('should not apply timezone for a histogram aggregated by minutes', function (done) {
+    it('should not apply offset for a histogram aggregated by minutes', function (done) {
         var self = this;
         var params = {
-            timezone: '-3600'
+            offset: '-3600'
         };
 
         self.testClient = new TestClient(mapConfig, 1234);
 
         self.testClient.getDataview('minute_histogram', {}, function (err, dataview) {
             assert.ifError(err);
-            self.testClient.getDataview('minute_histogram', params, function (err, dataviewWithTimezone) {
+            self.testClient.getDataview('minute_histogram', params, function (err, dataviewWithOffset) {
                 assert.ifError(err);
 
-                assert.notEqual(dataview.timezone, dataviewWithTimezone.timezone);
-                dataview.timezone = dataviewWithTimezone.timezone;
-                assert.deepEqual(dataview, dataviewWithTimezone);
+                assert.notEqual(dataview.offset, dataviewWithOffset.offset);
+                dataview.offset = dataviewWithOffset.offset;
+                assert.deepEqual(dataview, dataviewWithOffset);
                 done();
             });
         });
@@ -576,10 +576,10 @@ describe('histogram-dataview for date column type', function() {
             end: 1171584600 // 2007-02-16 00:10:00 = max(date_colum)
         };
 
-        var paramsWithTimezone = {
+        var paramsWithOffset = {
             start: 1171583400, // 2007-02-15 23:50:00 = min(date_colum)
             end: 1171584600, // 2007-02-16 00:10:00 = max(date_colum)
-            timezone: '-3600'
+            offset: '-3600'
         };
 
         self.testClient = new TestClient(mapConfig, 1234);
@@ -591,13 +591,13 @@ describe('histogram-dataview for date column type', function() {
 
                 assert.deepEqual(dataview, filteredDataview);
 
-                self.testClient.getDataview('minute_histogram', paramsWithTimezone,
-                function (err, filteredWithTimezoneDataview) {
+                self.testClient.getDataview('minute_histogram', paramsWithOffset,
+                function (err, filteredWithOffsetDataview) {
                     assert.ifError(err);
 
-                    assert.notEqual(filteredWithTimezoneDataview.timezone, filteredDataview.timezone);
-                    filteredWithTimezoneDataview.timezone = filteredDataview.timezone;
-                    assert.deepEqual(filteredWithTimezoneDataview, filteredDataview);
+                    assert.notEqual(filteredWithOffsetDataview.offset, filteredDataview.offset);
+                    filteredWithOffsetDataview.offset = filteredDataview.offset;
+                    assert.deepEqual(filteredWithOffsetDataview, filteredDataview);
                     done();
                 });
             });
@@ -619,7 +619,7 @@ describe('histogram-dataview for date column type', function() {
             bins_count: 2,
             bins_start: 1171497600,
             timestamp_start: 1171497600,
-            timezone: 0,
+            offset: 0,
             nulls: 0,
             bins:
             [{
@@ -650,24 +650,24 @@ describe('histogram-dataview for date column type', function() {
         });
     });
 
-    it('should return a histogram aggregated by days with timezone', function (done) {
+    it('should return a histogram aggregated by days with offset', function (done) {
         var self = this;
 
-        var paramsWithDailyAggAndTimezone = {
+        var paramsWithDailyAggAndOffset = {
             aggregation: 'day',
-            timezone: '-3600'
+            offset: '-3600'
         };
 
         // data (UTC): from 2007-02-15 23:50:00 to 2007-02-16 00:10:00
 
-        var dataviewWithDailyAggAndTimezoneFixture = {
+        var dataviewWithDailyAggAndOffsetFixture = {
             aggregation: 'day',
             bin_width: 1200,
             bins_count: 1,
             bins_start: 1171501200,
             timestamp_start: 1171497600,
             nulls: 0,
-            timezone: -3600,
+            offset: -3600,
             bins:
             [{
                 bin: 0,
@@ -681,10 +681,10 @@ describe('histogram-dataview for date column type', function() {
         };
 
         self.testClient = new TestClient(mapConfig, 1234);
-        self.testClient.getDataview('minute_histogram', paramsWithDailyAggAndTimezone, function (err, dataview) {
+        self.testClient.getDataview('minute_histogram', paramsWithDailyAggAndOffset, function (err, dataview) {
             assert.ifError(err);
 
-            assert.deepEqual(dataview, dataviewWithDailyAggAndTimezoneFixture);
+            assert.deepEqual(dataview, dataviewWithDailyAggAndOffsetFixture);
             done();
         });
     });
