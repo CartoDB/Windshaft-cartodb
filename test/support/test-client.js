@@ -525,7 +525,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             };
 
             var expectedResponse = {
-                status: 200,
+                status: params.status || 200,
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
@@ -542,7 +542,12 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
             if (isMvt) {
                 request.encoding = 'binary';
-                expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
+
+                if (expectedResponse.status === 200) {
+                    expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
+                } else if (expectedResponse.status === 204) {
+                    expectedResponse.headers['Content-Type'] = undefined;
+                }
             }
 
             var isGeojson = format.match(/geojson$/);
@@ -561,15 +566,16 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
             assert.response(server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
-
                 var obj;
 
                 if (isPng) {
                     obj = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
                 }
                 else if (isMvt) {
-                    obj = new mapnik.VectorTile(z, x, y);
-                    obj.setDataSync(new Buffer(res.body, 'binary'));
+                    if (res.body) {
+                        obj = new mapnik.VectorTile(z, x, y);
+                        obj.setDataSync(new Buffer(res.body, 'binary'));
+                    }
                 }
                 else {
                     obj = JSON.parse(res.body);
