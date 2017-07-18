@@ -14,13 +14,13 @@ var helper = require('./test_helper');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 serverOptions.analysis.batch.inlineExecution = true;
-var server = new CartodbWindshaft(serverOptions);
 
 function TestClient(config, apiKey) {
     this.mapConfig = isMapConfig(config) ? config : null;
     this.template = isTemplate(config) ? config : null;
     this.apiKey = apiKey;
     this.keysToDelete = {};
+    this.server = new CartodbWindshaft(serverOptions);
 }
 
 module.exports = TestClient;
@@ -97,7 +97,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
     step(
         function createLayergroup() {
             var next = this;
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'POST',
@@ -156,7 +156,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
 
             url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName + '?' + qs.stringify(urlParams);
 
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
@@ -208,7 +208,7 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
     step(
         function createLayergroup() {
             var next = this;
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'POST',
@@ -265,7 +265,7 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
             }
             url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName + '/search?' + qs.stringify(urlParams);
 
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
@@ -332,7 +332,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
     step(
         function createLayergroup() {
             var next = this;
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'POST',
@@ -385,7 +385,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             }
             url = '/api/v1/map/' + layergroupId + '/dataview/' + dataviewName + '?' + qs.stringify(urlParams);
 
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
@@ -441,7 +441,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
             params.placeholders = params.placeholders || {};
 
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
                     method: 'POST',
@@ -473,7 +473,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 urlNamed + '/' + templateId  + '?' + qs.stringify({api_key: self.apiKey}) :
                 url;
 
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: path,
                     method: 'POST',
@@ -569,20 +569,22 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
             }
 
-            assert.response(server, request, expectedResponse, function(res, err) {
+            if (params.contentType) {
+                expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
+            }
+
+            assert.response(self.server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
                 var obj;
 
                 if (isPng) {
                     obj = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                }
-                else if (isMvt) {
+                } else if (isMvt) {
                     if (res.body) {
                         obj = new mapnik.VectorTile(z, x, y);
                         obj.setDataSync(new Buffer(res.body, 'binary'));
                     }
-                }
-                else {
+                } else {
                     obj = JSON.parse(res.body);
                 }
 
@@ -618,7 +620,7 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
         url += '?' + qs.stringify({api_key: this.apiKey});
     }
 
-    assert.response(server,
+    assert.response(self.server,
         {
             url: url,
             method: 'POST',
@@ -662,7 +664,7 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
     step(
         function createLayergroup() {
             var next = this;
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'POST',
@@ -723,7 +725,7 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
                 }
             };
 
-            assert.response(server, request, expectedResponse, function(res, err) {
+            assert.response(self.server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
                 next(null, res, JSON.parse(res.body));
             });
@@ -741,6 +743,10 @@ TestClient.prototype.drain = function(callback) {
 };
 
 module.exports.getStaticMap = function getStaticMap(templateName, params, callback) {
+    var self = this;
+
+    self.server = new CartodbWindshaft(serverOptions);
+
     if (!callback) {
         callback = params;
         params = null;
@@ -771,9 +777,22 @@ module.exports.getStaticMap = function getStaticMap(templateName, params, callba
     // this could be removed once named maps are invalidated, otherwise you hits the cache
     var server = new CartodbWindshaft(serverOptions);
 
-    assert.response(server, requestOptions, expectedResponse, function (res, err) {
+    assert.response(self.server, requestOptions, expectedResponse, function (res, err) {
         helper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, function() {
             return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
         });
     });
 };
+
+TestClient.prototype.setUserRenderTimeoutLimit = function (user, userTimeoutLimit, callback) {
+    const userTimeoutLimitsKey = `limits:timeout:${user}`;
+    const params = [
+        userTimeoutLimitsKey,
+        'render', userTimeoutLimit,
+        'render_public', userTimeoutLimit
+    ];
+
+    this.keysToDelete[userTimeoutLimitsKey] = 5;
+
+    helper.configureMetadata('hmset', params, callback);
+}

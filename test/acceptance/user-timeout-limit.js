@@ -1,48 +1,25 @@
 require('../support/test_helper');
 
-var assert = require('../support/assert');
-var TestClient = require('../support/test-client');
-var testHelper = require('../support/test_helper');
+const assert = require('../support/assert');
+const TestClient = require('../support/test-client');
 
-var redis = require('redis');
-var keysToDelete;
+const timeoutErrorTilePath = `${process.cwd()}/assets/render-timeout-fallback.png`;
 
-function withUserTimeoutRenderLimit(redisClient, user, userTimeoutLimit, callback) {
-    redisClient.SELECT(5, function(err) {
-        if (err) {
-            return callback(err);
-        }
+var pointSleepSql = `
+    SELECT
+        pg_sleep(0.5),
+        'SRID=3857;POINT(0 0)'::geometry the_geom_webmercator,
+        1 cartodb_id
+`;
 
-        var userTimeoutLimitsKey = 'limits:timeout:' + user;
-        var redisParams = [
-            userTimeoutLimitsKey,
-            'render', userTimeoutLimit,
-            'render_public', userTimeoutLimit
-        ];
-
-        redisClient.hmset(redisParams, function (err) {
-            if (err) {
-                return callback(err);
-            }
-            keysToDelete[userTimeoutLimitsKey] = 5;
-            return callback();
-        });
-    });
-}
-
-function createMapConfig (cartocss) {
+function createMapConfig (sql = pointSleepSql, cartocss = TestClient.CARTOCSS.POINTS) {
     return {
         version: '1.6.0',
         layers: [{
-            type: "cartodb",
+            type: 'cartodb',
             options: {
-                sql: [
-                    'SELECT',
-                    ' pg_sleep(1),',
-                    ' 1 cartodb_id,',
-                    ' \'SRID=3857;POINT(0 0)\'::geometry the_geom_webmercator'
-                ].join('\n'),
-                cartocss: cartocss,
+                sql,
+                cartocss,
                 cartocss_version: '2.3.0',
                 interactivity: 'cartodb_id'
             }
@@ -51,28 +28,63 @@ function createMapConfig (cartocss) {
 }
 
 describe('user timeout limits', function () {
-    var redisClient = redis.createClient(global.environment.redis.port);
+    describe('with onTileErrorStrategy ENABLED', function () {
+        let onTileErrorStrategy;
 
-    beforeEach(function() {
-        keysToDelete = {};
+        before(function () {
+            onTileErrorStrategy = global.environment.enabledFeatures.onTileErrorStrategy;
+            global.environment.enabledFeatures.onTileErrorStrategy = true;
+        });
+
+        after(function () {
+            global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
+        });
+
+        it('layergroup creation works if test tile is fast but tile request fails if they are slow', function (done) {
+            var testClient = new TestClient(createMapConfig(), 1234);
+
+            testClient.setUserRenderTimeoutLimit('localhost', 50, function (err) {
+                assert.ifError(err);
+
+                testClient.getTile(0, 0, 0, {}, function (err, res, tile) {
+                    assert.ifError(err);
+
+                    assert.imageIsSimilarToFile(tile, timeoutErrorTilePath, 0.05, function (err) {
+                        assert.ifError(err);
+                        testClient.drain(done);
+                    });
+                });
+            });
+        });
     });
 
-    afterEach(function (done) {
-        testHelper.deleteRedisKeys(keysToDelete, done);
-    });
+    describe('with onTileErrorStrategy DISABLED', function() {
+        var onTileErrorStrategy;
 
-    it('layergroup creation works even if test tile is slow', function (done) {
-        withUserTimeoutRenderLimit(redisClient, 'localhost', 1, function (err) {
-            if (err) {
-                return done(err);
-            }
+        beforeEach(function() {
+            onTileErrorStrategy = global.environment.enabledFeatures.onTileErrorStrategy;
+            global.environment.enabledFeatures.onTileErrorStrategy = false;
+        });
 
-            var mapConfig = createMapConfig(TestClient.CARTOCSS.POINTS);
-            var testClient = new TestClient(mapConfig, 1234);
-            testClient.getTile(4, 4, 4, {}, function (err /*, res, tile */) {
-                assert.ok(err, err);
-                // TODO: check timeout tile
-                testClient.drain(done);
+        afterEach(function() {
+            global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
+        });
+
+        it('layergroup creation works even if test tile is slow', function (done) {
+            var testClient = new TestClient(createMapConfig(), 1234);
+            testClient.setUserRenderTimeoutLimit('localhost', 50, function (err) {
+                assert.ifError(err);
+                var params = {
+                    status: 400,
+                    contentType: 'application/json; charset=utf-8'
+                };
+
+                testClient.getTile(0, 0, 0, params, function (err, res, tile) {
+                    assert.ifError(err);
+
+                    assert.equal(tile.errors[0], 'Render timed out');
+                    testClient.drain(done);
+                });
             });
         });
     });

@@ -166,12 +166,29 @@ function rmdirRecursiveSync(dirname) {
     }
 }
 
+function configureMetadata(action, params, callback) {
+    redisClient.SELECT(5, function (err) {
+        if (err) {
+            return callback(err);
+        }
+
+        redisClient[action](params, function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback();
+        });
+    });
+}
+
 module.exports = {
   deleteRedisKeys: deleteRedisKeys,
   lzma_compress_to_base64: lzma_compress_to_base64,
   checkNoCache: checkNoCache,
   checkSurrogateKey: checkSurrogateKey,
   checkCache: checkCache,
-  rmdirRecursiveSync: rmdirRecursiveSync
+  rmdirRecursiveSync: rmdirRecursiveSync,
+  configureMetadata
 };
 
