@@ -45,7 +45,6 @@ describe('mvt', function () {
             testClient.getTile(z, x, y, { format, status }, (err, res) => {
                 assert.ifError(err);
 
-                assert.ifError(err);
                 assert.equal(res.statusCode, test.status);
                 testClient.drain(done);
             });
