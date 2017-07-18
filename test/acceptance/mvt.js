@@ -1,16 +1,9 @@
 require('../support/test_helper');
 
-var assert = require('../support/assert');
-var TestClient = require('../support/test-client');
+const assert = require('../support/assert');
+const TestClient = require('../support/test-client');
 
-function createMapConfig (sql) {
-    sql = sql || [
-        'select',
-        '   *',
-        'from',
-        '   populated_places_simple_reduced',
-    ].join('\n');
-
+function createMapConfig (sql = TestClient.SQL.ONE_POINT) {
     return {
         version: '1.6.0',
         layers: [{
@@ -25,14 +18,21 @@ function createMapConfig (sql) {
     };
 }
 
-
 describe('mvt', function () {
     const testCases = [
         {
             desc: 'should get empty mvt with code 204 (no content)',
             coords: { z: 0, x: 0, y: 0 },
             format: 'mvt',
-            mapConfig: createMapConfig('select 1 as cartodb_id, null::geometry as the_geom_webmercator')
+            status: 204,
+            mapConfig: createMapConfig(TestClient.SQL.EMPTY)
+        },
+        {
+            desc: 'should get mvt tile with code 200 (ok)',
+            coords: { z: 0, x: 0, y: 0 },
+            format: 'mvt',
+            status: 200,
+            mapConfig: createMapConfig()
         }
     ];
 
@@ -40,17 +40,13 @@ describe('mvt', function () {
         it(test.desc, done => {
             const testClient = new TestClient(test.mapConfig, 1234);
             const { z, x, y } = test.coords;
-            const options = {
-                format: test.format,
-                status: 204
-            };
+            const { format, status } = test;
 
-            testClient.getTile(z, x, y, options, (err, res) => {
+            testClient.getTile(z, x, y, { format, status }, (err, res) => {
                 assert.ifError(err);
 
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204);
-                assert.equal(res.body, '');
+                assert.equal(res.statusCode, test.status);
                 testClient.drain(done);
             });
         });

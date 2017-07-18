@@ -75,6 +75,11 @@ module.exports.CARTOCSS = {
     ].join('\n')
 };
 
+module.exports.SQL = {
+    EMPTY: 'select 1 as cartodb_id, null::geometry as the_geom_webmercator',
+    ONE_POINT: 'select 1 as cartodb_id, \'SRID=3857;POINT(0 0)\'::geometry the_geom_webmercator'
+}
+
 TestClient.prototype.getWidget = function(widgetName, params, callback) {
     var self = this;
 
