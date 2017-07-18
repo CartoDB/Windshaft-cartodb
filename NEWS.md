@@ -3,6 +3,8 @@
 ## 3.9.7
 Released 2017-mm-dd
 
+ - Respond with 204 (No content) when vector tile has no data #712
+
 
 ## 3.9.6
 Released 2017-07-11
