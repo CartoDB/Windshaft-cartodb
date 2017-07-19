@@ -575,15 +575,22 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
             assert.response(self.server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
-                var body;
 
-                if (res.headers['content-type'] === 'image/png') {
-                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                } else if (res.headers['content-type'] === 'application/x-protobuf') {
-                    body = new mapnik.VectorTile(z, x, y);
-                    body.setDataSync(new Buffer(res.body, 'binary'));
-                } else if (res.headers['content-type'] === 'application/json; charset=utf-8') {
-                    body = JSON.parse(res.body);
+                var body;
+                switch (res.headers['content-type']) {
+                    case 'image/png':
+                        body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                        break;
+                    case 'application/x-protobuf':
+                        body = new mapnik.VectorTile(z, x, y);
+                        body.setDataSync(new Buffer(res.body, 'binary'));
+                        break;
+                    case 'application/json; charset=utf-8':
+                        body = JSON.parse(res.body);
+                        break;
+                    default:
+                        body = res.body
+                        break;
                 }
 
                 next(null, res, body);
