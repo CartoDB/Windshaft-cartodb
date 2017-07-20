@@ -1,13 +1,13 @@
 # Changelog
 
 ## 3.9.7
-Released 2017-mm-dd
+Released 2017-07-20
 
 Bug fixes:
  - Respond with 204 (No content) when vector tile has no data #712
 
 Announcements:
- - Upgrades turbo-carto to [0.19.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.1)
+ - Upgrades turbo-carto to [0.19.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.2)
 
 
 ## 3.9.6
