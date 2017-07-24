@@ -1,5 +1,21 @@
 # Changelog
 
+## 3.9.8
+Released 2017-07-21
+
+ - Upgrades windshaft to [3.2.2](https://github.com/CartoDB/windshaft/releases/tag/3.2.2).
+
+
+## 3.9.7
+Released 2017-07-20
+
+Bug fixes:
+ - Respond with 204 (No content) when vector tile has no data #712
+
+Announcements:
+ - Upgrades turbo-carto to [0.19.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.2)
+
+
 ## 3.9.6
 Released 2017-07-11
 
