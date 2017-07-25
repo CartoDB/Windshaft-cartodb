@@ -40,7 +40,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.2",
     "underscore": "~1.6.0",
-    "windshaft": "3.2.2",
+    "windshaft": "cartodb/windshaft#response-timeout-limit",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
