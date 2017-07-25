@@ -3,7 +3,8 @@
 var qs = require('querystring');
 var step = require('step');
 var urlParser = require('url');
-
+var PSQL = require('cartodb-psql');
+var _ = require('underscore');
 var mapnik = require('windshaft').mapnik;
 
 var LayergroupToken = require('./layergroup-token');
@@ -71,6 +72,34 @@ module.exports.CARTOCSS = {
         '  line-color: #FFF;',
         '  line-width: 0.5;',
         '  line-opacity: 1;',
+        '}'
+    ].join('\n'),
+
+    TORQUE: [
+        'Map {',
+        '    -torque-frame-count: 256;',
+        '    -torque-animation-duration: 30;',
+        '    -torque-time-attribute: "cartodb_id";',
+        '    -torque-aggregation-function: "count(1)";',
+        '    -torque-resolution: 4;',
+        '    -torque-data-aggregation: linear;',
+        '}',
+        '#layer {',
+        '    marker-width: 7;',
+        '    marker-fill: #FFB927;',
+        '    marker-fill-opacity: 0.9;',
+        '    marker-line-width: 1;',
+        '    marker-line-color: #FFF;',
+        '    marker-line-opacity: 1;',
+        '    comp-op: lighter;',
+        '}',
+        '#layer[frame-offset=1] {',
+        '    marker-width: 9;',
+        '    marker-fill-opacity: 0.45;',
+        '}',
+        '#layer[frame-offset=2] {',
+        '    marker-width: 11;',
+        '    marker-fill-opacity: 0.225;',
         '}'
     ].join('\n')
 };
@@ -800,4 +829,44 @@ TestClient.prototype.setUserRenderTimeoutLimit = function (user, userTimeoutLimi
     this.keysToDelete[userTimeoutLimitsKey] = 5;
 
     helper.configureMetadata('hmset', params, callback);
-}
+};
+
+TestClient.prototype.setUserDatabaseTimeoutLimit = function (user, userTimeoutLimit, callback) {
+    const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
+    const role = _.template(global.environment.postgres_auth_user, { user_id: 1 })
+
+    const psql = new PSQL({
+        user: 'postgres',
+        dbname: dbname,
+        host: global.environment.postgres.host,
+        port: global.environment.postgres.port
+    });
+
+    step(
+        function setTimeoutToUserRole (err, params) {
+            const next = this;
+
+            const timeoutQuery = `ALTER ROLE \"${role}\" SET statement_timeout to ${userTimeoutLimit}`;
+            psql.query(timeoutQuery, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                next(null, params, psql);
+            });
+        },
+        function setTimeoutToDatabase (err, params, psql) {
+            assert.ifError(err);
+
+            const timeoutQuery = `ALTER DATABASE \"${dbname}\" SET statement_timeout to ${userTimeoutLimit}`;
+
+            psql.query(timeoutQuery, this);
+        },
+        function finish (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            callback();
+        }
+    );
+};
