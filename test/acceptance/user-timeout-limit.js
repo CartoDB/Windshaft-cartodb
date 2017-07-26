@@ -9,14 +9,17 @@ const pointSleepSql = `
     SELECT
         pg_sleep(0.5),
         'SRID=3857;POINT(0 0)'::geometry the_geom_webmercator,
-        1 cartodb_id
+        1 cartodb_id,
+        2 value
 `;
 
+// during instatiation we validate tile 30/0/0, creating a point in that tile `pg_sleep` will throw a timeout
 const validationPointSleepSql = `
     SELECT
-        pg_sleep(0.5),
-        'SRID=3857;POINT(-180 90)'::geometry the_geom_webmercator,
-        1 cartodb_id
+        pg_sleep(1),
+        ST_Transform('SRID=4326;POINT(-180 85.05112877)'::geometry, 3857) the_geom_webmercator,
+        1 cartodb_id,
+        2 value
 `;
 
 const createMapConfig = ({
@@ -26,18 +29,20 @@ const createMapConfig = ({
     cartocss = TestClient.CARTOCSS.POINTS,
     cartocss_version = '2.3.0',
     interactivity = 'cartodb_id',
-    countBy = 'cartodb_id'
+    countBy = 'cartodb_id',
+    attributes = { id: 'cartodb_id', columns: ['value'] },
 } = {}) => ({
     version,
     layers: [{
         type,
         options: {
             source: {
-                id: "a0"
+                id: 'a0'
             },
             cartocss,
             cartocss_version,
-            interactivity
+            interactivity,
+            attributes
         }
     }],
     analyses: [
@@ -64,7 +69,7 @@ const createMapConfig = ({
 });
 
 describe('user timeout limit', function () {
-    describe.skip('map instantiation', function () {
+    describe('map instantiation', function () {
         beforeEach(function (done) {
             const mapconfig = createMapConfig({ sql: validationPointSleepSql });
             this.testClient = new TestClient(mapconfig, 1234);
@@ -92,8 +97,16 @@ describe('user timeout limit', function () {
                 assert.ifError(err);
 
                 assert.deepEqual(timeoutError, {
-                    errors: ['Render timed out'],
-                    errors_with_context: [{ type: 'unknown', message: 'Render timed out' }]
+                    errors: ["Render timed out"],
+                    errors_with_context: [{
+                        type: "layer",
+                        message: "Render timed out",
+                        layer: {
+                            id: "layer0",
+                            index: 0,
+                            type: "mapnik"
+                        }
+                    }]
                 });
 
                 done();
