@@ -16,6 +16,14 @@ var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 serverOptions.analysis.batch.inlineExecution = true;
 
+const MAPNIK_SUPPORTED_FORMATS = {
+    'png': true,
+    'png32': true,
+    'grid.json': true,
+    'geojson': true,
+    'mvt': true
+}
+
 function TestClient(config, apiKey) {
     this.mapConfig = isMapConfig(config) ? config : null;
     this.template = isTemplate(config) ? config : null;
@@ -542,6 +550,10 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             }
 
             var format = params.format || 'png';
+
+            if (layers === undefined && !MAPNIK_SUPPORTED_FORMATS[format]) {
+                throw new Error(`Missing layer filter while fetching ${format} tile, review params argument`);
+            }
 
             url += [z,x,y].join('/');
             url += '.' + format;
