@@ -7,10 +7,10 @@ const timeoutErrorTilePath = `${process.cwd()}/assets/render-timeout-fallback.pn
 
 const pointSleepSql = `
     SELECT
-        pg_sleep(0.5),
+        pg_sleep(1),
         'SRID=3857;POINT(0 0)'::geometry the_geom_webmercator,
         1 cartodb_id,
-        2 value
+        2 val
 `;
 
 // during instatiation we validate tile 30/0/0, creating a point in that tile `pg_sleep` will throw a timeout
@@ -19,7 +19,7 @@ const validationPointSleepSql = `
         pg_sleep(1),
         ST_Transform('SRID=4326;POINT(-180 85.05112877)'::geometry, 3857) the_geom_webmercator,
         1 cartodb_id,
-        2 value
+        2 val
 `;
 
 const createMapConfig = ({
@@ -30,7 +30,7 @@ const createMapConfig = ({
     cartocss_version = '2.3.0',
     interactivity = 'cartodb_id',
     countBy = 'cartodb_id',
-    attributes = { id: 'cartodb_id', columns: ['value'] },
+    attributes
 } = {}) => ({
     version,
     layers: [{
@@ -68,7 +68,15 @@ const createMapConfig = ({
     }
 });
 
-describe('user timeout limit', function () {
+describe.only('user timeout limit', function () {
+    before(function (done) {
+        TestClient.setUserDatabaseTimeoutLimit('localhost', 900, done);
+    });
+
+    after(function (done) {
+        TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
+    });
+
     describe('map instantiation', function () {
         beforeEach(function (done) {
             const mapconfig = createMapConfig({ sql: validationPointSleepSql });
@@ -114,64 +122,14 @@ describe('user timeout limit', function () {
         });
     });
 
-    describe('user torque timeout limits', function () {
-        beforeEach(function (done) {
-            const mapconfig = createMapConfig({
-                type: 'torque',
-                cartocss: TestClient.CARTOCSS.TORQUE
-            });
-            this.testClient = new TestClient(mapconfig, 1234);
-            this.testClient.setUserDatabaseTimeoutLimit('localhost', 50, done);
-        });
-
-        afterEach(function (done) {
-            this.testClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
-                if (err) {
-                    return done(err);
-                }
-                this.testClient.drain(done);
-            });
-        });
-
-        it('layergroup creation fails due to statement timeout', function (done) {
-            const expectedResponse = {
-                status: 400,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
-            };
-
-            this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
-                assert.ifError(err);
-
-                assert.deepEqual(timeoutError, {
-                    errors: ["TorqueRenderer: canceling statement due to statement timeout"],
-                    errors_with_context: [{
-                        "type": "layer",
-                        "message": "TorqueRenderer: canceling statement due to statement timeout",
-                        "layer": { "id": "torque-layer0", "index": 0, "type": "torque" }
-                    }]
-                });
-
-                done();
-            });
-        });
-    });
-
     describe('dataview', function () {
-        beforeEach(function (done) {
+        beforeEach(function () {
             const mapconfig = createMapConfig();
             this.testClient = new TestClient(mapconfig, 1234);
-            this.testClient.setUserDatabaseTimeoutLimit('localhost', 50, done);
         });
 
         afterEach(function (done) {
-            this.testClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
-                if (err) {
-                    return done(err);
-                }
-                this.testClient.drain(done);
-            });
+            this.testClient.drain(done);
         });
 
         it('layergroup creation works but dataview request fails due to statement timeout', function (done) {
@@ -190,6 +148,42 @@ describe('user timeout limit', function () {
                 assert.deepEqual(dataview, {
                     errors: ['canceling statement due to statement timeout'],
                     errors_with_context: [{ type: 'unknown', message: 'canceling statement due to statement timeout' }]
+                });
+
+                done();
+            });
+        });
+    });
+
+    describe('torque', function () {
+        beforeEach(function () {
+            const mapconfig = createMapConfig({
+                type: 'torque',
+                cartocss: TestClient.CARTOCSS.TORQUE
+            });
+            this.testClient = new TestClient(mapconfig, 1234);
+        });
+
+        afterEach(function (done) {
+            this.testClient.drain(done);
+        });
+
+        it('layergroup creation fails due to statement timeout', function (done) {
+            const expectedResponse = {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            };
+
+            this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
+                assert.deepEqual(timeoutError, {
+                    errors: ["TorqueRenderer: canceling statement due to statement timeout"],
+                    errors_with_context: [{
+                        type: "layer",
+                        message: "TorqueRenderer: canceling statement due to statement timeout",
+                        layer: { id: 'torque-layer0', index: 0, type: "torque" }
+                    }]
                 });
 
                 done();
