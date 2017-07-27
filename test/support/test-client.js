@@ -850,9 +850,10 @@ TestClient.prototype.setUserRenderTimeoutLimit = function (user, userTimeoutLimi
     helper.configureMetadata('hmset', params, callback);
 };
 
-TestClient.setUserDatabaseTimeoutLimit = function (user, userTimeoutLimit, callback) {
+TestClient.setUserDatabaseTimeoutLimit = function (user, timeoutLimit, callback) {
     const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
     const role = _.template(global.environment.postgres_auth_user, { user_id: 1 })
+    const publicUser = global.environment.postgres.user;
 
     const psql = new PSQL({
         user: 'postgres',
@@ -862,30 +863,17 @@ TestClient.setUserDatabaseTimeoutLimit = function (user, userTimeoutLimit, callb
     });
 
     step(
-        function setTimeoutToUserRole (err, params) {
-            const next = this;
+        function configureTimeouts () {
+            const timeoutSQLs = [
+                `ALTER ROLE \"${publicUser}\" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                `ALTER ROLE \"${role}\" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                `ALTER DATABASE \"${dbname}\" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
+            ];
 
-            const timeoutQuery = `ALTER ROLE \"${role}\" SET statement_timeout to ${userTimeoutLimit}`;
-            psql.query(timeoutQuery, function (err) {
-                if (err) {
-                    return next(err);
-                }
-                next(null, params, psql);
-            });
+            const group = this.group();
+
+            timeoutSQLs.forEach(sql => psql.query(sql, group()));
         },
-        function setTimeoutToDatabase (err, params, psql) {
-            assert.ifError(err);
-
-            const timeoutQuery = `ALTER DATABASE \"${dbname}\" SET statement_timeout to ${userTimeoutLimit}`;
-
-            psql.query(timeoutQuery, this);
-        },
-        function finish (err) {
-            if (err) {
-                return callback(err);
-            }
-
-            callback();
-        }
+        callback
     );
 };
