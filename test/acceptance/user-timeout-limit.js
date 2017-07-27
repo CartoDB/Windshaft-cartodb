@@ -272,7 +272,7 @@ describe('user timeout limit', function () {
         });
     });
 
-    describe('user vector timeout limits', function () {
+    describe('vector', function () {
         beforeEach(function (done) {
             const mapconfig = createMapConfig();
             this.testClient = new TestClient(mapconfig, 1234);
@@ -302,7 +302,7 @@ describe('user timeout limit', function () {
         });
     });
 
-    describe('user interativity timeout limits', function () {
+    describe('interativity', function () {
         beforeEach(function (done) {
             const mapconfig = createMapConfig();
             this.testClient = new TestClient(mapconfig, 1234);
