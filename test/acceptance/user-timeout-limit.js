@@ -68,7 +68,7 @@ const createMapConfig = ({
     }
 });
 
-describe.only('user timeout limit', function () {
+describe('user timeout limit', function () {
     before(function (done) {
         TestClient.setUserDatabaseTimeoutLimit('localhost', 900, done);
     });
@@ -196,23 +196,24 @@ describe.only('user timeout limit', function () {
         describe('with onTileErrorStrategy ENABLED', function () {
             let onTileErrorStrategy;
 
-            beforeEach(function () {
+            beforeEach(function (done) {
                 onTileErrorStrategy = global.environment.enabledFeatures.onTileErrorStrategy;
                 global.environment.enabledFeatures.onTileErrorStrategy = true;
-            });
 
-            afterEach(function () {
-                global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
-            });
-
-            beforeEach(function (done) {
                 const mapconfig = createMapConfig();
                 this.testClient = new TestClient(mapconfig, 1234);
                 this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
             });
 
             afterEach(function (done) {
-                this.testClient.drain(done);
+                global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
+
+                this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    this.testClient.drain(done);
+                });
             });
 
 
@@ -231,23 +232,24 @@ describe.only('user timeout limit', function () {
         describe('with onTileErrorStrategy DISABLED', function() {
             var onTileErrorStrategy;
 
-            beforeEach(function() {
+            beforeEach(function (done) {
                 onTileErrorStrategy = global.environment.enabledFeatures.onTileErrorStrategy;
                 global.environment.enabledFeatures.onTileErrorStrategy = false;
-            });
 
-            afterEach(function() {
-                global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
-            });
-
-            beforeEach(function (done) {
                 const mapconfig = createMapConfig();
                 this.testClient = new TestClient(mapconfig, 1234);
                 this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
             });
 
             afterEach(function (done) {
-                this.testClient.drain(done);
+                global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
+
+                this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    this.testClient.drain(done);
+                });
             });
 
             it('layergroup creation works even if render tile is slow', function (done) {
@@ -274,7 +276,12 @@ describe.only('user timeout limit', function () {
         });
 
         afterEach(function (done) {
-            this.testClient.drain(done);
+            this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
+                if (err) {
+                    return done(err);
+                }
+                this.testClient.drain(done);
+            });
         });
 
         it('layergroup creation works but vector tile request fails due to render timeout', function (done) {
@@ -304,7 +311,12 @@ describe.only('user timeout limit', function () {
         });
 
         afterEach(function (done) {
-            this.testClient.drain(done);
+            this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
+                if (err) {
+                    return done(err);
+                }
+                this.testClient.drain(done);
+            });
         });
 
         it('layergroup creation works but "grid.json" tile request fails due to render timeout', function (done) {
