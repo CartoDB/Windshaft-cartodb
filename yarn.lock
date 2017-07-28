@@ -2113,7 +2113,7 @@ tilelive-bridge@cartodb/tilelive-bridge#query-timeout:
 
 tilelive-mapnik@cartodb/tilelive-mapnik#custom-timeout:
   version "0.6.18-cdb2"
-  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/d9bfe27a4d5120be92e71337474135e2877e9cd4"
+  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/f9042e5eab92e26fb9e2a6ace65af92cc176a218"
   dependencies:
     generic-pool "~2.4.0"
     mapnik "3.5.14"
