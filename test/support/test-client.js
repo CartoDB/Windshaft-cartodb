@@ -852,8 +852,9 @@ TestClient.prototype.setUserRenderTimeoutLimit = function (user, userTimeoutLimi
 
 TestClient.setUserDatabaseTimeoutLimit = function (user, timeoutLimit, callback) {
     const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
-    const role = _.template(global.environment.postgres_auth_user, { user_id: 1 })
-    const publicUser = global.environment.postgres.user;
+    const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 })
+    const pass = _.template(global.environment.postgres_auth_pass, { user_id: 1 })
+    const publicuser = global.environment.postgres.user;
 
     const psql = new PSQL({
         user: 'postgres',
@@ -865,9 +866,9 @@ TestClient.setUserDatabaseTimeoutLimit = function (user, timeoutLimit, callback)
     step(
         function configureTimeouts () {
             const timeoutSQLs = [
-                `ALTER ROLE \"${publicUser}\" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
-                `ALTER ROLE \"${role}\" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
-                `ALTER DATABASE \"${dbname}\" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
+                // `ALTER ROLE "${publicuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                `ALTER ROLE "${dbuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                // `ALTER DATABASE "${dbname}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
             ];
 
             const group = this.group();
