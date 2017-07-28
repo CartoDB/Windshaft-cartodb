@@ -14,6 +14,7 @@ var lzmaWorker = new LZMA();
 var redis = require('redis');
 var nock = require('nock');
 var log4js = require('log4js');
+var pg = require('pg');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
@@ -125,6 +126,12 @@ afterEach(function(done) {
             });
         });
     });
+});
+
+
+afterEach(function () {
+    // TODO: this method will be replaced by psql.end
+    pg.end();
 });
 
 function deleteRedisKeys(keysToDelete, callback) {
