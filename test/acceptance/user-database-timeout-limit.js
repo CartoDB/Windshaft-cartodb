@@ -5,7 +5,7 @@ const TestClient = require('../support/test-client');
 
 const pointSleepSql = `
     SELECT
-        pg_sleep(1),
+        pg_sleep(0.5),
         'SRID=3857;POINT(0 0)'::geometry the_geom_webmercator,
         1 cartodb_id,
         2 val
@@ -55,7 +55,7 @@ const createMapConfig = ({
 
 describe('user database timeout limit', function () {
     beforeEach(function (done) {
-        TestClient.setUserDatabaseTimeoutLimit('localhost', 50, done);
+        TestClient.setUserDatabaseTimeoutLimit('localhost', 300, done);
     });
 
     afterEach(function (done) {

@@ -16,7 +16,7 @@ const pointSleepSql = `
 // during instatiation we validate tile 30/0/0, creating a point in that tile `pg_sleep` will throw a timeout
 const validationPointSleepSql = `
     SELECT
-        pg_sleep(1),
+        pg_sleep(0.5),
         ST_Transform('SRID=4326;POINT(-180 85.05112877)'::geometry, 3857) the_geom_webmercator,
         1 cartodb_id,
         2 val
