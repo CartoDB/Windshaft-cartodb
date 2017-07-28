@@ -7,7 +7,7 @@ const timeoutErrorTilePath = `${process.cwd()}/assets/render-timeout-fallback.pn
 
 const pointSleepSql = `
     SELECT
-        pg_sleep(1),
+        pg_sleep(0.5),
         'SRID=3857;POINT(0 0)'::geometry the_geom_webmercator,
         1 cartodb_id,
         2 val
