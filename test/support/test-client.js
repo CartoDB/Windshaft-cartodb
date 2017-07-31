@@ -471,6 +471,11 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
     }
 
     var layergroupId;
+
+    if (params.layergroupid) {
+        layergroupId = params.layergroupid
+    }
+
     step(
         function createTemplate () {
             var next = this;
@@ -511,6 +516,10 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
         },
         function createLayergroup(err, templateId) {
             var next = this;
+
+            if (layergroupId) {
+                return next(null, layergroupId);
+            }
 
             var data = templateId ? params.placeholders : self.mapConfig
             var path  = templateId ?
