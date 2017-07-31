@@ -87,7 +87,11 @@ describe('user database timeout limit', function () {
 
                 assert.deepEqual(dataview, {
                     errors: ['canceling statement due to statement timeout'],
-                    errors_with_context: [{ type: 'unknown', message: 'canceling statement due to statement timeout' }]
+                    errors_with_context: [{
+                        type: 'limit',
+                        subtype: 'datasource',
+                        message: 'canceling statement due to statement timeout'
+                    }]
                 });
 
                 done();
@@ -127,7 +131,8 @@ describe('user database timeout limit', function () {
                     assert.deepEqual(timeoutError, {
                         errors: [ 'TorqueRenderer: canceling statement due to statement timeout' ],
                         errors_with_context: [{
-                            type: 'layer',
+                            type: 'limit',
+                            subtype: 'datasource',
                             message: 'TorqueRenderer: canceling statement due to statement timeout',
                             layer: { id: 'torque-layer0', index: 0, type: 'torque' }
                         }]
@@ -195,7 +200,8 @@ describe('user database timeout limit', function () {
                         assert.deepEqual(attributes, {
                             errors: [ 'TorqueRenderer: canceling statement due to statement timeout' ],
                             errors_with_context: [{
-                                type: 'unknown',
+                                type: 'limit',
+                                subtype: 'datasource',
                                 message: 'TorqueRenderer: canceling statement due to statement timeout',
                             }]
                         });
@@ -241,7 +247,8 @@ describe('user database timeout limit', function () {
                     assert.deepEqual(timeoutError, {
                         errors: [ 'canceling statement due to statement timeout' ],
                         errors_with_context: [{
-                            type: 'layer',
+                            type: 'limit',
+                            subtype: 'datasource',
                             message: 'canceling statement due to statement timeout',
                             layer: {
                                 id: 'layer0',
@@ -317,7 +324,8 @@ describe('user database timeout limit', function () {
                         assert.deepEqual(attributes, {
                             errors: ['canceling statement due to statement timeout'],
                             errors_with_context: [{
-                                type: 'unknown',
+                                type: 'limit',
+                                subtype: 'datasource',
                                 message: 'canceling statement due to statement timeout'
                             }]
                         });

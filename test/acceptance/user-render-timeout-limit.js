@@ -97,7 +97,8 @@ describe('user render timeout limit', function () {
                 assert.deepEqual(timeoutError, {
                     errors: ["Render timed out"],
                     errors_with_context: [{
-                        type: "layer",
+                        type: 'limit',
+                        subtype: 'render',
                         message: "Render timed out",
                         layer: {
                             id: "layer0",
@@ -181,10 +182,18 @@ describe('user render timeout limit', function () {
                     }
                 };
 
-                this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
+                this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
                     assert.ifError(err);
 
-                    assert.equal(tile.errors[0], 'Render timed out');
+                    assert.deepEqual(timeoutError, {
+                        errors: ["Render timed out"],
+                        errors_with_context: [{
+                            type: 'limit',
+                            subtype: 'render',
+                            message: "Render timed out"
+                        }]
+                    });
+
                     done();
                 });
             });
@@ -223,7 +232,11 @@ describe('user render timeout limit', function () {
 
                 assert.deepEqual(tile, {
                     errors: ['Render timed out'],
-                    errors_with_context: [{ type: 'unknown', message: 'Render timed out' }]
+                    errors_with_context: [{
+                        type: 'limit',
+                        subtype: 'render',
+                        message: 'Render timed out'
+                    }]
                 });
 
                 done();
@@ -264,7 +277,11 @@ describe('user render timeout limit', function () {
 
                 assert.deepEqual(tile, {
                     errors: ['Render timed out'],
-                    errors_with_context: [{ type: 'unknown', message: 'Render timed out' }]
+                    errors_with_context: [{
+                        type: 'limit',
+                        subtype: 'render',
+                        message: 'Render timed out'
+                    }]
                 });
 
                 done();
