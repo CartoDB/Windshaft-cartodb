@@ -791,6 +791,110 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
     );
 };
 
+TestClient.prototype.getAttributes  = function(params, callback) {
+    var self = this;
+
+    if (!Number.isFinite(params.featureId)) {
+        throw new Error('featureId param must be a number')
+    }
+
+    if (!Number.isFinite(params.layer)) {
+        throw new Error('layer param must be a number')
+    }
+
+    var url = '/api/v1/map';
+
+    if (this.apiKey) {
+        url += '?' + qs.stringify({ api_key: this.apiKey });
+    }
+
+    var layergroupid;
+
+    if (params.layergroupid) {
+        layergroupid = params.layergroupid
+    }
+
+    step(
+        function createLayergroup() {
+            var next = this;
+
+            if (layergroupid) {
+                return next(null, layergroupid);
+            }
+
+            assert.response(self.server,
+                {
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.mapConfig)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    var parsedBody = JSON.parse(res.body);
+
+                    return next(null, parsedBody.layergroupid);
+                }
+            );
+        },
+        function getAttributes(err, _layergroupid) {
+            assert.ifError(err);
+
+            var next = this;
+
+            layergroupid = _layergroupid;
+
+            url = `/api/v1/map/${layergroupid}/${params.layer}/attributes/${params.featureId}`;
+
+            if (self.apiKey) {
+                url += '?' + qs.stringify({api_key: self.apiKey});
+            }
+
+            var request = {
+                url: url,
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            };
+
+            var expectedResponse = params.response || {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            };
+
+            assert.response(self.server, request, expectedResponse, function (res, err) {
+                assert.ifError(err);
+
+                var attributes = JSON.parse(res.body);
+
+                next(null, res, attributes);
+            });
+        },
+        function finish(err, res, attributes) {
+            if (layergroupid) {
+                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
+                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            }
+
+            return callback(err, res, attributes);
+        }
+    );
+};
+
 TestClient.prototype.drain = function(callback) {
     helper.deleteRedisKeys(this.keysToDelete, callback);
 };
