@@ -980,9 +980,9 @@ TestClient.setUserDatabaseTimeoutLimit = function (user, timeoutLimit, callback)
     step(
         function configureTimeouts () {
             const timeoutSQLs = [
-                // `ALTER ROLE "${publicuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                `ALTER ROLE "${publicuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
                 `ALTER ROLE "${dbuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
-                // `ALTER DATABASE "${dbname}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
+                `ALTER DATABASE "${dbname}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
             ];
 
             const group = this.group();
