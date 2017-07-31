@@ -707,7 +707,7 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
                 return callback(err);
             }
 
-            return callback(null, JSON.parse(res.body));
+            return callback(null, parsedBody);
         }
     );
 };
