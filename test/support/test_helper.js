@@ -128,11 +128,10 @@ afterEach(function(done) {
     });
 });
 
-
-afterEach(function () {
+function cleanPGPoolConnections () {
     // TODO: this method will be replaced by psql.end
     pg.end();
-});
+}
 
 function deleteRedisKeys(keysToDelete, callback) {
 
@@ -196,6 +195,7 @@ module.exports = {
   checkSurrogateKey: checkSurrogateKey,
   checkCache: checkCache,
   rmdirRecursiveSync: rmdirRecursiveSync,
-  configureMetadata
+  configureMetadata,
+  cleanPGPoolConnections
 };
 
