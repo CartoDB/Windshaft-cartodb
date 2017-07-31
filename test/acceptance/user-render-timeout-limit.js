@@ -95,11 +95,11 @@ describe('user render timeout limit', function () {
                 assert.ifError(err);
 
                 assert.deepEqual(timeoutError, {
-                    errors: ["Render timed out"],
+                    errors: ["You are over platform limits. Please contact us to know more details"],
                     errors_with_context: [{
                         type: 'limit',
                         subtype: 'render',
-                        message: "Render timed out",
+                        message: "You are over platform limits. Please contact us to know more details",
                         layer: {
                             id: "layer0",
                             index: 0,
@@ -186,11 +186,11 @@ describe('user render timeout limit', function () {
                     assert.ifError(err);
 
                     assert.deepEqual(timeoutError, {
-                        errors: ["Render timed out"],
+                        errors: ["You are over platform limits. Please contact us to know more details"],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'render',
-                            message: "Render timed out"
+                            message: "You are over platform limits. Please contact us to know more details"
                         }]
                     });
 
@@ -231,11 +231,11 @@ describe('user render timeout limit', function () {
                 assert.ifError(err);
 
                 assert.deepEqual(tile, {
-                    errors: ['Render timed out'],
+                    errors: ['You are over platform limits. Please contact us to know more details'],
                     errors_with_context: [{
                         type: 'limit',
                         subtype: 'render',
-                        message: 'Render timed out'
+                        message: 'You are over platform limits. Please contact us to know more details'
                     }]
                 });
 
@@ -276,11 +276,11 @@ describe('user render timeout limit', function () {
                 assert.ifError(err);
 
                 assert.deepEqual(tile, {
-                    errors: ['Render timed out'],
+                    errors: ['You are over platform limits. Please contact us to know more details'],
                     errors_with_context: [{
                         type: 'limit',
                         subtype: 'render',
-                        message: 'Render timed out'
+                        message: 'You are over platform limits. Please contact us to know more details'
                     }]
                 });
 

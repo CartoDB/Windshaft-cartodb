@@ -102,11 +102,13 @@ describe('render limits', function() {
                 assert.response(server,
                     createRequest(layergroup, user),
                     {
-                        status: 400
+                        status: 429
                     },
                     function(res) {
                         var parsed = JSON.parse(res.body);
-                        assert.deepEqual(parsed.errors, [ 'Render timed out' ]);
+                        assert.deepEqual(parsed.errors, [
+                            'You are over platform limits. Please contact us to know more details'
+                        ]);
                         done();
                     }
                 );
@@ -167,11 +169,13 @@ describe('render limits', function() {
                                 encoding: 'binary'
                             },
                             {
-                                status: 400
+                                status: 429
                             },
                             function(res) {
                                 var parsed = JSON.parse(res.body);
-                                assert.deepEqual(parsed.errors, ['Render timed out']);
+                                assert.deepEqual(parsed.errors, [
+                                    'You are over platform limits. Please contact us to know more details'
+                                ]);
                                 done();
                             }
                         );

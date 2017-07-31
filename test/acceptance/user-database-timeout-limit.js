@@ -86,11 +86,11 @@ describe('user database timeout limit', function () {
                 assert.ifError(err);
 
                 assert.deepEqual(dataview, {
-                    errors: ['canceling statement due to statement timeout'],
+                    errors: ['You are over platform limits. Please contact us to know more details'],
                     errors_with_context: [{
                         type: 'limit',
                         subtype: 'datasource',
-                        message: 'canceling statement due to statement timeout'
+                        message: 'You are over platform limits. Please contact us to know more details'
                     }]
                 });
 
@@ -129,11 +129,11 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ 'TorqueRenderer: canceling statement due to statement timeout' ],
+                        errors: [ 'You are over platform limits. Please contact us to know more details' ],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: 'TorqueRenderer: canceling statement due to statement timeout',
+                            message: 'You are over platform limits. Please contact us to know more details',
                             layer: { id: 'torque-layer0', index: 0, type: 'torque' }
                         }]
                     });
@@ -198,11 +198,11 @@ describe('user database timeout limit', function () {
                         assert.ifError(err);
 
                         assert.deepEqual(attributes, {
-                            errors: [ 'TorqueRenderer: canceling statement due to statement timeout' ],
+                            errors: [ 'You are over platform limits. Please contact us to know more details' ],
                             errors_with_context: [{
                                 type: 'limit',
                                 subtype: 'datasource',
-                                message: 'TorqueRenderer: canceling statement due to statement timeout',
+                                message: 'You are over platform limits. Please contact us to know more details',
                             }]
                         });
 
@@ -245,11 +245,11 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ 'canceling statement due to statement timeout' ],
+                        errors: [ 'You are over platform limits. Please contact us to know more details' ],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: 'canceling statement due to statement timeout',
+                            message: 'You are over platform limits. Please contact us to know more details',
                             layer: {
                                 id: 'layer0',
                                 index: 0,
@@ -322,11 +322,11 @@ describe('user database timeout limit', function () {
                         assert.ifError(err);
 
                         assert.deepEqual(attributes, {
-                            errors: ['canceling statement due to statement timeout'],
+                            errors: ['You are over platform limits. Please contact us to know more details'],
                             errors_with_context: [{
                                 type: 'limit',
                                 subtype: 'datasource',
-                                message: 'canceling statement due to statement timeout'
+                                message: 'You are over platform limits. Please contact us to know more details'
                             }]
                         });
 
