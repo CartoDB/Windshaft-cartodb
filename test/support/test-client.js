@@ -586,31 +586,29 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             };
 
-            var expectedResponse = {
-                status: params.status || 200,
+            var expectedResponse = Object.assign({}, {
+                status: 200,
                 headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
+                    'Content-Type': 'image/png'
                 }
-            };
+            }, params.response);
+
 
             var isPng = format.match(/png$/);
 
             if (isPng) {
                 request.encoding = 'binary';
-                expectedResponse.headers['Content-Type'] = 'image/png';
             }
 
             var isMvt = format.match(/mvt$/);
 
             if (isMvt) {
                 request.encoding = 'binary';
-
                 if (expectedResponse.status === 200) {
                     expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
-                } else if (expectedResponse.status === 204) {
-                    expectedResponse.headers['Content-Type'] = undefined;
                 }
             }
+
 
             var isGeojson = format.match(/geojson$/);
 
