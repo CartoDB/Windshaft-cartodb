@@ -29,8 +29,7 @@ const createMapConfig = ({
     cartocss = TestClient.CARTOCSS.POINTS,
     cartocss_version = '2.3.0',
     interactivity = 'cartodb_id',
-    countBy = 'cartodb_id',
-    attributes
+    countBy = 'cartodb_id'
 } = {}) => ({
     version,
     layers: [{
@@ -41,8 +40,7 @@ const createMapConfig = ({
             },
             cartocss,
             cartocss_version,
-            interactivity,
-            attributes
+            interactivity
         }
     }],
     analyses: [
