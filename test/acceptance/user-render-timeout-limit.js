@@ -85,7 +85,7 @@ describe('user render timeout limit', function () {
 
         it('layergroup creation fails due to statement timeout', function (done) {
             const expectedResponse = {
-                status: 400,
+                status: 429,
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
@@ -174,7 +174,7 @@ describe('user render timeout limit', function () {
             it('layergroup creation works and render tile fails', function (done) {
                 var params = {
                     response: {
-                        status: 400,
+                        status: 429,
                         headers: {
                             'Content-Type': 'application/json; charset=utf-8'
                         }
@@ -211,7 +211,7 @@ describe('user render timeout limit', function () {
             const params = {
                 format: 'mvt',
                 response: {
-                    status: 400,
+                    status: 429,
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
@@ -252,7 +252,7 @@ describe('user render timeout limit', function () {
                 layers: 'mapnik',
                 format: 'grid.json',
                 response: {
-                    status: 400,
+                    status: 429,
                     headers: {
                         'Content-Type': 'application/x-protobuf'
                     }

@@ -75,7 +75,7 @@ describe('user database timeout limit', function () {
         it('layergroup creation works but dataview request fails due to statement timeout', function (done) {
             const params = {
                 response: {
-                    status: 400,
+                    status: 429,
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
@@ -117,7 +117,7 @@ describe('user database timeout limit', function () {
 
             it('fails due to statement timeout', function (done) {
                 const expectedResponse = {
-                    status: 400,
+                    status: 429,
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
@@ -182,7 +182,7 @@ describe('user database timeout limit', function () {
                         format: 'torque.json',
                         layers: [ 0 ],
                         response: {
-                            status: 400,
+                            status: 429,
                             headers: {
                                 'Content-Type': 'application/json; charset=utf-8'
                             }
@@ -231,7 +231,7 @@ describe('user database timeout limit', function () {
 
             it('layergroup creation fails due to statement timeout', function (done) {
                 const expectedResponse = {
-                    status: 400,
+                    status: 429,
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
@@ -304,7 +304,7 @@ describe('user database timeout limit', function () {
                         featureId: 1,
                         layer: 0,
                         response: {
-                            status: 400,
+                            status: 429,
                             headers: {
                                 'Content-Type': 'application/json; charset=utf-8'
                             }
