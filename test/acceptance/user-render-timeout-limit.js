@@ -136,7 +136,6 @@ describe('user render timeout limit', function () {
                 });
             });
 
-
             it('layergroup creation works but tile request fails due to render timeout', function (done) {
                 this.testClient.getTile(0, 0, 0, {}, (err, res, tile) => {
                     assert.ifError(err);
@@ -172,10 +171,14 @@ describe('user render timeout limit', function () {
                 });
             });
 
-            it('layergroup creation works even if render tile is slow', function (done) {
+            it('layergroup creation works and render tile fails', function (done) {
                 var params = {
-                    status: 400,
-                    contentType: 'application/json; charset=utf-8'
+                    response: {
+                        status: 400,
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    }
                 };
 
                 this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
@@ -207,7 +210,12 @@ describe('user render timeout limit', function () {
         it('layergroup creation works but vector tile request fails due to render timeout', function (done) {
             const params = {
                 format: 'mvt',
-                status: 400
+                response: {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }
             };
 
             this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
@@ -243,7 +251,12 @@ describe('user render timeout limit', function () {
             const params = {
                 layers: 'mapnik',
                 format: 'grid.json',
-                status: 400
+                response: {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/x-protobuf'
+                    }
+                }
             };
 
             this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
