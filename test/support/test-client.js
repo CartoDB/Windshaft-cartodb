@@ -967,6 +967,9 @@ TestClient.setUserDatabaseTimeoutLimit = function (user, timeoutLimit, callback)
     const pass = _.template(global.environment.postgres_auth_pass, { user_id: 1 })
     const publicuser = global.environment.postgres.user;
 
+    // we need to guarantee all new connections have the new settings
+    helper.cleanPGPoolConnections()
+
     const psql = new PSQL({
         user: 'postgres',
         dbname: dbname,
@@ -989,3 +992,8 @@ TestClient.setUserDatabaseTimeoutLimit = function (user, timeoutLimit, callback)
         callback
     );
 };
+
+TestClient.cleanDatabaseConnections = function () {
+    helper.cleanPGPoolConnections()
+}
+
