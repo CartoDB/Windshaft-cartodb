@@ -58,20 +58,18 @@ const createMapConfig = ({
 describe('user database timeout limit', function () {
     describe('dataview', function () {
         beforeEach(function (done) {
+            const mapconfig = createMapConfig();
+            this.testClient = new TestClient(mapconfig, 1234);
             TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
         });
 
         afterEach(function (done) {
-            TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
-        });
-
-        beforeEach(function () {
-            const mapconfig = createMapConfig();
-            this.testClient = new TestClient(mapconfig, 1234);
-        });
-
-        afterEach(function (done) {
-            this.testClient.drain(done);
+            TestClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
+                if (err) {
+                    return done(err);
+                }
+                this.testClient.drain(done);
+            });
         });
 
         it('layergroup creation works but dataview request fails due to statement timeout', function (done) {
