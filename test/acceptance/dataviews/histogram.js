@@ -160,7 +160,8 @@ describe('histogram-dataview for date column type', function() {
                 },
                 type: 'histogram',
                 options: {
-                    column: 'd'
+                    column: 'd',
+                    aggregation: 'auto'
                 }
             },
             date_histogram: {
@@ -179,7 +180,8 @@ describe('histogram-dataview for date column type', function() {
                 },
                 type: 'histogram',
                 options: {
-                    column: 'd'
+                    column: 'd',
+                    aggregation: 'auto'
                 }
             },
             minute_histogram: {
