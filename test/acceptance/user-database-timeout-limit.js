@@ -208,6 +208,32 @@ describe('user database timeout limit', function () {
                         done();
                     });
                 });
+
+                it('"static png" fails due to statement timeout', function (done) {
+                    const params = {
+                        layergroupid: this.layergroupid,
+                        zoom: 0,
+                        lat: 0,
+                        lng: 0,
+                        width: 256,
+                        height: 256,
+                        format: 'png',
+                        response: {
+                            status: 429,
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8'
+                            }
+                        }
+                    };
+
+                    this.testClient.getStaticCenter(params, function (err, res, timeoutError) {
+                        assert.ifError(err);
+
+                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+
+                        done();
+                    });
+                });
             });
         });
     });
