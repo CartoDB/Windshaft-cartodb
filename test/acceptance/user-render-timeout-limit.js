@@ -303,6 +303,8 @@ describe('user render timeout limit', function () {
             });
 
             afterEach(function (done) {
+                global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
+
                 this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
                     if (err) {
                         return done(err);
