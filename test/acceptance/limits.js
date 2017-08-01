@@ -107,7 +107,7 @@ describe('render limits', function() {
                     function(res) {
                         var parsed = JSON.parse(res.body);
                         assert.deepEqual(parsed.errors, [
-                            'You are over platform limits. Please contact us to know more details'
+                            'You are over platform\'s limits. Please contact us to know more details'
                         ]);
                         done();
                     }
@@ -174,7 +174,7 @@ describe('render limits', function() {
                             function(res) {
                                 var parsed = JSON.parse(res.body);
                                 assert.deepEqual(parsed.errors, [
-                                    'You are over platform limits. Please contact us to know more details'
+                                    'You are over platform\'s limits. Please contact us to know more details'
                                 ]);
                                 done();
                             }
