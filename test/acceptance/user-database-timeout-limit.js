@@ -55,6 +55,15 @@ const createMapConfig = ({
     }
 });
 
+const DATASOURCE_TIMEOUT_ERROR = {
+    errors: ['You are over platform limits. Please contact us to know more details'],
+    errors_with_context: [{
+        type: 'limit',
+        subtype: 'datasource',
+        message: 'You are over platform limits. Please contact us to know more details'
+    }]
+};
+
 describe('user database timeout limit', function () {
     describe('dataview', function () {
         beforeEach(function (done) {
@@ -85,21 +94,14 @@ describe('user database timeout limit', function () {
             this.testClient.getDataview('count', params, (err, dataview) => {
                 assert.ifError(err);
 
-                assert.deepEqual(dataview, {
-                    errors: ['You are over platform limits. Please contact us to know more details'],
-                    errors_with_context: [{
-                        type: 'limit',
-                        subtype: 'datasource',
-                        message: 'You are over platform limits. Please contact us to know more details'
-                    }]
-                });
+                assert.deepEqual(dataview, DATASOURCE_TIMEOUT_ERROR);
 
                 done();
             });
         });
     });
 
-    describe('torque:', function () {
+    describe('torque', function () {
         describe('while validating in layergroup creation', function () {
             beforeEach(function (done) {
                 const mapconfig = createMapConfig({
@@ -143,8 +145,8 @@ describe('user database timeout limit', function () {
             });
         });
 
-        describe('fetching "torque.json" tile', function () {
-            before(function (done) {
+        describe('fetching torque tiles', function () {
+            beforeEach(function (done) {
                 const mapconfig = createMapConfig({
                     type: 'torque',
                     cartocss: TestClient.CARTOCSS.TORQUE
@@ -181,7 +183,7 @@ describe('user database timeout limit', function () {
                     TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
                 });
 
-                it('fails due to statement timeout', function (done) {
+                it('"torque.json" fails due to statement timeout', function (done) {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'torque.json',
@@ -197,14 +199,29 @@ describe('user database timeout limit', function () {
                     this.testClient.getTile(0, 0, 0, params, (err, res, attributes) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(attributes, {
-                            errors: [ 'You are over platform limits. Please contact us to know more details' ],
-                            errors_with_context: [{
-                                type: 'limit',
-                                subtype: 'datasource',
-                                message: 'You are over platform limits. Please contact us to know more details',
-                            }]
-                        });
+                        assert.deepEqual(attributes, DATASOURCE_TIMEOUT_ERROR);
+
+                        done();
+                    });
+                });
+
+                it('".png" fails due to statement timeout', function (done) {
+                    const params = {
+                        layergroupid: this.layergroupid,
+                        format: 'torque.png',
+                        layers: [ 0 ],
+                        response: {
+                            status: 429,
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8'
+                            }
+                        }
+                    };
+
+                    this.testClient.getTile(0, 0, 0, params, (err, res, attributes) => {
+                        assert.ifError(err);
+
+                        assert.deepEqual(attributes, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });
@@ -321,14 +338,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getAttributes(params, (err, res, attributes) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(attributes, {
-                            errors: ['You are over platform limits. Please contact us to know more details'],
-                            errors_with_context: [{
-                                type: 'limit',
-                                subtype: 'datasource',
-                                message: 'You are over platform limits. Please contact us to know more details'
-                            }]
-                        });
+                        assert.deepEqual(attributes, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });
