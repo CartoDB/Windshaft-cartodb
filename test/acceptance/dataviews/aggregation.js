@@ -145,4 +145,182 @@ describe('aggregations happy cases', function() {
             });
         });
     });
+
+    var widgetSearchExpects = {
+        'count': [ { category: 'other_a', value: 3 } ],
+        'sum': [ { category: 'other_a', value: 6 } ],
+        'avg': [ { category: 'other_a', value: 2 } ],
+        'max': [ { category: 'other_a', value: 3 } ],
+        'min': [ { category: 'other_a', value: 1 } ]
+    };
+
+    Object.keys(operations_and_values).forEach(function (operation) {
+        var description = 'should search OTHER category using "' + operation + '"';
+
+        it(description, function (done) {
+            this.testClient = new TestClient(aggregationOperationMapConfig(operation, query_other, 'cat', 'val'));
+            this.testClient.widgetSearch('cat', 'other_a', function (err, res, searchResult) {
+                assert.ifError(err);
+
+                assert.ok(searchResult);
+                assert.equal(searchResult.type, 'aggregation');
+
+                assert.equal(searchResult.categories.length, 1);
+                assert.deepEqual(
+                    searchResult.categories,
+                    widgetSearchExpects[operation]
+                );
+                done();
+            });
+        });
+    });
+});
+
+describe('aggregation-dataview: special float values', function() {
+
+    afterEach(function(done) {
+        if (this.testClient) {
+            this.testClient.drain(done);
+        } else {
+            done();
+        }
+    });
+
+    function createMapConfig(layers, dataviews, analysis) {
+        return {
+            version: '1.5.0',
+            layers: layers,
+            dataviews: dataviews || {},
+            analyses: analysis || []
+        };
+    }
+
+    var mapConfig = createMapConfig(
+        [
+            {
+                "type": "cartodb",
+                "options": {
+                    "source": {
+                        "id": "a0"
+                    },
+                    "cartocss": "#points { marker-width: 10; marker-fill: red; }",
+                    "cartocss_version": "2.3.0"
+                }
+            }
+        ],
+        {
+            val_aggregation: {
+                source: {
+                    id: 'a0'
+                },
+                type: 'aggregation',
+                options: {
+                    column: 'cat',
+                    aggregation: 'avg',
+                    aggregationColumn: 'val'
+                }
+            },
+            sum_aggregation_numeric: {
+                source: {
+                    id: 'a1'
+                },
+                type: 'aggregation',
+                options: {
+                    column: 'cat',
+                    aggregation: 'sum',
+                    aggregationColumn: 'val'
+                }
+            }
+        },
+        [
+            {
+                "id": "a0",
+                "type": "source",
+                "params": {
+                    "query": [
+                        'SELECT',
+                        '  null::geometry the_geom_webmercator,',
+                        '  CASE',
+                        '    WHEN x % 4 = 0 THEN \'infinity\'::float',
+                        '    WHEN x % 4 = 1 THEN \'-infinity\'::float',
+                        '    WHEN x % 4 = 2 THEN \'NaN\'::float',
+                        '    ELSE x',
+                        '  END AS val,',
+                        '  CASE',
+                        '    WHEN x % 2 = 0 THEN \'category_1\'',
+                        '    ELSE \'category_2\'',
+                        '  END AS cat',
+                        'FROM generate_series(1, 1000) x'
+                    ].join('\n')
+                }
+            }, {
+                "id": "a1",
+                "type": "source",
+                "params": {
+                    "query": [
+                        'SELECT',
+                        '  null::geometry the_geom_webmercator,',
+                        '  CASE',
+                        '    WHEN x % 3 = 0 THEN \'NaN\'::numeric',
+                        '    WHEN x % 3 = 1 THEN x',
+                        '    ELSE x',
+                        '  END AS val,',
+                        '  CASE',
+                        '    WHEN x % 2 = 0 THEN \'category_1\'',
+                        '    ELSE \'category_2\'',
+                        '  END AS cat',
+                        'FROM generate_series(1, 1000) x'
+                    ].join('\n')
+                }
+            }
+        ]
+    );
+
+    // Source a0
+    // -----------------------------------------------
+    // the_geom_webmercator  |    val    |    cat
+    // ----------------------+-----------+------------
+    //                       | -Infinity | category_2
+    //                       |       NaN | category_1
+    //                       |         3 | category_2
+    //                       |  Infinity | category_1
+    //                       | -Infinity | category_2
+    //                       |       NaN | category_1
+    //                       |         7 | category_2
+    //                       |  Infinity | category_1
+    //                       | -Infinity | category_2
+    //                       |       NaN | category_1
+    //                       |        11 | category_2
+    //                       |         " |          "
+
+    var filters = [{ own_filter: 0 }, {}];
+    filters.forEach(function (filter) {
+        it('should handle special float values using filter: ' + JSON.stringify(filter), function(done) {
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview('val_aggregation', { own_filter: 0 }, function(err, dataview) {
+                assert.ifError(err);
+                assert.ok(dataview.infinities === (250 + 250));
+                assert.ok(dataview.nans === 250);
+                assert.ok(dataview.categories.length === 1);
+                dataview.categories.forEach(function (category) {
+                    assert.ok(category.category === 'category_2');
+                    assert.ok(category.value === 501);
+                });
+                done();
+            });
+        });
+
+        it('should handle special numeric values using filter: ' + JSON.stringify(filter), function(done) {
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview('sum_aggregation_numeric', { own_filter: 0 }, function(err, dataview) {
+                assert.ifError(err);
+                assert.ok(dataview.nans === 333);
+                assert.ok(dataview.categories.length === 2);
+                dataview.categories.forEach(function (category) {
+                    assert.ok(category.value !== null);
+                });
+                done();
+            });
+        });
+    });
 });

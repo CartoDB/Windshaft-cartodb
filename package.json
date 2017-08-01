@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "3.9.3",
+  "version": "3.9.9",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -16,11 +16,12 @@
   "contributors": [
     "Simon Tokumine <simon@vizzuality.com>",
     "Javi Santana <jsantana@vizzuality.com>",
-    "Sandro Santilli <strk@vizzuality.com>"
+    "Sandro Santilli <strk@vizzuality.com>",
+    "Carlos Matallín <matallo@carto.com>"
   ],
   "dependencies": {
     "body-parser": "~1.14.0",
-    "camshaft": "0.55.5",
+    "camshaft": "0.55.6",
     "cartodb-psql": "0.8.0",
     "cartodb-query-tables": "0.2.0",
     "cartodb-redis": "0.13.2",
@@ -37,9 +38,9 @@
     "request": "~2.79.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
-    "turbo-carto": "0.19.1",
+    "turbo-carto": "0.19.2",
     "underscore": "~1.6.0",
-    "windshaft": "3.2.1",
+    "windshaft": "3.2.2",
     "yargs": "~5.0.0"
   },
   "devDependencies": {

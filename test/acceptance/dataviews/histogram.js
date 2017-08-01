@@ -13,6 +13,15 @@ function createMapConfig(layers, dataviews, analysis) {
     };
 }
 
+function createMapConfig(layers, dataviews, analysis) {
+    return {
+        version: '1.5.0',
+        layers: layers,
+        dataviews: dataviews || {},
+        analyses: analysis || []
+    };
+}
+
 describe('histogram-dataview', function() {
 
     afterEach(function(done) {
@@ -90,7 +99,6 @@ describe('histogram-dataview', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('pop_max_histogram', params, function(err, res) {
             assert.ok(!err, err);
-
             assert.ok(res.errors);
             assert.equal(res.errors.length, 1);
             assert.ok(res.errors[0].match(/Invalid number format for parameter 'bins'/));
@@ -685,6 +693,73 @@ describe('histogram-dataview for date column type', function() {
             assert.ifError(err);
 
             assert.deepEqual(dataview, dataviewWithDailyAggAndOffsetFixture);
+            done();
+        });
+    });
+});
+
+
+describe('histogram-dataview: special float valuer', function() {
+
+    afterEach(function(done) {
+        if (this.testClient) {
+            this.testClient.drain(done);
+        } else {
+            done();
+        }
+    });
+
+    var mapConfig = createMapConfig(
+        [
+            {
+                "type": "cartodb",
+                "options": {
+                    "source": {
+                        "id": "a0"
+                    },
+                    "cartocss": "#points { marker-width: 10; marker-fill: red; }",
+                    "cartocss_version": "2.3.0"
+                }
+            }
+        ],
+        {
+            val_histogram: {
+                source: {
+                    id: 'a0'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'val'
+                }
+            }
+        },
+        [
+            {
+                "id": "a0",
+                "type": "source",
+                "params": {
+                    "query": [
+                        'SELECT',
+                        '  null::geometry the_geom_webmercator,',
+                        '  CASE',
+                        '    WHEN x % 4 = 0 THEN \'infinity\'::float',
+                        '    WHEN x % 4 = 1 THEN \'-infinity\'::float',
+                        '    WHEN x % 4 = 2 THEN \'NaN\'::float',
+                        '    ELSE x',
+                        '  END AS val',
+                        'FROM generate_series(1, 1000) x'
+                    ].join('\n')
+                }
+            }
+        ]
+    );
+
+    it('should filter infinities out and count them in the summary', function(done) {
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('val_histogram', {}, function(err, dataview) {
+            assert.ok(!err, err);
+            assert.ok(dataview.infinities === (250 + 250));
+            assert.ok(dataview.nans === 250);
             done();
         });
     });

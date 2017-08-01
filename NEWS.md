@@ -1,5 +1,43 @@
 # Changelog
 
+## 3.9.9
+Released 2017-mm-dd
+
+
+## 3.9.8
+Released 2017-07-21
+
+ - Upgrades windshaft to [3.2.2](https://github.com/CartoDB/windshaft/releases/tag/3.2.2).
+
+
+## 3.9.7
+Released 2017-07-20
+
+Bug fixes:
+ - Respond with 204 (No content) when vector tile has no data #712
+
+Announcements:
+ - Upgrades turbo-carto to [0.19.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.2)
+
+
+## 3.9.6
+Released 2017-07-11
+
+ - Dataviews: support for aggregation in search results #708
+
+
+## 3.9.5
+Released 2017-06-27
+
+ - Dataviews: support special numeric values (±Infinity, NaN) #700
+
+
+## 3.9.4
+Released 2017-06-22
+
+Announcements:
+ - Upgrades camshaft to [0.55.6](https://github.com/CartoDB/camshaft/releases/tag/0.55.6).
+
 ## 3.9.3
 Released 2017-06-16
 
