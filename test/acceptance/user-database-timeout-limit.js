@@ -390,11 +390,11 @@ describe('user database timeout limit', function () {
                     TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
                 });
 
-                it.skip('"grid.json" fails due to statement timeout', function (done) {
+                it('"grid.json" fails due to statement timeout', function (done) {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'grid.json',
-                        layers: [ 0 ],
+                        layers: 'mapnik',
                         response: {
                             status: 429,
                             headers: {
