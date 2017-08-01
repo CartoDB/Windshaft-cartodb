@@ -267,7 +267,7 @@ describe('user render timeout limit', function () {
                 response: {
                     status: 429,
                     headers: {
-                        'Content-Type': 'application/x-protobuf'
+                        'Content-Type': 'application/json; charset=utf-8'
                     }
                 }
             };
