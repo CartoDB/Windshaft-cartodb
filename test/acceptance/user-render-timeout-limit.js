@@ -288,5 +288,105 @@ describe('user render timeout limit', function () {
             });
         });
     });
+
+    describe('static images', function () {
+        describe('with onTileErrorStrategy ENABLED', function () {
+            let onTileErrorStrategy;
+
+            beforeEach(function (done) {
+                onTileErrorStrategy = global.environment.enabledFeatures.onTileErrorStrategy;
+                global.environment.enabledFeatures.onTileErrorStrategy = true;
+
+                const mapconfig = createMapConfig();
+                this.testClient = new TestClient(mapconfig, 1234);
+                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+            });
+
+            afterEach(function (done) {
+                this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    this.testClient.drain(done);
+                });
+            });
+
+            it('layergroup creation works but static image fails due to render timeout', function (done) {
+                const params = {
+                    zoom: 0,
+                    lat: 0,
+                    lng: 0,
+                    width: 256,
+                    height: 256,
+                    format: 'png'
+                };
+
+                this.testClient.getStaticCenter(params, function (err, res, tile) {
+                    assert.ifError(err);
+
+                    assert.imageIsSimilarToFile(tile, timeoutErrorTilePath, 0.05, (err) => {
+                        assert.ifError(err);
+                        done();
+                    });
+                });
+            });
+        });
+
+        describe('with onTileErrorStrategy DISABLED', function() {
+            var onTileErrorStrategy;
+
+            beforeEach(function (done) {
+                onTileErrorStrategy = global.environment.enabledFeatures.onTileErrorStrategy;
+                global.environment.enabledFeatures.onTileErrorStrategy = false;
+
+                const mapconfig = createMapConfig();
+                this.testClient = new TestClient(mapconfig, 1234);
+                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+            });
+
+            afterEach(function (done) {
+                global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
+
+                this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    this.testClient.drain(done);
+                });
+            });
+
+            it('layergroup creation works and render tile fails', function (done) {
+                const params = {
+                    zoom: 0,
+                    lat: 0,
+                    lng: 0,
+                    width: 256,
+                    height: 256,
+                    format: 'png',
+                    response: {
+                        status: 429,
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    }
+                };
+
+                this.testClient.getStaticCenter(params, function (err, res, timeoutError) {
+                    assert.ifError(err);
+
+                    assert.deepEqual(timeoutError, {
+                        errors: ["You are over platform limits. Please contact us to know more details"],
+                        errors_with_context: [{
+                            type: 'limit',
+                            subtype: 'render',
+                            message: "You are over platform limits. Please contact us to know more details"
+                        }]
+                    });
+
+                    done();
+                });
+            });
+        });
+    });
 });
 
