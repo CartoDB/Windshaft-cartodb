@@ -710,6 +710,110 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
     );
 };
 
+TestClient.prototype.getStaticCenter = function (params, callback) {
+    var self = this;
+
+    let { layergroupid, z, lat, lng, width, height, format } = params
+
+    var url = `/api/v1/map/`;
+
+    if (this.apiKey) {
+        url += '?' + qs.stringify({api_key: this.apiKey});
+    }
+
+    step(
+        function createLayergroup() {
+            var next = this;
+
+            if (layergroupid) {
+                return next(null, layergroupid);
+            }
+
+            var data = self.mapConfig
+            var path  = url;
+
+            assert.response(self.server,
+                {
+                    url: path,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(data)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    return next(null, JSON.parse(res.body).layergroupid);
+                }
+            );
+        },
+        function getStaticResult(err, _layergroupid) {
+            assert.ifError(err);
+
+            var next = this;
+
+            layergroupid = _layergroupid;
+
+            url = `/api/v1/map/static/center/${layergroupid}/${z}/${lat}/${lng}/${width}/${height}.${format}`
+
+            if (self.apiKey) {
+                url += '?' + qs.stringify({api_key: self.apiKey});
+            }
+
+            var request = {
+                url: url,
+                encoding: 'binary',
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            };
+
+            var expectedResponse = Object.assign({}, {
+                status: 200,
+                headers: {
+                    'Content-Type': 'image/png'
+                }
+            }, params.response);
+
+            assert.response(self.server, request, expectedResponse, function(res, err) {
+                assert.ifError(err);
+
+                var body;
+                switch (res.headers['content-type']) {
+                    case 'image/png':
+                        body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                        break;
+                    case 'application/json; charset=utf-8':
+                        body = JSON.parse(res.body);
+                        break;
+                    default:
+                        body = res.body
+                        break;
+                }
+
+                next(null, res, body);
+            });
+        },
+        function finish(err, res, image) {
+            if (layergroupid) {
+                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
+                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            }
+            return callback(err, res, image);
+        }
+    );
+};
+
 TestClient.prototype.getNodeStatus = function(nodeName, callback) {
     var self = this;
 
