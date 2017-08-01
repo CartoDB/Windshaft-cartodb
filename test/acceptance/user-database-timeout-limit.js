@@ -3,6 +3,8 @@ require('../support/test_helper');
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 
+const timeoutErrorTilePath = `${process.cwd()}/assets/render-timeout-fallback.png`;
+
 const pointSleepSql = `
     SELECT
         pg_sleep(0.3),
@@ -153,31 +155,6 @@ describe('user database timeout limit', function () {
         });
 
         describe('fetching raster tiles', function () {
-            beforeEach(function (done) {
-                const mapconfig = createMapConfig();
-                this.testClient = new TestClient(mapconfig, 1234);
-                const expectedResponse = {
-                    status: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    }
-                };
-
-                this.testClient.getLayergroup(expectedResponse, (err, res) => {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    this.layergroupid = res.layergroupid;
-
-                    done();
-                });
-            });
-
-            afterEach(function (done) {
-                this.testClient.drain(done);
-            });
-
             describe('with user\'s timeout of 200 ms', function () {
                 beforeEach(function (done) {
                     TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
@@ -187,51 +164,157 @@ describe('user database timeout limit', function () {
                     TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
                 });
 
-                it('"png" fails due to statement timeout', function (done) {
-                    const params = {
-                        layergroupid: this.layergroupid,
-                        format: 'png',
-                        layers: [ 0 ],
-                        response: {
-                            status: 429,
+                describe('with onTileErrorStrategy ENABLED', function () {
+                    let onTileErrorStrategy;
+
+                    beforeEach(function (done) {
+                        onTileErrorStrategy = global.environment.enabledFeatures.onTileErrorStrategy;
+                        global.environment.enabledFeatures.onTileErrorStrategy = true;
+
+                        const mapconfig = createMapConfig();
+                        this.testClient = new TestClient(mapconfig, 1234);
+                        const expectedResponse = {
+                            status: 200,
                             headers: {
                                 'Content-Type': 'application/json; charset=utf-8'
                             }
-                        }
-                    };
+                        };
 
-                    this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
-                        assert.ifError(err);
+                        this.testClient.getLayergroup(expectedResponse, (err, res) => {
+                            if (err) {
+                                return done(err);
+                            }
 
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                            this.layergroupid = res.layergroupid;
 
-                        done();
+                            done();
+                        });
+                    });
+
+                    afterEach(function (done) {
+                        global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
+
+                        this.testClient.drain(done);
+                    });
+
+                    it('"png" fails due to statement timeout', function (done) {
+                        const params = {
+                            layergroupid: this.layergroupid,
+                            format: 'png',
+                            layers: [ 0 ]
+                        };
+
+                        this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
+                            assert.ifError(err);
+
+                            assert.imageIsSimilarToFile(tile, timeoutErrorTilePath, 0.05, (err) => {
+                                assert.ifError(err);
+                                done();
+                            });
+                        });
+                    });
+
+                    it('"static png" fails due to statement timeout', function (done) {
+                        const params = {
+                            layergroupid: this.layergroupid,
+                            zoom: 0,
+                            lat: 0,
+                            lng: 0,
+                            width: 256,
+                            height: 256,
+                            format: 'png'
+                        };
+
+                        this.testClient.getStaticCenter(params, function (err, res, tile) {
+                            assert.ifError(err);
+
+                            assert.imageIsSimilarToFile(tile, timeoutErrorTilePath, 0.05, (err) => {
+                                assert.ifError(err);
+                                done();
+                            });
+                        });
                     });
                 });
 
-                it('"static png" fails due to statement timeout', function (done) {
-                    const params = {
-                        layergroupid: this.layergroupid,
-                        zoom: 0,
-                        lat: 0,
-                        lng: 0,
-                        width: 256,
-                        height: 256,
-                        format: 'png',
-                        response: {
-                            status: 429,
+                describe('with onTileErrorStrategy DISABLED', function () {
+                    let onTileErrorStrategy;
+
+                    beforeEach(function (done) {
+                        onTileErrorStrategy = global.environment.enabledFeatures.onTileErrorStrategy;
+                        global.environment.enabledFeatures.onTileErrorStrategy = false;
+
+                        const mapconfig = createMapConfig();
+                        this.testClient = new TestClient(mapconfig, 1234);
+                        const expectedResponse = {
+                            status: 200,
                             headers: {
                                 'Content-Type': 'application/json; charset=utf-8'
                             }
-                        }
-                    };
+                        };
 
-                    this.testClient.getStaticCenter(params, function (err, res, timeoutError) {
-                        assert.ifError(err);
+                        this.testClient.getLayergroup(expectedResponse, (err, res) => {
+                            if (err) {
+                                return done(err);
+                            }
 
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                            this.layergroupid = res.layergroupid;
 
-                        done();
+                            done();
+                        });
+                    });
+
+                    afterEach(function (done) {
+                        global.environment.enabledFeatures.onTileErrorStrategy = onTileErrorStrategy;
+
+                        this.testClient.drain(done);
+                    });
+
+                    it('"png" fails due to statement timeout', function (done) {
+                        const params = {
+                            layergroupid: this.layergroupid,
+                            format: 'png',
+                            layers: [ 0 ],
+                            response: {
+                                status: 429,
+                                headers: {
+                                    'Content-Type': 'application/json; charset=utf-8'
+                                }
+                            }
+                        };
+
+                        this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
+                            assert.ifError(err);
+
+                            assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+
+                            done();
+                        });
+                    });
+
+                    it('"static png" fails due to statement timeout', function (done) {
+                        const params = {
+                            layergroupid: this.layergroupid,
+                            zoom: 0,
+                            lat: 0,
+                            lng: 0,
+                            width: 256,
+                            height: 256,
+                            format: 'png',
+                            response: {
+                                status: 429,
+                                headers: {
+                                    'Content-Type': 'application/json; charset=utf-8'
+                                }
+                            }
+                        };
+
+                        this.testClient.getStaticCenter(params, (err, res, timeoutError) => {
+                            assert.ifError(err);
+
+                            assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+
+                            done();
+                        });
                     });
                 });
             });
