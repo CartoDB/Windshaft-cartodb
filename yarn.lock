@@ -260,7 +260,7 @@ cartodb-query-tables@0.2.0:
 
 cartodb-redis@cartodb/node-cartodb-redis#timeout-limits:
   version "0.13.3"
-  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/530ae2736a184a3b9c9e978efa7dcb4faae7abee"
+  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/4c0586009dbfd464eb9e742bed39170334f40453"
   dependencies:
     dot "~1.0.2"
     redis-mpool "~0.4.1"
