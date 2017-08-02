@@ -40,7 +40,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "cartodb/turbo-carto#meta-column-rename",
     "underscore": "~1.6.0",
-    "windshaft": "cartodb/windshaft#query-variables",
+    "windshaft": "cartodb/windshaft#1000x",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
