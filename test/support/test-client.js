@@ -1097,7 +1097,4 @@ TestClient.setUserDatabaseTimeoutLimit = function (user, timeoutLimit, callback)
     );
 };
 
-TestClient.cleanDatabaseConnections = function () {
-    helper.cleanPGPoolConnections()
-}
 
