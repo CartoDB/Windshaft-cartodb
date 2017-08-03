@@ -7,8 +7,6 @@ describe('turbo-carto-postgres-datasource', function() {
 
     beforeEach(function () {
         const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
-        const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 })
-        const pass = _.template(global.environment.postgres_auth_pass, { user_id: 1 })
         const psql = new PSQL({
             user: 'postgres',
             dbname: dbname,
@@ -25,16 +23,16 @@ describe('turbo-carto-postgres-datasource', function() {
             '    ELSE x',
             '  END AS values',
             'FROM generate_series(1, 1000) x'
-        ].join('\n')
+        ].join('\n');
         this.datasource = new PostgresDatasource(psql, sql);
     });
 
     it('should ignore NaNs and Infinities when computing ramps', function(done) {
-       column = 'values';
-       buckets = 4;
-       method = 'equal';
+       var column = 'values';
+       var buckets = 4;
+       var method = 'equal';
        this.datasource.getRamp(column, buckets, method, function(err, result) {
-           expected_result = {
+           var expected_result = {
                ramp: [ 252, 501, 750, 999 ],
                stats: { min_val: 3, max_val: 999, avg_val: 501 },
                strategy: undefined
