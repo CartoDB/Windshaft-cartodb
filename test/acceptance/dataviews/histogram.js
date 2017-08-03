@@ -887,3 +887,75 @@ describe('histogram-dates: aggregation input value', function() {
         });
     });
 });
+
+
+describe('histogram-dates: timestamp starts at epoch', function() {
+
+    afterEach(function(done) {
+        if (this.testClient) {
+            this.testClient.drain(done);
+        } else {
+            done();
+        }
+    });
+
+    var mapConfig = createMapConfig(
+        [
+            {
+                type: "cartodb",
+                options: {
+                    source: {
+                        id: "a0"
+                    },
+                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
+                    cartocss_version: "2.3.0"
+                }
+            }
+        ],
+        {
+            epoch_start_histogram: {
+                source: {
+                    id: 'a0'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'd',
+                    aggregation: 'auto'
+                }
+            }
+        },
+        [
+            {
+                id: 'a0',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                            '\'1970-01-04 10:00:00\'::timestamp,',
+                            '\'1984-01-04 10:00:00\'::timestamp,',
+                            ' \'1 month\'::interval',
+                        ') date'
+                    ].join(' ')
+                }
+            }
+        ]
+    );
+
+    it('should work when timestamp_start is epoch (1970-01-01 = 0)', function(done) {
+        this.testClient = new TestClient(mapConfig, 1234);
+        const override = {};
+
+        this.testClient.getDataview('epoch_start_histogram', override, function(err, dataview) {
+            assert.ifError(err);
+
+            console.log(dataview);
+            const { aggregation, timestamp_start } = dataview;
+
+            assert.equal(timestamp_start, 0);
+            assert.equal(aggregation, 'quarter');
+
+            done();
+        });
+    });
+});
