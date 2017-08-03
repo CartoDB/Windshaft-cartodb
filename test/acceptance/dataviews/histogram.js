@@ -766,3 +766,124 @@ describe('histogram-dataview: special float valuer', function() {
         });
     });
 });
+
+describe('histogram-dates: aggregation input value', function() {
+
+    afterEach(function(done) {
+        if (this.testClient) {
+            this.testClient.drain(done);
+        } else {
+            done();
+        }
+    });
+
+    var mapConfig = createMapConfig(
+        [
+            {
+                type: "cartodb",
+                options: {
+                    source: {
+                        id: "a0"
+                    },
+                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
+                    cartocss_version: "2.3.0"
+                }
+            }
+        ],
+        {
+            agg_value_histogram: {
+                source: {
+                    id: 'a0'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'd',
+                    aggregation: 'day'
+                }
+            },
+            bad_agg_value_histogram: {
+                source: {
+                    id: 'a0'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'd',
+                    aggregation: 'wadus'
+                }
+            }
+        },
+        [
+            {
+                id: 'a0',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                            '\'2007-02-15 01:00:00\'::timestamp,',
+                            '\'2008-04-09 01:00:00\'::timestamp,',
+                            ' \'1 day\'::interval',
+                        ') date'
+                    ].join(' ')
+                }
+            }
+        ]
+    );
+
+    it('should fail when aggregation values is not valid while instantiating the map', function(done) {
+        this.testClient = new TestClient(mapConfig, 1234);
+        const override = {
+            response: {
+                status: 400
+            }
+        };
+
+        this.testClient.getDataview('bad_agg_value_histogram', override, function(err, dataviewError) {
+            assert.ifError(err);
+
+            assert.deepEqual(dataviewError, {
+                errors: [
+                    'Invalid aggregation value. Valid ones: auto, minute, hour, day, week, month, quarter, year'
+                ],
+                errors_with_context: [{
+                    type: 'unknown',
+                    message: [
+                        'Invalid aggregation value. ',
+                        'Valid ones: auto, minute, hour, day, week, month, quarter, year'
+                    ].join('')
+                }]
+            });
+
+            done();
+        });
+    });
+
+    it('should fail when aggregation values is not valid while fetching dataview result', function(done) {
+        this.testClient = new TestClient(mapConfig, 1234);
+        const override = {
+            aggregation: 'wadus',
+            response: {
+                status: 400
+            }
+        };
+
+        this.testClient.getDataview('agg_value_histogram', override, function(err, dataviewError) {
+            assert.ifError(err);
+
+            assert.deepEqual(dataviewError, {
+                errors: [
+                    'Invalid aggregation value. Valid ones: auto, minute, hour, day, week, month, quarter, year'
+                ],
+                errors_with_context: [{
+                    type: 'unknown',
+                    message: [
+                        'Invalid aggregation value. ',
+                        'Valid ones: auto, minute, hour, day, week, month, quarter, year'
+                    ].join('')
+                }]
+            });
+
+            done();
+        });
+    });
+});
