@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"abaculus@github:cartodb/abaculus#2.0.3-cdb1":
+abaculus@cartodb/abaculus#2.0.3-cdb1:
   version "2.0.3-cdb1"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/f5f34e1c80cdd8d49edd1d6fe3b2220ab2e23aaf"
   dependencies:
@@ -205,7 +205,7 @@ camshaft@0.55.6:
     dot "^1.0.3"
     request "^2.69.0"
 
-"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
+canvas@cartodb/node-canvas#1.6.2-cdb2:
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -231,7 +231,7 @@ carto@CartoDB/carto#0.15.1-cdb1:
     optimist "~0.6.0"
     underscore "~1.6.0"
 
-"carto@github:cartodb/carto#0.15.1-cdb3":
+carto@cartodb/carto#0.15.1-cdb3:
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
@@ -1288,7 +1288,7 @@ mocha@~3.4.1:
     mkdirp "0.5.1"
     supports-color "3.1.2"
 
-moment@^2.10.6:
+moment@^2.10.6, moment@~2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
@@ -2103,7 +2103,7 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-"tilelive-bridge@github:cartodb/tilelive-bridge#2.3.1-cdb3":
+tilelive-bridge@cartodb/tilelive-bridge#2.3.1-cdb3:
   version "2.3.1-cdb3"
   resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/bde83c8dcf4ada40c7c0eb1b477f212e75399d23"
   dependencies:
@@ -2111,7 +2111,7 @@ through@2:
     mapnik-pool "~0.1.3"
     sphericalmercator "1.0.x"
 
-"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb2":
+tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb2:
   version "0.6.18-cdb2"
   resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/46f1adefee90f3f46c0ede5e0833f8522634a858"
   dependencies:

@@ -374,7 +374,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
             };
 
-            ['bbox', 'bins', 'start', 'end'].forEach(function(extraParam) {
+            ['bbox', 'bins', 'start', 'end', 'aggregation', 'offset'].forEach(function(extraParam) {
                 if (params.hasOwnProperty(extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }
@@ -404,8 +404,11 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             );
         },
         function finish(err, dataview) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            if (layergroupId) {
+                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            }
+
             return callback(err, dataview);
         }
     );

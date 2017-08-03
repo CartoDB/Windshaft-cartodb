@@ -3,6 +3,8 @@
 ## 3.9.9
 Released 2017-mm-dd
 
+ - Improve time-series dataview, now supports date aggregations (e.g: daily, weekly, monthly, etc.) and timezones (UTC by default) #698
+
 
 ## 3.9.8
 Released 2017-07-21
