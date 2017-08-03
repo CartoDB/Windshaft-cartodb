@@ -404,8 +404,11 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             );
         },
         function finish(err, dataview) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            if (layergroupId) {
+                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            }
+
             return callback(err, dataview);
         }
     );
