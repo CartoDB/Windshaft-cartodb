@@ -1,9 +1,11 @@
 # Changelog
 
-## 3.9.9
-Released 2017-mm-dd
+## 3.10.0
+Released 2017-08-03
 
- - Improve time-series dataview, now supports date aggregations (e.g: daily, weekly, monthly, etc.) and timezones (UTC by default) #698
+Announcements:
+ - Improve time-series dataview, now supports date aggregations (e.g: daily, weekly, monthly, etc.) and timezones (UTC by default) #698.
+ - Support special numeric values (±Infinity, NaN) for json responses #706
 
 
 ## 3.9.8
