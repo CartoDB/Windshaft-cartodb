@@ -5,7 +5,7 @@ var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 var server = new CartodbWindshaft(serverOptions);
 
-var LayergroupToken = require('../support/layergroup-token');
+var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');

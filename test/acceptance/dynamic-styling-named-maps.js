@@ -1,6 +1,6 @@
 var assert = require('../support/assert');
 var step = require('step');
-var LayergroupToken = require('../support/layergroup-token');
+var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 var testHelper = require(__dirname + '/../support/test_helper');
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');

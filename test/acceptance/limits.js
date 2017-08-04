@@ -7,7 +7,7 @@ var redis = require('redis');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 
-var LayergroupToken = require('../support/layergroup-token');
+var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
 describe('render limits', function() {
 
