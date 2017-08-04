@@ -3,6 +3,10 @@
 ## 3.10.1
 Released 2017-mm-dd
 
+Bug fixes:
+ - Exclude Infinities & NaNs from ramps #719.
+ - Fixed issue in time-series when aggregation starts at 1970-01-01 (epoch) #720.
+
 
 ## 3.10.0
 Released 2017-08-03
