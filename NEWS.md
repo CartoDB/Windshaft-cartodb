@@ -1,7 +1,7 @@
 # Changelog
 
 ## 3.10.1
-Released 2017-mm-dd
+Released 2017-08-04
 
 Bug fixes:
  - Exclude Infinities & NaNs from ramps #719.
