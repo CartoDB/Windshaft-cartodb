@@ -991,6 +991,16 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                     column: 'd',
                     aggregation: 'auto'
                 }
+            },
+            timezone_epoch_histogram_tz: {
+                source: {
+                    id: 'a1'
+                },
+                type: 'histogram',
+                options: {
+                    column: 'd',
+                    aggregation: 'auto'
+                }
             }
         },
         [
@@ -1007,45 +1017,69 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                         ') date'
                     ].join(' ')
                 }
+            },
+            {
+                id: 'a1',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                            '\'1970-01-01 00:00:00\'::timestamptz,',
+                            '\'1970-01-01 01:59:00\'::timestamptz,',
+                            ' \'1 minute\'::interval',
+                        ') date'
+                    ].join(' ')
+                }
             }
         ]
     );
 
-    it('should return histogram with two buckets', function(done) {
-        this.testClient = new TestClient(mapConfig, 1234);
+    var dateHistogramsUseCases = [{
+        desc: 'supporting timestamp with offset',
+        dataviewId: 'timezone_epoch_histogram_tz'
+    }, {
+        desc: 'supporting timestamp without offset',
+        dataviewId: 'timezone_epoch_histogram'
+    }];
 
-        const override = {
-            aggregation: 'day',
-            offset: '-3600'
-        };
+    dateHistogramsUseCases.forEach(function (test) {
+        it('should return histogram with two buckets ' + test.desc , function(done) {
+            this.testClient = new TestClient(mapConfig, 1234);
 
-        this.testClient.getDataview('timezone_epoch_histogram', override, function(err, dataview) {
-            assert.ifError(err);
+            const override = {
+                aggregation: 'day',
+                offset: '-3600'
+            };
 
-            var OFFSET_IN_MINUTES = -1 * 60; // GMT-01
-            var initialTimestamp = '1969-12-31T00:00:00-01:00';
-            var binsStartInMilliseconds = dataview.bins_start * 1000;
-            var binsStartFormatted = moment.utc(binsStartInMilliseconds)
-                .utcOffset(OFFSET_IN_MINUTES)
-                .format();
-            assert.equal(binsStartFormatted, initialTimestamp);
+            this.testClient.getDataview(test.dataviewId, override, function(err, dataview) {
+                assert.ifError(err);
 
-            dataview.bins.forEach(function (bin, index) {
-                var binTimestampExpected = moment.utc(initialTimestamp)
-                    .utcOffset(OFFSET_IN_MINUTES)
-                    .add(index, override.aggregation)
-                    .format();
-                var binsTimestampInMilliseconds = bin.timestamp * 1000;
-                var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
+                var OFFSET_IN_MINUTES = -1 * 60; // GMT-01
+                var initialTimestamp = '1969-12-31T00:00:00-01:00';
+                var binsStartInMilliseconds = dataview.bins_start * 1000;
+                var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_IN_MINUTES)
                     .format();
+                assert.equal(binsStartFormatted, initialTimestamp);
 
-                assert.equal(binTimestampFormatted, binTimestampExpected);
-                assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
-                assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
+                dataview.bins.forEach(function (bin, index) {
+                    var binTimestampExpected = moment.utc(initialTimestamp)
+                        .utcOffset(OFFSET_IN_MINUTES)
+                        .add(index, override.aggregation)
+                        .format();
+                    var binsTimestampInMilliseconds = bin.timestamp * 1000;
+                    var binTimestampFormatted = moment.utc(binsTimestampInMilliseconds)
+                        .utcOffset(OFFSET_IN_MINUTES)
+                        .format();
+
+                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
+                    assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
+                });
+
+                done();
             });
-
-            done();
         });
     });
 });
