@@ -3,6 +3,12 @@
 ## 3.10.2
 Released 2017-mm-dd
 
+Announcements:
+ - Allow to override with any aggregation for histograms instantiated w/o aggregation.
+
+Bug fixes:
+ - Apply timezone after truncating the minimun date for each bin to calculate timestamps in time-series.
+
 
 ## 3.10.1
 Released 2017-08-04
