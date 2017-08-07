@@ -9,6 +9,7 @@ Announcements:
 Bug fixes:
  - Apply timezone after truncating the minimun date for each bin to calculate timestamps in time-series.
  - Support timestamp with timezones to calculate the number of bins in time-series.
+ - Fixed issue related to name collision while building time-series query.
 
 
 ## 3.10.1
