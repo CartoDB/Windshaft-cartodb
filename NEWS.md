@@ -1,7 +1,7 @@
 # Changelog
 
-## 3.10.2
-Released 2017-mm-dd
+## 3.11.0
+Released 2017-08-08
 
 Announcements:
  - Allow to override with any aggregation for histograms instantiated w/o aggregation.
