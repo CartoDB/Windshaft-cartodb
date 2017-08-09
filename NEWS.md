@@ -1,7 +1,35 @@
 # Changelog
 
-## 3.9.9
+## 3.11.1
 Released 2017-mm-dd
+
+
+## 3.11.0
+Released 2017-08-08
+
+Announcements:
+ - Allow to override with any aggregation for histograms instantiated w/o aggregation.
+
+Bug fixes:
+ - Apply timezone after truncating the minimun date for each bin to calculate timestamps in time-series.
+ - Support timestamp with timezones to calculate the number of bins in time-series.
+ - Fixed issue related to name collision while building time-series query.
+
+
+## 3.10.1
+Released 2017-08-04
+
+Bug fixes:
+ - Exclude Infinities & NaNs from ramps #719.
+ - Fixed issue in time-series when aggregation starts at 1970-01-01 (epoch) #720.
+
+
+## 3.10.0
+Released 2017-08-03
+
+Announcements:
+ - Improve time-series dataview, now supports date aggregations (e.g: daily, weekly, monthly, etc.) and timezones (UTC by default) #698.
+ - Support special numeric values (±Infinity, NaN) for json responses #706
 
 
 ## 3.9.8

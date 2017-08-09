@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "3.9.9",
+  "version": "3.11.1",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -47,6 +47,7 @@
     "istanbul": "~0.4.3",
     "jshint": "~2.9.4",
     "mocha": "~3.4.1",
+    "moment": "~2.18.1",
     "nock": "~2.11.0",
     "redis": "~0.12.1",
     "semver": "~1.1.4",

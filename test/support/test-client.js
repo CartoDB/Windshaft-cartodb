@@ -411,7 +411,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
             };
 
-            ['bbox', 'bins', 'start', 'end'].forEach(function(extraParam) {
+            ['bbox', 'bins', 'start', 'end', 'aggregation', 'offset'].forEach(function(extraParam) {
                 if (params.hasOwnProperty(extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }
@@ -451,6 +451,105 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             }
 
             return callback(null, dataview);
+        }
+    );
+};
+
+TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params, callback) {
+    var self = this;
+
+    if (!callback) {
+        callback = params;
+        params = {};
+    }
+
+    var extraParams = {};
+    if (this.apiKey) {
+        extraParams.api_key = this.apiKey;
+    }
+    if (params && params.filters) {
+        extraParams.filters = JSON.stringify(params.filters);
+    }
+
+    var url = '/api/v1/map';
+    if (Object.keys(extraParams).length > 0) {
+        url += '?' + qs.stringify(extraParams);
+    }
+
+    var expectedResponse = params.response || {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    var layergroupId;
+    step(
+        function createLayergroup() {
+            var next = this;
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.mapConfig)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    var parsedBody = JSON.parse(res.body);
+
+                    if (parsedBody.layergroupid) {
+                        self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                        self.keysToDelete['user:localhost:mapviews:global'] = 5;
+                    }
+
+                    return next(null, parsedBody.layergroupid);
+                }
+            );
+        },
+        function getFeatureAttributes(err, layergroupId) {
+            assert.ifError(err);
+
+            var next = this;
+
+            url = '/api/v1/map/' + layergroupId + '/' + layerId + '/attributes/' + featureId;
+
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
+                },
+                expectedResponse,
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next(null, JSON.parse(res.body));
+                }
+            );
+        },
+        function finish(err, attributes) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback(null, attributes);
         }
     );
 };
