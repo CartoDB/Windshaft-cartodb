@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-abaculus@cartodb/abaculus#2.0.3-cdb1:
+"abaculus@github:cartodb/abaculus#2.0.3-cdb1":
   version "2.0.3-cdb1"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/f5f34e1c80cdd8d49edd1d6fe3b2220ab2e23aaf"
   dependencies:
@@ -205,7 +205,7 @@ camshaft@0.55.6:
     dot "^1.0.3"
     request "^2.69.0"
 
-canvas@cartodb/node-canvas#1.6.2-cdb2:
+"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -223,15 +223,15 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@CartoDB/carto#0.15.1-cdb1:
+"carto@github:cartodb/carto#0.15.1-cdb1":
   version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
   dependencies:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "~1.6.0"
 
-carto@cartodb/carto#0.15.1-cdb3:
+"carto@github:cartodb/carto#0.15.1-cdb3":
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
@@ -252,6 +252,14 @@ cartodb-psql@0.8.0:
     debug "~2.2.0"
     pg cartodb/node-postgres#6.1.2-cdb1
     step "~0.0.6"
+    underscore "~1.6.0"
+
+cartodb-psql@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/cartodb-psql/-/cartodb-psql-0.9.0.tgz#887ba006fb499ab789c15d10f34f6afbe1f2f68d"
+  dependencies:
+    debug "~2.2.0"
+    pg cartodb/node-postgres#6.1.2-cdb1
     underscore "~1.6.0"
 
 cartodb-query-tables@0.2.0:
@@ -1312,7 +1320,7 @@ mv@~2:
     ncp "~2.0.0"
     rimraf "~2.4.0"
 
-nan@^2.0.8, nan@^2.3.4, nan@^2.4.0:
+nan@^2.0.8, nan@^2.3.4, nan@^2.4.0, nan@~2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.6.2.tgz#e4ff34e6c95fdfb5aecc08de6596f43605a7db45"
 
@@ -1343,7 +1351,7 @@ nock@~2.11.0:
     mkdirp "^0.5.0"
     propagate "0.3.x"
 
-node-pre-gyp@~0.6.27, node-pre-gyp@~0.6.30, node-pre-gyp@~0.6.31:
+node-pre-gyp@~0.6.27, node-pre-gyp@~0.6.30, node-pre-gyp@~0.6.36:
   version "0.6.36"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.36.tgz#db604112cb74e0d477554e9b505b17abddfab786"
   dependencies:
@@ -1520,7 +1528,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "~1.0.0"
 
-pg@cartodb/node-postgres#6.1.2-cdb1:
+pg@cartodb/node-postgres#6.1.2-cdb1, "pg@github:cartodb/node-postgres#6.1.2-cdb1":
   version "6.1.2"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3c81aea432ce58d20a795786c58bbb14f68f9689"
   dependencies:
@@ -1741,32 +1749,7 @@ repeat-string@^1.5.2:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
 
-request@2.x, request@^2.55.0, request@^2.69.0, request@~2.79.0:
-  version "2.79.0"
-  resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
-  dependencies:
-    aws-sign2 "~0.6.0"
-    aws4 "^1.2.1"
-    caseless "~0.11.0"
-    combined-stream "~1.0.5"
-    extend "~3.0.0"
-    forever-agent "~0.6.1"
-    form-data "~2.1.1"
-    har-validator "~2.0.6"
-    hawk "~3.1.3"
-    http-signature "~1.1.0"
-    is-typedarray "~1.0.0"
-    isstream "~0.1.2"
-    json-stringify-safe "~5.0.1"
-    mime-types "~2.1.7"
-    oauth-sign "~0.8.1"
-    qs "~6.3.0"
-    stringstream "~0.0.4"
-    tough-cookie "~2.3.0"
-    tunnel-agent "~0.4.1"
-    uuid "^3.0.0"
-
-request@^2.81.0:
+request@2.x, request@^2.81.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -1791,6 +1774,31 @@ request@^2.81.0:
     stringstream "~0.0.4"
     tough-cookie "~2.3.0"
     tunnel-agent "^0.6.0"
+    uuid "^3.0.0"
+
+request@^2.55.0, request@^2.69.0, request@~2.79.0:
+  version "2.79.0"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
+  dependencies:
+    aws-sign2 "~0.6.0"
+    aws4 "^1.2.1"
+    caseless "~0.11.0"
+    combined-stream "~1.0.5"
+    extend "~3.0.0"
+    forever-agent "~0.6.1"
+    form-data "~2.1.1"
+    har-validator "~2.0.6"
+    hawk "~3.1.3"
+    http-signature "~1.1.0"
+    is-typedarray "~1.0.0"
+    isstream "~0.1.2"
+    json-stringify-safe "~5.0.1"
+    mime-types "~2.1.7"
+    oauth-sign "~0.8.1"
+    qs "~6.3.0"
+    stringstream "~0.0.4"
+    tough-cookie "~2.3.0"
+    tunnel-agent "~0.4.1"
     uuid "^3.0.0"
 
 require-directory@^2.1.1:
@@ -1964,11 +1972,11 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
 "sqlite3@2.x || 3.x":
-  version "3.1.8"
-  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-3.1.8.tgz#4cbcf965d8b901d1b1015cbc7fc415aae157dfaa"
+  version "3.1.9"
+  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-3.1.9.tgz#b2e7fbaa348380318d3834323918c3c351b8bf18"
   dependencies:
-    nan "~2.4.0"
-    node-pre-gyp "~0.6.31"
+    nan "~2.6.2"
+    node-pre-gyp "~0.6.36"
 
 srs@1.x:
   version "1.2.0"
@@ -2103,17 +2111,17 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tilelive-bridge@cartodb/tilelive-bridge#query-timeout:
-  version "2.3.1-cdb2"
-  resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/38d5d82355aa9eef68c29b7d7a33b60a3ae394f7"
+"tilelive-bridge@github:cartodb/tilelive-bridge#2.3.1-cdb4":
+  version "2.3.1-cdb4"
+  resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/faa2b638da2d119b78281575d40255cb523f6ca6"
   dependencies:
     mapnik "~3.5.0"
     mapnik-pool "~0.1.3"
     sphericalmercator "1.0.x"
 
-tilelive-mapnik@cartodb/tilelive-mapnik#custom-timeout:
-  version "0.6.18-cdb2"
-  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/f9042e5eab92e26fb9e2a6ace65af92cc176a218"
+"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb3":
+  version "0.6.18-cdb3"
+  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/23bd1c31dd57d0b76c86b9f1eaf62462b3c17d01"
   dependencies:
     generic-pool "~2.4.0"
     mapnik "3.5.14"
@@ -2274,14 +2282,14 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@cartodb/windshaft#response-timeout-limit:
-  version "3.2.2"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/21ebe5f69b5b6215ec2f93088d8eee436f6b81d5"
+windshaft@3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-3.3.0.tgz#bf8ef35f9a2bb126934531b0020f5e8f96b37dfa"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
     carto cartodb/carto#0.15.1-cdb3
-    cartodb-psql "0.8.0"
+    cartodb-psql "0.9.0"
     debug "~2.2.0"
     dot "~1.0.2"
     grainstore "~1.6.0"
@@ -2293,8 +2301,8 @@ windshaft@cartodb/windshaft#response-timeout-limit:
     sphericalmercator "1.0.4"
     step "~0.0.6"
     tilelive "5.12.2"
-    tilelive-bridge cartodb/tilelive-bridge#query-timeout
-    tilelive-mapnik cartodb/tilelive-mapnik#custom-timeout
+    tilelive-bridge cartodb/tilelive-bridge#2.3.1-cdb4
+    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb3
     torque.js "~2.11.0"
     underscore "~1.6.0"
 
