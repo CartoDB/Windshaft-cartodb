@@ -24,7 +24,7 @@
     "camshaft": "0.55.6",
     "cartodb-psql": "0.8.0",
     "cartodb-query-tables": "0.2.0",
-    "cartodb-redis": "cartodb/node-cartodb-redis#timeout-limits",
+    "cartodb-redis": "0.14.0",
     "debug": "~2.2.0",
     "dot": "~1.0.2",
     "express": "~4.13.3",
