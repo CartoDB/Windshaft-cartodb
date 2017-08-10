@@ -487,7 +487,7 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
     step(
         function createLayergroup() {
             var next = this;
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'POST',
@@ -526,7 +526,7 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
 
             url = '/api/v1/map/' + layergroupId + '/' + layerId + '/attributes/' + featureId;
 
-            assert.response(server,
+            assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
