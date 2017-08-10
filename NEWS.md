@@ -1,7 +1,12 @@
 # Changelog
 
-## 3.11.1
-Released 2017-mm-dd
+## 3.12.0
+Released 2017-08-10
+
+Announcements:
+ - Apply max tile response time for requests to layergoup, tiles, static maps, attributes and dataviews services #717.
+ - Upgrades windshaft to [3.3.0](https://github.com/CartoDB/windshaft/releases/tag/3.3.0).
+ - Upgrades cartodb-redis to [0.14.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/0.14.0).
 
 
 ## 3.11.0
