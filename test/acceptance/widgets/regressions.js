@@ -275,7 +275,7 @@ describe('widgets-regressions', function() {
                     ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
                         '${JSON.stringify(intersectingTriangle)}'
                     ), 4326), 3857), 3, 'intersectingTriangle'
-                `
+            `;
 
             var mapConfig = {
                 version: '1.5.0',
@@ -320,7 +320,7 @@ describe('widgets-regressions', function() {
             };
             this.testClient.getDataview('val_formula', params, function(err, dataview) {
                 assert.equal(dataview.categories.length, 1);
-                assert.equal(dataview.categories[0].category, 'intersectingTriangle')
+                assert.equal(dataview.categories[0].category, 'intersectingTriangle');
                 done();
             });
         });
