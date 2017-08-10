@@ -1164,7 +1164,7 @@ TestClient.prototype.setUserRenderTimeoutLimit = function (user, userTimeoutLimi
     helper.configureMetadata('hmset', params, callback);
 };
 
-TestClient.setUserDatabaseTimeoutLimit = function (user, timeoutLimit, callback) {
+TestClient.setUserDatabaseTimeoutLimit = function (timeoutLimit, callback) {
     const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
     const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 })
     const pass = _.template(global.environment.postgres_auth_pass, { user_id: 1 })

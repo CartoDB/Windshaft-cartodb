@@ -81,11 +81,11 @@ describe('user database timeout limit', function () {
         beforeEach(function (done) {
             const mapconfig = createMapConfig();
             this.testClient = new TestClient(mapconfig, 1234);
-            TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+            TestClient.setUserDatabaseTimeoutLimit(200, done);
         });
 
         afterEach(function (done) {
-            TestClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
+            TestClient.setUserDatabaseTimeoutLimit(0, (err) => {
                 if (err) {
                     return done(err);
                 }
@@ -118,11 +118,11 @@ describe('user database timeout limit', function () {
             beforeEach(function (done) {
                 const mapconfig = createMapConfig({ sql: validationPointSleepSql });
                 this.testClient = new TestClient(mapconfig, 1234);
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                TestClient.setUserDatabaseTimeoutLimit(200, done);
             });
 
             afterEach(function (done) {
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
+                TestClient.setUserDatabaseTimeoutLimit(0, (err) => {
                     if (err) {
                         return done(err);
                     }
@@ -157,11 +157,11 @@ describe('user database timeout limit', function () {
         describe('fetching raster tiles', function () {
             describe('with user\'s timeout of 200 ms', function () {
                 beforeEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                    TestClient.setUserDatabaseTimeoutLimit(200, done);
                 });
 
                 afterEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
+                    TestClient.setUserDatabaseTimeoutLimit(0, done);
                 });
 
                 describe('with onTileErrorStrategy ENABLED', function () {
@@ -326,11 +326,11 @@ describe('user database timeout limit', function () {
             beforeEach(function (done) {
                 const mapconfig = createMapConfig({ sql: validationPointSleepSql });
                 this.testClient = new TestClient(mapconfig, 1234);
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                TestClient.setUserDatabaseTimeoutLimit(200, done);
             });
 
             afterEach(function (done) {
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
+                TestClient.setUserDatabaseTimeoutLimit(0, (err) => {
                     if (err) {
                         return done(err);
                     }
@@ -390,11 +390,11 @@ describe('user database timeout limit', function () {
 
             describe('with user\'s timeout of 200 ms', function () {
                 beforeEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                    TestClient.setUserDatabaseTimeoutLimit(200, done);
                 });
 
                 afterEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
+                    TestClient.setUserDatabaseTimeoutLimit(0, done);
                 });
 
                 it('"mvt" fails due to statement timeout', function (done) {
@@ -428,11 +428,11 @@ describe('user database timeout limit', function () {
             beforeEach(function (done) {
                 const mapconfig = createMapConfig({ sql: validationPointSleepSql, interactivity: 'val' });
                 this.testClient = new TestClient(mapconfig, 1234);
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                TestClient.setUserDatabaseTimeoutLimit(200, done);
             });
 
             afterEach(function (done) {
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
+                TestClient.setUserDatabaseTimeoutLimit(0, (err) => {
                     if (err) {
                         return done(err);
                     }
@@ -492,11 +492,11 @@ describe('user database timeout limit', function () {
 
             describe('with user\'s timeout of 200 ms', function () {
                 beforeEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                    TestClient.setUserDatabaseTimeoutLimit(200, done);
                 });
 
                 afterEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
+                    TestClient.setUserDatabaseTimeoutLimit(0, done);
                 });
 
                 it('"grid.json" fails due to statement timeout', function (done) {
@@ -532,11 +532,11 @@ describe('user database timeout limit', function () {
                     cartocss: TestClient.CARTOCSS.TORQUE
                 });
                 this.testClient = new TestClient(mapconfig, 1234);
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                TestClient.setUserDatabaseTimeoutLimit(200, done);
             });
 
             afterEach(function (done) {
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
+                TestClient.setUserDatabaseTimeoutLimit(0, (err) => {
                     if (err) {
                         return done(err);
                     }
@@ -599,11 +599,11 @@ describe('user database timeout limit', function () {
 
             describe('with user\'s timeout of 200 ms', function () {
                 beforeEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                    TestClient.setUserDatabaseTimeoutLimit(200, done);
                 });
 
                 afterEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
+                    TestClient.setUserDatabaseTimeoutLimit(0, done);
                 });
 
                 it('"torque.json" fails due to statement timeout', function (done) {
@@ -663,11 +663,11 @@ describe('user database timeout limit', function () {
                     }
                 });
                 this.testClient = new TestClient(mapconfig, 1234);
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                TestClient.setUserDatabaseTimeoutLimit(200, done);
             });
 
             afterEach(function (done) {
-                TestClient.setUserDatabaseTimeoutLimit('localhost', 0, (err) => {
+                TestClient.setUserDatabaseTimeoutLimit(0, (err) => {
                     if (err) {
                         return done(err);
                     }
@@ -738,11 +738,11 @@ describe('user database timeout limit', function () {
 
             describe('with user\'s timeout of 200 ms', function () {
                 beforeEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 200, done);
+                    TestClient.setUserDatabaseTimeoutLimit(200, done);
                 });
 
                 afterEach(function (done) {
-                    TestClient.setUserDatabaseTimeoutLimit('localhost', 0, done);
+                    TestClient.setUserDatabaseTimeoutLimit(0, done);
                 });
 
                 it('fails due to statement timeout', function (done) {
