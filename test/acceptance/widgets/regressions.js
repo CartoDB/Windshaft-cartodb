@@ -218,6 +218,103 @@ describe('widgets-regressions', function() {
             });
         });
 
+
+        it('should not count the polygons outside the bounding box', function(done) {
+            var notIntersectingLeftTriangle = {
+                type: "Polygon",
+                coordinates:[[
+                    [-161.015625,69.28725695167886],
+                    [-162.7734375,-7.710991655433217],
+                    [-40.78125,-8.059229627200192],
+                    [-161.015625,69.28725695167886]
+                ]]
+            };
+
+            var notIntersectingRightTriangle = {
+                type: "Polygon",
+                coordinates: [[
+                    [-29.179687499999996,-7.01366792756663],
+                    [103.71093749999999,-6.664607562172573],
+                    [105.46875,69.16255790810501],
+                    [-29.179687499999996,-7.01366792756663]
+                ]]
+            };
+
+            var intersectingTriangle = {
+                type: "Polygon",
+                coordinates:[[
+                    [-117.42187500000001,68.13885164925573],
+                    [-35.859375,20.96143961409684],
+                    [59.4140625,68.52823492039876],
+                    [-117.42187500000001,68.13885164925573]
+                ]]
+            };
+
+            let query = `  
+                SELECT
+                    ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
+                        '${JSON.stringify(notIntersectingLeftTriangle)}'
+                    ), 4326), 3857) AS the_geom_webmercator, 1 AS cartodb_id, 'notIntersectingLeftTriangle' AS name
+                UNION
+                SELECT
+                    ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
+                        '${JSON.stringify(notIntersectingRightTriangle)}'
+                    ), 4326), 3857), 2, 'notIntersectingRightTriangle'
+                UNION
+                SELECT
+                    ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
+                        '${JSON.stringify(intersectingTriangle)}'
+                    ), 4326), 3857), 3, 'intersectingTriangle'
+                `
+
+            var mapConfig = {
+                version: '1.5.0',
+                layers: [
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "source": {
+                                "id": "a0"
+                            },
+                            "cartocss": "#points { marker-width: 10; marker-fill: red; }",
+                            "cartocss_version": "2.3.0"
+                        }
+                    }
+                ],
+                dataviews: {
+                    val_formula: {
+                        source: {
+                            id: 'a0'
+                        },
+                        type: 'aggregation',
+                        options: {
+                            column: "name",
+                            aggregation: "count",
+                        }
+                    }
+                },
+                analyses: [
+                    {
+                        "id": "a0",
+                        "type": "source",
+                        "params": {
+                            "query": query
+                        }
+                    }
+                ]
+            };
+
+            this.testClient = new TestClient(mapConfig, 1234);
+            var params = {
+                bbox: '-77.34374999999999,45.82879925192134,17.578125,55.97379820507658'
+            };
+            this.testClient.getDataview('val_formula', params, function(err, dataview) {
+                assert.equal(dataview.categories.length, 1);
+                assert.equal(dataview.categories[0].category, 'intersectingTriangle')
+                done();
+            });
+        });
+
     });
 
 });
