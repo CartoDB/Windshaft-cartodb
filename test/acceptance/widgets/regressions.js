@@ -220,6 +220,16 @@ describe('widgets-regressions', function() {
 
 
         it('should not count the polygons outside the bounding box', function(done) {
+
+            // $               %        $ = not intersecting left triangle
+            // $$  **VVVVV**  %%        % = not intersecting right triangle
+            // $$$  *VVVVV*  %%%        * = intersecting triangle
+            // $$$$  *****  %%%%        V = bounding box
+            // $$$$$  ***  %%%%%
+            // $$$$$$  *  %%%%%%
+            // $$$$$$$   %%%%%%%
+            // $$$$$$$$ %%%%%%%%
+
             var notIntersectingLeftTriangle = {
                 type: "Polygon",
                 coordinates:[[
