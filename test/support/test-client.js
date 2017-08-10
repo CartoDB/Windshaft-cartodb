@@ -75,6 +75,11 @@ module.exports.CARTOCSS = {
     ].join('\n')
 };
 
+module.exports.SQL = {
+    EMPTY: 'select 1 as cartodb_id, null::geometry as the_geom_webmercator',
+    ONE_POINT: 'select 1 as cartodb_id, \'SRID=3857;POINT(0 0)\'::geometry the_geom_webmercator'
+}
+
 TestClient.prototype.getWidget = function(widgetName, params, callback) {
     var self = this;
 
@@ -369,7 +374,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
             };
 
-            ['bbox', 'bins', 'start', 'end'].forEach(function(extraParam) {
+            ['bbox', 'bins', 'start', 'end', 'aggregation', 'offset'].forEach(function(extraParam) {
                 if (params.hasOwnProperty(extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }
@@ -399,9 +404,111 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             );
         },
         function finish(err, dataview) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            if (layergroupId) {
+                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+            }
+
             return callback(err, dataview);
+        }
+    );
+};
+
+TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params, callback) {
+    var self = this;
+
+    if (!callback) {
+        callback = params;
+        params = {};
+    }
+
+    var extraParams = {};
+    if (this.apiKey) {
+        extraParams.api_key = this.apiKey;
+    }
+    if (params && params.filters) {
+        extraParams.filters = JSON.stringify(params.filters);
+    }
+
+    var url = '/api/v1/map';
+    if (Object.keys(extraParams).length > 0) {
+        url += '?' + qs.stringify(extraParams);
+    }
+
+    var expectedResponse = params.response || {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    var layergroupId;
+    step(
+        function createLayergroup() {
+            var next = this;
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.mapConfig)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    var parsedBody = JSON.parse(res.body);
+
+                    if (parsedBody.layergroupid) {
+                        self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                        self.keysToDelete['user:localhost:mapviews:global'] = 5;
+                    }
+
+                    return next(null, parsedBody.layergroupid);
+                }
+            );
+        },
+        function getFeatureAttributes(err, layergroupId) {
+            assert.ifError(err);
+
+            var next = this;
+
+            url = '/api/v1/map/' + layergroupId + '/' + layerId + '/attributes/' + featureId;
+
+            assert.response(server,
+                {
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
+                },
+                expectedResponse,
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next(null, JSON.parse(res.body));
+                }
+            );
+        },
+        function finish(err, attributes) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback(null, attributes);
         }
     );
 };
@@ -435,7 +542,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             }
 
             params.placeholders = params.placeholders || {};
-        
+
             assert.response(server,
                 {
                     url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
@@ -525,7 +632,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             };
 
             var expectedResponse = {
-                status: 200,
+                status: params.status || 200,
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
@@ -542,7 +649,12 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
             if (isMvt) {
                 request.encoding = 'binary';
-                expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
+
+                if (expectedResponse.status === 200) {
+                    expectedResponse.headers['Content-Type'] = 'application/x-protobuf';
+                } else if (expectedResponse.status === 204) {
+                    expectedResponse.headers['Content-Type'] = undefined;
+                }
             }
 
             var isGeojson = format.match(/geojson$/);
@@ -561,15 +673,16 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
             assert.response(server, request, expectedResponse, function(res, err) {
                 assert.ifError(err);
-
                 var obj;
 
                 if (isPng) {
                     obj = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
                 }
                 else if (isMvt) {
-                    obj = new mapnik.VectorTile(z, x, y);
-                    obj.setDataSync(new Buffer(res.body, 'binary'));
+                    if (res.body) {
+                        obj = new mapnik.VectorTile(z, x, y);
+                        obj.setDataSync(new Buffer(res.body, 'binary'));
+                    }
                 }
                 else {
                     obj = JSON.parse(res.body);

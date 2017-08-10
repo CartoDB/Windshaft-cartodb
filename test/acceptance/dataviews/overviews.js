@@ -124,6 +124,13 @@ describe('dataviews using tables with overviews', function() {
                 params: {
                   query: 'select * from test_table_overviews'
                 }
+            },
+            {
+                id: 'data-source-special-float-values',
+                type: 'source',
+                params: {
+                  query: 'select * from test_special_float_values_table_overviews'
+                }
             }
         ],
         dataviews:  {
@@ -144,6 +151,17 @@ describe('dataviews using tables with overviews', function() {
                     aggregationColumn: 'name',
                 }
             },
+            test_categories_special_values: {
+                type: 'aggregation',
+                source: {
+                    id: 'data-source-special-float-values'
+                },
+                options: {
+                    column: 'name',
+                    aggregation: 'sum',
+                    aggregationColumn: 'value',
+                }
+            },
             test_histogram: {
                 type: 'histogram',
                 source: {id: 'data-source'},
@@ -158,12 +176,32 @@ describe('dataviews using tables with overviews', function() {
                     column: 'updated_at'
                 }
             },
+            test_histogram_special_values: {
+                type: 'histogram',
+                source: {
+                    id: 'data-source-special-float-values'
+                },
+                options: {
+                    column: 'value',
+                    bins: 2
+                }
+            },
             test_avg: {
                 type: 'formula',
                 source: {id: 'data-source'},
                 options: {
                     column: 'value',
                     operation: 'avg'
+                }
+            },
+            test_formula_sum_special_values: {
+                type: 'formula',
+                source: {
+                    id: 'data-source-special-float-values'
+                },
+                options: {
+                    column: 'value',
+                    operation: 'sum'
                 }
             },
             test_count: {
@@ -200,6 +238,17 @@ describe('dataviews using tables with overviews', function() {
                     cartocss_version: '2.3.0',
                     source: { id: 'data-source' }
                 }
+            },
+            {
+                type: 'mapnik',
+                options: {
+                    sql: 'select * from test_special_float_values_table_overviews',
+                    cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                    cartocss_version: '2.3.0',
+                    source: {
+                        id: 'data-source-special-float-values'
+                    }
+                }
             }
         ]
     };
@@ -217,7 +266,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"sum","result":15,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation":"sum",
+                "result":15,
+                "infinities": 0,
+                "nans": 0,
+                "nulls":0,
+                "type":"formula"
+            });
 
             testClient.drain(done);
         });
@@ -229,7 +285,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"avg","result":3,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation":"avg",
+                "result":3,
+                "nulls":0,
+                "type":"formula",
+                "infinities": 0,
+                "nans": 0
+            });
 
             testClient.drain(done);
         });
@@ -241,7 +304,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"count","result":5,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation":"count",
+                "result":5,
+                "nulls":0,
+                "type":"formula",
+                "infinities": 0,
+                "nans": 0
+            });
 
             testClient.drain(done);
         });
@@ -253,7 +323,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"max","result":5,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation": "max",
+                "result": 5,
+                "nulls": 0,
+                "infinities": 0,
+                "nans": 0,
+                "type": "formula"
+            });
 
             testClient.drain(done);
         });
@@ -265,7 +342,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"min","result":1,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation": "min",
+                "result": 1,
+                "nulls": 0,
+                "infinities": 0,
+                "nans": 0,
+                "type": "formula"
+            });
 
             testClient.drain(done);
         });
@@ -280,7 +364,14 @@ describe('dataviews using tables with overviews', function() {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {"operation":"sum","result":15,"nulls":0,"type":"formula"});
+            assert.deepEqual(formula_result, {
+                "operation":"sum",
+                "result":15,
+                "nulls":0,
+                "infinities": 0,
+                "nans": 0,
+                "type":"formula"
+            });
 
             testClient.drain(done);
         });
@@ -378,7 +469,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"sum","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation":"sum",
+                        "result":1,
+                        "nulls":0,
+                        "infinities": 0,
+                        "nans": 0,
+                        "type":"formula"
+                    });
                     testClient.drain(done);
                 });
             });
@@ -389,7 +487,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"avg","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation":"avg",
+                        "result":1,
+                        "nulls":0,
+                        "infinities": 0,
+                        "nans": 0,
+                        "type":"formula"
+                    });
 
                     testClient.drain(done);
                 });
@@ -401,7 +506,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"count","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation":"count",
+                        "result":1,
+                        "infinities": 0,
+                        "nans": 0,
+                        "nulls":0,
+                        "type":"formula"
+                    });
 
                     testClient.drain(done);
                 });
@@ -413,7 +525,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"max","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation": "max",
+                        "result": 1,
+                        "nulls": 0,
+                        "infinities": 0,
+                        "nans": 0,
+                        "type": "formula"
+                    });
 
                     testClient.drain(done);
                 });
@@ -425,7 +544,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"min","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation": "min",
+                        "result": 1,
+                        "nulls": 0,
+                        "infinities": 0,
+                        "nans": 0,
+                        "type": "formula"
+                    });
 
                     testClient.drain(done);
                 });
@@ -443,7 +569,14 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {"operation":"sum","result":1,"nulls":0,"type":"formula"});
+                    assert.deepEqual(formula_result, {
+                        "operation":"sum",
+                        "result":1,
+                        "nulls":0,
+                        "infinities": 0,
+                        "nans": 0,
+                        "type":"formula"
+                    });
                     testClient.drain(done);
                 });
             });
@@ -451,5 +584,69 @@ describe('dataviews using tables with overviews', function() {
 
         });
 
+        describe('aggregation special float values', function () {
+            var params = {};
+
+            it("should expose an aggregation dataview filtering special float values out", function (done) {
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_categories_special_values', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.deepEqual(dataview, {
+                        aggregation: 'sum',
+                        count: 5,
+                        nulls: 0,
+                        nans: 1,
+                        infinities: 1,
+                        min: 6,
+                        max: 6,
+                        categoriesCount: 1,
+                        categories: [ { category: 'Hawai', value: 6, agg: false } ],
+                        type: 'aggregation'
+                    });
+                    testClient.drain(done);
+                });
+            });
+
+            it('should expose a histogram dataview filtering special float values out', function (done) {
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_histogram_special_values', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.deepEqual(dataview, {
+                        bin_width: 0,
+                        bins_count: 1,
+                        bins_start: 3,
+                        nulls: 0,
+                        infinities: 1,
+                        nans: 1,
+                        avg: 3,
+                        bins: [ { bin: 0, min: 3, max: 3, avg: 3, freq: 2 } ],
+                        type: 'histogram'
+                    });
+                    testClient.drain(done);
+                });
+            });
+
+            it('should expose a formula (sum) dataview filtering special float values out', function (done) {
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_formula_sum_special_values', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.deepEqual(dataview, {
+                        operation: 'sum',
+                        result: 6,
+                        nulls: 0,
+                        nans: 1,
+                        infinities: 1,
+                        type: 'formula'
+                    });
+                    testClient.drain(done);
+                });
+            });
+        });
     });
 });

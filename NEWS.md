@@ -1,7 +1,88 @@
 # Changelog
 
-## 3.9.1
+## 3.11.1
 Released 2017-mm-dd
+
+
+## 3.11.0
+Released 2017-08-08
+
+Announcements:
+ - Allow to override with any aggregation for histograms instantiated w/o aggregation.
+
+Bug fixes:
+ - Apply timezone after truncating the minimun date for each bin to calculate timestamps in time-series.
+ - Support timestamp with timezones to calculate the number of bins in time-series.
+ - Fixed issue related to name collision while building time-series query.
+
+
+## 3.10.1
+Released 2017-08-04
+
+Bug fixes:
+ - Exclude Infinities & NaNs from ramps #719.
+ - Fixed issue in time-series when aggregation starts at 1970-01-01 (epoch) #720.
+
+
+## 3.10.0
+Released 2017-08-03
+
+Announcements:
+ - Improve time-series dataview, now supports date aggregations (e.g: daily, weekly, monthly, etc.) and timezones (UTC by default) #698.
+ - Support special numeric values (±Infinity, NaN) for json responses #706
+
+
+## 3.9.8
+Released 2017-07-21
+
+ - Upgrades windshaft to [3.2.2](https://github.com/CartoDB/windshaft/releases/tag/3.2.2).
+
+
+## 3.9.7
+Released 2017-07-20
+
+Bug fixes:
+ - Respond with 204 (No content) when vector tile has no data #712
+
+Announcements:
+ - Upgrades turbo-carto to [0.19.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.2)
+
+
+## 3.9.6
+Released 2017-07-11
+
+ - Dataviews: support for aggregation in search results #708
+
+
+## 3.9.5
+Released 2017-06-27
+
+ - Dataviews: support special numeric values (±Infinity, NaN) #700
+
+
+## 3.9.4
+Released 2017-06-22
+
+Announcements:
+ - Upgrades camshaft to [0.55.6](https://github.com/CartoDB/camshaft/releases/tag/0.55.6).
+
+## 3.9.3
+Released 2017-06-16
+
+Announcements:
+ - Upgrades camshaft to [0.55.5](https://github.com/CartoDB/camshaft/releases/tag/0.55.5).
+
+## 3.9.2
+Released 2017-06-16
+
+Announcements:
+ - Upgrades camshaft to [0.55.4](https://github.com/CartoDB/camshaft/releases/tag/0.55.4).
+
+## 3.9.1
+Released 2017-06-06
+
+Announcements:
+ - Upgrades camshaft to [0.55.3](https://github.com/CartoDB/camshaft/releases/tag/0.55.3).
 
 
 ## 3.9.0
