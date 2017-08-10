@@ -1,5 +1,42 @@
 # Changelog
 
+## 3.12.0
+Released 2017-08-10
+
+Announcements:
+ - Apply max tile response time for requests to layergoup, tiles, static maps, attributes and dataviews services #717.
+ - Upgrades windshaft to [3.3.0](https://github.com/CartoDB/windshaft/releases/tag/3.3.0).
+ - Upgrades cartodb-redis to [0.14.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/0.14.0).
+
+
+## 3.11.0
+Released 2017-08-08
+
+Announcements:
+ - Allow to override with any aggregation for histograms instantiated w/o aggregation.
+
+Bug fixes:
+ - Apply timezone after truncating the minimun date for each bin to calculate timestamps in time-series.
+ - Support timestamp with timezones to calculate the number of bins in time-series.
+ - Fixed issue related to name collision while building time-series query.
+
+
+## 3.10.1
+Released 2017-08-04
+
+Bug fixes:
+ - Exclude Infinities & NaNs from ramps #719.
+ - Fixed issue in time-series when aggregation starts at 1970-01-01 (epoch) #720.
+
+
+## 3.10.0
+Released 2017-08-03
+
+Announcements:
+ - Improve time-series dataview, now supports date aggregations (e.g: daily, weekly, monthly, etc.) and timezones (UTC by default) #698.
+ - Support special numeric values (±Infinity, NaN) for json responses #706
+
+
 ## 3.9.8
 Released 2017-07-21
 
