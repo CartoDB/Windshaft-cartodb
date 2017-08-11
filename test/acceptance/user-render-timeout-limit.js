@@ -138,7 +138,15 @@ describe('user render timeout limit', function () {
             });
 
             it('layergroup creation works but tile request fails due to render timeout', function (done) {
-                this.testClient.getTile(0, 0, 0, {}, (err, res, tile) => {
+                const override = {
+                    response: {
+                        headers: {
+                            'X-Response-Timeout': 'HIT'
+                        }
+                    }
+                };
+
+                this.testClient.getTile(0, 0, 0, override, (err, res, tile) => {
                     assert.ifError(err);
 
                     assert.imageIsSimilarToFile(tile, timeoutErrorTilePath, 0.05, (err) => {
@@ -320,7 +328,14 @@ describe('user render timeout limit', function () {
                     lng: 0,
                     width: 256,
                     height: 256,
-                    format: 'png'
+                    format: 'png',
+                    // TODO: Research how to get headers from renderer through abaculus.
+                    // Abaculus is hiding http headers from renderers and returning its own headers.
+                    // response: {
+                    //     headers: {
+                    //         'X-Response-Timeout': 'HIT'
+                    //     }
+                    // }
                 };
 
                 this.testClient.getStaticCenter(params, function (err, res, tile) {
