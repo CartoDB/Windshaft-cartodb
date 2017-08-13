@@ -1,7 +1,7 @@
 # Changelog
 
 ## 3.12.1
-Released 2017-mm-dd
+Released 2017-08-13
  - Upgrades cartodb-psql to [0.10.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.10.1).
  - Upgrades windshaft to [3.3.1](https://github.com/CartoDB/windshaft/releases/tag/3.3.1).
  - Upgrades camshaft to [0.55.7](https://github.com/CartoDB/camshaft/releases/tag/0.55.7).
