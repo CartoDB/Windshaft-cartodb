@@ -3,6 +3,9 @@
 ## 3.12.2
 Released 2017-mm-dd
 
+Bug fixes:
+ - Polygon count problems #725.
+
 
 ## 3.12.1
 Released 2017-08-13
