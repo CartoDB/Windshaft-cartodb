@@ -230,7 +230,7 @@ describe('widgets-regressions', function() {
             // $$$$$$$   %%%%%%%
             // $$$$$$$$ %%%%%%%%
 
-            var notIntersectingLeftTriangle = {
+            const notIntersectingLeftTriangle = {
                 type: "Polygon",
                 coordinates:[[
                     [-161.015625,69.28725695167886],
@@ -240,7 +240,7 @@ describe('widgets-regressions', function() {
                 ]]
             };
 
-            var notIntersectingRightTriangle = {
+            const notIntersectingRightTriangle = {
                 type: "Polygon",
                 coordinates: [[
                     [-29.179687499999996,-7.01366792756663],
@@ -250,7 +250,7 @@ describe('widgets-regressions', function() {
                 ]]
             };
 
-            var intersectingTriangle = {
+            const intersectingTriangle = {
                 type: "Polygon",
                 coordinates:[[
                     [-117.42187500000001,68.13885164925573],
@@ -260,7 +260,7 @@ describe('widgets-regressions', function() {
                 ]]
             };
 
-            let query = `  
+            const query = `  
                 SELECT
                     ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
                         '${JSON.stringify(notIntersectingLeftTriangle)}'
@@ -277,7 +277,7 @@ describe('widgets-regressions', function() {
                     ), 4326), 3857), 3, 'intersectingTriangle'
             `;
 
-            var mapConfig = {
+            const mapConfig = {
                 version: '1.5.0',
                 layers: [
                     {
@@ -315,10 +315,11 @@ describe('widgets-regressions', function() {
             };
 
             this.testClient = new TestClient(mapConfig, 1234);
-            var params = {
+            const params = {
                 bbox: '-77.34374999999999,45.82879925192134,17.578125,55.97379820507658'
             };
             this.testClient.getDataview('val_formula', params, function(err, dataview) {
+                assert.ifError(err);
                 assert.equal(dataview.categories.length, 1);
                 assert.equal(dataview.categories[0].category, 'intersectingTriangle');
                 done();
