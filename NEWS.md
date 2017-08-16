@@ -1,7 +1,7 @@
 # Changelog
 
 ## 3.12.2
-Released 2017-mm-dd
+Released 2017-08-16
 
 Bug fixes:
  - Polygon count problems #725.
