@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.12.6
+Released 2017-mm-dd
+
+
+
 ## 3.12.5
 Released 2017-08-24
 
