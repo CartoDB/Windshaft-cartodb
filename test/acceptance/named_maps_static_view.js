@@ -217,7 +217,7 @@ describe('named maps static view', function() {
             }
             getStaticMap({ bbox: '0,45,90,45' }, function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('override-zoom'), IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('override-bbox'), IMAGE_TOLERANCE, done);
             });
         });
     });
