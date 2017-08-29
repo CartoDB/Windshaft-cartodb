@@ -3,6 +3,8 @@
 ## 3.12.6
 Released 2017-mm-dd
 
+Bugfixes:
+ - Bounding box parameter ignored in static named maps #735.
 
 
 ## 3.12.5
