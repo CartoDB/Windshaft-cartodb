@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.6.7
+Released 2017-09-01
+
+Announcements:
+ - Adding a new cartodb-psql fixing a pg vulnerability.
+
+
 ## 3.6.6
 Released 2017-05-11
 
