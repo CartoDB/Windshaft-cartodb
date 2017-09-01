@@ -1,6 +1,4 @@
-sudo: false
-
-before_script:
+before_install:		
   - lsb_release -a
   - sudo mv /etc/apt/sources.list.d/pgdg.list* /tmp
   - sudo apt-get -qq purge postgis* postgresql*
@@ -17,6 +15,8 @@ before_script:
   - sudo apt-get install -q ogr2ogr2-static-bin
   - echo -e "local\tall\tall\ttrust\nhost\tall\tall\t127.0.0.1/32\ttrust\nhost\tall\tall\t::1/128\ttrust" |sudo tee /etc/postgresql/9.3/main/pg_hba.conf
   - sudo service postgresql restart
+
+before_script:
   - psql -c 'create database template_postgis;' -U postgres
   - psql -c 'CREATE EXTENSION postgis;' -U postgres -d template_postgis
   - ./configure
