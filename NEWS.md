@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.43.2
+
+Released 2017-09-01
+
+Bug fixes:
+ - Adding a new cartodb-psql fixing a pg vulnerability
+ 
+
 ## 2.43.1
 
 Released 2016-05-19
