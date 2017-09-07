@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.12.8
+Released 2017-mm-dd
+
+Bug fixes:
+- Integer out of range in date histograms. (https://github.com/CartoDB/support/issues/962)
+
 ## 3.12.7
 Released 2017-09-01
 
