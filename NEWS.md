@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.12.9
+Released 2017-mm-dd
+
+Bug fixes:
+- Do not use distinct when calculating quantiles. #743
+
 ## 3.12.8
 Released 2017-09-07
 
