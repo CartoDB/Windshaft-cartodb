@@ -1,5 +1,20 @@
 # Changelog
 
+## 3.12.10
+Released 2017-mm-dd
+
+## 3.12.9
+Released 2017-09-07
+
+Bug fixes:
+- Do not use distinct when calculating quantiles. #743
+
+## 3.12.8
+Released 2017-09-07
+
+Bug fixes:
+- Integer out of range in date histograms. (https://github.com/CartoDB/support/issues/962)
+
 ## 3.12.7
 Released 2017-09-01
 
