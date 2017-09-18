@@ -42,7 +42,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.2",
     "underscore": "~1.6.0",
-    "windshaft": "3.3.1",
+    "windshaft": "3.3.2",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
