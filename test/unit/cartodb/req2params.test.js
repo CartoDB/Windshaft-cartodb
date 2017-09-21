@@ -45,7 +45,8 @@ describe('req2params', function() {
 
     it('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
-      baseController.req2params(prepareRequest(req), function(err, req) {
+      var res = {};
+      baseController.req2params(prepareRequest(req), res, function(err, req) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -59,7 +60,8 @@ describe('req2params', function() {
 
     it('sets dbname from redis metadata', function(done){
       var req = {headers: { host:'localhost' }, query: {} };
-      baseController.req2params(prepareRequest(req), function(err, req) {
+      var res = {};
+      baseController.req2params(prepareRequest(req), res, function(err, req) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -73,7 +75,8 @@ describe('req2params', function() {
 
     it('sets also dbuser for authenticated requests', function(done){
       var req = {headers: { host:'localhost' }, query: {map_key: '1234'} };
-      baseController.req2params(prepareRequest(req), function(err, req) {
+      var res = {};
+      baseController.req2params(prepareRequest(req), res, function(err, req) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -90,7 +93,7 @@ describe('req2params', function() {
                   map_key: '1235'
               }
           };
-          baseController.req2params(prepareRequest(req), function(err, req) {
+          baseController.req2params(prepareRequest(req), res, function(err, req) {
               // wrong key resets params to no user
               assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
               done();
@@ -116,7 +119,8 @@ describe('req2params', function() {
                     lzma: data
                 }
             };
-            baseController.req2params(prepareRequest(req), function(err, req) {
+            var res = {};
+            baseController.req2params(prepareRequest(req), res, function(err, req) {
                 if ( err ) {
                     return done(err);
                 }
