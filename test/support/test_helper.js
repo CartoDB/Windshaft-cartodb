@@ -14,6 +14,7 @@ var lzmaWorker = new LZMA();
 var redis = require('redis');
 var nock = require('nock');
 var log4js = require('log4js');
+var pg = require('pg');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
@@ -127,6 +128,11 @@ afterEach(function(done) {
     });
 });
 
+function cleanPGPoolConnections () {
+    // TODO: this method will be replaced by psql.end
+    pg.end();
+}
+
 function deleteRedisKeys(keysToDelete, callback) {
 
     if (Object.keys(keysToDelete).length === 0) {
@@ -166,12 +172,30 @@ function rmdirRecursiveSync(dirname) {
     }
 }
 
+function configureMetadata(action, params, callback) {
+    redisClient.SELECT(5, function (err) {
+        if (err) {
+            return callback(err);
+        }
+
+        redisClient[action](params, function (err) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback();
+        });
+    });
+}
+
 module.exports = {
   deleteRedisKeys: deleteRedisKeys,
   lzma_compress_to_base64: lzma_compress_to_base64,
   checkNoCache: checkNoCache,
   checkSurrogateKey: checkSurrogateKey,
   checkCache: checkCache,
-  rmdirRecursiveSync: rmdirRecursiveSync
+  rmdirRecursiveSync: rmdirRecursiveSync,
+  configureMetadata,
+  cleanPGPoolConnections
 };
 

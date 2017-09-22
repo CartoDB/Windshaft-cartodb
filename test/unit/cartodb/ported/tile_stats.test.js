@@ -6,10 +6,13 @@ var LayergroupController = require('../../../../lib/cartodb/controllers/layergro
 
 describe('tile stats', function() {
 
-    after(function() {
-        global.statsClient = null;
+    beforeEach(function () {
+        this.statsClient = global.statsClient;
     });
 
+    afterEach(function() {
+        global.statsClient  = this.statsClient;
+    });
 
     it('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
         var expectedCalls = 2, // it will call increment once for the general error

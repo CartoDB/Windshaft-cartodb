@@ -1,7 +1,87 @@
 # Changelog
 
-## 3.10.2
+## 3.12.11
 Released 2017-mm-dd
+
+## 3.12.10
+Released 2017-09-18
+ - Upgrades windshaft to [3.3.2](https://github.com/CartoDB/windshaft/releases/tag/3.3.2).
+
+## 3.12.9
+Released 2017-09-07
+
+Bug fixes:
+- Do not use distinct when calculating quantiles. #743
+
+## 3.12.8
+Released 2017-09-07
+
+Bug fixes:
+- Integer out of range in date histograms. (https://github.com/CartoDB/support/issues/962)
+
+## 3.12.7
+Released 2017-09-01
+
+ - Upgrades camshaft to [0.58.1](https://github.com/CartoDB/camshaft/releases/tag/0.58.1).
+
+
+## 3.12.6
+Released 2017-08-31
+
+ - Upgrades camshaft to [0.58.0](https://github.com/CartoDB/camshaft/releases/tag/0.58.0).
+
+
+## 3.12.5
+Released 2017-08-24
+
+ - Upgrades camshaft to [0.57.0](https://github.com/CartoDB/camshaft/releases/tag/0.57.0).
+
+
+## 3.12.4
+Released 2017-08-23
+
+Announcements:
+ - Upgrades camshaft to [0.56.0](https://github.com/CartoDB/camshaft/releases/tag/0.56.0).
+
+## 3.12.3
+Released 2017-08-22
+
+Announcements:
+ - Upgrades camshaft to [0.55.8](https://github.com/CartoDB/camshaft/releases/tag/0.55.8).
+
+## 3.12.2
+Released 2017-08-16
+
+Bug fixes:
+ - Polygon count problems #725.
+
+
+## 3.12.1
+Released 2017-08-13
+ - Upgrades cartodb-psql to [0.10.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.10.1).
+ - Upgrades windshaft to [3.3.1](https://github.com/CartoDB/windshaft/releases/tag/3.3.1).
+ - Upgrades camshaft to [0.55.7](https://github.com/CartoDB/camshaft/releases/tag/0.55.7).
+
+
+## 3.12.0
+Released 2017-08-10
+
+Announcements:
+ - Apply max tile response time for requests to layergoup, tiles, static maps, attributes and dataviews services #717.
+ - Upgrades windshaft to [3.3.0](https://github.com/CartoDB/windshaft/releases/tag/3.3.0).
+ - Upgrades cartodb-redis to [0.14.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/0.14.0).
+
+
+## 3.11.0
+Released 2017-08-08
+
+Announcements:
+ - Allow to override with any aggregation for histograms instantiated w/o aggregation.
+
+Bug fixes:
+ - Apply timezone after truncating the minimun date for each bin to calculate timestamps in time-series.
+ - Support timestamp with timezones to calculate the number of bins in time-series.
+ - Fixed issue related to name collision while building time-series query.
 
 
 ## 3.10.1

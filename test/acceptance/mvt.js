@@ -24,14 +24,24 @@ describe('mvt', function () {
             desc: 'should get empty mvt with code 204 (no content)',
             coords: { z: 0, x: 0, y: 0 },
             format: 'mvt',
-            status: 204,
+            response: {
+                status: 204,
+                headers: {
+                    'Content-Type': undefined
+                }
+            },
             mapConfig: createMapConfig(TestClient.SQL.EMPTY)
         },
         {
             desc: 'should get mvt tile with code 200 (ok)',
             coords: { z: 0, x: 0, y: 0 },
             format: 'mvt',
-            status: 200,
+            response: {
+                status: 200,
+                headers: {
+                    'Content-Type': 'application/x-protobuf'
+                }
+            },
             mapConfig: createMapConfig()
         }
     ];
@@ -40,12 +50,12 @@ describe('mvt', function () {
         it(test.desc, done => {
             const testClient = new TestClient(test.mapConfig, 1234);
             const { z, x, y } = test.coords;
-            const { format, status } = test;
+            const { format, response } = test;
 
-            testClient.getTile(z, x, y, { format, status }, (err, res) => {
+            testClient.getTile(z, x, y, { format, response }, (err, res) => {
                 assert.ifError(err);
 
-                assert.equal(res.statusCode, test.status);
+                assert.equal(res.statusCode, test.response.status);
                 testClient.drain(done);
             });
         });
