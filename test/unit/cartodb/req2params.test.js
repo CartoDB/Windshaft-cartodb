@@ -1,6 +1,5 @@
 var assert = require('assert');
 var _ = require('underscore');
-var test_helper = require('../../support/test_helper');
 
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
@@ -101,35 +100,32 @@ describe('req2params', function() {
       });
     });
 
-    it('it should extend params with decoded lzma', function(done) {
-        var qo = {
-            config: {
-                version: '1.3.0'
+    it('it should remove invalid params', function(done) {
+        var config = {
+            version: '1.3.0'
+        };
+        var req = {
+            headers: {
+                host:'localhost'
+            },
+            query: {
+                non_included: 'toberemoved',
+                api_key: 'test',
+                style: 'override',
+                config: config
             }
         };
-        test_helper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
-            var req = {
-                headers: {
-                    host:'localhost'
-                },
-                query: {
-                    non_included: 'toberemoved',
-                    api_key: 'test',
-                    style: 'override',
-                    lzma: data
-                }
-            };
-            var res = {};
-            req2params(prepareRequest(req), res, function(err, req) {
-                if ( err ) {
-                    return done(err);
-                }
-                var query = req.params;
-                assert.deepEqual(qo.config, query.config);
-                assert.equal('test', query.api_key);
-                assert.equal(undefined, query.non_included);
-                done();
-            });
+        var res = {};
+
+        req2params(prepareRequest(req), res, function(err, req) {
+            if ( err ) {
+                return done(err);
+            }
+            var query = req.params;
+            assert.deepEqual(config, query.config);
+            assert.equal('test', query.api_key);
+            assert.equal(undefined, query.non_included);
+            done();
         });
     });
 
