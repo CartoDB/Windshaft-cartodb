@@ -1,6 +1,5 @@
 var assert = require('assert');
 var _ = require('underscore');
-require('../../support/test_helper');
 
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
@@ -116,30 +115,17 @@ describe('req2params', function() {
                 config: config
             }
         };
-        test_helper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
-            var req = {
-                headers: {
-                    host:'localhost'
-                },
-                query: {
-                    non_included: 'toberemoved',
-                    api_key: 'test',
-                    style: 'override',
-                    lzma: data
-                }
-            };
-            var res = {};
-            req2params(prepareRequest(req), res, function(err, req) {
-                if ( err ) {
-                    return done(err);
-                }
-                var query = req.params;
-                assert.deepEqual(qo.config, query.config);
-                assert.equal('test', query.api_key);
-                assert.equal(undefined, query.non_included);
-                done();
-            });
+        var res = {};
 
+        req2params(prepareRequest(req), res, function(err, req) {
+            if ( err ) {
+                return done(err);
+            }
+            var query = req.params;
+            assert.deepEqual(config, query.config);
+            assert.equal('test', query.api_key);
+            assert.equal(undefined, query.non_included);
+            done();
         });
     });
 
