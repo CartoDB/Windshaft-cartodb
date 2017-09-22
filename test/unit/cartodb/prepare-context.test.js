@@ -39,6 +39,7 @@ describe('prepare-context', function() {
             done: function() {}
         };
         req.context = { user: 'localhost' };
+        req.params = {};
         return req;
     }
 
