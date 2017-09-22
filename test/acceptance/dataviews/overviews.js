@@ -403,7 +403,7 @@ describe('dataviews using tables with overviews', function() {
                     assert.ok(histogram);
                     assert.equal(histogram.type, 'histogram');
                     assert.ok(Array.isArray(histogram.bins));
-                    assert.equal(histogram.bins.length, 4);
+                    assert.equal(histogram.bins.length, 1);
                     testClient.drain(done);
                 });
             });
