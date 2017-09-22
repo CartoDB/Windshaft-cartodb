@@ -162,6 +162,7 @@ describe('tt-query-map-config-adapter', function() {
                 type: 'range',
                 dataview: 'rank_max_histogram',
                 column: 'rank_max',
+                column_type: undefined,
                 min: 8,
                 max: 12
             });
@@ -169,6 +170,7 @@ describe('tt-query-map-config-adapter', function() {
                 type: 'category',
                 dataview: 'adm0_a3_count',
                 column: 'adm0_a3',
+                column_type: 'string',
                 accept: ['USA', 'IND']
             });
 
@@ -185,13 +187,13 @@ describe('tt-query-map-config-adapter', function() {
                 '  \'TT_populated_places_simple_reduced\',',
                 '  \'@bbox\'::json,',
                 '  ARRAY[\'{"min":8,"max":12,"type":"range","column":"rank_max"}\',' +
-                '\'{"accept":["USA","IND"],"type":"category","column":"adm0_a3"}\']::json[],',
-                '  ARRAY[]::json[],',
+                '\'{"accept":["USA","IND"],"type":"category","column":"adm0_a3","column_type":"string"}\']::json[],',
+                '  ARRAY[\'{"type":"numeric","aggregate_function":"count","aggregate_column":"1"}\']::json[],',
                 '  @zoom',
                 ') AS tiledata (',
                 '  cartodb_id int,',
-                '  the_geom_webmercator geometry',
-                '  ',
+                '  the_geom_webmercator geometry,',
+                '  count_vals numeric',
                 ')'
             ].join('\n'));
 

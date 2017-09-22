@@ -1,4 +1,4 @@
-var PostgresDatasource = require('../../../../lib/cartodb/backends/turbo-carto-postgres-datasource');
+var PostgresDatasource = require('../../../../lib/cartodb/models/datasource/postgresql');
 var PSQL = require('cartodb-psql');
 var _ = require('underscore');
 var assert = require('assert');
@@ -24,7 +24,7 @@ describe('turbo-carto-postgres-datasource', function() {
             '  END AS values',
             'FROM generate_series(1, 1000) x'
         ].join('\n');
-        this.datasource = new PostgresDatasource(psql, sql);
+        this.datasource = new PostgresDatasource(psql, {options: { sql: sql }}, null);
     });
 
     it('should ignore NaNs and Infinities when computing ramps', function(done) {

@@ -332,6 +332,21 @@ describe('histogram-dataview for date column type', function() {
             });
         });
 
+        it('should cast overridden start and end to float to avoid out of range errors ' + test.desc, function (done) {
+            var params = {
+                start: -2145916800,
+                end: 1009843199
+            };
+
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
+                assert.ok(!err, err);
+                assert.equal(dataview.type, 'histogram');
+                assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
+
+                done();
+            });
+        });
 
         it('should return same histogram ' + test.desc, function (done) {
             var params = {
