@@ -6,6 +6,9 @@ var config = {
     // Its default size is 4, but it can be changed at startup time (the absolute maximum is 128).
     // See http://docs.libuv.org/en/latest/threadpool.html
     ,uv_threadpool_size: undefined
+    // Time in milliseconds to force GC cycle.
+    // Disable by using <=0 value.
+    ,gc_interval: 10000
     // Regular expression pattern to extract username
     // from hostname. Must have a single grabbing block.
     ,user_from_host: '(.*)'
@@ -315,7 +318,7 @@ var config = {
         // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
         cdbQueryTablesFromPostgres: true,
         // whether in mapconfig is available stats & metadata for each layer
-        layerMetadata: true
+        layerStats: true
     }
 };
 

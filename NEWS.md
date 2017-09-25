@@ -1,8 +1,283 @@
 # Changelog
 
-
-## 3.1.2
+## 3.12.11
 Released 2017-mm-dd
+
+Bugfixes:
+ - Bounding box parameter ignored in static named maps #735.
+
+
+## 3.12.10
+Released 2017-09-18
+ - Upgrades windshaft to [3.3.2](https://github.com/CartoDB/windshaft/releases/tag/3.3.2).
+
+## 3.12.9
+Released 2017-09-07
+
+Bug fixes:
+- Do not use distinct when calculating quantiles. #743
+
+## 3.12.8
+Released 2017-09-07
+
+Bug fixes:
+- Integer out of range in date histograms. (https://github.com/CartoDB/support/issues/962)
+
+## 3.12.7
+Released 2017-09-01
+
+ - Upgrades camshaft to [0.58.1](https://github.com/CartoDB/camshaft/releases/tag/0.58.1).
+
+
+## 3.12.6
+Released 2017-08-31
+
+ - Upgrades camshaft to [0.58.0](https://github.com/CartoDB/camshaft/releases/tag/0.58.0).
+
+
+## 3.12.5
+Released 2017-08-24
+
+ - Upgrades camshaft to [0.57.0](https://github.com/CartoDB/camshaft/releases/tag/0.57.0).
+
+
+## 3.12.4
+Released 2017-08-23
+
+Announcements:
+ - Upgrades camshaft to [0.56.0](https://github.com/CartoDB/camshaft/releases/tag/0.56.0).
+
+## 3.12.3
+Released 2017-08-22
+
+Announcements:
+ - Upgrades camshaft to [0.55.8](https://github.com/CartoDB/camshaft/releases/tag/0.55.8).
+
+## 3.12.2
+Released 2017-08-16
+
+Bug fixes:
+ - Polygon count problems #725.
+
+
+## 3.12.1
+Released 2017-08-13
+ - Upgrades cartodb-psql to [0.10.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.10.1).
+ - Upgrades windshaft to [3.3.1](https://github.com/CartoDB/windshaft/releases/tag/3.3.1).
+ - Upgrades camshaft to [0.55.7](https://github.com/CartoDB/camshaft/releases/tag/0.55.7).
+
+
+## 3.12.0
+Released 2017-08-10
+
+Announcements:
+ - Apply max tile response time for requests to layergoup, tiles, static maps, attributes and dataviews services #717.
+ - Upgrades windshaft to [3.3.0](https://github.com/CartoDB/windshaft/releases/tag/3.3.0).
+ - Upgrades cartodb-redis to [0.14.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/0.14.0).
+
+
+## 3.11.0
+Released 2017-08-08
+
+Announcements:
+ - Allow to override with any aggregation for histograms instantiated w/o aggregation.
+
+Bug fixes:
+ - Apply timezone after truncating the minimun date for each bin to calculate timestamps in time-series.
+ - Support timestamp with timezones to calculate the number of bins in time-series.
+ - Fixed issue related to name collision while building time-series query.
+
+
+## 3.10.1
+Released 2017-08-04
+
+Bug fixes:
+ - Exclude Infinities & NaNs from ramps #719.
+ - Fixed issue in time-series when aggregation starts at 1970-01-01 (epoch) #720.
+
+
+## 3.10.0
+Released 2017-08-03
+
+Announcements:
+ - Improve time-series dataview, now supports date aggregations (e.g: daily, weekly, monthly, etc.) and timezones (UTC by default) #698.
+ - Support special numeric values (±Infinity, NaN) for json responses #706
+
+
+## 3.9.8
+Released 2017-07-21
+
+ - Upgrades windshaft to [3.2.2](https://github.com/CartoDB/windshaft/releases/tag/3.2.2).
+
+
+## 3.9.7
+Released 2017-07-20
+
+Bug fixes:
+ - Respond with 204 (No content) when vector tile has no data #712
+
+Announcements:
+ - Upgrades turbo-carto to [0.19.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.2)
+
+
+## 3.9.6
+Released 2017-07-11
+
+ - Dataviews: support for aggregation in search results #708
+
+
+## 3.9.5
+Released 2017-06-27
+
+ - Dataviews: support special numeric values (±Infinity, NaN) #700
+
+
+## 3.9.4
+Released 2017-06-22
+
+Announcements:
+ - Upgrades camshaft to [0.55.6](https://github.com/CartoDB/camshaft/releases/tag/0.55.6).
+
+## 3.9.3
+Released 2017-06-16
+
+Announcements:
+ - Upgrades camshaft to [0.55.5](https://github.com/CartoDB/camshaft/releases/tag/0.55.5).
+
+## 3.9.2
+Released 2017-06-16
+
+Announcements:
+ - Upgrades camshaft to [0.55.4](https://github.com/CartoDB/camshaft/releases/tag/0.55.4).
+
+## 3.9.1
+Released 2017-06-06
+
+Announcements:
+ - Upgrades camshaft to [0.55.3](https://github.com/CartoDB/camshaft/releases/tag/0.55.3).
+
+
+## 3.9.0
+Released 2017-05-31
+
+Announcements:
+ - Upgrades windshaft to [3.2.1](https://github.com/CartoDB/windshaft/releases/tag/3.2.1).
+ - Add support to retrieve info about layer stats in map instantiation.
+ - Upgrades camshaft to [0.55.2](https://github.com/CartoDB/camshaft/releases/tag/0.55.2).
+ - Remove promise polyfill from turbo-carto adapter
+
+
+## 3.8.0
+Released 2017-05-22
+
+Announcements:
+ - Upgrades camshaft to [0.55.0](https://github.com/CartoDB/camshaft/releases/tag/0.55.0).
+ - Upgrades turbo-carto to [0.19.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.19.1)
+
+
+## 3.7.1
+Released 2017-05-18
+
+Bug fixes:
+ - Fix buffersize assignment when is not defined in requested mapconfig.
+
+
+## 3.7.0
+Released 2017-05-18
+
+Announcements:
+- Manage multiple values of buffer-size for different formats
+- Upgrades windshaft to [3.2.0](https://github.com/CartoDB/windshaft/releases/tag/3.2.0).
+
+
+## 3.6.6
+Released 2017-05-11
+
+Announcements:
+ - Upgrades camshaft to [0.54.4](https://github.com/CartoDB/camshaft/releases/tag/0.54.4).
+
+
+## 3.6.5
+Released 2017-05-09
+
+Announcements:
+ - Upgrades camshaft to [0.54.3](https://github.com/CartoDB/camshaft/releases/tag/0.54.3).
+
+
+## 3.6.4
+Released 2017-05-05
+
+Announcements:
+ - Upgrade cartodb-psql to [0.8.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.8.0).
+ - Upgrades camshaft to [0.54.2](https://github.com/CartoDB/camshaft/releases/tag/0.54.2).
+ - Upgrades windshaft to [3.1.2](https://github.com/CartoDB/windshaft/releases/tag/3.1.2).
+
+
+## 3.6.3
+Released 2017-04-25
+
+Announcements:
+ - Upgrades windshaft to [3.1.1](https://github.com/CartoDB/windshaft/releases/tag/3.1.1).
+
+
+## 3.6.2
+Released 2017-04-24
+
+Announcements:
+ - Upgrades grainstore to [1.6.3](https://github.com/CartoDB/grainstore/releases/tag/1.6.3).
+
+
+## 3.6.1
+Released 2017-04-24
+
+Announcements:
+ - Upgrades camshaft to [0.54.1](https://github.com/CartoDB/camshaft/releases/tag/0.54.1).
+
+
+## 3.6.0
+Released 2017-04-20
+
+Announcements:
+ - Upgrades camshaft to [0.54.0](https://github.com/CartoDB/camshaft/releases/tag/0.54.0).
+
+
+## 3.5.1
+Released 2017-04-11
+
+Announcements:
+ - Upgrades camshaft to [0.53.1](https://github.com/CartoDB/camshaft/releases/tag/0.53.1).
+
+
+## 3.5.0
+Released 2017-04-10
+
+Bug fixes:
+ - Fix invalidation of cache for maps with analyses #638.
+
+Announcements:
+ - Upgrades camshaft to [0.53.0](https://github.com/CartoDB/camshaft/releases/tag/0.53.0).
+
+
+## 3.4.0
+Released 2017-04-03
+
+Announcements:
+ - Upgrades camshaft to [0.51.0](https://github.com/CartoDB/camshaft/releases/tag/0.51.0).
+
+
+## 3.3.0
+Released 2017-04-03
+
+New features:
+ - Static map endpoints allow specifying the layers to render #653.
+
+
+## 3.2.0
+Released 2017-03-30
+
+Announcements:
+ - Upgrades windshaft to [3.1.0](https://github.com/CartoDB/windshaft/releases/tag/3.1.0).
+ - Active GC interval.
 
 
 ## 3.1.1

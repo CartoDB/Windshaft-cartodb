@@ -373,5 +373,70 @@ describe('analysis-layers error cases', function() {
         });
     });
 
+    it('should return "function does not exist" indicating the node_id and context', function(done) {
+        var mapConfig = createMapConfig([{
+            "type": "cartodb",
+            "options": {
+                "source": {
+                    "id": "HEAD"
+                },
+                "cartocss": '#polygons { polygon-fill: red; }',
+                "cartocss_version": "2.3.0"
+            }
+        }], {}, [{
+            "id": "HEAD",
+            "type": "buffer",
+            "params": {
+                "source": {
+                    "id": "HEAD2",
+                    "type": "buffer",
+                    "params": {
+                        "source": {
+                            "id": "HEAD3",
+                            "type": 'deprecated-sql-function',
+                            "params": {
+                                "id": "HEAD4",
+                                "function_name": 'DEP_EXT_does_not_exist_fn',
+                                "primary_source": {
+                                    "type": 'source',
+                                    "params": {
+                                        "query": "select * from populated_places_simple_reduced"
+                                    }
+                                },
+                                "function_args": ['wadus']
+                            }
+                        },
+                        "radius": 10
+                    }
+                },
+                "radius": 10
+            }
+        }]);
+
+        var testClient = new TestClient(mapConfig, 1234);
+
+        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+            assert.ok(!err, err);
+
+            assert.equal(layergroupResult.errors.length, 1);
+            assert.equal(
+                layergroupResult.errors[0],
+                'function dep_ext_does_not_exist_fn(unknown, unknown, unknown, text[], unknown) does not exist'
+            );
+
+            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
+            assert.equal(
+                layergroupResult.errors_with_context[0].message,
+                'function dep_ext_does_not_exist_fn(unknown, unknown, unknown, text[], unknown) does not exist'
+            );
+            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.equal(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD3');
+
+            testClient.drain(done);
+        });
+    });
+
+
 
 });

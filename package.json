@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "3.1.2",
+  "version": "3.12.11",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -16,14 +16,17 @@
   "contributors": [
     "Simon Tokumine <simon@vizzuality.com>",
     "Javi Santana <jsantana@vizzuality.com>",
-    "Sandro Santilli <strk@vizzuality.com>"
+    "Sandro Santilli <strk@vizzuality.com>",
+    "Carlos Matallín <matallo@carto.com>",
+    "Daniel Garcia Aubert <dgaubert@carto.com>",
+    "Mario de Frutos <mario.defrutos@carto.com>"
   ],
   "dependencies": {
     "body-parser": "~1.14.0",
-    "camshaft": "0.50.3",
-    "cartodb-psql": "~0.7.1",
+    "camshaft": "0.58.1",
+    "cartodb-psql": "0.10.1",
     "cartodb-query-tables": "0.2.0",
-    "cartodb-redis": "0.13.2",
+    "cartodb-redis": "0.14.0",
     "debug": "~2.2.0",
     "dot": "~1.0.2",
     "express": "~4.13.3",
@@ -38,20 +41,22 @@
     "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
-    "turbo-carto": "0.19.0",
+    "turbo-carto": "0.19.2",
     "underscore": "~1.6.0",
-    "windshaft": "3.0.1",
+    "windshaft": "3.3.2",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
     "istanbul": "~0.4.3",
-    "jshint": "~2.6.0",
-    "mocha": "~1.21.4",
+    "jshint": "~2.9.4",
+    "mocha": "~3.4.1",
+    "moment": "~2.18.1",
     "nock": "~2.11.0",
     "redis": "~0.12.1",
     "strftime": "~0.8.2"
   },
   "scripts": {
+    "lint": "jshint lib test",
     "preinstall": "make pre-install",
     "test": "make test-all"
   },
