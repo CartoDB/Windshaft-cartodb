@@ -7,7 +7,10 @@ var PgConnection = require('../../../lib/cartodb/backends/pg_connection');
 var AuthApi = require('../../../lib/cartodb/api/auth_api');
 var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 
-var prepareContextMiddleware = require('../../../lib/cartodb/middleware/prepare-context');
+const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
+const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
+const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
+
 var windshaft = require('windshaft');
 
 describe('prepare-context', function() {
@@ -16,8 +19,10 @@ describe('prepare-context', function() {
     var test_pubuser = global.environment.postgres.user;
     var test_database = test_user + '_db';
 
+    let cleanUpQueryParams;
+    let dbConnSetup;
+    let authorize;
 
-    var prepareContext;
     before(function() {
         var redisPool = new RedisPool(global.environment.redis);
         var mapStore = new windshaft.storage.MapStore();
@@ -26,12 +31,16 @@ describe('prepare-context', function() {
         var templateMaps = new TemplateMaps(redisPool);
         var authApi = new AuthApi(pgConnection, metadataBackend, mapStore, templateMaps);
 
-        prepareContext = prepareContextMiddleware(authApi, pgConnection);
+        cleanUpQueryParams = cleanUpQueryParamsMiddleware();
+        authorize = authorizeMiddleware(authApi);
+        dbConnSetup = dbConnSetupMiddleware(pgConnection);
     });
 
 
     it('can be found in server_options', function(){
-      assert.ok(_.isFunction(prepareContext));
+        assert.ok(_.isFunction(authorize));
+        assert.ok(_.isFunction(dbConnSetup));
+        assert.ok(_.isFunction(cleanUpQueryParams));
     });
 
     function prepareRequest(req) {
@@ -46,22 +55,22 @@ describe('prepare-context', function() {
     it('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
       var res = {};
-      prepareContext(prepareRequest(req), res, function(err, req) {
+
+      cleanUpQueryParams(prepareRequest(req), res, function(err) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
           assert.ok(req.hasOwnProperty('params'), 'request has params');
           assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
-          assert.equal(req.params.dbname, test_database, 'could forge dbname: '+ req.params.dbname);
-          assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
           done();
       });
     });
 
     it('sets dbname from redis metadata', function(done){
-      var req = {headers: { host:'localhost' }, query: {} };
+      var req = {headers: { host:'localhost' }, query: {}, locals: {} };
       var res = {};
-      prepareContext(prepareRequest(req), res, function(err, req) {
+
+      dbConnSetup(prepareRequest(req), res, function(err) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -74,31 +83,38 @@ describe('prepare-context', function() {
     });
 
     it('sets also dbuser for authenticated requests', function(done){
-      var req = {headers: { host:'localhost' }, query: {map_key: '1234'} };
-      var res = {};
-      prepareContext(prepareRequest(req), res, function(err, req) {
-          if ( err ) { done(err); return; }
-          assert.ok(_.isObject(req.query), 'request has query');
-          assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-          assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
-          assert.equal(req.params.dbname, test_database);
-          assert.equal(req.params.dbuser, test_user);
+        var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }, locals: {} };
+        var res = {};
 
-          req = {
-              headers: {
-                  host:'localhost'
-              },
-              query: {
-                  map_key: '1235'
-              }
-          };
-          prepareContext(prepareRequest(req), res, function(err, req) {
-              // wrong key resets params to no user
-              assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
-              done();
-          });
-      });
+        // FIXME: review authorize-pgconnsetup workflow, It might we are doing authorization twice.
+        authorize(prepareRequest(req), res, function (err) {
+            if (err) { done(err); return; }
+            dbConnSetup(req, res, function(err) {
+                if ( err ) { done(err); return; }
+                assert.ok(_.isObject(req.query), 'request has query');
+                assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
+                assert.ok(req.hasOwnProperty('params'), 'request has params');
+                assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
+                assert.equal(req.params.dbname, test_database);
+                assert.equal(req.params.dbuser, test_user);
+
+                req = {
+                    headers: {
+                        host:'localhost'
+                    },
+                    query: {
+                        map_key: '1235'
+                    },
+                    locals: {}
+                };
+
+                dbConnSetup(prepareRequest(req), res, function(err, req) {
+                    // wrong key resets params to no user
+                    assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
+                    done();
+                });
+            });
+        });
     });
 
     it('it should remove invalid params', function(done) {
@@ -114,14 +130,16 @@ describe('prepare-context', function() {
                 api_key: 'test',
                 style: 'override',
                 config: config
-            }
+            },
+            locals: {}
         };
         var res = {};
 
-        prepareContext(prepareRequest(req), res, function(err, req) {
+        cleanUpQueryParams(prepareRequest(req), res, function (err) {
             if ( err ) {
                 return done(err);
             }
+
             var query = req.params;
             assert.deepEqual(config, query.config);
             assert.equal('test', query.api_key);
