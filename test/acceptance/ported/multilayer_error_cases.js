@@ -135,7 +135,7 @@ describe('multilayer error cases', function() {
       });
     });
 
-    it("[FAILS] until Windshaft validates grid.json tiles: sql/interactivity combination error", function(done) {
+    it("Windshaft validates grid.json tiles: sql/interactivity combination error", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
