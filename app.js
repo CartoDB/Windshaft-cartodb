@@ -5,12 +5,11 @@ var fs = require('fs');
 var _ = require('underscore');
 var semver = require('semver');
 
-var ver = process.versions.node;
-ver = ver.split('-')[0]; // explode and truncate tag from version
+var nodejsVersion = process.versions.node;
 
 // jshint undef:false
-if (!semver.satisfies(ver, '>6.9.0')) {
-    console.log('Node version ' + ver + ' is not supported, please use Node.js 6.9 or higher.');
+if (!semver.satisfies(nodejsVersion, '>6.9.0')) {
+    console.log(`Node version ${nodejsVersion} is not supported, please use Node.js 6.9 or higher.`);
     process.exit(1);
 }
 
