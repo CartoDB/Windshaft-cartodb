@@ -38,6 +38,7 @@
     "queue-async": "~1.0.7",
     "redis-mpool": "0.4.1",
     "request": "~2.79.0",
+    "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.19.2",
@@ -52,7 +53,6 @@
     "moment": "~2.18.1",
     "nock": "~2.11.0",
     "redis": "~0.12.1",
-    "semver": "~1.1.4",
     "strftime": "~0.8.2"
   },
   "scripts": {

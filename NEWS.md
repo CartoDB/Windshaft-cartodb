@@ -3,6 +3,10 @@
 ## 3.12.11
 Released 2017-mm-dd
 
+Bugfixes:
+ - Bounding box parameter ignored in static named maps #735.
+
+
 ## 3.12.10
 Released 2017-09-18
  - Upgrades windshaft to [3.3.2](https://github.com/CartoDB/windshaft/releases/tag/3.3.2).
