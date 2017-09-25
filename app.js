@@ -11,7 +11,7 @@ var logError = console.error.bind(console);
 // jshint undef:true
 
 var nodejsVersion = process.versions.node;
-if (!semver.satisfies(nodejsVersion, '>6.9.0')) {
+if (!semver.satisfies(nodejsVersion, '>=6.9.0')) {
     logError(`Node version ${nodejsVersion} is not supported, please use Node.js 6.9 or higher.`);
     process.exit(1);
 }
