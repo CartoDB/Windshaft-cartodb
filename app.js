@@ -2,13 +2,19 @@ var http = require('http');
 var https = require('https');
 var path = require('path');
 var fs = require('fs');
-
 var _ = require('underscore');
+var semver = require('semver');
 
 // jshint undef:false
 var log = console.log.bind(console);
 var logError = console.error.bind(console);
 // jshint undef:true
+
+var nodejsVersion = process.versions.node;
+if (!semver.satisfies(nodejsVersion, '>6.9.0')) {
+    logError(`Node version ${nodejsVersion} is not supported, please use Node.js 6.9 or higher.`);
+    process.exit(1);
+}
 
 var argv = require('yargs')
     .usage('Usage: $0 <environment> [options]')
