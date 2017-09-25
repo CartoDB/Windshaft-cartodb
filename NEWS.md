@@ -1,7 +1,9 @@
 # Changelog
 
-## 3.12.11
+## 3.13.0
 Released 2017-mm-dd
+ - Upgrades camshaft, cartodb-query-tables, and turbo-carto: better support for query variables.
+
 
 ## 3.12.10
 Released 2017-09-18
