@@ -1,7 +1,44 @@
 # Changelog
 
-## 2.89.1
+## 2.91.3
 Released 2017-mm-dd
+
+
+## 2.91.2
+Released 2017-04-24
+
+Announcements:
+ - Upgrades grainstore to [1.6.3](https://github.com/CartoDB/grainstore/releases/tag/1.6.3).
+
+
+## 2.91.1
+Released 2017-04-24
+
+Announcements:
+ - Upgrades camshaft to [0.54.1](https://github.com/CartoDB/camshaft/releases/tag/0.54.1).
+
+
+## 2.91.0
+Released 2017-04-11
+
+Announcements:
+ - Upgrades camshaft to [0.54.0](https://github.com/CartoDB/camshaft/releases/tag/0.54.0).
+
+## 2.90.2
+Released 2017-04-11
+
+Announcements:
+ - Upgrades camshaft to [0.53.1](https://github.com/CartoDB/camshaft/releases/tag/0.53.1)
+
+
+## 2.90.0
+Released 2017-04-10
+
+Bug fixes:
+ - Fix invalidation of cache for maps with analyses #661.
+
+Announcements:
+ - Upgrades camshaft to [0.53.0](https://github.com/CartoDB/camshaft/releases/tag/0.53.0)
 
 
 ## 2.89.0
