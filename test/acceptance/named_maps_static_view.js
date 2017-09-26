@@ -222,7 +222,7 @@ describe('named maps static view', function() {
         });
     });
 
-    it.skip('FIXME: should allow to select the layers to render', function (done) {
+    it('should allow to select the layers to render', function (done) {
         var view = {
             bounds: {
                 west: 0,
