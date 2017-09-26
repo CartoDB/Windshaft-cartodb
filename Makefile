@@ -18,8 +18,8 @@ config.status--test:
 config/environments/test.js: config.status--test
 	./config.status--test
 
-# FIXME: remove -not -path filer
-TEST_SUITE := $(shell find test/{acceptance,integration,unit} -name "*.js" -not -path "*ported*" -not -path "*overviews_queries*")
+# FIXME: remove -not -path filer  -not -path "*ported*" -not -path "*overviews_queries*"
+TEST_SUITE := $(shell find test/{acceptance,integration,unit} -name "*.js")
 TEST_SUITE_UNIT := $(shell find test/unit -name "*.js")
 TEST_SUITE_INTEGRATION := $(shell find test/integration -name "*.js")
 TEST_SUITE_ACCEPTANCE := $(shell find test/acceptance -name "*.js")
