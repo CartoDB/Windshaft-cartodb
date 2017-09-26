@@ -219,9 +219,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.58.1:
-  version "0.58.1"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.58.1.tgz#e4156580683f624212ea3020e59790ad006f24cc"
+camshaft@0.59.0:
+  version "0.59.0"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.59.0.tgz#699c0834116ec87e067d42e11eea9540bddc6383"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
@@ -278,9 +278,9 @@ cartodb-psql@0.10.1, cartodb-psql@^0.10.1:
     pg cartodb/node-postgres#6.1.6-cdb1
     underscore "~1.6.0"
 
-cartodb-query-tables@0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.2.0.tgz#b4d672accde04da5b890a5d56a87b761fa7eec44"
+cartodb-query-tables@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.3.0.tgz#56e18d869666eb2e8e2cb57d0baf3acc923f8756"
 
 cartodb-redis@0.14.0:
   version "0.14.0"
@@ -2323,9 +2323,9 @@ tunnel-agent@~0.4.1:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/tunnel-agent/-/tunnel-agent-0.4.3.tgz#6373db76909fe570e08d73583365ed828a74eeeb"
 
-turbo-carto@0.19.2:
-  version "0.19.2"
-  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.19.2.tgz#062d68e59f89377f0cfa69a2717c047fe95e32fd"
+turbo-carto@0.20.0:
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.20.0.tgz#ebeb4620f3e26ed3cce53a9ff30f087f46a2e3fd"
   dependencies:
     cartocolor "4.0.0"
     colorbrewer "1.0.0"
