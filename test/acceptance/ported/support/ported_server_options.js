@@ -47,7 +47,7 @@ module.exports = _.extend({}, serverOptions, {
     log_format: null, // do not log anything
     afterLayergroupCreateCalls: 0,
     useProfiler: true,
-    req2params: function(req, callback){
+    req2params: function(req, res, callback){
 
         if ( req.query.testUnexpectedError ) {
             return callback('test unexpected error');

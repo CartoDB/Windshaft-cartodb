@@ -41,7 +41,9 @@ describe('tile stats', function() {
             jsonp: function() {},
             send: function() {}
         };
-        layergroupController.finalizeGetTileOrGrid('Unsupported format png2', reqMock, resMock, null, null);
+
+        var next = function () {};
+        layergroupController.finalizeGetTileOrGrid('Unsupported format png2', reqMock, resMock, null, null, next);
 
         assert.ok(formatMatched, 'Format was never matched in increment method');
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
@@ -74,7 +76,8 @@ describe('tile stats', function() {
 
         var layergroupController = new LayergroupController();
 
-        layergroupController.finalizeGetTileOrGrid('Another error happened', reqMock, resMock, null, null);
+        var next = function () {};
+        layergroupController.finalizeGetTileOrGrid('Another error happened', reqMock, resMock, null, null, next);
 
         assert.ok(formatMatched, 'Format was never matched in increment method');
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
