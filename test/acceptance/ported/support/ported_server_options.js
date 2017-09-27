@@ -1,6 +1,5 @@
 var _ = require('underscore');
 var serverOptions = require('../../../../lib/cartodb/server_options');
-var LayergroupToken = require('../../../../lib/cartodb/models/layergroup-token');
 var mapnik = require('windshaft').mapnik;
 var OverviewsQueryRewriter = require('../../../../lib/cartodb/utils/overviews_query_rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
@@ -56,9 +55,12 @@ module.exports = _.extend({}, serverOptions, {
 
         // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
         req.params =  _.extend({}, req.params);
-        if (req.params.token) {
-            req.params.token = LayergroupToken.parse(req.params.token).token;
-        }
+
+        // We don't want to inherit Date.now() `cache_buster` as it is the default value
+        // introduced by the middleware when no cache buster is found.
+        // We are only interested in the `token` for the ported tests.
+        delete req.params.cache_buster;
+        delete req.params.signer;
 
         _.extend(req.params, req.query);
         req.params.user = 'localhost';
