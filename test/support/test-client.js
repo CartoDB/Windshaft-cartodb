@@ -7,7 +7,7 @@ var PSQL = require('cartodb-psql');
 var _ = require('underscore');
 var mapnik = require('windshaft').mapnik;
 
-var LayergroupToken = require('./layergroup-token');
+var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
 var assert = require('./assert');
 var helper = require('./test_helper');
