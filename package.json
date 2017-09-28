@@ -22,7 +22,7 @@
     "Mario de Frutos <mario.defrutos@carto.com>"
   ],
   "dependencies": {
-    "body-parser": "~1.17.2",
+    "body-parser": "^1.18.2",
     "camshaft": "0.59.1",
     "cartodb-psql": "0.10.1",
     "cartodb-query-tables": "0.3.0",
