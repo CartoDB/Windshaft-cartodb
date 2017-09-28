@@ -101,6 +101,9 @@ var config = {
       // Milliseconds since last access before renderer cache item expires
       cache_ttl: 60000,
       statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
+      mvt: {
+        usePgSQL: false
+      },
       mapnik: {
           // The size of the pool of internal mapnik backend
           // This pool size is per mapnik renderer created in Windshaft's RendererFactory
