@@ -52,13 +52,15 @@
     "mocha": "~3.4.1",
     "moment": "~2.18.1",
     "nock": "~2.11.0",
+    "nsp": "^2.8.1",
     "redis": "~0.12.1",
     "strftime": "~0.8.2"
   },
   "scripts": {
     "lint": "jshint lib test",
     "preinstall": "make pre-install",
-    "test": "make test-all"
+    "test": "make test-all",
+    "check-security": "./node_modules/.bin/nsp check --output summary"
   },
   "engines": {
     "node": ">=6.9",
