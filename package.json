@@ -37,7 +37,7 @@
     "node-statsd": "~0.0.7",
     "queue-async": "~1.0.7",
     "redis-mpool": "0.4.1",
-    "request": "~2.79.0",
+    "request": "^2.83.0",
     "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
