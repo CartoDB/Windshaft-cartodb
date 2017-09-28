@@ -1,7 +1,12 @@
 # Changelog
 
-## 3.13.0
+## 4.0.0
 Released 2017-mm-dd
+
+Backward incompatible changes:
+ - Removes `list` dataview type.
+
+Announcements:
  - Upgrades camshaft, cartodb-query-tables, and turbo-carto: better support for query variables.
 
 Bugfixes:
