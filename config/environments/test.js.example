@@ -101,6 +101,9 @@ var config = {
       cache_ttl: 60000,
       statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
       mvt: {
+        //If enabled, MVTs will be generated with PostGIS directly, instead of using Mapnik,
+        //PostGIS 2.4 is required for this to work
+        //If disabled it will use Mapnik MVT generation
         usePgSQL: false
       },
       mapnik: {
