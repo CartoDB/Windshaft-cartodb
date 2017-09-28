@@ -4,10 +4,9 @@
 Released 2017-mm-dd
  - Upgrades camshaft, cartodb-query-tables, and turbo-carto: better support for query variables.
 
-
 Bugfixes:
  - Bounding box parameter ignored in static named maps #735.
-
+ - camhaft 0.59.1 fixes duplicate columns in aggregate-intersection analysis
 
 ## 3.12.10
 Released 2017-09-18
