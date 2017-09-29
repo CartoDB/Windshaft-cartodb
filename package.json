@@ -27,7 +27,7 @@
     "cartodb-psql": "0.10.1",
     "cartodb-query-tables": "0.3.0",
     "cartodb-redis": "0.14.0",
-    "debug": "~2.2.0",
+    "debug": "^3.1.0",
     "dot": "~1.0.2",
     "express": "^4.15.5",
     "fastly-purge": "~1.0.1",
