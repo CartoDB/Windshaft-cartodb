@@ -29,7 +29,7 @@
     "cartodb-redis": "0.14.0",
     "debug": "^3.1.0",
     "dot": "~1.0.2",
-    "express": "^4.15.5",
+    "express": "~4.16.0",
     "fastly-purge": "~1.0.1",
     "log4js": "cartodb/log4js-node#cdb",
     "lru-cache": "2.6.5",

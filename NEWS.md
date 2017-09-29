@@ -3,6 +3,7 @@
 ## 3.13.0
 Released 2017-mm-dd
  - Upgrades camshaft, cartodb-query-tables, and turbo-carto: better support for query variables.
+ - Upgrades express, debug, request and body-parser for sequrity reasons
 
 Bugfixes:
  - Bounding box parameter ignored in static named maps #735.
