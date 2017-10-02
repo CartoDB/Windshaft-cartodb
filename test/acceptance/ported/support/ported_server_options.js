@@ -74,6 +74,9 @@ module.exports = _.extend({}, serverOptions, {
         }
         req.params.dbname = 'test_windshaft_cartodb_user_1_db';
 
+        // add all params to res.locals
+        res.locals = _.extend({}, req.params);
+
 
         // increment number of calls counter
         global.req2params_calls = global.req2params_calls ? global.req2params_calls + 1 : 1;
