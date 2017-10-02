@@ -125,13 +125,13 @@ describe('prepare-context', function() {
                     },
                     query: {
                         map_key: '1235'
-                    },
-                    locals: {}
+                    }
                 };
 
                 ({req, res} = prepareRequest(req, res));
                 
-                dbConnSetup(req, res, function(err, req) {
+                dbConnSetup(req, res, function(err) {
+                    if ( err ) { done(err); return; }
                     // wrong key resets params to no user
                     assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser ('+res.locals.dbuser+')');
                     done();
