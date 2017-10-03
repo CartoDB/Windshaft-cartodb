@@ -2,6 +2,7 @@
 
 ## 3.13.1
 Released 2017-mm-dd
+ - Upgrades windshaft to [3.3.3](https://github.com/CartoDB/windshaft/releases/tag/3.3.3).
  - Upgrades yarn minimum version requirement to v0.27.5
 
 Bugfixes:
