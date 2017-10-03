@@ -63,7 +63,7 @@ module.exports = _.extend({}, serverOptions, {
 
         _.extend(req.params, req.query);
         req.params.user = 'localhost';
-        req.context = {user: 'localhost'};
+        res.locals.user = 'localhost';
 
         req.params.dbhost = global.environment.postgres.host;
         req.params.dbport = req.params.dbport || global.environment.postgres.port;

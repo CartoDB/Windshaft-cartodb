@@ -48,8 +48,11 @@ describe('prepare-context', function() {
         req.profiler = {
             done: function() {}
         };
-        req.context = { user: 'localhost' };
-        res.locals = {};
+
+        if(!res.locals) {
+            res.locals = {};
+        }
+        res.locals.user = 'localhost';
 
         return {req, res};
     }
@@ -128,8 +131,10 @@ describe('prepare-context', function() {
                     }
                 };
 
+                res = {};
+
                 ({req, res} = prepareRequest(req, res));
-                
+
                 dbConnSetup(req, res, function(err) {
                     if ( err ) { done(err); return; }
                     // wrong key resets params to no user
