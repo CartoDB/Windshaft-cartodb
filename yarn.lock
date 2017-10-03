@@ -215,14 +215,14 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.59.1:
-  version "0.59.1"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.59.1.tgz#a2e87fa4a0236655160cd1a6a9e966cbbf86dd43"
+camshaft@0.59.2:
+  version "0.59.2"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.59.2.tgz#8b032771faa1264bd8a81040c6075beb1a32e286"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
     cartodb-psql "^0.10.1"
-    debug "^2.2.0"
+    debug "^3.1.0"
     dot "^1.0.3"
     request "^2.69.0"
 
@@ -266,11 +266,11 @@ cartocolor@4.0.0:
   dependencies:
     colorbrewer "1.0.0"
 
-cartodb-psql@0.10.1, cartodb-psql@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/cartodb-psql/-/cartodb-psql-0.10.1.tgz#0ac947e62fe10b27916df6b7ba6c461953fe3a23"
+cartodb-psql@0.10.2, cartodb-psql@^0.10.1:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/cartodb-psql/-/cartodb-psql-0.10.2.tgz#8c505066e4a635cfa0ee4c603769c83f6e2187dd"
   dependencies:
-    debug "~2.2.0"
+    debug "^3.1.0"
     pg cartodb/node-postgres#6.1.6-cdb1
     underscore "~1.6.0"
 
@@ -426,12 +426,6 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-debug@2.2.0, debug@~2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
-  dependencies:
-    ms "0.7.1"
-
 debug@2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.0.tgz#bc596bcabe7617f11d9fa15361eded5608b8499b"
@@ -455,6 +449,12 @@ debug@^3.1.0:
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
   dependencies:
     ms "2.0.0"
+
+debug@~2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
+  dependencies:
+    ms "0.7.1"
 
 decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
@@ -2244,13 +2244,13 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-turbo-carto@0.20.0:
-  version "0.20.0"
-  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.20.0.tgz#ebeb4620f3e26ed3cce53a9ff30f087f46a2e3fd"
+turbo-carto@0.20.1:
+  version "0.20.1"
+  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.20.1.tgz#e9f5fa1408d9d4325a1e79333e6d242170f89e6d"
   dependencies:
     cartocolor "4.0.0"
     colorbrewer "1.0.0"
-    debug "2.2.0"
+    debug "^3.1.0"
     es6-promise "3.1.2"
     postcss "5.0.19"
     postcss-value-parser "3.3.0"
