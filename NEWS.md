@@ -2,6 +2,7 @@
 
 ## 3.13.1
 Released 2017-mm-dd
+ - Upgrades yarn minimum version requirement to v0.27.5
 
 Bugfixes:
  -

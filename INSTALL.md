@@ -5,7 +5,7 @@ Make sure that you have the requirements needed. These are
 
 - Core
   - Node.js >=6.9.x
-  - yarn >=0.21.3
+  - yarn >=0.27.5
   - PostgreSQL >8.3.x, PostGIS >1.5.x
   - Redis >2.4.0 (http://www.redis.io)
   - Mapnik >3.x. See [Installing Mapnik](https://github.com/CartoDB/Windshaft#installing-mapnik).
