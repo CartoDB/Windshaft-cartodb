@@ -1,7 +1,14 @@
 # Changelog
 
-## 3.13.0
+## 3.13.1
 Released 2017-mm-dd
+ - Upgrades yarn minimum version requirement to v0.27.5
+
+Bugfixes:
+ -
+
+## 3.13.0
+Released 2017-10-02
  - Upgrades camshaft, cartodb-query-tables, and turbo-carto: better support for query variables.
  - Upgrades express, debug, request and body-parser for sequrity reasons
 
