@@ -44,26 +44,28 @@ describe('prepare-context', function() {
         assert.ok(_.isFunction(cleanUpQueryParams));
     });
 
-    function prepareRequest(req, res) {
+    function prepareRequest(req) {
         req.profiler = {
             done: function() {}
         };
 
+        return req;
+    }
+
+    function prepareResponse(res) {
         if(!res.locals) {
             res.locals = {};
         }
         res.locals.user = 'localhost';
 
-        return {req, res};
+        return res;
     }
 
     it('res.locals are created', function(done) {
         let req = {};
         let res = {};
 
-        ({req, res} = prepareRequest(req, res));
-
-        localsMiddleware(req, res, function(err) {
+        localsMiddleware(prepareRequest(req), prepareResponse(res), function(err) {
             if ( err ) { done(err); return; }
             assert.ok(res.hasOwnProperty('locals'), 'response has locals');
             done();
@@ -74,9 +76,7 @@ describe('prepare-context', function() {
         var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
         var res = {};
 
-        ({req, res} = prepareRequest(req, res));
-
-        cleanUpQueryParams(req, res, function(err) {
+        cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function(err) {
             if ( err ) { done(err); return; }
             assert.ok(_.isObject(req.query), 'request has query');
             assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -90,9 +90,7 @@ describe('prepare-context', function() {
         var req = {headers: { host:'localhost' }, query: {} };
         var res = {};
 
-        ({req, res} = prepareRequest(req, res));      
-
-        dbConnSetup(req, res, function(err) {
+        dbConnSetup(prepareRequest(req), prepareResponse(res), function(err) {
             if ( err ) { done(err); return; }
             assert.ok(_.isObject(req.query), 'request has query');
             assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
@@ -108,10 +106,8 @@ describe('prepare-context', function() {
         var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }};
         var res = {};
 
-        ({req, res} = prepareRequest(req, res));
-
         // FIXME: review authorize-pgconnsetup workflow, It might we are doing authorization twice.
-        authorize(req, res, function (err) {
+        authorize(prepareRequest(req), prepareResponse(res), function (err) {
             if (err) { done(err); return; }
             dbConnSetup(req, res, function(err) {
                 if ( err ) { done(err); return; }
@@ -133,9 +129,7 @@ describe('prepare-context', function() {
 
                 res = {};
 
-                ({req, res} = prepareRequest(req, res));
-
-                dbConnSetup(req, res, function(err) {
+                dbConnSetup(prepareRequest(req), prepareResponse(res), function(err) {
                     if ( err ) { done(err); return; }
                     // wrong key resets params to no user
                     assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser ('+res.locals.dbuser+')');
@@ -161,10 +155,8 @@ describe('prepare-context', function() {
             }
         };
         var res = {};
-
-        ({req, res} = prepareRequest(req, res));
         
-        cleanUpQueryParams(req, res, function (err) {
+        cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function (err) {
             if ( err ) {
                 return done(err);
             }
