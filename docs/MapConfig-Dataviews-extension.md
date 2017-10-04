@@ -8,50 +8,13 @@ This specification describes an extension for
 
 This extension depends on Analyses extension. It extends MapConfig with a new attribute: `dataviews`.
 
-It makes possible to get tabular data from analysis nodes: lists, aggregated lists, aggregations, and histograms.
+It makes possible to get tabular data from analysis nodes: aggregated lists, aggregations, and histograms.
 
 ## 2.1. Dataview types
 
-### List
-
-A list is a simple result set per row where is possible to retrieve several columns from the original layer query.
-
-Definition
-```
-{
-    // REQUIRED
-    // string, `type` the list type
-    “type”: “list”,
-    // REQUIRED
-    // object, `options` dataview params
-    “options”: {
-        // REQUIRED
-        // array, `columns` to select for the list
-        “columns”: [“name”, “description”]
-    }
-}
-```
-
-Expected output
-```
-{
-  "type": "list",
-  "rows": [
-    {
-      "{columnName1}": "val1",
-      "{columnName2}": 100
-    },
-    {
-      "{columnName1}": "val2",
-      "{columnName2}": 200
-    }
-  ]
-}
-```
-
 ### Aggregation
 
-An aggregation is very similar to a list but results are aggregated by a column and a given aggregation function.
+An aggregation is a list with aggregated results by a column and a given aggregation function.
 
 Definition
 ```

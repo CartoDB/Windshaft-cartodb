@@ -1,15 +1,21 @@
 # Changelog
 
-## 3.13.1
+## 4.0.0
 Released 2017-mm-dd
+
+Announcements:
  - Upgrades turbo-carto to [0.20.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.20.1)
  - Upgrades cartodb-psql to [0.10.2](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.10.2).
  - Upgrades camshaft to [0.59.2](https://github.com/CartoDB/camshaft/releases/tag/0.59.2).
  - Upgrades windshaft to [3.3.3](https://github.com/CartoDB/windshaft/releases/tag/3.3.3).
- - Upgrades yarn minimum version requirement to v0.27.5
 
-Bugfixes:
- -
+Backward incompatible changes:
+ - Removes `list` dataview type.
+
+
+## 3.13.1
+Released 2017-10-03
+ - Upgrades yarn minimum version requirement to v0.27.5
 
 ## 3.13.0
 Released 2017-10-02
