@@ -7,6 +7,7 @@ Backward incompatible changes:
  - Removes `list` dataview type.
 
 Announcements:
+ - Upgrades body-parser to 1.18.2.
  - Upgrades express to 4.16.0.
  - Upgrades debug to 3.1.0.
  - Upgrades request to 2.83.0.
