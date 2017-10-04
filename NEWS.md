@@ -6,9 +6,9 @@ Released 2017-mm-dd
 Backward incompatible changes:
  - Removes `list` dataview type.
 
-## 3.13.1
-Released 2017-10-03
+Announcements:
  - Upgrades yarn minimum version requirement to v0.27.5
+
 
 ## 3.13.0
 Released 2017-10-02
