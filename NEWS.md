@@ -1,11 +1,14 @@
 # Changelog
 
-## 3.13.1
+## 4.0.0
 Released 2017-mm-dd
- - Upgrades yarn minimum version requirement to v0.27.5
 
-Bugfixes:
- -
+Backward incompatible changes:
+ - Removes `list` dataview type.
+
+## 3.13.1
+Released 2017-10-03
+ - Upgrades yarn minimum version requirement to v0.27.5
 
 ## 3.13.0
 Released 2017-10-02
