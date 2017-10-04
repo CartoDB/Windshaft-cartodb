@@ -4,6 +4,9 @@
 Released 2017-mm-dd
 
 Announcements:
+ - Upgrades express to 4.16.0.
+ - Upgrades debug to 3.1.0.
+ - Upgrades request to 2.83.0.
  - Upgrades turbo-carto to [0.20.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.20.1)
  - Upgrades cartodb-psql to [0.10.2](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.10.2).
  - Upgrades camshaft to [0.59.2](https://github.com/CartoDB/camshaft/releases/tag/0.59.2).
