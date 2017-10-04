@@ -1,7 +1,7 @@
 # Changelog
 
 ## 4.0.0
-Released 2017-mm-dd
+Released 2017-10-04
 
 Backward incompatible changes:
  - Removes `list` dataview type.
