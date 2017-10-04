@@ -192,8 +192,32 @@ describe('named maps static view', function() {
             }
             getStaticMap({ zoom: 3 }, function(err, img) {
                 assert.ok(!err);
-                img.save('/tmp/static.png');
                 assert.imageIsSimilarToFile(img, previewFixture('override-zoom'), IMAGE_TOLERANCE, done);
+            });
+        });
+    });
+
+    it('should return override bbox', function (done) {
+        var view = {
+            bounds: {
+                west: 0,
+                south: 0,
+                east: 45,
+                north: 45
+            },
+            zoom: 4,
+            center: {
+                lng: 40,
+                lat: 20
+            }
+        };
+        templateMaps.addTemplate(username, createTemplate(view), function (err) {
+            if (err) {
+                return done(err);
+            }
+            getStaticMap({ bbox: '0,45,90,45' }, function(err, img) {
+                assert.ok(!err);
+                assert.imageIsSimilarToFile(img, previewFixture('override-bbox'), IMAGE_TOLERANCE, done);
             });
         });
     });
