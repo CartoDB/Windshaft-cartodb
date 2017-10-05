@@ -68,7 +68,7 @@ describe('prepare-context', function() {
 
     it('sets dbname from redis metadata', function(done){
       var req = {headers: { host:'localhost' }, query: {}, locals: {} };
-      var res = {};
+      var res = { set: function () {} };
 
       dbConnSetup(prepareRequest(req), res, function(err) {
           if ( err ) { done(err); return; }
@@ -84,7 +84,7 @@ describe('prepare-context', function() {
 
     it('sets also dbuser for authenticated requests', function(done){
         var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }, locals: {} };
-        var res = {};
+        var res = { set: function () {} };
 
         // FIXME: review authorize-pgconnsetup workflow, It might we are doing authorization twice.
         authorize(prepareRequest(req), res, function (err) {
@@ -108,7 +108,7 @@ describe('prepare-context', function() {
                     locals: {}
                 };
 
-                dbConnSetup(prepareRequest(req), res, function(err, req) {
+                dbConnSetup(prepareRequest(req), res, function () {
                     // wrong key resets params to no user
                     assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
                     done();
