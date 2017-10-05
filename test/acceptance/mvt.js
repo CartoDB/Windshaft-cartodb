@@ -87,9 +87,9 @@ describe('mvt', function () {
                 var geojsonTile = JSON.parse(MVT.toGeoJSONSync(0));
                 assert.ok(!err, err);
 
-                assert.ok(Array.isArray(geojson.features));
-                assert.ok(geojson.features.length > 0);
-                var feature = geojson.features[0];
+                assert.ok(Array.isArray(geojsonTile.features));
+                assert.ok(geojsonTile.features.length > 0);
+                var feature = geojsonTile.features[0];
                 assert.ok(feature.properties.hasOwnProperty('pop_max'), 'Missing pop_max property');
 
                 testClient.drain(done);
