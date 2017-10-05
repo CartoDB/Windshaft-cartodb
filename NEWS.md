@@ -1,11 +1,25 @@
 # Changelog
 
-## 3.13.1
+## 4.0.1
 Released 2017-mm-dd
+
+## 4.0.0
+Released 2017-10-04
+
+Backward incompatible changes:
+ - Removes `list` dataview type.
+
+Announcements:
+ - Upgrades body-parser to 1.18.2.
+ - Upgrades express to 4.16.0.
+ - Upgrades debug to 3.1.0.
+ - Upgrades request to 2.83.0.
+ - Upgrades turbo-carto to [0.20.1](https://github.com/CartoDB/turbo-carto/releases/tag/0.20.1)
+ - Upgrades cartodb-psql to [0.10.2](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.10.2).
+ - Upgrades camshaft to [0.59.2](https://github.com/CartoDB/camshaft/releases/tag/0.59.2).
+ - Upgrades windshaft to [3.3.3](https://github.com/CartoDB/windshaft/releases/tag/3.3.3).
  - Upgrades yarn minimum version requirement to v0.27.5
 
-Bugfixes:
- -
 
 ## 3.13.0
 Released 2017-10-02
