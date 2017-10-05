@@ -73,33 +73,33 @@ describe('prepare-context', function() {
     });
     
     it('cleans up request', function(done){
-        var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
-        var res = {};
+      var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
+      var res = {};
 
-        cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function(err) {
-            if ( err ) { done(err); return; }
-            assert.ok(_.isObject(req.query), 'request has query');
-            assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-            assert.ok(res.hasOwnProperty('locals'), 'response has locals');
-            assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
-            done();
-        });
+      cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function(err) {
+          if ( err ) { done(err); return; }
+          assert.ok(_.isObject(req.query), 'request has query');
+          assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
+          assert.ok(res.hasOwnProperty('locals'), 'response has locals');
+          assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
+          done();
+      });
     });
 
     it('sets dbname from redis metadata', function(done){
-        var req = {headers: { host:'localhost' }, query: {} };
-        var res = {};
+      var req = {headers: { host:'localhost' }, query: {} };
+      var res = {};
 
-        dbConnSetup(prepareRequest(req), prepareResponse(res), function(err) {
-            if ( err ) { done(err); return; }
-            assert.ok(_.isObject(req.query), 'request has query');
-            assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-            assert.ok(res.hasOwnProperty('locals'), 'response has locals');
-            assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
-            assert.equal(res.locals.dbname, test_database);
-            assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser ('+res.locals.dbuser+')');
-            done();
-        });
+      dbConnSetup(prepareRequest(req), prepareResponse(res), function(err) {
+        if ( err ) { done(err); return; }
+          assert.ok(_.isObject(req.query), 'request has query');
+          assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
+          assert.ok(res.hasOwnProperty('locals'), 'response has locals');
+          assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
+          assert.equal(res.locals.dbname, test_database);
+          assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser ('+res.locals.dbuser+')');
+          done();
+      });
     });
 
     it('sets also dbuser for authenticated requests', function(done){
