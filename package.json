@@ -43,7 +43,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.20.0",
     "underscore": "~1.6.0",
-    "windshaft": "3.3.2",
+    "windshaft": "cartodb/windshaft",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
@@ -58,7 +58,8 @@
   "scripts": {
     "lint": "jshint lib test",
     "preinstall": "make pre-install",
-    "test": "make test-all"
+    "test": "make test-all",
+    "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn"
   },
   "engines": {
     "node": ">=6.9",
