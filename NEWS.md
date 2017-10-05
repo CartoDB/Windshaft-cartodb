@@ -1,13 +1,19 @@
 # Changelog
 
-## 3.13.0
+## 3.13.1
 Released 2017-mm-dd
- - Upgrades camshaft, cartodb-query-tables, and turbo-carto: better support for query variables.
+ - Upgrades yarn minimum version requirement to v0.27.5
 
+Bugfixes:
+ -
+
+## 3.13.0
+Released 2017-10-02
+ - Upgrades camshaft, cartodb-query-tables, and turbo-carto: better support for query variables.
 
 Bugfixes:
  - Bounding box parameter ignored in static named maps #735.
-
+ - camhaft 0.59.1 fixes duplicate columns in aggregate-intersection analysis
 
 ## 3.12.10
 Released 2017-09-18
