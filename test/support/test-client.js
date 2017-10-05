@@ -20,7 +20,7 @@ const MAPNIK_SUPPORTED_FORMATS = {
     'png': true,
     'png32': true,
     'grid.json': true,
-    'geojson': true,
+    'mvt': true,
     'mvt': true
 }
 
