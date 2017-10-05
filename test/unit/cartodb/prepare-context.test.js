@@ -129,8 +129,7 @@ describe('prepare-context', function() {
 
                 res = {};
 
-                dbConnSetup(prepareRequest(req), prepareResponse(res), function(err) {
-                    if ( err ) { done(err); return; }
+                dbConnSetup(prepareRequest(req), prepareResponse(res), function() {
                     // wrong key resets params to no user
                     assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser ('+res.locals.dbuser+')');
                     done();
