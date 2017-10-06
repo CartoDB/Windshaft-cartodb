@@ -130,7 +130,6 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
         url += '?' + qs.stringify({ filters: JSON.stringify(params.filters) });
     }
 
-    var layergroupId;
     step(
         function createLayergroup() {
             var next = this;
@@ -176,11 +175,12 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                 }
             );
         },
-        function getWidgetResult(err, _layergroupId) {
+        function getWidgetResult(err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
-            layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             var urlParams = {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
@@ -217,8 +217,6 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
             );
         },
         function finish(err, res) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
             var widget;
             if (!err && res.body) {
                 widget = JSON.parse(res.body);
@@ -241,7 +239,6 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
         url += '?' + qs.stringify({ filters: JSON.stringify(params.filters) });
     }
 
-    var layergroupId;
     step(
         function createLayergroup() {
             var next = this;
@@ -287,11 +284,12 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
                 }
             );
         },
-        function getWidgetSearchResult(err, _layergroupId) {
+        function getWidgetSearchResult(err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
-            layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             var urlParams = {
                 q: userQuery,
@@ -326,8 +324,6 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
             );
         },
         function finish(err, res) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
             var searchResult;
             if (!err && res.body) {
                 searchResult = JSON.parse(res.body);
@@ -365,7 +361,6 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
         }
     };
 
-    var layergroupId;
     step(
         function createLayergroup() {
             var next = this;
@@ -401,11 +396,10 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 }
             );
         },
-        function getDataviewResult(err, _layergroupId) {
+        function getDataviewResult(err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
-            layergroupId = _layergroupId;
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
@@ -644,11 +638,10 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             );
         },
-        function getTileResult(err, _layergroupId) {
+        function getTileResult(err, layergroupId) {
             // jshint maxcomplexity:12
             assert.ifError(err);
 
-            layergroupId = _layergroupId;
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
@@ -849,14 +842,13 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 }
             );
         },
-        function getStaticResult(err, _layergroupid) {
+        function getStaticResult(err, layergroupId) {
             assert.ifError(err);
 
-            layergroupid = _layergroupid;
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            url = `/api/v1/map/static/center/${layergroupid}/${z}/${lat}/${lng}/${width}/${height}.${format}`;
+            url = `/api/v1/map/static/center/${layergroupId}/${z}/${lat}/${lng}/${width}/${height}.${format}`;
 
             if (self.apiKey) {
                 url += '?' + qs.stringify({api_key: self.apiKey});
@@ -912,7 +904,6 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
         url += '?' + qs.stringify({api_key: this.apiKey});
     }
 
-    var layergroupId;
     var nodes = {};
     step(
         function createLayergroup() {
@@ -951,10 +942,9 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
                 }
             );
         },
-        function getNodeStatusResult(err, _layergroupId) {
+        function getNodeStatusResult(err, layergroupId) {
             assert.ifError(err);
 
-            layergroupId = _layergroupId;
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
@@ -1047,14 +1037,13 @@ TestClient.prototype.getAttributes  = function(params, callback) {
                 }
             );
         },
-        function getAttributes(err, _layergroupid) {
+        function getAttributes(err, layergroupId) {
             assert.ifError(err);
 
-            layergroupid = _layergroupid;
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            url = `/api/v1/map/${layergroupid}/${params.layer}/attributes/${params.featureId}`;
+            url = `/api/v1/map/${layergroupId}/${params.layer}/attributes/${params.featureId}`;
 
             if (self.apiKey) {
                 url += '?' + qs.stringify({api_key: self.apiKey});
@@ -1126,7 +1115,7 @@ module.exports.getStaticMap = function getStaticMap(templateName, params, callba
     // this could be removed once named maps are invalidated, otherwise you hits the cache
     var server = new CartodbWindshaft(serverOptions);
 
-    assert.response(self.server, requestOptions, expectedResponse, function (res, err) {
+    assert.response(server, requestOptions, expectedResponse, function (res, err) {
         helper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, function() {
             return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
         });
