@@ -1,4 +1,3 @@
 test/results/
 test/monkey/
 test/benchmark.js
-test/support/
