@@ -406,6 +406,8 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
 
             var next = this;
             layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             var urlParams = {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
@@ -444,12 +446,6 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             if (err) {
                 return callback(err);
             }
-
-            if (layergroupId) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
-            }
-
             return callback(null, dataview);
         }
     );
@@ -652,8 +648,9 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
         function getTileResult(err, _layergroupId) {
             assert.ifError(err);
 
-            var next = this;
             layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             url = '/api/v1/map/' + layergroupId + '/';
 
@@ -727,35 +724,31 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
             }
 
-            assert.response(self.server, request, expectedResponse, function(res, err) {
-                assert.ifError(err);
-
-                var body;
-                switch (res.headers['content-type']) {
-                    case 'image/png':
-                        body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                        break;
-                    case 'application/x-protobuf':
-                        body = new mapnik.VectorTile(z, x, y);
-                        body.setDataSync(new Buffer(res.body, 'binary'));
-                        break;
-                    case 'application/json; charset=utf-8':
-                        body = JSON.parse(res.body);
-                        break;
-                    default:
-                        body = res.body
-                        break;
-                }
-
-                next(null, res, body);
-            });
+            assert.response(self.server, request, expectedResponse, this);
         },
-        function finish(err, res, image) {
-            if (layergroupId) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+        function finish(res, err) {
+            if (err) {
+                return callback(err);
             }
-            return callback(err, res, image);
+
+            var body;
+            switch (res.headers['content-type']) {
+                case 'image/png':
+                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    break;
+                case 'application/x-protobuf':
+                    body = new mapnik.VectorTile(z, x, y);
+                    body.setDataSync(new Buffer(res.body, 'binary'));
+                    break;
+                case 'application/json; charset=utf-8':
+                    body = JSON.parse(res.body);
+                    break;
+                default:
+                    body = res.body
+                    break;
+            }
+
+            return callback(err, res, body);
         }
     );
 };
@@ -861,6 +854,8 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
             var next = this;
 
             layergroupid = _layergroupid;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             url = `/api/v1/map/static/center/${layergroupid}/${z}/${lat}/${lng}/${width}/${height}.${format}`
 
@@ -884,31 +879,27 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 }
             }, params.response);
 
-            assert.response(self.server, request, expectedResponse, function(res, err) {
-                assert.ifError(err);
-
-                var body;
-                switch (res.headers['content-type']) {
-                    case 'image/png':
-                        body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                        break;
-                    case 'application/json; charset=utf-8':
-                        body = JSON.parse(res.body);
-                        break;
-                    default:
-                        body = res.body
-                        break;
-                }
-
-                next(null, res, body);
-            });
+            assert.response(self.server, request, expectedResponse, this);
         },
-        function finish(err, res, image) {
-            if (layergroupid) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+        function(res, err) {
+            if (err) {
+                return callback(err);
             }
-            return callback(err, res, image);
+
+            var body;
+            switch (res.headers['content-type']) {
+                case 'image/png':
+                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    break;
+                case 'application/json; charset=utf-8':
+                    body = JSON.parse(res.body);
+                    break;
+                default:
+                    body = res.body
+                    break;
+            }
+
+            return callback(err, res, body);
         }
     );
 };
@@ -964,8 +955,9 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
         function getNodeStatusResult(err, _layergroupId) {
             assert.ifError(err);
 
-            var next = this;
             layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             url = urlParser.parse(nodes[nodeName]).path;
 
@@ -988,15 +980,13 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
                 }
             };
 
-            assert.response(self.server, request, expectedResponse, function(res, err) {
-                assert.ifError(err);
-                next(null, res, JSON.parse(res.body));
-            });
+            assert.response(self.server, request, expectedResponse, this);
         },
-        function finish(err, res, image) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
-            return callback(err, res, image);
+        function finish(res, err) {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, res, JSON.parse(res.body));
         }
     );
 };
@@ -1061,9 +1051,9 @@ TestClient.prototype.getAttributes  = function(params, callback) {
         function getAttributes(err, _layergroupid) {
             assert.ifError(err);
 
-            var next = this;
-
             layergroupid = _layergroupid;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             url = `/api/v1/map/${layergroupid}/${params.layer}/attributes/${params.featureId}`;
 
@@ -1086,21 +1076,14 @@ TestClient.prototype.getAttributes  = function(params, callback) {
                 }
             };
 
-            assert.response(self.server, request, expectedResponse, function (res, err) {
-                assert.ifError(err);
-
-                var attributes = JSON.parse(res.body);
-
-                next(null, res, attributes);
-            });
+            assert.response(self.server, request, expectedResponse, this);
         },
-        function finish(err, res, attributes) {
-            if (layergroupid) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+        function finish(res, err) {
+            if (err) {
+                return callback(err);
             }
-
-            return callback(err, res, attributes);
+            var attributes = JSON.parse(res.body);
+            return callback(null, res, attributes);
         }
     );
 };
