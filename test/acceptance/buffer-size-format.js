@@ -143,10 +143,7 @@ describe('buffer size per format', function () {
                 assert.ifError(err);
                 // To generate images use:
                 // tile.save(test.fixturePath);
-                test.assert(tile, function (err) {
-                    assert.ifError(err);
-                    return done();
-                });
+                test.assert(tile, done);
             });
         });
     });
@@ -267,23 +264,27 @@ describe('buffer size per format for named maps', function () {
         }
     ];
 
+    afterEach(function(done) {
+        if (this.testClient) {
+            return this.testClient.drain(done);
+        }
+        return done();
+    });
+
     testCases.forEach(function (test) {
         it(test.desc, function (done) {
-            var testClient = new TestClient(test.template, 1234);
+            this.testClient = new TestClient(test.template, 1234);
             var coords = test.coords;
             var options = {
                 format: test.format,
                 placeholders: test.placeholders,
                 layers: test.layers
             };
-            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+            this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
                 //tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-0-test.png');
-                test.assert(tile, function (err) {
-                    assert.ifError(err);
-                    testClient.drain(done);
-                });
+                test.assert(tile, done);
             });
         });
     });
@@ -423,25 +424,29 @@ describe('buffer size per format for named maps w/o placeholders', function () {
 
     ];
 
+    afterEach(function(done) {
+        if (this.testClient) {
+            return this.testClient.drain(done);
+        }
+        return done();
+    });
+
     testCases.forEach(function (test) {
         it(test.desc, function (done) {
-            var testClient = new TestClient(test.template, 1234);
+            this.testClient = new TestClient(test.template, 1234);
             var coords = test.coords;
             var options = {
                 format: test.format,
                 placeholders: test.placeholders,
                 layers: test.layers
             };
-            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+            this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
                 //tile.save(test.fixturePath);
                 // require('fs').writeFileSync(test.fixturePath, JSON.stringify(tile));
                 // require('fs').writeFileSync(test.fixturePath, tile.getDataSync());
-                test.assert(tile, function (err) {
-                    assert.ifError(err);
-                    testClient.drain(done);
-                });
+                test.assert(tile, done);
             });
         });
     });
