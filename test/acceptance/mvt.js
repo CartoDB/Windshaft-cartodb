@@ -24,8 +24,12 @@ describe('mvt (postgis)', mvt(true));
 
 function mvt(usePostGIS) {
 return function () {
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
     before(function () {
         serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+    });
+    after(function (){
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
     describe('analysis-layers-dataviews-mvt', function () {
