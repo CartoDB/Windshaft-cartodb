@@ -77,7 +77,6 @@ function randomImagePath() {
     return path.resolve('test/results/png/image-test-' + Date.now() + '.png');
 }
 
-// jshint maxcomplexity:9
 assert.response = function(server, req, res, callback) {
     if (!callback) {
         callback = res;
