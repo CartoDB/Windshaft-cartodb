@@ -106,7 +106,6 @@ assert.response = function(server, req, res, callback) {
 
     // jshint maxcomplexity:9
     function onServerListening() {
-        var status = res.status || res.statusCode;
         var requestParams = {
             url: 'http://' + host + ':' + port + req.url,
             method: req.method || 'GET',
@@ -122,57 +121,70 @@ assert.response = function(server, req, res, callback) {
         request(requestParams, function assert$response$requestHandler(error, response, body) {
             listener.close(function() {
                 response.body = response.body || body;
-
-                // Assert response body
-                if (res.body) {
-                    var eql = res.body instanceof RegExp ? res.body.test(response.body) : res.body === response.body;
-                    if (!eql) {
-                        return callback(response, new Error(colorize(
-                            '[red]{Invalid response body.}\n' +
-                            '     Expected: [green]{' + res.body + '}\n' +
-                            '     Got: [red]{' + response.body + '}'))
-                        );
-                    }
-                }
-
-                // Assert response status
-                if (typeof status === 'number') {
-                    if (response.statusCode !== status) {
-                        return callback(response, new Error(colorize(
-                            '[red]{Invalid response status code.}\n' +
-                            '     Expected: [green]{' + status + '}\n' +
-                            '     Got: [red]{' + response.statusCode + '}\n' +
-                            '     Body: ' + response.body))
-                        );
-                    }
-                }
-
-                // Assert response headers
-                if (res.headers) {
-                    var keys = Object.keys(res.headers);
-                    for (var i = 0, len = keys.length; i < len; ++i) {
-                        var name = keys[i],
-                            actual = response.headers[name.toLowerCase()],
-                            expected = res.headers[name],
-                            headerEql = expected instanceof RegExp ? expected.test(actual) : expected === actual;
-                        if (!headerEql) {
-                            return callback(response, new Error(colorize(
-                                'Invalid response header [bold]{' + name + '}.\n' +
-                                '     Expected: [green]{' + expected + '}\n' +
-                                '     Got: [red]{' + actual + '}'))
-                            );
-                        }
-                    }
-                }
-
-                // Callback
-                callback(response);
+                var err = validateResponse(response, res);
+                return callback(response, err);
             });
         });
 
     }
 };
-// jshint maxcomplexity:6
+
+function validateResponseBody(response, expected) {
+    if (expected.body) {
+        var eql = expected.body instanceof RegExp ?
+            expected.body.test(response.body) :
+            expected.body === response.body;
+        if (!eql) {
+            return new Error(colorize(
+                '[red]{Invalid response body.}\n' +
+                '     Expected: [green]{' + expected.body + '}\n' +
+                '     Got: [red]{' + response.body + '}')
+            );
+        }
+    }
+}
+
+function validateResponseStatus(response, expected) {
+    var status = expected.status || expected.statusCode;
+    // Assert response status
+    if (typeof status === 'number') {
+        if (response.statusCode !== status) {
+            return new Error(colorize(
+                '[red]{Invalid response status code.}\n' +
+                '     Expected: [green]{' + status + '}\n' +
+                '     Got: [red]{' + response.statusCode + '}\n' +
+                '     Body: ' + response.body)
+            );
+        }
+    }
+}
+
+function validateResponseHeaders(response, expected) {
+    // Assert response headers
+    if (expected.headers) {
+        var keys = Object.keys(expected.headers);
+        for (var i = 0, len = keys.length; i < len; ++i) {
+            var name = keys[i],
+                actual = response.headers[name.toLowerCase()],
+                expectedHeader = expected.headers[name],
+                headerEql = expectedHeader instanceof RegExp ? expectedHeader.test(actual) : expectedHeader === actual;
+            if (!headerEql) {
+                return new Error(colorize(
+                    'Invalid response header [bold]{' + name + '}.\n' +
+                    '     Expected: [green]{' + expectedHeader + '}\n' +
+                    '     Got: [red]{' + actual + '}')
+                );
+            }
+        }
+    }
+}
+
+function validateResponse(response, expected) {
+    // Assert response body
+    return validateResponseBody(response, expected) ||
+        validateResponseStatus(response, expected) ||
+        validateResponseHeaders(response, expected);
+}
 
 // @param tolerance number of tolerated grid cell differences
 // jshint maxcomplexity:9
