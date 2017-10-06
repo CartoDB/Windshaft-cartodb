@@ -61,10 +61,9 @@
     "test": "make test-all",
     "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn",
     "docker-install": "sudo apt install docker.io && sudo usermod -aG docker $(whoami)",
-    "docker-pull": "docker pull cartoimages/windshaft-carto-testing",
-    "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-carto-testing",
-    "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/windshaft-carto-testing bash",
-    "docker-build": "docker build -t cartoimages/windshaft-carto-testing .",
+    "docker-pull": "docker pull cartoimages/windshaft-testing",
+    "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh",
+    "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/windshaft-testing bash",
     "docker-publish": "docker push cartoimages/windshaft-carto-testing"
   },
   "engines": {
