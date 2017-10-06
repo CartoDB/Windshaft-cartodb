@@ -124,21 +124,28 @@ describe('buffer size per format', function () {
         }
     ];
 
+    afterEach(function(done) {
+        if (this.testClient) {
+            return this.testClient.drain(done);
+        }
+        return done();
+    });
+
     testCases.forEach(function (test) {
         it(test.desc, function (done) {
-            var testClient = new TestClient(test.mapConfig, 1234);
+            this.testClient = new TestClient(test.mapConfig, 1234);
             var coords = test.coords;
             var options = {
                 format: test.format,
                 layers: test.layers
             };
-            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+            this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
                 // tile.save(test.fixturePath);
                 test.assert(tile, function (err) {
                     assert.ifError(err);
-                    testClient.drain(done);
+                    return done();
                 });
             });
         });
