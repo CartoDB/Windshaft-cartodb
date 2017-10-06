@@ -137,7 +137,7 @@ assert.response = function(server, req, res, callback) {
 
                 // Assert response status
                 if (typeof status === 'number') {
-                    if (response.statusCode != status) {
+                    if (response.statusCode !== status) {
                         return callback(response, new Error(colorize(
                             '[red]{Invalid response status code.}\n' +
                             '     Expected: [green]{' + status + '}\n' +
