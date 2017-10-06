@@ -2,6 +2,7 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
+var serverOptions = require('../../lib/cartodb/server_options');
 
 function createMapConfig(sql = TestClient.SQL.ONE_POINT) {
     return {
@@ -18,7 +19,14 @@ function createMapConfig(sql = TestClient.SQL.ONE_POINT) {
     };
 }
 
-describe('mvt', function () {
+describe('mvt (mapnik)', mvt(false));
+describe('mvt (postgis)', mvt(true));
+
+function mvt(usePostGIS) {
+return function () {
+    before(function () {
+        serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+    });
 
     describe('analysis-layers-dataviews-mvt', function () {
 
@@ -81,7 +89,7 @@ describe('mvt', function () {
         );
 
         it('should get pop_max column from dataview', function (done) {
-            var testClient = new TestClient(mapConfig, 1234);
+            var testClient = new TestClient(mapConfig);
 
             testClient.getTile(0, 0, 0, { format: 'mvt', layers: 0 }, function (err, res, MVT) {
                 var geojsonTile = JSON.parse(MVT.toGeoJSONSync(0));
@@ -128,23 +136,25 @@ describe('mvt', function () {
 
     testCases.forEach(function (test) {
         it(test.desc, done => {
-            const testClient = new TestClient(test.mapConfig, 1234);
+            var testClient = new TestClient(test.mapConfig);
             const { z, x, y } = test.coords;
             const { format, response } = test;
 
             testClient.getTile(z, x, y, { format, response }, (err, res) => {
                 assert.ifError(err);
-
-                assert.equal(res.statusCode, test.response.status);
                 testClient.drain(done);
             });
         });
     });
 
 
+    if (usePostGIS){
+        describe('use only needed columns', onlyNeededColumns);
+    }else{
+        describe.skip('use only needed columns', onlyNeededColumns);
+    }
 
-    describe('use only needed columns', function () {
-
+    function onlyNeededColumns() {
         function getFeatureByCartodbId(features, cartodbId) {
             for (var i = 0, len = features.length; i < len; i++) {
                 if (features[i].properties.cartodb_id === cartodbId) {
@@ -268,7 +278,6 @@ describe('mvt', function () {
                     }
                 }]
             };
-
             this.testClient = new TestClient(formulaWidgetMapConfig);
             this.testClient.getTile(0, 0, 0, options, function (err, res, MVT) {
                 var geojsonTile = JSON.parse(MVT.toGeoJSONSync(0));
@@ -485,6 +494,6 @@ describe('mvt', function () {
             });
         });
 
-    });
-});
-
+    }
+}
+}
