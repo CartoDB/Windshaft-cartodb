@@ -22,7 +22,7 @@ const MAPNIK_SUPPORTED_FORMATS = {
     'grid.json': true,
     'geojson': true,
     'mvt': true
-}
+};
 
 function TestClient(config, apiKey) {
     this.mapConfig = isMapConfig(config) ? config : null;
@@ -115,7 +115,7 @@ module.exports.CARTOCSS = {
 module.exports.SQL = {
     EMPTY: 'select 1 as cartodb_id, null::geometry as the_geom_webmercator',
     ONE_POINT: 'select 1 as cartodb_id, \'SRID=3857;POINT(0 0)\'::geometry the_geom_webmercator'
-}
+};
 
 TestClient.prototype.getWidget = function(widgetName, params, callback) {
     var self = this;
@@ -130,7 +130,6 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
         url += '?' + qs.stringify({ filters: JSON.stringify(params.filters) });
     }
 
-    var layergroupId;
     step(
         function createLayergroup() {
             var next = this;
@@ -176,11 +175,12 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                 }
             );
         },
-        function getWidgetResult(err, _layergroupId) {
+        function getWidgetResult(err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
-            layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             var urlParams = {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
@@ -217,8 +217,6 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
             );
         },
         function finish(err, res) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
             var widget;
             if (!err && res.body) {
                 widget = JSON.parse(res.body);
@@ -241,7 +239,6 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
         url += '?' + qs.stringify({ filters: JSON.stringify(params.filters) });
     }
 
-    var layergroupId;
     step(
         function createLayergroup() {
             var next = this;
@@ -287,11 +284,12 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
                 }
             );
         },
-        function getWidgetSearchResult(err, _layergroupId) {
+        function getWidgetSearchResult(err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
-            layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             var urlParams = {
                 q: userQuery,
@@ -326,8 +324,6 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
             );
         },
         function finish(err, res) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
             var searchResult;
             if (!err && res.body) {
                 searchResult = JSON.parse(res.body);
@@ -365,7 +361,6 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
         }
     };
 
-    var layergroupId;
     step(
         function createLayergroup() {
             var next = this;
@@ -401,11 +396,12 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 }
             );
         },
-        function getDataviewResult(err, _layergroupId) {
+        function getDataviewResult(err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
-            layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             var urlParams = {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
@@ -444,12 +440,6 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             if (err) {
                 return callback(err);
             }
-
-            if (layergroupId) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
-            }
-
             return callback(null, dataview);
         }
     );
@@ -483,7 +473,6 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
         }
     };
 
-    var layergroupId;
     step(
         function createLayergroup() {
             var next = this;
@@ -572,7 +561,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
     var layergroupId;
 
     if (params.layergroupid) {
-        layergroupId = params.layergroupid
+        layergroupId = params.layergroupid;
     }
 
     step(
@@ -587,7 +576,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 return next(new Error('apiKey param is mandatory to create a new template'));
             }
 
-            params.placeholders = params.placeholders || {};
+            params.placeholders = params.placeholders || {};
 
             assert.response(self.server,
                 {
@@ -620,7 +609,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 return next(null, layergroupId);
             }
 
-            var data = templateId ? params.placeholders : self.mapConfig
+            var data = templateId ? params.placeholders : self.mapConfig;
             var path  = templateId ?
                 urlNamed + '/' + templateId  + '?' + qs.stringify({api_key: self.apiKey}) :
                 url;
@@ -649,11 +638,12 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             );
         },
-        function getTileResult(err, _layergroupId) {
+        function getTileResult(err, layergroupId) {
+            // jshint maxcomplexity:12
             assert.ifError(err);
 
-            var next = this;
-            layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             url = '/api/v1/map/' + layergroupId + '/';
 
@@ -727,35 +717,31 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
             }
 
-            assert.response(self.server, request, expectedResponse, function(res, err) {
-                assert.ifError(err);
-
-                var body;
-                switch (res.headers['content-type']) {
-                    case 'image/png':
-                        body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                        break;
-                    case 'application/x-protobuf':
-                        body = new mapnik.VectorTile(z, x, y);
-                        body.setDataSync(new Buffer(res.body, 'binary'));
-                        break;
-                    case 'application/json; charset=utf-8':
-                        body = JSON.parse(res.body);
-                        break;
-                    default:
-                        body = res.body
-                        break;
-                }
-
-                next(null, res, body);
-            });
+            assert.response(self.server, request, expectedResponse, this);
         },
-        function finish(err, res, image) {
-            if (layergroupId) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+        function finish(res, err) {
+            if (err) {
+                return callback(err);
             }
-            return callback(err, res, image);
+
+            var body;
+            switch (res.headers['content-type']) {
+                case 'image/png':
+                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    break;
+                case 'application/x-protobuf':
+                    body = new mapnik.VectorTile(z, x, y);
+                    body.setDataSync(new Buffer(res.body, 'binary'));
+                    break;
+                case 'application/json; charset=utf-8':
+                    body = JSON.parse(res.body);
+                    break;
+                default:
+                    body = res.body;
+                    break;
+            }
+
+            return callback(err, res, body);
         }
     );
 };
@@ -791,10 +777,11 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
         },
         expectedResponse,
         function(res, err) {
+            var parsedBody;
             // If there is a response, we are still interested in catching the created keys
             // to be able to delete them on the .drain() method.
             if (res) {
-                var parsedBody = JSON.parse(res.body);
+                parsedBody = JSON.parse(res.body);
                 if (parsedBody.layergroupid) {
                     self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
                     self.keysToDelete['user:localhost:mapviews:global'] = 5;
@@ -812,7 +799,7 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
 TestClient.prototype.getStaticCenter = function (params, callback) {
     var self = this;
 
-    let { layergroupid, z, lat, lng, width, height, format } = params
+    let { layergroupid, z, lat, lng, width, height, format } = params;
 
     var url = `/api/v1/map/`;
 
@@ -828,7 +815,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 return next(null, layergroupid);
             }
 
-            var data = self.mapConfig
+            var data = self.mapConfig;
             var path  = url;
 
             assert.response(self.server,
@@ -855,14 +842,13 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 }
             );
         },
-        function getStaticResult(err, _layergroupid) {
+        function getStaticResult(err, layergroupId) {
             assert.ifError(err);
 
-            var next = this;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            layergroupid = _layergroupid;
-
-            url = `/api/v1/map/static/center/${layergroupid}/${z}/${lat}/${lng}/${width}/${height}.${format}`
+            url = `/api/v1/map/static/center/${layergroupId}/${z}/${lat}/${lng}/${width}/${height}.${format}`;
 
             if (self.apiKey) {
                 url += '?' + qs.stringify({api_key: self.apiKey});
@@ -884,31 +870,27 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 }
             }, params.response);
 
-            assert.response(self.server, request, expectedResponse, function(res, err) {
-                assert.ifError(err);
-
-                var body;
-                switch (res.headers['content-type']) {
-                    case 'image/png':
-                        body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                        break;
-                    case 'application/json; charset=utf-8':
-                        body = JSON.parse(res.body);
-                        break;
-                    default:
-                        body = res.body
-                        break;
-                }
-
-                next(null, res, body);
-            });
+            assert.response(self.server, request, expectedResponse, this);
         },
-        function finish(err, res, image) {
-            if (layergroupid) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+        function(res, err) {
+            if (err) {
+                return callback(err);
             }
-            return callback(err, res, image);
+
+            var body;
+            switch (res.headers['content-type']) {
+                case 'image/png':
+                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    break;
+                case 'application/json; charset=utf-8':
+                    body = JSON.parse(res.body);
+                    break;
+                default:
+                    body = res.body;
+                    break;
+            }
+
+            return callback(err, res, body);
         }
     );
 };
@@ -922,7 +904,6 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
         url += '?' + qs.stringify({api_key: this.apiKey});
     }
 
-    var layergroupId;
     var nodes = {};
     step(
         function createLayergroup() {
@@ -961,11 +942,11 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
                 }
             );
         },
-        function getNodeStatusResult(err, _layergroupId) {
+        function getNodeStatusResult(err, layergroupId) {
             assert.ifError(err);
 
-            var next = this;
-            layergroupId = _layergroupId;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             url = urlParser.parse(nodes[nodeName]).path;
 
@@ -988,15 +969,13 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
                 }
             };
 
-            assert.response(self.server, request, expectedResponse, function(res, err) {
-                assert.ifError(err);
-                next(null, res, JSON.parse(res.body));
-            });
+            assert.response(self.server, request, expectedResponse, this);
         },
-        function finish(err, res, image) {
-            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
-            self.keysToDelete['user:localhost:mapviews:global'] = 5;
-            return callback(err, res, image);
+        function finish(res, err) {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, res, JSON.parse(res.body));
         }
     );
 };
@@ -1005,11 +984,11 @@ TestClient.prototype.getAttributes  = function(params, callback) {
     var self = this;
 
     if (!Number.isFinite(params.featureId)) {
-        throw new Error('featureId param must be a number')
+        throw new Error('featureId param must be a number');
     }
 
     if (!Number.isFinite(params.layer)) {
-        throw new Error('layer param must be a number')
+        throw new Error('layer param must be a number');
     }
 
     var url = '/api/v1/map';
@@ -1021,7 +1000,7 @@ TestClient.prototype.getAttributes  = function(params, callback) {
     var layergroupid;
 
     if (params.layergroupid) {
-        layergroupid = params.layergroupid
+        layergroupid = params.layergroupid;
     }
 
     step(
@@ -1058,14 +1037,13 @@ TestClient.prototype.getAttributes  = function(params, callback) {
                 }
             );
         },
-        function getAttributes(err, _layergroupid) {
+        function getAttributes(err, layergroupId) {
             assert.ifError(err);
 
-            var next = this;
+            self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
+            self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            layergroupid = _layergroupid;
-
-            url = `/api/v1/map/${layergroupid}/${params.layer}/attributes/${params.featureId}`;
+            url = `/api/v1/map/${layergroupId}/${params.layer}/attributes/${params.featureId}`;
 
             if (self.apiKey) {
                 url += '?' + qs.stringify({api_key: self.apiKey});
@@ -1086,21 +1064,14 @@ TestClient.prototype.getAttributes  = function(params, callback) {
                 }
             };
 
-            assert.response(self.server, request, expectedResponse, function (res, err) {
-                assert.ifError(err);
-
-                var attributes = JSON.parse(res.body);
-
-                next(null, res, attributes);
-            });
+            assert.response(self.server, request, expectedResponse, this);
         },
-        function finish(err, res, attributes) {
-            if (layergroupid) {
-                self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupid).token] = 0;
-                self.keysToDelete['user:localhost:mapviews:global'] = 5;
+        function finish(res, err) {
+            if (err) {
+                return callback(err);
             }
-
-            return callback(err, res, attributes);
+            var attributes = JSON.parse(res.body);
+            return callback(null, res, attributes);
         }
     );
 };
@@ -1144,7 +1115,7 @@ module.exports.getStaticMap = function getStaticMap(templateName, params, callba
     // this could be removed once named maps are invalidated, otherwise you hits the cache
     var server = new CartodbWindshaft(serverOptions);
 
-    assert.response(self.server, requestOptions, expectedResponse, function (res, err) {
+    assert.response(server, requestOptions, expectedResponse, function (res, err) {
         helper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, function() {
             return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
         });
@@ -1166,12 +1137,11 @@ TestClient.prototype.setUserRenderTimeoutLimit = function (user, userTimeoutLimi
 
 TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callback) {
     const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
-    const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 })
-    const pass = _.template(global.environment.postgres_auth_pass, { user_id: 1 })
+    const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
     const publicuser = global.environment.postgres.user;
 
     // we need to guarantee all new connections have the new settings
-    helper.cleanPGPoolConnections()
+    helper.cleanPGPoolConnections();
 
     const psql = new PSQL({
         user: 'postgres',
