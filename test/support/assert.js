@@ -187,8 +187,8 @@ function validateResponse(response, expected) {
 }
 
 // @param tolerance number of tolerated grid cell differences
-// jshint maxcomplexity:9
 assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
+    // jshint maxcomplexity:9
     fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
     var expected_json = JSON.parse(fs.readFileSync(file_b, 'utf8'));
 
