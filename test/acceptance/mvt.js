@@ -325,7 +325,8 @@ return function () {
             });
         });
 
-        it.skip('should work with mapnik substitution tokens', function (done) {
+        var skipOnPostGIS = usePostGIS ? it.skip: it;
+        skipOnPostGIS('should work with mapnik substitution tokens', function (done) {
             var cartocss = [
                 "#layer {",
                 "  line-width: 2;",
