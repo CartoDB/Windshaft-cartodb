@@ -240,6 +240,14 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
+carto@CartoDB/carto#0.15.1-cdb1:
+  version "0.15.1-cdb1"
+  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  dependencies:
+    mapnik-reference "~6.0.2"
+    optimist "~0.6.0"
+    underscore "~1.6.0"
+
 carto@cartodb/carto#0.15.1-cdb3:
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
@@ -247,14 +255,6 @@ carto@cartodb/carto#0.15.1-cdb3:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "1.8.3"
-
-"carto@github:cartodb/carto#0.15.1-cdb1":
-  version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
-  dependencies:
-    mapnik-reference "~6.0.2"
-    optimist "~0.6.0"
-    underscore "~1.6.0"
 
 cartocolor@4.0.0:
   version "4.0.0"
@@ -1572,7 +1572,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-"pg@github:cartodb/node-postgres#6.1.6-cdb1":
+pg@cartodb/node-postgres#6.1.6-cdb1:
   version "6.1.6"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3eef52dd1e655f658a4ee8ac5697688b3ecfed44"
   dependencies:
