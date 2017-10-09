@@ -135,26 +135,21 @@ describe('buffer size per format', function () {
     const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
     testCases.forEach(function (test) {
         var testFn = (usePostGIS) => {
-                before(function () {
-                    serverOptions.renderer.mvt.usePostGIS = usePostGIS;
-                });
-                after(function () {
-                    serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
-                });
-
                 it(test.desc, function (done) {
-                this.testClient = new TestClient(test.mapConfig, 1234);
-                var coords = test.coords;
-                var options = {
-                    format: test.format,
-                    layers: test.layers
-                };
-                this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
-                    assert.ifError(err);
-                    // To generate images use:
-                    // tile.save(test.fixturePath);
-                    test.assert(tile, done);
-                });
+                    serverOptions.renderer.mvt.usePostGIS = usePostGIS;                    
+                    this.testClient = new TestClient(test.mapConfig, 1234);
+                    serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;                
+                    var coords = test.coords;
+                    var options = {
+                        format: test.format,
+                        layers: test.layers
+                    };
+                    this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+                        assert.ifError(err);
+                        // To generate images use:
+                        // tile.save(test.fixturePath);
+                        test.assert(tile, done);
+                    });
             });
         };
         if (test.format === 'mvt'){
@@ -449,14 +444,10 @@ describe('buffer size per format for named maps w/o placeholders', function () {
     const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
     testCases.forEach(function (test) {
         var testFn = (usePostGIS) => {
-                before(function () {
-                    serverOptions.renderer.mvt.usePostGIS = usePostGIS;
-                });
-                after(function () {
-                    serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
-                });
-                it(test.desc, function (done) {
+                it(test.desc + `(${usePostGIS? 'PostGIS' : 'mapnik'})`, function (done) {
+                    serverOptions.renderer.mvt.usePostGIS = usePostGIS;                    
                     this.testClient = new TestClient(test.template, 1234);
+                    serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;                    
                     var coords = test.coords;
                     var options = {
                         format: test.format,
@@ -474,7 +465,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
                 });
         };
         if (test.format === 'mvt'){
-            testFn(true);
+            testFn(false);
         }
         testFn(false);
     });
