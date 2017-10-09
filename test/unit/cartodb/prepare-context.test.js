@@ -127,7 +127,7 @@ describe('prepare-context', function() {
                     }
                 };
 
-                res = {};
+                res = { set: function () {} };
 
                 dbConnSetup(prepareRequest(req), prepareResponse(res), function() {
                     // wrong key resets params to no user
