@@ -2,6 +2,7 @@ require('../support/test_helper');
 
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
+var serverOptions = require('../../lib/cartodb/server_options');
 
 const timeoutErrorTilePath = `${process.cwd()}/assets/render-timeout-fallback.png`;
 
@@ -200,49 +201,56 @@ describe('user render timeout limit', function () {
         });
     });
 
-    describe('vector', function () {
-        beforeEach(function (done) {
-            const mapconfig = createMapConfig();
-            this.testClient = new TestClient(mapconfig, 1234);
-            this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
-        });
-
-        afterEach(function (done) {
-            this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
-                if (err) {
-                    return done(err);
-                }
-                this.testClient.drain(done);
+    describe('vector (PostGIS)', vector(true));
+    describe('vector (mapnik)', vector(false));
+    function vector(usePostGIS) {
+        const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+        return function () {
+            beforeEach(function (done) {
+                serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+                const mapconfig = createMapConfig();
+                this.testClient = new TestClient(mapconfig, 1234);
+                this.testClient.setUserDatabaseTimeoutLimit(50, done);
             });
-        });
 
-        it('layergroup creation works but vector tile request fails due to render timeout', function (done) {
-            const params = {
-                format: 'mvt',
-                response: {
-                    status: 429,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
+            afterEach(function (done) {
+                serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+                this.testClient.setUserDatabaseTimeoutLimit(0, (err) => {
+                    if (err) {
+                        return done(err);
                     }
-                }
-            };
-
-            this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
-                assert.ifError(err);
-
-                assert.deepEqual(tile, {
-                    errors: ['You are over platform\'s limits. Please contact us to know more details'],
-                    errors_with_context: [{
-                        type: 'limit',
-                        subtype: 'render',
-                        message: 'You are over platform\'s limits. Please contact us to know more details'
-                    }]
+                    this.testClient.drain(done);
                 });
-
-                done();
             });
-        });
-    });
+
+            it('layergroup creation works but vector tile request fails due to render timeout', function (done) {
+                const params = {
+                    format: 'mvt',
+                    response: {
+                        status: 429,
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    }
+                };
+
+                this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
+                    assert.ifError(err);
+
+                    assert.deepEqual(tile, {
+                        errors: ['You are over platform\'s limits. Please contact us to know more details'],
+                        errors_with_context: [{
+                            type: 'limit',
+                            subtype: 'datasource',
+                            message: 'You are over platform\'s limits. Please contact us to know more details'
+                        }]
+                    });
+
+                    done();
+                });
+            });
+        };
+    }
 
     describe('interativity', function () {
         beforeEach(function (done) {
