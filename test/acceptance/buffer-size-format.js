@@ -3,6 +3,7 @@ require('../support/test_helper');
 var fs = require('fs');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
+var serverOptions = require('../../lib/cartodb/server_options');
 var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 5;
 
@@ -131,21 +132,35 @@ describe('buffer size per format', function () {
         return done();
     });
 
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
     testCases.forEach(function (test) {
-        it(test.desc, function (done) {
-            this.testClient = new TestClient(test.mapConfig, 1234);
-            var coords = test.coords;
-            var options = {
-                format: test.format,
-                layers: test.layers
-            };
-            this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
-                assert.ifError(err);
-                // To generate images use:
-                // tile.save(test.fixturePath);
-                test.assert(tile, done);
+        var testFn = (usePostGIS) => {
+                before(function () {
+                    serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+                });
+                after(function () {
+                    serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+                });
+
+                it(test.desc, function (done) {
+                this.testClient = new TestClient(test.mapConfig, 1234);
+                var coords = test.coords;
+                var options = {
+                    format: test.format,
+                    layers: test.layers
+                };
+                this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+                    assert.ifError(err);
+                    // To generate images use:
+                    // tile.save(test.fixturePath);
+                    test.assert(tile, done);
+                });
             });
-        });
+        };
+        if (test.format === 'mvt'){
+            testFn(true);
+        }
+        testFn(false);
     });
 });
 
@@ -431,23 +446,36 @@ describe('buffer size per format for named maps w/o placeholders', function () {
         return done();
     });
 
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
     testCases.forEach(function (test) {
-        it(test.desc, function (done) {
-            this.testClient = new TestClient(test.template, 1234);
-            var coords = test.coords;
-            var options = {
-                format: test.format,
-                placeholders: test.placeholders,
-                layers: test.layers
-            };
-            this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
-                assert.ifError(err);
-                // To generate images use:
-                //tile.save(test.fixturePath);
-                // require('fs').writeFileSync(test.fixturePath, JSON.stringify(tile));
-                // require('fs').writeFileSync(test.fixturePath, tile.getDataSync());
-                test.assert(tile, done);
-            });
-        });
+        var testFn = (usePostGIS) => {
+                before(function () {
+                    serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+                });
+                after(function () {
+                    serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+                });
+                it(test.desc, function (done) {
+                    this.testClient = new TestClient(test.template, 1234);
+                    var coords = test.coords;
+                    var options = {
+                        format: test.format,
+                        placeholders: test.placeholders,
+                        layers: test.layers
+                    };
+                    this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+                        assert.ifError(err);
+                        // To generate images use:
+                        //tile.save(test.fixturePath);
+                        // require('fs').writeFileSync(test.fixturePath, JSON.stringify(tile));
+                        // require('fs').writeFileSync(test.fixturePath, tile.getDataSync());
+                        test.assert(tile, done);
+                    });
+                });
+        };
+        if (test.format === 'mvt'){
+            testFn(true);
+        }
+        testFn(false);
     });
 });
