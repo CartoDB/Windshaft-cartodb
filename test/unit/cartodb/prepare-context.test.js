@@ -88,7 +88,7 @@ describe('prepare-context', function() {
 
     it('sets dbname from redis metadata', function(done){
       var req = {headers: { host:'localhost' }, query: {} };
-      var res = {};
+      var res = { set: function () {} };
 
       dbConnSetup(prepareRequest(req), prepareResponse(res), function(err) {
         if ( err ) { done(err); return; }
@@ -104,7 +104,7 @@ describe('prepare-context', function() {
 
     it('sets also dbuser for authenticated requests', function(done){
         var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }};
-        var res = {};
+        var res = { set: function () {} };
 
         // FIXME: review authorize-pgconnsetup workflow, It might we are doing authorization twice.
         authorize(prepareRequest(req), prepareResponse(res), function (err) {
