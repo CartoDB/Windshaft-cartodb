@@ -10,6 +10,7 @@ var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
 const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
 const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
+const localsMiddleware =  require('../../../lib/cartodb/middleware/context/locals');
 
 var windshaft = require('windshaft');
 
@@ -47,56 +48,75 @@ describe('prepare-context', function() {
         req.profiler = {
             done: function() {}
         };
-        req.context = { user: 'localhost' };
-        req.params = {};
+
         return req;
     }
 
+    function prepareResponse(res) {
+        if(!res.locals) {
+            res.locals = {};
+        }
+        res.locals.user = 'localhost';
+
+        return res;
+    }
+
+    it('res.locals are created', function(done) {
+        let req = {};
+        let res = {};
+
+        localsMiddleware(prepareRequest(req), prepareResponse(res), function(err) {
+            if ( err ) { done(err); return; }
+            assert.ok(res.hasOwnProperty('locals'), 'response has locals');
+            done();
+        });
+    });
+    
     it('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
       var res = {};
 
-      cleanUpQueryParams(prepareRequest(req), res, function(err) {
+      cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function(err) {
           if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-          assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
+          assert.ok(res.hasOwnProperty('locals'), 'response has locals');
+          assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
           done();
       });
     });
 
     it('sets dbname from redis metadata', function(done){
-      var req = {headers: { host:'localhost' }, query: {}, locals: {} };
+      var req = {headers: { host:'localhost' }, query: {} };
       var res = { set: function () {} };
 
-      dbConnSetup(prepareRequest(req), res, function(err) {
-          if ( err ) { done(err); return; }
+      dbConnSetup(prepareRequest(req), prepareResponse(res), function(err) {
+        if ( err ) { done(err); return; }
           assert.ok(_.isObject(req.query), 'request has query');
           assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-          assert.ok(req.hasOwnProperty('params'), 'request has params');
-          assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
-          assert.equal(req.params.dbname, test_database);
-          assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
+          assert.ok(res.hasOwnProperty('locals'), 'response has locals');
+          assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
+          assert.equal(res.locals.dbname, test_database);
+          assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser ('+res.locals.dbuser+')');
           done();
       });
     });
 
     it('sets also dbuser for authenticated requests', function(done){
-        var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }, locals: {} };
+        var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }};
         var res = { set: function () {} };
 
         // FIXME: review authorize-pgconnsetup workflow, It might we are doing authorization twice.
-        authorize(prepareRequest(req), res, function (err) {
+        authorize(prepareRequest(req), prepareResponse(res), function (err) {
             if (err) { done(err); return; }
             dbConnSetup(req, res, function(err) {
                 if ( err ) { done(err); return; }
                 assert.ok(_.isObject(req.query), 'request has query');
                 assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-                assert.ok(req.hasOwnProperty('params'), 'request has params');
-                assert.ok(!req.params.hasOwnProperty('interactivity'), 'request params do not have interactivity');
-                assert.equal(req.params.dbname, test_database);
-                assert.equal(req.params.dbuser, test_user);
+                assert.ok(res.hasOwnProperty('locals'), 'response has locals');
+                assert.ok(!res.locals.hasOwnProperty('interactivity'), 'request params do not have interactivity');
+                assert.equal(res.locals.dbname, test_database);
+                assert.equal(res.locals.dbuser, test_user);
 
                 req = {
                     headers: {
@@ -104,13 +124,14 @@ describe('prepare-context', function() {
                     },
                     query: {
                         map_key: '1235'
-                    },
-                    locals: {}
+                    }
                 };
 
-                dbConnSetup(prepareRequest(req), res, function () {
+                res = { set: function () {} };
+
+                dbConnSetup(prepareRequest(req), prepareResponse(res), function() {
                     // wrong key resets params to no user
-                    assert.ok(req.params.dbuser === test_pubuser, 'could inject dbuser ('+req.params.dbuser+')');
+                    assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser ('+res.locals.dbuser+')');
                     done();
                 });
             });
@@ -130,17 +151,16 @@ describe('prepare-context', function() {
                 api_key: 'test',
                 style: 'override',
                 config: config
-            },
-            locals: {}
+            }
         };
         var res = {};
-
-        cleanUpQueryParams(prepareRequest(req), res, function (err) {
+        
+        cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function (err) {
             if ( err ) {
                 return done(err);
             }
 
-            var query = req.params;
+            var query = res.locals;
             assert.deepEqual(config, query.config);
             assert.equal('test', query.api_key);
             assert.equal(undefined, query.non_included);

@@ -63,7 +63,7 @@ module.exports = _.extend({}, serverOptions, {
 
         _.extend(req.params, req.query);
         req.params.user = 'localhost';
-        req.context = {user: 'localhost'};
+        res.locals.user = 'localhost';
 
         req.params.dbhost = global.environment.postgres.host;
         req.params.dbport = req.params.dbport || global.environment.postgres.port;
@@ -73,6 +73,9 @@ module.exports = _.extend({}, serverOptions, {
             req.params.dbuser = 'test_windshaft_cartodb_user_1';
         }
         req.params.dbname = 'test_windshaft_cartodb_user_1_db';
+
+        // add all params to res.locals
+        res.locals = _.extend({}, req.params);
 
 
         // increment number of calls counter
