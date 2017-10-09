@@ -117,6 +117,15 @@ module.exports.SQL = {
     ONE_POINT: 'select 1 as cartodb_id, \'SRID=3857;POINT(0 0)\'::geometry the_geom_webmercator'
 };
 
+function resErr2errRes(callback) {
+    return (res, err) => {
+        if (err) {
+            return callback(err);
+        }
+        return callback(err, res);
+    };
+}
+
 TestClient.prototype.getWidget = function(widgetName, params, callback) {
     var self = this;
 
@@ -717,9 +726,9 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 expectedResponse.headers['Content-Type'] = 'application/json; charset=utf-8';
             }
 
-            assert.response(self.server, request, expectedResponse, this);
+            assert.response(self.server, request, expectedResponse, resErr2errRes(this));
         },
-        function finish(res, err) {
+        function finish(err, res) {
             if (err) {
                 return callback(err);
             }
@@ -870,9 +879,9 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 }
             }, params.response);
 
-            assert.response(self.server, request, expectedResponse, this);
+            assert.response(self.server, request, expectedResponse, resErr2errRes(this));
         },
-        function(res, err) {
+        function(err, res) {
             if (err) {
                 return callback(err);
             }
@@ -969,9 +978,9 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
                 }
             };
 
-            assert.response(self.server, request, expectedResponse, this);
+            assert.response(self.server, request, expectedResponse, resErr2errRes(this));
         },
-        function finish(res, err) {
+        function finish(err, res) {
             if (err) {
                 return callback(err);
             }
@@ -1064,9 +1073,9 @@ TestClient.prototype.getAttributes  = function(params, callback) {
                 }
             };
 
-            assert.response(self.server, request, expectedResponse, this);
+            assert.response(self.server, request, expectedResponse, resErr2errRes(this));
         },
-        function finish(res, err) {
+        function finish(err, res) {
             if (err) {
                 return callback(err);
             }
