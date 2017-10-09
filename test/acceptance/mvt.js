@@ -144,7 +144,7 @@ return function () {
             const { z, x, y } = test.coords;
             const { format, response } = test;
 
-            testClient.getTile(z, x, y, { format, response }, (err, res) => {
+            testClient.getTile(z, x, y, { format, response }, err => {
                 assert.ifError(err);
                 testClient.drain(done);
             });
@@ -185,7 +185,8 @@ return function () {
                     type: 'mapnik',
                     options: {
                         sql: 'select * from populated_places_simple_reduced',
-                        cartocss: '#layer0 { marker-fill: red; marker-width: 10; [name="Madrid"] { marker-fill: green; } }',
+                        cartocss: 
+                            '#layer0 { marker-fill: red; marker-width: 10; [name="Madrid"] { marker-fill: green; } }',
                         cartocss_version: '2.0.1',
                         widgets: {
                             adm0name: {
@@ -336,20 +337,20 @@ return function () {
             ].join('\n');
 
             var sql = [
-                'WITH hgrid AS (',
-                '  SELECT CDB_HexagonGrid(',
-                '    ST_Expand(!bbox!, greatest(!pixel_width!,!pixel_height!) * 100),',
-                '    greatest(!pixel_width!,!pixel_height!) * 100',
-                '  ) as cell',
-                ')',
-                'SELECT',
-                '  hgrid.cell as the_geom_webmercator,',
-                '  count(1) as points_count,',
-                '  count(1)/power(100 * CDB_XYZ_Resolution(CDB_ZoomFromScale(!scale_denominator!)), 2) as points_density,',
-                '  1 as cartodb_id',
-                'FROM hgrid, (SELECT * FROM populated_places_simple_reduced) i',
-                'where ST_Intersects(i.the_geom_webmercator, hgrid.cell)',
-                'GROUP BY hgrid.cell'
+            'WITH hgrid AS (',
+            '  SELECT CDB_HexagonGrid(',
+            '    ST_Expand(!bbox!, greatest(!pixel_width!,!pixel_height!) * 100),',
+            '    greatest(!pixel_width!,!pixel_height!) * 100',
+            '  ) as cell',
+            ')',
+            'SELECT',
+            '  hgrid.cell as the_geom_webmercator,',
+            '  count(1) as points_count,',
+            '  count(1)/power(100 * CDB_XYZ_Resolution(CDB_ZoomFromScale(!scale_denominator!)), 2) as points_density,',
+            '  1 as cartodb_id',
+            'FROM hgrid, (SELECT * FROM populated_places_simple_reduced) i',
+            'where ST_Intersects(i.the_geom_webmercator, hgrid.cell)',
+            'GROUP BY hgrid.cell'
             ].join('\n');
 
             var mapConfig = {
@@ -499,5 +500,5 @@ return function () {
         });
 
     }
-}
+};
 }
