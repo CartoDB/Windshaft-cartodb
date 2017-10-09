@@ -325,7 +325,7 @@ return function () {
             });
         });
 
-        it('should work with mapnik substitution tokens', function (done) {
+        it.skip('should work with mapnik substitution tokens', function (done) {
             var cartocss = [
                 "#layer {",
                 "  line-width: 2;",
