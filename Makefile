@@ -16,7 +16,7 @@ config.status--test:
 	./configure --environment=test
 
 config/environments/test.js: config.status--test
-	./config.status--test 
+	./config.status--test
 
 TEST_SUITE := $(shell find test/{acceptance,integration,unit} -name "*.js")
 TEST_SUITE_UNIT := $(shell find test/unit -name "*.js")
