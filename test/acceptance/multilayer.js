@@ -9,7 +9,7 @@ var mapnik = require('windshaft').mapnik;
 var semver = require('semver');
 
 var helper = require(__dirname + '/../support/test_helper');
-var LayergroupToken = require('../support/layergroup-token');
+var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 

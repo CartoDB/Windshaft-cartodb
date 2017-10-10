@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "3.13.1",
+  "version": "4.0.1",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -22,14 +22,14 @@
     "Mario de Frutos <mario.defrutos@carto.com>"
   ],
   "dependencies": {
-    "body-parser": "~1.14.0",
-    "camshaft": "0.59.1",
-    "cartodb-psql": "0.10.1",
+    "body-parser": "^1.18.2",
+    "camshaft": "0.59.2",
+    "cartodb-psql": "0.10.2",
     "cartodb-query-tables": "0.3.0",
     "cartodb-redis": "0.14.0",
-    "debug": "~2.2.0",
+    "debug": "^3.1.0",
     "dot": "~1.0.2",
-    "express": "~4.13.3",
+    "express": "~4.16.0",
     "fastly-purge": "~1.0.1",
     "log4js": "cartodb/log4js-node#cdb",
     "lru-cache": "2.6.5",
@@ -37,13 +37,13 @@
     "node-statsd": "~0.0.7",
     "queue-async": "~1.0.7",
     "redis-mpool": "0.4.1",
-    "request": "~2.79.0",
+    "request": "^2.83.0",
     "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
-    "turbo-carto": "0.20.0",
+    "turbo-carto": "0.20.1",
     "underscore": "~1.6.0",
-    "windshaft": "3.3.2",
+    "windshaft": "3.3.3",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
@@ -62,6 +62,6 @@
   },
   "engines": {
     "node": ">=6.9",
-    "yarn": "^0.21.3"
+    "yarn": ">=0.27.5 <1.0.0"
   }
 }
