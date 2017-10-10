@@ -6,7 +6,7 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 
 var BaseController = require('../../../lib/cartodb/controllers/base');
-var LayergroupToken = require('../../support/layergroup-token');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('retina support', function() {
 

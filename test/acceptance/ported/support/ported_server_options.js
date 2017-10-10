@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var serverOptions = require('../../../../lib/cartodb/server_options');
-var LayergroupToken = require('../../../support/layergroup-token');
 var mapnik = require('windshaft').mapnik;
+var LayergroupToken = require('../../../../lib/cartodb/models/layergroup-token');
 var OverviewsQueryRewriter = require('../../../../lib/cartodb/utils/overviews_query_rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
   zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'
@@ -48,7 +48,7 @@ module.exports = _.extend({}, serverOptions, {
     log_format: null, // do not log anything
     afterLayergroupCreateCalls: 0,
     useProfiler: true,
-    req2params: function(req, callback){
+    req2params: function(req, res, callback){
 
         if ( req.query.testUnexpectedError ) {
             return callback('test unexpected error');
@@ -56,13 +56,14 @@ module.exports = _.extend({}, serverOptions, {
 
         // this is in case you want to test sql parameters eg ...png?sql=select * from my_table limit 10
         req.params =  _.extend({}, req.params);
+
         if (req.params.token) {
             req.params.token = LayergroupToken.parse(req.params.token).token;
         }
 
         _.extend(req.params, req.query);
         req.params.user = 'localhost';
-        req.context = {user: 'localhost'};
+        res.locals.user = 'localhost';
 
         req.params.dbhost = global.environment.postgres.host;
         req.params.dbport = req.params.dbport || global.environment.postgres.port;
@@ -72,6 +73,9 @@ module.exports = _.extend({}, serverOptions, {
             req.params.dbuser = 'test_windshaft_cartodb_user_1';
         }
         req.params.dbname = 'test_windshaft_cartodb_user_1_db';
+
+        // add all params to res.locals
+        res.locals = _.extend({}, req.params);
 
 
         // increment number of calls counter
