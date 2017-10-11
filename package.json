@@ -43,7 +43,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.20.1",
     "underscore": "~1.6.0",
-    "windshaft": "3.3.3",
+    "windshaft": "cartodb/windshaft",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
@@ -58,7 +58,13 @@
   "scripts": {
     "lint": "jshint lib test",
     "preinstall": "make pre-install",
-    "test": "make test-all"
+    "test": "make test-all",
+    "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn",
+    "docker-install": "sudo apt install docker.io && sudo usermod -aG docker $(whoami)",
+    "docker-pull": "docker pull cartoimages/windshaft-testing",
+    "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh",
+    "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/windshaft-testing bash",
+    "docker-publish": "docker push cartoimages/windshaft-carto-testing"
   },
   "engines": {
     "node": ">=6.9",
