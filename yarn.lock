@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-abaculus@cartodb/abaculus#2.0.3-cdb1:
+"abaculus@github:cartodb/abaculus#2.0.3-cdb1":
   version "2.0.3-cdb1"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/f5f34e1c80cdd8d49edd1d6fe3b2220ab2e23aaf"
   dependencies:
@@ -210,7 +210,7 @@ camshaft@0.59.2:
     dot "^1.0.3"
     request "^2.69.0"
 
-canvas@cartodb/node-canvas#1.6.2-cdb2:
+"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -228,15 +228,15 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@CartoDB/carto#0.15.1-cdb1:
+"carto@github:cartodb/carto#0.15.1-cdb1":
   version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
   dependencies:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "~1.6.0"
 
-carto@cartodb/carto#0.15.1-cdb3:
+"carto@github:cartodb/carto#0.15.1-cdb3":
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
@@ -584,8 +584,8 @@ exit@0.1.2, exit@0.1.x:
   resolved "https://registry.yarnpkg.com/exit/-/exit-0.1.2.tgz#0632638f8d877cc82107d30a0fff1a17cba1cd0c"
 
 express@~4.16.0:
-  version "4.16.1"
-  resolved "https://registry.yarnpkg.com/express/-/express-4.16.1.tgz#6b33b560183c9b253b7b62144df33a4654ac9ed0"
+  version "4.16.2"
+  resolved "https://registry.yarnpkg.com/express/-/express-4.16.2.tgz#e35c6dfe2d64b7dca0a5cd4f21781be3299e076c"
   dependencies:
     accepts "~1.3.4"
     array-flatten "1.1.1"
@@ -1286,7 +1286,11 @@ mocha@~3.4.1:
     mkdirp "0.5.1"
     supports-color "3.1.2"
 
-moment@^2.10.6, moment@~2.18.1:
+moment@^2.10.6:
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.0.tgz#44f675ef6b944942762581b1c179fb679e599d67"
+
+moment@~2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
@@ -1522,7 +1526,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-pg@cartodb/node-postgres#6.1.6-cdb1:
+"pg@github:cartodb/node-postgres#6.1.6-cdb1":
   version "6.1.6"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3eef52dd1e655f658a4ee8ac5697688b3ecfed44"
   dependencies:
@@ -1580,8 +1584,8 @@ postcss@5.0.19:
     supports-color "^3.1.2"
 
 postcss@^5.0.18, postcss@^5.2.5, postcss@~5.2.8:
-  version "5.2.17"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-5.2.17.tgz#cf4f597b864d65c8a492b2eabe9d706c879c388b"
+  version "5.2.18"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-5.2.18.tgz#badfa1497d46244f6390f58b319830d9107853c5"
   dependencies:
     chalk "^1.1.3"
     js-base64 "^2.1.9"
@@ -2089,7 +2093,7 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tilelive-bridge@cartodb/tilelive-bridge#2.3.1-cdb4:
+"tilelive-bridge@github:cartodb/tilelive-bridge#2.3.1-cdb4":
   version "2.3.1-cdb4"
   resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/faa2b638da2d119b78281575d40255cb523f6ca6"
   dependencies:
@@ -2097,7 +2101,7 @@ tilelive-bridge@cartodb/tilelive-bridge#2.3.1-cdb4:
     mapnik-pool "~0.1.3"
     sphericalmercator "1.0.x"
 
-tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb3:
+"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb3":
   version "0.6.18-cdb3"
   resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/23bd1c31dd57d0b76c86b9f1eaf62462b3c17d01"
   dependencies:
@@ -2258,9 +2262,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-3.3.3.tgz#0582e6a0d9cf91c533134787ace64a3337200e33"
+windshaft@~4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.0.0.tgz#b28ffb3775db3a4f2578e79d73c9b854a1ae5854"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
