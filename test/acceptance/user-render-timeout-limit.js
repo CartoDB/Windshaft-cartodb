@@ -201,7 +201,10 @@ describe('user render timeout limit', function () {
         });
     });
 
-    describe('vector (PostGIS)', vector(true));
+    if (process.env.POSTGIS_VERSION === '2.4') {
+        describe('vector (PostGIS)', vector(true));
+    }
+
     describe('vector (mapnik)', vector(false));
     function vector(usePostGIS) {
         const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
