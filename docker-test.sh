@@ -1,4 +1,4 @@
-export NPROCS=1 && export JOBS=1 && export CXX=g++-4.9 && export PGUSER=postgres export POSTGIS_VERSION=2.4
+export NPROCS=1 && export JOBS=1 && export CXX=g++-4.9 && export PGUSER=postgres
 
 npm install -g yarn@0.27.5
 yarn
