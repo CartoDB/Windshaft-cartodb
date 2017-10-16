@@ -7,6 +7,7 @@ Released 2017-mm-dd
  - Use express error handler middleware to respond in case of something went wrong.
  - Use `res.locals` object to share info between middlewares and leave `req.params` as an object containing properties mapped to the named route params.
  - Move `LZMA` decompression to its own middleware.
+ - Implement stats middleware removing some duplicated code while sending response.
 
 
 ## 4.0.0
