@@ -20,7 +20,9 @@ function createMapConfig(sql = TestClient.SQL.ONE_POINT) {
 }
 
 describe('mvt (mapnik)', mvt(false));
-describe('mvt (postgis)', mvt(true));
+if (process.env.POSTGIS_VERSION === '2.4') {
+    describe('mvt (postgis)', mvt(true));
+}
 
 function mvt(usePostGIS) {
 return function () {
@@ -185,7 +187,7 @@ return function () {
                     type: 'mapnik',
                     options: {
                         sql: 'select * from populated_places_simple_reduced',
-                        cartocss: 
+                        cartocss:
                             '#layer0 { marker-fill: red; marker-width: 10; [name="Madrid"] { marker-fill: green; } }',
                         cartocss_version: '2.0.1',
                         widgets: {

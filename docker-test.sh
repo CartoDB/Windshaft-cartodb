@@ -8,4 +8,4 @@ yarn
 createdb template_postgis && createuser publicuser
 psql -c "CREATE EXTENSION postgis" template_postgis
 
-npm test
+POSTGIS_VERSION=2.4 npm test
