@@ -152,7 +152,8 @@ It is important to note that generated images are cached from the live data refe
 * Timeout limits for generating static maps are the same across CARTO Builder and CARTO Engine. It is important to ensure timely processing of queries.
 * If you are publishing your map as a static image with the API, you must manually add [attributions](https://carto.com/attribution) for your static map image. For example, add the following attribution code:
 
-{% highlight javascript %}attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>
+{% highlight javascript %}
+attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>
 {% endhighlight %}
 
 ## Examples
