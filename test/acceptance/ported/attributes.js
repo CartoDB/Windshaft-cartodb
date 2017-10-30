@@ -4,13 +4,10 @@ var assert        = require('../../support/assert');
 var step          = require('step');
 var cartodbServer = require('../../../lib/cartodb/server');
 var PortedServerOptions = require('./support/ported_server_options');
-var BaseController = require('../../../lib/cartodb/controllers/base');
 
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
-
 describe('attributes', function() {
-
     var server = cartodbServer(PortedServerOptions);
     server.setMaxListeners(0);
 
@@ -47,16 +44,6 @@ describe('attributes', function() {
 
     afterEach(function(done) {
         testHelper.deleteRedisKeys(keysToDelete, done);
-    });
-
-    var req2paramsFn;
-    before(function() {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = PortedServerOptions.req2params;
-    });
-
-    after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
     });
 
     it("can only be fetched from layer having an attributes spec", function(done) {
