@@ -325,7 +325,7 @@ describe('aggregation-dataview: special float values', function() {
     });
 });
 
-describe('categories param', function () {
+describe('aggregation dataview tuned by categories query param', function () {
     afterEach(function(done) {
         if (this.testClient) {
             this.testClient.drain(done);
@@ -388,16 +388,41 @@ describe('categories param', function () {
         ]
     };
 
-    it('should accept cartegories param to customize aggregation dataview', function (done) {
-        this.testClient = new TestClient(mapConfig, 1234);
-        const params = {
-            categories: 2
-        };
+    var scenarios = [
+        {
+            params: { own_filter: 0, categories: -1 },
+            categoriesExpected: 4
+        },
+        {
+            params: { own_filter: 0, categories: 0 },
+            categoriesExpected: 4
+        },
+        {
+            params: { own_filter: 0, categories: 1 },
+            categoriesExpected: 1
+        },
+        {
+            params: { own_filter: 0, categories: 2 },
+            categoriesExpected: 2
+        },
+        {
+            params: { own_filter: 0, categories: 4 },
+            categoriesExpected: 4
+        },
+        {
+            params: { own_filter: 0, categories: 5 },
+            categoriesExpected: 4
+        }
+    ];
 
-        this.testClient.getDataview('categories', params, (err, dataview) => {
-            assert.ifError(err);
-            assert.equal(dataview.categoriesCount, 2);
-            done();
+    scenarios.forEach(function (scenario) {
+        it(`should handle cartegories to customize aggregations: ${JSON.stringify(scenario.params)}`, function (done) {
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview('categories', scenario.params, (err, dataview) => {
+                assert.ifError(err);
+                assert.equal(dataview.categories.length, scenario.categoriesExpected);
+                done();
+            });
         });
     });
 });
