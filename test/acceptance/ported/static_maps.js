@@ -5,9 +5,6 @@ var testClient = require('./support/test_client');
 var http = require('http');
 var fs = require('fs');
 
-var PortedServerOptions = require('./support/ported_server_options');
-var BaseController = require('../../../lib/cartodb/controllers/base');
-
 describe('static_maps', function() {
 
     var validUrlTemplate = 'http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png';
@@ -15,11 +12,7 @@ describe('static_maps', function() {
 
     var httpRendererResourcesServer;
 
-    var req2paramsFn;
     before(function(done) {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = PortedServerOptions.req2params;
-
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer( function(request, response) {
             var filename = __dirname + '/../../fixtures/http/basemap.png';
@@ -33,7 +26,6 @@ describe('static_maps', function() {
     });
 
     after(function(done) {
-        BaseController.prototype.req2params = req2paramsFn;
         httpRendererResourcesServer.close(done);
     });
 
