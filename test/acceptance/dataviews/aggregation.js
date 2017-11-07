@@ -326,14 +326,6 @@ describe('aggregation-dataview: special float values', function() {
 });
 
 describe('aggregation dataview tuned by categories query param', function () {
-    afterEach(function(done) {
-        if (this.testClient) {
-            this.testClient.drain(done);
-        } else {
-            done();
-        }
-    });
-
     const mapConfig = {
         version: '1.5.0',
         layers: [
@@ -388,6 +380,14 @@ describe('aggregation dataview tuned by categories query param', function () {
         ]
     };
 
+    beforeEach(function () {
+        this.testClient = new TestClient(mapConfig, 1234);
+    });
+
+    afterEach(function (done) {
+        this.testClient.drain(done);
+    });
+
     var scenarios = [
         {
             params: { own_filter: 0, categories: -1 },
@@ -417,7 +417,6 @@ describe('aggregation dataview tuned by categories query param', function () {
 
     scenarios.forEach(function (scenario) {
         it(`should handle cartegories to customize aggregations: ${JSON.stringify(scenario.params)}`, function (done) {
-            this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('categories', scenario.params, (err, dataview) => {
                 assert.ifError(err);
                 assert.equal(dataview.categories.length, scenario.categoriesExpected);
