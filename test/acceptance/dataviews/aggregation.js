@@ -324,3 +324,80 @@ describe('aggregation-dataview: special float values', function() {
         });
     });
 });
+
+describe('categories param', function () {
+    afterEach(function(done) {
+        if (this.testClient) {
+            this.testClient.drain(done);
+        } else {
+            done();
+        }
+    });
+
+    const mapConfig = {
+        version: '1.5.0',
+        layers: [
+            {
+                type: "cartodb",
+                options: {
+                    source: {
+                        "id": "a0"
+                    },
+                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
+                    cartocss_version: "2.3.0"
+                }
+            }
+        ],
+        dataviews: {
+            categories: {
+                source: {
+                    id: 'a0'
+                },
+                type: 'aggregation',
+                options: {
+                    column: 'cat',
+                    aggregation: 'sum',
+                    aggregationColumn: 'val'
+                }
+            }
+        },
+        analyses: [
+            {
+                id: "a0",
+                type: "source",
+                params: {
+                    query: `
+                        SELECT
+                            null::geometry the_geom_webmercator,
+                            CASE
+                                WHEN x % 4 = 0 THEN 1
+                                WHEN x % 4 = 1 THEN 2
+                                WHEN x % 4 = 2 THEN 3
+                                ELSE 4
+                            END AS val,
+                            CASE
+                                WHEN x % 4 = 0 THEN 'category_1'
+                                WHEN x % 4 = 1 THEN 'category_2'
+                                WHEN x % 4 = 2 THEN 'category_3'
+                                ELSE 'category_4'
+                            END AS cat
+                        FROM generate_series(1, 1000) x
+                    `
+                }
+            }
+        ]
+    };
+
+    it('should accept cartegories param to customize aggregation dataview', function (done) {
+        this.testClient = new TestClient(mapConfig, 1234);
+        const params = {
+            categories: 2
+        };
+
+        this.testClient.getDataview('categories', params, (err, dataview) => {
+            assert.ifError(err);
+            assert.equal(dataview.categoriesCount, 2);
+            done();
+        });
+    });
+});
