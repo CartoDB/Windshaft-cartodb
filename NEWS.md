@@ -5,7 +5,7 @@ Released 2017-mm-dd
 
 Announcements:
  - Upgrades windshaft to [4.0.1](https://github.com/CartoDB/windshaft/releases/tag/4.0.1).
- - Add `categories` query param to define the number of cateries to be ranked for aggregation dataviews.
+ - Add `categories` query param to define the number of categories to be ranked for aggregation dataviews.
 
 
 ## 4.0.1
