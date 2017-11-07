@@ -15,7 +15,7 @@ tile = mapbox_vector_tile.encode([
         }]
     },
     {
-        "name": "air",
+        "name": "errorTileStripesLayer",
         "features": [{
             "geometry":"LINESTRING(159 3877, -1570 3877)",
             "properties":{
@@ -27,5 +27,5 @@ tile = mapbox_vector_tile.encode([
     }
 ])
 
-with open('./assets/render-timeout-fallback.mvt', 'w+') as f:
-    f.write(repr(tile))
+with open('./assets/render-timeout-fallback.mvt', 'w') as f:
+    f.write(tile)
