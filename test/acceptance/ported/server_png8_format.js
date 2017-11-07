@@ -6,13 +6,11 @@ var fs = require('fs');
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 
-var BaseController = require('../../../lib/cartodb/controllers/base');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
 describe('server_png8_format', function() {
-
     var serverOptionsPng32 = ServerOptions;
     serverOptionsPng32.grainstore = _.clone(ServerOptions.grainstore);
     serverOptionsPng32.grainstore.mapnik_tile_format = 'png32';
@@ -25,13 +23,9 @@ describe('server_png8_format', function() {
     var serverPng8 = cartodbServer(serverOptionsPng8);
     serverPng8.setMaxListeners(0);
 
-
     var layergroupId;
 
-    var req2paramsFn;
     before(function(done) {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = ServerOptions.req2params;
         var testPngFilesDir = __dirname + '/../../results/png';
         fs.readdirSync(testPngFilesDir)
             .filter(function(fileName) {
@@ -43,10 +37,6 @@ describe('server_png8_format', function() {
             .forEach(fs.unlinkSync);
 
         done();
-    });
-
-    after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
     });
 
     var keysToDelete;
