@@ -1,5 +1,3 @@
-require('../../../support/test_helper');
-
 const assert = require('assert');
 const statusCodeMiddleware = require('../../../../lib/cartodb/middleware/error/status-code');
 
