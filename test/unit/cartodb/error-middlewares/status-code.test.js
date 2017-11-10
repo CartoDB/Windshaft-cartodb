@@ -1,7 +1,7 @@
-require('../../support/test_helper.js');
+require('../../../support/test_helper');
 
-var assert = require('assert');
-var statusCodeMiddleware = require('../../../lib/cartodb/middleware/error/status-code');
+const assert = require('assert');
+const statusCodeMiddleware = require('../../../../lib/cartodb/middleware/error/status-code');
 
 describe('error-middleware: status code', function() {
 
