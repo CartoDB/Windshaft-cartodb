@@ -28,7 +28,7 @@ describe('multilayer error cases', function() {
         }, {}, function(res) {
             assert.equal(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
-            assert.deepEqual(parsedBody.errors, ["layergroup POST data must be of type application/json"]);
+            assert.deepEqual(parsedBody.errors, ["POST data must be of type application/json"]);
             done();
         });
     });
