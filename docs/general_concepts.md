@@ -22,6 +22,6 @@ Errors are reported using standard HTTP codes and extended information encoded i
 
 If you use JSONP, the 200 HTTP code is always returned so the JavaScript client can receive errors from the JSON object.
 
-## CORS support
+## CORS Support
 
 All the endpoints, which might be accessed using a web browser, add CORS headers and allow OPTIONS method.

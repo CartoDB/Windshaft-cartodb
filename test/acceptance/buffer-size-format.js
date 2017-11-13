@@ -3,6 +3,7 @@ require('../support/test_helper');
 var fs = require('fs');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
+var serverOptions = require('../../lib/cartodb/server_options');
 var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 5;
 
@@ -124,24 +125,37 @@ describe('buffer size per format', function () {
         }
     ];
 
+    afterEach(function(done) {
+        if (this.testClient) {
+            return this.testClient.drain(done);
+        }
+        return done();
+    });
+
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
     testCases.forEach(function (test) {
-        it(test.desc, function (done) {
-            var testClient = new TestClient(test.mapConfig, 1234);
-            var coords = test.coords;
-            var options = {
-                format: test.format,
-                layers: test.layers
-            };
-            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
-                assert.ifError(err);
-                // To generate images use:
-                // tile.save(test.fixturePath);
-                test.assert(tile, function (err) {
+        var testFn = (usePostGIS) => {
+            it(test.desc, function (done) {
+                serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+                this.testClient = new TestClient(test.mapConfig, 1234);
+                serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+                var coords = test.coords;
+                var options = {
+                    format: test.format,
+                    layers: test.layers
+                };
+                this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                     assert.ifError(err);
-                    testClient.drain(done);
+                    // To generate images use:
+                    // tile.save(test.fixturePath);
+                    test.assert(tile, done);
                 });
             });
-        });
+        };
+        if (process.env.POSTGIS_VERSION === '2.4' && test.format === 'mvt'){
+            testFn(true);
+        }
+        testFn(false);
     });
 });
 
@@ -260,23 +274,27 @@ describe('buffer size per format for named maps', function () {
         }
     ];
 
+    afterEach(function(done) {
+        if (this.testClient) {
+            return this.testClient.drain(done);
+        }
+        return done();
+    });
+
     testCases.forEach(function (test) {
         it(test.desc, function (done) {
-            var testClient = new TestClient(test.template, 1234);
+            this.testClient = new TestClient(test.template, 1234);
             var coords = test.coords;
             var options = {
                 format: test.format,
                 placeholders: test.placeholders,
                 layers: test.layers
             };
-            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+            this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
                 //tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-0-test.png');
-                test.assert(tile, function (err) {
-                    assert.ifError(err);
-                    testClient.drain(done);
-                });
+                test.assert(tile, done);
             });
         });
     });
@@ -416,26 +434,40 @@ describe('buffer size per format for named maps w/o placeholders', function () {
 
     ];
 
+    afterEach(function(done) {
+        if (this.testClient) {
+            return this.testClient.drain(done);
+        }
+        return done();
+    });
+
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
     testCases.forEach(function (test) {
-        it(test.desc, function (done) {
-            var testClient = new TestClient(test.template, 1234);
-            var coords = test.coords;
-            var options = {
-                format: test.format,
-                placeholders: test.placeholders,
-                layers: test.layers
-            };
-            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
-                assert.ifError(err);
-                // To generate images use:
-                //tile.save(test.fixturePath);
-                // require('fs').writeFileSync(test.fixturePath, JSON.stringify(tile));
-                // require('fs').writeFileSync(test.fixturePath, tile.getDataSync());
-                test.assert(tile, function (err) {
-                    assert.ifError(err);
-                    testClient.drain(done);
+        var testFn = (usePostGIS) => {
+                it(test.desc + `(${usePostGIS? 'PostGIS':'mapnik'})`, function (done) {
+                    serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+                    test.template.name += '_1';
+                    this.testClient = new TestClient(test.template, 1234);
+                    serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+                    var coords = test.coords;
+                    var options = {
+                        format: test.format,
+                        placeholders: test.placeholders,
+                        layers: test.layers
+                    };
+                    this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+                        assert.ifError(err);
+                        // To generate images use:
+                        //tile.save(test.fixturePath);
+                        // require('fs').writeFileSync(test.fixturePath, JSON.stringify(tile));
+                        // require('fs').writeFileSync(test.fixturePath, tile.getDataSync());
+                        test.assert(tile, done);
+                    });
                 });
-            });
-        });
+        };
+        if (process.env.POSTGIS_VERSION === '2.4' && test.format === 'mvt'){
+            testFn(true);
+        }
+        testFn(false);
     });
 });

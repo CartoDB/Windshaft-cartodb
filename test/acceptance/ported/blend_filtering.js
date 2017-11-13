@@ -5,20 +5,13 @@ var testClient = require('./support/test_client');
 var fs = require('fs');
 var http = require('http');
 
-var PortedServerOptions = require('./support/ported_server_options');
-var BaseController = require('../../../lib/cartodb/controllers/base');
-
 describe('blend layer filtering', function() {
 
     var IMG_TOLERANCE_PER_MIL = 20;
 
     var httpRendererResourcesServer;
 
-    var req2paramsFn;
     before(function(done) {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = PortedServerOptions.req2params;
-
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer( function(request, response) {
             var filename = __dirname + '/../../fixtures/http/light_nolabels-1-0-0.png';
@@ -32,7 +25,6 @@ describe('blend layer filtering', function() {
     });
 
     after(function(done) {
-        BaseController.prototype.req2params = req2paramsFn;
         httpRendererResourcesServer.close(done);
     });
 

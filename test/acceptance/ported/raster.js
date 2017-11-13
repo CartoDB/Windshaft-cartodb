@@ -4,9 +4,7 @@ var assert = require('../../support/assert');
 var step = require('step');
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
-
-var BaseController = require('../../../lib/cartodb/controllers/base');
-var LayergroupToken = require('../../support/layergroup-token');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('raster', function() {
 
@@ -20,18 +18,7 @@ describe('raster', function() {
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
 
-    var req2paramsFn;
-    before(function() {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = ServerOptions.req2params;
-    });
-
-    after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
-    });
-
     it("can render raster for valid mapconfig", function(done) {
-
       var mapconfig =  {
         version: '1.2.0',
         layers: [

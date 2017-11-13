@@ -7,8 +7,7 @@ var step = require('step');
 var mapnik = require('windshaft').mapnik;
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
-var LayergroupToken = require('../../support/layergroup-token');
-var BaseController = require('../../../lib/cartodb/controllers/base');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('multilayer', function() {
 
@@ -23,16 +22,6 @@ describe('multilayer', function() {
       assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
       assert.equal(res.headers['access-control-allow-origin'], '*');
     }
-
-    var req2paramsFn;
-    before(function() {
-      req2paramsFn = BaseController.prototype.req2params;
-      BaseController.prototype.req2params = ServerOptions.req2params;
-    });
-
-    after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
-    });
 
     // See https://github.com/Vizzuality/Windshaft/issues/70
     it("post layergroup with encoding in content-type", function(done) {

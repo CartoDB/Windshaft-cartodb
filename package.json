@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "3.12.0",
+  "version": "4.0.2",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -17,30 +17,34 @@
     "Simon Tokumine <simon@vizzuality.com>",
     "Javi Santana <jsantana@vizzuality.com>",
     "Sandro Santilli <strk@vizzuality.com>",
-    "Carlos Matallín <matallo@carto.com>"
+    "Carlos Matallín <matallo@carto.com>",
+    "Daniel Garcia Aubert <dgaubert@carto.com>",
+    "Mario de Frutos <mario.defrutos@carto.com>"
   ],
   "dependencies": {
-    "body-parser": "~1.14.0",
-    "camshaft": "0.55.6",
-    "cartodb-psql": "0.8.0",
-    "cartodb-query-tables": "0.2.0",
+    "body-parser": "^1.18.2",
+    "camshaft": "0.59.4",
+    "cartodb-psql": "0.10.2",
+    "cartodb-query-tables": "0.3.0",
     "cartodb-redis": "0.14.0",
-    "debug": "~2.2.0",
+    "debug": "^3.1.0",
     "dot": "~1.0.2",
-    "express": "~4.13.3",
+    "express": "~4.16.0",
     "fastly-purge": "~1.0.1",
     "log4js": "cartodb/log4js-node#cdb",
     "lru-cache": "2.6.5",
     "lzma": "~2.3.2",
     "node-statsd": "~0.0.7",
+    "on-headers": "^1.0.1",
     "queue-async": "~1.0.7",
     "redis-mpool": "0.4.1",
-    "request": "~2.79.0",
+    "request": "^2.83.0",
+    "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
-    "turbo-carto": "0.19.2",
+    "turbo-carto": "0.20.1",
     "underscore": "~1.6.0",
-    "windshaft": "3.3.0",
+    "windshaft": "4.0.1",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
@@ -50,16 +54,21 @@
     "moment": "~2.18.1",
     "nock": "~2.11.0",
     "redis": "~0.12.1",
-    "semver": "~1.1.4",
     "strftime": "~0.8.2"
   },
   "scripts": {
     "lint": "jshint lib test",
     "preinstall": "make pre-install",
-    "test": "make test-all"
+    "test": "make test-all",
+    "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn",
+    "docker-install": "sudo apt install docker.io && sudo usermod -aG docker $(whoami)",
+    "docker-pull": "docker pull cartoimages/windshaft-testing",
+    "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh",
+    "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/windshaft-testing bash",
+    "docker-publish": "docker push cartoimages/windshaft-carto-testing"
   },
   "engines": {
     "node": ">=6.9",
-    "yarn": "^0.21.3"
+    "yarn": ">=0.27.5 <1.0.0"
   }
 }

@@ -1,27 +1,14 @@
+sudo: required
 dist: trusty
-addons:
-  postgresql: "9.5"
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - postgresql-9.5-postgis-2.3
-      - postgresql-plpython-9.5
-      - pkg-config
-      - libcairo2-dev
-      - libjpeg8-dev
-      - libgif-dev
-      - libpango1.0-dev
-      - g++-4.9
+
+services:
+  - docker
 
 before_install:
-  - createdb template_postgis
-  - createuser publicuser
-  - psql -c "CREATE EXTENSION postgis" template_postgis
+  - docker pull cartoimages/windshaft-carto-testing
 
-env:
-  - NPROCS=1 JOBS=1 PGUSER=postgres CXX=g++-4.9
+script:
+  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/windshaft-carto-testing
 
-language: node_js
-node_js:
-  - "6"
+language: generic
+

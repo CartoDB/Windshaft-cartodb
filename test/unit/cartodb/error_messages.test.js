@@ -2,7 +2,7 @@ require('../../support/test_helper');
 
 var assert = require('assert');
 
-var BaseController = require('../../../lib/cartodb/controllers/base');
+var errorMiddleware = require('../../../lib/cartodb/middleware/error-middleware');
 
 describe('error messages clean up', function() {
 
@@ -15,7 +15,7 @@ describe('error messages clean up', function() {
             "  encountered during parsing of layer 'layer0' in Layer"
         ].join('\n');
 
-        var outMessage = BaseController.errorMessage(inMessage);
+        var outMessage = errorMiddleware.errorMessage(inMessage);
 
         assert.ok(outMessage.match('connect'), outMessage);
         assert.ok(!outMessage.match(/666/), outMessage);

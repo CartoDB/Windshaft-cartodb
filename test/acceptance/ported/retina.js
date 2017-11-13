@@ -5,8 +5,7 @@ var mapnik = require('windshaft').mapnik;
 var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 
-var BaseController = require('../../../lib/cartodb/controllers/base');
-var LayergroupToken = require('../../support/layergroup-token');
+var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('retina support', function() {
 
@@ -15,15 +14,6 @@ describe('retina support', function() {
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
 
-    var req2paramsFn;
-    before(function() {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = ServerOptions.req2params;
-    });
-
-    after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
-    });
 
     var keysToDelete;
     beforeEach(function(done) {
