@@ -97,7 +97,7 @@ if test x"$PREPARE_PGSQL" = xyes; then
     if [ $PG_PARALLEL -eq 0 ]; then
         sed -e 's/PARALLEL \= [A-Z]*,/''/g' \
             -e 's/PARALLEL [A-Z]*/''/g' -i sql/$i.sql
-    fi  
+    fi
     cat sql/${i}.sql |
       sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
       sed "s/:PUBLICUSER/${PUBLICUSER}/" |
@@ -132,6 +132,17 @@ EOF
   cat <<EOF | redis-cli -p ${REDIS_PORT} -n 0
 HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
+EOF
+
+# Auth token
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:public_token \
+    user "localhost" \
+    type "default" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
 EOF
 
 fi
