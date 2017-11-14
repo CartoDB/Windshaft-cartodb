@@ -7,8 +7,6 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
-var BaseController = require('../../../lib/cartodb/controllers/base');
-
 describe('server_gettile', function() {
 
     var server = cartodbServer(ServerOptions);
@@ -16,16 +14,7 @@ describe('server_gettile', function() {
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
-    var req2paramsFn;
-    before(function() {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = ServerOptions.req2params;
-    });
-
-
     after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
-
         testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
     });
 
