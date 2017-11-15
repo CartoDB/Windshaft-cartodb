@@ -6,21 +6,7 @@ var serverOptions = require('./support/ported_server_options');
 var fs = require('fs');
 var http = require('http');
 
-var PortedServerOptions = require('./support/ported_server_options');
-var BaseController = require('../../../lib/cartodb/controllers/base');
-
 describe.skip('blend http client timeout', function() {
-
-    var req2paramsFn;
-    before(function() {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = PortedServerOptions.req2params;
-    });
-
-    after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
-    });
-
     var mapConfig = {
         version: '1.3.0',
         layers: [

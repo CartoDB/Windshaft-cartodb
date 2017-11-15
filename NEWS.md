@@ -1,7 +1,11 @@
 # Changelog
 
-## 4.0.2
+## 4.1.0
 Released 2017-mm-dd
+
+Announcements:
+ - Upgrades windshaft to [4.0.1](https://github.com/CartoDB/windshaft/releases/tag/4.0.1).
+ - Add `categories` query param to define the number of categories to be ranked for aggregation dataviews.
 
 
 ## 4.0.1
@@ -9,6 +13,7 @@ Released 2017-10-18
 
 Announcements:
  - Upgrades camshaft to [0.59.4](https://github.com/CartoDB/camshaft/releases/tag/0.59.4).
+ - Upgrades windshaft to [4.0.0](https://github.com/CartoDB/windshaft/releases/tag/4.0.0).
  - Split and move `req2params` method to multiple middlewares.
  - Use express error handler middleware to respond in case of something went wrong.
  - Use `res.locals` object to share info between middlewares and leave `req.params` as an object containing properties mapped to the named route params.

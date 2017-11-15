@@ -6,19 +6,14 @@ var assert = require('../../support/assert');
 var testClient = require('./support/test_client');
 var serverOptions = require('./support/ported_server_options');
 
-var PortedServerOptions = require('./support/ported_server_options');
-var BaseController = require('../../../lib/cartodb/controllers/base');
-
 describe.skip('render limits', function() {
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
     var limitsConfig;
     var onTileErrorStrategy;
-    var req2paramsFn;
+
     before(function() {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = PortedServerOptions.req2params;
         limitsConfig = serverOptions.renderer.mapnik.limits;
         serverOptions.renderer.mapnik.limits = {
             render: 50,
@@ -31,7 +26,6 @@ describe.skip('render limits', function() {
     });
 
     after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
         serverOptions.renderer.mapnik.limits = limitsConfig;
         serverOptions.renderer.onTileErrorStrategy = onTileErrorStrategy;
     });

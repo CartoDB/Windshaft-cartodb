@@ -156,7 +156,7 @@ https://{username}.cartodb.com/api/v1/map/HASH/2/{z}/{x}/{y}.mvt
 
 #### Example 1: MVT Tiles with Windshaft, CARTO.js, and MapboxGL
 
-1. Import the required libraries:
+1) Import the required libraries:
 
 ```bash
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.9.0/mapbox-gl.js'></script>
@@ -164,13 +164,13 @@ https://{username}.cartodb.com/api/v1/map/HASH/2/{z}/{x}/{y}.mvt
 <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.core.js"></script>
 ```
 
-2. Configure Map Client:
+2) Configure Map Client:
 
 ```bash
 mapboxgl.accessToken = '{yourMapboxToken}';
 ```
 
-3. Create Map Object (Mapbox):
+3) Create Map Object (Mapbox):
 
 ```bash
 var map = new mapboxgl.Map({
@@ -182,7 +182,7 @@ center: [30, 0]
 });
 ```
 
-4. Define Layer Options (CARTO):
+4) Define Layer Options (CARTO):
 
 ```bash
 var layerOptions = {
@@ -194,7 +194,7 @@ cartocss: "...",
 };
 ```
 
-5. Request Tiles (from CARTO) and Set to Map Object (Mapbox):
+5) Request Tiles (from CARTO) and Set to Map Object (Mapbox):
 
 **Note:** By default, [CARTO core functions](https://carto.com/docs/carto-engine/carto-js/core-api/) retrieve URLs for fully rendered tiles. You must replace the default format (.png) with the MVT format (.mvt).
 
@@ -214,20 +214,20 @@ map.setStyle(simpleStyle(tiles));
 
 When you are not including CARTO.js to implement MVT tiles, you must use the `map.setStyle` parameter to specify vector map rendering.
 
-1. Import the required libraries:
+1) Import the required libraries:
 
 ```bash
 <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.9.0/mapbox-gl.js'></script>
 <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.9.0/mapbox-gl.css' rel='stylesheet'/>
 ```
 
-2. Configure Map Client:
+2) Configure Map Client:
 
 ```bash
 mapboxgl.accessToken = '{yourMapboxToken}';
 ```
 
-3. Create Map Object (Mapbox):
+3) Create Map Object (Mapbox):
 
 ```bash
 var map = new mapboxgl.Map({
@@ -239,7 +239,7 @@ center: [30, 0]
 });
 ```
 
-4. Set the Style
+4) Set the Style
 
 ```bash
 map.setStyle({
