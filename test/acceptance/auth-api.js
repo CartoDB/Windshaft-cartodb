@@ -27,7 +27,7 @@ describe('Auth API', function () {
         ]
     });
 
-    it('should create a map using default token', function (done) {
+    it('should create a map using the default token', function (done) {
         const mapconfig = createMapConfig();
         const OK_RESPONSE = {
             status: 200,
