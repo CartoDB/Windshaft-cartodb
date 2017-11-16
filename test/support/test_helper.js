@@ -95,7 +95,8 @@ afterEach(function(done) {
         'rails:test_windshaft_cartodb_user_1_db:my_table': true,
         'rails:users:localhost:map_key': true,
         'rails:users:cartodb250user': true,
-        'rails:users:localhost': true
+        'rails:users:localhost': true,
+        'api_keys:localhost:public_token': true
     };
     var databasesTasks = { 0: 'users', 5: 'meta'};
 
@@ -198,4 +199,3 @@ module.exports = {
   configureMetadata,
   cleanPGPoolConnections
 };
-

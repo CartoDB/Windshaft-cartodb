@@ -13,6 +13,7 @@
 PREPARE_REDIS=yes
 PREPARE_PGSQL=yes
 DOWNLOAD_SQL_FILES=yes
+PG_PARALLEL=$(pg_config --version | (awk '{$2*=1000; if ($2 >= 9600) print 1; else print 0;}' 2> /dev/null || echo 0))
 
 while [ -n "$1" ]; do
   if test "$1" = "--skip-pg"; then
@@ -92,6 +93,11 @@ if test x"$PREPARE_PGSQL" = xyes; then
   ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
   for i in ${ALL_SQL_SCRIPTS}
   do
+    # Strip PARALLEL labels for PostgreSQL releases before 9.6
+    if [ $PG_PARALLEL -eq 0 ]; then
+        sed -e 's/PARALLEL \= [A-Z]*,/''/g' \
+            -e 's/PARALLEL [A-Z]*/''/g' -i sql/$i.sql
+    fi
     cat sql/${i}.sql |
       sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
       sed "s/:PUBLICUSER/${PUBLICUSER}/" |
@@ -126,6 +132,17 @@ EOF
   cat <<EOF | redis-cli -p ${REDIS_PORT} -n 0
 HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
+EOF
+
+# Auth token
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:public_token \
+    user "localhost" \
+    type "default" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
 EOF
 
 fi
