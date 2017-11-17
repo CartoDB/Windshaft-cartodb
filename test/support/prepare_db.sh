@@ -134,9 +134,9 @@ HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
 EOF
 
-# Auth token
+# API Key Default public
 cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
-  HMSET api_keys:localhost:public_token \
+  HMSET api_keys:localhost:default_public \
     user "localhost" \
     type "default" \
     grants_sql "true" \
@@ -144,6 +144,26 @@ cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
     database_role "test_windshaft_publicuser" \
     database_password "public"
 EOF
+
+# API Key Master
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:master_master_master_master_master_master \
+    user "localhost" \
+    type "master" \
+    database_role "${TESTUSER}" \
+    database_password "${TESTPASS}"
+EOF
+
+# API Key Regular
+# cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+#   HMSET api_keys:localhost:9999999999999999999999999999999999999999 \
+#     user "localhost" \
+#     type "regular" \
+#     grants_sql "true" \
+#     grants_maps "true" \
+#     database_role "test_windshaft_publicuser" \
+#     database_password "public"
+# EOF
 
 fi
 
