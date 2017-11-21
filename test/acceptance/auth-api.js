@@ -27,7 +27,7 @@ describe('Auth API', function () {
         ]
     });
 
-    it('should create a map using the default token', function (done) {
+    it('should create a map using the default API key', function (done) {
         const mapconfig = createMapConfig();
         const OK_RESPONSE = {
             status: 200,
@@ -36,7 +36,7 @@ describe('Auth API', function () {
             }
         };
 
-        this.testClient = new TestClient(mapconfig, 'public_token');
+        this.testClient = new TestClient(mapconfig, 'default_public');
 
         this.testClient.getLayergroup(OK_RESPONSE, (err, result) => {
             assert.ifError(err);
@@ -49,7 +49,7 @@ describe('Auth API', function () {
         });
     });
 
-    it('should fail while creating a map (private dataset) and using the default token', function (done) {
+    it('should fail while creating a map (private dataset) and using the default API key', function (done) {
         const mapconfig = createMapConfig({ sql: privateSQL });
         const PERMISSION_DENIED_RESPONSE = {
             status: 403,
@@ -58,12 +58,32 @@ describe('Auth API', function () {
             }
         };
 
-        this.testClient = new TestClient(mapconfig, 'public_token');
+        this.testClient = new TestClient(mapconfig, 'default_public');
 
         this.testClient.getLayergroup(PERMISSION_DENIED_RESPONSE, (err, result) => {
             assert.ifError(err);
             assert.ok(Array.isArray(result.errors));
             assert.equal(result.errors.length, 1);
+            this.testClient.drain(done);
+        });
+    });
+
+    it('should not fail while creating a map (private dataset) and using the master API Key', function (done) {
+        const mapconfig = createMapConfig({ sql: privateSQL });
+        const OK_RESPONSE = {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+
+        this.testClient = new TestClient(mapconfig, 'master_master_master_master_master_master');
+
+        this.testClient.getLayergroup(OK_RESPONSE, (err, result) => {
+            assert.ifError(err);
+
+console.log(result);
+
             this.testClient.drain(done);
         });
     });
