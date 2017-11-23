@@ -1174,4 +1174,42 @@ TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callb
     );
 };
 
+TestClient.prototype.getAnalysesCatalog = function (params, callback) {
+    var url = '/api/v1/map/analyses/catalog';
 
+    if (this.apiKey) {
+        url += '?' + qs.stringify({api_key: this.apiKey});
+    }
+
+    if (params.jsonp) {
+        url += '&' + qs.stringify({callback: params.jsonp});
+    }
+
+    assert.response(this.server,
+        {
+            url: url,
+            method: 'GET',
+            headers: {
+                host: 'localhost',
+                'Content-Type': 'application/json'
+            }
+        },
+        {
+            status: params.status || 200,
+            headers: {
+                'Content-Type': params.jsonp ?
+                    'text/javascript; charset=utf-8' :
+                    'application/json; charset=utf-8'
+            }
+        },
+        function(res, err) {
+            if (err) {
+                return callback(err);
+            }
+
+            var parsedBody = params.jsonp ? res.body : JSON.parse(res.body);
+
+            return callback(null, parsedBody);
+        }
+    );
+};
