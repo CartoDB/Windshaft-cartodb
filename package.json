@@ -44,7 +44,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.20.1",
     "underscore": "~1.6.0",
-    "windshaft": "4.0.1",
+    "windshaft": "cartodb/windshaft#vr-aggretation",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
