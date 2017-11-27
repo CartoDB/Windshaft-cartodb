@@ -23,7 +23,12 @@ describe('error-middleware', function() {
 
     it('should return a header with errors', function (done) {
         const error = new Error('error test');
+        error.label = 'test label';
+        error.type = 'test type';
+        error.subtype = 'test subtype';
 
+        const errors = [error, error];
+        
         const req = {};
         const res = {
             headers: {},
@@ -42,11 +47,20 @@ describe('error-middleware', function() {
             statusCode: 400,
             message: error.message,
             name: error.name,
-            moreErrors: []
+            label: error.label,
+            type: error.type,
+            subtype: error.subtype,
+            moreErrors: [{
+                message: error.message,
+                name: error.name,
+                label: error.label,
+                type: error.type,
+                subtype: error.subtype
+            }]
         };
 
         const errorFn = errorMiddleware();
-        errorFn(error, req, res);
+        errorFn(errors, req, res);
 
         assert.deepEqual(res.headers, {
             'X-Tiler-Errors': JSON.stringify(errorHeader)
