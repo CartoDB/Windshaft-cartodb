@@ -3,7 +3,7 @@ require('../../support/test_helper.js');
 var assert = require('assert');
 var errorMiddleware = require('../../../lib/cartodb/middleware/error-middleware');
 
-describe.only('error-middleware', function() {
+describe('error-middleware', function() {
 
     it('different formats for postgis plugin error returns 400 as status code', function() {
 
