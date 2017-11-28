@@ -44,12 +44,14 @@ describe('error-middleware', function() {
         };
 
         const errorHeader = {
-            statusCode: 400,
-            message: error.message,
-            name: error.name,
-            label: error.label,
-            type: error.type,
-            subtype: error.subtype,
+            mainError: {
+                statusCode: 400,
+                message: error.message,
+                name: error.name,
+                label: error.label,
+                type: error.type,
+                subtype: error.subtype,
+            },
             moreErrors: [{
                 message: error.message,
                 name: error.name,
@@ -94,12 +96,14 @@ describe('error-middleware', function() {
         };
 
         const errorHeader = {
-            statusCode: 400,
-            message: error.message,
-            name: error.name,
-            label: error.label,
-            type: error.type,
-            subtype: error.subtype,
+            mainError: {
+                statusCode: 400,
+                message: error.message,
+                name: error.name,
+                label: error.label,
+                type: error.type,
+                subtype: error.subtype,
+            },
             moreErrors: [{
                 message: error.message,
                 name: error.name,
