@@ -1164,7 +1164,7 @@ describe(suiteName, function() {
     });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/133
-    it("MapConfig with mapnik layer and no cartocss", function(done) {
+    it.skip("MapConfig with mapnik layer and no cartocss", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
