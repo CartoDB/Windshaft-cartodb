@@ -15,6 +15,7 @@ var redis = require('redis');
 var nock = require('nock');
 var log4js = require('log4js');
 var pg = require('pg');
+var _ = require('underscore');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
@@ -190,6 +191,21 @@ function configureMetadata(action, params, callback) {
     });
 }
 
+function getTestContextDbObject() {
+    const dbConfig = global.environment.postgres;
+    const user_id = 1;
+    const user = _.template(global.environment.postgres_auth_user)({ user_id });
+    const password = _.template(global.environment.postgres_auth_pass)({ user_id });
+    
+    return {
+        host: dbConfig.host,
+        port: dbConfig.port,
+        name: user,
+        user,
+        password
+    };
+}
+
 module.exports = {
   deleteRedisKeys: deleteRedisKeys,
   lzma_compress_to_base64: lzma_compress_to_base64,
@@ -198,5 +214,6 @@ module.exports = {
   checkCache: checkCache,
   rmdirRecursiveSync: rmdirRecursiveSync,
   configureMetadata,
-  cleanPGPoolConnections
+  cleanPGPoolConnections,
+  getTestContextDbObject
 };
