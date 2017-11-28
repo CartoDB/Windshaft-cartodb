@@ -118,6 +118,7 @@ if test x"$PREPARE_REDIS" = xyes; then
 HMSET rails:users:localhost id ${TESTUSERID} \
                             database_name "${TEST_DB}" \
                             database_host localhost \
+                            database_port 5432 \
                             database_master_role "${TESTUSER}" \
                             database_master_password "${TESTPASS}" \
                             map_key 1234
