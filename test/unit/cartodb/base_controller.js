@@ -68,4 +68,54 @@ describe('error-middleware', function() {
 
         done();
     });
+
+    it('JSONP should return a header with error status code', function (done) {
+        const error = new Error('error test');
+        error.label = 'test label';
+        error.type = 'test type';
+        error.subtype = 'test subtype';
+
+        const errors = [error, error];
+
+        const req = {
+            query: { callback: true }
+        };
+        const res = {
+            headers: {},
+            set (key, value) {
+                this.headers[key] = value;
+            },
+            statusCode: 0,
+            status (status) {
+                this.statusCode = status;
+            },
+            jsonp () {},
+            send () {}
+        };
+
+        const errorHeader = {
+            statusCode: 400,
+            message: error.message,
+            name: error.name,
+            label: error.label,
+            type: error.type,
+            subtype: error.subtype,
+            moreErrors: [{
+                message: error.message,
+                name: error.name,
+                label: error.label,
+                type: error.type,
+                subtype: error.subtype
+            }]
+        };
+
+        const errorFn = errorMiddleware();
+        errorFn(errors, req, res);
+
+        assert.deepEqual(res.headers, {
+            'X-Tiler-Errors': JSON.stringify(errorHeader)
+        });
+
+        done();
+    });
 });
