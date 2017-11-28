@@ -95,8 +95,10 @@ if test x"$PREPARE_PGSQL" = xyes; then
   do
     # Strip PARALLEL labels for PostgreSQL releases before 9.6
     if [ $PG_PARALLEL -eq 0 ]; then
+        TMPFILE=$(mktemp /tmp/$(basename $0).XXXXXXXX)
         sed -e 's/PARALLEL \= [A-Z]*,/''/g' \
-            -e 's/PARALLEL [A-Z]*/''/g' -i sql/$i.sql
+            -e 's/PARALLEL [A-Z]*/''/g' sql/$i.sql > $TMPFILE
+        mv $TMPFILE sql/$i.sql
     fi
     cat sql/${i}.sql |
       sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |

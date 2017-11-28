@@ -419,18 +419,23 @@ describe('user database timeout limit', function () {
                         response: {
                             status: 429,
                             headers: {
-                                'Content-Type': 'application/json; charset=utf-8'
+                                'Content-Type': 'application/x-protobuf'
                             }
                         }
                     };
 
-                    this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
+                    this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
                         assert.ifError(err);
-
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
-
+    
+                        var tileJSON = tile.toJSON();
+                        assert.equal(Array.isArray(tileJSON), true);
+                        assert.equal(tileJSON.length, 2);
+                        assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
+                        assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+                    
                         done();
                     });
+                    
                 });
             });
         });
