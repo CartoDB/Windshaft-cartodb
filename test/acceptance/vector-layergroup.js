@@ -201,8 +201,12 @@ suites.forEach((suite) => {
                     }
                 };
 
-                this.testClient.mapConfig.layers[0].options.cartocss = '#layer0 { marker-fill: red; marker-width: 10; }';
-                this.testClient.mapConfig.layers[0].options.cartocss_version = '2.3.0';
+                const cartocss = `#layer0 { marker-fill: red; marker-width: 10; }`;
+                const cartocssVersion = '2.3.0';
+
+                this.testClient.mapConfig.layers[0].options.cartocss = cartocss;
+                this.testClient.mapConfig.layers[0].options.cartocss_version = cartocssVersion;
+
                 this.testClient.getLayergroup(response, (err, body) => {
                     if (err) {
                         return done(err);
