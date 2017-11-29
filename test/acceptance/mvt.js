@@ -181,6 +181,38 @@ return function () {
                 done();
             });
         });
+
+        it('should fail when the map-config mix layers with and without cartocss', function (done) {
+            const response = {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            };
+
+            this.testClient.mapConfig.layers[0].options.cartocss = '#layer0 { marker-fill: red; marker-width: 10; }';
+            this.testClient.mapConfig.layers[0].options.cartocss_version = '2.3.0';
+            this.testClient.getLayergroup(response, (err, body) => {
+                if (err) {
+                    return done(err);
+                }
+
+                assert.deepEqual(body, {
+                    "errors": [
+                        "The layergroup contains incompatible layers: don't mix styled layers with non styled layers (without cartocss)"
+                    ],
+                    "errors_with_context":[
+                        {
+                            "type":"layergroup",
+                            "message": "The layergroup contains incompatible layers: don't mix styled layers with non styled layers (without cartocss)"
+                        }
+                    ]
+                });
+
+                done();
+            });
+        });
+
     });
 
     describe('analysis-layers-dataviews-mvt', function () {
