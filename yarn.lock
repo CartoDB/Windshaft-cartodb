@@ -2235,9 +2235,9 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-turbo-carto@0.20.1:
-  version "0.20.1"
-  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.20.1.tgz#e9f5fa1408d9d4325a1e79333e6d242170f89e6d"
+turbo-carto@0.20.2:
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.20.2.tgz#2b737597a65c2918432f70ea414f12fbec2b6a6f"
   dependencies:
     cartocolor "4.0.0"
     colorbrewer "1.0.0"
