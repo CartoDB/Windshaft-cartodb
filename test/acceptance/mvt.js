@@ -151,7 +151,7 @@ return function () {
             });
         });
 
-        it.only('should fail when the format requested is not mvt', function (done) {
+        it('should fail when the format requested is not mvt', function (done) {
             const options = {
                 format: 'png',
                 response: {
