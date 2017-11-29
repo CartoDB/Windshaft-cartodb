@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.1
+Released 2017-mm-dd
+
+Announcements:
+ - Upgrades turbo-carto to [0.20.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.20.2).
+
 ## 4.1.0
 Released 2017-mm-dd
 
