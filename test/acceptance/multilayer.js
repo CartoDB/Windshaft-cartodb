@@ -1163,6 +1163,10 @@ describe(suiteName, function() {
       );
     });
 
+    // WARN: MapConfig with mapnik layer and no cartocss it's valid since
+    // vector & raster aggregation project, now we can request MVT format w/o defining styles
+    // for the layer.
+
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/133
     it.skip("MapConfig with mapnik layer and no cartocss", function(done) {
 

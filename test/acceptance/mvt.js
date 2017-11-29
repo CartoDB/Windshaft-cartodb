@@ -34,6 +34,124 @@ return function () {
         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
+    describe('vector-layergroup', function () {
+        const POLYGONS_SQL = `
+            select
+                st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 1000000)::geometry as the_geom,
+                st_transform(
+                    st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 1000000)::geometry,
+                    3857
+                ) as the_geom_webmercator,
+                x as value
+            from generate_series(-3, 3) x
+        `;
+
+        const POINTS_SQL = `
+            select
+                st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
+                st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
+                x as value
+            from generate_series(-3, 3) x
+        `;
+
+        function createVectorLayergroup () {
+            return {
+                version: '1.6.0',
+                layers: [
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL
+                        }
+                    },
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POLYGONS_SQL
+                        }
+                    }
+                ]
+            };
+        }
+
+        beforeEach(function () {
+            this.mapConfig = createVectorLayergroup();
+            this.testClient = new TestClient(this.mapConfig);
+        });
+
+        afterEach(function (done) {
+            this.testClient.drain(done);
+        });
+
+        it('should get vector tiles from layergroup with layers w/o cartocss', function (done) {
+            this.testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, tile) => {
+                if (err) {
+                    return done(err);
+                }
+
+                assert.equal(tile.tileSize, 4096);
+                assert.equal(tile.z, 0);
+                assert.equal(tile.x, 0);
+                assert.equal(tile.y, 0);
+
+                const layer0 = JSON.parse(tile.toGeoJSONSync(0));
+
+                assert.equal(layer0.name, 'layer0');
+                assert.equal(layer0.features[0].type, 'Feature');
+                assert.equal(layer0.features[0].geometry.type, 'Point');
+
+                const layer1 = JSON.parse(tile.toGeoJSONSync(1));
+
+                assert.equal(layer1.name, 'layer1');
+                assert.equal(layer1.features[0].type, 'Feature');
+                assert.equal(layer1.features[0].geometry.type, 'Polygon');
+                done();
+            });
+        });
+
+        it('should get vector tiles from specific layer (layer0)', function (done) {
+            this.testClient.getTile(0, 0, 0, { format: 'mvt', layers: 0 }, (err, res, tile) => {
+                if (err) {
+                    return done(err);
+                }
+
+                assert.equal(tile.tileSize, 4096);
+                assert.equal(tile.z, 0);
+                assert.equal(tile.x, 0);
+                assert.equal(tile.y, 0);
+
+                const layer = JSON.parse(tile.toGeoJSONSync(0));
+
+                assert.equal(layer.name, 'layer0');
+                assert.equal(layer.features[0].type, 'Feature');
+                assert.equal(layer.features[0].geometry.type, 'Point');
+
+                done();
+            });
+        });
+
+        it('should get vector tiles from specific layer (layer1)', function (done) {
+            this.testClient.getTile(0, 0, 0, { format: 'mvt', layers: 1 }, (err, res, tile) => {
+                if (err) {
+                    return done(err);
+                }
+
+                assert.equal(tile.tileSize, 4096);
+                assert.equal(tile.z, 0);
+                assert.equal(tile.x, 0);
+                assert.equal(tile.y, 0);
+
+                const layer = JSON.parse(tile.toGeoJSONSync(0));
+
+                assert.equal(layer.name, 'layer1');
+                assert.equal(layer.features[0].type, 'Feature');
+                assert.equal(layer.features[0].geometry.type, 'Polygon');
+
+                done();
+            });
+        });
+    });
+
     describe('analysis-layers-dataviews-mvt', function () {
 
         function createMapConfig(layers, dataviews, analysis) {
