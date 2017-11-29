@@ -196,12 +196,14 @@ return function () {
 
                 assert.deepEqual(body, {
                     "errors": [
-                        "The layergroup contains incompatible layers: don't mix styled layers with non styled layers (without cartocss)"
+                        "The layergroup contains incompatible layers: " +
+                            "don't mix styled layers with non styled layers (without cartocss)"
                     ],
                     "errors_with_context":[
                         {
                             "type":"layergroup",
-                            "message": "The layergroup contains incompatible layers: don't mix styled layers with non styled layers (without cartocss)"
+                            "message": "The layergroup contains incompatible layers: " +
+                                "don't mix styled layers with non styled layers (without cartocss)"
                         }
                     ]
                 });
