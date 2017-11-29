@@ -35,21 +35,18 @@ return function () {
     });
 
     describe('vector-layergroup', function () {
-        const POLYGONS_SQL = `
+        const POINTS_SQL_1 = `
             select
-                st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 1000000)::geometry as the_geom,
-                st_transform(
-                    st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 1000000)::geometry,
-                    3857
-                ) as the_geom_webmercator,
+                st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
+                st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
                 x as value
             from generate_series(-3, 3) x
         `;
 
-        const POINTS_SQL = `
+        const POINTS_SQL_2 = `
             select
-                st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
-                st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
+                st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326) as the_geom,
+                st_transform(st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326), 3857) as the_geom_webmercator,
                 x as value
             from generate_series(-3, 3) x
         `;
@@ -61,13 +58,13 @@ return function () {
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POINTS_SQL
+                            sql: POINTS_SQL_1
                         }
                     },
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POLYGONS_SQL
+                            sql: POINTS_SQL_2
                         }
                     }
                 ]
@@ -104,7 +101,7 @@ return function () {
 
                 assert.equal(layer1.name, 'layer1');
                 assert.equal(layer1.features[0].type, 'Feature');
-                assert.equal(layer1.features[0].geometry.type, 'Polygon');
+                assert.equal(layer1.features[0].geometry.type, 'Point');
                 done();
             });
         });
@@ -145,7 +142,7 @@ return function () {
 
                 assert.equal(layer.name, 'layer1');
                 assert.equal(layer.features[0].type, 'Feature');
-                assert.equal(layer.features[0].geometry.type, 'Polygon');
+                assert.equal(layer.features[0].geometry.type, 'Point');
 
                 done();
             });
