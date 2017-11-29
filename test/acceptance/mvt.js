@@ -150,6 +150,37 @@ return function () {
                 done();
             });
         });
+
+        it.only('should fail when the format requested is not mvt', function (done) {
+            const options = {
+                format: 'png',
+                response: {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }
+            };
+
+            this.testClient.getTile(0, 0, 0, options, (err, res, body) => {
+                if (err) {
+                    return done(err);
+                }
+
+                assert.deepEqual(body, {
+                    "errors": [
+                        "Invalid format: only mvt format is available for layers without CartoCSS defined"
+                    ],
+                    "errors_with_context":[
+                        {
+                            "type":"tile",
+                            "message":"Invalid format: only mvt format is available for layers without CartoCSS defined"
+                        }
+                    ]
+                });
+                done();
+            });
+        });
     });
 
     describe('analysis-layers-dataviews-mvt', function () {
