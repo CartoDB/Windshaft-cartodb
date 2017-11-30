@@ -43,7 +43,7 @@ describe('error-middleware', function() {
             send () {}
         };
 
-        const errorHeader = {
+        const errorHeader = {      
             mainError: {
                 statusCode: 400,
                 message: error.message,
