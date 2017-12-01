@@ -166,12 +166,12 @@ return function () {
 
                 assert.deepEqual(body, {
                     "errors": [
-                        "Invalid format: only mvt format is available for layers without CartoCSS defined"
+                        "Unsupported format: 'cartocss' option is missing for png"
                     ],
                     "errors_with_context":[
                         {
                             "type":"tile",
-                            "message":"Invalid format: only mvt format is available for layers without CartoCSS defined"
+                            "message":"Unsupported format: 'cartocss' option is missing for png"
                         }
                     ]
                 });
@@ -196,14 +196,14 @@ return function () {
 
                 assert.deepEqual(body, {
                     "errors": [
-                        "The layergroup contains incompatible layers: " +
-                            "don't mix styled layers with non styled layers (without cartocss)"
+                        "The `mapnik` or `cartodb` layers must be consistent:"  +
+                            " `cartocss` option is either present or voided in all layers. Mixing is not allowed."
                     ],
                     "errors_with_context":[
                         {
-                            "type":"layergroup",
-                            "message": "The layergroup contains incompatible layers: " +
-                                "don't mix styled layers with non styled layers (without cartocss)"
+                            "type":"mapconfig",
+                            "message": "The `mapnik` or `cartodb` layers must be consistent:"  +
+                            " `cartocss` option is either present or voided in all layers. Mixing is not allowed."
                         }
                     ]
                 });
