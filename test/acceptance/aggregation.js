@@ -3,6 +3,7 @@ require('../support/test_helper');
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
+const MISSING_AGGREGATION_COLUMNS = 'There are missing columns to perform aggregation';
 
 const suites = [{
     desc: 'mvt (mapnik)',
@@ -30,7 +31,8 @@ describe('aggregation', function () {
     select
         st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326) as the_geom,
         st_transform(st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326), 3857) as the_geom_webmercator,
-        x as value
+        x as value,
+        x*x as  sqrt_value
     from generate_series(-3, 3) x
     `;
 
@@ -70,17 +72,14 @@ describe('aggregation', function () {
                 serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
             });
 
-
-            beforeEach(function () {
-                this.mapConfig = createVectorMapConfig();
-                this.testClient = new TestClient(this.mapConfig);
-            });
-
             afterEach(function (done) {
                 this.testClient.drain(done);
             });
 
-            it('should return a layergroup indicating that was aggregated', function (done) {
+            it('should return a layergroup indicating the mapconfig was aggregated', function (done) {
+                this.mapConfig = createVectorMapConfig();
+                this.testClient = new TestClient(this.mapConfig);
+
                 this.testClient.getLayergroup((err, body) => {
                     if (err) {
                         return done(err);
@@ -94,6 +93,111 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            it('should return a layergroup with aggregation and cartocss compatible', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                }
+                            },
+                            cartocss: '#layer { marker-width: [value]*2; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup((err/*, body */) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    done();
+                });
+            });
+
+            it('should fail if cartocss uses "value" cloumn and it\'s not defined in the aggregation',
+            function (done) {
+                const response = {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                };
+
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_2,
+                            aggregation: true,
+                            cartocss: '#layer { marker-width: [value]; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup(response, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(body.errors[0], MISSING_AGGREGATION_COLUMNS);
+
+                    done();
+                });
+            });
+
+            it('should fail if aggregation misses a column defined in interactivity',
+            function (done) {
+                const response = {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                };
+
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_2,
+                            aggregation: {
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                }
+                            },
+                            cartocss: '#layer { marker-width: [value]; }',
+                            cartocss_version: '2.3.0',
+                            interactivity: ['sqrt_value']
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup(response, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(body.errors[0], MISSING_AGGREGATION_COLUMNS);
+
+                    done();
+                });
+            });
+
         });
     });
 });
