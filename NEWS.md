@@ -1,7 +1,12 @@
 # Changelog
 
-## 4.1.2
+## 4.2.0
 Released 2017-mm-dd
+
+Announcements:
+
+ - Allow to request MVT tiles without CartoCSS
+ - Upgrades windshaft to [4.1.0](https://github.com/CartoDB/windshaft/releases/tag/4.1.0).
 
 
 ## 4.1.1
@@ -9,6 +14,7 @@ Released 2017-11-29
 
 Announcements:
  - Upgrades turbo-carto to [0.20.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.20.2).
+
 
 ## 4.1.0
 Released 2017-mm-dd
