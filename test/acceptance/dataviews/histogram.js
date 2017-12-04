@@ -256,6 +256,7 @@ describe('histogram-dataview for date column type', function() {
     }];
 
     dateHistogramsUseCases.forEach(function (test) {
+
         it('should create a date histogram aggregated in months (EDT) ' + test.desc, function (done) {
             var OFFSET_EDT_IN_MINUTES = -4 * 60; // EDT Eastern Daylight Time (GMT-4) in minutes
 
@@ -347,27 +348,6 @@ describe('histogram-dataview for date column type', function() {
                 done();
             });
         });
-
-        it('should return same histogram ' + test.desc, function (done) {
-            var params = {
-                start: 1171501200, // 2007-02-15 01:00:00 = min(date_colum)
-                end: 1207702800 // 2008-04-09 01:00:00 = max(date_colum)
-            };
-
-            this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview(test.dataviewId, {}, function (err, dataview) {
-                assert.ok(!err, err);
-
-                this.testClient = new TestClient(mapConfig, 1234);
-                this.testClient.getDataview(test.dataviewId, params, function (err, filteredDataview) {
-                    assert.ok(!err, err);
-
-                    assert.deepEqual(dataview, filteredDataview);
-                    done();
-                });
-            });
-        });
-
 
         it('should aggregate histogram overriding default offset to CEST ' + test.desc, function (done) {
             var OFFSET_CEST_IN_SECONDS = 2 * 3600; // Central European Summer Time (Daylight Saving Time)
@@ -528,6 +508,26 @@ describe('histogram-dataview for date column type', function() {
                 assert.equal(dataview.bins.length, 6);
                 assert.equal(dataview.bins_count, 7);
                 assert.ok(dataview.bins_count > dataview.bins.length);
+                done();
+            });
+        });
+    });
+
+    it('should return same histogram ', function (done) {
+        var params = {
+            start: 1171501200, // 2007-02-15 01:00:00 = min(date_colum)
+            end: 1207702800 // 2008-04-09 01:00:00 = max(date_colum)
+        };
+
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('datetime_histogram_tz', {}, function (err, dataview) {
+            assert.ok(!err, err);
+
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview('datetime_histogram_tz', params, function (err, filteredDataview) {
+                assert.ok(!err, err);
+
+                assert.deepEqual(dataview, filteredDataview);
                 done();
             });
         });
