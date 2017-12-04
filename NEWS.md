@@ -3,6 +3,13 @@
 ## 4.2.1
 Released 2017-mm-dd
 
+Announcements:
+- Optimize Formula queries.
+- Optimize Formula queries in overviews.
+- Optimize Numeric Histogram queries.
+- Optimize Date Histogram queries.
+- Date Histograms: Now returns the same value for max/min/avg/timestamp per bin.
+- Date Histograms: Now it should return the same no matter the DB/Client time zone.
 
 ## 4.2.0
 Released 2017-12-04
