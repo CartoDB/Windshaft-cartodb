@@ -214,8 +214,8 @@ describe('histogram-dataview for date column type', function() {
                 "params": {
                     "query": [
                         "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00+00'::timestamptz, '2008-04-09 01:00:00+00'::timestamptz, '1 day'::interval",
+                        "from generate_series('2007-02-15 01:00:00+00'::timestamptz,",
+                        "'2008-04-09 01:00:00+00'::timestamptz, '1 day'::interval",
                         ") date"
                     ].join(' ')
                 }
@@ -238,8 +238,8 @@ describe('histogram-dataview for date column type', function() {
                 "params": {
                     "query": [
                         "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 23:50:00+00'::timestamptz, '2007-02-16 00:10:00+00'::timestamptz, '1 minute'::interval",
+                        "from generate_series('2007-02-15 23:50:00+00'::timestamptz,",
+                        "'2007-02-16 00:10:00+00'::timestamptz, '1 minute'::interval",
                         ") date"
                     ].join(' ')
                 }
