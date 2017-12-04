@@ -1,10 +1,9 @@
 # Changelog
 
 ## 4.2.0
-Released 2017-mm-dd
+Released 2017-12-04
 
 Announcements:
-
  - Allow to request MVT tiles without CartoCSS
  - Upgrades windshaft to [4.1.0](https://github.com/CartoDB/windshaft/releases/tag/4.1.0).
 
