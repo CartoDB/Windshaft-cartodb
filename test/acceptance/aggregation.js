@@ -266,7 +266,6 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    console.log(require('util').inspect(body, { depth: null }));
                     assert.equal(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
