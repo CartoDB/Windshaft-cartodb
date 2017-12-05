@@ -3,7 +3,8 @@ require('../support/test_helper');
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
-const MISSING_AGGREGATION_COLUMNS = 'There are missing columns to perform aggregation';
+const MISSING_AGGREGATION_COLUMNS = 'Missing columns in the aggregation. The map-config defines cartocss expressions,'+
+    ' interactivity fields or attributes that are not present in the aggregation';
 
 const suites = [{
     desc: 'mvt (mapnik)',
@@ -61,7 +62,7 @@ describe('aggregation', function () {
     suites.forEach((suite) => {
         const { desc, usePostGIS } = suite;
 
-        describe.only(desc, function () {
+        describe(desc, function () {
             const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
             before(function () {
