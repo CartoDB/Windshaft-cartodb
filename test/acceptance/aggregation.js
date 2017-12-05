@@ -61,7 +61,7 @@ describe('aggregation', function () {
     suites.forEach((suite) => {
         const { desc, usePostGIS } = suite;
 
-        describe(desc, function () {
+        describe.only(desc, function () {
             const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
             before(function () {
@@ -88,7 +88,7 @@ describe('aggregation', function () {
                     assert.equal(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.aggregated));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
 
                     done();
                 });
@@ -108,23 +108,28 @@ describe('aggregation', function () {
                                     }
                                 }
                             },
-                            cartocss: '#layer { marker-width: [value]*2; }',
+                            cartocss: '#layer { marker-width: [value]; }',
                             cartocss_version: '2.3.0'
                         }
                     }
                 ]);
 
                 this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup((err/*, body */) => {
+                this.testClient.getLayergroup((err, body) => {
                     if (err) {
                         return done(err);
                     }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
 
                     done();
                 });
             });
 
-            it('should fail if cartocss uses "value" cloumn and it\'s not defined in the aggregation',
+            it('should fail if cartocss uses "value" column and it\'s not defined in the aggregation',
             function (done) {
                 const response = {
                     status: 400,
