@@ -138,7 +138,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
                         errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
                         errors_with_context: [{
@@ -177,7 +177,7 @@ describe('user database timeout limit', function () {
                                 return done(err);
                             }
 
-                            this.testClient.getLayergroup(expectedResponse, (err, res) => {
+                            this.testClient.getLayergroup({ response: expectedResponse }, (err, res) => {
                                 if (err) {
                                     return done(err);
                                 }
@@ -259,7 +259,7 @@ describe('user database timeout limit', function () {
                                 return done(err);
                             }
 
-                            this.testClient.getLayergroup(expectedResponse, (err, res) => {
+                            this.testClient.getLayergroup({ response: expectedResponse }, (err, res) => {
                                 if (err) {
                                     return done(err);
                                 }
@@ -360,7 +360,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
                         errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
                         errors_with_context: [{
@@ -387,7 +387,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, res) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, res) => {
                     if (err) {
                         return done(err);
                     }
@@ -426,16 +426,16 @@ describe('user database timeout limit', function () {
 
                     this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
                         assert.ifError(err);
-    
+
                         var tileJSON = tile.toJSON();
                         assert.equal(Array.isArray(tileJSON), true);
                         assert.equal(tileJSON.length, 2);
                         assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
                         assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
-                    
+
                         done();
                     });
-                    
+
                 });
             });
         });
@@ -467,7 +467,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
                         errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
                         errors_with_context: [{
@@ -494,7 +494,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, res) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, res) => {
                     if (err) {
                         return done(err);
                     }
@@ -571,7 +571,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
                         errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
                         errors_with_context: [{
@@ -601,7 +601,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, res) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, res) => {
                     if (err) {
                         return done(err);
                     }
@@ -702,7 +702,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
                         errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
                         errors_with_context: [{
@@ -740,7 +740,7 @@ describe('user database timeout limit', function () {
                     }
                 };
 
-                this.testClient.getLayergroup(expectedResponse, (err, res) => {
+                this.testClient.getLayergroup({ response: expectedResponse }, (err, res) => {
                     if (err) {
                         return done(err);
                     }

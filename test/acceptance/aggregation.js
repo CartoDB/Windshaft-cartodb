@@ -146,7 +146,7 @@ describe('aggregation', function () {
                 ]);
 
                 this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup(response, (err, body) => {
+                this.testClient.getLayergroup({ response }, (err, body) => {
                     if (err) {
                         return done(err);
                     }
@@ -187,7 +187,7 @@ describe('aggregation', function () {
                 ]);
 
                 this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup(response, (err, body) => {
+                this.testClient.getLayergroup({ response }, (err, body) => {
                     if (err) {
                         return done(err);
                     }

@@ -51,7 +51,7 @@ describe('histogram-dataview', function() {
     it('should fail when invalid dataviews object is provided, string case', function(done) {
         var mapConfig = createMapConfig("wadus-string");
         this.testClient = new TestClient(mapConfig, 1234);
-        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, errObj) {
+        this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, errObj) {
             assert.ok(!err, err);
 
             assert.deepEqual(errObj.errors, [ '"dataviews" must be a valid JSON object: "string" type found' ]);
@@ -63,7 +63,7 @@ describe('histogram-dataview', function() {
     it('should fail when invalid dataviews object is provided, array case', function(done) {
         var mapConfig = createMapConfig([]);
         this.testClient = new TestClient(mapConfig, 1234);
-        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, errObj) {
+        this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, errObj) {
             assert.ok(!err, err);
 
             assert.deepEqual(errObj.errors, [ '"dataviews" must be a valid JSON object: "array" type found' ]);
