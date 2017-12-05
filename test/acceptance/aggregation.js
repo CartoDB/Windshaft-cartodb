@@ -198,6 +198,40 @@ describe('aggregation', function () {
                 });
             });
 
+            it('should skip aggregation to create a layergroup with aggregation defined already', function (done) {
+                const mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(mapConfig);
+                const options = { aggregation: false };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation === undefined));
+
+                    done();
+                });
+            });
         });
     });
 });

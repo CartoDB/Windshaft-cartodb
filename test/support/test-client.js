@@ -771,17 +771,24 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
     );
 };
 
-TestClient.prototype.getLayergroup = function(params, callback) {
+TestClient.prototype.getLayergroup = function (params, callback) {
+    // jshint maxcomplexity: 7
     var self = this;
 
     if (!callback) {
         callback = params;
-        params = {
-            response: {
-                status: 200,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
-                }
+        params = null;
+    }
+
+    if (!params) {
+        params = {};
+    }
+
+    if (!params.response) {
+        params.response = {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
             }
         };
     }
