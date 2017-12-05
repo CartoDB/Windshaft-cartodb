@@ -37,6 +37,15 @@ describe('aggregation', function () {
     from generate_series(-3, 3) x
     `;
 
+
+    const POINTS_SQL_NO_THE_GEOM = `
+    select
+        st_transform(st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326), 3857) as the_geom_webmercator,
+        x as value,
+        x*x as  sqrt_value
+    from generate_series(-3, 3) x
+    `;
+
     function createVectorMapConfig (layers = [
         {
             type: 'cartodb',
@@ -90,6 +99,7 @@ describe('aggregation', function () {
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
 
                     done();
                 });
@@ -125,6 +135,7 @@ describe('aggregation', function () {
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
 
                     done();
                 });
@@ -238,6 +249,65 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            it('without the_geom defined in the sql should return a layergroup ', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_NO_THE_GEOM,
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    console.log(require('util').inspect(body, { depth: null }));
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
+
+                    done();
+                });
+            });
+
+            it('without the_geom defined in the sql should get a vector tile', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_NO_THE_GEOM,
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(tile.tileSize, 4096);
+                    assert.equal(tile.z, 0);
+                    assert.equal(tile.x, 0);
+                    assert.equal(tile.y, 0);
+
+                    const layer0 = JSON.parse(tile.toGeoJSONSync(0));
+
+                    assert.equal(layer0.name, 'layer0');
+                    assert.equal(layer0.features[0].type, 'Feature');
+                    assert.equal(layer0.features[0].geometry.type, 'Point');
+
+                    done();
+                });
+            });
+
         });
     });
 });
