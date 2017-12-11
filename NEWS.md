@@ -1,7 +1,12 @@
 # Changelog
 
-## 4.2.1
+## 4.3.1
 Released 2017-mm-dd
+
+Announcements:
+
+## 4.3.0
+Released 2017-12-11
 
 Announcements:
 - Optimize Formula queries.
