@@ -1,5 +1,36 @@
 # Changelog
 
+## 4.3.1
+Released 2017-mm-dd
+
+Announcements:
+
+## 4.3.0
+Released 2017-12-11
+
+Announcements:
+- Optimize Formula queries.
+- Optimize Formula queries in overviews.
+- Optimize Numeric Histogram queries.
+- Optimize Date Histogram queries.
+- Date Histograms: Now returns the same value for max/min/avg/timestamp per bin.
+- Date Histograms: Now it should return the same no matter the DB/Client time zone.
+
+## 4.2.0
+Released 2017-12-04
+
+Announcements:
+ - Allow to request MVT tiles without CartoCSS
+ - Upgrades windshaft to [4.1.0](https://github.com/CartoDB/windshaft/releases/tag/4.1.0).
+
+
+## 4.1.1
+Released 2017-11-29
+
+Announcements:
+ - Upgrades turbo-carto to [0.20.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.20.2).
+
+
 ## 4.1.0
 Released 2017-mm-dd
 
