@@ -186,7 +186,7 @@ describe('histogram-dataview for date column type', function() {
             },
             minute_histogram: {
                 source: {
-                    id: 'minute-histogram-source'
+                    id: 'minute-histogram-source-tz'
                 },
                 type: 'histogram',
                 options: {
@@ -214,8 +214,8 @@ describe('histogram-dataview for date column type', function() {
                 "params": {
                     "query": [
                         "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00'::timestamptz, '2008-04-09 01:00:00'::timestamptz, '1 day'::interval",
+                        "from generate_series('2007-02-15 01:00:00+00'::timestamptz,",
+                        "'2008-04-09 01:00:00+00'::timestamptz, '1 day'::interval",
                         ") date"
                     ].join(' ')
                 }
@@ -233,13 +233,13 @@ describe('histogram-dataview for date column type', function() {
                 }
             },
             {
-                "id": "minute-histogram-source",
+                "id": "minute-histogram-source-tz",
                 "type": "source",
                 "params": {
                     "query": [
                         "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 23:50:00'::timestamp, '2007-02-16 00:10:00'::timestamp, '1 minute'::interval",
+                        "from generate_series('2007-02-15 23:50:00+00'::timestamptz,",
+                        "'2007-02-16 00:10:00+00'::timestamptz, '1 minute'::interval",
                         ") date"
                     ].join(' ')
                 }
@@ -256,6 +256,7 @@ describe('histogram-dataview for date column type', function() {
     }];
 
     dateHistogramsUseCases.forEach(function (test) {
+
         it('should create a date histogram aggregated in months (EDT) ' + test.desc, function (done) {
             var OFFSET_EDT_IN_MINUTES = -4 * 60; // EDT Eastern Daylight Time (GMT-4) in minutes
 
@@ -323,7 +324,7 @@ describe('histogram-dataview for date column type', function() {
                 assert.ok(!err, err);
                 assert.equal(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 6);
+                assert.equal(dataview.bins_count, 6);
                 dataview.bins.forEach(function (bin) {
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -335,7 +336,7 @@ describe('histogram-dataview for date column type', function() {
         it('should cast overridden start and end to float to avoid out of range errors ' + test.desc, function (done) {
             var params = {
                 start: -2145916800,
-                end: 1009843199
+                end: 1193792400
             };
 
             this.testClient = new TestClient(mapConfig, 1234);
@@ -347,27 +348,6 @@ describe('histogram-dataview for date column type', function() {
                 done();
             });
         });
-
-        it('should return same histogram ' + test.desc, function (done) {
-            var params = {
-                start: 1171501200, // 2007-02-15 01:00:00 = min(date_colum)
-                end: 1207702800 // 2008-04-09 01:00:00 = max(date_colum)
-            };
-
-            this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview(test.dataviewId, {}, function (err, dataview) {
-                assert.ok(!err, err);
-
-                this.testClient = new TestClient(mapConfig, 1234);
-                this.testClient.getDataview(test.dataviewId, params, function (err, filteredDataview) {
-                    assert.ok(!err, err);
-
-                    assert.deepEqual(dataview, filteredDataview);
-                    done();
-                });
-            });
-        });
-
 
         it('should aggregate histogram overriding default offset to CEST ' + test.desc, function (done) {
             var OFFSET_CEST_IN_SECONDS = 2 * 3600; // Central European Summer Time (Daylight Saving Time)
@@ -533,6 +513,26 @@ describe('histogram-dataview for date column type', function() {
         });
     });
 
+    it('should return same histogram ', function (done) {
+        var params = {
+            start: 1171501200, // 2007-02-15 01:00:00 = min(date_colum)
+            end: 1207702800 // 2008-04-09 01:00:00 = max(date_colum)
+        };
+
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('datetime_histogram_tz', {}, function (err, dataview) {
+            assert.ok(!err, err);
+
+            this.testClient = new TestClient(mapConfig, 1234);
+            this.testClient.getDataview('datetime_histogram_tz', params, function (err, filteredDataview) {
+                assert.ok(!err, err);
+
+                assert.deepEqual(dataview, filteredDataview);
+                done();
+            });
+        });
+    });
+
     it('should find the best aggregation (automatic mode) to build the histogram', function (done) {
         var params = {};
         this.testClient = new TestClient(mapConfig, 1234);
@@ -640,7 +640,7 @@ describe('histogram-dataview for date column type', function() {
 
         var dataviewWithDailyAggFixture = {
             aggregation: 'day',
-            bin_width: 600,
+            bin_width: 86400,
             bins_count: 2,
             bins_start: 1171497600,
             timestamp_start: 1171497600,
@@ -650,17 +650,17 @@ describe('histogram-dataview for date column type', function() {
             [{
                 bin: 0,
                 timestamp: 1171497600,
-                min: 1171583400,
-                max: 1171583940,
-                avg: 1171583670,
+                min: 1171497600,
+                max: 1171497600,
+                avg: 1171497600,
                 freq: 10
             },
             {
                 bin: 1,
                 timestamp: 1171584000,
                 min: 1171584000,
-                max: 1171584600,
-                avg: 1171584300,
+                max: 1171584000,
+                avg: 1171584000,
                 freq: 11
             }],
             type: 'histogram'
@@ -687,19 +687,19 @@ describe('histogram-dataview for date column type', function() {
 
         var dataviewWithDailyAggAndOffsetFixture = {
             aggregation: 'day',
-            bin_width: 1200,
+            bin_width: 86400,
             bins_count: 1,
             bins_start: 1171501200,
-            timestamp_start: 1171497600,
+            timestamp_start: 1171501200,
             nulls: 0,
             offset: -3600,
             bins:
             [{
                 bin: 0,
                 timestamp: 1171501200,
-                min: 1171583400,
-                max: 1171584600,
-                avg: 1171584000,
+                min: 1171501200,
+                max: 1171501200,
+                avg: 1171501200,
                 freq: 21
             }],
             type: 'histogram'
