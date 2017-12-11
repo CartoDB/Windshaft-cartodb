@@ -38,13 +38,17 @@ describe('aggregation', function () {
     `;
 
 
-    const POINTS_SQL_NO_THE_GEOM = `
+    const POLYGONS_SQL_1 = `
     select
-        st_transform(st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326), 3857) as the_geom_webmercator,
-        x as value,
-        x*x as  sqrt_value
+        st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 100000)::geometry as the_geom,
+        st_transform(
+            st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 100000)::geometry,
+            3857
+        ) as the_geom_webmercator,
+        x as value
     from generate_series(-3, 3) x
     `;
+
 
     function createVectorMapConfig (layers = [
         {
@@ -87,7 +91,26 @@ describe('aggregation', function () {
             });
 
             it('should return a layergroup indicating the mapconfig was aggregated', function (done) {
-                this.mapConfig = createVectorMapConfig();
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1
+                            }
+                        }
+                    },
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_2,
+                            aggregation: {
+                                threshold: 1
+                            }
+                        }
+                    }
+                ]);
                 this.testClient = new TestClient(this.mapConfig);
 
                 this.testClient.getLayergroup((err, body) => {
@@ -117,7 +140,8 @@ describe('aggregation', function () {
                                         aggregate_function: 'sum',
                                         aggregated_column: 'value'
                                     }
-                                }
+                                },
+                                threshold: 1
                             },
                             cartocss: '#layer { marker-width: [value]; }',
                             cartocss_version: '2.3.0'
@@ -250,18 +274,29 @@ describe('aggregation', function () {
                 });
             });
 
-            it('without the_geom defined in the sql should return a layergroup ', function (done) {
-                this.mapConfig = createVectorMapConfig([
+            it('when the layer\'s row count is lower than threshold should skip aggregation', function (done) {
+                const mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POINTS_SQL_NO_THE_GEOM,
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                threshold: 1001
+                            }
                         }
                     }
                 ]);
 
-                this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup((err, body) => {
+                this.testClient = new TestClient(mapConfig);
+                const options = {};
+
+                this.testClient.getLayergroup(options, (err, body) => {
                     if (err) {
                         return done(err);
                     }
@@ -269,44 +304,54 @@ describe('aggregation', function () {
                     assert.equal(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
-                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
+                    body.metadata.layers.forEach(layer =>{
+                        assert.deepEqual(layer.meta.aggregation, { png: false, mvt: false });
+                    });
 
                     done();
                 });
             });
 
-            it('without the_geom defined in the sql should get a vector tile', function (done) {
-                this.mapConfig = createVectorMapConfig([
+            it('when the layer\'s geometry type is not point should responds with error', function (done) {
+                const mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POINTS_SQL_NO_THE_GEOM,
+                            sql: POLYGONS_SQL_1,
+                            aggregation: {
+                                threshold: 1
+                            }
                         }
                     }
                 ]);
 
-                this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, tile) => {
+                this.testClient = new TestClient(mapConfig);
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
                     if (err) {
                         return done(err);
                     }
 
-                    assert.equal(tile.tileSize, 4096);
-                    assert.equal(tile.z, 0);
-                    assert.equal(tile.x, 0);
-                    assert.equal(tile.y, 0);
-
-                    const layer0 = JSON.parse(tile.toGeoJSONSync(0));
-
-                    assert.equal(layer0.name, 'layer0');
-                    assert.equal(layer0.features[0].type, 'Feature');
-                    assert.equal(layer0.features[0].geometry.type, 'Point');
+                    assert.deepEqual(body, {
+                        errors: [
+                            'Unsupported geometry type (ST_Polygon) for aggregation.' +
+                                ' Aggregation is available only for points.'
+                        ],
+                        errors_with_context:[{
+                            type: 'unknown',
+                            message: 'Unsupported geometry type (ST_Polygon) for aggregation.' +
+                                ' Aggregation is available only for points.'
+                        }]
+                    });
 
                     done();
                 });
             });
-
         });
     });
 });
