@@ -72,8 +72,7 @@ describe('analysis-filters-params', () => {
                     max: 2e6
                 }
             }
-        },
-        no_filters: 1
+        }
     };
 
 
