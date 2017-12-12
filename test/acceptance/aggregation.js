@@ -379,13 +379,13 @@ describe('aggregation', function () {
 
                     assert.deepEqual(body, {
                         errors: [
-                            'Unsupported geometry type (ST_Polygon) for aggregation.' +
-                                ' Aggregation is available only for points.'
+                            'Unsupported geometry type: ST_Polygon.' +
+                                ' Aggregation is available only for geometry type: ST_Point'
                         ],
                         errors_with_context:[{
                             type: 'unknown',
-                            message: 'Unsupported geometry type (ST_Polygon) for aggregation.' +
-                                ' Aggregation is available only for points.'
+                            message: 'Unsupported geometry type: ST_Polygon.' +
+                            ' Aggregation is available only for geometry type: ST_Point'
                         }]
                     });
 
