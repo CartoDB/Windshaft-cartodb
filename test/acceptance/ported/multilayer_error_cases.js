@@ -7,22 +7,10 @@ var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 var TestClient = require('../../support/test-client');
 
-var BaseController = require('../../../lib/cartodb/controllers/base');
-
 describe('multilayer error cases', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
-
-    var req2paramsFn;
-    before(function() {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = ServerOptions.req2params;
-    });
-
-    after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
-    });
 
     // var client = null;
     afterEach(function(done) {
@@ -40,7 +28,7 @@ describe('multilayer error cases', function() {
         }, {}, function(res) {
             assert.equal(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
-            assert.deepEqual(parsedBody.errors, ["layergroup POST data must be of type application/json"]);
+            assert.deepEqual(parsedBody.errors, ["POST data must be of type application/json"]);
             done();
         });
     });

@@ -7,22 +7,10 @@ var getLayerTypeFn = require('windshaft').model.MapConfig.prototype.getType;
 var PortedServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
-var BaseController = require('../../../lib/cartodb/controllers/base');
-
 describe('multilayer interactivity and layers order', function() {
 
     var server = cartodbServer(PortedServerOptions);
     server.setMaxListeners(0);
-
-    var req2paramsFn;
-    before(function() {
-        req2paramsFn = BaseController.prototype.req2params;
-        BaseController.prototype.req2params = PortedServerOptions.req2params;
-    });
-
-    after(function() {
-        BaseController.prototype.req2params = req2paramsFn;
-    });
 
     function layerType(layer) {
         return layer.type || 'undefined';

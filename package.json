@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "4.0.1",
+  "version": "4.3.1",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "body-parser": "^1.18.2",
-    "camshaft": "0.59.2",
+    "camshaft": "0.59.4",
     "cartodb-psql": "0.10.2",
     "cartodb-query-tables": "0.3.0",
     "cartodb-redis": "0.14.0",
@@ -35,15 +35,16 @@
     "lru-cache": "2.6.5",
     "lzma": "~2.3.2",
     "node-statsd": "~0.0.7",
+    "on-headers": "^1.0.1",
     "queue-async": "~1.0.7",
     "redis-mpool": "0.4.1",
     "request": "^2.83.0",
     "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
-    "turbo-carto": "0.20.1",
+    "turbo-carto": "0.20.2",
     "underscore": "~1.6.0",
-    "windshaft": "3.3.3",
+    "windshaft": "4.1.0",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
@@ -58,7 +59,13 @@
   "scripts": {
     "lint": "jshint lib test",
     "preinstall": "make pre-install",
-    "test": "make test-all"
+    "test": "make test-all",
+    "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn",
+    "docker-install": "sudo apt install docker.io && sudo usermod -aG docker $(whoami)",
+    "docker-pull": "docker pull cartoimages/windshaft-testing",
+    "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh",
+    "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/windshaft-testing bash",
+    "docker-publish": "docker push cartoimages/windshaft-carto-testing"
   },
   "engines": {
     "node": ">=6.9",

@@ -17,3 +17,4 @@ You can create two types of maps with the Maps API:
 * [Anonymous Maps](anonymous_maps.md)
 * [Named Maps](named_maps.md)
 * [Static Maps API](static_maps_api.md)
+* [MapConfig File Format]([local file in the docs repo](https://github.com/CartoDB/docs/blob/master/_app/_mapsapi/06-mapconfig.md))
