@@ -625,7 +625,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 queryParams.api_key = self.apiKey;
             }
 
-            if (typeof params.aggregation === 'boolean') {
+            if (params.aggregation !== undefined) {
                 queryParams.aggregation = params.aggregation;
             }
 
@@ -801,7 +801,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
         queryParams.api_key = self.apiKey;
     }
 
-    if (typeof params.aggregation === 'boolean') {
+    if (params.aggregation !== undefined) {
         queryParams.aggregation = params.aggregation;
     }
 

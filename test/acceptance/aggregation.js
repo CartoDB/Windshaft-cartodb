@@ -291,7 +291,8 @@ describe('aggregation', function () {
                                         aggregate_function: 'sum',
                                         aggregated_column: 'value'
                                     }
-                                }
+                                },
+                                threshold: 1
                             }
                         }
                     }
@@ -308,7 +309,49 @@ describe('aggregation', function () {
                     assert.equal(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation === undefined));
+                    body.metadata.layers.forEach(layer => assert.equal(layer.meta.aggregation, undefined));
+
+                    done();
+                });
+            });
+
+            it('when the aggregation param is not valid should respond with error', function (done) {
+                const mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(mapConfig);
+                const options = {
+                    response: {
+                        status: 400
+                    },
+                    aggregation: 'wadus'
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [
+                            "Invalid value for 'aggregation' query param: wadus." +
+                                " Valid ones are 'true' or 'false'"
+                        ],
+                        errors_with_context:[{
+                            type: 'unknown',
+                            message: "Invalid value for 'aggregation' query param: wadus." +
+                                " Valid ones are 'true' or 'false'"
+                        }]
+                    });
 
                     done();
                 });
@@ -352,7 +395,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it('when the layer\'s geometry type is not point should responds with error', function (done) {
+            it('when the layer\'s geometry type is not point should respond with error', function (done) {
                 const mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
