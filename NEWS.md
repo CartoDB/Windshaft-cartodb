@@ -1,7 +1,7 @@
 # Changelog
 
 ## 4.3.1
-Released 2017-mm-dd
+Released 2017-12-12
 
 Bug fix:
   - Fixed bug introduced in version 4.0.1 that brokes the static map generation using JPG as format
