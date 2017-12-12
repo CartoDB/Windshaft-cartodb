@@ -143,7 +143,7 @@ describe('aggregation', function () {
                                 },
                                 threshold: 1
                             },
-                            cartocss: '#layer { marker-width: [value]; }',
+                            cartocss: '#layer { marker-width: [total]; }',
                             cartocss_version: '2.3.0'
                         }
                     }
