@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.3.2
+Released 2017-mm-dd
+
 ## 4.3.1
 Released 2017-12-12
 
