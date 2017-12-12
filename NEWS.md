@@ -1,9 +1,21 @@
 # Changelog
 
-## 4.3.1
+## 4.4.1
 Released 2017-mm-dd
 
+
+## 4.4.0
+Released 2017-12-12
+
 Announcements:
+ - Upgrades camshaft to [0.60.0](https://github.com/CartoDB/camshaft/releases/tag/0.60.0).
+
+
+## 4.3.1
+Released 2017-12-12
+
+Bug fix:
+  - Fixed bug introduced in version 4.0.1 that brokes the static map generation using JPG as format #808
 
 ## 4.3.0
 Released 2017-12-11
