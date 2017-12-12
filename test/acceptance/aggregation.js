@@ -165,6 +165,46 @@ describe('aggregation', function () {
                 });
             });
 
+            it('should fail when aggregation and cartocss are not compatible', function (done) {
+                const response = {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                };
+
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                threshold: 1
+                            },
+                            cartocss: '#layer { marker-width: [value]; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup({ response }, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(body.errors[0], MISSING_AGGREGATION_COLUMNS);
+
+                    done();
+                });
+            });
+
             it('should fail if cartocss uses "value" column and it\'s not defined in the aggregation',
             function (done) {
                 const response = {
