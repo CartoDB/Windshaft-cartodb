@@ -77,7 +77,7 @@ if test x"$PREPARE_PGSQL" = xyes; then
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 
   LOCAL_SQL_SCRIPTS='analysis_catalog windshaft.test gadm4 ported/populated_places_simple_reduced cdb_analysis_check cdb_invalidate_varnish'
-  REMOTE_SQL_SCRIPTS='CDB_QueryStatements CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_ZoomFromScale CDB_OverviewsSupport CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ CDB_EstimateRowCount'
+  REMOTE_SQL_SCRIPTS='CDB_QueryStatements CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_ZoomFromScale CDB_OverviewsSupport CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ CDB_EstimateRowCount CDB_RectangleGrid'
 
   CURL_ARGS=""
   for i in ${REMOTE_SQL_SCRIPTS}
@@ -99,7 +99,7 @@ if test x"$PREPARE_PGSQL" = xyes; then
         sed -e 's/PARALLEL \= [A-Z]*,/''/g' \
             -e 's/PARALLEL [A-Z]*/''/g' sql/$i.sql > $TMPFILE
         mv $TMPFILE sql/$i.sql
-    fi  
+    fi
     cat sql/${i}.sql |
       sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
       sed "s/:PUBLICUSER/${PUBLICUSER}/" |

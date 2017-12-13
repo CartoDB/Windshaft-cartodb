@@ -49,6 +49,23 @@ describe('aggregation', function () {
     from generate_series(-3, 3) x
     `;
 
+    const SQL_WRAP = `
+    WITH hgrid AS (
+        SELECT
+            CDB_RectangleGrid (
+                ST_Expand(!bbox!, CDB_XYZ_Resolution(1) * 12),
+                CDB_XYZ_Resolution(1) * 12,
+                CDB_XYZ_Resolution(1) * 12
+            ) as cell
+    )
+    SELECT
+        hgrid.cell as the_geom_webmercator,
+        count(1) as agg_value,
+        count(1) /power( 12 * CDB_XYZ_Resolution(1), 2 ) as agg_value_density,
+        row_number() over () as cartodb_id
+    FROM hgrid, (<%= sql %>) i
+    WHERE ST_Intersects(i.the_geom_webmercator, hgrid.cell) GROUP BY hgrid.cell
+    `;
 
     function createVectorMapConfig (layers = [
         {
@@ -431,6 +448,36 @@ describe('aggregation', function () {
                             ' Aggregation is available only for geometry type: ST_Point'
                         }]
                     });
+
+                    done();
+                });
+            });
+
+            it('when sql_wrap is provided should return a layergroup', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql_wrap: SQL_WRAP,
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1
+                            }
+                        }
+                    }
+                ]);
+                this.testClient = new TestClient(this.mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
 
                     done();
                 });
