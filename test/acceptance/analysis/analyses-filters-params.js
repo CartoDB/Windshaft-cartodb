@@ -78,10 +78,11 @@ describe('analysis-filters-params', () => {
 
     it('should get a filtered histogram dataview with all filters', function(done) {
         const testClient = new TestClient(mapConfig, 1234);
+        const testParams = Object.assign({}, params, {
+            own_filter: 1
+        });
 
-        params.own_filter = 1;
-
-        testClient.getDataview('pop_max_histogram', params, (err, dataview) => {
+        testClient.getDataview('pop_max_histogram', testParams, (err, dataview) => {
             assert.ok(!err, err);
 
             assert.equal(dataview.type, 'histogram');
@@ -93,10 +94,11 @@ describe('analysis-filters-params', () => {
 
     it('should get a filtered histogram dataview with all filters except my own filter', function(done) {
         const testClient = new TestClient(mapConfig, 1234);
+        const testParams = Object.assign({}, params, {
+            own_filter: 0
+        });
 
-        params.own_filter = 0;
-
-        testClient.getDataview('pop_max_histogram', params, (err, dataview) => {
+        testClient.getDataview('pop_max_histogram', testParams, (err, dataview) => {
             assert.ok(!err, err);
 
             assert.equal(dataview.type, 'histogram');
@@ -108,10 +110,11 @@ describe('analysis-filters-params', () => {
 
     it('should get a filtered histogram dataview without filters', function(done) {
         const testClient = new TestClient(mapConfig, 1234);
+        const testParams = Object.assign({}, params, {
+            no_filters: 1
+        });
 
-        params.no_filters = 1;
-
-        testClient.getDataview('pop_max_histogram', params, (err, dataview) => {
+        testClient.getDataview('pop_max_histogram', testParams, (err, dataview) => {
             assert.ok(!err, err);
 
             assert.equal(dataview.type, 'histogram');
@@ -121,4 +124,27 @@ describe('analysis-filters-params', () => {
         });
     });
 
+    it('should return an error if both no_filters and own_filter params are present', function (done) {
+        const testClient = new TestClient(mapConfig, 1234);
+        const expectedError = {
+            errors: ['Both own_filter and no_filters cannot be sent in the same request'],
+            errors_with_context: [{
+                type: 'dataview',
+                message: 'Both own_filter and no_filters cannot be sent in the same request'
+            }]
+        };
+        const testParams = Object.assign({}, params, {
+            no_filters: 1,
+            own_filter: 0,
+            response: {
+                status: 400
+            }
+        });
+
+        testClient.getDataview('pop_max_histogram', testParams, (err, dataview) => {
+            assert.deepEqual(dataview, expectedError);
+
+            testClient.drain(done);
+        });
+    });
 });

@@ -414,8 +414,9 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             var urlParams = {};
             if (params.hasOwnProperty('no_filters')) {
                 urlParams.no_filters = params.no_filters;
-            } else {
-                urlParams.own_filter = params.hasOwnProperty('own_filter') ? params.own_filter : 1;
+            } 
+            if (params.hasOwnProperty('own_filter')) {
+                urlParams.own_filter = params.own_filter;
             }
 
             ['bbox', 'bins', 'start', 'end', 'aggregation', 'offset', 'categories'].forEach(function(extraParam) {
