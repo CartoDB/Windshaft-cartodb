@@ -37,7 +37,6 @@ describe('aggregation', function () {
     from generate_series(-3, 3) x
     `;
 
-
     const POLYGONS_SQL_1 = `
     select
         st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 100000)::geometry as the_geom,
@@ -65,6 +64,17 @@ describe('aggregation', function () {
         row_number() over () as cartodb_id
     FROM hgrid, (<%= sql %>) i
     WHERE ST_Intersects(i.the_geom_webmercator, hgrid.cell) GROUP BY hgrid.cell
+    `;
+
+    const TURBO_CARTOCSS_SQL_WRAP = `
+        #layer {
+            polygon-fill: ramp([agg_value], (#245668, #04817E, #39AB7E, #8BD16D, #EDEF5D), quantiles);
+        }
+        #layer::outline {
+            line-width: 1;
+            line-color: #FFFFFF;
+            line-opacity: 1;
+        }
     `;
 
     function createVectorMapConfig (layers = [
@@ -216,7 +226,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(body.errors[0], MISSING_AGGREGATION_COLUMNS);
+                    assert.ok(body.errors[0].match(/column "value" does not exist/));
 
                     done();
                 });
@@ -236,7 +246,9 @@ describe('aggregation', function () {
                         type: 'cartodb',
                         options: {
                             sql: POINTS_SQL_2,
-                            aggregation: true,
+                            aggregation: {
+                                threshold: 1
+                            },
                             cartocss: '#layer { marker-width: [value]; }',
                             cartocss_version: '2.3.0'
                         }
@@ -249,48 +261,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(body.errors[0], MISSING_AGGREGATION_COLUMNS);
-
-                    done();
-                });
-            });
-
-            it('should fail if aggregation misses a column defined in interactivity',
-            function (done) {
-                const response = {
-                    status: 400,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    }
-                };
-
-                this.mapConfig = createVectorMapConfig([
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POINTS_SQL_2,
-                            aggregation: {
-                                columns: {
-                                    total: {
-                                        aggregate_function: 'sum',
-                                        aggregated_column: 'value'
-                                    }
-                                }
-                            },
-                            cartocss: '#layer { marker-width: [value]; }',
-                            cartocss_version: '2.3.0',
-                            interactivity: ['sqrt_value']
-                        }
-                    }
-                ]);
-
-                this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup({ response }, (err, body) => {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    assert.equal(body.errors[0], MISSING_AGGREGATION_COLUMNS);
+                    assert.ok(body.errors[0].match(/column "value" does not exist/));
 
                     done();
                 });
@@ -462,7 +433,9 @@ describe('aggregation', function () {
                             sql: POINTS_SQL_1,
                             aggregation: {
                                 threshold: 1
-                            }
+                            },
+                            cartocss: TURBO_CARTOCSS_SQL_WRAP,
+                            cartocss_version: '3.0.12'
                         }
                     }
                 ]);
@@ -477,7 +450,7 @@ describe('aggregation', function () {
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
-                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
 
                     done();
                 });
@@ -493,8 +466,8 @@ describe('aggregation', function () {
                             aggregation: {
                                 threshold: 1
                             },
-                            cartocss: '#layer { marker-width: 1; }',
-                            cartocss_version: '2.3.0'
+                            cartocss: TURBO_CARTOCSS_SQL_WRAP,
+                            cartocss_version: '3.0.12'
                         }
                     }
                 ]);
