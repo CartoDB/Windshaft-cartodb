@@ -57,7 +57,7 @@ describe('multilayer error cases', function() {
                 res.body,
                 '/**/ typeof test === \'function\' && ' +
                 'test({"errors":["Missing layers array from layergroup config"],' +
-                '"errors_with_context":[{"type":"unknown",' +
+                '"errors_with_context":[{"type":"mapconfig",' +
                 '"message":"Missing layers array from layergroup config"}]});'
             );
             done();
