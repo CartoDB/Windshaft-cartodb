@@ -482,6 +482,32 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            it('when sql_wrap is provided should return a tile', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql_wrap: SQL_WRAP,
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1
+                            },
+                            cartocss: '#layer { marker-width: 1; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+                this.testClient = new TestClient(this.mapConfig);
+
+                this.testClient.getTile(0, 0, 0, {}, (err) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    done();
+                });
+            });
         });
     });
 });
