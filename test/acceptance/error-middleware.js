@@ -17,22 +17,24 @@ describe('error middleware', function () {
                 message: "Missing cartocss for layer 0 options",
                 name: "Error",
                 label: "ANONYMOUS LAYERGROUP",
-                type: "layer", 
+                type: "layer",
             },
             moreErrors: []
         };
 
         this.testClient = new TestClient(mapConfig, 1234);
-        
-        const expectedResponse = {
-            status: 400,
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                'X-Tiler-Errors': JSON.stringify(errorHeader)
+
+        const params = {
+            response: {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'X-Tiler-Errors': JSON.stringify(errorHeader)
+                }
             }
         };
 
-        this.testClient.getLayergroup(expectedResponse, (err) => {
+        this.testClient.getLayergroup(params, (err) => {
             assert.ifError(err);
             done();
         });
