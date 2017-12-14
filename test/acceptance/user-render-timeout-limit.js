@@ -232,7 +232,7 @@ describe('user render timeout limit', function () {
                     response: {
                         status: 429,
                         headers: {
-                            'Content-Type': 'application/json; charset=utf-8'
+                            'Content-Type': 'application/x-protobuf'
                         }
                     }
                 };
@@ -240,15 +240,12 @@ describe('user render timeout limit', function () {
                 this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
                     assert.ifError(err);
 
-                    assert.deepEqual(tile, {
-                        errors: ['You are over platform\'s limits. Please contact us to know more details'],
-                        errors_with_context: [{
-                            type: 'limit',
-                            subtype: 'datasource',
-                            message: 'You are over platform\'s limits. Please contact us to know more details'
-                        }]
-                    });
-
+                    var tileJSON = tile.toJSON();
+                    assert.equal(Array.isArray(tileJSON), true);
+                    assert.equal(tileJSON.length, 2);
+                    assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
+                    assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+                    
                     done();
                 });
             });
