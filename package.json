@@ -37,7 +37,6 @@
     "node-statsd": "~0.0.7",
     "on-headers": "^1.0.1",
     "queue-async": "~1.0.7",
-    "redis-mpool": "0.4.1",
     "request": "^2.83.0",
     "semver": "~5.3.0",
     "step": "~0.0.6",
@@ -53,7 +52,7 @@
     "mocha": "~3.4.1",
     "moment": "~2.18.1",
     "nock": "~2.11.0",
-    "redis": "~0.12.1",
+    "redis": "^2.8.0",
     "strftime": "~0.8.2"
   },
   "scripts": {
