@@ -1,10 +1,12 @@
 # Changelog
 
-## 4.4.1
+## 4.5.0
 Released 2017-mm-dd
 
 Announcements:
- - Logging all errors
+ - Logging all errors.
+ - Add support for aggregated visualizations.
+ - Allow vector-only map-config creation.
 
 ## 4.4.0
 Released 2017-12-12
