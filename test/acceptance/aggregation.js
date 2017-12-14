@@ -26,6 +26,19 @@ describe('aggregation', function () {
     from generate_series(-3, 3) x
     `;
 
+    const POINTS_SQL_TIMESTAMP_1 = `
+    select
+        st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
+        st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
+        x as value,
+        date
+    from
+        generate_series(-3, 3) x,
+        generate_series(
+            '2007-02-15 01:00:00'::timestamp, '2007-02-18 01:00:00'::timestamp, '1 day'::interval
+        ) date
+    `;
+
     const POINTS_SQL_2 = `
     select
         st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326) as the_geom,
@@ -475,6 +488,43 @@ describe('aggregation', function () {
                     if (err) {
                         return done(err);
                     }
+
+                    done();
+                });
+            });
+
+            it('should work when the sql has single quotes', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: `
+                            SELECT
+                                the_geom_webmercator,
+                                the_geom,
+                                value,
+                                DATE_PART('day', date::timestamp - '1912-12-31 01:00:00'::timestamp )::numeric AS day
+                            FROM (${POINTS_SQL_TIMESTAMP_1}) _query
+                            `,
+                            aggregation: {
+                                threshold: 1
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
 
                     done();
                 });
