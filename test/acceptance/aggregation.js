@@ -166,6 +166,33 @@ describe('aggregation', function () {
                 });
             });
 
+            it('should return a NOT aggregated layergroup', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            cartocss: '#layer { marker-width: [value]; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+                this.testClient = new TestClient(this.mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.equal(layer.meta.aggregation, undefined));
+
+                    done();
+                });
+            });
+
             it('should return a layergroup with aggregation and cartocss compatible', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
