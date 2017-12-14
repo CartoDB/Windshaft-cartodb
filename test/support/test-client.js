@@ -618,8 +618,19 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             }
 
             var data = templateId ? params.placeholders : self.mapConfig;
+
+            const queryParams = {};
+
+            if (self.apiKey) {
+                queryParams.api_key = self.apiKey;
+            }
+
+            if (params.aggregation !== undefined) {
+                queryParams.aggregation = params.aggregation;
+            }
+
             var path  = templateId ?
-                urlNamed + '/' + templateId  + '?' + qs.stringify({api_key: self.apiKey}) :
+                urlNamed + '/' + templateId  + '?' + qs.stringify(queryParams) :
                 url;
 
             assert.response(self.server,
@@ -647,7 +658,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             );
         },
         function getTileResult(err, layergroupId) {
-            // jshint maxcomplexity:12
+            // jshint maxcomplexity:13
             assert.ifError(err);
 
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
@@ -671,8 +682,14 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             url += [z,x,y].join('/');
             url += '.' + format;
 
+            const queryParams = {};
+
             if (self.apiKey) {
-                url += '?' + qs.stringify({api_key: self.apiKey});
+                queryParams.api_key = self.apiKey;
+            }
+
+            if (Object.keys(queryParams).length) {
+                url += '?' + qs.stringify(queryParams);
             }
 
             var request = {
@@ -754,12 +771,21 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
     );
 };
 
-TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
+TestClient.prototype.getLayergroup = function (params, callback) {
+    // jshint maxcomplexity: 7
     var self = this;
 
     if (!callback) {
-        callback = expectedResponse;
-        expectedResponse = {
+        callback = params;
+        params = null;
+    }
+
+    if (!params) {
+        params = {};
+    }
+
+    if (!params.response) {
+        params.response = {
             status: 200,
             headers: {
                 'Content-Type': 'application/json; charset=utf-8'
@@ -769,8 +795,18 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
 
     var url = '/api/v1/map';
 
-    if (this.apiKey) {
-        url += '?' + qs.stringify({api_key: this.apiKey});
+    const queryParams = {};
+
+    if (self.apiKey) {
+        queryParams.api_key = self.apiKey;
+    }
+
+    if (params.aggregation !== undefined) {
+        queryParams.aggregation = params.aggregation;
+    }
+
+    if (Object.keys(queryParams).length) {
+        url += '?' + qs.stringify(queryParams);
     }
 
     assert.response(self.server,
@@ -783,7 +819,7 @@ TestClient.prototype.getLayergroup = function(expectedResponse, callback) {
             },
             data: JSON.stringify(self.mapConfig)
         },
-        expectedResponse,
+        params.response,
         function(res, err) {
             var parsedBody;
             // If there is a response, we are still interested in catching the created keys

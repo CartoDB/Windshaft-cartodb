@@ -62,7 +62,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -97,7 +97,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -144,7 +144,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -190,7 +190,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 11111);
 
-        testClient.getLayergroup(AUTH_ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: AUTH_ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -246,7 +246,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -298,7 +298,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -351,7 +351,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -415,7 +415,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
