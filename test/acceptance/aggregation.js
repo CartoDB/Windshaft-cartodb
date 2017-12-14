@@ -20,6 +20,7 @@ describe('aggregation', function () {
 
     const POINTS_SQL_1 = `
     select
+        x + 4 as cartodb_id,
         st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
         st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
         x as value
@@ -28,6 +29,7 @@ describe('aggregation', function () {
 
     const POINTS_SQL_TIMESTAMP_1 = `
     select
+        row_number() over() AS cartodb_id,
         st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
         st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
         x as value,
@@ -41,6 +43,7 @@ describe('aggregation', function () {
 
     const POINTS_SQL_2 = `
     select
+        x + 4 as cartodb_id,
         st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326) as the_geom,
         st_transform(st_setsrid(st_makepoint(x*10, x*10*(-1)), 4326), 3857) as the_geom_webmercator,
         x as value,
@@ -50,6 +53,7 @@ describe('aggregation', function () {
 
     const POLYGONS_SQL_1 = `
     select
+        x + 4 as cartodb_id,
         st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 100000)::geometry as the_geom,
         st_transform(
             st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 100000)::geometry,
