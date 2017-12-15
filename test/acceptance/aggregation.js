@@ -560,6 +560,132 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            it('aggregates with point-grid placement', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                placement: 'point-grid',
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    },
+                                    v_avg: {
+                                        aggregate_function: 'avg',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                threshold: 1
+                            },
+                            cartocss: '#layer { marker-width: [total]; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+
+                    done();
+                });
+            });
+
+            it('aggregates with point-sample placement', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                placement: 'point-sample',
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    },
+                                    v_avg: {
+                                        aggregate_function: 'avg',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                threshold: 1
+                            },
+                            cartocss: '#layer { marker-width: [total]; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+
+                    done();
+                });
+            });
+
+            it('aggregates with centroid placement', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                placement: 'centroid',
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    },
+                                    v_avg: {
+                                        aggregate_function: 'avg',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                threshold: 1
+                            },
+                            cartocss: '#layer { marker-width: [total]; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+
+                    done();
+                });
+            });
         });
     });
 });
