@@ -19,7 +19,9 @@
     "Sandro Santilli <strk@vizzuality.com>",
     "Carlos Matallín <matallo@carto.com>",
     "Daniel Garcia Aubert <dgaubert@carto.com>",
-    "Mario de Frutos <mario.defrutos@carto.com>"
+    "Mario de Frutos <mario.defrutos@carto.com>",
+    "Ivan Malagon <ivan@carto.com>",
+    "Simon Martin <simon@carto.com>"
   ],
   "dependencies": {
     "body-parser": "^1.18.2",

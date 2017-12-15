@@ -4,7 +4,8 @@
 Released 2017-mm-dd
 
 Announcements:
- - Logging all errors
+ - Logging all errors.
+ - Histograms: Now they accept a `no_filters` parameter.
 
 ## 4.4.0
 Released 2017-12-12

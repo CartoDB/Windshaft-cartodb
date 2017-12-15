@@ -109,7 +109,8 @@ describe('analysis-layers-dataviews', function() {
                         min: 2e6
                     }
                 }
-            }
+            },
+            own_filter: 1
         };
 
         testClient.getDataview('pop_max_histogram', params, function(err, dataview) {
