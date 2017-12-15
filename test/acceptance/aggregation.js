@@ -560,6 +560,28 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`should work for ${placement} placement`, function(done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                cartocss: '#layer { marker-width: 4; }',
+                                cartocss_version: '3.0.12',
+                                aggregation: {
+                                    threshold: 1,
+                                    placement
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    this.testClient.getTile(0, 0, 0, done);
+                });
+            });
         });
     });
 });
