@@ -122,4 +122,57 @@ describe('error-middleware', function() {
 
         done();
     });
+
+    it('should escape chars that broke logs regex', function (done) {
+        const badString = 'error: ( ) = " \" \' * $ & |';
+        const escapedString = 'error                     ';
+
+        const error = new Error(badString);
+        error.label = badString;
+        error.type = badString;
+        error.subtype = badString;
+
+        const errors = [error, error];
+        
+        const req = {};
+        const res = {
+            headers: {},
+            set (key, value) {
+                this.headers[key] = value;
+            },
+            statusCode: 0,
+            status (status) {
+                this.statusCode = status;
+            },
+            json () {},
+            send () {}
+        };
+
+        const errorHeader = {      
+            mainError: {
+                statusCode: 400,
+                message: escapedString,
+                name: error.name,
+                label: escapedString,
+                type: escapedString,
+                subtype: escapedString,
+            },
+            moreErrors: [{
+                message: escapedString,
+                name: error.name,
+                label: escapedString,
+                type: escapedString,
+                subtype: escapedString
+            }]
+        };
+
+        const errorFn = errorMiddleware();
+        errorFn(errors, req, res);
+
+        assert.deepEqual(res.headers, {
+            'X-Tiler-Errors': JSON.stringify(errorHeader)
+        });
+
+        done();
+    });
 });
