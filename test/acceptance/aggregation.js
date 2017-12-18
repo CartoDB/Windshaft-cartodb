@@ -686,6 +686,135 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            it('should fail with bad resolution', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        id: 'wadus',
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                resolution: 'wadus',
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid resolution, should be a number greather than 0' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid resolution, should be a number greather than 0',
+                            layer: {
+                                "id": "wadus",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+                    done();
+                });
+            });
+
+            it('should fail with bad placement', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                placement: 'wadus',
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid placement. Valid values: centroid, point-grid, point-sample'],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid placement. Valid values: centroid, point-grid, point-sample',
+                            layer: {
+                                id: "layer0",
+                                index: 0,
+                                type: "mapnik",
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
+            it('should fail with bad threshold', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 'wadus',
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid threshold, should be a number greather than 0' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid threshold, should be a number greather than 0',
+                            layer: {
+                                "id": "layer0",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
         });
     });
 });
