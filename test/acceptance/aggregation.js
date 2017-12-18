@@ -820,6 +820,152 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            it('should fail with bad column name', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns : {
+                                    '': {
+                                        aggregate_function: 'count',
+                                        aggregated_column: 'value',
+                                    }
+                                },
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid column name, should be a non empty string' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid column name, should be a non empty string',
+                            layer: {
+                                "id": "layer0",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
+            it('should fail with bad aggregated function', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns : {
+                                    'wadus_function': {
+                                        aggregate_function: 'wadus',
+                                        aggregated_column: 'value',
+                                    }
+                                },
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Unsupported aggregation function wadus, ' +
+                                    'valid ones: count, avg, sum, min, max, mode' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Unsupported aggregation function wadus, ' +
+                                    'valid ones: count, avg, sum, min, max, mode',
+                            layer: {
+                                "id": "layer0",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
+            it('should fail with bad aggregated columns', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns : {
+                                    'total_wadus': {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: '',
+                                    }
+                                },
+                            }
+                        }
+                    }
+                ]);
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid aggregated column, should be a non empty string' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid aggregated column, should be a non empty string',
+                            layer: {
+                                "id": "layer0",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
         });
     });
 });
