@@ -393,7 +393,8 @@ describe('dataviews using tables with overviews', function() {
                 var params = {
                     filters: {
                         dataviews: { test_histogram: { min: 2 } }
-                    }
+                    },
+                    own_filter: 1
                 };
                 var testClient = new TestClient(overviewsMapConfig);
                 testClient.getDataview('test_histogram', params, function (err, histogram) {
@@ -412,7 +413,8 @@ describe('dataviews using tables with overviews', function() {
                 var params = {
                     filters: {
                         dataviews: { test_histogram: { max: -1 } }
-                    }
+                    },
+                    own_filter: 1
                 };
                 var testClient = new TestClient(overviewsMapConfig);
                 testClient.getDataview('test_histogram', params, function (err, histogram) {
@@ -433,7 +435,8 @@ describe('dataviews using tables with overviews', function() {
                 var params = {
                     filters: {
                         dataviews: { test_histogram_date: { max: -1 } }
-                    }
+                    },
+                    own_filter: 1
                 };
                 var testClient = new TestClient(overviewsMapConfig);
                 testClient.getDataview('test_histogram_date', params, function (err, histogram) {

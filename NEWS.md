@@ -7,6 +7,8 @@ Announcements:
  - Logging all errors.
  - Add support for aggregated visualizations.
  - Allow vector-only map-config creation.
+ - Histograms: Now they accept a `no_filters` parameter.
+
 
 ## 4.4.0
 Released 2017-12-12
