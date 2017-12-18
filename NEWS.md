@@ -4,6 +4,8 @@
 Released 2017-mm-dd
 
 Announcements:
+ - Date histograms: Add second, decade, century and millenium aggregations
+ - Date histograms: Switch the auto threshold from 366 buckets to 100.
  - Logging all errors.
  - Add support for aggregated visualizations.
  - Allow vector-only map-config creation.
