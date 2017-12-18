@@ -456,9 +456,14 @@ describe('aggregation', function () {
                                 ' Aggregation is available only for geometry type: ST_Point'
                         ],
                         errors_with_context:[{
-                            type: 'unknown',
+                            type: 'layer',
                             message: 'Unsupported geometry type: ST_Polygon.' +
-                            ' Aggregation is available only for geometry type: ST_Point'
+                            ' Aggregation is available only for geometry type: ST_Point',
+                            layer: {
+                                id: 'layer0',
+                                index: 0,
+                                type: 'mapnik'
+                            }
                         }]
                     });
 
