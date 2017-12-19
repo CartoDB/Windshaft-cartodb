@@ -1,7 +1,7 @@
 # Changelog
 
 ## 4.5.0
-Released 2017-mm-dd
+Released 2017-12-19
 
 Announcements:
  - Date histograms: Add second, decade, century and millenium aggregations
