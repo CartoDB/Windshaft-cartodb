@@ -692,6 +692,51 @@ describe('aggregation', function () {
                 });
             });
 
+            it('aggregates with full-sample placement', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            resolution: 256,
+                            aggregation: {
+                                placement: 'point-grid',
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    },
+                                    v_avg: {
+                                        aggregate_function: 'avg',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                threshold: 1
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, res, mvt) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const geojsonTile = JSON.parse(mvt.toGeoJSONSync(0));
+
+                    assert.ok(Array.isArray(geojsonTile.features));
+                    assert.ok(geojsonTile.features.length > 0);
+
+                    const feature = geojsonTile.features[0];
+
+                    assert.ok(feature.properties.hasOwnProperty('value'), 'Missing value property');
+
+                    done();
+                });
+            });
+
             it('should fail with bad resolution', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
