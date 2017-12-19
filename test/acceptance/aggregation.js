@@ -762,10 +762,10 @@ describe('aggregation', function () {
                     }
 
                     assert.deepEqual(body, {
-                        errors: [ 'Invalid placement. Valid values: centroid, point-grid, point-sample'],
+                        errors: [ 'Invalid placement. Valid values: centroid, point-grid, point-sample, full-sample'],
                         errors_with_context:[{
                             type: 'layer',
-                            message: 'Invalid placement. Valid values: centroid, point-grid, point-sample',
+                            message: 'Invalid placement. Valid values: centroid, point-grid, point-sample, full-sample',
                             layer: {
                                 id: "layer0",
                                 index: 0,
