@@ -1,9 +1,10 @@
 # Changelog
+
 ## 4.5.1
 Released YYYY-MM-DD
 
 Announcements:
-- 
+ - Validate aggregation input params
 
 
 ## 4.5.0
