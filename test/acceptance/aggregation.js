@@ -456,9 +456,14 @@ describe('aggregation', function () {
                                 ' Aggregation is available only for geometry type: ST_Point'
                         ],
                         errors_with_context:[{
-                            type: 'unknown',
+                            type: 'layer',
                             message: 'Unsupported geometry type: ST_Polygon.' +
-                            ' Aggregation is available only for geometry type: ST_Point'
+                            ' Aggregation is available only for geometry type: ST_Point',
+                            layer: {
+                                id: 'layer0',
+                                index: 0,
+                                type: 'mapnik'
+                            }
                         }]
                     });
 
@@ -686,6 +691,281 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            it('should fail with bad resolution', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        id: 'wadus',
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                resolution: 'wadus',
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid resolution, should be a number greather than 0' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid resolution, should be a number greather than 0',
+                            layer: {
+                                "id": "wadus",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+                    done();
+                });
+            });
+
+            it('should fail with bad placement', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                placement: 'wadus',
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid placement. Valid values: centroid, point-grid, point-sample'],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid placement. Valid values: centroid, point-grid, point-sample',
+                            layer: {
+                                id: "layer0",
+                                index: 0,
+                                type: "mapnik",
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
+            it('should fail with bad threshold', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 'wadus',
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid threshold, should be a number greather than 0' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid threshold, should be a number greather than 0',
+                            layer: {
+                                "id": "layer0",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
+            it('should fail with bad column name', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns : {
+                                    '': {
+                                        aggregate_function: 'count',
+                                        aggregated_column: 'value',
+                                    }
+                                },
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid column name, should be a non empty string' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid column name, should be a non empty string',
+                            layer: {
+                                "id": "layer0",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
+            it('should fail with bad aggregated function', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns : {
+                                    'wadus_function': {
+                                        aggregate_function: 'wadus',
+                                        aggregated_column: 'value',
+                                    }
+                                },
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Unsupported aggregation function wadus, ' +
+                                    'valid ones: count, avg, sum, min, max, mode' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Unsupported aggregation function wadus, ' +
+                                    'valid ones: count, avg, sum, min, max, mode',
+                            layer: {
+                                "id": "layer0",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
+            it('should fail with bad aggregated columns', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                columns : {
+                                    'total_wadus': {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: '',
+                                    }
+                                },
+                            }
+                        }
+                    }
+                ]);
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid aggregated column, should be a non empty string' ],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid aggregated column, should be a non empty string',
+                            layer: {
+                                "id": "layer0",
+                                "index": 0,
+                                "type": "mapnik"
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
         });
     });
 });
