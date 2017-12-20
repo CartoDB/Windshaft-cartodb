@@ -529,6 +529,39 @@ describe('aggregation', function () {
                 });
             });
 
+            it('when dimensions is provided should return a tile returning the column used as dimensions', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    value: "value"
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.value, 'number'));
+
+                    done();
+                });
+            });
+
             it('should work when the sql has single quotes', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
