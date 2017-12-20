@@ -529,7 +529,8 @@ describe('aggregation', function () {
                 });
             });
 
-            it('when dimensions is provided should return a tile returning the column used as dimensions', function (done) {
+            it('when dimensions is provided should return a tile returning the column used as dimensions',
+            function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
