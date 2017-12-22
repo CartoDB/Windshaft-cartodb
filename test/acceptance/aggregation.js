@@ -740,7 +740,7 @@ describe('aggregation', function () {
                             sql: POINTS_SQL_1,
                             resolution: 256,
                             aggregation: {
-                                placement: 'point-grid',
+                                placement: 'full-sample',
                                 columns: {
                                     total: {
                                         aggregate_function: 'sum',
