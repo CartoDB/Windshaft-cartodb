@@ -697,7 +697,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`aggregations should trigger non-default aggregation`, function(done) {
+            it(`aggregation columns should trigger non-default aggregation`, function(done) {
 
                 // FIXME: skip until pg-mvt renderer is able to return all columns
                 if (process.env.POSTGIS_VERSION === '2.4') {
@@ -743,6 +743,54 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`aggregations with base column names should work for ${placement} placement`, function(done) {
+
+                    // FIXME: skip until pg-mvt renderer is able to return all columns
+                    if (process.env.POSTGIS_VERSION === '2.4') {
+                        return done();
+                    }
+
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    placement: placement ,
+                                    threshold: 1,
+                                    columns: {
+                                        value: {
+                                            aggregate_function: 'sum',
+                                            aggregated_column: 'value'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(
+                            feature => assert.equal(typeof feature.properties.value, 'number')
+                        );
+
+                        done();
+                    });
+                });
+            });
+
             it('should work when the sql has single quotes', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
