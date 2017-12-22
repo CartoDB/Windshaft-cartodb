@@ -244,14 +244,6 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@CartoDB/carto#0.15.1-cdb1:
-  version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
-  dependencies:
-    mapnik-reference "~6.0.2"
-    optimist "~0.6.0"
-    underscore "~1.6.0"
-
 carto@cartodb/carto#0.15.1-cdb3:
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
@@ -259,6 +251,14 @@ carto@cartodb/carto#0.15.1-cdb3:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "1.8.3"
+
+"carto@github:cartodb/carto#0.15.1-cdb1":
+  version "0.15.1-cdb1"
+  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  dependencies:
+    mapnik-reference "~6.0.2"
+    optimist "~0.6.0"
+    underscore "~1.6.0"
 
 cartocolor@4.0.0:
   version "4.0.0"
@@ -2392,9 +2392,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.1.0.tgz#dc17c8369570c305171d1ab5ca130369bba04d58"
+windshaft@cartodb/windshaft#pg-mvt-do-not-filter-columns:
+  version "4.1.1"
+  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/2de4e21b41787acd1630193fdd42c308815bfee5"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
