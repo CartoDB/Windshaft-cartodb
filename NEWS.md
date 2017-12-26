@@ -5,6 +5,7 @@ Released YYYY-MM-DD
 
 Announcements:
  - Validate aggregation input params
+ - Fix column names collisions in histograms [#828](https://github.com/CartoDB/Windshaft-cartodb/pull/828)
 
 
 ## 4.5.0
