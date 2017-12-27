@@ -289,7 +289,8 @@ describe('aggregation', function () {
                         options: {
                             sql: POINTS_SQL_2,
                             aggregation: {
-                                threshold: 1
+                                threshold: 1,
+                                placement: 'centroid'
                             },
                             cartocss: '#layer { marker-width: [value]; }',
                             cartocss_version: '2.3.0'
@@ -305,6 +306,45 @@ describe('aggregation', function () {
 
                     assert.ok(body.errors[0].match(/column "value" does not exist/));
 
+                    done();
+                });
+            });
+
+            it('should provide all columns in the default aggregation ',
+            function (done) {
+                const response = {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                };
+
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_2,
+                            aggregation: {
+                                threshold: 1
+                            },
+                            cartocss: '#layer { marker-width: [value]; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup({ response }, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
                     done();
                 });
             });
@@ -569,6 +609,188 @@ describe('aggregation', function () {
                 });
             });
 
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`dimensions should work for ${placement} placement`, function(done) {
+
+                    // FIXME: skip until pg-mvt renderer is able to return all columns
+                    if (process.env.POSTGIS_VERSION === '2.4') {
+                        return done();
+                    }
+
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    placement: placement ,
+                                    threshold: 1,
+                                    dimensions: {
+                                        value: "value"
+                                    }
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(
+                            feature => assert.equal(typeof feature.properties.value, 'number')
+                        );
+
+                        done();
+                    });
+                });
+            });
+
+            it(`dimensions should trigger non-default aggregation`, function(done) {
+
+                // FIXME: skip until pg-mvt renderer is able to return all columns
+                if (process.env.POSTGIS_VERSION === '2.4') {
+                    return done();
+                }
+
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_2,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    value: "value"
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(
+                        feature => assert.equal(typeof feature.properties.value, 'number')
+                    );
+                    tileJSON[0].features.forEach(
+                        feature => assert.equal(typeof feature.properties.sqrt_value, 'undefined')
+                    );
+
+                    done();
+                });
+            });
+
+            it(`aggregation columns should trigger non-default aggregation`, function(done) {
+
+                // FIXME: skip until pg-mvt renderer is able to return all columns
+                if (process.env.POSTGIS_VERSION === '2.4') {
+                    return done();
+                }
+
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_2,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(
+                        feature => assert.equal(typeof feature.properties.value, 'number')
+                    );
+                    tileJSON[0].features.forEach(
+                        feature => assert.equal(typeof feature.properties.sqrt_value, 'undefined')
+                    );
+
+                    done();
+                });
+            });
+
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`aggregations with base column names should work for ${placement} placement`, function(done) {
+
+                    // FIXME: skip until pg-mvt renderer is able to return all columns
+                    if (process.env.POSTGIS_VERSION === '2.4') {
+                        return done();
+                    }
+
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    placement: placement ,
+                                    threshold: 1,
+                                    columns: {
+                                        value: {
+                                            aggregate_function: 'sum',
+                                            aggregated_column: 'value'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(
+                            feature => assert.equal(typeof feature.properties.value, 'number')
+                        );
+
+                        done();
+                    });
+                });
+            });
+
             it('should work when the sql has single quotes', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
@@ -576,6 +798,7 @@ describe('aggregation', function () {
                         options: {
                             sql: `
                             SELECT
+                                cartodb_id,
                                 the_geom_webmercator,
                                 the_geom,
                                 value,
@@ -732,7 +955,13 @@ describe('aggregation', function () {
                 });
             });
 
-            it('aggregates with full-sample placement', function (done) {
+            it('aggregates with full-sample placement by default', function (done) {
+
+                // FIXME: skip until pg-mvt renderer is able to return all columns
+                if (process.env.POSTGIS_VERSION === '2.4') {
+                    return done();
+                }
+
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -740,17 +969,6 @@ describe('aggregation', function () {
                             sql: POINTS_SQL_1,
                             resolution: 256,
                             aggregation: {
-                                placement: 'full-sample',
-                                columns: {
-                                    total: {
-                                        aggregate_function: 'sum',
-                                        aggregated_column: 'value'
-                                    },
-                                    v_avg: {
-                                        aggregate_function: 'avg',
-                                        aggregated_column: 'value'
-                                    }
-                                },
                                 threshold: 1
                             }
                         }
@@ -847,10 +1065,10 @@ describe('aggregation', function () {
                     }
 
                     assert.deepEqual(body, {
-                        errors: [ 'Invalid placement. Valid values: centroid, point-grid, point-sample, full-sample'],
+                        errors: [ 'Invalid placement. Valid values: centroid, point-grid, point-sample'],
                         errors_with_context:[{
                             type: 'layer',
-                            message: 'Invalid placement. Valid values: centroid, point-grid, point-sample, full-sample',
+                            message: 'Invalid placement. Valid values: centroid, point-grid, point-sample',
                             layer: {
                                 id: "layer0",
                                 index: 0,
