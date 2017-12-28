@@ -4,6 +4,7 @@
 Released YYYY-MM-DD
 
 Announcements:
+ - Upgrades windshaft to [4.1.1](https://github.com/CartoDB/windshaft/releases/tag/4.1.1).
  - Validate aggregation input params
  - Fix column names collisions in histograms [#828](https://github.com/CartoDB/Windshaft-cartodb/pull/828)
 
