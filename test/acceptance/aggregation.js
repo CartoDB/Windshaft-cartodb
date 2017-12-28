@@ -571,12 +571,6 @@ describe('aggregation', function () {
 
             it('when dimensions is provided should return a tile returning the column used as dimensions',
             function (done) {
-
-                // FIXME: skip until pg-mvt renderer is able to return all columns
-                if (process.env.POSTGIS_VERSION === '2.4') {
-                    return done();
-                }
-
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -611,12 +605,6 @@ describe('aggregation', function () {
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
                 it(`dimensions should work for ${placement} placement`, function(done) {
-
-                    // FIXME: skip until pg-mvt renderer is able to return all columns
-                    if (process.env.POSTGIS_VERSION === '2.4') {
-                        return done();
-                    }
-
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
@@ -654,12 +642,6 @@ describe('aggregation', function () {
             });
 
             it(`dimensions should trigger non-default aggregation`, function(done) {
-
-                // FIXME: skip until pg-mvt renderer is able to return all columns
-                if (process.env.POSTGIS_VERSION === '2.4') {
-                    return done();
-                }
-
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -698,12 +680,6 @@ describe('aggregation', function () {
             });
 
             it(`aggregation columns should trigger non-default aggregation`, function(done) {
-
-                // FIXME: skip until pg-mvt renderer is able to return all columns
-                if (process.env.POSTGIS_VERSION === '2.4') {
-                    return done();
-                }
-
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -746,12 +722,6 @@ describe('aggregation', function () {
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
                 it(`aggregations with base column names should work for ${placement} placement`, function(done) {
-
-                    // FIXME: skip until pg-mvt renderer is able to return all columns
-                    if (process.env.POSTGIS_VERSION === '2.4') {
-                        return done();
-                    }
-
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
