@@ -75,6 +75,22 @@ function checkSurrogateKey(res, expectedKey) {
     assert.deepEqual(keys, expectedKeys);
 }
 
+var uncaughtExceptions = [];
+process.on('uncaughtException', function(err) {
+    uncaughtExceptions.push(err);
+});
+beforeEach(function() {
+    uncaughtExceptions = [];
+});
+//global afterEach to capture uncaught exceptions
+afterEach(function() {
+    assert.equal(
+        uncaughtExceptions.length,
+        0,
+        'uncaughtException:\n\n' + uncaughtExceptions.map(err => err.stack).join('\n\n'));
+});
+
+
 var redisClient;
 
 beforeEach(function() {
