@@ -33,8 +33,8 @@ ajv@^4.9.1:
     json-stable-stringify "^1.0.1"
 
 ajv@^5.1.0:
-  version "5.5.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.1.tgz#b38bb8876d9e86bee994956a04e721e88b248eb2"
+  version "5.5.2"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-5.5.2.tgz#73b5eeca3fab653e3d3f9422b341ad42205dc965"
   dependencies:
     co "^4.6.0"
     fast-deep-equal "^1.0.0"
@@ -244,9 +244,9 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@CartoDB/carto#0.15.1-cdb1:
+"carto@github:cartodb/carto#0.15.1-cdb1":
   version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
   dependencies:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
@@ -842,9 +842,9 @@ graceful-fs@^4.1.2:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-grainstore@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.7.0.tgz#28d78895c82e6201f7d0ff63af1056f3c0fda0d3"
+grainstore@~1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.8.0.tgz#9398729df88f3aecb55ffbb415d541dcca4420af"
   dependencies:
     carto "0.16.3"
     debug "~3.1.0"
@@ -1380,8 +1380,8 @@ mocha@~3.4.1:
     supports-color "3.1.2"
 
 moment@^2.10.6:
-  version "2.19.4"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.4.tgz#17e5e2c6ead8819c8ecfad83a0acccb312e94682"
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
 
 moment@~2.18.1:
   version "2.18.1"
@@ -2392,9 +2392,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.1.1.tgz#cdae06202e841b8e75915de5155b8a279b4547be"
+windshaft@4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.2.0.tgz#6a0409832a0d3bccfa09a88a8ab8288686b6762d"
   dependencies:
     abaculus cartodb/abaculus#2.0.3-cdb1
     canvas cartodb/node-canvas#1.6.2-cdb2
@@ -2402,7 +2402,7 @@ windshaft@4.1.1:
     cartodb-psql "^0.10.1"
     debug "^3.1.0"
     dot "~1.0.2"
-    grainstore "1.7.0"
+    grainstore "~1.8.0"
     mapnik "3.5.14"
     queue-async "~1.0.7"
     redis-mpool "0.4.1"
