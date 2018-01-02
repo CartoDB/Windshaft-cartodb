@@ -1,7 +1,7 @@
 # Changelog
 
 ## 4.6.0
-Released 2018-mm-dd
+Released 2018-01-02
 
 Announcements:
  - Upgrades windshaft to [4.2.0](https://github.com/CartoDB/windshaft/releases/tag/4.2.0).
