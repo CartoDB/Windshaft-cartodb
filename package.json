@@ -46,7 +46,7 @@
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.20.2",
     "underscore": "~1.6.0",
-    "windshaft": "cartodb/windshaft#pg-mvt-do-not-filter-columns",
+    "windshaft": "4.2.0",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
