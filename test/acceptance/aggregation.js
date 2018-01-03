@@ -1271,9 +1271,7 @@ describe('aggregation', function () {
 
                         const tileJSON = tile.toJSON();
 
-                        tileJSON[0].features.forEach(feature => {
-                            assert.equal(typeof feature.properties.value, 'number');
-                        });
+                        assert.equal(tileJSON[0].features.length, 7);
 
                         done();
                     });
@@ -1324,9 +1322,7 @@ describe('aggregation', function () {
 
                         const tileJSON = tile.toJSON();
 
-                        tileJSON[0].features.forEach(feature => {
-                            assert.equal(typeof feature.properties.value, 'number');
-                        });
+                        assert.equal(tileJSON[0].features.length, 7);
 
                         done();
                     });
