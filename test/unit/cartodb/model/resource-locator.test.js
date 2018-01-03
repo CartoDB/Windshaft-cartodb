@@ -77,8 +77,14 @@ describe('ResourceLocator', function() {
                 var urls = resourceLocator.getUrls(USERNAME, RESOURCE);
                 assert.ok(urls);
 
-                assert.equal(urls.http, ['http://' + USERNAME + '.localhost.lan', 'api/v1/map', RESOURCE].join('/'));
-                assert.equal(urls.https, ['https://' + USERNAME + '.ssl.localhost.lan', 'api/v1/map', RESOURCE].join('/'));
+                assert.equal(
+                    urls.http,
+                    ['http://' + USERNAME + '.localhost.lan', 'api/v1/map', RESOURCE].join('/')
+                );
+                assert.equal(
+                    urls.https,
+                    ['https://' + USERNAME + '.ssl.localhost.lan', 'api/v1/map', RESOURCE].join('/')
+                );
             });
         });
 
@@ -201,7 +207,7 @@ describe('ResourceLocator', function() {
                 );
                 assert.equal(
                     urls.https,
-                    ['https://cdn_' + httpsSubdomain + '.ssl.cdn.carto.com', 'u', USERNAME, 'api/v1/map', RESOURCE].join('/')
+                    `https://cdn_${httpsSubdomain}'.ssl.cdn.carto.com/u/${USERNAME}/api/v1/map/${RESOURCE}`
                 );
             });
         });
