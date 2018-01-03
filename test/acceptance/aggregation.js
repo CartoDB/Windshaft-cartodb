@@ -385,6 +385,44 @@ describe('aggregation', function () {
                 });
             });
 
+            it('skip default aggregation by setting `aggregation: false` for just one layer', function (done) {
+                const mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1
+                            }
+                        }
+                    },
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_2,
+                            aggregation: false
+                        }
+                    }
+
+                ]);
+
+                this.testClient = new TestClient(mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, true);
+                    assert.equal(body.metadata.layers[1].meta.aggregation.mvt, false);
+
+                    done();
+                });
+            });
+
             it('when the aggregation param is not valid should respond with error', function (done) {
                 const mapConfig = createVectorMapConfig([
                     {
