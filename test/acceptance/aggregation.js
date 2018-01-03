@@ -1233,6 +1233,34 @@ describe('aggregation', function () {
                 });
             });
 
+            it('should skip aggregation w/o failing when is Vector Only MapConfig and layer has polygons', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POLYGONS_SQL_1
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.value, 'number'));
+
+                    done();
+                });
+            });
+
         });
     });
 });
