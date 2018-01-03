@@ -2,6 +2,7 @@
 
 ## 4.6.1
 Released 2018-mm-dd
+ - Allow to create vector map-config for layers that doesn't have points. Layers with lines or polygons won't be aggregated by default.
 
 
 ## 4.6.0
