@@ -1,7 +1,12 @@
 # Changelog
 
-## 4.6.1
+## 4.7.0
 Released 2018-mm-dd
+
+New features:
+ - Return tilejson in metadata #837.
+
+Bug fixes:
  - Allow to create vector map-config for layers that doesn't have points. Layers with lines or polygons won't be aggregated by default.
 
 
