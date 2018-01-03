@@ -207,7 +207,7 @@ describe('ResourceLocator', function() {
                 );
                 assert.equal(
                     urls.https,
-                    `https://cdn_${httpsSubdomain}'.ssl.cdn.carto.com/u/${USERNAME}/api/v1/map/${RESOURCE}`
+                    `https://cdn_${httpsSubdomain}.ssl.cdn.carto.com/u/${USERNAME}/api/v1/map/${RESOURCE}`
                 );
             });
         });
