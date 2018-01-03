@@ -179,8 +179,8 @@ describe('tilejson', function() {
                 const url = metadata.url;
                 assert.deepEqual(Object.keys(url), ['vector']);
 
-                assert.ok(url.vector.http.urlTemplate);
-                assert.ok(url.vector.http.subdomains);
+                assert.ok(url.vector.urlTemplate);
+                assert.ok(url.vector.subdomains);
 
                 testClient.drain(done);
             });
@@ -204,11 +204,11 @@ describe('tilejson', function() {
                 const url = metadata.url;
                 assert.deepEqual(Object.keys(url), ['vector', 'raster']);
 
-                assert.ok(url.vector.http.urlTemplate);
-                assert.ok(url.vector.http.subdomains);
+                assert.ok(url.vector.urlTemplate);
+                assert.ok(url.vector.subdomains);
 
-                assert.ok(url.raster.http.urlTemplate);
-                assert.ok(url.raster.http.subdomains);
+                assert.ok(url.raster.urlTemplate);
+                assert.ok(url.raster.subdomains);
 
                 testClient.drain(done);
             });
