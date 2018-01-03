@@ -1,7 +1,7 @@
 # Changelog
 
 ## 4.7.0
-Released 2018-mm-dd
+Released 2018-01-03
 
 New features:
  - Return tilejson in metadata #837.
