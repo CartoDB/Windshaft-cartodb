@@ -8,7 +8,7 @@ describe('tilejson', function() {
     function tilejsonValidation(tilejson, shouldHaveGrid = false) {
         assert.equal(tilejson.tilejson, '2.2.0');
 
-        assert.ok(Array.isArray(tilejson.tiles));
+        assert.ok(Array.isArray(tilejson.tiles), JSON.stringify(tilejson));
         assert.ok(tilejson.tiles.length > 0);
 
         if (shouldHaveGrid) {
@@ -161,7 +161,7 @@ describe('tilejson', function() {
 
     describe('root tilejson', function() {
 
-        it('should expose just the `vector` tilejson when for vector only mapnik layers', function(done) {
+        it('should expose just the `vector` tilejson and URL when for vector only mapnik layers', function(done) {
             var testClient = new TestClient(mapConfig(VECTOR_LAYER));
 
             testClient.getLayergroup(function(err, layergroupResult) {
@@ -176,11 +176,17 @@ describe('tilejson', function() {
                     tilejsonValidation(tilejson[k]);
                 });
 
+                const url = metadata.url;
+                assert.deepEqual(Object.keys(url), ['vector']);
+
+                assert.ok(url.vector.http.urlTemplate);
+                assert.ok(url.vector.http.subdomains);
+
                 testClient.drain(done);
             });
         });
 
-        it('should expose just the `vector` and `raster` tilejson for mapnik layers', function(done) {
+        it('should expose just the `vector` and `raster` tilejson and urls for mapnik layers', function(done) {
             var testClient = new TestClient(mapConfig(RASTER_LAYER));
 
             testClient.getLayergroup(function(err, layergroupResult) {
@@ -194,6 +200,15 @@ describe('tilejson', function() {
                 Object.keys(tilejson).forEach(k => {
                     tilejsonValidation(tilejson[k]);
                 });
+
+                const url = metadata.url;
+                assert.deepEqual(Object.keys(url), ['vector', 'raster']);
+
+                assert.ok(url.vector.http.urlTemplate);
+                assert.ok(url.vector.http.subdomains);
+
+                assert.ok(url.raster.http.urlTemplate);
+                assert.ok(url.raster.http.subdomains);
 
                 testClient.drain(done);
             });
