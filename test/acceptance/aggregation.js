@@ -471,6 +471,8 @@ describe('aggregation', function () {
                         type: 'cartodb',
                         options: {
                             sql: POLYGONS_SQL_1,
+                            cartocss: '#layer { marker-width: [value]; }',
+                            cartocss_version: '2.3.0',
                             aggregation: {
                                 threshold: 1
                             }
@@ -1233,7 +1235,9 @@ describe('aggregation', function () {
                 });
             });
 
-            it('should skip aggregation w/o failing when is Vector Only MapConfig and layer has polygons', function (done) {
+
+            it('should skip aggregation w/o failing when is Vector Only MapConfig and layer has polygons',
+            function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -1244,23 +1248,90 @@ describe('aggregation', function () {
                 ]);
 
                 this.testClient = new TestClient(this.mapConfig);
-                const options = {
-                    format: 'mvt'
-                };
 
-                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                this.testClient.getLayergroup((err, body) => {
                     if (err) {
                         return done(err);
                     }
 
-                    const tileJSON = tile.toJSON();
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
 
-                    tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.value, 'number'));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
 
-                    done();
+                    const options = {
+                        format: 'mvt'
+                    };
+
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(feature => {
+                            assert.equal(typeof feature.properties.value, 'number');
+                        });
+
+                        done();
+                    });
                 });
             });
 
+            it('should skip aggregation for polygons (w/o failing) and aggregate when the layer has points',
+            function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POLYGONS_SQL_1
+                        }
+                    },
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, false);
+                    assert.equal(body.metadata.layers[1].meta.aggregation.mvt, true);
+
+                    const options = {
+                        format: 'mvt'
+                    };
+
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(feature => {
+                            assert.equal(typeof feature.properties.value, 'number');
+                        });
+
+                        done();
+                    });
+                });
+            });
         });
     });
 });
