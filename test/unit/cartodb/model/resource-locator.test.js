@@ -54,6 +54,24 @@ describe('ResourceLocator', function() {
                 );
             });
         });
+
+        describe('getTemplateUrls', function() {
+            it('should return default urls when basic http and https domains are provided', function() {
+                var resourceLocator = new ResourceLocator(BASIC_ENVIRONMENT);
+                var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
+                assert.ok(urls);
+
+                assert.deepEqual(urls.http, {
+                    urlTemplate: `http://cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
+                    subdomains: []
+                });
+                assert.deepEqual(urls.https, {
+                    urlTemplate: `https://cdn.ssl.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
+                    subdomains: []
+                });
+            });
+        });
+
     });
 
     describe('resource templates', function() {
@@ -104,6 +122,24 @@ describe('ResourceLocator', function() {
                 );
             });
         });
+
+        describe('getTemplateUrls', function() {
+            it('resources_url_templates should take precedence over http and https domains', function() {
+                var resourceLocator = new ResourceLocator(RESOURCE_TEMPLATES_ENVIRONMENT);
+                var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
+                assert.ok(urls);
+
+                assert.deepEqual(urls.http, {
+                    urlTemplate: `http://${USERNAME}.localhost.lan/api/v1/map/${TILE_RESOURCE}`,
+                    subdomains: []
+                });
+                assert.deepEqual(urls.https, {
+                    urlTemplate: `https://${USERNAME}.ssl.localhost.lan/api/v1/map/${TILE_RESOURCE}`,
+                    subdomains: []
+                });
+            });
+        });
+
     });
 
     describe('cdn templates', function() {
@@ -126,6 +162,7 @@ describe('ResourceLocator', function() {
                 }
             }
         };
+
         describe('getUrls', function() {
             it('cdn_url templates should take precedence over http and https domains', function() {
                 var resourceLocator = new ResourceLocator(CDN_TEMPLATES_ENVIRONMENT);
@@ -162,6 +199,23 @@ describe('ResourceLocator', function() {
                     HTTPS_SUBDOMAINS
                         .map(s => `https://cdn_${s}.ssl.cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`)
                 );
+            });
+        });
+
+        describe('getTemplateUrls', function() {
+            it('cdn_url templates should take precedence over http and https domains', function() {
+                var resourceLocator = new ResourceLocator(CDN_TEMPLATES_ENVIRONMENT);
+                var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
+                assert.ok(urls);
+
+                assert.deepEqual(urls.http, {
+                    urlTemplate: `http://{s}.cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
+                    subdomains: HTTP_SUBDOMAINS
+                });
+                assert.deepEqual(urls.https, {
+                    urlTemplate: `https://cdn_{s}.ssl.cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
+                    subdomains: HTTPS_SUBDOMAINS
+                });
             });
         });
 
@@ -228,6 +282,23 @@ describe('ResourceLocator', function() {
                     HTTPS_SUBDOMAINS
                         .map(s => `https://cdn_${s}.ssl.cdn.carto.com/u/${USERNAME}/api/v1/map/${TILE_RESOURCE}`)
                 );
+            });
+        });
+
+        describe('getTemplateUrls', function() {
+            it('should mix cdn_url templates and resources_url_templates', function() {
+                var resourceLocator = new ResourceLocator(CDN_URL_AND_RESOURCE_TEMPLATES_ENVIRONMENT);
+                var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
+                assert.ok(urls);
+
+                assert.deepEqual(urls.http, {
+                    urlTemplate: `http://{s}.cdn.carto.com/u/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
+                    subdomains: HTTP_SUBDOMAINS
+                });
+                assert.deepEqual(urls.https, {
+                    urlTemplate: `https://cdn_{s}.ssl.cdn.carto.com/u/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
+                    subdomains: HTTPS_SUBDOMAINS
+                });
             });
         });
 
