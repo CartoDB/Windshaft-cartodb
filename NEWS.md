@@ -1,7 +1,10 @@
 # Changelog
 
-## 4.7.1
+## 4.8.0
 Released 2018-mm-dd
+
+New features:
+ - Return url template in metadata #838.
 
 
 ## 4.7.0
