@@ -1,7 +1,7 @@
 # Changelog
 
 ## 4.8.0
-Released 2018-mm-dd
+Released 2018-01-04
 
 New features:
  - Return url template in metadata #838.
