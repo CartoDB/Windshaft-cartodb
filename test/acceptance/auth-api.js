@@ -79,7 +79,7 @@ describe('Auth API', function () {
 
         this.testClient = new TestClient(mapconfig, 'master_master_master_master_master_master');
 
-        this.testClient.getLayergroup(OK_RESPONSE, (err, result) => {
+        this.testClient.getLayergroup(OK_RESPONSE, (err /*, result */) => {
             assert.ifError(err);
 
 console.log(result);
