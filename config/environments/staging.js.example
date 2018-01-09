@@ -55,7 +55,7 @@ var config = {
     ,socket_timeout: 600000
     ,enable_cors: true
     ,cache_enabled: true
-    ,log_format: ':req[X-Real-IP] :method :req[Host]:url :status :response-time ms (:res[X-Tiler-Profiler]) -> :res[Content-Type]'
+    ,log_format: ':req[X-Real-IP] :method :req[Host]:url :status :response-time ms (:res[X-Tiler-Profiler]) -> :res[Content-Type] (:res[X-Tiler-Errors])'
     // If log_filename is given logs will be written
     // there, in append mode. Otherwise stdout is used (default).
     // Log file will be re-opened on receiving the HUP signal

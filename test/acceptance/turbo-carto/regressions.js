@@ -79,7 +79,7 @@ describe('turbo-carto regressions', function() {
         ].join('\n');
 
         this.testClient = new TestClient(makeMapconfig('SELECT * FROM test_table_private_1', cartocss));
-        this.testClient.getLayergroup(TestClient.RESPONSE.ERROR, function(err, layergroup) {
+        this.testClient.getLayergroup({ response: TestClient.RESPONSE.ERROR }, function(err, layergroup) {
             assert.ok(!err, err);
 
             assert.ok(!layergroup.hasOwnProperty('layergroupid'));

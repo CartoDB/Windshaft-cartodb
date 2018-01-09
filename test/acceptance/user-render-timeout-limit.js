@@ -92,7 +92,7 @@ describe('user render timeout limit', function () {
                 }
             };
 
-            this.testClient.getLayergroup(expectedResponse, (err, timeoutError) => {
+            this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                 assert.ifError(err);
 
                 assert.deepEqual(timeoutError, {
@@ -245,7 +245,7 @@ describe('user render timeout limit', function () {
                     assert.equal(tileJSON.length, 2);
                     assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
                     assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
-                    
+
                     done();
                 });
             });
@@ -399,4 +399,3 @@ describe('user render timeout limit', function () {
         });
     });
 });
-

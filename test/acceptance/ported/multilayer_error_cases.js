@@ -151,7 +151,7 @@ describe('multilayer error cases', function() {
       };
       ServerOptions.afterLayergroupCreateCalls = 0;
       this.client = new TestClient(layergroup);
-      this.client.getLayergroup({status: 400}, function(err, parsed) {
+      this.client.getLayergroup({ response: { status: 400 } }, function(err, parsed) {
         assert.ok(!err, err);
         // See http://github.com/CartoDB/Windshaft/issues/159
         assert.equal(ServerOptions.afterLayergroupCreateCalls, 0);

@@ -37,7 +37,7 @@ assert.imageBuffersAreSimilar = function(bufferA, bufferB, tolerance, callback) 
     imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };
 
-assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback) {
+assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback, format='png') {
     callback = callback || function(err) { assert.ifError(err); };
 
     var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
@@ -46,19 +46,23 @@ assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath
 
     imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
         if (err) {
-            var testImageFilePath = randomImagePath();
-            testImage.save(testImageFilePath);
+            var testImageFilePath = randomImagePath(format);
+            testImage.save(testImageFilePath, format);
         }
         callback(err);
-    });
+    }, format);
 };
 
-function imagesAreSimilar(testImage, referenceImage, tolerance, callback) {
+function imagesAreSimilar(testImage, referenceImage, tolerance, callback, format='png') {
     if (testImage.width() !== referenceImage.width() || testImage.height() !== referenceImage.height()) {
         return callback(new Error('Images are not the same size'));
     }
 
-    var pixelsDifference = referenceImage.compare(testImage);
+    var options = {};
+    if (format === 'jpeg') {
+        options.alpha = false;
+    }
+    var pixelsDifference = referenceImage.compare(testImage, options);
     var similarity = pixelsDifference / (referenceImage.width() * referenceImage.height());
     var tolerancePerMil = (tolerance / 1000);
 
@@ -73,8 +77,8 @@ function imagesAreSimilar(testImage, referenceImage, tolerance, callback) {
     }
 }
 
-function randomImagePath() {
-    return path.resolve('test/results/png/image-test-' + Date.now() + '.png');
+function randomImagePath(format='png') {
+    return path.resolve('test/results/' + format + '/image-test-' + Date.now() + '.' + format);
 }
 
 assert.response = function(server, req, res, callback) {

@@ -1,6 +1,7 @@
 # Anonymous Maps
 
-Anonymous Maps allows you to instantiate a map given SQL and CartoCSS. It also allows you to add interaction capabilities using [UTF Grid.](https://github.com/mapbox/utfgrid-spec)
+Anonymous Maps allows you to instantiate a map given SQL and CartoCSS. It also allows you to add interaction capabilities using [UTF Grid.](https://github.com/mapbox/utfgrid-spec).
+Alternatively, you can get the data for the map (geometry and attributes for each layer) using vector tiles (in which case CartoCSS is not required).
 
 
 ## Instantiate
@@ -72,19 +73,19 @@ curl 'https://{username}.carto.com/api/v1/map' -H 'Content-Type: application/jso
 
 ## Map Tile Rendering
 
-Map tiles create the graphical representation of your map in a web browser. The performance rendering of map tiles is dependent on the type of geospatial data model (raster or vector) that you are using.
+Map tiles are used to create the graphic representation of your map in a web browser. Tiles can be requested either as pre-rendered *raster* tiles (images) or as *vector* map data to be rendered by the client (browser).
 
-- **Raster**: Generates map tiles based on a grid of pixels to represent your data. Each cell is a fixed size and contains values for particular map features. On the server-side, each request queries a dataset to retrieve data for each map tile. The grid size of map tiles can often lead to graphic quality issues.
+- **Raster**: If a tile is requested as a raster image format, like PNG, the map will be rendered on the server, using the CartoCSS styles defined in the layers of the map. It is necessary that all the layers of a map define CartoCSS styles in order to obtain raster tiles. Raster tiles are made up of 256x256 pixels; to avoid graphic quality issues tiles should be used unscaled to represent the zoom level (Z) for which they are requested. In order to render tiles, data will be retrieved from the database (in vector format) on the server-side.
 
-- **Vector**: Generates map tiles based on pre-defined coordinates to represent your data, similar to how basemap image tiles are rendered. On the client-side, map tiles represent real-world geometries of a map. Depending on the coordinates, vertices are used to connect the data and display points, lines, or polygons for the map tiles.
+- **Vector**: Tiles can also be requested as MVT (Mapbox Vector Tiles). In this case, only the geospatial vector data, without any styling, is returned. These tiles should be processed in the client-side to render the map.  In this case layers do not need to define CartoCSS, as any rendering and styling will be performed on the client side. The vector data of a tile represents real-world geometries by defining the vertices of points, lines or polygons in a tile-specific coordinate system.
 
 ## Retrieve resources from the layergroup
 
 When you have a layergroup, there are several resources for retrieving layergoup details such as, accessing Mapnik tiles, getting individual layers, accessing defined Attributes, and blending and layer selection.
 
-### Mapnik tiles
+### Raster tiles
 
-These raster tiles retrieve just the Mapnik layers. See [individual layers](#individual-layers) for details about how to retrieve other layers.
+These raster tiles are PNG images that represent only the Mapnik layers of a map. See [individual layers](#individual-layers) for details about how to retrieve other layers.
 
 ```bash
 https://{username}.carto.com/api/v1/map/{layergroupid}/{z}/{x}/{y}.png
@@ -92,9 +93,9 @@ https://{username}.carto.com/api/v1/map/{layergroupid}/{z}/{x}/{y}.png
 
 ### Mapbox Vector Tiles (MVT)
 
-[Mapbox Vector Tiles (MVT)](https://www.mapbox.com/vector-tiles/specification/) are map tiles that store geographic vector data on the client-side. Browser performance is fast since you can pan and zoom without having to query the server.
+[Mapbox Vector Tiles (MVT)](https://www.mapbox.com/vector-tiles/specification/) are map tiles that transfer geographic vector data to the client-side. Browser performance is fast since you can pan and zoom without having to query the server.
 
-CARTO uses a Web Graphics Library (WebGL) to process MVT files. This is useful since WebGL's are compatible with most web browsers, include support for multiple client-side mapping engines, and do not require additional information from the server; which makes it more efficient for rendering map tiles. However, you can use any implementation tool for processing MVT files.
+CARTO uses Web Graphics Library (WebGL) to process MVT files on the browser. This is useful since WebGL is compatible with most web browsers, include support for multiple client-side mapping engines, and do not require additional information from the server; which makes it more efficient for rendering map tiles. However, you can use any implementation tool for processing MVT files.
 
 The following examples describe how to fetch MVT tiles with a cURL request.
 
@@ -245,7 +246,7 @@ center: [30, 0]
 map.setStyle({
     "version": 7,
     "glyphs": "...",
-    "constants": {...}, 
+    "constants": {...},
     "sources": {
       "cartodb": {
         "type": "vector",

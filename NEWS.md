@@ -1,5 +1,87 @@
 # Changelog
 
+## 4.8.1
+Released 2018-mm-dd
+
+
+## 4.8.0
+Released 2018-01-04
+
+New features:
+ - Return url template in metadata #838.
+
+
+## 4.7.0
+Released 2018-01-03
+
+New features:
+ - Return tilejson in metadata #837.
+
+Bug fixes:
+ - Allow to create vector map-config for layers that doesn't have points. Layers with lines or polygons won't be aggregated by default.
+
+
+## 4.6.0
+Released 2018-01-02
+
+Announcements:
+ - Upgrades windshaft to [4.2.0](https://github.com/CartoDB/windshaft/releases/tag/4.2.0).
+ - Validate aggregation input params.
+ - Fix column names collisions in histograms [#828](https://github.com/CartoDB/Windshaft-cartodb/pull/828).
+ - Add full-sample aggregation support for vector map-config.
+
+
+## 4.5.0
+Released 2017-12-19
+
+Announcements:
+ - Date histograms: Add second, decade, century and millenium aggregations
+ - Date histograms: Switch the auto threshold from 366 buckets to 100.
+ - Logging all errors.
+ - Add support for aggregated visualizations.
+ - Allow vector-only map-config creation.
+ - Histograms: Now they accept a `no_filters` parameter.
+
+
+## 4.4.0
+Released 2017-12-12
+
+Announcements:
+ - Upgrades camshaft to [0.60.0](https://github.com/CartoDB/camshaft/releases/tag/0.60.0).
+
+
+## 4.3.1
+Released 2017-12-12
+
+Bug fix:
+  - Fixed bug introduced in version 4.0.1 that brokes the static map generation using JPG as format #808
+
+## 4.3.0
+Released 2017-12-11
+
+Announcements:
+- Optimize Formula queries.
+- Optimize Formula queries in overviews.
+- Optimize Numeric Histogram queries.
+- Optimize Date Histogram queries.
+- Date Histograms: Now returns the same value for max/min/avg/timestamp per bin.
+- Date Histograms: Now it should return the same no matter the DB/Client time zone.
+
+## 4.2.0
+Released 2017-12-04
+
+Announcements:
+ - Allow to request MVT tiles without CartoCSS
+ - Upgrades windshaft to [4.1.0](https://github.com/CartoDB/windshaft/releases/tag/4.1.0).
+
+
+## 4.1.1
+Released 2017-11-29
+
+Announcements:
+ - Upgrades turbo-carto to [0.20.2](https://github.com/CartoDB/turbo-carto/releases/tag/0.20.2).
+
+
 ## 4.1.0
 Released 2017-mm-dd
 

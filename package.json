@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "4.0.2",
+  "version": "4.8.1",
   "description": "A map tile server for CartoDB",
   "keywords": [
     "cartodb"
@@ -19,12 +19,14 @@
     "Sandro Santilli <strk@vizzuality.com>",
     "Carlos Matallín <matallo@carto.com>",
     "Daniel Garcia Aubert <dgaubert@carto.com>",
-    "Mario de Frutos <mario.defrutos@carto.com>"
+    "Mario de Frutos <mario.defrutos@carto.com>",
+    "Ivan Malagon <ivan@carto.com>",
+    "Simon Martin <simon@carto.com>"
   ],
   "dependencies": {
     "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
-    "camshaft": "0.59.4",
+    "camshaft": "0.60.0",
     "cartodb-psql": "0.10.2",
     "cartodb-query-tables": "0.3.0",
     "cartodb-redis": "0.14.0",
@@ -44,9 +46,9 @@
     "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
-    "turbo-carto": "0.20.1",
+    "turbo-carto": "0.20.2",
     "underscore": "~1.6.0",
-    "windshaft": "4.0.1",
+    "windshaft": "4.2.0",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
@@ -66,7 +68,7 @@
     "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn",
     "docker-install": "sudo apt install docker.io && sudo usermod -aG docker $(whoami)",
     "docker-pull": "docker pull cartoimages/windshaft-testing",
-    "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh",
+    "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
     "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/windshaft-testing bash",
     "docker-publish": "docker push cartoimages/windshaft-carto-testing"
   },

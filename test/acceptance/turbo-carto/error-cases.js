@@ -51,7 +51,7 @@ describe('turbo-carto error cases', function() {
 
     it('should return invalid number of ramp error', function(done) {
         this.testClient = new TestClient(makeMapconfig('ramp([pop_max], 8, 96, 3, (8,24,96,128))'));
-        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroup) {
+        this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroup) {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
@@ -65,7 +65,7 @@ describe('turbo-carto error cases', function() {
 
     it('should return invalid column from datasource', function(done) {
         this.testClient = new TestClient(makeMapconfig(null, 'ramp([wadus_column], (red, green, blue))'));
-        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroup) {
+        this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroup) {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
@@ -80,7 +80,7 @@ describe('turbo-carto error cases', function() {
 
     it('should return invalid method from datasource', function(done) {
         this.testClient = new TestClient(makeMapconfig(null, 'ramp([wadus_column], (red, green, blue), wadusmethod)'));
-        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroup) {
+        this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroup) {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
@@ -95,7 +95,7 @@ describe('turbo-carto error cases', function() {
 
     it('should fail by falling back to normal carto parser', function(done) {
         this.testClient = new TestClient(makeMapconfig('ramp([price], (8,24,96), (8,24,96));//(red, green, blue))'));
-        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroup) {
+        this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroup) {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
@@ -109,7 +109,7 @@ describe('turbo-carto error cases', function() {
 
     it('turbo-carto: should return error invalid column from datasource with some context', function(done) {
         this.testClient = new TestClient(makeMapconfig(null, 'ramp([wadus_column], (red, green, blue))'));
-        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroup) {
+        this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroup) {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
@@ -164,7 +164,7 @@ describe('turbo-carto error cases', function() {
         };
 
         this.testClient = new TestClient(multipleErrorsMapConfig);
-        this.testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroup) {
+        this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroup) {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));

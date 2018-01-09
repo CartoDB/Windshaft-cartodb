@@ -28,7 +28,7 @@ describe('regressions', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup(ERROR_RESPONSE, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);

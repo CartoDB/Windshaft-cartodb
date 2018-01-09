@@ -174,7 +174,9 @@ describe('analysis-layers', function() {
             }
         };
 
-        testClient.getLayergroup(PERMISSION_DENIED_RESPONSE, function(err, layergroupResult) {
+
+
+        testClient.getLayergroup({ response: PERMISSION_DENIED_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
             assert.deepEqual(
                 layergroupResult.errors,

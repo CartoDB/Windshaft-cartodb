@@ -11,7 +11,7 @@ describe('tile stats', function() {
     });
 
     afterEach(function() {
-        global.statsClient  = this.statsClient;
+        global.statsClient = this.statsClient;
     });
 
     it('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
@@ -84,7 +84,7 @@ describe('tile stats', function() {
     });
 
     function mockStatsClientGetInstance(instance) {
-        global.statsClient = instance;
+        global.statsClient = Object.assign(global.statsClient, instance);
     }
 
 });

@@ -19,7 +19,8 @@ describe('named maps static view', function() {
     var username = 'localhost';
     var templateName = 'template_with_view';
 
-    var IMAGE_TOLERANCE = 20;
+    var PNG_IMAGE_TOLERANCE = 20;
+    var JPG_IMAGE_TOLERANCE = 100;
 
     function createTemplate(view, layers) {
         return {
@@ -92,8 +93,8 @@ describe('named maps static view', function() {
         });
     }
 
-    function previewFixture(version) {
-        return './test/fixtures/previews/populated_places_simple_reduced-' + version + '.png';
+    function previewFixture(version, format='png') {
+        return './test/fixtures/previews/populated_places_simple_reduced-' + version + '.' + format;
     }
 
     it('should return an image estimating its bounds based on dataset', function (done) {
@@ -103,7 +104,7 @@ describe('named maps static view', function() {
             }
             getStaticMap(function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('estimated'), IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('estimated'), PNG_IMAGE_TOLERANCE, done);
             });
         });
     });
@@ -122,7 +123,7 @@ describe('named maps static view', function() {
             }
             getStaticMap(function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('zoom-center'), IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('zoom-center'), PNG_IMAGE_TOLERANCE, done);
             });
         });
     });
@@ -142,7 +143,7 @@ describe('named maps static view', function() {
             }
             getStaticMap(function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('bounds'), IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('bounds'), PNG_IMAGE_TOLERANCE, done);
             });
         });
     });
@@ -167,7 +168,7 @@ describe('named maps static view', function() {
             }
             getStaticMap(function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('zoom-center'), IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('zoom-center'), PNG_IMAGE_TOLERANCE, done);
             });
         });
     });
@@ -192,7 +193,7 @@ describe('named maps static view', function() {
             }
             getStaticMap({ zoom: 3 }, function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('override-zoom'), IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('override-zoom'), PNG_IMAGE_TOLERANCE, done);
             });
         });
     });
@@ -217,7 +218,7 @@ describe('named maps static view', function() {
             }
             getStaticMap({ bbox: '0,45,90,45' }, function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('override-bbox'), IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('override-bbox'), PNG_IMAGE_TOLERANCE, done);
             });
         });
     });
@@ -256,7 +257,27 @@ describe('named maps static view', function() {
             }
             getStaticMap({ layer: 0 }, function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('bounds'), IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('bounds'), PNG_IMAGE_TOLERANCE, done);
+            });
+        });
+    });
+
+    it('should return jpg static map', function (done) {
+        var view = {
+            zoom: 4,
+            center: {
+                lng: 40,
+                lat: 20
+            }
+        };
+        templateMaps.addTemplate(username, createTemplate(view), function (err) {
+            if (err) {
+                return done(err);
+            }
+            getStaticMap({ format: 'jpeg' }, function(err, img) {
+                assert.ok(!err);
+                assert.imageIsSimilarToFile(img, previewFixture('zoom-center', 'jpeg'),
+                                            JPG_IMAGE_TOLERANCE, done, 'jpeg');
             });
         });
     });
