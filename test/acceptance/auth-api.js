@@ -82,8 +82,6 @@ describe('Auth API', function () {
         this.testClient.getLayergroup(OK_RESPONSE, (err /*, result */) => {
             assert.ifError(err);
 
-console.log(result);
-
             this.testClient.drain(done);
         });
     });
