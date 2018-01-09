@@ -118,6 +118,9 @@ if test x"$PREPARE_REDIS" = xyes; then
 HMSET rails:users:localhost id ${TESTUSERID} \
                             database_name "${TEST_DB}" \
                             database_host localhost \
+                            database_port 5432 \
+                            database_master_role "${TESTUSER}" \
+                            database_master_password "${TESTPASS}" \
                             map_key 1234
 SADD rails:users:localhost:map_key 1235
 EOF
@@ -135,6 +138,37 @@ EOF
 HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
 EOF
+
+# API Key Default public
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:default_public \
+    user "localhost" \
+    type "default" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
+# API Key Master
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:master_master_master_master_master_master \
+    user "localhost" \
+    type "master" \
+    database_role "${TESTUSER}" \
+    database_password "${TESTPASS}"
+EOF
+
+# API Key Regular
+# cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+#   HMSET api_keys:localhost:9999999999999999999999999999999999999999 \
+#     user "localhost" \
+#     type "regular" \
+#     grants_sql "true" \
+#     grants_maps "true" \
+#     database_role "test_windshaft_publicuser" \
+#     database_password "public"
+# EOF
 
 fi
 

@@ -1633,7 +1633,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-pg@cartodb/node-postgres#6.1.6-cdb1:
+"pg@github:cartodb/node-postgres#6.1.6-cdb1":
   version "6.1.6"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3eef52dd1e655f658a4ee8ac5697688b3ecfed44"
   dependencies:
