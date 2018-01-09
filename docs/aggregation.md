@@ -105,28 +105,13 @@ Determines the kind of aggregated geometry generated:
 This is the default placement. It will place the aggregated point at a random sample of the grouped points,
 like the default aggregation does. No other attribute is sampled, though, the point will contain the aggregated attributes determined by the `columns` parameter.
 
-Example: here the red dots are the original data points; the greenish bigger dots are the aggregated points and the blue lines show the aggregation grid.
-
-![point-sample](https://user-images.githubusercontent.com/5909/34304018-38dfe972-e738-11e7-80e3-de5016e76f24.png)
-
-See the `vector-agg-mapbox-gl.html` example to [check how point-sample works using vector tiles in Mapbox GL](https://bl.ocks.org/rochoa/raw/20df8dcab7325d41249d0f9269250970/vector-agg-mapbox-gl.html).
-
 #### `point-grid`
 
 Generates points at the center of the aggregation grid cells (squares).
 
-![grid-point](https://user-images.githubusercontent.com/5909/34304044-52a019fe-e738-11e7-869d-0ba1cb17ff54.png)
-
-See the `vector-agg-open-layers.html` example to [check how point-grid works using vector tiles in OpenLayers](https://bl.ocks.org/rochoa/raw/20df8dcab7325d41249d0f9269250970/vector-agg-open-layers.html).
-
 #### `centroid`
 
 Generates points with the averaged coordinated of the grouped points (i.e. the points inside each grid cell).
-
-![centroid](https://user-images.githubusercontent.com/5909/34304047-553324e0-e738-11e7-924c-c3778c2d72a7.png)
-
-See the `raster-agg-leaflet.html` example to [check how centroid works using raster tiles in Leaflet](https://bl.ocks.org/rochoa/raw/20df8dcab7325d41249d0f9269250970/raster-agg-leaflet.html).
-
 
 ### `columns`
 
