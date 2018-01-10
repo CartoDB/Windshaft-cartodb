@@ -21,6 +21,17 @@ global.environment  = require(__dirname + '/../../config/environments/test');
 global.environment.name = 'test';
 process.env.NODE_ENV = 'test';
 
+// See https://github.com/CartoDB/support/issues/984
+// CartoCSS properties text-wrap-width/text-wrap-character not working
+function setICUEnvVariable() {
+    const glob = require('glob');
+    const path = require('path');
+    let directory = glob.sync(path.join(__dirname, '../..', '/node_modules/mapnik/lib/binding/*/share/mapnik/icu/'));
+    if (directory && directory.length > 0) {
+        process.env.ICU_DATA = directory[0];
+    }
+}
+setICUEnvVariable();
 
 // don't output logs in test environment to reduce noise
 log4js.configure({ appenders: [] });
