@@ -20,8 +20,8 @@ if (!semver.satisfies(nodejsVersion, '>=6.9.0')) {
 // CartoCSS properties text-wrap-width/text-wrap-character not working
 // This function should be called as soon as possible.
 function setICUEnvVariable() {
-    if (process.env['ICU_DATA'] === undefined) {
-        process.env['ICU_DATA'] = __dirname + '/node_modules/mapnik/lib/binding/node-v48-linux-x64/share/mapnik/icu';
+    if (process.env.ICU_DATA === undefined) {
+        process.env.ICU_DATA = __dirname + '/node_modules/mapnik/lib/binding/node-v48-linux-x64/share/mapnik/icu';
     }
 }
 setICUEnvVariable();
