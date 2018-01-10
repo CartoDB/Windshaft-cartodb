@@ -18,10 +18,43 @@ if (!semver.satisfies(nodejsVersion, '>=6.9.0')) {
 
 // See https://github.com/CartoDB/support/issues/984
 // CartoCSS properties text-wrap-width/text-wrap-character not working
-// This function should be called as soon as possible.
+// This function should be called before the require('yargs').
 function setICUEnvVariable() {
     if (process.env.ICU_DATA === undefined) {
-        process.env.ICU_DATA = __dirname + '/node_modules/mapnik/lib/binding/node-v48-linux-x64/share/mapnik/icu';
+        // There are 3 ways to set the env variable. Option 1 doesn't work. Option 2 is the best alternative.
+
+        // 1
+        // The best approach to generate the path where the ICU DATA is stored is by calling binary.find()
+        // Sadly, it fails. It generates the correct path, but mapnik raises "could not create BreakIterator: U_MISSING_RESOURCE_ERROR"
+        const binary = require('node-pre-gyp');
+        let binding_path = binary.find(path.resolve(path.join(__dirname, 'node_modules/mapnik/package.json')));
+        binding_path = path.dirname(binding_path);
+        // If we hardcode de path, it works. the call to binary.find seems to be the problem here.
+        // var binding_path = __dirname + '/node_modules/mapnik/lib/binding/node-v48-linux-x64/';
+        process.env.ICU_DATA1 = path.join(binding_path, 'share/mapnik/icu/');
+        console.log('process.env.ICU_DATA1: ', process.env.ICU_DATA1);
+
+        // 2
+        // Alternative to 1 using glob module.
+        const glob = require('glob');
+        let directory = glob.sync(__dirname + '/node_modules/mapnik/lib/binding/*/share/mapnik/icu/');
+
+        if (directory && directory.length > 0) {
+            process.env.ICU_DATA2 = directory[0];
+        }
+        console.log('process.env.ICU_DATA2: ', process.env.ICU_DATA2);
+        
+        // 3
+        // hardcoded. not multiplatform (just works in some linuxes)
+        process.env.ICU_DATA3 = __dirname + '/node_modules/mapnik/lib/binding/node-v48-linux-x64/share/mapnik/icu/';
+        console.log('process.env.ICU_DATA3: ', process.env.ICU_DATA3);
+        
+        
+        console.log(process.env.ICU_DATA1 === process.env.ICU_DATA2);
+        console.log(process.env.ICU_DATA2 === process.env.ICU_DATA3);
+
+        process.env.ICU_DATA = process.env.ICU_DATA3;
+        console.log(process.env.ICU_DATA)
     }
 }
 setICUEnvVariable();
