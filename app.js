@@ -4,6 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('underscore');
 var semver = require('semver');
+const glob = require('glob');
 
 // jshint undef:false
 var log = console.log.bind(console);
@@ -21,7 +22,6 @@ if (!semver.satisfies(nodejsVersion, '>=6.9.0')) {
 // This function should be called before the require('yargs').
 function setICUEnvVariable() {
     if (process.env.ICU_DATA === undefined) {
-        const glob = require('glob');
         let directory = glob.sync(__dirname + '/node_modules/mapnik/lib/binding/*/share/mapnik/icu/');
 
         if (directory && directory.length > 0) {
