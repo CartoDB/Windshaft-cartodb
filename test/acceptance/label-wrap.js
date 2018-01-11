@@ -2,7 +2,7 @@ require('../support/test_helper');
 var TestClient = require('../support/test-client');
 
 var assert = require('../support/assert');
-var IMAGE_TOLERANCE = 20;
+var IMAGE_TOLERANCE = 5;
 
 describe('CartoCSS wrap', function () {
     const options = {
@@ -62,7 +62,6 @@ describe('CartoCSS wrap', function () {
     it.only("Label should be text-wrapped", function (done) {
         this.testClient = new TestClient(mapConfig);
         this.testClient.getTile(1, 0, 1, { layers: [0] }, (err, res, body) => {
-            if (err) console.log(err)
             var textWrapPath = './test/fixtures/text_wrap.png';
             assert.imageIsSimilarToFile(body, textWrapPath, IMAGE_TOLERANCE, done);
         });
