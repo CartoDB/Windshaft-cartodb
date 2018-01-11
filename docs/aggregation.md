@@ -14,7 +14,7 @@ This special mode performs only spatial aggregation (using a grid defined by the
 
 Regarding the randomness of the sample: currently we use the row with the minimum `cartodb_id` value in each group.
 
-The rationale behind having this special aggregation with all the original columns is to provide a mostly transparent way to handle large datasets without having to provide special map configurations for those cases (i.e. preserving the logic used to produce the maps with smaller datasets). Overviews have been used so far with this intent, but they are inflexible.
+The rationale behind having this special aggregation with all the original columns is to provide a mostly transparent way to handle large datasets without having to provide special map configurations for those cases (i.e. preserving the logic used to produce the maps with smaller datasets). [Overviews have been used so far with this intent](https://carto.com/docs/tips-and-tricks/back-end-data-performance/), but they are inflexible.
 
 ### User defined aggregations
 
