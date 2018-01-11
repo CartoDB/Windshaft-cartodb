@@ -166,7 +166,7 @@ This is the minimum number of (estimated) rows in the dataset (query results) fo
                 "cartocss": "#table { marker-width: [total]; marker-fill: ramp(value, (red, green, blue), jenks); }",
                 "cartocss_version": "2.3.0",
                 "aggregation": {
-                    "placement": "centroid",s
+                    "placement": "centroid",
                     "columns": {
                         "value": {
                             "aggregate_function": "avg",
@@ -177,7 +177,7 @@ This is the minimum number of (estimated) rows in the dataset (query results) fo
                             "aggregated_column": "value"
                         }
                     },
-                    "resolution": 2, // Aggregation cell is 2x2 pixels
+                    "resolution": 2,
                     "threshold": 500000
                 }
             }
