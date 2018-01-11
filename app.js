@@ -4,7 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('underscore');
 var semver = require('semver');
-const glob = require('glob');
+const setICUEnvVariable = require('./lib/cartodb/utils/icu_data_env_setter');
 
 // jshint undef:false
 var log = console.log.bind(console);
@@ -17,18 +17,7 @@ if (!semver.satisfies(nodejsVersion, '>=6.9.0')) {
     process.exit(1);
 }
 
-// See https://github.com/CartoDB/support/issues/984
-// CartoCSS properties text-wrap-width/text-wrap-character not working
 // This function should be called before the require('yargs').
-function setICUEnvVariable() {
-    if (process.env.ICU_DATA === undefined) {
-        let directory = glob.sync(__dirname + '/node_modules/mapnik/lib/binding/*/share/mapnik/icu/');
-
-        if (directory && directory.length > 0) {
-            process.env.ICU_DATA = directory[0];
-        }
-    }
-}
 setICUEnvVariable();
 
 var argv = require('yargs')
