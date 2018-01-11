@@ -16,7 +16,7 @@ describe('CartoCSS wrap', function () {
         cartocss: `
             #continent_points::labels {
                 text-name: [continent];
-                text-face-name: 'Open Sans Italic';
+                text-face-name: 'DejaVu Sans Book';
                 text-size: 10;
                 text-fill: lighten(#000,40);
                 text-transform: uppercase;
