@@ -15,12 +15,14 @@ var redis = require('redis');
 var nock = require('nock');
 var log4js = require('log4js');
 var pg = require('pg');
+const setICUEnvVariable = require('../../lib/cartodb/utils/icu_data_env_setter');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
 global.environment.name = 'test';
 process.env.NODE_ENV = 'test';
 
+setICUEnvVariable();
 
 // don't output logs in test environment to reduce noise
 log4js.configure({ appenders: [] });

@@ -4,6 +4,7 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('underscore');
 var semver = require('semver');
+const setICUEnvVariable = require('./lib/cartodb/utils/icu_data_env_setter');
 
 // jshint undef:false
 var log = console.log.bind(console);
@@ -15,6 +16,9 @@ if (!semver.satisfies(nodejsVersion, '>=6.9.0')) {
     logError(`Node version ${nodejsVersion} is not supported, please use Node.js 6.9 or higher.`);
     process.exit(1);
 }
+
+// This function should be called before the require('yargs').
+setICUEnvVariable();
 
 var argv = require('yargs')
     .usage('Usage: $0 <environment> [options]')
