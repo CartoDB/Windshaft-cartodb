@@ -59,7 +59,7 @@ describe('CartoCSS wrap', function () {
         }
     });
 
-    it.only("Label should be text-wrapped", function (done) {
+    it("Label should be text-wrapped", function (done) {
         this.testClient = new TestClient(mapConfig);
         this.testClient.getTile(1, 0, 1, { layers: [0] }, (err, res, body) => {
             var textWrapPath = './test/fixtures/text_wrap.png';
