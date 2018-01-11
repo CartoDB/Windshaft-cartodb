@@ -1,6 +1,6 @@
 # Tile Aggregation
 
-To be able to represent a large amount of data (say, hundred of thousands to millions of points) in a til. This can be useful both for raster tiles (where the aggregation reduces the number of features to be rendered) and vector tiles (the tile contais less features).
+To be able to represent a large amount of data (say, hundred of thousands to millions of points) in a tile. This can be useful both for raster tiles (where the aggregation reduces the number of features to be rendered) and vector tiles (the tile contais less features).
 
 Aggregation is available only for point geometries. During aggregation the points are grouped using a grid; all the points laying in the same cell of the grid are summarized in a single aggregated result point.
  - The position of the aggregated point is controlled by the `placement` parameter.
