@@ -42,6 +42,13 @@ updated_at | The ISO date of the last time the data involved in the query was up
 metadata | Includes information about the layers.
 cdn_url | URLs to fetch the data using the best CDN for your zone.
 
+**Improved response metadata**
+
+Originally, you needed to concantenate the `layergroupid` with the correct domain and the path for the tiles.
+Now, for convenience, the layergroup includes the final URLs in two formats:
+1. Leaflet's urlTemplate alike: useful when working with raster tiles or with libraries with an API similar to Leaflet's one.
+1. [TileJSON spec](https://github.com/mapbox/tilejson-spec): useful when working with Mapbox GL or any other library that supports TileJSON.
+
 ### Example
 
 #### Call
@@ -62,11 +69,30 @@ curl 'https://{username}.carto.com/api/v1/map' -H 'Content-Type: application/jso
         "type": "mapnik",
         "meta": {}
       }
-    ]
+    ],
+    "tilejson": {
+        "raster": {
+            "tilejson": "2.2.0",
+            "tiles": [
+                "http://a.cdb.com/c01a54877c62831bb51720263f91fb33/{z}/{x}/{y}.png",
+                "http://b.cdb.com/c01a54877c62831bb51720263f91fb33/{z}/{x}/{y}.png"
+            ]
+        }
+    },
+    "url": {
+        "raster": {
+            "urlTemplate": "http://{s}.cdb.com/c01a54877c62831bb51720263f91fb33/{z}/{x}/{y}.png",
+            "subdomains": ["a", "b"]
+        }
+    }
   },
   "cdn_url": {
     "http": "http://cdb.com",
-    "https": "https://cdb.com"
+    "https": "https://cdb.com",
+    "templates": {
+         "http": { "subdomains": ["a","b"], "url": "http://{s}.cdb.com" },
+         "https": { "subdomains": ["a","b"], "url": "https://{s}.example.com" },
+    }
   }
 }
 ```
