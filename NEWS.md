@@ -1,7 +1,15 @@
 # Changelog
 
-## 4.8.1
+## 4.9.0
 Released 2018-mm-dd
+
+New features:
+ - Now mapnik has support for fine-grained metrics.
+ - Variables can be passed for later substitution in postgis datasource.
+
+Announcements:
+ - Upgrade windshaft to [4.3.0](https://github.com/CartoDB/windshaft/releases/tag/4.3.0). Underneath it upgrades mapnik and all the related dependencies.
+ - Use the script docker-test.sh for travis builds.
 
 
 ## 4.8.0
