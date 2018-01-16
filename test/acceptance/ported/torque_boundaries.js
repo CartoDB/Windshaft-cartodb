@@ -257,6 +257,14 @@ describe('torque boundary points', function() {
                     assert.equal(res.statusCode, 200, res.body);
                     assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
                     var parsed = JSON.parse(res.body);
+                    /* Order the JSON first by descending x__uint8 and ascending
+                     * y__uint8 */
+                    parsed.sort(function(a,b) {
+                        if (a.x__uint8 === b.x__uint8) {
+                            return (a.y__uint8 > b.y__uint8);
+                        }
+                        return (a.x__uint8 < b.x__uint8);
+                    });
 
                     var i = 0;
                     tileRequest.expects.forEach(function(expected) {
@@ -424,7 +432,7 @@ describe('torque boundary points', function() {
 
                 var parsed = JSON.parse(res.body);
 
-                assert.deepEqual(parsed, [
+                assert.deepEqual(parsed.sort(function(a,b){return a.x__uint8 > b.x__uint8;}), [
                     {
                         x__uint8: 47,
                         y__uint8: 127,
@@ -438,7 +446,6 @@ describe('torque boundary points', function() {
                         dates__uint16: [0]
                     }
                 ]);
-
                 done();
             });
         });

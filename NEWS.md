@@ -10,6 +10,8 @@ Released 2018-01-04
 New features:
  - Return url template in metadata #838.
 
+Bux fixes:
+ - Tests: Order torque objects before comparison
 
 ## 4.7.0
 Released 2018-01-03
@@ -29,7 +31,6 @@ Announcements:
  - Validate aggregation input params.
  - Fix column names collisions in histograms [#828](https://github.com/CartoDB/Windshaft-cartodb/pull/828).
  - Add full-sample aggregation support for vector map-config.
-
 
 ## 4.5.0
 Released 2017-12-19
