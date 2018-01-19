@@ -1829,7 +1829,7 @@ redis-commands@^1.2.0:
 
 redis-mpool@cartodb/node-redis-mpool#redis4, redis-mpool@~0.4.1:
   version "0.4.2"
-  resolved "https://codeload.github.com/cartodb/node-redis-mpool/tar.gz/a375b741a6001d2e9d875a50d6002f56a3be96a0"
+  resolved "https://codeload.github.com/cartodb/node-redis-mpool/tar.gz/d1b00a9c0525e8c2bdb260693b7fcfd5a63b7c89"
   dependencies:
     generic-pool "~2.1.1"
     hiredis "~0.5.0"
