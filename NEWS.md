@@ -1,8 +1,10 @@
 # Changelog
 
 ## 5.0.1
-Released 2018-mm-dd
+Released 2018-01-20
 
+Bug Fixes:
+- Allow aggregation for queries with no the_geom (only the_geom_webmercator) #856
 
 ## 5.0.0
 Released 2018-01-29
