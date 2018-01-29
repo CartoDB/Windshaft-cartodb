@@ -1366,6 +1366,41 @@ describe('aggregation', function () {
                     });
                 });
             });
+
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`cartodb_id should be present in ${placement} aggregation`, function(done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    placement: placement,
+                                    threshold: 1
+                                },
+                                cartocss: '#layer { marker-width: 1; }',
+                                cartocss_version: '2.3.0',
+                                interactivity: ['cartodb_id']
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    this.testClient.getLayergroup((err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        assert.equal(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
+
+                        body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                        body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+
+                        done();
+                    });
+                });
+            });
         });
     });
 });
