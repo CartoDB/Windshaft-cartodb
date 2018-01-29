@@ -92,6 +92,14 @@ describe('aggregation', function () {
         }
     `;
 
+    const POINTS_SQL_ONLY_WEBMERCATOR = `
+    select
+        x + 4 as cartodb_id,
+        st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
+        x as value
+    from generate_series(-3, 3) x
+    `;
+
     function createVectorMapConfig (layers = [
         {
             type: 'cartodb',
@@ -1399,6 +1407,35 @@ describe('aggregation', function () {
 
                         done();
                     });
+                });
+            });
+
+            it('should only require the_geom_webmercator for aggregation', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_ONLY_WEBMERCATOR,
+                            aggregation: {
+                                threshold: 1
+                            }
+                        }
+                    }
+                ]);
+                this.testClient = new TestClient(this.mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
+
+                    done();
                 });
             });
         });
