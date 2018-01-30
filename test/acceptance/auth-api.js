@@ -3,7 +3,7 @@ require('../support/test_helper');
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 
-describe('Auth API', function () {
+describe.skip('Auth API', function () {
     const publicSQL = 'select * from test_table';
     const privateSQL = 'select * from test_table_private_1';
 

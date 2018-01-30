@@ -75,7 +75,6 @@ describe('analysis-filters-params', () => {
         }
     };
 
-
     it('should get a filtered histogram dataview with all filters', function(done) {
         const testClient = new TestClient(mapConfig, 1234);
         const testParams = Object.assign({}, params, {

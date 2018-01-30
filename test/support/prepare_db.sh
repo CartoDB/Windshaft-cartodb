@@ -119,8 +119,6 @@ HMSET rails:users:localhost id ${TESTUSERID} \
                             database_name "${TEST_DB}" \
                             database_host localhost \
                             database_port 5432 \
-                            database_master_role "${TESTUSER}" \
-                            database_master_password "${TESTPASS}" \
                             map_key 1234
 SADD rails:users:localhost:map_key 1235
 EOF
@@ -146,17 +144,19 @@ cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
     type "default" \
     grants_sql "true" \
     grants_maps "true" \
-    database_role "test_windshaft_publicuser" \
-    database_password "public"
+    db_role "test_windshaft_publicuser" \
+    db_password "public"
 EOF
 
 # API Key Master
 cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
-  HMSET api_keys:localhost:master_master_master_master_master_master \
+  HMSET api_keys:localhost:1234 \
     user "localhost" \
     type "master" \
-    database_role "${TESTUSER}" \
-    database_password "${TESTPASS}"
+    grants_sql "true" \
+    grants_maps "true" \
+    db_role "${TESTUSER}" \
+    db_password "${TESTPASS}"
 EOF
 
 # API Key Regular

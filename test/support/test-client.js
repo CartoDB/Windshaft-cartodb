@@ -414,7 +414,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             var urlParams = {};
             if (params.hasOwnProperty('no_filters')) {
                 urlParams.no_filters = params.no_filters;
-            } 
+            }
             if (params.hasOwnProperty('own_filter')) {
                 urlParams.own_filter = params.own_filter;
             }
