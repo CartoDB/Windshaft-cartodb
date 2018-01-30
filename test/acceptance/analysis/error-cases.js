@@ -21,7 +21,7 @@ describe('analysis-layers error cases', function() {
     };
 
     var AUTH_ERROR_RESPONSE = {
-        status: 403,
+        status: 401,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         }
@@ -194,18 +194,10 @@ describe('analysis-layers error cases', function() {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(
-                layergroupResult.errors[0],
-                'Analysis requires authentication with API key: permission denied.'
-            );
+            assert.equal(layergroupResult.errors[0], 'Unauthorized');
 
-            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
-            assert.equal(
-                layergroupResult.errors_with_context[0].message,
-                'Analysis requires authentication with API key: permission denied.'
-            );
-            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.equal(layergroupResult.errors_with_context[0].type, 'auth');
+            assert.equal(layergroupResult.errors_with_context[0].message,'Unauthorized');
 
             testClient.drain(done);
         });

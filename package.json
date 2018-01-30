@@ -29,12 +29,13 @@
     "camshaft": "0.60.0",
     "cartodb-psql": "0.10.2",
     "cartodb-query-tables": "0.3.0",
-    "cartodb-redis": "0.14.0",
+    "cartodb-redis": "cartodb/node-cartodb-redis#new-auth-get-api-key-changes",
     "debug": "^3.1.0",
     "dot": "~1.0.2",
     "express": "~4.16.0",
     "fastly-purge": "~1.0.1",
     "http-errors": "^1.6.2",
+    "glob": "^7.1.2",
     "log4js": "cartodb/log4js-node#cdb",
     "lru-cache": "2.6.5",
     "lzma": "~2.3.2",
@@ -69,8 +70,7 @@
     "docker-install": "sudo apt install docker.io && sudo usermod -aG docker $(whoami)",
     "docker-pull": "docker pull cartoimages/windshaft-testing",
     "docker-test": "docker run -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
-    "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/windshaft-testing bash",
-    "docker-publish": "docker push cartoimages/windshaft-carto-testing"
+    "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/windshaft-testing bash"
   },
   "engines": {
     "node": ">=6.9",

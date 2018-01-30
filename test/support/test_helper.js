@@ -16,12 +16,14 @@ var nock = require('nock');
 var log4js = require('log4js');
 var pg = require('pg');
 var _ = require('underscore');
+const setICUEnvVariable = require('../../lib/cartodb/utils/icu_data_env_setter');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
 global.environment.name = 'test';
 process.env.NODE_ENV = 'test';
 
+setICUEnvVariable();
 
 // don't output logs in test environment to reduce noise
 log4js.configure({ appenders: [] });
@@ -114,7 +116,7 @@ afterEach(function(done) {
         'rails:users:cartodb250user': true,
         'rails:users:localhost': true,
         'api_keys:localhost:default_public': true,
-        'api_keys:localhost:master_master_master_master_master_master': true
+        'api_keys:localhost:1234': true
     };
     var databasesTasks = { 0: 'users', 5: 'meta'};
 
@@ -212,7 +214,7 @@ function getTestContextDbObject() {
     const user_id = 1;
     const user = _.template(global.environment.postgres_auth_user)({ user_id });
     const password = _.template(global.environment.postgres_auth_pass)({ user_id });
-    
+
     return {
         host: dbConfig.host,
         port: dbConfig.port,

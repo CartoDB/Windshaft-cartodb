@@ -23,7 +23,7 @@ server.setMaxListeners(0);
 
 var QueryTables = require('cartodb-query-tables');
 
-['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
+['/api/v1/map' /* , '/user/localhost/api/v1/map' */].forEach(function(layergroup_url) {
 
 var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
 describe(suiteName, function() {
@@ -47,7 +47,7 @@ describe(suiteName, function() {
     var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
     var test_database = test_user + '_db';
 
-    it("layergroup with 2 layers, each with its style", function(done) {
+    it.only("layergroup with 2 layers, each with its style", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
