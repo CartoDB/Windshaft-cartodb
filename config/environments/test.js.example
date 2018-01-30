@@ -197,7 +197,12 @@ var config = {
               // which cost is no more expensive than snapping and results are
               // much closer to the original geometry
               removeRepeatedPoints: false // this requires postgis >=2.2
-          }
+          },
+
+          // If enabled Mapnik will reuse the features retrieved from the database
+          // instead of requesting them once per style inside a layer
+          'cache-features': true
+
       },
       http: {
           timeout: 2000, // the timeout in ms for a http tile request
