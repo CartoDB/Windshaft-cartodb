@@ -1,8 +1,7 @@
 # Changelog
 
-## 5.0.1
-Released 2018-mm-dd
-
+## 5.1.0
+Released 2018-01-30
 New features:
  - Now mapnik has support for fine-grained metrics.
  - Variables can be passed for later substitution in postgis datasource.
@@ -10,6 +9,11 @@ New features:
 Announcements:
  - Upgrade windshaft to [4.3.1](https://github.com/CartoDB/windshaft/releases/tag/4.3.1). Underneath it upgrades mapnik and all the related dependencies.
 
+## 5.0.1
+Released 2018-01-29
+
+Bug Fixes:
+- Allow aggregation for queries with no the_geom (only the_geom_webmercator) #856
 
 ## 5.0.0
 Released 2018-01-29
