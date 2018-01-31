@@ -867,9 +867,9 @@ graceful-fs@^4.1.2:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-grainstore@~1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.8.1.tgz#5a0f9ef35dedffb4a393d5339dffc2a8ae19a897"
+grainstore@1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.8.2.tgz#79dd7a91a098bf8b0ea3189961775c8cc7474319"
   dependencies:
     carto "0.16.3"
     debug "~3.1.0"
@@ -1794,8 +1794,8 @@ raw-body@2.3.2:
     unpipe "1.0.0"
 
 rc@^1.1.7:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.4.tgz#a0f606caae2a3b862bbd0ef85482c0125b315fa3"
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.5.tgz#275cd687f6e3b36cc756baa26dfee80a790301fd"
   dependencies:
     deep-extend "~0.4.0"
     ini "~1.3.0"
@@ -2400,9 +2400,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.3.1.tgz#fd012caaacb40de41e7a4e650d039fd9dc59af91"
+windshaft@4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.3.2.tgz#8bd0f0ec3df8e29f03414d2836daf2d5b03446a5"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.2"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb1
@@ -2412,7 +2412,7 @@ windshaft@4.3.1:
     cartodb-psql "^0.10.1"
     debug "^3.1.0"
     dot "~1.0.2"
-    grainstore "~1.8.1"
+    grainstore "1.8.2"
     queue-async "~1.0.7"
     redis-mpool "0.4.1"
     request "^2.83.0"
