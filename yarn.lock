@@ -2400,9 +2400,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.3.2.tgz#8bd0f0ec3df8e29f03414d2836daf2d5b03446a5"
+windshaft@4.3.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.3.3.tgz#a48fdd6ca05257c103f34c80195722ef52dc0813"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.2"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb1
