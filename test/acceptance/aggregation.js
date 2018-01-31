@@ -1438,6 +1438,43 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+            it('aggregation should work with attributes', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            cartocss: '#layer { marker-width: 7; }',
+                            cartocss_version: '2.3.0',
+                            aggregation: {
+                                threshold: 1
+                            },
+                            attributes: {
+                                id: 'cartodb_id',
+                                columns: [
+                                    'value'
+                                ]
+                            }
+                        }
+                    }
+                ]);
+                this.testClient = new TestClient(this.mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+
+                    done();
+                });
+            });
         });
     });
 });
