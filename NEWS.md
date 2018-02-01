@@ -1,7 +1,7 @@
 # Changelog
 
-## 5.1.1
-Released yyyy-mm-dd
+## 5.2.0
+Released 2018-02-01
 
 Announcements:
  - Upgrade windshaft to [4.3.3](https://github.com/CartoDB/windshaft/releases/tag/4.3.2) adding support for cache-features' in Mapnik/CartoDB layers.
