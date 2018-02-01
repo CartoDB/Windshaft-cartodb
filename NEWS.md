@@ -1,10 +1,10 @@
 # Changelog
 
 ## 5.2.1
-Released 2018-XX-XX
+Released 2018-02-01
 
-Announcements:
- -
+Bug Fixes:
+- Allow use of aggregation with attributes #861
 
 ## 5.2.0
 Released 2018-02-01
