@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.2.2
+Released 2018-mm-dd
+
+
 ## 5.2.1
 Released 2018-02-01
 
