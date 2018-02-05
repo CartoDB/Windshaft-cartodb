@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@carto/mapnik@3.6.2-carto.1", "@carto/mapnik@~3.6.2-carto.0":
-  version "3.6.2-carto.1"
-  resolved "https://registry.yarnpkg.com/@carto/mapnik/-/mapnik-3.6.2-carto.1.tgz#149318e9a75d0a10ed8aab528c6cd64018a5a538"
+"@carto/mapnik@3.6.2-carto.2", "@carto/mapnik@~3.6.2-carto.0":
+  version "3.6.2-carto.2"
+  resolved "https://registry.yarnpkg.com/@carto/mapnik/-/mapnik-3.6.2-carto.2.tgz#45a055fd2d39530a873ef9ce5a325baacc81c196"
   dependencies:
     mapnik-vector-tile "1.5.0"
     nan "~2.7.0"
@@ -112,8 +112,8 @@ assert-plus@^0.2.0:
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-0.2.0.tgz#d74e1b87e7affc0db8aadb7021f3fe48101ab234"
 
 assertion-error@^1.0.1:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/assertion-error/-/assertion-error-1.0.2.tgz#13ca515d86206da0bac66e834dd397d87581094c"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/assertion-error/-/assertion-error-1.1.0.tgz#e60b6b0e8f301bd97e5375215bda406c85118c0b"
 
 async@1.x, async@^1.4.0, async@^1.5.2:
   version "1.5.2"
@@ -261,14 +261,6 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@CartoDB/carto#0.15.1-cdb1:
-  version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
-  dependencies:
-    mapnik-reference "~6.0.2"
-    optimist "~0.6.0"
-    underscore "~1.6.0"
-
 carto@cartodb/carto#0.15.1-cdb3:
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
@@ -276,6 +268,14 @@ carto@cartodb/carto#0.15.1-cdb3:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "1.8.3"
+
+"carto@github:cartodb/carto#0.15.1-cdb1":
+  version "0.15.1-cdb1"
+  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  dependencies:
+    mapnik-reference "~6.0.2"
+    optimist "~0.6.0"
+    underscore "~1.6.0"
 
 cartocolor@4.0.0:
   version "4.0.0"
@@ -294,14 +294,6 @@ cartodb-psql@0.10.2, cartodb-psql@^0.10.1:
 cartodb-query-tables@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.3.0.tgz#56e18d869666eb2e8e2cb57d0baf3acc923f8756"
-
-cartodb-redis@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/cartodb-redis/-/cartodb-redis-0.14.0.tgz#6f82fdb3e5b7c8005dbaccd6172c1706c4378df2"
-  dependencies:
-    dot "~1.0.2"
-    redis-mpool "~0.4.1"
-    underscore "~1.6.0"
 
 cartodb-redis@cartodb/node-cartodb-redis#redis4:
   version "0.14.1"
@@ -505,9 +497,13 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
 
-depd@1.1.1, depd@~1.1.1:
+depd@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.1.tgz#5783b4e1c459f06fa5ca27f991f3d06e7a310359"
+
+depd@~1.1.1:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
 
 destroy@~1.0.4:
   version "1.0.4"
@@ -574,8 +570,8 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
 encodeurl@~1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.1.tgz#79e3d58655346909fe6f0f45a5de68103b294d20"
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
 
 entities@1.0:
   version "1.0.0"
@@ -859,9 +855,9 @@ graceful-fs@^4.1.2:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-grainstore@~1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.8.1.tgz#5a0f9ef35dedffb4a393d5339dffc2a8ae19a897"
+grainstore@1.8.2:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.8.2.tgz#79dd7a91a098bf8b0ea3189961775c8cc7474319"
   dependencies:
     carto "0.16.3"
     debug "~3.1.0"
@@ -1090,8 +1086,8 @@ istanbul@~0.4.3:
     wordwrap "^1.0.0"
 
 js-base64@^2.1.9:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.0.tgz#9e566fee624751a1d720c966cd6226d29d4025aa"
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.3.tgz#2e545ec2b0f2957f41356510205214e98fad6582"
 
 js-string-escape@1.0.1:
   version "1.0.1"
@@ -1249,8 +1245,8 @@ lodash@3.7.x:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.7.0.tgz#3678bd8ab995057c07ade836ed2ef087da811d45"
 
 lodash@^4.5.1:
-  version "4.17.4"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
 log4js@cartodb/log4js-node#cdb:
   version "0.6.25"
@@ -1403,17 +1399,21 @@ mv@~2:
     ncp "~2.0.0"
     rimraf "~2.4.0"
 
-nan@^2.0.8, nan@^2.3.4, nan@~2.4.0:
+nan@^2.0.8, nan@^2.3.4, nan@^2.4.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.8.0.tgz#ed715f3fe9de02b57a5e6252d90a96675e1f085a"
+
+nan@~2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.4.0.tgz#fb3c59d45fe4effe215f0b890f8adf6eb32d2232"
-
-nan@^2.4.0, nan@~2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/nan/-/nan-2.7.0.tgz#d95bf721ec877e08db276ed3fc6eb78f9083ad46"
 
 nan@~2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.6.2.tgz#e4ff34e6c95fdfb5aecc08de6596f43605a7db45"
+
+nan@~2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.7.0.tgz#d95bf721ec877e08db276ed3fc6eb78f9083ad46"
 
 ncp@~2.0.0:
   version "2.0.0"
@@ -1625,7 +1625,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-pg@cartodb/node-postgres#6.1.6-cdb1:
+"pg@github:cartodb/node-postgres#6.1.6-cdb1":
   version "6.1.6"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3eef52dd1e655f658a4ee8ac5697688b3ecfed44"
   dependencies:
@@ -1770,8 +1770,8 @@ raw-body@2.3.2:
     unpipe "1.0.0"
 
 rc@^1.1.7:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.2.tgz#d8ce9cb57e8d64d9c7badd9876c7c34cbe3c7077"
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.5.tgz#275cd687f6e3b36cc756baa26dfee80a790301fd"
   dependencies:
     deep-extend "~0.4.0"
     ini "~1.3.0"
@@ -1827,8 +1827,8 @@ redis-commands@^1.2.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/redis-commands/-/redis-commands-1.3.1.tgz#81d826f45fa9c8b2011f4cd7a0fe597d241d442b"
 
-redis-mpool@cartodb/node-redis-mpool#redis4, redis-mpool@~0.4.1:
-  version "0.4.2"
+redis-mpool@cartodb/node-redis-mpool#redis4:
+  version "0.5.0"
   resolved "https://codeload.github.com/cartodb/node-redis-mpool/tar.gz/d1b00a9c0525e8c2bdb260693b7fcfd5a63b7c89"
   dependencies:
     generic-pool "~2.1.1"
@@ -2321,8 +2321,8 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
 uuid@^3.0.0, uuid@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.1"
@@ -2368,10 +2368,10 @@ window-size@^0.2.0:
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
 windshaft@cartodb/windshaft#redis4:
-  version "4.3.1"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/7af09158e9a1a588892c98b1bce39e290fbc37ad"
+  version "4.3.4"
+  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/09594cd948f96d24af511b8f54c843c44c3d035a"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.1"
+    "@carto/mapnik" "3.6.2-carto.2"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb1
     abaculus cartodb/abaculus#2.0.3-cdb2
     canvas cartodb/node-canvas#1.6.2-cdb2
@@ -2379,7 +2379,7 @@ windshaft@cartodb/windshaft#redis4:
     cartodb-psql "^0.10.1"
     debug "^3.1.0"
     dot "~1.0.2"
-    grainstore "~1.8.1"
+    grainstore "1.8.2"
     queue-async "~1.0.7"
     redis-mpool cartodb/node-redis-mpool#redis4
     request "^2.83.0"

@@ -1,8 +1,41 @@
 # Changelog
 
-## 4.8.1
+## 5.2.2
 Released 2018-mm-dd
 
+
+## 5.2.1
+Released 2018-02-01
+
+Bug Fixes:
+- Allow use of aggregation with attributes #861
+
+## 5.2.0
+Released 2018-02-01
+
+Announcements:
+ - Upgrade windshaft to [4.3.3](https://github.com/CartoDB/windshaft/releases/tag/4.3.2) adding support for cache-features' in Mapnik/CartoDB layers.
+
+## 5.1.0
+Released 2018-01-30
+New features:
+ - Now mapnik has support for fine-grained metrics.
+ - Variables can be passed for later substitution in postgis datasource.
+
+Announcements:
+ - Upgrade windshaft to [4.3.1](https://github.com/CartoDB/windshaft/releases/tag/4.3.1). Underneath it upgrades mapnik and all the related dependencies.
+
+## 5.0.1
+Released 2018-01-29
+
+Bug Fixes:
+- Allow aggregation for queries with no the_geom (only the_geom_webmercator) #856
+
+## 5.0.0
+Released 2018-01-29
+
+Backward incompatible changes:
+- Aggregation dataview returns categories with the same type as the database type. For example, if we are aggretating by a numeric field, the resulting JSON will contain a number instead of a stringified number.
 
 ## 4.8.0
 Released 2018-01-04
