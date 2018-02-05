@@ -11,7 +11,7 @@
     node-pre-gyp "~0.6.30"
     protozero "1.5.1"
 
-"@carto/tilelive-bridge@cartodb/tilelive-bridge#2.5.1-cdb1":
+"@carto/tilelive-bridge@github:cartodb/tilelive-bridge#2.5.1-cdb1":
   version "2.5.1-cdb1"
   resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/b0b5559f948e77b337bc9a9ae0bf6ec4249fba21"
   dependencies:
@@ -23,7 +23,7 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz#70237b9774095ed1cfdbcea7a8fd1fc82b2691f2"
 
-abaculus@cartodb/abaculus#2.0.3-cdb2:
+"abaculus@github:cartodb/abaculus#2.0.3-cdb2":
   version "2.0.3-cdb2"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/6468e0e3fddb2b23f60b9a3156117cff0307f6dc"
   dependencies:
@@ -243,7 +243,7 @@ camshaft@0.60.0:
     dot "^1.0.3"
     request "^2.69.0"
 
-canvas@cartodb/node-canvas#1.6.2-cdb2:
+"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -261,21 +261,21 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@cartodb/carto#0.15.1-cdb3:
+carto@CartoDB/carto#0.15.1-cdb1:
+  version "0.15.1-cdb1"
+  resolved "https://codeload.github.com/CartoDB/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
+  dependencies:
+    mapnik-reference "~6.0.2"
+    optimist "~0.6.0"
+    underscore "~1.6.0"
+
+"carto@github:cartodb/carto#0.15.1-cdb3":
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "1.8.3"
-
-"carto@github:cartodb/carto#0.15.1-cdb1":
-  version "0.15.1-cdb1"
-  resolved "https://codeload.github.com/cartodb/carto/tar.gz/8050ec843f1f32a6469e5d1cf49602773015d398"
-  dependencies:
-    mapnik-reference "~6.0.2"
-    optimist "~0.6.0"
-    underscore "~1.6.0"
 
 cartocolor@4.0.0:
   version "4.0.0"
@@ -295,12 +295,12 @@ cartodb-query-tables@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.3.0.tgz#56e18d869666eb2e8e2cb57d0baf3acc923f8756"
 
-cartodb-redis@cartodb/node-cartodb-redis#redis4:
-  version "0.14.1"
-  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/5fb6f72794ee049f56ba9a2f861e3be4baae7d8a"
+cartodb-redis@0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/cartodb-redis/-/cartodb-redis-0.15.0.tgz#509ab9f62b8cae0838bcb8db1cb9d6355704ace3"
   dependencies:
     dot "~1.0.2"
-    redis-mpool cartodb/node-redis-mpool#redis4
+    redis-mpool "^0.5.0"
     underscore "~1.6.0"
 
 caseless@~0.12.0:
@@ -1625,7 +1625,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-"pg@github:cartodb/node-postgres#6.1.6-cdb1":
+pg@cartodb/node-postgres#6.1.6-cdb1:
   version "6.1.6"
   resolved "https://codeload.github.com/cartodb/node-postgres/tar.gz/3eef52dd1e655f658a4ee8ac5697688b3ecfed44"
   dependencies:
@@ -1827,9 +1827,9 @@ redis-commands@^1.2.0:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/redis-commands/-/redis-commands-1.3.1.tgz#81d826f45fa9c8b2011f4cd7a0fe597d241d442b"
 
-redis-mpool@cartodb/node-redis-mpool#redis4:
+redis-mpool@0.5.0, redis-mpool@^0.5.0:
   version "0.5.0"
-  resolved "https://codeload.github.com/cartodb/node-redis-mpool/tar.gz/d1b00a9c0525e8c2bdb260693b7fcfd5a63b7c89"
+  resolved "https://registry.yarnpkg.com/redis-mpool/-/redis-mpool-0.5.0.tgz#9a22dcffb4ad796ec88ce3038b991deae9d1fda7"
   dependencies:
     generic-pool "~2.1.1"
     hiredis "~0.5.0"
@@ -2206,7 +2206,7 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb4:
+"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb4":
   version "0.6.18-cdb4"
   resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/510cfb6f033f7551f973886751643202d4cb5f4a"
   dependencies:
@@ -2367,9 +2367,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@cartodb/windshaft#redis4:
-  version "4.3.4"
-  resolved "https://codeload.github.com/cartodb/windshaft/tar.gz/09594cd948f96d24af511b8f54c843c44c3d035a"
+windshaft@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.4.0.tgz#16ecfa0fbda97347a061d3928c54d327be682e49"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.2"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb1
@@ -2381,7 +2381,7 @@ windshaft@cartodb/windshaft#redis4:
     dot "~1.0.2"
     grainstore "1.8.2"
     queue-async "~1.0.7"
-    redis-mpool cartodb/node-redis-mpool#redis4
+    redis-mpool "^0.5.0"
     request "^2.83.0"
     semver "~5.0.3"
     sphericalmercator "1.0.4"
