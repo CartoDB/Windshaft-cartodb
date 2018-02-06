@@ -28,7 +28,7 @@
     "camshaft": "0.60.0",
     "cartodb-psql": "0.10.2",
     "cartodb-query-tables": "0.3.0",
-    "cartodb-redis": "0.14.0",
+    "cartodb-redis": "0.15.0",
     "debug": "^3.1.0",
     "dot": "~1.0.2",
     "express": "~4.16.0",
@@ -40,14 +40,14 @@
     "node-statsd": "~0.0.7",
     "on-headers": "^1.0.1",
     "queue-async": "~1.0.7",
-    "redis-mpool": "0.4.1",
+    "redis-mpool": "0.5.0",
     "request": "^2.83.0",
     "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.20.2",
     "underscore": "~1.6.0",
-    "windshaft": "4.3.3",
+    "windshaft": "4.4.0",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
@@ -56,7 +56,7 @@
     "mocha": "~3.4.1",
     "moment": "~2.18.1",
     "nock": "~2.11.0",
-    "redis": "~0.12.1",
+    "redis": "2.8.0",
     "strftime": "~0.8.2"
   },
   "scripts": {
