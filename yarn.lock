@@ -1335,9 +1335,9 @@ mime@~1.2.11:
   version "1.2.11"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.2.11.tgz#58203eed86e3a5ef17aed2b7d9ebd47f0a60dd10"
 
-mime@~1.3.4:
-  version "1.3.6"
-  resolved "https://registry.yarnpkg.com/mime/-/mime-1.3.6.tgz#591d84d3653a6b0b4a3b9df8de5aa8108e72e5e0"
+mime@~1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
 
 "minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.4, minimatch@~3.0.2:
   version "3.0.4"
@@ -2206,13 +2206,13 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb4":
-  version "0.6.18-cdb4"
-  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/510cfb6f033f7551f973886751643202d4cb5f4a"
+"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb5":
+  version "0.6.18-cdb5"
+  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/cec846025e60837c60af193d600d972917ea8d35"
   dependencies:
     "@carto/mapnik" "~3.6.2-carto.0"
     generic-pool "~2.4.0"
-    mime "~1.3.4"
+    mime "~1.6.0"
     sphericalmercator "~1.0.4"
     step "~0.0.5"
 
@@ -2367,9 +2367,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.4.0.tgz#16ecfa0fbda97347a061d3928c54d327be682e49"
+windshaft@4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.5.0.tgz#44f17073267d459c9a2b9f213250210b89d4d35d"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.2"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb1
@@ -2387,7 +2387,7 @@ windshaft@4.4.0:
     sphericalmercator "1.0.4"
     step "~0.0.6"
     tilelive "5.12.2"
-    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb4
+    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb5
     torque.js "~2.11.0"
     underscore "~1.6.0"
 

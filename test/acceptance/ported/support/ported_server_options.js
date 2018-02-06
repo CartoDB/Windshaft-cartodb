@@ -27,6 +27,7 @@ module.exports = _.extend({}, serverOptions, {
             snapToGrid: false,
             clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
             scale_factors: [1, 2],
+            metrics: false,
             limits: {
                 render: 0,
                 cacheOnTimeout: true
