@@ -162,7 +162,7 @@ describe('named-maps analysis', function() {
             helper.deleteRedisKeys(keysToDelete, done);
         });
 
-        it.only('should be able to retrieve images from analysis', function(done) {
+        it('should be able to retrieve images from analysis', function(done) {
             assert.response(
                 server,
                 {
