@@ -1,7 +1,10 @@
 # Changelog
 
-## 5.2.2
+## 5.3.0
 Released 2018-mm-dd
+ - Upgrades redis-mpool to 0.5.0
+ - Upgrades windshaft to 4.4.0
+ - Upgrades cartodb-redis to 0.15.0
 
 
 ## 5.2.1
