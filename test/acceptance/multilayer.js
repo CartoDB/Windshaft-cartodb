@@ -47,7 +47,7 @@ describe(suiteName, function() {
     var test_user = _.template(global.environment.postgres_auth_user, {user_id:1});
     var test_database = test_user + '_db';
 
-    it.only("layergroup with 2 layers, each with its style", function(done) {
+    it("layergroup with 2 layers, each with its style", function(done) {
 
       var layergroup =  {
         version: '1.0.0',
