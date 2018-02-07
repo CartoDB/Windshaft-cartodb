@@ -138,4 +138,26 @@ EOF
 
 fi
 
+# API Key Master
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:1234 \
+    user "localhost" \
+    type "master" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "${TESTUSER}" \
+    database_password "${TESTPASS}"
+EOF
+
+# API Key Default public
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:default_public \
+    user "localhost" \
+    type "default" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
 echo "Finished preparing data. Ready to run tests"
