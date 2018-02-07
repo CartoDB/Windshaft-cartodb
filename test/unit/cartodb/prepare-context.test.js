@@ -103,8 +103,20 @@ describe('prepare-context', function() {
     });
 
     it('sets also dbuser for authenticated requests', function(done){
-        var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }};
-        var res = { set: function () {} };
+        var req = { 
+            headers: { 
+                host: 'localhost' 
+            }, 
+            query: {
+                api_key: '1234'
+            }
+        };
+        var res = { 
+            set: function () {},
+            locals: {
+                api_key: '1234' 
+            }
+        };
 
         // FIXME: review authorize-pgconnsetup workflow, It might we are doing authorization twice.
         authorize(prepareRequest(req), prepareResponse(res), function (err) {
