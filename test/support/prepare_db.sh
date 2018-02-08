@@ -138,6 +138,10 @@ EOF
 
 fi
 
+# API keys ==============================
+
+# User localhost -----------------------
+
 # API Key Master
 cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
   HMSET api_keys:localhost:1234 \
@@ -182,6 +186,9 @@ cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
     database_password "public"
 EOF
 
+# User cartodb250user -----------------------
+
+# API Key Master
 cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
   HMSET api_keys:cartodb250user:4321 \
     user "localhost" \
@@ -192,7 +199,7 @@ cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
     database_password "${TESTPASS}"
 EOF
 
-# API Key Default public
+# API Key Default
 cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
   HMSET api_keys:cartodb250user:default_public \
     user "localhost" \
