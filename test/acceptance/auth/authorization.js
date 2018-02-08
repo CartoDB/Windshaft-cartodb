@@ -207,4 +207,48 @@ describe('authorization', function() {
             testClient.drain(done);
         });
     });
+
+    it('should create a layergroup with a buffer analysis using a regular apikey token', function (done) {
+        const apikeyToken = 'regular1';
+        const mapConfig = {
+            version: '1.7.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                        source: {
+                            id: 'HEAD1'
+                        },
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ],
+            analyses: [
+                {
+                    id: "HEAD1",
+                    type: "buffer",
+                    params: {
+                        source: {
+                            id: 'HEAD2',
+                            type: 'source',
+                            params: {
+                                query: 'select * from test_table_localhost_regular1'
+                            }
+                        },
+                        radius: 50000
+                    }
+                }
+            ]
+        };
+        const testClient = new TestClient(mapConfig, apikeyToken);
+
+        testClient.getLayergroup(function (err, layergroupResult) {
+            assert.ifError(err);
+
+            assert.ok(layergroupResult.layergroupid);
+
+            testClient.drain(done);
+        });
+    });
 });

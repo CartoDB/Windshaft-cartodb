@@ -27,6 +27,8 @@ CREATE USER :TESTUSER WITH PASSWORD ':TESTPASS';
 DROP USER IF EXISTS test_windshaft_regular1;
 CREATE USER test_windshaft_regular1 WITH PASSWORD 'regular1';
 
+GRANT test_windshaft_regular1 to :TESTUSER;
+
 -- first table
 CREATE TABLE test_table (
     updated_at timestamp without time zone DEFAULT now(),
@@ -193,6 +195,7 @@ INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('test_table_private_
 
 -- GRANT SELECT ON CDB_TableMetadata TO :PUBLICUSER;
 GRANT SELECT ON CDB_TableMetadata TO :TESTUSER;
+GRANT SELECT ON CDB_TableMetadata TO test_windshaft_regular1; -- for analysis
 
 -- long name table
 CREATE TABLE
@@ -755,6 +758,7 @@ GRANT SELECT ON TABLE analysis_rent_listings TO :PUBLICUSER;
 
 --
 GRANT SELECT, UPDATE, INSERT, DELETE ON cdb_analysis_catalog TO :TESTUSER;
+GRANT SELECT, UPDATE, INSERT, DELETE ON cdb_analysis_catalog TO test_windshaft_regular1; -- for analysis
 
 DROP EXTENSION IF EXISTS crankshaft;
 CREATE SCHEMA IF NOT EXISTS cdb_crankshaft;
