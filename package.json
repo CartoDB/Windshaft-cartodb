@@ -28,7 +28,7 @@
     "camshaft": "0.60.0",
     "cartodb-psql": "0.10.2",
     "cartodb-query-tables": "0.3.0",
-    "cartodb-redis": "0.15.0",
+    "cartodb-redis": "cartodb/node-cartodb-redis#project-auth-api",
     "debug": "^3.1.0",
     "dot": "~1.0.2",
     "express": "~4.16.0",

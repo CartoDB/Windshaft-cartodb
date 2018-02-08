@@ -11,7 +11,7 @@
     node-pre-gyp "~0.6.30"
     protozero "1.5.1"
 
-"@carto/tilelive-bridge@github:cartodb/tilelive-bridge#2.5.1-cdb1":
+"@carto/tilelive-bridge@cartodb/tilelive-bridge#2.5.1-cdb1":
   version "2.5.1-cdb1"
   resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/b0b5559f948e77b337bc9a9ae0bf6ec4249fba21"
   dependencies:
@@ -23,7 +23,7 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz#70237b9774095ed1cfdbcea7a8fd1fc82b2691f2"
 
-"abaculus@github:cartodb/abaculus#2.0.3-cdb2":
+abaculus@cartodb/abaculus#2.0.3-cdb2:
   version "2.0.3-cdb2"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/6468e0e3fddb2b23f60b9a3156117cff0307f6dc"
   dependencies:
@@ -243,7 +243,7 @@ camshaft@0.60.0:
     dot "^1.0.3"
     request "^2.69.0"
 
-"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
+canvas@cartodb/node-canvas#1.6.2-cdb2:
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -269,7 +269,7 @@ carto@CartoDB/carto#0.15.1-cdb1:
     optimist "~0.6.0"
     underscore "~1.6.0"
 
-"carto@github:cartodb/carto#0.15.1-cdb3":
+carto@cartodb/carto#0.15.1-cdb3:
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
@@ -295,9 +295,9 @@ cartodb-query-tables@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.3.0.tgz#56e18d869666eb2e8e2cb57d0baf3acc923f8756"
 
-cartodb-redis@0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/cartodb-redis/-/cartodb-redis-0.15.0.tgz#509ab9f62b8cae0838bcb8db1cb9d6355704ace3"
+cartodb-redis@cartodb/node-cartodb-redis#project-auth-api:
+  version "0.15.1"
+  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/2d17fe82d66972edce5c727c679a335845ea5eb0"
   dependencies:
     dot "~1.0.2"
     redis-mpool "^0.5.0"
@@ -2206,7 +2206,7 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb5":
+tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb5:
   version "0.6.18-cdb5"
   resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/cec846025e60837c60af193d600d972917ea8d35"
   dependencies:
