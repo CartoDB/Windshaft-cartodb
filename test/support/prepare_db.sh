@@ -171,6 +171,17 @@ cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
     database_password "regular1"
 EOF
 
+# API Key Regular 2 no Maps API access, only to check grants permissions to the API
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:regular2 \
+    user "localhost" \
+    type "regular" \
+    grants_sql "true" \
+    grants_maps "false" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
 cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
   HMSET api_keys:cartodb250user:4321 \
     user "localhost" \

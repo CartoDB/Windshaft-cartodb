@@ -118,7 +118,8 @@ afterEach(function(done) {
         'api_keys:localhost:default_public': true,
         'api_keys:cartodb250user:4321': true,
         'api_keys:cartodb250user:default_public': true,
-        'api_keys:localhost:regular1': true
+        'api_keys:localhost:regular1': true,
+        'api_keys:localhost:regular2': true,
     };
     var databasesTasks = { 0: 'users', 5: 'meta'};
 
