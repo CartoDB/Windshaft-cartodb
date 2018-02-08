@@ -160,6 +160,17 @@ cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
     database_password "public"
 EOF
 
+# API Key Regular
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:regular1 \
+    user "localhost" \
+    type "regular" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_regular1" \
+    database_password "regular1"
+EOF
+
 cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
   HMSET api_keys:cartodb250user:4321 \
     user "localhost" \
