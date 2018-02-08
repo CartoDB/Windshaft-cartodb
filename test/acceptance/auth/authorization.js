@@ -56,6 +56,31 @@ describe('authorization', function() {
         });
     });
 
+    it('should create a layergroup with default apikey token', function (done) {
+        const apikeyToken = 'default_public';
+        const mapConfig = {
+            version: '1.7.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select * FROM test_table',
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
+        };
+        const testClient = new TestClient(mapConfig, apikeyToken);
+
+        testClient.getLayergroup(function (err, layergroupResult) {
+            assert.ifError(err);
+
+            assert.ok(layergroupResult.layergroupid);
+
+            testClient.drain(done);
+        });
+    });
+
     it('should fail if apikey does not grant access to table', function (done) {
         const mapConfig = {
             version: '1.7.0',
