@@ -115,7 +115,9 @@ afterEach(function(done) {
         'rails:users:cartodb250user': true,
         'rails:users:localhost': true,
         'api_keys:localhost:1234': true,
-        'api_keys:localhost:default_public': true
+        'api_keys:localhost:default_public': true,
+        'api_keys:cartodb250user:4321': true,
+        'api_keys:cartodb250user:default_public': true
     };
     var databasesTasks = { 0: 'users', 5: 'meta'};
 
