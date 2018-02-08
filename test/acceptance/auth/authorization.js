@@ -29,7 +29,7 @@ describe('authorization', function() {
         });
     });
 
-    it('should fail if apikey does not gran access to table', function (done) {
+    it('should fail if apikey does not grant access to table', function (done) {
         const mapConfig = {
             version: '1.7.0',
             layers: [
