@@ -208,6 +208,7 @@ describe('authorization', function() {
         });
     });
 
+    // Warning: TBA
     it('should create a layergroup with a buffer analysis using a regular apikey token', function (done) {
         const apikeyToken = 'regular1';
         const mapConfig = {

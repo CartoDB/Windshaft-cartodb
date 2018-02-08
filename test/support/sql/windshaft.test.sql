@@ -195,7 +195,7 @@ INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('test_table_private_
 
 -- GRANT SELECT ON CDB_TableMetadata TO :PUBLICUSER;
 GRANT SELECT ON CDB_TableMetadata TO :TESTUSER;
-GRANT SELECT ON CDB_TableMetadata TO test_windshaft_regular1; -- for analysis
+GRANT SELECT ON CDB_TableMetadata TO test_windshaft_regular1; -- for analysis. Warning: TBA
 
 -- long name table
 CREATE TABLE
@@ -758,7 +758,7 @@ GRANT SELECT ON TABLE analysis_rent_listings TO :PUBLICUSER;
 
 --
 GRANT SELECT, UPDATE, INSERT, DELETE ON cdb_analysis_catalog TO :TESTUSER;
-GRANT SELECT, UPDATE, INSERT, DELETE ON cdb_analysis_catalog TO test_windshaft_regular1; -- for analysis
+GRANT SELECT, UPDATE, INSERT, DELETE ON cdb_analysis_catalog TO test_windshaft_regular1; -- for analysis. Warning: TBA
 
 DROP EXTENSION IF EXISTS crankshaft;
 CREATE SCHEMA IF NOT EXISTS cdb_crankshaft;
