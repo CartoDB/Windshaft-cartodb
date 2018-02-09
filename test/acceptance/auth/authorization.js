@@ -2,6 +2,7 @@ require('../../support/test_helper');
 
 const assert = require('../../support/assert');
 const TestClient = require('../../support/test-client');
+const  mapnik = require('windshaft').mapnik;
 
 describe('authorization', function() {
     it('should create a layergroup with regular apikey token', function(done) {
@@ -248,6 +249,87 @@ describe('authorization', function() {
             assert.ifError(err);
 
             assert.ok(layergroupResult.layergroupid);
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should create and get a named map tile using a regular apikey token', function (done) {
+        const apikeyToken = 'regular1';
+
+        const template = {
+            version: '0.0.1',
+            name: 'auth-api-template',
+            placeholders: {
+                buffersize: {
+                    type: 'number',
+                    default: 0
+                }
+            },
+            layergroup: {
+                version: '1.7.0',
+                layers: [{
+                    type: 'cartodb',
+                    options: {
+                        sql: 'select * from test_table_localhost_regular1',
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0',
+                    }
+                }]
+            }
+        };
+
+        const testClient = new TestClient(template, apikeyToken);
+
+        testClient.getTile(0, 0, 0, function (err, res, tile) {
+            assert.ifError(err);
+
+            assert.equal(res.statusCode, 200);
+            assert.ok(tile instanceof mapnik.Image);
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should fail creating a named map using a regular apikey token and a private table', function (done) {
+        const apikeyToken = 'regular1';
+
+        const template = {
+            version: '0.0.1',
+            name: 'auth-api-template-private',
+            placeholders: {
+                buffersize: {
+                    type: 'number',
+                    default: 0
+                }
+            },
+            layergroup: {
+                version: '1.7.0',
+                layers: [{
+                    type: 'cartodb',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced_private',
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0',
+                    }
+                }]
+            }
+        };
+
+        const testClient = new TestClient(template, apikeyToken);
+
+        const PERMISSION_DENIED_RESPONSE = {
+            status: 403,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+        testClient.getTile(0, 0, 0, { response: PERMISSION_DENIED_RESPONSE }, function (err, res, body) {
+            assert.ifError(err);
+
+            assert.ok(body.hasOwnProperty('errors'));
+            assert.equal(body.errors.length, 1);
+            assert.ok(body.errors[0].match(/permission denied/), body.errors[0]);
 
             testClient.drain(done);
         });
