@@ -86,7 +86,12 @@ describe('authorization', function() {
 
             const testClientGet = new TestClient({}, apikeyTokenGet);
 
-            testClientGet.getTile(0, 0, 0, { layergroupid: layergroupId, response: PERMISSION_DENIED_RESPONSE}, function(err, res, body) {
+            const params = {
+                layergroupid: layergroupId,
+                response: PERMISSION_DENIED_RESPONSE
+            };
+
+            testClientGet.getTile(0, 0, 0, params, function(err, res, body) {
 
                 assert.ifError(err);
 
