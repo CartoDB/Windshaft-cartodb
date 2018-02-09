@@ -4,6 +4,13 @@ const assert = require('../../support/assert');
 const TestClient = require('../../support/test-client');
 const  mapnik = require('windshaft').mapnik;
 
+const PERMISSION_DENIED_RESPONSE = {
+    status: 403,
+    headers: {
+        'Content-Type': 'application/json; charset=utf-8'
+    }
+};
+
 describe('authorization', function() {
     it('should create a layergroup with regular apikey token', function(done) {
         const apikeyToken = 'regular1';
@@ -27,6 +34,68 @@ describe('authorization', function() {
             assert.ok(layergroupResult.layergroupid);
 
             testClient.drain(done);
+        });
+    });
+
+    it('should create and get a named map tile using a regular apikey token', function (done) {
+        const apikeyToken = 'regular1';
+        const mapConfig = {
+            version: '1.7.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select * FROM test_table_localhost_regular1',
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
+        };
+        const testClient = new TestClient(mapConfig, apikeyToken);
+
+        testClient.getTile(0, 0, 0, function (err, res, tile) {
+            assert.ifError(err);
+
+            assert.equal(res.statusCode, 200);
+            assert.ok(tile instanceof mapnik.Image);
+
+            testClient.drain(done);
+        });
+    });    
+
+    it('should fail getting a named map tile with default apikey token', function (done) {
+        const apikeyTokenCreate = 'regular1';
+        const apikeyTokenGet = 'default_public';
+        const mapConfig = {
+            version: '1.7.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select * FROM test_table_localhost_regular1',
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
+        };
+
+        const testClientCreate = new TestClient(mapConfig, apikeyTokenCreate);
+        testClientCreate.getLayergroup(function (err, layergroupResult) {
+            assert.ifError(err);
+            const layergroupId = layergroupResult.layergroupid;
+
+            const testClientGet = new TestClient({}, apikeyTokenGet);
+
+            testClientGet.getTile(0, 0, 0, { layergroupid: layergroupId, response: PERMISSION_DENIED_RESPONSE}, function(err, res, body) {
+
+                assert.ifError(err);
+
+                assert.ok(body.hasOwnProperty('errors'));
+                assert.equal(body.errors.length, 1);
+                assert.ok(body.errors[0].match(/permission denied/), body.errors[0]);
+
+                testClientGet.drain(done);
+            });
         });
     });
 
@@ -77,6 +146,32 @@ describe('authorization', function() {
             assert.ifError(err);
 
             assert.ok(layergroupResult.layergroupid);
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should create and get a tile with default apikey token', function (done) {
+        const apikeyToken = 'default_public';
+        const mapConfig = {
+            version: '1.7.0',
+            layers: [
+                {
+                    options: {
+                        sql: 'select * FROM test_table',
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
+        };
+        const testClient = new TestClient(mapConfig, apikeyToken);
+
+        testClient.getTile(0, 0, 0, function (err, res, tile) {
+            assert.ifError(err);
+
+            assert.equal(res.statusCode, 200);
+            assert.ok(tile instanceof mapnik.Image);
 
             testClient.drain(done);
         });
@@ -318,12 +413,6 @@ describe('authorization', function() {
 
         const testClient = new TestClient(template, apikeyToken);
 
-        const PERMISSION_DENIED_RESPONSE = {
-            status: 403,
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        };
         testClient.getTile(0, 0, 0, { response: PERMISSION_DENIED_RESPONSE }, function (err, res, body) {
             assert.ifError(err);
 
