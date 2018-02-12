@@ -232,9 +232,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.60.0:
-  version "0.60.0"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.60.0.tgz#0433b5a576e08cabbc9bae1e1b22305274b8b7b6"
+camshaft@0.61.2:
+  version "0.61.2"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.61.2.tgz#5c0d43ca769377c6cfb9808f1023d20ea3df55b3"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
@@ -2367,9 +2367,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.5.0.tgz#44f17073267d459c9a2b9f213250210b89d4d35d"
+windshaft@4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.5.1.tgz#1be73b2d81cd8df648423ac219dae27406261aab"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.2"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb1

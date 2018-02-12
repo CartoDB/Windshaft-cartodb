@@ -1,11 +1,12 @@
 # Changelog
 
 ## 5.3.0
-Released 2018-mm-dd
+Released 2018-02-12
  - Upgrades redis-mpool to 0.5.0
- - Upgrades windshaft to 4.5.0
+ - Upgrades windshaft to 4.5.1
  - Upgrades cartodb-redis to 0.15.0
  - Adds metrics option to the Mapnik renderer
+ - Upgrades camshadft to 0.61.2
 
 ## 5.2.1
 Released 2018-02-01
