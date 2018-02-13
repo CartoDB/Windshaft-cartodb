@@ -2,6 +2,7 @@
 
 ## 5.3.2
 Released yyyy-mm-dd
+ - Upgrades Windshaft to 4.5.3
 
 ## 5.3.1
 Released 2018-02-13
