@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.1
+Released yyyy-mm-dd
+ - Improve the speed of the aggregation dataview #865
+
 ## 5.3.0
 Released 2018-02-12
  - Upgrades redis-mpool to 0.5.0
