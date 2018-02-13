@@ -1,7 +1,7 @@
 # Changelog
 
 ## 5.3.1
-Released yyyy-mm-dd
+Released 2018-02-13
  - Improve the speed of the aggregation dataview #865
 
 ## 5.3.0
