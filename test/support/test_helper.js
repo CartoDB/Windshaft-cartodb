@@ -114,6 +114,7 @@ afterEach(function(done) {
         'rails:users:localhost:map_key': true,
         'rails:users:cartodb250user': true,
         'rails:users:localhost': true,
+        'rails:users:user_previous_to_project_auth': true, // AUTH_FALLBACK
         'api_keys:localhost:1234': true,
         'api_keys:localhost:default_public': true,
         'api_keys:cartodb250user:4321': true,

@@ -131,6 +131,19 @@ HMSET rails:users:cartodb250user id ${TESTUSERID} \
                                  map_key 4321
 EOF
 
+
+# Remove this block when Auth fallback is not used anymore
+# AUTH_FALLBACK
+  # A user to test auth fallback to no api keys mode
+  cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+HMSET rails:users:user_previous_to_project_auth id ${TESTUSERID} \
+                                 database_name "${TEST_DB}" \
+                                 database_host "localhost" \
+                                 database_password "${TESTPASS}" \
+                                 database_publicuser "${PUBLICUSER}"\
+                                 map_key 4444
+EOF
+
   cat <<EOF | redis-cli -p ${REDIS_PORT} -n 0
 HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
