@@ -10,7 +10,7 @@ var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
 const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
 const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
-const apikeyTokenMiddleware = require('../../../lib/cartodb/middleware/context/apikey-token');
+const apikeyCredentialsMiddleware = require('../../../lib/cartodb/middleware/context/apikey-credentials');
 const localsMiddleware =  require('../../../lib/cartodb/middleware/context/locals');
 
 var windshaft = require('windshaft');
@@ -24,7 +24,7 @@ describe('prepare-context', function() {
     let cleanUpQueryParams;
     let dbConnSetup;
     let authorize;
-    let setApikeyToken;
+    let setApikeyCredentials;
 
     before(function() {
         var redisPool = new RedisPool(global.environment.redis);
@@ -37,7 +37,7 @@ describe('prepare-context', function() {
         cleanUpQueryParams = cleanUpQueryParamsMiddleware();
         authorize = authorizeMiddleware(authApi);
         dbConnSetup = dbConnSetupMiddleware(pgConnection);
-        setApikeyToken = apikeyTokenMiddleware();
+        setApikeyCredentials = apikeyCredentialsMiddleware();
     });
 
 
@@ -194,7 +194,7 @@ describe('prepare-context', function() {
                 }
             };
             var res = {};
-            setApikeyToken(prepareRequest(req), prepareResponse(res), function (err) {
+            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
                 if (err) {
                     return done(err);
                 }
@@ -215,7 +215,7 @@ describe('prepare-context', function() {
                 }
             };
             var res = {};
-            setApikeyToken(prepareRequest(req), prepareResponse(res), function (err) {
+            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
                 if (err) {
                     return done(err);
                 }
@@ -230,11 +230,30 @@ describe('prepare-context', function() {
             var req = {
                 headers: {
                     host: 'localhost',
-                    authorization: 'Basic dXNlcjoxMjM0', // user: user, password: 1234
+                    authorization: 'Basic bG9jYWxob3N0OjEyMzQ=', // user: localhost, password: 1234
                 }
             };
             var res = {};
-            setApikeyToken(prepareRequest(req), prepareResponse(res), function (err) {
+            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+
+        it('fail from http header with user mismatch', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost',
+                    authorization: 'Basic YW5vdGhlcl91c2VyOjEyMzQ=', // user: another_user, password: 1234
+                }
+            };
+            var res = {};
+            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
                 if (err) {
                     return done(err);
                 }
