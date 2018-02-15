@@ -200,7 +200,47 @@ describe('prepare-context', function() {
                 }
                 var query = res.locals;
                 
-                assert.equal('1234', query.apikeyToken);
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+
+        it('from body param', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost'
+                },
+                body: {
+                    api_key: '1234',
+                }
+            };
+            var res = {};
+            setApikeyToken(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+
+        it('from http header', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost',
+                    authorization: 'Basic dXNlcjoxMjM0', // user: user, password: 1234
+                }
+            };
+            var res = {};
+            setApikeyToken(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+
+                assert.equal('1234', query.api_key);
                 done();
             });
         });
