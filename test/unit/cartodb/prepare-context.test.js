@@ -183,14 +183,14 @@ describe('prepare-context', function() {
         });
     });
 
-    describe.only('Set apikey token', function(){
+    describe('Set apikey token', function(){
         it('from query param', function (done) {
             var req = {
                 headers: {
                     host: 'localhost'
                 },
                 query: {
-                    api_quey: '1234',
+                    api_key: '1234',
                 }
             };
             var res = {};
@@ -199,7 +199,6 @@ describe('prepare-context', function() {
                     return done(err);
                 }
                 var query = res.locals;
-                console.log(query);
                 
                 assert.equal('1234', query.apikeyToken);
                 done();
