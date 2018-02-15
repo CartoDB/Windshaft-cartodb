@@ -244,24 +244,5 @@ describe('prepare-context', function() {
                 done();
             });
         });
-
-        it('fail from http header with user mismatch', function (done) {
-            var req = {
-                headers: {
-                    host: 'localhost',
-                    authorization: 'Basic YW5vdGhlcl91c2VyOjEyMzQ=', // user: another_user, password: 1234
-                }
-            };
-            var res = {};
-            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
-                if (err) {
-                    return done(err);
-                }
-                var query = res.locals;
-
-                assert.equal('1234', query.api_key);
-                done();
-            });
-        });
     });
 });
