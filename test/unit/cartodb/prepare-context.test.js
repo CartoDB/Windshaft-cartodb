@@ -10,6 +10,7 @@ var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
 const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
 const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
+const apikeyTokenMiddleware = require('../../../lib/cartodb/middleware/context/apikey-token');
 const localsMiddleware =  require('../../../lib/cartodb/middleware/context/locals');
 
 var windshaft = require('windshaft');
@@ -23,6 +24,7 @@ describe('prepare-context', function() {
     let cleanUpQueryParams;
     let dbConnSetup;
     let authorize;
+    let setApikeyToken;
 
     before(function() {
         var redisPool = new RedisPool(global.environment.redis);
@@ -35,6 +37,7 @@ describe('prepare-context', function() {
         cleanUpQueryParams = cleanUpQueryParamsMiddleware();
         authorize = authorizeMiddleware(authApi);
         dbConnSetup = dbConnSetupMiddleware(pgConnection);
+        setApikeyToken = apikeyTokenMiddleware();
     });
 
 
@@ -180,4 +183,27 @@ describe('prepare-context', function() {
         });
     });
 
+    describe.only('Set apikey token', function(){
+        it('from query param', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost'
+                },
+                query: {
+                    api_quey: '1234',
+                }
+            };
+            var res = {};
+            setApikeyToken(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+                console.log(query);
+                
+                assert.equal('1234', query.apikeyToken);
+                done();
+            });
+        });
+    });
 });

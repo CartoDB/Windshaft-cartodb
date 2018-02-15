@@ -24,6 +24,7 @@
     "Simon Martin <simon@carto.com>"
   ],
   "dependencies": {
+    "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
     "camshaft": "0.61.2",
     "cartodb-psql": "0.10.2",
