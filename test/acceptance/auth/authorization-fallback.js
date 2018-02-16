@@ -101,7 +101,6 @@ describe('authorization fallback', function () {
         );
     });
 
-
     it("succeed with default - sending no api key token", function (done) {
         var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
@@ -125,16 +124,23 @@ describe('authorization fallback', function () {
         );
     });
 
-    it("fail with non-existent api key", function (done) {
-        var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
+    it("succeed with non-existent api key - defaults to default", function (done) {
+        var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
         assert.response(server,
             createRequest(layergroup, 'user_previous_to_project_auth', 'THIS-API-KEY-DOESNT-EXIST'),
             {
-                status: 401
+                status: 200
             },
             function (res, err) {
                 assert.ifError(err);
+
+                var parsed = JSON.parse(res.body);
+                assert.ok(parsed.layergroupid);
+                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                keysToDelete['user:user_previous_to_project_auth:mapviews:global'] = 5;
 
                 done();
             }
@@ -146,6 +152,22 @@ describe('authorization fallback', function () {
 
         assert.response(server,
             createRequest(layergroup, 'user_previous_to_project_auth', 'default_public'),
+            {
+                status: 403
+            },
+            function (res, err) {
+                assert.ifError(err);
+
+                done();
+            }
+        );
+    });
+
+    it("fail with non-existent api key - defaults to default", function (done) {
+        var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
+
+        assert.response(server,
+            createRequest(layergroup, 'user_previous_to_project_auth', 'THIS-API-KEY-DOESNT-EXIST'),
             {
                 status: 403
             },
