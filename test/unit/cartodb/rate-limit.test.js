@@ -35,7 +35,7 @@ function getReqAndRes() {
     };
 }
 
-describe.only('rate-limit', function() {
+describe('rate-limit', function() {
     before(function() {
         const redisPool = new RedisPool(global.environment.redis);
         const metadataBackend = cartodbRedis({pool: redisPool});
@@ -227,6 +227,8 @@ describe.only('rate-limit', function() {
         );
     });
 
+    // skipped: not always limits the same requests
+    // created to test the behavior of redis-cell 
     it.skip("2 req/sec: 10 request (1 per 100ms) should be: 1 not limited, 4 limited", function(done) {
         const count = 2;
         const period = 1;
@@ -283,6 +285,8 @@ describe.only('rate-limit', function() {
         setTimeout(done, 3400);
     });
 
+    // skipped: not always limits the same requests
+    // created to test the behavior of redis-cell 
     it.skip("5 req/sec: 10 request (1 per 100ms) should be: 1 not limited, 1 limited", function(done) {
         const count = 5;
         const period = 1;
