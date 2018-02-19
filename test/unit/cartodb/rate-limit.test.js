@@ -122,7 +122,7 @@ describe('rate-limit', function() {
         );
     });
 
-    it("1 req/sec: 5 request (1 per 250ms) should be: not limited, limited, limited, limited, not limited", function(done) {
+    it("1 req/sec: 5 request (1 per 250ms) should be limited: OK, KO, KO, KO, OK", function(done) {
         const count = 1;
         const period = 1;
         const burst = 0;
