@@ -11,7 +11,6 @@ const {
 let redisClient;
 let rateLimit;
 const user = 'cdb';
-const endpointGroup = 'tile';
 let keysToDelete = [];
 
 function setLimit(count, period, burst) {
@@ -39,7 +38,7 @@ function getReqAndRes() {
     };
 }
 
-describe('rate-limit', function() {
+describe.only('rate-limit', function() {
     before(function() {
         const redisPool = new RedisPool(global.environment.redis);
         const metadataBackend = cartodbRedis({pool: redisPool});
