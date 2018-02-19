@@ -42,7 +42,7 @@ describe.only('rate-limit', function() {
     before(function() {
         const redisPool = new RedisPool(global.environment.redis);
         const metadataBackend = cartodbRedis({pool: redisPool});
-        rateLimit = rateLimitMiddleware(metadataBackend);
+        rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_8);
         
         redisClient = redis.createClient(global.environment.redis.port);
     });
