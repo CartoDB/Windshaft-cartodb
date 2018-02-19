@@ -303,7 +303,7 @@ cartodb-query-tables@0.3.0:
 
 cartodb-redis@cartodb/node-cartodb-redis#project-auth-api:
   version "0.15.1"
-  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/2d17fe82d66972edce5c727c679a335845ea5eb0"
+  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/ffc1dccaa5ad433a1582d8e3d5926063bd3851d3"
   dependencies:
     dot "~1.0.2"
     redis-mpool "^0.5.0"
