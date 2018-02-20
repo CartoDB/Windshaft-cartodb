@@ -40,6 +40,9 @@ function getReqAndRes() {
 
 describe('rate limit unit', function() {
     before(function() {
+        global.environment.enabledFeatures.rateLimitsEnabled = true;
+        global.environment.enabledFeatures.rateLimitsByEndpoint.endpoint8 = true;
+        
         const redisPool = new RedisPool(global.environment.redis);
         const metadataBackend = cartodbRedis({pool: redisPool});
         rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_8);
@@ -48,6 +51,9 @@ describe('rate limit unit', function() {
     });
 
     after(function() {
+        global.environment.enabledFeatures.rateLimitsEnabled = false;
+        global.environment.enabledFeatures.rateLimitsByEndpoint.endpoint8 = false;
+        
         keysToDelete.forEach( key => {
             redisClient.del(key);
         });

@@ -81,8 +81,16 @@ function setLimit(count, period, burst) {
 
 describe('rate limit acceptance', function() {
     before(function() {
+        global.environment.enabledFeatures.rateLimitsEnabled = true;
+        global.environment.enabledFeatures.rateLimitsByEndpoint.endpoint1 = true;
+        
         redisClient = redis.createClient(global.environment.redis.port);
         testClient = new TestClient(createMapConfig(), 1234);
+    });
+
+    after(function() {
+        global.environment.enabledFeatures.rateLimitsEnabled = false;
+        global.environment.enabledFeatures.rateLimitsByEndpoint.endpoint1 = false;
     });
 
     afterEach(function(done) {
