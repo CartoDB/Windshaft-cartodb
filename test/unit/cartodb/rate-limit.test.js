@@ -38,7 +38,7 @@ function getReqAndRes() {
     };
 }
 
-describe.only('rate-limit', function() {
+describe('rate limit unit', function() {
     before(function() {
         const redisPool = new RedisPool(global.environment.redis);
         const metadataBackend = cartodbRedis({pool: redisPool});
@@ -66,7 +66,7 @@ describe.only('rate-limit', function() {
                 "X-Rate-Limit-Limit": burst + 1,
                 "X-Rate-Limit-Remaining": burst,
                 "X-Rate-Limit-Reset": period,
-                "X-Rate-Limit-Retry-After": -1              
+                "X-Rate-Limit-Retry-After": -1
             });
 
             setTimeout(done, period * 1000);
@@ -86,7 +86,7 @@ describe.only('rate-limit', function() {
                 "X-Rate-Limit-Limit": burst + 1,
                 "X-Rate-Limit-Remaining": burst,
                 "X-Rate-Limit-Reset": period,
-                "X-Rate-Limit-Retry-After": -1              
+                "X-Rate-Limit-Retry-After": -1
             });
         });
 
@@ -99,7 +99,7 @@ describe.only('rate-limit', function() {
                         "X-Rate-Limit-Limit": burst + 1,
                         "X-Rate-Limit-Remaining": burst,
                         "X-Rate-Limit-Reset": period,
-                        "X-Rate-Limit-Retry-After": -1              
+                        "X-Rate-Limit-Retry-After": -1
                     });                
                 });
             },
@@ -115,7 +115,7 @@ describe.only('rate-limit', function() {
                         "X-Rate-Limit-Limit": burst + 1,
                         "X-Rate-Limit-Remaining": burst,
                         "X-Rate-Limit-Reset": period,
-                        "X-Rate-Limit-Retry-After": -1              
+                        "X-Rate-Limit-Retry-After": -1
                     });
                     
                     setTimeout(done, period * 1000);
@@ -151,7 +151,7 @@ describe.only('rate-limit', function() {
                         "X-Rate-Limit-Limit": burst + 1,
                         "X-Rate-Limit-Remaining": count - 1,
                         "X-Rate-Limit-Reset": period,
-                        "X-Rate-Limit-Retry-After": -1              
+                        "X-Rate-Limit-Retry-After": -1
                     });                  
                 });
             },
@@ -167,10 +167,10 @@ describe.only('rate-limit', function() {
                         "X-Rate-Limit-Limit": burst + 1,
                         "X-Rate-Limit-Remaining": 0,
                         "X-Rate-Limit-Reset": period,
-                        "X-Rate-Limit-Retry-After": 1              
+                        "X-Rate-Limit-Retry-After": 1
                     });
                     assert.equal(err.message, 'You are over the limits.');
-                    assert.equal(err.http_status, 429);                 
+                    assert.equal(err.http_status, 429);
                 });
             },
             500
@@ -185,7 +185,7 @@ describe.only('rate-limit', function() {
                         "X-Rate-Limit-Limit": burst + 1,
                         "X-Rate-Limit-Remaining": 0,
                         "X-Rate-Limit-Reset": period,
-                        "X-Rate-Limit-Retry-After": 1              
+                        "X-Rate-Limit-Retry-After": 1
                     });
                     assert.equal(err.message, 'You are over the limits.');
                     assert.equal(err.http_status, 429);
@@ -203,10 +203,10 @@ describe.only('rate-limit', function() {
                         "X-Rate-Limit-Limit": burst + 1,
                         "X-Rate-Limit-Remaining": 0,
                         "X-Rate-Limit-Reset": period,
-                        "X-Rate-Limit-Retry-After": 1              
+                        "X-Rate-Limit-Retry-After": 1
                     });
                     assert.equal(err.message, 'You are over the limits.');
-                    assert.equal(err.http_status, 429);               
+                    assert.equal(err.http_status, 429);
                 });
             },
             950
@@ -221,7 +221,7 @@ describe.only('rate-limit', function() {
                         "X-Rate-Limit-Limit": burst + 1,
                         "X-Rate-Limit-Remaining": count - 1,
                         "X-Rate-Limit-Reset": period,
-                        "X-Rate-Limit-Retry-After": -1              
+                        "X-Rate-Limit-Retry-After": -1
                     });                  
                     setTimeout(done, 1000);
                 });
