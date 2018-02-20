@@ -348,21 +348,21 @@ var config = {
         rateLimitsEnabled: false,
         // whether it should rate limit one or more endpoints (only if rateLimitsEnabled = true)
         rateLimitsByEndpoint: {
-            endpoint1: false,
-            endpoint2: false,
-            endpoint3: false,
-            endpoint5: false,
-            endpoint6: false,
-            endpoint7: false,
-            endpoint8: false,
-            endpoint9: false,
-            endpoint10: false,
-            endpoint11: false,
-            endpoint12: false,
-            endpoint13: false,
-            endpoint14: false,
-            endpoint15: false,
-            endpoint17: false
+            anonymous: false,
+            static: false,
+            staticNamed: false,
+            dataview: false,
+            dataviewSearch: false,
+            analysis: false,
+            tile: false,
+            attributes: false,
+            namedList: false,
+            namedCreate: false,
+            namedGet: false,
+            named: false,
+            namedUpdate: false,
+            namedDelete: false,
+            namedTiles: false
         }
     }
 };
