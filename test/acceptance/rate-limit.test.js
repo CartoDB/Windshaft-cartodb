@@ -5,7 +5,7 @@ const TestClient = require('../support/test-client');
 const redis = require('redis');
 const {
     RATE_LIMIT_ENDPOINTS_GROUPS,
-    RATE_LIMIT_STORE_KEY
+    getStoreKey
 } = require('../../lib/cartodb/middleware/rate-limit');
 
 
@@ -72,7 +72,7 @@ function setLimit(count, period, burst) {
             return;
         }
 
-        const key = RATE_LIMIT_STORE_KEY + user + ':' + RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_1;
+        const key = getStoreKey(user, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_1);        
         redisClient.hset(key, 'b', burst, 'c', count, 'p', period, () => {
             keysToDelete.push(key);
         });
