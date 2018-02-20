@@ -67,13 +67,13 @@ const createMapConfig = ({
 
 
 function setLimit(count, period, burst) {
-    redisClient.SELECT(8, function(err) {
+    redisClient.SELECT(8, err => {
         if (err) {
             return;
         }
 
         const key = RATE_LIMIT_STORE_KEY + user + ':' + RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_1;
-        redisClient.hset(key, 'b', burst, 'c', count, 'p', period, function() {
+        redisClient.hset(key, 'b', burst, 'c', count, 'p', period, () => {
             keysToDelete.push(key);
         });
     });
@@ -118,7 +118,7 @@ describe('rate limit acceptance', function() {
             }
         };
 
-        testClient.getLayergroup({ response }, (err) => {
+        testClient.getLayergroup({ response }, err => {
             assert.ifError(err);
             setTimeout(done, period * 1000);
         });
@@ -141,7 +141,7 @@ describe('rate limit acceptance', function() {
             }
         };
 
-        testClient.getLayergroup({ response }, (err, res) => {
+        testClient.getLayergroup({ response }, err => {
             assert.ifError(err);
         });
 
@@ -158,7 +158,7 @@ describe('rate limit acceptance', function() {
                     }
                 };
 
-                testClient.getLayergroup({ response }, (err) => {
+                testClient.getLayergroup({ response }, err => {
                     assert.ifError(err);
                 });
             },
@@ -178,7 +178,7 @@ describe('rate limit acceptance', function() {
                     }
                 };
 
-                testClient.getLayergroup({ response }, (err) => {
+                testClient.getLayergroup({ response }, err => {
                     assert.ifError(err);
                 });
             },
@@ -198,7 +198,7 @@ describe('rate limit acceptance', function() {
                     }
                 };
 
-                testClient.getLayergroup({ response }, (err) => {
+                testClient.getLayergroup({ response }, err => {
                     assert.ifError(err);
                 });
             },
@@ -218,7 +218,7 @@ describe('rate limit acceptance', function() {
                     }
                 };
 
-                testClient.getLayergroup({ response }, (err) => {
+                testClient.getLayergroup({ response }, err => {
                     assert.ifError(err);
                 });
             },
@@ -238,7 +238,7 @@ describe('rate limit acceptance', function() {
                     }
                 };
 
-                testClient.getLayergroup({ response }, (err) => {
+                testClient.getLayergroup({ response }, err => {
                     assert.ifError(err);
                     done();
                 });
