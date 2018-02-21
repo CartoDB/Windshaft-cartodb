@@ -1,3 +1,5 @@
+require('../../support/test_helper');
+
 const assert = require('assert');
 const redis = require('redis');
 const RedisPool = require('redis-mpool');
