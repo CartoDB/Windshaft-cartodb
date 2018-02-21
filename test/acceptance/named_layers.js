@@ -108,7 +108,7 @@ describe('named_layers', function() {
     });
 
     beforeEach(function(done) {
-        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: true};
+        global.environment.enabledFeatures.cdbQueryTablesFromPostgres = true;
         templateMaps.addTemplate(username, nestedNamedMapTemplate, function(err) {
             if (err) {
                 return done(err);
@@ -125,7 +125,7 @@ describe('named_layers', function() {
     });
 
     afterEach(function(done) {
-        global.environment.enabledFeatures = {cdbQueryTablesFromPostgres: false};
+        global.environment.enabledFeatures.cdbQueryTablesFromPostgres = false;
         templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
             if (err) {
                 return done(err);
