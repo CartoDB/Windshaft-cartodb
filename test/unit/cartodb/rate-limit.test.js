@@ -51,50 +51,45 @@ describe('rate limit unit', function() {
         rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_8);
         
         redisClient = redis.createClient(global.environment.redis.port);
+
+        const count = 1;
+        const period = 1;
+        const burst = 0;
+        setLimit(count, period, burst);
     });
 
     after(function() {
         global.environment.enabledFeatures.rateLimitsEnabled = false;
         global.environment.enabledFeatures.rateLimitsByEndpoint.tile = false;
-        
+
         keysToDelete.forEach( key => {
             redisClient.del(key);
         });
     });
     
     it("should not be rate limited", function(done) {
-        const count = 1;
-        const period = 1;
-        const burst = 1;
-        setLimit(count, period, burst);
-
         const {req, res} = getReqAndRes();
         rateLimit(req, res, function(err) {
             assert.ifError(err);
             assert.deepEqual(res.headers, {
-                "X-Rate-Limit-Limit": burst + 1,
-                "X-Rate-Limit-Remaining": burst,
-                "X-Rate-Limit-Reset": period,
+                "X-Rate-Limit-Limit": 1,
+                "X-Rate-Limit-Remaining": 0,
+                "X-Rate-Limit-Reset": 1,
                 "X-Rate-Limit-Retry-After": -1
             });
 
-            setTimeout(done, period * 1000);
+            setTimeout(done, 1000);
         });
     });
 
     it("1 req/sec: 3 request (1 per second) should not be rate limited", function(done) {
-        const count = 1;
-        const period = 1;
-        const burst = 1;
-        setLimit(count, period, burst);
-
         let {req, res} = getReqAndRes();
         rateLimit(req, res, function(err) {
             assert.ifError(err);
             assert.deepEqual(res.headers, {
-                "X-Rate-Limit-Limit": burst + 1,
-                "X-Rate-Limit-Remaining": burst,
-                "X-Rate-Limit-Reset": period,
+                "X-Rate-Limit-Limit": 1,
+                "X-Rate-Limit-Remaining": 0,
+                "X-Rate-Limit-Reset": 1,
                 "X-Rate-Limit-Retry-After": -1
             });
         });
@@ -105,14 +100,14 @@ describe('rate limit unit', function() {
                 rateLimit(req, res, function(err) {
                     assert.ifError(err);
                     assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": burst + 1,
-                        "X-Rate-Limit-Remaining": burst,
-                        "X-Rate-Limit-Reset": period,
+                        "X-Rate-Limit-Limit": 1,
+                        "X-Rate-Limit-Remaining": 0,
+                        "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": -1
                     });                
                 });
             },
-            period * 1050
+            1100
         );
 
         setTimeout(
@@ -121,32 +116,27 @@ describe('rate limit unit', function() {
                 rateLimit(req, res, function(err) {
                     assert.ifError(err);
                     assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": burst + 1,
-                        "X-Rate-Limit-Remaining": burst,
-                        "X-Rate-Limit-Reset": period,
+                        "X-Rate-Limit-Limit": 1,
+                        "X-Rate-Limit-Remaining": 0,
+                        "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": -1
                     });
                     
-                    setTimeout(done, period * 1000);
+                    setTimeout(done, 1000);
                 });
             },
-            2 * period * 1050
+            2 * 1100
         );
     });
 
     it("1 req/sec: 5 request (1 per 250ms) should be limited: OK, KO, KO, KO, OK", function(done) {
-        const count = 1;
-        const period = 1;
-        const burst = 0;
-        setLimit(count, period, burst);
-
         let {req, res} = getReqAndRes();
         rateLimit(req, res, function(err) {
             assert.ifError(err);
             assert.deepEqual(res.headers, {
-                "X-Rate-Limit-Limit": burst + 1,
-                "X-Rate-Limit-Remaining": count - 1,
-                "X-Rate-Limit-Reset": period,
+                "X-Rate-Limit-Limit": 1,
+                "X-Rate-Limit-Remaining": 0,
+                "X-Rate-Limit-Reset": 1,
                 "X-Rate-Limit-Retry-After": -1
             });
         });
@@ -157,9 +147,9 @@ describe('rate limit unit', function() {
                 rateLimit(req, res, function(err) {
                     assert.ifError(err);
                     assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": burst + 1,
-                        "X-Rate-Limit-Remaining": count - 1,
-                        "X-Rate-Limit-Reset": period,
+                        "X-Rate-Limit-Limit": 1,
+                        "X-Rate-Limit-Remaining": 0,
+                        "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": -1
                     });                  
                 });
@@ -173,9 +163,9 @@ describe('rate limit unit', function() {
                 rateLimit(req, res, function(err) {
                     assert.ok(err);
                     assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": burst + 1,
+                        "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": period,
+                        "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": 1
                     });
                     assert.equal(err.message, 'You are over the limits.');
@@ -191,9 +181,9 @@ describe('rate limit unit', function() {
                 rateLimit(req, res, function(err) {
                     assert.ok(err);
                     assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": burst + 1,
+                        "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": period,
+                        "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": 1
                     });
                     assert.equal(err.message, 'You are over the limits.');
@@ -209,9 +199,9 @@ describe('rate limit unit', function() {
                 rateLimit(req, res, function(err) {
                     assert.ok(err);
                     assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": burst + 1,
+                        "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": period,
+                        "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": 1
                     });
                     assert.equal(err.message, 'You are over the limits.');
@@ -227,9 +217,9 @@ describe('rate limit unit', function() {
                 rateLimit(req, res, function(err) {
                     assert.ifError(err);
                     assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": burst + 1,
-                        "X-Rate-Limit-Remaining": count - 1,
-                        "X-Rate-Limit-Reset": period,
+                        "X-Rate-Limit-Limit": 1,
+                        "X-Rate-Limit-Remaining": 0,
+                        "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": -1
                     });                  
                     setTimeout(done, 1000);

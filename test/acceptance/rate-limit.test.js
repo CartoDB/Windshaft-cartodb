@@ -107,7 +107,6 @@ describe('rate limit acceptance', function() {
                 done();
             });
         });
-
     }); 
 
     it('should not be rate limited', function (done) {
