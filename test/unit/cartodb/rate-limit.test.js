@@ -8,7 +8,7 @@ const {
     rateLimitMiddleware,
     RATE_LIMIT_ENDPOINTS_GROUPS,
     getStoreKey
-} =  require('../../../lib/cartodb/middleware/rate-limit');
+} = require('../../../lib/cartodb/middleware/rate-limit');
 
 let redisClient;
 let rateLimit;
@@ -16,7 +16,7 @@ const user = 'cdb';
 let keysToDelete = [];
 
 function setLimit(count, period, burst) {
-    redisClient.SELECT(8, function(err) {
+    redisClient.SELECT(8, function (err) {
         if (err) {
             return;
         }
@@ -41,15 +41,15 @@ function getReqAndRes() {
     };
 }
 
-describe('rate limit unit', function() {
-    before(function() {
+describe('rate limit unit 1 limit', function () {
+    before(function () {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.tile = true;
-        
+
         const redisPool = new RedisPool(global.environment.redis);
-        const metadataBackend = cartodbRedis({pool: redisPool});
+        const metadataBackend = cartodbRedis({ pool: redisPool });
         rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_8);
-        
+
         redisClient = redis.createClient(global.environment.redis.port);
 
         const count = 1;
@@ -58,18 +58,18 @@ describe('rate limit unit', function() {
         setLimit(count, period, burst);
     });
 
-    after(function() {
+    after(function () {
         global.environment.enabledFeatures.rateLimitsEnabled = false;
         global.environment.enabledFeatures.rateLimitsByEndpoint.tile = false;
 
-        keysToDelete.forEach( key => {
+        keysToDelete.forEach(key => {
             redisClient.del(key);
         });
     });
-    
-    it("should not be rate limited", function(done) {
-        const {req, res} = getReqAndRes();
-        rateLimit(req, res, function(err) {
+
+    it("should not be rate limited", function (done) {
+        const { req, res } = getReqAndRes();
+        rateLimit(req, res, function (err) {
             assert.ifError(err);
             assert.deepEqual(res.headers, {
                 "X-Rate-Limit-Limit": 1,
@@ -82,9 +82,9 @@ describe('rate limit unit', function() {
         });
     });
 
-    it("1 req/sec: 3 request (1 per second) should not be rate limited", function(done) {
-        let {req, res} = getReqAndRes();
-        rateLimit(req, res, function(err) {
+    it("3 request (1 per second) should not be rate limited", function (done) {
+        let { req, res } = getReqAndRes();
+        rateLimit(req, res, function (err) {
             assert.ifError(err);
             assert.deepEqual(res.headers, {
                 "X-Rate-Limit-Limit": 1,
@@ -95,25 +95,9 @@ describe('rate limit unit', function() {
         });
 
         setTimeout(
-            function() {
-                let {req, res} = getReqAndRes();
-                rateLimit(req, res, function(err) {
-                    assert.ifError(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": -1
-                    });                
-                });
-            },
-            1100
-        );
-
-        setTimeout(
-            function() {
-                let {req, res} = getReqAndRes();
-                rateLimit(req, res, function(err) {
+            function () {
+                let { req, res } = getReqAndRes();
+                rateLimit(req, res, function (err) {
                     assert.ifError(err);
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
@@ -121,7 +105,23 @@ describe('rate limit unit', function() {
                         "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": -1
                     });
-                    
+                });
+            },
+            1100
+        );
+
+        setTimeout(
+            function () {
+                let { req, res } = getReqAndRes();
+                rateLimit(req, res, function (err) {
+                    assert.ifError(err);
+                    assert.deepEqual(res.headers, {
+                        "X-Rate-Limit-Limit": 1,
+                        "X-Rate-Limit-Remaining": 0,
+                        "X-Rate-Limit-Reset": 1,
+                        "X-Rate-Limit-Retry-After": -1
+                    });
+
                     setTimeout(done, 1000);
                 });
             },
@@ -129,9 +129,9 @@ describe('rate limit unit', function() {
         );
     });
 
-    it("1 req/sec: 5 request (1 per 250ms) should be limited: OK, KO, KO, KO, OK", function(done) {
-        let {req, res} = getReqAndRes();
-        rateLimit(req, res, function(err) {
+    it("5 request (1 per 250ms) should be limited: OK, KO, KO, KO, OK", function (done) {
+        let { req, res } = getReqAndRes();
+        rateLimit(req, res, function (err) {
             assert.ifError(err);
             assert.deepEqual(res.headers, {
                 "X-Rate-Limit-Limit": 1,
@@ -142,25 +142,25 @@ describe('rate limit unit', function() {
         });
 
         setTimeout(
-            function() {
-                let {req, res} = getReqAndRes();
-                rateLimit(req, res, function(err) {
+            function () {
+                let { req, res } = getReqAndRes();
+                rateLimit(req, res, function (err) {
                     assert.ifError(err);
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
                         "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": -1
-                    });                  
+                    });
                 });
             },
             250
         );
 
         setTimeout(
-            function() {
-                let {req, res} = getReqAndRes();
-                rateLimit(req, res, function(err) {
+            function () {
+                let { req, res } = getReqAndRes();
+                rateLimit(req, res, function (err) {
                     assert.ok(err);
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
@@ -176,9 +176,9 @@ describe('rate limit unit', function() {
         );
 
         setTimeout(
-            function() {
-                let {req, res} = getReqAndRes();
-                rateLimit(req, res, function(err) {
+            function () {
+                let { req, res } = getReqAndRes();
+                rateLimit(req, res, function (err) {
                     assert.ok(err);
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
@@ -194,9 +194,9 @@ describe('rate limit unit', function() {
         );
 
         setTimeout(
-            function() {
-                let {req, res} = getReqAndRes();
-                rateLimit(req, res, function(err) {
+            function () {
+                let { req, res } = getReqAndRes();
+                rateLimit(req, res, function (err) {
                     assert.ok(err);
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
@@ -210,25 +210,89 @@ describe('rate limit unit', function() {
             },
             950
         );
-        
+
         setTimeout(
-            function() {
-                let {req, res} = getReqAndRes();
-                rateLimit(req, res, function(err) {
+            function () {
+                let { req, res } = getReqAndRes();
+                rateLimit(req, res, function (err) {
                     assert.ifError(err);
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
                         "X-Rate-Limit-Reset": 1,
                         "X-Rate-Limit-Retry-After": -1
-                    });                  
+                    });
                     setTimeout(done, 1000);
                 });
             },
             1050
         );
     });
+});
 
 
+describe.only('rate limit unit multiple limits', function () {
+    before(function () {
+        global.environment.enabledFeatures.rateLimitsEnabled = true;
+        global.environment.enabledFeatures.rateLimitsByEndpoint.tile = true;
+
+        const redisPool = new RedisPool(global.environment.redis);
+        const metadataBackend = cartodbRedis({ pool: redisPool });
+        rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_8);
+
+        redisClient = redis.createClient(global.environment.redis.port);
+    });
+
+    after(function () {
+        global.environment.enabledFeatures.rateLimitsEnabled = false;
+        global.environment.enabledFeatures.rateLimitsByEndpoint.tile = false;
+
+        keysToDelete.forEach(key => {
+            redisClient.del(key);
+        });
+    });
+
+    it("get the smaller limit 1", function (done) {
+        setLimit(5, 1, 5);
+        setLimit(2, 1, 2);
+        setTimeout( () => {
+            let { req, res } = getReqAndRes();
+            rateLimit(req, res, function (err) {
+                assert.ifError(err);
+                assert.deepEqual(res.headers, {
+                    "X-Rate-Limit-Limit": 3,
+                    "X-Rate-Limit-Remaining": 1,
+                    "X-Rate-Limit-Reset": 0,
+                    "X-Rate-Limit-Retry-After": -1
+                });
+
+                keysToDelete.forEach(key => {
+                    redisClient.del(key);
+                });
+
+                setTimeout(done, 1000);
+            });
+        }, 100);
+
+    });
+
+    it("get the smaller limit 2", function (done) {
+        setLimit(2, 1, 2);
+        setLimit(5, 2, 5);
+        setTimeout( () => {
+            let { req, res } = getReqAndRes();
+            rateLimit(req, res, function (err) {
+                assert.ifError(err);
+                assert.deepEqual(res.headers, {
+                    "X-Rate-Limit-Limit": 3,
+                    "X-Rate-Limit-Remaining": 2,
+                    "X-Rate-Limit-Reset": 0,
+                    "X-Rate-Limit-Retry-After": -1
+                });
+                done();
+            });
+        }, 100);
+
+    });
 
 });
