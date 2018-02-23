@@ -48,8 +48,14 @@ module.exports.RESPONSE = {
             'Content-Type': 'application/json; charset=utf-8'
         }
     },
-    GENERAL_AUTH_ERROR: {
+    GENERIC_AUTH_ERROR: {
         status: 403,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    },
+    APIKEY_NOT_FOUND_AUTH_ERROR: {
+        status: 401,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         }
