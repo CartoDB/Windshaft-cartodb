@@ -48,13 +48,13 @@ module.exports.RESPONSE = {
             'Content-Type': 'application/json; charset=utf-8'
         }
     },
-    GENERIC_AUTH_ERROR: {
+    UNAUTHORIZED_ERROR: {
         status: 403,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         }
     },
-    APIKEY_NOT_FOUND_AUTH_ERROR: {
+    FORBIDDEN_ERROR: {
         status: 401,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
