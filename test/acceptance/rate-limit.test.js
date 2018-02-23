@@ -73,9 +73,10 @@ function setLimit(count, period, burst) {
         }
 
         const key = getStoreKey(user, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_1);        
-        redisClient.hset(key, 'b', burst, 'c', count, 'p', period, () => {
-            keysToDelete.push(key);
-        });
+        redisClient.rpush(key, burst);
+        redisClient.rpush(key, count);
+        redisClient.rpush(key, period);
+        keysToDelete.push(key);
     });
 }
 
