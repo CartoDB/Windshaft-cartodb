@@ -47,6 +47,12 @@ module.exports.RESPONSE = {
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         }
+    },
+    GENERAL_AUTH_ERROR: {
+        status: 403,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
     }
 };
 

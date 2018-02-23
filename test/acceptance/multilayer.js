@@ -1336,7 +1336,10 @@ describe(suiteName, function() {
                 status: 403
             },
             function(res) {
-                assert.ok(res.body.match(/permission denied for relation test_table_private_1/));
+                var parsedBody = JSON.parse(res.body);
+                assert.ok(parsedBody.errors[0].match(/permission denied for relation/));
+                assert.equal(parsedBody.errors_with_context[0].subtype, 'permission-denied-relation');
+                assert.equal(parsedBody.errors_with_context[0].info, 'test_table_private_1');
                 done();
             }
         );

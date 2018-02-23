@@ -94,10 +94,15 @@ describe('authorization', function() {
             testClientGet.getTile(0, 0, 0, params, function(err, res, body) {
 
                 assert.ifError(err);
+                assert.equal(403, res.statusCode);
 
                 assert.ok(body.hasOwnProperty('errors'));
                 assert.equal(body.errors.length, 1);
                 assert.ok(body.errors[0].match(/permission denied/), body.errors[0]);
+
+                assert.equal(body.errors_with_context.length, 1);
+                assert.equal(body.errors_with_context[0].type, 'auth');
+                assert.equal(body.errors_with_context[0].subtype, 'permission-denied-relation');
 
                 testClientGet.drain(done);
             });
@@ -125,7 +130,10 @@ describe('authorization', function() {
 
             assert.ok(layergroupResult.hasOwnProperty('errors'));
             assert.equal(layergroupResult.errors.length, 1);
-            assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
+
+            assert.ok(layergroupResult.hasOwnProperty('errors_with_context'));    
+            assert.equal(layergroupResult.errors_with_context[0].type, 'layer');
+            assert.equal(layergroupResult.errors_with_context[0].subtype, 'permission-denied-relation');
 
             testClient.drain(done);
         });
@@ -203,6 +211,10 @@ describe('authorization', function() {
             assert.ok(layergroupResult.hasOwnProperty('errors'));
             assert.equal(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
+
+            assert.ok(layergroupResult.hasOwnProperty('errors_with_context'));
+            assert.equal(layergroupResult.errors_with_context[0].type, 'layer');
+            assert.equal(layergroupResult.errors_with_context[0].subtype, 'permission-denied-relation');
             
             testClient.drain(done);
         });
@@ -424,6 +436,10 @@ describe('authorization', function() {
             assert.ok(body.hasOwnProperty('errors'));
             assert.equal(body.errors.length, 1);
             assert.ok(body.errors[0].match(/permission denied/), body.errors[0]);
+
+            assert.ok(body.hasOwnProperty('errors_with_context'));
+            assert.equal(body.errors_with_context[0].type, 'auth');
+            assert.equal(body.errors_with_context[0].subtype, 'permission-denied-relation');
 
             testClient.drain(done);
         });
