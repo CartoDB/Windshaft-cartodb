@@ -231,7 +231,7 @@ describe('rate limit unit 1 limit', function () {
 });
 
 
-describe.only('rate limit unit multiple limits', function () {
+describe('rate limit unit multiple limits', function () {
     before(function () {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.tile = true;
