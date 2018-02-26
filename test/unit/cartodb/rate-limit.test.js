@@ -7,7 +7,8 @@ const cartodbRedis = require('cartodb-redis');
 const {
     rateLimitMiddleware,
     RATE_LIMIT_ENDPOINTS_GROUPS,
-    getStoreKey
+    getStoreKey,
+    getLowerRateLimit
 } = require('../../../lib/cartodb/middleware/rate-limit');
 
 let redisClient;
@@ -231,68 +232,105 @@ describe('rate limit unit 1 limit', function () {
 });
 
 
-describe('rate limit unit multiple limits', function () {
-    before(function () {
-        global.environment.enabledFeatures.rateLimitsEnabled = true;
-        global.environment.enabledFeatures.rateLimitsByEndpoint.tile = true;
-
-        const redisPool = new RedisPool(global.environment.redis);
-        const metadataBackend = cartodbRedis({ pool: redisPool });
-        rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_8);
-
-        redisClient = redis.createClient(global.environment.redis.port);
+describe('Lower rate limit', function () {
+    it("1 limit: not limited", function (done) {
+        const limits = [[0, 3, 1, -1, 1]];
+        const result = getLowerRateLimit(limits);
+        assert.deepEqual(limits[0], result);
+        done();
     });
 
-    after(function () {
-        global.environment.enabledFeatures.rateLimitsEnabled = false;
-        global.environment.enabledFeatures.rateLimitsByEndpoint.tile = false;
-
-        keysToDelete.forEach(key => {
-            redisClient.del(key);
-        });
+    it("1 limit: limited", function (done) {
+        const limits = [[1, 3, 0, 0, 1]];
+        const result = getLowerRateLimit(limits);
+        assert.deepEqual(limits[0], result);
+        done();
     });
 
-    it("get the smaller limit 1", function (done) {
-        setLimit(5, 1, 5);
-        setLimit(2, 1, 2);
-        setTimeout( () => {
-            let { req, res } = getReqAndRes();
-            rateLimit(req, res, function (err) {
-                assert.ifError(err);
-                assert.deepEqual(res.headers, {
-                    "X-Rate-Limit-Limit": 3,
-                    "X-Rate-Limit-Remaining": 1,
-                    "X-Rate-Limit-Reset": 0,
-                    "X-Rate-Limit-Retry-After": -1
-                });
+    it("empty or invalid", function (done) {
+        let limits = [];
+        let result = getLowerRateLimit(limits);
+        assert.deepEqual(null, result);
 
-                keysToDelete.forEach(key => {
-                    redisClient.del(key);
-                });
+        limits = undefined;
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(null, result);
 
-                setTimeout(done, 1000);
-            });
-        }, 100);
+        limits = null;
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(null, result);
 
+        limits = [[]];
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(null, result);
+
+        limits = [[], []];
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(null, result);
+
+        limits = {};
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(null, result);
+
+        limits = [{}];
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(null, result);
+
+        limits = [[1, 2]];
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(null, result);
+
+        done();
     });
 
-    it("get the smaller limit 2", function (done) {
-        setLimit(2, 1, 2);
-        setLimit(5, 2, 5);
-        setTimeout( () => {
-            let { req, res } = getReqAndRes();
-            rateLimit(req, res, function (err) {
-                assert.ifError(err);
-                assert.deepEqual(res.headers, {
-                    "X-Rate-Limit-Limit": 3,
-                    "X-Rate-Limit-Remaining": 2,
-                    "X-Rate-Limit-Reset": 0,
-                    "X-Rate-Limit-Retry-After": -1
-                });
-                done();
-            });
-        }, 100);
+    it("multiple limits: valid and invalid", function (done) {
+        const limit1 = [0, 3, 0];
+        const limit2 = [0, 3, 1, 0, 1];
+        
+        let limits = [limit1, limit2];
+        let result = getLowerRateLimit(limits);
+        assert.deepEqual(limit2, result);
 
+        limits = [limit2, limit1];
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(limit2, result);
+
+        done();
     });
 
+    it("multiple limits: not limited", function (done) {
+        const limit1 = [0, 3, 2, 0, 1];
+        const limit2 = [0, 3, 3, 0, 1];
+        const limit3 = [0, 3, 1, 0, 1];
+        const limit4 = [0, 3, 4, 0, 1];
+        const limit5 = [0, 3, 5, 0, 1];
+        
+        let limits = [limit1, limit2, limit3, limit4, limit5];
+        let result = getLowerRateLimit(limits);
+        assert.deepEqual(limit3, result);
+
+        limits = [limit1, limit2];
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(limit1, result);
+
+        done();
+    });
+
+    it("multiple limits: limited", function (done) {
+        const limit1 = [0, 3, 2, 0, 1];
+        const limit2 = [0, 3, 3, 0, 1];
+        const limit3 = [0, 3, 1, 0, 1];
+        const limit4 = [0, 3, 4, 0, 1];
+        const limit5 = [1, 3, 5, 0, 1];
+        
+        let limits = [limit1, limit2, limit3, limit4, limit5];
+        let result = getLowerRateLimit(limits);
+        assert.deepEqual(limit5, result);
+
+        limits = [limit1, limit2, limit5, limit3, limit4];
+        result = getLowerRateLimit(limits);
+        assert.deepEqual(limit5, result);
+
+        done();
+    });
 });
