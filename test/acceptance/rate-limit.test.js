@@ -151,7 +151,7 @@ describe('rate limit', function() {
         });
     });
 
-    it("1 req/sec: 5 request (1 per 250ms) should be limited: OK, KO, KO, KO, OK", function(done) {
+    it("1 req/sec: 2 req/seg should be limited", function(done) {
         const count = 1;
         const period = 1;
         const burst = 1;
@@ -195,13 +195,13 @@ describe('rate limit', function() {
         setTimeout(
             function() {
                 let response = {
-                    status: 200,
+                    status: 429,
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8',
                         'X-Rate-Limit-Limit': '2',
                         'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '2',
-                        'X-Rate-Limit-Retry-After': '-1'
+                        'X-Rate-Limit-Reset': '1',
+                        'X-Rate-Limit-Retry-After': '0'
                     }
                 };
 
@@ -220,8 +220,8 @@ describe('rate limit', function() {
                         'Content-Type': 'application/json; charset=utf-8',
                         'X-Rate-Limit-Limit': '2',
                         'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '2',
-                        'X-Rate-Limit-Retry-After': '1'
+                        'X-Rate-Limit-Reset': '1',
+                        'X-Rate-Limit-Retry-After': '0'
                     }
                 };
 
@@ -240,8 +240,8 @@ describe('rate limit', function() {
                         'Content-Type': 'application/json; charset=utf-8',
                         'X-Rate-Limit-Limit': '2',
                         'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '2',
-                        'X-Rate-Limit-Retry-After': '1'
+                        'X-Rate-Limit-Reset': '1',
+                        'X-Rate-Limit-Retry-After': '0'
                     }
                 };
 
@@ -260,7 +260,7 @@ describe('rate limit', function() {
                         'Content-Type': 'application/json; charset=utf-8',
                         'X-Rate-Limit-Limit': '2',
                         'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '2',
+                        'X-Rate-Limit-Reset': '1',
                         'X-Rate-Limit-Retry-After': '-1'
                     }
                 };
@@ -302,21 +302,6 @@ describe('rate limit middleware', function () {
 
         keysToDelete.forEach(key => {
             redisClient.del(key);
-        });
-    });
-
-    it("should not be rate limited", function (done) {
-        const { req, res } = getReqAndRes();
-        rateLimit(req, res, function (err) {
-            assert.ifError(err);
-            assert.deepEqual(res.headers, {
-                "X-Rate-Limit-Limit": 1,
-                "X-Rate-Limit-Remaining": 0,
-                "X-Rate-Limit-Reset": 1,
-                "X-Rate-Limit-Retry-After": -1
-            });
-
-            setTimeout(done, 1000);
         });
     });
 
@@ -367,7 +352,7 @@ describe('rate limit middleware', function () {
         );
     });
 
-    it("5 request (1 per 250ms) should be limited: OK, KO, KO, KO, OK", function (done) {
+    it("1 req/sec: 2 req/seg should be limited", function (done) {
         let { req, res } = getReqAndRes();
         rateLimit(req, res, function (err) {
             assert.ifError(err);
@@ -383,13 +368,15 @@ describe('rate limit middleware', function () {
             function () {
                 let { req, res } = getReqAndRes();
                 rateLimit(req, res, function (err) {
-                    assert.ifError(err);
+                    assert.ok(err);
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": -1
+                        "X-Rate-Limit-Reset": 0,
+                        "X-Rate-Limit-Retry-After": 0
                     });
+                    assert.equal(err.message, 'You are over the limits.');
+                    assert.equal(err.http_status, 429);
                 });
             },
             250
@@ -403,8 +390,8 @@ describe('rate limit middleware', function () {
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": 1
+                        "X-Rate-Limit-Reset": 0,
+                        "X-Rate-Limit-Retry-After": 0
                     });
                     assert.equal(err.message, 'You are over the limits.');
                     assert.equal(err.http_status, 429);
@@ -421,8 +408,8 @@ describe('rate limit middleware', function () {
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": 1
+                        "X-Rate-Limit-Reset": 0,
+                        "X-Rate-Limit-Retry-After": 0
                     });
                     assert.equal(err.message, 'You are over the limits.');
                     assert.equal(err.http_status, 429);
@@ -439,8 +426,8 @@ describe('rate limit middleware', function () {
                     assert.deepEqual(res.headers, {
                         "X-Rate-Limit-Limit": 1,
                         "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": 1
+                        "X-Rate-Limit-Reset": 0,
+                        "X-Rate-Limit-Retry-After": 0
                     });
                     assert.equal(err.message, 'You are over the limits.');
                     assert.equal(err.http_status, 429);
