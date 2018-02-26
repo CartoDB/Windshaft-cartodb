@@ -49,13 +49,13 @@ module.exports.RESPONSE = {
         }
     },
     UNAUTHORIZED_ERROR: {
-        status: 403,
+        status: 401,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         }
     },
     FORBIDDEN_ERROR: {
-        status: 401,
+        status: 403,
         headers: {
             'Content-Type': 'application/json; charset=utf-8'
         }
