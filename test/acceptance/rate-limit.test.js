@@ -12,7 +12,7 @@ const {
 let redisClient;
 let testClient;
 let keysToDelete = ['user:localhost:mapviews:global'];
-const user = 'cdb';
+const user = 'localhost';
 
 const query = `
     SELECT

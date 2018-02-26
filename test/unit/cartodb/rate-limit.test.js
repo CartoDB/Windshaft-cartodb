@@ -13,7 +13,7 @@ const {
 
 let redisClient;
 let rateLimit;
-const user = 'cdb';
+const user = 'localhost';
 let keysToDelete = [];
 
 function setLimit(count, period, burst) {
