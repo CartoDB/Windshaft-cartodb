@@ -72,7 +72,7 @@ function setLimit(count, period, burst) {
             return;
         }
 
-        const key = getStoreKey(user, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_1);        
+        const key = getStoreKey(user, RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS);        
         redisClient.rpush(key, burst);
         redisClient.rpush(key, count);
         redisClient.rpush(key, period);
@@ -280,7 +280,7 @@ describe('rate limit middleware', function () {
 
         const redisPool = new RedisPool(global.environment.redis);
         const metadataBackend = cartodbRedis({ pool: redisPool });
-        rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ENDPOINT_1);
+        rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS);
 
         redisClient = redis.createClient(global.environment.redis.port);
         testClient = new TestClient(createMapConfig(), 1234);
