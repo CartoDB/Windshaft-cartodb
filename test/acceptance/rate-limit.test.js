@@ -5,12 +5,8 @@ const redis = require('redis');
 const RedisPool = require('redis-mpool');
 const cartodbRedis = require('cartodb-redis');
 const TestClient = require('../support/test-client');
-const {
-    rateLimitMiddleware,
-    RATE_LIMIT_ENDPOINTS_GROUPS,
-    getStoreKey
-} = require('../../lib/cartodb/middleware/rate-limit');
-
+const rateLimitMiddleware = require('../../lib/cartodb/middleware/rate-limit');
+const { RATE_LIMIT_ENDPOINTS_GROUPS, getStoreKey } = rateLimitMiddleware;
 
 let rateLimit;
 let redisClient;
