@@ -1,8 +1,7 @@
 require('../../support/test_helper');
 
 const assert = require('assert');
-
-const { getLowerRateLimit } = require('../../../lib/cartodb/middleware/rate-limit');
+const { getLowerRateLimit } = require('../../../lib/cartodb/api/user_limits_api');
 
 
 describe('Lower rate limit', function () {

@@ -5,9 +5,12 @@ const redis = require('redis');
 const RedisPool = require('redis-mpool');
 const cartodbRedis = require('cartodb-redis');
 const TestClient = require('../support/test-client');
+const UserLimitsApi = require('../../lib/cartodb/api/user_limits_api');
 const rateLimitMiddleware = require('../../lib/cartodb/middleware/rate-limit');
-const { RATE_LIMIT_ENDPOINTS_GROUPS, getStoreKey } = rateLimitMiddleware;
+const { RATE_LIMIT_ENDPOINTS_GROUPS } = rateLimitMiddleware;
+const { getStoreKey } = require('../../lib/cartodb/api/user_limits_api');
 
+let userLimitsApi; 
 let rateLimit;
 let redisClient;
 let testClient;
@@ -274,13 +277,18 @@ describe('rate limit', function() {
 
 
 describe('rate limit middleware', function () {
-    before(function () {
+    before(function (done) {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.anonymous = true;
 
         const redisPool = new RedisPool(global.environment.redis);
         const metadataBackend = cartodbRedis({ pool: redisPool });
-        rateLimit = rateLimitMiddleware(metadataBackend, RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS);
+        userLimitsApi = new UserLimitsApi(metadataBackend, {
+            limits: {
+                rateLimitsEnabled: global.environment.enabledFeatures.rateLimitsEnabled
+            }
+        });
+        rateLimit = rateLimitMiddleware(userLimitsApi, RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS);
 
         redisClient = redis.createClient(global.environment.redis.port);
         testClient = new TestClient(createMapConfig(), 1234);
@@ -290,6 +298,8 @@ describe('rate limit middleware', function () {
         const period = 1;
         const burst = 0;
         setLimit(count, period, burst);
+
+        setTimeout(done, 10);
     });
 
     after(function () {
@@ -448,5 +458,119 @@ describe('rate limit middleware', function () {
             },
             1050
         );
+    });
+
+    it("1 req/sec: 2 req/seg should be limited, removing script SHA from Redis", function (done) {
+        userLimitsApi.metadataBackend.redisCmd(
+            8, 
+            'SCRIPT', 
+            ['FLUSH'], 
+            function () {
+                let { req, res } = getReqAndRes();
+                rateLimit(req, res, function (err) {
+                    assert.ifError(err);
+                    assert.deepEqual(res.headers, {
+                        "X-Rate-Limit-Limit": 1,
+                        "X-Rate-Limit-Remaining": 0,
+                        "X-Rate-Limit-Reset": 1,
+                        "X-Rate-Limit-Retry-After": -1
+                    });
+                });
+        
+                setTimeout(
+                    function () {
+                        let { req, res } = getReqAndRes();
+                        rateLimit(req, res, function (err) {
+                            assert.ok(err);
+                            assert.deepEqual(res.headers, {
+                                "X-Rate-Limit-Limit": 1,
+                                "X-Rate-Limit-Remaining": 0,
+                                "X-Rate-Limit-Reset": 0,
+                                "X-Rate-Limit-Retry-After": 0
+                            });
+                            assert.equal(err.message, 'You are over the limits.');
+                            assert.equal(err.http_status, 429);
+                        });
+                    },
+                    250
+                );
+        
+                setTimeout(
+                    function () {
+                        let { req, res } = getReqAndRes();
+                        rateLimit(req, res, function (err) {
+                            assert.ok(err);
+                            assert.deepEqual(res.headers, {
+                                "X-Rate-Limit-Limit": 1,
+                                "X-Rate-Limit-Remaining": 0,
+                                "X-Rate-Limit-Reset": 0,
+                                "X-Rate-Limit-Retry-After": 0
+                            });
+                            assert.equal(err.message, 'You are over the limits.');
+                            assert.equal(err.http_status, 429);
+                        });
+                    },
+                    500
+                );
+        
+                setTimeout(
+                    function () {
+                        let { req, res } = getReqAndRes();
+                        rateLimit(req, res, function (err) {
+                            assert.ok(err);
+                            assert.deepEqual(res.headers, {
+                                "X-Rate-Limit-Limit": 1,
+                                "X-Rate-Limit-Remaining": 0,
+                                "X-Rate-Limit-Reset": 0,
+                                "X-Rate-Limit-Retry-After": 0
+                            });
+                            assert.equal(err.message, 'You are over the limits.');
+                            assert.equal(err.http_status, 429);
+                        });
+                    },
+                    750
+                );
+        
+                setTimeout(
+                    function () {
+                        let { req, res } = getReqAndRes();
+                        rateLimit(req, res, function (err) {
+                            assert.ok(err);
+                            assert.deepEqual(res.headers, {
+                                "X-Rate-Limit-Limit": 1,
+                                "X-Rate-Limit-Remaining": 0,
+                                "X-Rate-Limit-Reset": 0,
+                                "X-Rate-Limit-Retry-After": 0
+                            });
+                            assert.equal(err.message, 'You are over the limits.');
+                            assert.equal(err.http_status, 429);
+                        });
+                    },
+                    950
+                );
+        
+                setTimeout(
+                    function () {
+                        let { req, res } = getReqAndRes();
+                        rateLimit(req, res, function (err) {
+                            assert.ifError(err);
+                            assert.deepEqual(res.headers, {
+                                "X-Rate-Limit-Limit": 1,
+                                "X-Rate-Limit-Remaining": 0,
+                                "X-Rate-Limit-Reset": 1,
+                                "X-Rate-Limit-Retry-After": -1
+                            });
+                        });
+                    },
+                    1050
+                );
+                
+                setTimeout( function() {
+                    userLimitsApi.preprareRateLimit();
+                    setTimeout(done, 1000);
+                }, 1100);
+            }
+        );
+
     });
 });
