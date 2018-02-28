@@ -143,6 +143,12 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
 
+basic-auth@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/basic-auth/-/basic-auth-2.0.0.tgz#015db3f353e02e56377755f962742e8981e7bbba"
+  dependencies:
+    safe-buffer "5.1.1"
+
 bcrypt-pbkdf@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/bcrypt-pbkdf/-/bcrypt-pbkdf-1.0.1.tgz#63bc5dcb61331b92bc05fd528953c33462a06f8d"
@@ -295,9 +301,9 @@ cartodb-query-tables@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.3.0.tgz#56e18d869666eb2e8e2cb57d0baf3acc923f8756"
 
-cartodb-redis@0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/cartodb-redis/-/cartodb-redis-0.15.0.tgz#509ab9f62b8cae0838bcb8db1cb9d6355704ace3"
+cartodb-redis@0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/cartodb-redis/-/cartodb-redis-0.16.0.tgz#969312fd329b24a76bf6e5a4dd961445f2eda734"
   dependencies:
     dot "~1.0.2"
     redis-mpool "^0.5.0"

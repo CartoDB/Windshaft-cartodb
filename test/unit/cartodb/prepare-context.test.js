@@ -10,6 +10,7 @@ var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
 const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
 const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
+const apikeyCredentialsMiddleware = require('../../../lib/cartodb/middleware/context/apikey-credentials');
 const localsMiddleware =  require('../../../lib/cartodb/middleware/context/locals');
 
 var windshaft = require('windshaft');
@@ -23,6 +24,7 @@ describe('prepare-context', function() {
     let cleanUpQueryParams;
     let dbConnSetup;
     let authorize;
+    let setApikeyCredentials;
 
     before(function() {
         var redisPool = new RedisPool(global.environment.redis);
@@ -35,6 +37,7 @@ describe('prepare-context', function() {
         cleanUpQueryParams = cleanUpQueryParamsMiddleware();
         authorize = authorizeMiddleware(authApi);
         dbConnSetup = dbConnSetupMiddleware(pgConnection);
+        setApikeyCredentials = apikeyCredentialsMiddleware();
     });
 
 
@@ -103,8 +106,20 @@ describe('prepare-context', function() {
     });
 
     it('sets also dbuser for authenticated requests', function(done){
-        var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }};
-        var res = { set: function () {} };
+        var req = { 
+            headers: { 
+                host: 'localhost' 
+            }, 
+            query: {
+                api_key: '1234'
+            }
+        };
+        var res = { 
+            set: function () {},
+            locals: {
+                api_key: '1234' 
+            }
+        };
 
         // FIXME: review authorize-pgconnsetup workflow, It might we are doing authorization twice.
         authorize(prepareRequest(req), prepareResponse(res), function (err) {
@@ -168,4 +183,66 @@ describe('prepare-context', function() {
         });
     });
 
+    describe('Set apikey token', function(){
+        it('from query param', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost'
+                },
+                query: {
+                    api_key: '1234',
+                }
+            };
+            var res = {};
+            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+                
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+
+        it('from body param', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost'
+                },
+                body: {
+                    api_key: '1234',
+                }
+            };
+            var res = {};
+            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+
+        it('from http header', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost',
+                    authorization: 'Basic bG9jYWxob3N0OjEyMzQ=', // user: localhost, password: 1234
+                }
+            };
+            var res = {};
+            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+    });
 });
