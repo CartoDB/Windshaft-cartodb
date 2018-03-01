@@ -65,10 +65,11 @@ describe('prepare-context', function() {
     }
 
     it('res.locals are created', function(done) {
+        const locals = localsMiddleware();
         let req = {};
         let res = {};
 
-        localsMiddleware(prepareRequest(req), prepareResponse(res), function(err) {
+        locals(prepareRequest(req), prepareResponse(res), function(err) {
             if ( err ) { done(err); return; }
             assert.ok(res.hasOwnProperty('locals'), 'response has locals');
             done();
