@@ -12,6 +12,7 @@ describe('lzma-middleware', function() {
             }
         };
         testHelper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
+            const lzma = lzmaMiddleware();
             var req = {
                 headers: {
                     host:'localhost'
@@ -21,7 +22,8 @@ describe('lzma-middleware', function() {
                     lzma: data
                 }
             };
-            lzmaMiddleware(req, {}, function(err) {
+
+            lzma(req, {}, function(err) {
                 if ( err ) {
                     return done(err);
                 }
