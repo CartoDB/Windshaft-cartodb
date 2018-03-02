@@ -37,7 +37,7 @@ return function () {
     describe('named map tile', function () {
         it('should get default named vector tile', function (done) {
             const apikeyToken = 1234;
-            const templateName = 'mvt-template';
+            const templateName = `mvt-template-${usePostGIS ? 'postgis' : 'mapnik'}`;
             const template = {
                 version: '0.0.1',
                 name: templateName,
@@ -71,7 +71,7 @@ return function () {
 
                 assert.equal(tileJSON[0].features.length, 10);
 
-                done();
+                testClient.drain(done);
             });
         });
     });
