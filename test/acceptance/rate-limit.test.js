@@ -98,6 +98,50 @@ function getReqAndRes() {
     };
 }
 
+function assertGetLayergroupRequest (status, limit, remaining, reset, retry, done = null) {
+    const response = {
+        status,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            'X-Rate-Limit-Limit': limit,
+            'X-Rate-Limit-Remaining': remaining,
+            'X-Rate-Limit-Reset': reset,
+            'X-Rate-Limit-Retry-After': retry
+        }
+    };
+
+    testClient.getLayergroup({ response }, err => {
+        assert.ifError(err);
+        if (done) {
+            setTimeout(done, 1000);
+        }
+    });
+}
+
+function assertRateLimitRequest (status, limit, remaining, reset, retry, done = null) {
+    const { req, res } = getReqAndRes();
+    rateLimit(req, res, function (err) {
+        assert.deepEqual(res.headers, {
+            "X-Rate-Limit-Limit": limit,
+            "X-Rate-Limit-Remaining": remaining,
+            "X-Rate-Limit-Reset": reset,
+            "X-Rate-Limit-Retry-After": retry
+        });
+
+        if(status === 200) {
+            assert.ifError(err);
+        } else {
+            assert.ok(err);
+            assert.equal(err.message, 'You are over the limits.');
+            assert.equal(err.http_status, 429);
+        }
+
+        if (done) {
+            setTimeout(done, 1000);
+        }
+    });
+}
+
 describe('rate limit', function() {
     before(function() {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
@@ -133,21 +177,7 @@ describe('rate limit', function() {
         const burst = 1;
         setLimit(count, period, burst);
 
-        let response = {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                'X-Rate-Limit-Limit': '2',
-                'X-Rate-Limit-Remaining': '1',
-                'X-Rate-Limit-Reset': '1',
-                'X-Rate-Limit-Retry-After': '-1'
-            }
-        };
-
-        testClient.getLayergroup({ response }, err => {
-            assert.ifError(err);
-            setTimeout(done, period * 1000);
-        });
+        assertGetLayergroupRequest(200, '2', '1', '1', '-1', done);
     });
 
     it("1 req/sec: 2 req/seg should be limited", function(done) {
@@ -156,121 +186,12 @@ describe('rate limit', function() {
         const burst = 1;
         setLimit(count, period, burst);
 
-        let response = {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                'X-Rate-Limit-Limit': '2',
-                'X-Rate-Limit-Remaining': '1',
-                'X-Rate-Limit-Reset': '1',
-                'X-Rate-Limit-Retry-After': '-1'
-            }
-        };
-
-        testClient.getLayergroup({ response }, err => {
-            assert.ifError(err);
-        });
-
-        setTimeout(
-            function() {
-                let response = {
-                    status: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'X-Rate-Limit-Limit': '2',
-                        'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '1',
-                        'X-Rate-Limit-Retry-After': '-1'
-                    }
-                };
-
-                testClient.getLayergroup({ response }, err => {
-                    assert.ifError(err);
-                });
-            },
-            250
-        );
-
-        setTimeout(
-            function() {
-                let response = {
-                    status: 429,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'X-Rate-Limit-Limit': '2',
-                        'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '1',
-                        'X-Rate-Limit-Retry-After': '0'
-                    }
-                };
-
-                testClient.getLayergroup({ response }, err => {
-                    assert.ifError(err);
-                });
-            },
-            500
-        );
-
-        setTimeout(
-            function() {
-                let response = {
-                    status: 429,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'X-Rate-Limit-Limit': '2',
-                        'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '1',
-                        'X-Rate-Limit-Retry-After': '0'
-                    }
-                };
-
-                testClient.getLayergroup({ response }, err => {
-                    assert.ifError(err);
-                });
-            },
-            750
-        );
-
-        setTimeout(
-            function() {
-                let response = {
-                    status: 429,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'X-Rate-Limit-Limit': '2',
-                        'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '1',
-                        'X-Rate-Limit-Retry-After': '0'
-                    }
-                };
-
-                testClient.getLayergroup({ response }, err => {
-                    assert.ifError(err);
-                });
-            },
-            950
-        );
-        
-        setTimeout(
-            function() {
-                let response = {
-                    status: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'X-Rate-Limit-Limit': '2',
-                        'X-Rate-Limit-Remaining': '0',
-                        'X-Rate-Limit-Reset': '1',
-                        'X-Rate-Limit-Retry-After': '-1'
-                    }
-                };
-
-                testClient.getLayergroup({ response }, err => {
-                    assert.ifError(err);
-                    setTimeout(done, period * 2 * 1000);
-                });
-            },
-            1050
-        );
+        assertGetLayergroupRequest(200, '2', '1', '1', '-1');
+        setTimeout( () => assertGetLayergroupRequest(200, '2', '0', '1', '-1'), 250);
+        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '0'),  500);
+        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '0'),  750);
+        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '0'),  950);
+        setTimeout( () => assertGetLayergroupRequest(200, '2', '0', '1', '-1', done), 1050);
     });
 
 });
@@ -299,7 +220,7 @@ describe('rate limit middleware', function () {
         const burst = 0;
         setLimit(count, period, burst);
 
-        setTimeout(done, 10);
+        setTimeout(done, 1000);
     });
 
     after(function () {
@@ -311,266 +232,28 @@ describe('rate limit middleware', function () {
         });
     });
 
-    it("3 request (1 per second) should not be rate limited", function (done) {
-        let { req, res } = getReqAndRes();
-        rateLimit(req, res, function (err) {
-            assert.ifError(err);
-            assert.deepEqual(res.headers, {
-                "X-Rate-Limit-Limit": 1,
-                "X-Rate-Limit-Remaining": 0,
-                "X-Rate-Limit-Reset": 1,
-                "X-Rate-Limit-Retry-After": -1
-            });
-        });
-
-        setTimeout(
-            function () {
-                let { req, res } = getReqAndRes();
-                rateLimit(req, res, function (err) {
-                    assert.ifError(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": -1
-                    });
-                });
-            },
-            1100
-        );
-
-        setTimeout(
-            function () {
-                let { req, res } = getReqAndRes();
-                rateLimit(req, res, function (err) {
-                    assert.ifError(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": -1
-                    });
-
-                    setTimeout(done, 1000);
-                });
-            },
-            2 * 1100
-        );
-    });
-
     it("1 req/sec: 2 req/seg should be limited", function (done) {
-        let { req, res } = getReqAndRes();
-        rateLimit(req, res, function (err) {
-            assert.ifError(err);
-            assert.deepEqual(res.headers, {
-                "X-Rate-Limit-Limit": 1,
-                "X-Rate-Limit-Remaining": 0,
-                "X-Rate-Limit-Reset": 1,
-                "X-Rate-Limit-Retry-After": -1
-            });
-        });
-
-        setTimeout(
-            function () {
-                let { req, res } = getReqAndRes();
-                rateLimit(req, res, function (err) {
-                    assert.ok(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 0,
-                        "X-Rate-Limit-Retry-After": 0
-                    });
-                    assert.equal(err.message, 'You are over the limits.');
-                    assert.equal(err.http_status, 429);
-                });
-            },
-            250
-        );
-
-        setTimeout(
-            function () {
-                let { req, res } = getReqAndRes();
-                rateLimit(req, res, function (err) {
-                    assert.ok(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 0,
-                        "X-Rate-Limit-Retry-After": 0
-                    });
-                    assert.equal(err.message, 'You are over the limits.');
-                    assert.equal(err.http_status, 429);
-                });
-            },
-            500
-        );
-
-        setTimeout(
-            function () {
-                let { req, res } = getReqAndRes();
-                rateLimit(req, res, function (err) {
-                    assert.ok(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 0,
-                        "X-Rate-Limit-Retry-After": 0
-                    });
-                    assert.equal(err.message, 'You are over the limits.');
-                    assert.equal(err.http_status, 429);
-                });
-            },
-            750
-        );
-
-        setTimeout(
-            function () {
-                let { req, res } = getReqAndRes();
-                rateLimit(req, res, function (err) {
-                    assert.ok(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 0,
-                        "X-Rate-Limit-Retry-After": 0
-                    });
-                    assert.equal(err.message, 'You are over the limits.');
-                    assert.equal(err.http_status, 429);
-                });
-            },
-            950
-        );
-
-        setTimeout(
-            function () {
-                let { req, res } = getReqAndRes();
-                rateLimit(req, res, function (err) {
-                    assert.ifError(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": -1
-                    });
-                    setTimeout(done, 1000);
-                });
-            },
-            1050
-        );
+        assertRateLimitRequest(200, 1, 0, 1, -1);
+        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 250);
+        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 500);
+        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 750);
+        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 950);
+        setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, -1, done), 1050);
     });
 
-    it("1 req/sec: 2 req/seg should be limited, removing script SHA from Redis", function (done) {
+    it("1 req/sec: 2 req/seg should be limited, removing SHA script from Redis", function (done) {
         userLimitsApi.metadataBackend.redisCmd(
             8, 
             'SCRIPT', 
             ['FLUSH'], 
             function () {
-                let { req, res } = getReqAndRes();
-                rateLimit(req, res, function (err) {
-                    assert.ifError(err);
-                    assert.deepEqual(res.headers, {
-                        "X-Rate-Limit-Limit": 1,
-                        "X-Rate-Limit-Remaining": 0,
-                        "X-Rate-Limit-Reset": 1,
-                        "X-Rate-Limit-Retry-After": -1
-                    });
-                });
-        
-                setTimeout(
-                    function () {
-                        let { req, res } = getReqAndRes();
-                        rateLimit(req, res, function (err) {
-                            assert.ok(err);
-                            assert.deepEqual(res.headers, {
-                                "X-Rate-Limit-Limit": 1,
-                                "X-Rate-Limit-Remaining": 0,
-                                "X-Rate-Limit-Reset": 0,
-                                "X-Rate-Limit-Retry-After": 0
-                            });
-                            assert.equal(err.message, 'You are over the limits.');
-                            assert.equal(err.http_status, 429);
-                        });
-                    },
-                    250
-                );
-        
-                setTimeout(
-                    function () {
-                        let { req, res } = getReqAndRes();
-                        rateLimit(req, res, function (err) {
-                            assert.ok(err);
-                            assert.deepEqual(res.headers, {
-                                "X-Rate-Limit-Limit": 1,
-                                "X-Rate-Limit-Remaining": 0,
-                                "X-Rate-Limit-Reset": 0,
-                                "X-Rate-Limit-Retry-After": 0
-                            });
-                            assert.equal(err.message, 'You are over the limits.');
-                            assert.equal(err.http_status, 429);
-                        });
-                    },
-                    500
-                );
-        
-                setTimeout(
-                    function () {
-                        let { req, res } = getReqAndRes();
-                        rateLimit(req, res, function (err) {
-                            assert.ok(err);
-                            assert.deepEqual(res.headers, {
-                                "X-Rate-Limit-Limit": 1,
-                                "X-Rate-Limit-Remaining": 0,
-                                "X-Rate-Limit-Reset": 0,
-                                "X-Rate-Limit-Retry-After": 0
-                            });
-                            assert.equal(err.message, 'You are over the limits.');
-                            assert.equal(err.http_status, 429);
-                        });
-                    },
-                    750
-                );
-        
-                setTimeout(
-                    function () {
-                        let { req, res } = getReqAndRes();
-                        rateLimit(req, res, function (err) {
-                            assert.ok(err);
-                            assert.deepEqual(res.headers, {
-                                "X-Rate-Limit-Limit": 1,
-                                "X-Rate-Limit-Remaining": 0,
-                                "X-Rate-Limit-Reset": 0,
-                                "X-Rate-Limit-Retry-After": 0
-                            });
-                            assert.equal(err.message, 'You are over the limits.');
-                            assert.equal(err.http_status, 429);
-                        });
-                    },
-                    950
-                );
-        
-                setTimeout(
-                    function () {
-                        let { req, res } = getReqAndRes();
-                        rateLimit(req, res, function (err) {
-                            assert.ifError(err);
-                            assert.deepEqual(res.headers, {
-                                "X-Rate-Limit-Limit": 1,
-                                "X-Rate-Limit-Remaining": 0,
-                                "X-Rate-Limit-Reset": 1,
-                                "X-Rate-Limit-Retry-After": -1
-                            });
-                        });
-                    },
-                    1050
-                );
-                
-                setTimeout( function() {
-                    userLimitsApi.preprareRateLimit();
-                    setTimeout(done, 1000);
-                }, 1100);
+                assertRateLimitRequest(200, 1, 0, 1, -1);
+                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 500);
+                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 500);
+                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 750);
+                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 950);
+                setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, -1, done), 1050);
             }
         );
-
     });
 });
