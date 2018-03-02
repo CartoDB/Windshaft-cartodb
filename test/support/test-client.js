@@ -414,7 +414,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
             var urlParams = {};
             if (params.hasOwnProperty('no_filters')) {
                 urlParams.no_filters = params.no_filters;
-            } 
+            }
             if (params.hasOwnProperty('own_filter')) {
                 urlParams.own_filter = params.own_filter;
             }
@@ -1252,4 +1252,88 @@ TestClient.prototype.getAnalysesCatalog = function (params, callback) {
             return callback(null, parsedBody);
         }
     );
+};
+
+TestClient.prototype.getNamedTile =  function (name, z, x, y, format, options, callback) {
+    const { params }  = options;
+
+    if (!this.apiKey) {
+        return callback(new Error('apiKey param is mandatory to create a new template'));
+    }
+
+    const createTemplateRequest = {
+        url: `/api/v1/map/named?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'POST',
+        headers: {
+            host: 'localhost',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(this.template)
+    };
+
+    const createTemplateResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    assert.response(this.server, createTemplateRequest, createTemplateResponse, (res, err) => {
+        if (err) {
+            return callback(err);
+        }
+
+        const templateId = JSON.parse(res.body).template_id;
+        const queryParams = params ? `?${qs.stringify(params)}` : '';
+        const url = `/api/v1/map/named/${templateId}/all/${[z,x,y].join('/')}.${format}${queryParams}`;
+        const namedTileRequest = {
+            url,
+            method: 'GET',
+            headers: {
+                host: 'localhost'
+            },
+            encoding: 'binary'
+        };
+
+        let contentType;
+        switch (format) {
+            case 'png':
+                contentType = 'image/png';
+                break;
+            case 'mvt':
+                contentType = 'application/x-protobuf';
+                break;
+            default:
+                contentType = 'application/json';
+                break;
+        }
+
+        const namedTileResponse = Object.assign({
+            status: 200,
+            headers: {
+                'content-type': contentType
+            }
+        }, options.response);
+
+        assert.response(this.server, namedTileRequest, namedTileResponse, (res, err) => {
+            let body;
+            switch (res.headers['content-type']) {
+                case 'image/png':
+                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    break;
+                case 'application/x-protobuf':
+                    body = new mapnik.VectorTile(z, x, y);
+                    body.setDataSync(new Buffer(res.body, 'binary'));
+                    break;
+                case 'application/json; charset=utf-8':
+                    body = JSON.parse(res.body);
+                    break;
+                default:
+                    body = res.body;
+                    break;
+            }
+
+            return callback(err, res, body);
+        });
+    });
 };

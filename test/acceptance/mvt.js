@@ -34,6 +34,48 @@ return function () {
         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
+    describe('named map tile', function () {
+        it('should get default named vector tile', function (done) {
+            const apikeyToken = 1234;
+            const templateName = 'mvt-template';
+            const template = {
+                version: '0.0.1',
+                name: templateName,
+                placeholders: {
+                    buffersize: {
+                        type: 'number',
+                        default: 0
+                    }
+                },
+                layergroup: {
+                    version: '1.7.0',
+                    layers: [{
+                        type: 'cartodb',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced limit 10',
+                            cartocss: TestClient.CARTOCSS.POINTS,
+                            cartocss_version: '2.3.0',
+                        }
+                    }]
+                }
+            };
+
+            const testClient = new TestClient(template, apikeyToken);
+
+            testClient.getNamedTile(templateName, 0, 0, 0, 'mvt', {}, (err, res, tile) => {
+                if (err) {
+                    return done(err);
+                }
+
+                const tileJSON = tile.toJSON();
+
+                assert.equal(tileJSON[0].features.length, 10);
+
+                done();
+            });
+        });
+    });
+
     describe('analysis-layers-dataviews-mvt', function () {
 
         function createMapConfig(layers, dataviews, analysis) {
