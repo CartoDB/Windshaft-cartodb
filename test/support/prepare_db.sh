@@ -131,11 +131,97 @@ HMSET rails:users:cartodb250user id ${TESTUSERID} \
                                  map_key 4321
 EOF
 
+
+# Remove this block when Auth fallback is not used anymore
+# AUTH_FALLBACK
+  # A user to test auth fallback to no api keys mode
+  cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+HMSET rails:users:user_previous_to_project_auth id ${TESTUSERID} \
+                                 database_name "${TEST_DB}" \
+                                 database_host "localhost" \
+                                 database_password "${TESTPASS}" \
+                                 database_publicuser "${PUBLICUSER}"\
+                                 map_key 4444
+EOF
+
   cat <<EOF | redis-cli -p ${REDIS_PORT} -n 0
 HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
 EOF
 
 fi
+
+# API keys ==============================
+
+# User localhost -----------------------
+
+# API Key Master
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:1234 \
+    user "localhost" \
+    type "master" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "${TESTUSER}" \
+    database_password "${TESTPASS}"
+EOF
+
+# API Key Default public
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:default_public \
+    user "localhost" \
+    type "default" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
+# API Key Regular
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:regular1 \
+    user "localhost" \
+    type "regular" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_regular1" \
+    database_password "regular1"
+EOF
+
+# API Key Regular 2 no Maps API access, only to check grants permissions to the API
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:regular2 \
+    user "localhost" \
+    type "regular" \
+    grants_sql "true" \
+    grants_maps "false" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
+# User cartodb250user -----------------------
+
+# API Key Master
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:cartodb250user:4321 \
+    user "localhost" \
+    type "master" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "${TESTUSER}" \
+    database_password "${TESTPASS}"
+EOF
+
+# API Key Default
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:cartodb250user:default_public \
+    user "localhost" \
+    type "default" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
 
 echo "Finished preparing data. Ready to run tests"

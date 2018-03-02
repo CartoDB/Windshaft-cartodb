@@ -188,7 +188,7 @@ describe('analysis-layers error cases', function() {
             ]
         );
 
-        var testClient = new TestClient(mapConfig, 11111);
+        var testClient = new TestClient(mapConfig); //No apikey provided -> using default public apikey
 
         testClient.getLayergroup({ response: AUTH_ERROR_RESPONSE }, function(err, layergroupResult) {
             assert.ok(!err, err);
