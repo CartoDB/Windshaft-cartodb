@@ -20,6 +20,9 @@ describe('lzma-middleware', function() {
                 query: {
                     api_key: 'test',
                     lzma: data
+                },
+                profiler: {
+                    done: function () {}
                 }
             };
 
