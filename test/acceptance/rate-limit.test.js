@@ -8,7 +8,6 @@ const TestClient = require('../support/test-client');
 const UserLimitsApi = require('../../lib/cartodb/api/user_limits_api');
 const rateLimitMiddleware = require('../../lib/cartodb/middleware/rate-limit');
 const { RATE_LIMIT_ENDPOINTS_GROUPS } = rateLimitMiddleware;
-const { getStoreKey } = require('../../lib/cartodb/api/user_limits_api');
 
 let userLimitsApi; 
 let rateLimit;
@@ -75,7 +74,7 @@ function setLimit(count, period, burst) {
             return;
         }
 
-        const key = getStoreKey(user, RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS);        
+        const key = `limits:rate:store:${user}:maps:${RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS}`;
         redisClient.rpush(key, burst);
         redisClient.rpush(key, count);
         redisClient.rpush(key, period);
@@ -109,7 +108,7 @@ function assertGetLayergroupRequest (status, limit, remaining, reset, retry, don
             'X-Rate-Limit-Retry-After': retry
         }
     };
-
+    
     testClient.getLayergroup({ response }, err => {
         assert.ifError(err);
         if (done) {
