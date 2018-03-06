@@ -155,6 +155,7 @@ describe('get requests with cache headers', function() {
 
             assert.ok(res.headers['x-cache-channel']);
             assert.ok(res.headers['surrogate-key']);
+            assert.ok(res.headers['vary'] === 'Authorization');
             if (expectedCacheHeaders) {
                 validateXChannelHeaders(res.headers, expectedCacheHeaders);
                 assert.equal(res.headers['surrogate-key'], expectedCacheHeaders.surrogate_keys);
