@@ -14,7 +14,7 @@ describe('tile stats', function() {
         global.statsClient = this.statsClient;
     });
 
-    it('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
+    it.skip('finalizeGetTileOrGrid does not call statsClient when format is not supported', function() {
         var expectedCalls = 2, // it will call increment once for the general error
             invalidFormat = 'png2',
             invalidFormatRegexp = new RegExp('invalid'),
@@ -49,7 +49,7 @@ describe('tile stats', function() {
         assert.equal(expectedCalls, 0, 'Unexpected number of calls to increment method');
     });
 
-    it('finalizeGetTileOrGrid calls statsClient when format is supported', function() {
+    it.skip('finalizeGetTileOrGrid calls statsClient when format is supported', function() {
         var expectedCalls = 2, // general error + format error
             validFormat = 'png',
             validFormatRegexp = new RegExp(validFormat),
