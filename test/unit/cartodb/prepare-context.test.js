@@ -10,7 +10,7 @@ var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
 const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
 const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
-const apikeyCredentialsMiddleware = require('../../../lib/cartodb/middleware/context/apikey-credentials');
+const credentialsMiddleware = require('../../../lib/cartodb/middleware/context/credentials');
 const localsMiddleware =  require('../../../lib/cartodb/middleware/context/locals');
 
 var windshaft = require('windshaft');
@@ -24,7 +24,7 @@ describe('prepare-context', function() {
     let cleanUpQueryParams;
     let dbConnSetup;
     let authorize;
-    let setApikeyCredentials;
+    let setCredentials;
 
     before(function() {
         var redisPool = new RedisPool(global.environment.redis);
@@ -37,7 +37,7 @@ describe('prepare-context', function() {
         cleanUpQueryParams = cleanUpQueryParamsMiddleware();
         authorize = authorizeMiddleware(authApi);
         dbConnSetup = dbConnSetupMiddleware(pgConnection);
-        setApikeyCredentials = apikeyCredentialsMiddleware();
+        setCredentials = credentialsMiddleware();
     });
 
 
@@ -65,16 +65,17 @@ describe('prepare-context', function() {
     }
 
     it('res.locals are created', function(done) {
+        const locals = localsMiddleware();
         let req = {};
         let res = {};
 
-        localsMiddleware(prepareRequest(req), prepareResponse(res), function(err) {
+        locals(prepareRequest(req), prepareResponse(res), function(err) {
             if ( err ) { done(err); return; }
             assert.ok(res.hasOwnProperty('locals'), 'response has locals');
             done();
         });
     });
-    
+
     it('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
       var res = {};
@@ -106,18 +107,18 @@ describe('prepare-context', function() {
     });
 
     it('sets also dbuser for authenticated requests', function(done){
-        var req = { 
-            headers: { 
-                host: 'localhost' 
-            }, 
+        var req = {
+            headers: {
+                host: 'localhost'
+            },
             query: {
                 api_key: '1234'
             }
         };
-        var res = { 
+        var res = {
             set: function () {},
             locals: {
-                api_key: '1234' 
+                api_key: '1234'
             }
         };
 
@@ -169,7 +170,7 @@ describe('prepare-context', function() {
             }
         };
         var res = {};
-        
+
         cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function (err) {
             if ( err ) {
                 return done(err);
@@ -194,12 +195,12 @@ describe('prepare-context', function() {
                 }
             };
             var res = {};
-            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+            setCredentials(prepareRequest(req), prepareResponse(res), function (err) {
                 if (err) {
                     return done(err);
                 }
                 var query = res.locals;
-                
+
                 assert.equal('1234', query.api_key);
                 done();
             });
@@ -215,7 +216,7 @@ describe('prepare-context', function() {
                 }
             };
             var res = {};
-            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+            setCredentials(prepareRequest(req), prepareResponse(res), function (err) {
                 if (err) {
                     return done(err);
                 }
@@ -234,7 +235,7 @@ describe('prepare-context', function() {
                 }
             };
             var res = {};
-            setApikeyCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+            setCredentials(prepareRequest(req), prepareResponse(res), function (err) {
                 if (err) {
                     return done(err);
                 }
