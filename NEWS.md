@@ -5,6 +5,7 @@ Released yyyy-mm-dd
  - Upgrades Windshaft to 4.5.3
  - Implemented middleware to authorize users via new Api Key system
  - Keep the old authorization system as fallback
+ - Aggregation widget: Remove NULL categories in 'count' aggregations too
 
 ## 5.3.1
 Released 2018-02-13
