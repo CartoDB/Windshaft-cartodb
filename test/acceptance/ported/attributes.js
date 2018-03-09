@@ -125,7 +125,7 @@ describe('attributes', function() {
                     var parsed = JSON.parse(res.body);
                     assert.ok(parsed.errors);
                     var msg = parsed.errors[0];
-                    assert.ok(msg.match(/0 features.*identified by fid -666/), msg);
+                    assert.equal(msg, "Multiple features (0) identified by 'i' = -666 in layer 1");
                     return null;
                 },
                 function finish(err) {
