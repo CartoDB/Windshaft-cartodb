@@ -1912,7 +1912,7 @@ request@2.85.0:
     tunnel-agent "^0.6.0"
     uuid "^3.1.0"
 
-request@2.x, request@^2.55.0, request@^2.69.0, request@^2.83.0:
+request@2.x, request@^2.55.0, request@^2.69.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:
@@ -2400,9 +2400,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.5.4:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.5.4.tgz#ce9b2f1bbc8ef749a26693e1832774b438d78cb9"
+windshaft@4.5.5:
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.5.5.tgz#a737ef16b737ffd36ed9184b4b2a4d30f737747b"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.2"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb3
@@ -2415,7 +2415,7 @@ windshaft@4.5.4:
     grainstore "1.8.2"
     queue-async "~1.0.7"
     redis-mpool "^0.5.0"
-    request "^2.83.0"
+    request "2.85.0"
     semver "~5.0.3"
     sphericalmercator "1.0.4"
     step "~0.0.6"
