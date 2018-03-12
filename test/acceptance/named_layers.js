@@ -659,7 +659,9 @@ describe('named_layers', function() {
                 }
 
                 var parsedBody = JSON.parse(response.body);
-                assert.ok(parsedBody.errors[0].match(/permission denied for relation test_table_private_1/));
+                assert.ok(parsedBody.errors[0].search(/permission denied for relation/i) >= 0);
+                assert.equal(parsedBody.errors_with_context[0].info, 'test_table_private_1');
+
 
                 return null;
             },
