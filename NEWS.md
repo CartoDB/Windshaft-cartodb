@@ -2,9 +2,10 @@
 
 ## 5.4.0
 Released yyyy-mm-dd
- - Upgrades Windshaft to 4.5.3
+ - Upgrades Windshaft to 4.5.4 ([Mapnik top metrics](https://github.com/CartoDB/Windshaft/pull/597), [AttributesBackend allows multiple features if all the attributes are the same](https://github.com/CartoDB/Windshaft/pull/602))
  - Implemented middleware to authorize users via new Api Key system
  - Keep the old authorization system as fallback
+ - Aggregation widget: Remove NULL categories in 'count' aggregations too
 
 ## 5.3.1
 Released 2018-02-13
