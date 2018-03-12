@@ -61,6 +61,8 @@ describe('prepare-context', function() {
         }
         res.locals.user = 'localhost';
 
+        res.set = function () {};
+
         return res;
     }
 
