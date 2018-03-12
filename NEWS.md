@@ -6,6 +6,7 @@ Released yyyy-mm-dd
  - Implemented middleware to authorize users via new Api Key system
  - Keep the old authorization system as fallback
  - Aggregation widget: Remove NULL categories in 'count' aggregations too
+ - Update request to 2.85.0
 
 ## 5.3.1
 Released 2018-02-13
