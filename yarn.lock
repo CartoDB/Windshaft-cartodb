@@ -11,11 +11,11 @@
     node-pre-gyp "~0.6.30"
     protozero "1.5.1"
 
-"@carto/tilelive-bridge@cartodb/tilelive-bridge#2.5.1-cdb1":
-  version "2.5.1-cdb1"
-  resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/b0b5559f948e77b337bc9a9ae0bf6ec4249fba21"
+"@carto/tilelive-bridge@github:cartodb/tilelive-bridge#2.5.1-cdb3":
+  version "2.5.1-cdb3"
+  resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/e61c7752c033595a273dcd1d4b267252b174bd28"
   dependencies:
-    "@carto/mapnik" "~3.6.2-carto.0"
+    "@carto/mapnik" "3.6.2-carto.2"
     "@mapbox/sphericalmercator" "~1.0.1"
     mapnik-pool "~0.1.3"
 
@@ -23,7 +23,7 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz#70237b9774095ed1cfdbcea7a8fd1fc82b2691f2"
 
-abaculus@cartodb/abaculus#2.0.3-cdb2:
+"abaculus@github:cartodb/abaculus#2.0.3-cdb2":
   version "2.0.3-cdb2"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/6468e0e3fddb2b23f60b9a3156117cff0307f6dc"
   dependencies:
@@ -238,9 +238,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.61.2:
-  version "0.61.2"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.61.2.tgz#5c0d43ca769377c6cfb9808f1023d20ea3df55b3"
+camshaft@0.61.3:
+  version "0.61.3"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.61.3.tgz#a1507f19e39dbf98940298ba1704b742741a5053"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
@@ -249,7 +249,7 @@ camshaft@0.61.2:
     dot "^1.0.3"
     request "^2.69.0"
 
-canvas@cartodb/node-canvas#1.6.2-cdb2:
+"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -275,7 +275,7 @@ carto@CartoDB/carto#0.15.1-cdb1:
     optimist "~0.6.0"
     underscore "~1.6.0"
 
-carto@cartodb/carto#0.15.1-cdb3:
+"carto@github:cartodb/carto#0.15.1-cdb3":
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
@@ -1885,7 +1885,34 @@ request@2.81.0:
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
 
-request@2.x, request@^2.55.0, request@^2.69.0, request@^2.83.0:
+request@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.85.0.tgz#5a03615a47c61420b3eb99b7dba204f83603e1fa"
+  dependencies:
+    aws-sign2 "~0.7.0"
+    aws4 "^1.6.0"
+    caseless "~0.12.0"
+    combined-stream "~1.0.5"
+    extend "~3.0.1"
+    forever-agent "~0.6.1"
+    form-data "~2.3.1"
+    har-validator "~5.0.3"
+    hawk "~6.0.2"
+    http-signature "~1.2.0"
+    is-typedarray "~1.0.0"
+    isstream "~0.1.2"
+    json-stringify-safe "~5.0.1"
+    mime-types "~2.1.17"
+    oauth-sign "~0.8.2"
+    performance-now "^2.1.0"
+    qs "~6.5.1"
+    safe-buffer "^5.1.1"
+    stringstream "~0.0.5"
+    tough-cookie "~2.3.3"
+    tunnel-agent "^0.6.0"
+    uuid "^3.1.0"
+
+request@2.x, request@^2.55.0, request@^2.69.0:
   version "2.83.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:
@@ -2212,11 +2239,11 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb5:
-  version "0.6.18-cdb5"
-  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/cec846025e60837c60af193d600d972917ea8d35"
+"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb7":
+  version "0.6.18-cdb7"
+  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/488d2acd65c89cc5382d996eabe8dc1f5051ce0f"
   dependencies:
-    "@carto/mapnik" "~3.6.2-carto.0"
+    "@carto/mapnik" "3.6.2-carto.2"
     generic-pool "~2.4.0"
     mime "~1.6.0"
     sphericalmercator "~1.0.4"
@@ -2373,12 +2400,12 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.5.3:
-  version "4.5.3"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.5.3.tgz#45e792af06b224f78f44b6eb3b0ecb9d90dcc943"
+windshaft@4.5.6:
+  version "4.5.6"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.5.6.tgz#566c635f25e4dfc18b46cffe1b22b8c9626f8295"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.2"
-    "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb1
+    "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb3
     abaculus cartodb/abaculus#2.0.3-cdb2
     canvas cartodb/node-canvas#1.6.2-cdb2
     carto cartodb/carto#0.15.1-cdb3
@@ -2388,12 +2415,12 @@ windshaft@4.5.3:
     grainstore "1.8.2"
     queue-async "~1.0.7"
     redis-mpool "^0.5.0"
-    request "^2.83.0"
+    request "2.85.0"
     semver "~5.0.3"
     sphericalmercator "1.0.4"
     step "~0.0.6"
     tilelive "5.12.2"
-    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb5
+    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb7
     torque.js "~2.11.0"
     underscore "~1.6.0"
 

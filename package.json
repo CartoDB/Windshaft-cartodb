@@ -26,7 +26,7 @@
   "dependencies": {
     "basic-auth": "^2.0.0",
     "body-parser": "^1.18.2",
-    "camshaft": "0.61.2",
+    "camshaft": "0.61.3",
     "cartodb-psql": "0.10.2",
     "cartodb-query-tables": "0.3.0",
     "cartodb-redis": "cartodb/node-cartodb-redis#rateLimits",
@@ -42,13 +42,13 @@
     "on-headers": "^1.0.1",
     "queue-async": "~1.0.7",
     "redis-mpool": "0.5.0",
-    "request": "^2.83.0",
+    "request": "2.85.0",
     "semver": "~5.3.0",
     "step": "~0.0.6",
     "step-profiler": "~0.3.0",
     "turbo-carto": "0.20.2",
     "underscore": "~1.6.0",
-    "windshaft": "4.5.3",
+    "windshaft": "4.5.6",
     "yargs": "~5.0.0"
   },
   "devDependencies": {
