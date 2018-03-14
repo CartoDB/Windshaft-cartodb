@@ -133,6 +133,8 @@ function assertRateLimitRequest (status, limit, remaining, reset, retry, done = 
             assert.ok(err);
             assert.equal(err.message, 'You are over the limits.');
             assert.equal(err.http_status, 429);
+            assert.equal(err.type, 'limit');
+            assert.equal(err.subtype, 'rate-limit');
         }
 
         if (done) {
