@@ -346,19 +346,19 @@ var config = {
         rateLimitsByEndpoint: {
             anonymous: false,
             static: false,
-            staticNamed: false,
+            static_named: false,
             dataview: false,
-            dataviewSearch: false,
+            dataview_search: false,
             analysis: false,
             tile: false,
             attributes: false,
-            namedList: false,
-            namedCreate: false,
-            namedGet: false,
+            named_list: false,
+            named_create: false,
+            named_get: false,
             named: false,
-            namedUpdate: false,
-            namedDelete: false,
-            namedTiles: false
+            named_update: false,
+            named_delete: false,
+            named_tiles: false
         }
     }
 };
