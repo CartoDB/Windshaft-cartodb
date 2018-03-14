@@ -7,7 +7,7 @@ Released yyyy-mm-dd
  - Keep the old authorization system as fallback
  - Aggregation widget: Remove NULL categories in 'count' aggregations too
  - Update request to 2.85.0
- - Update camshaft to 0.61.3 (Fixes duplicated cartodb_id in AOI)
+ - Update camshaft to 0.61.4 (Fixes for AOI and Merge analyses)
 
 ## 5.3.1
 Released 2018-02-13
