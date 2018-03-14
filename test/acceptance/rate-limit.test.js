@@ -102,10 +102,10 @@ function assertGetLayergroupRequest (status, limit, remaining, reset, retry, don
         status,
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
-            'X-Rate-Limit-Limit': limit,
-            'X-Rate-Limit-Remaining': remaining,
-            'X-Rate-Limit-Reset': reset,
-            'X-Rate-Limit-Retry-After': retry
+            'Carto-Rate-Limit-Limit': limit,
+            'Carto-Rate-Limit-Remaining': remaining,
+            'Carto-Rate-Limit-Reset': reset,
+            'Retry-After': retry
         }
     };
     
@@ -121,10 +121,10 @@ function assertRateLimitRequest (status, limit, remaining, reset, retry, done = 
     const { req, res } = getReqAndRes();
     rateLimit(req, res, function (err) {
         assert.deepEqual(res.headers, {
-            "X-Rate-Limit-Limit": limit,
-            "X-Rate-Limit-Remaining": remaining,
-            "X-Rate-Limit-Reset": reset,
-            "X-Rate-Limit-Retry-After": retry
+            "Carto-Rate-Limit-Limit": limit,
+            "Carto-Rate-Limit-Remaining": remaining,
+            "Carto-Rate-Limit-Reset": reset,
+            "Retry-After": retry
         });
 
         if(status === 200) {
