@@ -354,6 +354,7 @@ var config = {
             dataview: false,
             dataview_search: false,
             analysis: false,
+            analysis_catalog: false,
             tile: false,
             attributes: false,
             named_list: false,
