@@ -1,7 +1,7 @@
 # Changelog
 
 ## 5.4.0
-Released yyyy-mm-dd
+Released 2018-03-15
  - Upgrades Windshaft to 4.5.7 ([Mapnik top metrics](https://github.com/CartoDB/Windshaft/pull/597), [AttributesBackend allows multiple features if all the attributes are the same](https://github.com/CartoDB/Windshaft/pull/602))
  - Implemented middleware to authorize users via new Api Key system
  - Keep the old authorization system as fallback
