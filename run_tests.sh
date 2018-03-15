@@ -53,9 +53,10 @@ die() {
 get_redis_cell() {
   if test x"$OPT_REDIS_CELL" = xyes; then
     echo "Downloading redis-cell"
-    wget https://github.com/brandur/redis-cell/releases/download/v0.2.2/redis-cell-v0.2.2-x86_64-unknown-linux-gnu.tar.gz > /dev/null 2>&1
-    tar xvzf redis-cell-v0.2.2-x86_64-unknown-linux-gnu.tar.gz > /dev/null 2>&1
-    rm redis-cell-v0.2.2-x86_64-unknown-linux-gnu.tar.gz
+    curl -L https://github.com/brandur/redis-cell/releases/download/v0.2.2/redis-cell-v0.2.2-x86_64-unknown-linux-gnu.tar.gz --output redis-cell.tar.gz > /dev/null 2>&1
+    tar xvzf redis-cell.tar.gz > /dev/null 2>&1
+    mv libredis_cell.so ${BASEDIR}/test/support/libredis_cell.so
+    rm redis-cell.tar.gz
     rm libredis_cell.d
   fi
 }
@@ -123,7 +124,7 @@ TESTS=$@
 if test x"$OPT_CREATE_REDIS" = xyes; then
   get_redis_cell
   echo "Starting redis on port ${REDIS_PORT}"
-  echo "port ${REDIS_PORT}" | redis-server - --loadmodule ./libredis_cell.so > ${BASEDIR}/test.log &
+  echo "port ${REDIS_PORT}" | redis-server - --loadmodule ${BASEDIR}/test/support/libredis_cell.so > ${BASEDIR}/test.log &
   PID_REDIS=$!
   echo ${PID_REDIS} > ${BASEDIR}/redis.pid
 fi
