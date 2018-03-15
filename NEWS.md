@@ -2,7 +2,7 @@
 
 ## 5.4.1
 Released yyyy-mm-dd
-
+ - Updates camshaft to 0.61.5 (Fixes AOI version bug)
 
 ## 5.4.0
 Released 2018-03-15
