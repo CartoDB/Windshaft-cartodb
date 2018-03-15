@@ -8,7 +8,7 @@ Released yyyy-mm-dd
  - Aggregation widget: Remove NULL categories in 'count' aggregations too
  - Update request to 2.85.0
  - Update camshaft to 0.61.4 (Fixes for AOI and Merge analyses)
- - Update @carto/mapnik to 3.6.2-carto.4. Also update tilelive-mapnik, tilelive-bridge and abaculus accordingly. That version includes a cache for rasterized symbols. See https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto4
+ - Update windshaft to 4.6.0, which in turn updates @carto/mapnik to 3.6.2-carto.4 and related dependencies. It brings in a cache for rasterized symbols. See https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto4
  - PostGIS: Variables in postgis SQL queries must now additionally be wrapped in `!` (refs [#29](https://github.com/CartoDB/mapnik/issues/29), [mapnik/#3618](https://github.com/mapnik/mapnik/pull/3618)):
 ```sql
 -- Before
