@@ -9,7 +9,7 @@ var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 
 const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
 const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
-const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
+const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/db-conn-setup');
 const credentialsMiddleware = require('../../../lib/cartodb/middleware/context/credentials');
 const localsMiddleware =  require('../../../lib/cartodb/middleware/context/locals');
 
