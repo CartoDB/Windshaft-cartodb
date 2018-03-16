@@ -178,10 +178,9 @@ describe('prepare-context', function() {
                 return done(err);
             }
 
-            var query = res.locals;
-            assert.deepEqual(config, query.config);
-            assert.equal('test', query.api_key);
-            assert.equal(undefined, query.non_included);
+            assert.deepEqual(config, req.query.config);
+            assert.equal('test', req.query.api_key);
+            assert.equal(undefined, req.query.non_included);
             done();
         });
     });
