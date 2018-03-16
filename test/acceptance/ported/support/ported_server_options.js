@@ -47,5 +47,5 @@ module.exports = _.extend({}, serverOptions, {
     enable_cors: global.environment.enable_cors,
     unbuffered_logging: true, // for smoother teardown from tests
     log_format: null, // do not log anything
-    useProfiler: true,
+    useProfiler: true
 });
