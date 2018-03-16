@@ -72,7 +72,7 @@ function createLayergroup(layergroupConfig, options, callback) {
             });
         },
         function validateLayergroup(err, res) {
-            assert.ok(!err, 'Failed to request layergroup');
+            assert.ifError(err);
 
             var parsedBody;
             var layergroupid;
@@ -129,6 +129,7 @@ function layergroupRequest(layergroupConfig, method, callbackName, extraParams) 
     var request = {
         url: '/database/windshaft_test/layergroup',
         headers: {
+            host: 'localhost',
             'Content-Type': 'application/json'
         }
     };
