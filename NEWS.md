@@ -2,6 +2,7 @@
 
 ## 5.4.1
 Released yyyy-mm-dd
+ - Upgrades camshaft to 0.61.8
 
 
 ## 5.4.0
