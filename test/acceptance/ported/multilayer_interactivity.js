@@ -30,6 +30,7 @@ describe('multilayer interactivity and layers order', function() {
                     url: '/database/windshaft_test/layergroup',
                     method: 'POST',
                     headers: {
+                        host: 'localhost',
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify(layergroup)

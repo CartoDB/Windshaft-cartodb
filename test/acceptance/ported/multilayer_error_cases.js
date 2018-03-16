@@ -7,7 +7,7 @@ var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 var TestClient = require('../../support/test-client');
 
-describe.only('multilayer error cases', function() {
+describe('multilayer error cases', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
