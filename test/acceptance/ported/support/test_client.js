@@ -459,7 +459,10 @@ function withLayergroup(layergroupConfig, options, callback) {
 
                 var request = {
                     url: finalUrl,
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
                 };
 
                 if (options.contentType === pngContentType) {
