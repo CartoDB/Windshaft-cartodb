@@ -47,12 +47,5 @@ module.exports = _.extend({}, serverOptions, {
     enable_cors: global.environment.enable_cors,
     unbuffered_logging: true, // for smoother teardown from tests
     log_format: null, // do not log anything
-    afterLayergroupCreateCalls: 0,
     useProfiler: true,
-    afterLayergroupCreate: function(req, cfg, res, callback) {
-        res.layercount = cfg.layers.length;
-//        config.afterLayergroupCreateCalls++;
-        callback(null);
-    }
-
 });
