@@ -38,6 +38,7 @@ describe('retina support', function() {
                 url: '/database/windshaft_test/layergroup',
                 method: 'POST',
                 headers: {
+                    host: 'localhost',
                     'Content-Type': 'application/json'
                 },
                 data: JSON.stringify(retinaSampleMapConfig)
@@ -67,7 +68,10 @@ describe('retina support', function() {
             {
                 url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/0/0' + scaleFactor + '.png',
                 method: 'GET',
-                encoding: 'binary'
+                encoding: 'binary',
+                headers: {
+                    host: 'localhost'
+                }
             },
             responseHead,
             assertFn
