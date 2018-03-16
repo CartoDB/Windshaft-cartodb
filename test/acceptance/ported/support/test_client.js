@@ -337,6 +337,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
                 url: '/database/windshaft_test/layergroup',
                 method: 'POST',
                 headers: {
+                    host: 'localhost',
                     'Content-Type': 'application/json'
                 },
                 data: JSON.stringify(layergroupConfig)
@@ -372,7 +373,10 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
 
             var request = {
                 url: finalUrl,
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
             };
 
             if (contentType === pngContentType) {
