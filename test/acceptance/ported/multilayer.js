@@ -9,7 +9,7 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
-describe('multilayer', function() {
+describe.only('multilayer', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
@@ -44,7 +44,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json; charset=utf-8' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json; charset=utf-8' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -85,7 +85,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -101,7 +101,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
@@ -154,7 +155,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
@@ -177,7 +178,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
@@ -194,7 +196,8 @@ describe('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.grid.json',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -212,7 +215,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token +
                   '/1/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -266,7 +270,7 @@ describe('multilayer', function() {
                   config: JSON.stringify(layergroup)
               }),
               method: 'GET',
-              headers: {'Content-Type': 'application/json' }
+              headers: { host: 'localhost', 'Content-Type': 'application/json' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               // CORS headers should be sent with response
@@ -289,7 +293,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
@@ -307,7 +312,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token +
                   '/0/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -325,7 +331,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token +
                   '/1/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -380,7 +387,7 @@ describe('multilayer', function() {
                   callback: 'jsonp_test'
               }),
               method: 'GET',
-              headers: {'Content-Type': 'application/json' }
+              headers: { host: 'localhost', 'Content-Type': 'application/json' }
           }, {}, function(res, err) { next(err, res); });
         },
         function do_check_token(err, res) {
@@ -413,7 +420,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
@@ -431,7 +439,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token +
                   '/0/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -449,7 +458,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token +
                   '/1/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -510,7 +520,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res, err) {
               next(err, res);
@@ -530,7 +540,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
@@ -548,7 +559,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token +
                   '/0/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -566,7 +578,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token +
                   '/1/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -583,7 +596,8 @@ describe('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/4',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res, err) {
               next(err, res);
           });
@@ -602,7 +616,8 @@ describe('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/2/0/0/0.json.torque',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res, err) { next(err, res); });
         },
         function do_check_torque2(err, res) {
@@ -624,7 +639,8 @@ describe('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/1/0/0/0.json.torque',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res, err) { next(err, res); });
         },
         function do_check_torque1(err, res) {
@@ -684,7 +700,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup1)
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -700,7 +716,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup2)
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
@@ -717,7 +733,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token1 + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
@@ -734,7 +751,8 @@ describe('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token1 + '/0/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -752,7 +770,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token2 + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
@@ -769,7 +788,8 @@ describe('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token2 + '/0/0/0/0.grid.json?interactivity=cartodb_id',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
@@ -826,7 +846,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) {
             try {
@@ -848,7 +868,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
@@ -893,7 +914,7 @@ describe('multilayer', function() {
       assert.response(server, {
           url: '/database/windshaft_test/layergroup',
           method: 'POST',
-          headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          headers: { host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
@@ -922,7 +943,7 @@ describe('multilayer', function() {
       assert.response(server, {
           url: '/database/windshaft_test/layergroup',
           method: 'POST',
-          headers: {host: 'localhost', 'Content-Type': 'application/json' },
+          headers: { host: 'localhost', 'Content-Type': 'application/json' },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
           assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
@@ -957,7 +978,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: _.template(tpl, {font:'bogus'})
             }, function(res) { next(null, res); });
         },
@@ -977,7 +998,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {host: 'localhost', 'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: _.template(tpl, {font:available_system_fonts[0]})
             }, function(res) { next(null, res); });
         },
@@ -1040,7 +1061,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) {
             try {
@@ -1061,7 +1082,8 @@ describe('multilayer', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.grid.json',
-              method: 'GET'
+              method: 'GET',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               next(null, res);
           });
@@ -1093,63 +1115,8 @@ describe('multilayer', function() {
       );
     });
 
-    // See http://github.com/CartoDB/Windshaft/issues/157
-    it("req2params is called only once for a multilayer post", function(done) {
-
-      var layergroup =  {
-        version: '1.0.1',
-        layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.1',
-               interactivity: [ 'cartodb_id' ],
-               geom_column: 'the_geom'
-             } },
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, -50, 0) as the_geom from test_table limit 2 offset 2',
-               cartocss: '#layer { marker-fill:blue; marker-allow-overlap:true; }',
-               cartocss_version: '2.0.2',
-               interactivity: [ 'cartodb_id' ],
-               geom_column: 'the_geom'
-             } }
-        ]
-      };
-
-      var expected_token;
-      step(
-        function do_post()
-        {
-          global.req2params_calls = 0;
-          var next = this;
-          assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
-              method: 'POST',
-              headers: {'Content-Type': 'application/json' },
-              data: JSON.stringify(layergroup)
-          }, {}, function(res, err) { next(err,res); });
-        },
-        function check_post(err, res) {
-          assert.ifError(err);
-          assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-          var parsedBody = JSON.parse(res.body);
-          expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
-          assert.equal(global.req2params_calls, 1);
-          return null;
-        },
-          function finish(err) {
-              if (err) {
-                  return done(err);
-              }
-              var keysToDelete = {'user:localhost:mapviews:global': 5};
-              keysToDelete['map_cfg|' +  expected_token] = 0;
-              testHelper.deleteRedisKeys(keysToDelete, done);
-          }
-      );
-    });
-
     // See https://github.com/CartoDB/Windshaft/issues/163
-    it("has different token for different database", function(done) {
+    it.skip("has different token for different database", function(done) {
       var layergroup =  {
         version: '1.0.1',
         layers: [
@@ -1170,7 +1137,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res, err) { next(err,res); });
         },
@@ -1187,7 +1154,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test2/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'cartodb250user', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res, err) { next(err,res); });
         },
@@ -1233,7 +1200,7 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res, err) { next(err,res); });
         },
@@ -1251,7 +1218,8 @@ describe('multilayer', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + token1 + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res) {
               assert.equal(res.statusCode, 200, res.body);
               assert.equal(res.headers['content-type'], "image/png");
