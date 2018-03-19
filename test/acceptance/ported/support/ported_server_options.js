@@ -1,7 +1,6 @@
 var _ = require('underscore');
 var serverOptions = require('../../../../lib/cartodb/server_options');
 var mapnik = require('windshaft').mapnik;
-var LayergroupToken = require('../../../../lib/cartodb/models/layergroup-token');
 var OverviewsQueryRewriter = require('../../../../lib/cartodb/utils/overviews_query_rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
   zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'

@@ -7,7 +7,7 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
-describe('server_gettile', function() {
+describe.only('server_gettile', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
@@ -42,8 +42,7 @@ describe('server_gettile', function() {
       );
     });
 
-    // REVIEW
-    it.skip("response of get tile can be served by renderer cache",  function(done) {
+    it("response of get tile can be served by renderer cache",  function(done) {
         var tileUrl = '/13/4011/3088.png';
         var lastXwc;
         var mapConfig = testClient.defaultTableMapConfig('test_table');
@@ -60,7 +59,7 @@ describe('server_gettile', function() {
                     assert.ok(xwc > 0);
                     assert.ok(xwc >= lastXwc);
 
-                    requestTile(tileUrl + '?cache_buster=wadus', function (err, res) {
+                    requestTile(tileUrl, { cache_buster: 'wadus' }, function (err, res) {
                         var xwc = res.headers['x-windshaft-cache'];
                         assert.ok(!xwc);
 
@@ -85,8 +84,7 @@ describe('server_gettile', function() {
         );
     });
 
-    // REVIEW
-    it.skip("getting two tiles with same configuration uses renderer cache",  function(done) {
+    it("getting two tiles with same configuration uses renderer cache",  function(done) {
 
         var imageFixture = './test/fixtures/test_table_13_4011_3088_styled.png';
         var tileUrl = '/13/4011/3088.png';
@@ -101,18 +99,25 @@ describe('server_gettile', function() {
         }
 
         testClient.withLayergroup(mapConfig, validateLayergroup, function(err, requestTile, finish) {
-
             requestTile(tileUrl, function(err, res) {
-                assert.ok(res.headers.hasOwnProperty('x-windshaft-cache'), "Did not hit renderer cache on second time");
-                assert.ok(res.headers['x-windshaft-cache'] >= 0);
+                var xwc = res.headers['x-windshaft-cache'];
+                assert.ok(!xwc);
 
-                assert.imageBufferIsSimilarToFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL,
-                    function(err) {
-                        finish(function(finishErr) {
-                            done(err || finishErr);
-                        });
-                    }
-                );
+                requestTile(tileUrl, function (err, res) {
+                    assert.ok(
+                        res.headers.hasOwnProperty('x-windshaft-cache'),
+                        "Did not hit renderer cache on second time"
+                    );
+                    assert.ok(res.headers['x-windshaft-cache'] >= 0);
+
+                    assert.imageBufferIsSimilarToFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL,
+                        function(err) {
+                            finish(function(finishErr) {
+                                done(err || finishErr);
+                            });
+                        }
+                    );
+                });
             });
         });
     });
