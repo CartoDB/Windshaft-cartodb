@@ -5,10 +5,10 @@ services:
   - docker
 
 before_install:
-  - docker pull oleurud/windshaft-carto
+  - docker pull cartoimages/windshaft-testing
 
 script:
-  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv oleurud/windshaft-carto bash docker-test.sh
+  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/windshaft-testing bash docker-test.sh
 
 language: generic
 
