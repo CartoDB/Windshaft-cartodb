@@ -7,7 +7,7 @@ var cartodbServer = require('../../../lib/cartodb/server');
 var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
-describe.only('server_gettile', function() {
+describe('server_gettile', function() {
 
     var server = cartodbServer(ServerOptions);
     server.setMaxListeners(0);
