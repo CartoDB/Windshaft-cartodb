@@ -349,9 +349,8 @@ describe('torque', function() {
 
     });
 
-    // REVIEW
     // See http://github.com/CartoDB/Windshaft/issues/164
-    it.skip("gives a 500 on database connection refused", function(done) {
+    it("gives a 500 on database connection refused", function(done) {
 
       var mapconfig =  {
         version: '1.1.0',
@@ -367,12 +366,15 @@ describe('torque', function() {
         ]
       };
 
+      let defautlPort = global.environment.postgres.port;
+
       step(
         function do_post()
         {
           var next = this;
+          global.environment.postgres.port = 54777;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup?dbport=54777',
+              url: '/database/windshaft_test/layergroup',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
@@ -380,6 +382,9 @@ describe('torque', function() {
         },
         function checkPost(err, res) {
           assert.ifError(err);
+
+          global.environment.postgres.port = defautlPort;
+
           assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors, parsed);
@@ -422,7 +427,7 @@ describe('torque', function() {
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
-          }, {}, function(res) { next(null, res); });
+          }, {}, function (res) { next(null, res); });
         },
         function checkResponse(err, res) {
           assert.ifError(err);
