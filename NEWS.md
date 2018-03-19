@@ -3,7 +3,8 @@
 ## 5.4.1
 Released yyyy-mm-dd
  - Upgrades camshaft to 0.61.8
-
+ - Upgrades cartodb-redis to 1.0.0
+ - Rate limit feature (disabled by default)
 
 ## 5.4.0
 Released 2018-03-15
