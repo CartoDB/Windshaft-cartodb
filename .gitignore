@@ -11,3 +11,4 @@ redis.pid
 *.log
 coverage/
 .DS_Store
+libredis_cell.so
