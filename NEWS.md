@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.0.1
+Released 2018-mm-dd
+
 ## 6.0.0
 Released 2018-03-19
 Backward incompatible changes:
