@@ -6,6 +6,7 @@ OPT_DROP_REDIS=yes   # drop the redis test environment
 OPT_DROP_PGSQL=yes   # drop the PostgreSQL test environment
 OPT_COVERAGE=no      # run tests with coverage
 OPT_DOWNLOAD_SQL=yes # download a fresh copy of sql files
+OPT_REDIS_CELL=yes   # download redis cell
 
 export PGAPPNAME=cartodb_tiler_tester
 
@@ -49,6 +50,17 @@ die() {
 	exit 1
 }
 
+get_redis_cell() {
+  if test x"$OPT_REDIS_CELL" = xyes; then
+    echo "Downloading redis-cell"
+    curl -L https://github.com/brandur/redis-cell/releases/download/v0.2.2/redis-cell-v0.2.2-x86_64-unknown-linux-gnu.tar.gz --output redis-cell.tar.gz > /dev/null 2>&1
+    tar xvzf redis-cell.tar.gz > /dev/null 2>&1
+    mv libredis_cell.so ${BASEDIR}/test/support/libredis_cell.so
+    rm redis-cell.tar.gz
+    rm libredis_cell.d
+  fi
+}
+
 trap 'cleanup_and_exit' 1 2 3 5 9 13
 
 while [ -n "$1" ]; do
@@ -88,6 +100,10 @@ while [ -n "$1" ]; do
                 OPT_CREATE_PGSQL=no
                 shift
                 continue
+        elif test "$1" = "--norediscell"; then
+                OPT_REDIS_CELL=no
+                shift
+                continue
         else
                 break
         fi
@@ -99,14 +115,16 @@ if [ -z "$1" ]; then
         echo " --nocreate   do not create the test environment on start" >&2
         echo " --nodrop     do not drop the test environment on exit" >&2
         echo " --with-coverage   use istanbul to determine code coverage" >&2
+        echo " --norediscell  do not download redis-cell" >&2
         exit 1
 fi
 
 TESTS=$@
 
 if test x"$OPT_CREATE_REDIS" = xyes; then
+  get_redis_cell
   echo "Starting redis on port ${REDIS_PORT}"
-  echo "port ${REDIS_PORT}" | redis-server - > ${BASEDIR}/test.log &
+  echo "port ${REDIS_PORT}" | redis-server - --loadmodule ${BASEDIR}/test/support/libredis_cell.so > ${BASEDIR}/test.log &
   PID_REDIS=$!
   echo ${PID_REDIS} > ${BASEDIR}/redis.pid
 fi

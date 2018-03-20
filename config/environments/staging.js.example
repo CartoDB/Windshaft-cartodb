@@ -345,7 +345,28 @@ var config = {
         // whether the affected tables for a given SQL must query directly postgresql or use the SQL API
         cdbQueryTablesFromPostgres: true,
         // whether in mapconfig is available stats & metadata for each layer
-        layerStats: true
+        layerStats: true,
+        // whether it should rate limit endpoints (global configuration)
+        rateLimitsEnabled: false,
+        // whether it should rate limit one or more endpoints (only if rateLimitsEnabled = true)
+        rateLimitsByEndpoint: {
+            anonymous: false,
+            static: false,
+            static_named: false,
+            dataview: false,
+            dataview_search: false,
+            analysis: false,
+            analysis_catalog: false,
+            tile: false,
+            attributes: false,
+            named_list: false,
+            named_create: false,
+            named_get: false,
+            named: false,
+            named_update: false,
+            named_delete: false,
+            named_tiles: false
+        }
     }
 };
 
