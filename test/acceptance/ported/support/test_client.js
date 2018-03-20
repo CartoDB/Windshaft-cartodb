@@ -456,17 +456,17 @@ function withLayergroup(layergroupConfig, options, callback) {
 
                 const signerTpl = function ({ signer }) {
                     return `${signer ? `:${signer}@` : ''}`;
-                }
+                };
 
                 const cacheTpl = function ({ cache_buster, cacheBuster }) {
                     return `${cache_buster ? `:${cache_buster}` : `:${cacheBuster}`}`;
-                }
+                };
 
                 const urlTpl = function ({layergroupid, cache_buster = null, tile }) {
                     const { signer, token , cacheBuster } = LayergroupToken.parse(layergroupid);
-                    const base = '/database/windshaft_test/layergroup/'
+                    const base = '/database/windshaft_test/layergroup/';
                     return `${base}${signerTpl({signer})}${token}${cacheTpl({cache_buster, cacheBuster})}${tile}`;
-                }
+                };
 
                 const finalUrl = urlTpl({ layergroupid, cache_buster: options.cache_buster, tile: layergroupUrl });
 
