@@ -1336,7 +1336,7 @@ describe(suiteName, function() {
                 status: 403
             },
             function(res) {
-                assert.ok(res.body.match(/permission denied for relation test_table_private_1/));
+                assert.ok(res.body.match(/permission denied for .+?test_table_private_1/));
                 done();
             }
         );
