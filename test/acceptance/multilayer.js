@@ -1272,6 +1272,8 @@ describe(suiteName, function() {
     it("cache control for layergroup default value", function(done) {
         global.environment.varnish.layergroupTtl = null;
 
+        var server = new CartodbWindshaft(serverOptions);
+
         assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
             function(res) {
                 assert.equal(res.headers['cache-control'], 'public,max-age=86400,must-revalidate');
@@ -1286,6 +1288,8 @@ describe(suiteName, function() {
     it("cache control for layergroup uses configuration for max-age", function(done) {
         var layergroupTtl = 300;
         global.environment.varnish.layergroupTtl = layergroupTtl;
+
+        var server = new CartodbWindshaft(serverOptions);
 
         assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
             function(res) {
