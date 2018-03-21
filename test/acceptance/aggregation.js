@@ -1475,6 +1475,510 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
+
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`filters should work for ${placement} placement`, function(done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    placement: placement ,
+                                    threshold: 1,
+                                    columns: {
+                                        value: {
+                                            aggregate_function: 'sum',
+                                            aggregated_column: 'value'
+                                        }
+                                    },
+                                    filters: {
+                                        value: {
+                                            greater_than_or_equal_to: 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(row => {
+                            assert.ok(row.properties.value >= 0);
+                        });
+
+                        done();
+                    });
+                });
+            });
+
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`multiple ORed filters should work for ${placement} placement`, function(done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    placement: placement ,
+                                    threshold: 1,
+                                    columns: {
+                                        value: {
+                                            aggregate_function: 'sum',
+                                            aggregated_column: 'value'
+                                        }
+                                    },
+                                    filters: {
+                                        value: [
+                                            { greater_than: 0 },
+                                            { less_than: -2 }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(row => {
+                            assert.ok(row.properties.value > 0 || row.properties.value < -2);
+                        });
+
+                        done();
+                    });
+                });
+            });
+
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`multiple ANDed filters should work for ${placement} placement`, function(done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_2,
+                                aggregation: {
+                                    placement: placement ,
+                                    threshold: 1,
+                                    columns: {
+                                        value: {
+                                            aggregate_function: 'sum',
+                                            aggregated_column: 'value'
+                                        },
+                                        value2: {
+                                            aggregate_function: 'sum',
+                                            aggregated_column: 'sqrt_value'
+                                        }
+                                    },
+                                    filters: {
+                                        value: { greater_than: 0 },
+                                        value2: { less_than: 9 }
+                                    }
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(row => {
+                            assert.ok(row.properties.value > 0 && row.properties.value2 < 9);
+                        });
+
+                        done();
+                    });
+                });
+            });
+
+            it(`supports IN filters`, function(done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                filters: {
+                                    value: { in: [1, 3] }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(row => {
+                        assert.ok(row.properties.value === 1 || row.properties.value === 3);
+                    });
+
+                    done();
+                });
+            });
+
+            it(`supports NOT IN filters`, function(done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                filters: {
+                                    value: { not_in: [1, 3] }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(row => {
+                        assert.ok(row.properties.value !== 1 && row.properties.value !== 3);
+                    });
+
+                    done();
+                });
+            });
+
+            it(`supports EQUAL filters`, function(done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                filters: {
+                                    value: [{ equal: 1}, { equal: 3}]
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(row => {
+                        assert.ok(row.properties.value === 1 || row.properties.value === 3);
+                    });
+
+                    done();
+                });
+            });
+
+            it(`supports NOT EQUAL filters`, function(done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                filters: {
+                                    value: { not_equal: 1 }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(row => {
+                        assert.ok(row.properties.value !== 1);
+                    });
+
+                    done();
+                });
+            });
+
+            it(`supports BETWEEN filters`, function(done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                filters: {
+                                    value: {
+                                        greater_than_or_equal_to: -1,
+                                        less_than_or_equal_to: 2
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(row => {
+                        assert.ok(row.properties.value >= -1 || row.properties.value <= 2);
+                    });
+
+                    done();
+                });
+            });
+
+            it(`supports RANGE filters`, function(done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                filters: {
+                                    value: {
+                                        greater_than: -1,
+                                        less_than_or_equal_to: 2
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(row => {
+                        assert.ok(row.properties.value > -1 || row.properties.value <= 2);
+                    });
+
+                    done();
+                });
+            });
+
+            it(`invalid filters cause errors`, function(done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                filters: {
+                                    value: {
+                                        not_a_valid_parameter: 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid filter parameter name: not_a_valid_parameter'],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid filter parameter name: not_a_valid_parameter',
+                            layer: {
+                                id: "layer0",
+                                index: 0,
+                                type: "mapnik",
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
+            it(`filters on invalid columns cause errors`, function(done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_1,
+                            aggregation: {
+                                threshold: 1,
+                                columns: {
+                                    value_sum: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    }
+                                },
+                                filters: {
+                                    value: {
+                                        not_a_valid_parameter: 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+
+                const options = {
+                    response: {
+                        status: 400
+                    }
+                };
+
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepEqual(body, {
+                        errors: [ 'Invalid filtered column: value'],
+                        errors_with_context:[{
+                            type: 'layer',
+                            message: 'Invalid filtered column: value',
+                            layer: {
+                                id: "layer0",
+                                index: 0,
+                                type: "mapnik",
+                            }
+                        }]
+                    });
+
+                    done();
+                });
+            });
+
         });
     });
 });
