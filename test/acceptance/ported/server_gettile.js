@@ -59,7 +59,7 @@ describe('server_gettile', function() {
                     assert.ok(xwc > 0);
                     assert.ok(xwc >= lastXwc);
 
-                    requestTile(tileUrl + '?cache_buster=wadus', function (err, res) {
+                    requestTile(tileUrl, { cache_buster: 'wadus' }, function (err, res) {
                         var xwc = res.headers['x-windshaft-cache'];
                         assert.ok(!xwc);
 
@@ -99,18 +99,25 @@ describe('server_gettile', function() {
         }
 
         testClient.withLayergroup(mapConfig, validateLayergroup, function(err, requestTile, finish) {
-
             requestTile(tileUrl, function(err, res) {
-                assert.ok(res.headers.hasOwnProperty('x-windshaft-cache'), "Did not hit renderer cache on second time");
-                assert.ok(res.headers['x-windshaft-cache'] >= 0);
+                var xwc = res.headers['x-windshaft-cache'];
+                assert.ok(!xwc);
 
-                assert.imageBufferIsSimilarToFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL,
-                    function(err) {
-                        finish(function(finishErr) {
-                            done(err || finishErr);
-                        });
-                    }
-                );
+                requestTile(tileUrl, function (err, res) {
+                    assert.ok(
+                        res.headers.hasOwnProperty('x-windshaft-cache'),
+                        "Did not hit renderer cache on second time"
+                    );
+                    assert.ok(res.headers['x-windshaft-cache'] >= 0);
+
+                    assert.imageBufferIsSimilarToFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL,
+                        function(err) {
+                            finish(function(finishErr) {
+                                done(err || finishErr);
+                            });
+                        }
+                    );
+                });
             });
         });
     });

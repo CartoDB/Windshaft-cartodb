@@ -48,7 +48,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },
@@ -71,7 +71,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },
@@ -94,7 +94,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },
@@ -136,7 +136,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },
@@ -179,7 +179,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
           }, {}, function(res, err) { next(err, res); });
         },
@@ -218,7 +218,10 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: {
+                  host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_mapnik_error_1(err, res) {
@@ -235,7 +238,10 @@ describe('torque', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.grid.json',
-              method: 'GET'
+              method: 'GET',
+              headers: {
+                host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_mapnik_error_2(err, res) {
@@ -252,7 +258,10 @@ describe('torque', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.json.torque',
-              method: 'GET'
+              method: 'GET',
+              headers: {
+                host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_torque0_response(err, res) {
@@ -270,7 +279,10 @@ describe('torque', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.torque.json',
-              method: 'GET'
+              method: 'GET',
+              headers: {
+                host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_torque0_response_1(err, res) {
@@ -315,7 +327,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
           }, {}, function(res, err) { next(err, res); });
         },
@@ -354,19 +366,25 @@ describe('torque', function() {
         ]
       };
 
+      let defautlPort = global.environment.postgres.port;
+
       step(
         function do_post()
         {
           var next = this;
+          global.environment.postgres.port = 54777;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup?dbport=54777',
+              url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
           }, {}, function(res, err) { next(err, res); });
         },
         function checkPost(err, res) {
           assert.ifError(err);
+
+          global.environment.postgres.port = defautlPort;
+
           assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors, parsed);
@@ -407,9 +425,9 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
-          }, {}, function(res) { next(null, res); });
+          }, {}, function (res) { next(null, res); });
         },
         function checkResponse(err, res) {
           assert.ifError(err);

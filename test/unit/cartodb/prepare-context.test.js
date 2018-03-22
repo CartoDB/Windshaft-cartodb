@@ -7,11 +7,11 @@ var PgConnection = require('../../../lib/cartodb/backends/pg_connection');
 var AuthApi = require('../../../lib/cartodb/api/auth_api');
 var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 
-const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
-const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
-const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
-const credentialsMiddleware = require('../../../lib/cartodb/middleware/context/credentials');
-const localsMiddleware =  require('../../../lib/cartodb/middleware/context/locals');
+const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/clean-up-query-params');
+const authorizeMiddleware = require('../../../lib/cartodb/middleware/authorize');
+const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/db-conn-setup');
+const credentialsMiddleware = require('../../../lib/cartodb/middleware/credentials');
+const localsMiddleware =  require('../../../lib/cartodb/middleware/locals');
 
 var windshaft = require('windshaft');
 
@@ -178,10 +178,9 @@ describe('prepare-context', function() {
                 return done(err);
             }
 
-            var query = res.locals;
-            assert.deepEqual(config, query.config);
-            assert.equal('test', query.api_key);
-            assert.equal(undefined, query.non_included);
+            assert.deepEqual(config, req.query.config);
+            assert.equal('test', req.query.api_key);
+            assert.equal(undefined, req.query.non_included);
             done();
         });
     });

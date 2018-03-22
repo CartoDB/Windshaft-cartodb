@@ -1,10 +1,9 @@
 var testHelper = require('../../support/test_helper');
 
-var assert        = require('../../support/assert');
-var step          = require('step');
+var assert = require('../../support/assert');
+var step = require('step');
 var cartodbServer = require('../../../lib/cartodb/server');
 var PortedServerOptions = require('./support/ported_server_options');
-
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('attributes', function() {
@@ -47,132 +46,147 @@ describe('attributes', function() {
     });
 
     it("can only be fetched from layer having an attributes spec", function(done) {
-
-            var expected_token;
-            step(
-                function do_post()
-                {
-                    var next = this;
-                    assert.response(server, {
-                        url: '/database/windshaft_test/layergroup',
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json' },
-                        data: JSON.stringify(test_mapconfig_1)
-                    }, {}, function(res, err) { next(err, res); });
-                },
-                function checkPost(err, res) {
-                    assert.ifError(err);
-                    assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-                    // CORS headers should be sent with response
-                    // from layergroup creation via POST
-                    checkCORSHeaders(res);
-                    var parsedBody = JSON.parse(res.body);
-                    if ( expected_token ) {
-                        assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
-                    } else {
-                        expected_token = parsedBody.layergroupid;
-                    }
-                    return null;
-                },
-                function do_get_attr_0(err)
-                {
-                    assert.ifError(err);
-                    var next = this;
-                    assert.response(server, {
-                        url: '/database/windshaft_test/layergroup/' + expected_token + '/0/attributes/1',
-                        method: 'GET'
-                    }, {}, function(res, err) { next(err, res); });
-                },
-                function check_error_0(err, res) {
-                    assert.ifError(err);
-                    assert.equal(
-                        res.statusCode,
-                        400,
-                        res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' )
-                    );
-                    var parsed = JSON.parse(res.body);
-                    assert.equal(parsed.errors[0], "Layer 0 has no exposed attributes");
-                    return null;
-                },
-                function do_get_attr_1(err)
-                {
-                    assert.ifError(err);
-                    var next = this;
-                    assert.response(server, {
-                        url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/1',
-                        method: 'GET'
-                    }, {}, function(res, err) { next(err, res); });
-                },
-                function check_attr_1(err, res) {
-                    assert.ifError(err);
-                    assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-                    var parsed = JSON.parse(res.body);
-                    assert.deepEqual(parsed, {"n":6});
-                    return null;
-                },
-                function do_get_attr_1_404(err)
-                {
-                    assert.ifError(err);
-                    var next = this;
-                    assert.response(server, {
-                        url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/-666',
-                        method: 'GET'
-                    }, {}, function(res, err) { next(err, res); });
-                },
-                function check_attr_1_404(err, res) {
-                    assert.ifError(err);
-                    assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
-                    var parsed = JSON.parse(res.body);
-                    assert.ok(parsed.errors);
-                    var msg = parsed.errors[0];
-                    assert.equal(msg, "Multiple features (0) identified by 'i' = -666 in layer 1");
-                    return null;
-                },
-                function finish(err) {
-                    keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
-                    keysToDelete['user:localhost:mapviews:global'] = 5;
-
-                    done(err);
+        var expected_token;
+        step(
+            function do_post()
+            {
+                var next = this;
+                assert.response(server, {
+                    url: '/database/windshaft_test/layergroup',
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(test_mapconfig_1)
+                }, {}, function(res, err) { next(err, res); });
+            },
+            function checkPost(err, res) {
+                assert.ifError(err);
+                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                // CORS headers should be sent with response
+                // from layergroup creation via POST
+                checkCORSHeaders(res);
+                var parsedBody = JSON.parse(res.body);
+                if ( expected_token ) {
+                    assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
+                } else {
+                    expected_token = parsedBody.layergroupid;
                 }
-            );
-        });
+                return null;
+            },
+            function do_get_attr_0(err)
+            {
+                assert.ifError(err);
+                var next = this;
+                assert.response(server, {
+                    url: '/database/windshaft_test/layergroup/' + expected_token + '/0/attributes/1',
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    },
+                }, {}, function(res, err) { next(err, res); });
+            },
+            function check_error_0(err, res) {
+                assert.ifError(err);
+                assert.equal(
+                    res.statusCode,
+                    400,
+                    res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' )
+                );
+                var parsed = JSON.parse(res.body);
+                assert.equal(parsed.errors[0], "Layer 0 has no exposed attributes");
+                return null;
+            },
+            function do_get_attr_1(err)
+            {
+                assert.ifError(err);
+                var next = this;
+                assert.response(server, {
+                    url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/1',
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
+                }, {}, function(res, err) { next(err, res); });
+            },
+            function check_attr_1(err, res) {
+                assert.ifError(err);
+                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                var parsed = JSON.parse(res.body);
+                assert.deepEqual(parsed, {"n":6});
+                return null;
+            },
+            function do_get_attr_1_404(err)
+            {
+                assert.ifError(err);
+                var next = this;
+                assert.response(server, {
+                    url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/-666',
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
+                }, {}, function(res, err) { next(err, res); });
+            },
+            function check_attr_1_404(err, res) {
+                assert.ifError(err);
+                assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+                var parsed = JSON.parse(res.body);
+                assert.ok(parsed.errors);
+                var msg = parsed.errors[0];
+                assert.equal(msg, "Multiple features (0) identified by 'i' = -666 in layer 1");
+                return null;
+            },
+            function finish(err) {
+                keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+
+
+                done(err);
+            }
+        );
+    });
 
     // See https://github.com/CartoDB/Windshaft/issues/131
     it("are checked at map creation time", function(done) {
 
-            // clone the mapconfig test
-            var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
-            // append unexistant attribute name
-            mapconfig.layers[1].options.sql = 'SELECT * FROM test_table';
-            mapconfig.layers[1].options.attributes.id = 'unexistant';
-            mapconfig.layers[1].options.attributes.columns = ['cartodb_id'];
+        // clone the mapconfig test
+        var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
+        // append unexistant attribute name
+        mapconfig.layers[1].options.sql = 'SELECT * FROM test_table';
+        mapconfig.layers[1].options.attributes.id = 'unexistant';
+        mapconfig.layers[1].options.attributes.columns = ['cartodb_id'];
 
-            step(
-                function do_post()
-                {
-                    var next = this;
-                    assert.response(server, {
-                        url: '/database/windshaft_test/layergroup',
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json' },
-                        data: JSON.stringify(mapconfig)
-                    }, {}, function(res, err) { next(err, res); });
-                },
-                function checkPost(err, res) {
-                    assert.ifError(err);
-                    assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
-                    var parsed = JSON.parse(res.body);
-                    assert.ok(parsed.errors);
-                    assert.equal(parsed.errors.length, 1);
-                    var msg = parsed.errors[0];
-                    assert.equal(msg, 'column "unexistant" does not exist');
-                    return null;
-                },
-                function finish(err) {
-                    done(err);
-                }
-            );
-        });
+        step(
+            function do_post()
+            {
+                var next = this;
+                assert.response(server, {
+                    url: '/database/windshaft_test/layergroup',
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(mapconfig)
+                }, {}, function(res, err) { next(err, res); });
+            },
+            function checkPost(err, res) {
+                assert.ifError(err);
+                assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
+                var parsed = JSON.parse(res.body);
+                assert.ok(parsed.errors);
+                assert.equal(parsed.errors.length, 1);
+                var msg = parsed.errors[0];
+                assert.equal(msg, 'column "unexistant" does not exist');
+                return null;
+            },
+            function finish(err) {
+                done(err);
+            }
+        );
+    });
 
     it("can be used with jsonp", function(done) {
 
@@ -184,7 +198,10 @@ describe('attributes', function() {
                 assert.response(server, {
                     url: '/database/windshaft_test/layergroup',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json' },
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
                     data: JSON.stringify(test_mapconfig_1)
                 }, {}, function(res, err) { next(err, res); });
             },
@@ -209,7 +226,10 @@ describe('attributes', function() {
                 assert.response(server, {
                     url: '/database/windshaft_test/layergroup/' + expected_token +
                         '/0/attributes/1?callback=test',
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
                 }, {}, function(res, err) { next(err, res); });
             },
             function check_error_0(err, res) {
@@ -232,7 +252,10 @@ describe('attributes', function() {
                 var next = this;
                 assert.response(server, {
                     url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/1',
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
                 }, {}, function(res, err) { next(err, res); });
             },
             function check_attr_1(err, res) {
@@ -270,7 +293,10 @@ describe('attributes', function() {
                 assert.response(server, {
                     url: '/database/windshaft_test/layergroup',
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json' },
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
                     data: JSON.stringify(mapconfig)
                 }, {}, function(res, err) { next(err, res); });
             },
