@@ -87,8 +87,12 @@ function getReqAndRes() {
         req: {},
         res: {
             headers: {},
-            set(headers) {
-                this.headers = headers;
+            set(headers, value) {
+                if(typeof headers === 'object') {
+                    this.headers = headers;
+                } else {
+                    this.headers[headers] = value;
+                }
             },
             locals: {
                 user: 'localhost'
@@ -97,17 +101,20 @@ function getReqAndRes() {
     };
 }
 
-function assertGetLayergroupRequest (status, limit, remaining, reset, retry, done = null) {
-    const response = {
+function assertGetLayergroupRequest (status, limit, remaining, reset, retry, done) {
+    let response = {
         status,
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
             'Carto-Rate-Limit-Limit': limit,
             'Carto-Rate-Limit-Remaining': remaining,
-            'Carto-Rate-Limit-Reset': reset,
-            'Retry-After': retry
+            'Carto-Rate-Limit-Reset': reset
         }
     };
+    
+    if(retry) {
+        response.headers['Retry-After'] = retry;
+    }
     
     testClient.getLayergroup({ response }, err => {
         assert.ifError(err);
@@ -117,15 +124,20 @@ function assertGetLayergroupRequest (status, limit, remaining, reset, retry, don
     });
 }
 
-function assertRateLimitRequest (status, limit, remaining, reset, retry, done = null) {
+function assertRateLimitRequest (status, limit, remaining, reset, retry, done) {
     const { req, res } = getReqAndRes();
     rateLimit(req, res, function (err) {
-        assert.deepEqual(res.headers, {
+        let expectedHeaders = {
             "Carto-Rate-Limit-Limit": limit,
             "Carto-Rate-Limit-Remaining": remaining,
-            "Carto-Rate-Limit-Reset": reset,
-            "Retry-After": retry
-        });
+            "Carto-Rate-Limit-Reset": reset
+        };
+        
+        if(retry) {
+            expectedHeaders['Retry-After'] = retry;
+        }
+    
+        assert.deepEqual(res.headers, expectedHeaders);
 
         if(status === 200) {
             assert.ifError(err);
@@ -178,7 +190,7 @@ describe('rate limit', function() {
         const burst = 1;
         setLimit(count, period, burst);
 
-        assertGetLayergroupRequest(200, '2', '1', '1', '-1', done);
+        assertGetLayergroupRequest(200, '2', '1', '1', null, done);
     });
 
     it("1 req/sec: 2 req/seg should be limited", function(done) {
@@ -187,12 +199,12 @@ describe('rate limit', function() {
         const burst = 1;
         setLimit(count, period, burst);
 
-        assertGetLayergroupRequest(200, '2', '1', '1', '-1');
-        setTimeout( () => assertGetLayergroupRequest(200, '2', '0', '1', '-1'), 250);
-        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '0'),  500);
-        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '0'),  750);
-        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '0'),  950);
-        setTimeout( () => assertGetLayergroupRequest(200, '2', '0', '1', '-1', done), 1050);
+        assertGetLayergroupRequest(200, '2', '1', '1');
+        setTimeout( () => assertGetLayergroupRequest(200, '2', '0', '1'), 250);
+        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '1'),  500);
+        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '1'),  750);
+        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '1'),  950);
+        setTimeout( () => assertGetLayergroupRequest(200, '2', '0', '1', null, done), 1050);
     });
 
 });
@@ -234,12 +246,12 @@ describe('rate limit middleware', function () {
     });
 
     it("1 req/sec: 2 req/seg should be limited", function (done) {
-        assertRateLimitRequest(200, 1, 0, 1, -1);
-        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 250);
-        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 500);
-        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 750);
-        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 950);
-        setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, -1, done), 1050);
+        assertRateLimitRequest(200, 1, 0, 1);
+        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 250);
+        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
+        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 750);
+        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 950);
+        setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, null, done), 1050);
     });
 
     it("1 req/sec: 2 req/seg should be limited, removing SHA script from Redis", function (done) {
@@ -248,12 +260,12 @@ describe('rate limit middleware', function () {
             'SCRIPT', 
             ['FLUSH'], 
             function () {
-                assertRateLimitRequest(200, 1, 0, 1, -1);
-                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 500);
-                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 500);
-                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 750);
-                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 0), 950);
-                setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, -1, done), 1050);
+                assertRateLimitRequest(200, 1, 0, 1);
+                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
+                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
+                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 750);
+                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 950);
+                setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, null, done), 1050);
             }
         );
     });
