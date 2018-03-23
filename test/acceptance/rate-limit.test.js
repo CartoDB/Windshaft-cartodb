@@ -15,6 +15,7 @@ let redisClient;
 let testClient;
 let keysToDelete = ['user:localhost:mapviews:global'];
 const user = 'localhost';
+let layergroupid;
 
 const query = `
     SELECT
@@ -68,13 +69,13 @@ const createMapConfig = ({
 });
 
 
-function setLimit(count, period, burst) {
+function setLimit(count, period, burst, endpoint = RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS) {
     redisClient.SELECT(8, err => {
         if (err) {
             return;
         }
 
-        const key = `limits:rate:store:${user}:maps:${RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS}`;
+        const key = `limits:rate:store:${user}:maps:${endpoint}`;
         redisClient.rpush(key, burst);
         redisClient.rpush(key, count);
         redisClient.rpush(key, period);
@@ -268,5 +269,87 @@ describe('rate limit middleware', function () {
                 setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, null, done), 1050);
             }
         );
+    });
+});
+
+describe('rate limit and vector tiles', function () {
+
+    before(function(done) {
+        global.environment.enabledFeatures.rateLimitsEnabled = true;
+        global.environment.enabledFeatures.rateLimitsByEndpoint.tile = true;
+        
+        redisClient = redis.createClient(global.environment.redis.port);
+        const count = 1;
+        const period = 1;
+        const burst = 0;
+        setLimit(count, period, burst, RATE_LIMIT_ENDPOINTS_GROUPS.TILE);
+
+        testClient = new TestClient(createMapConfig(), 1234);
+        testClient.getLayergroup({status: 200}, (err, res) => {
+            assert.ifError(err);
+            
+            layergroupid = res.layergroupid;
+    
+            done();
+        });
+    });
+
+    after(function() {
+        global.environment.enabledFeatures.rateLimitsEnabled = false;
+        global.environment.enabledFeatures.rateLimitsByEndpoint.tile = false;
+    });
+
+    afterEach(function(done) {
+        keysToDelete.forEach( key => {
+            redisClient.del(key);
+        });
+
+        redisClient.SELECT(0, () => {
+            redisClient.del('user:localhost:mapviews:global');
+
+            redisClient.SELECT(5, () => {
+                redisClient.del('user:localhost:mapviews:global');
+                done();
+            });
+        });
+    });
+
+    it('mvt rate limited', function (done) {
+        const tileParams = (status, limit, remaining, reset, retry, contentType) => {
+            let headers = {
+                "Content-Type": contentType,
+                "Carto-Rate-Limit-Limit": limit,
+                "Carto-Rate-Limit-Remaining": remaining,
+                "Carto-Rate-Limit-Reset": reset
+            };
+
+            if (retry) {
+                headers['Retry-After'] = retry;
+            }
+
+            return {
+                layergroupid: layergroupid,
+                format: 'mvt',
+                response: {status, headers}
+            };
+        };
+
+        testClient.getTile(0, 0, 0, tileParams(204, '1', '0', '1'), (err) => {
+            assert.ifError(err);
+    
+            testClient.getTile(0, 0, 0, tileParams(429, '1', '0', '0', '1', 'application/x-protobuf'), (err, res, tile) => {
+                assert.ifError(err);
+
+                var tileJSON = tile.toJSON();
+                assert.equal(Array.isArray(tileJSON), true);
+                assert.equal(tileJSON.length, 2);
+                assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
+                assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+        
+                done();
+            });
+            
+        });
+    
     });
 });
