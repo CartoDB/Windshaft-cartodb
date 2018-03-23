@@ -337,18 +337,23 @@ describe('rate limit and vector tiles', function () {
         testClient.getTile(0, 0, 0, tileParams(204, '1', '0', '1'), (err) => {
             assert.ifError(err);
     
-            testClient.getTile(0, 0, 0, tileParams(429, '1', '0', '0', '1', 'application/x-protobuf'), (err, res, tile) => {
-                assert.ifError(err);
+            testClient.getTile(
+                0, 
+                0, 
+                0, 
+                tileParams(429, '1', '0', '0', '1', 'application/x-protobuf'), 
+                (err, res, tile) => {
+                    assert.ifError(err);
 
-                var tileJSON = tile.toJSON();
-                assert.equal(Array.isArray(tileJSON), true);
-                assert.equal(tileJSON.length, 2);
-                assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
-                assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
-        
-                done();
-            });
+                    var tileJSON = tile.toJSON();
+                    assert.equal(Array.isArray(tileJSON), true);
+                    assert.equal(tileJSON.length, 2);
+                    assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
+                    assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
             
+                    done();
+                }
+            );    
         });
     
     });
