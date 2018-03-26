@@ -100,8 +100,6 @@ if ( global.environment.log_filename ) {
 global.log4js.configure(log4jsConfig);
 global.logger = global.log4js.getLogger();
 
-global.environment.api_hostname = require('os').hostname().split('.')[0];
-
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
 var cartodbWindshaft = require('./lib/cartodb/server');
