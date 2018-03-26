@@ -50,17 +50,6 @@ die() {
 	exit 1
 }
 
-get_redis_cell() {
-  if test x"$OPT_REDIS_CELL" = xyes; then
-    echo "Downloading redis-cell"
-    curl -L https://github.com/brandur/redis-cell/releases/download/v0.2.2/redis-cell-v0.2.2-x86_64-unknown-linux-gnu.tar.gz --output redis-cell.tar.gz > /dev/null 2>&1
-    tar xvzf redis-cell.tar.gz > /dev/null 2>&1
-    mv libredis_cell.so ${BASEDIR}/test/support/libredis_cell.so
-    rm redis-cell.tar.gz
-    rm libredis_cell.d
-  fi
-}
-
 trap 'cleanup_and_exit' 1 2 3 5 9 13
 
 while [ -n "$1" ]; do
