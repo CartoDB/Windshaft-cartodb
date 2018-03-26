@@ -122,9 +122,13 @@ fi
 TESTS=$@
 
 if test x"$OPT_CREATE_REDIS" = xyes; then
-  get_redis_cell
   echo "Starting redis on port ${REDIS_PORT}"
-  echo "port ${REDIS_PORT}" | redis-server - --loadmodule ${BASEDIR}/test/support/libredis_cell.so > ${BASEDIR}/test.log &
+  REDIS_CELL_PATH="${BASEDIR}/test/support/libredis_cell.so"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    REDIS_CELL_PATH="${BASEDIR}/test/support/libredis_cell.dylib"
+  fi
+
+  echo "port ${REDIS_PORT}" | redis-server - --loadmodule ${REDIS_CELL_PATH} > ${BASEDIR}/test.log &
   PID_REDIS=$!
   echo ${PID_REDIS} > ${BASEDIR}/redis.pid
 fi
