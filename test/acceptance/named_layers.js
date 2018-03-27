@@ -659,7 +659,7 @@ describe('named_layers', function() {
                 }
 
                 var parsedBody = JSON.parse(response.body);
-                assert.ok(parsedBody.errors[0].match(/permission denied for relation test_table_private_1/));
+                assert.ok(parsedBody.errors[0].match(/permission denied for .+?test_table_private_1/));
 
                 return null;
             },

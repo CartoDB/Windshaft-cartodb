@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.0.1
+Released 2018-mm-dd
+
 ## 6.0.0
 Released 2018-03-19
 Backward incompatible changes:
@@ -9,6 +12,7 @@ New features:
  - Upgrades camshaft to 0.61.8
  - Upgrades cartodb-redis to 1.0.0
  - Rate limit feature (disabled by default)
+ - Fixes for tests with PG11
 
 ## 5.4.0
 Released 2018-03-15

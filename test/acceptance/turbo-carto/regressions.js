@@ -88,7 +88,7 @@ describe('turbo-carto regressions', function() {
             var turboCartoError = layergroup.errors_with_context[0];
             assert.ok(turboCartoError);
             assert.equal(turboCartoError.type, 'layer');
-            assert.ok(turboCartoError.message.match(/permission\sdenied\sfor\srelation\stest_table_private_1/));
+            assert.ok(turboCartoError.message.match(/permission\sdenied\sfor\s.+?test_table_private_1/));
 
             done();
         });
