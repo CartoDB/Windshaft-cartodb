@@ -11,7 +11,6 @@ const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/cl
 const authorizeMiddleware = require('../../../lib/cartodb/middleware/authorize');
 const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/db-conn-setup');
 const credentialsMiddleware = require('../../../lib/cartodb/middleware/credentials');
-const localsMiddleware =  require('../../../lib/cartodb/middleware/locals');
 
 var windshaft = require('windshaft');
 
@@ -65,18 +64,6 @@ describe('prepare-context', function() {
 
         return res;
     }
-
-    it('res.locals are created', function(done) {
-        const locals = localsMiddleware();
-        let req = {};
-        let res = {};
-
-        locals(prepareRequest(req), prepareResponse(res), function(err) {
-            if ( err ) { done(err); return; }
-            assert.ok(res.hasOwnProperty('locals'), 'response has locals');
-            done();
-        });
-    });
 
     it('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
