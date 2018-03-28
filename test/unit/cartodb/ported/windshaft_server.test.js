@@ -33,12 +33,4 @@ describe('windshaft', function() {
             }, /Cannot read property 'mapnik' of undefined/
         );
     });
-
-    it('options are set on main windshaft object',  function(){
-        var ws = cartodbServer(serverOptions);
-        assert.ok(_.isObject(ws.bind));
-        assert.ok(_.isObject(ws.grainstore));
-        assert.equal(ws.base_url, '/tiles/:table');
-    });
-
 });
