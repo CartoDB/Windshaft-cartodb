@@ -1,6 +1,5 @@
 require('../../../support/test_helper.js');
 
-var _ = require('underscore');
 var assert = require('assert');
 var cartodbServer = require('../../../../lib/cartodb/server');
 var serverOptions = require('../../../../lib/cartodb/server_options');
