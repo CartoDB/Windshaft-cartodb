@@ -230,7 +230,7 @@ describe('tests from old api translated to multilayer', function() {
                     var parsed = JSON.parse(res.body);
                     assert.ok(parsed.errors);
                     assert.equal(parsed.errors.length, 1);
-                    assert.ok(parsed.errors[0].match(/^Unexpected token W/));
+                    assert.ok(parsed.errors[0].match(/Unexpected token W/));
 
                     done();
                 }
