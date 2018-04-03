@@ -26,6 +26,7 @@ server.setMaxListeners(0);
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
 describe('template_api', function() {
+    // FIXME: we need a better way to reset cache while running tests
     server.layergroupAffectedTablesCache.cache.reset();
 
     var httpRendererResourcesServer;
@@ -1056,6 +1057,7 @@ describe('template_api', function() {
           assert.ok(cc);
           assert.equal(cc, expectedCC);
           // hack simulating restart...
+          // FIXME: we need a better way to reset cache while running tests
           server.layergroupAffectedTablesCache.cache.reset(); // need to clean channel cache
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
