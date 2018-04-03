@@ -5,6 +5,7 @@ Released 2018-mm-dd
 
 New features:
 - Aggreation filters
+- Upgrades Windshaft to 4.7.0, which includes @carto/mapnik v3.6.2-carto.7 with improvements to metrics and markers caching. It also adds an option to disable the markers symbolizer caches in mapnik.
 
 Bug Fixes:
 - Non-default aggregation selected the wrong columns (e.g. for vector tiles)
