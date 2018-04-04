@@ -10,7 +10,7 @@ Aggregation is available only for point geometries. During aggregation the point
 
 When no placement or columns are specified a special default aggregation is performed.
 
-This special mode performs only spatial aggregation (using a grid defined by the requested tile and the resolution, parameter, as all the other cases), and returns a _random_ record from each group (grid cell) with all its columns and an additional `_cdb_features_count` with the number of features in the group.
+This special mode performs only spatial aggregation (using a grid defined by the requested tile and the resolution, parameter, as all the other cases), and returns a _random_ record from each group (grid cell) with all its columns and an additional `_cdb_feature_count` with the number of features in the group.
 
 Regarding the randomness of the sample: currently we use the row with the minimum `cartodb_id` value in each group.
 
@@ -18,7 +18,7 @@ The rationale behind having this special aggregation with all the original colum
 
 ### User defined aggregations
 
-When either a explicit placement or columns are requested we no longer use the special, query; we use one determined by the placement (which will default to "centroid"), and it will have as columns only the aggregated columns specified, in addition to `_cdb_features_count`, which is always present.
+When either a explicit placement or columns are requested we no longer use the special, query; we use one determined by the placement (which will default to "centroid"), and it will have as columns only the aggregated columns specified, in addition to `_cdb_feature_count`, which is always present.
 
 We might decide in the future to allow sampling column values for any of the different placement modes.
 
@@ -220,7 +220,7 @@ In addition, the filters applied to different columns are logically combined wit
 }
 ```
 
-Note that the filtered columns have to be defined with the `columns` parameter, except for `_cdb_features_count`, which is always implicitly defined and can be filtered too.
+Note that the filtered columns have to be defined with the `columns` parameter, except for `_cdb_feature_count`, which is always implicitly defined and can be filtered too.
 
 #### Example
 
