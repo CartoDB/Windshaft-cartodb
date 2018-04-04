@@ -23,13 +23,12 @@ describe('multilayer interactivity and layers order', function() {
                 layers: testScenario.layers
             };
 
-            PortedServerOptions.afterLayergroupCreateCalls = 0;
-
             assert.response(server,
                 {
                     url: '/database/windshaft_test/layergroup',
                     method: 'POST',
                     headers: {
+                        host: 'localhost',
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify(layergroup)
@@ -48,8 +47,6 @@ describe('multilayer interactivity and layers order', function() {
                             '\n\tResponse body: ' + response.body +
                             '\n\tLayer types: ' + layergroup.layers.map(layerType).join(', ')
                     );
-
-//                    assert.equal(PortedServerOptions.afterLayergroupCreateCalls, 1);
 
                     var layergroupResponse = JSON.parse(response.body);
                     assert.ok(layergroupResponse);

@@ -62,6 +62,7 @@ describe('server_png8_format', function() {
                     url: '/database/windshaft_test/layergroup',
                     method: 'POST',
                     headers: {
+                        host: 'localhost',
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify(layergroup)
@@ -81,7 +82,10 @@ describe('server_png8_format', function() {
                     var requestPayload = {
                         url: '/database/windshaft_test/layergroup/' + layergroupId + tilePartialUrl,
                         method: 'GET',
-                        encoding: 'binary'
+                        encoding: 'binary',
+                        headers: {
+                            host: 'localhost'
+                        }
                     };
 
                     var requestHeaders = {
@@ -179,4 +183,3 @@ describe('server_png8_format', function() {
         });
     });
 });
-
