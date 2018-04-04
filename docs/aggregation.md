@@ -262,3 +262,57 @@ Note that the filtered columns have to be defined with the `columns` parameter, 
     ]
 }
 ```
+
+### `order`
+
+The order of aggregated results is unspecified unless the `order` parameter is used.
+Even if the source query SQL includes an `ORDER BY` clause, it does not apply to the aggregated results.
+
+The order is specify as a list of columns with optional ordering direction: "asc" for ascending, which is the default, or "desc" for descending:
+
+```json
+[
+    "first_column",
+    "second_column:desc"
+]
+```
+
+The order direction, if present is separated with a colon.
+
+Only `cartodb_id`, `_cdb_features_coount` or columns defined with the `columns` parameter can be used in the ordering.
+
+```json
+{
+    "version": "1.7.0",
+    "extent": [-20037508.5, -20037508.5, 20037508.5, 20037508.5],
+    "srid": 3857,
+    "maxzoom": 18,
+    "minzoom": 3,
+    "layers": [
+        {
+            "type": "mapnik",
+            "options": {
+                "sql": "select * from table",
+                "cartocss": "#table { marker-width: [total]; marker-fill: ramp(value, (red, green, blue), jenks); }",
+                "cartocss_version": "2.3.0",
+                "aggregation": {
+                    "placement": "centroid",
+                    "columns": {
+                        "avg_rank": {
+                            "aggregate_function": "avg",
+                            "aggregated_column": "rank"
+                        },
+                        "total_value": {
+                            "aggregate_function": "sum",
+                            "aggregated_column": "value"
+                        }
+                    },
+                    "order": [ "total_value:desc", "_cdb_features_count" ],
+                    "resolution": 2,
+                    "threshold": 500000
+                }
+            }
+        }
+    ]
+}
+```
