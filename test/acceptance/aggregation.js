@@ -689,6 +689,45 @@ describe('aggregation', function () {
                 });
             });
 
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`dimensions with alias should work for ${placement} placement`, function(done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    placement: placement ,
+                                    threshold: 1,
+                                    dimensions: {
+                                        value2: "value"
+                                    }
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(
+                            feature => assert.equal(typeof feature.properties.value2, 'number')
+                        );
+
+                        done();
+                    });
+                });
+            });
+
+
             it(`dimensions should trigger non-default aggregation`, function(done) {
                 this.mapConfig = createVectorMapConfig([
                     {
