@@ -1,7 +1,14 @@
 # Changelog
 
-## 6.0.1
+## 6.1.0
 Released 2018-mm-dd
+
+New features:
+- Aggreation filters
+
+Bug Fixes:
+- Non-default aggregation selected the wrong columns (e.g. for vector tiles)
+- Aggregation dimensions with alias where broken
 
 ## 6.0.0
 Released 2018-03-19
