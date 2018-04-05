@@ -2115,6 +2115,65 @@ describe('aggregation', function () {
                 });
             });
 
+
+            ['default', 'centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`aggregated ids are unique for ${placement} aggregation`, function (done) {
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_1,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getTile(1, 0, 1, { format: 'mvt' },  (err, res, mvt) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tile1 = JSON.parse(mvt.toGeoJSONSync(0));
+
+                        assert.ok(Array.isArray(tile1.features));
+                        assert.ok(tile1.features.length > 0);
+
+                        this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
+                            if (err) {
+                                return done(err);
+                            }
+
+                            const tile2 = JSON.parse(mvt.toGeoJSONSync(0));
+
+                            assert.ok(Array.isArray(tile2.features));
+                            assert.ok(tile2.features.length > 0);
+
+                            const tile1Ids = tile1.features.map(f => f.properties.cartodb_id);
+                            const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
+                            const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
+                            assert.equal(repeatedIds.length, 0);
+
+                            done();
+                        });
+
+                    });
+                });
+            });
+
+
         });
     });
 });
