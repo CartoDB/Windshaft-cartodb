@@ -357,6 +357,103 @@ describe('aggregation', function () {
                 });
             });
 
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it('should provide all the requested columns in non-default aggregation ',
+                function (done) {
+                    const response = {
+                        status: 200,
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
+                        }
+                    };
+
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_2,
+                                aggregation: {
+                                    placement: placement,
+                                    columns: {
+                                        'first_column': {
+                                            aggregate_function: 'sum',
+                                            aggregated_column: 'value'
+                                        }
+                                    },
+                                    dimensions: {
+                                        second_column: 'sqrt_value'
+                                    },
+                                    threshold: 1
+                                },
+                                cartocss: '#layer { marker-width: [first_column]; line-width: [second_column]; }',
+                                cartocss_version: '2.3.0'
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    this.testClient.getLayergroup({ response }, (err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+
+                        assert.equal(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
+
+                        body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                        body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+                        done();
+                    });
+                });
+
+                it('should provide only the requested columns in non-default aggregation ',
+                function (done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_2,
+                                aggregation: {
+                                    placement: placement,
+                                    columns: {
+                                        'first_column': {
+                                            aggregate_function: 'sum',
+                                            aggregated_column: 'value'
+                                        }
+                                    },
+                                    dimensions: {
+                                        second_column: 'sqrt_value'
+                                    },
+                                    threshold: 1
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, res, mvt) {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const geojsonTile = JSON.parse(mvt.toGeoJSONSync(0));
+                        let columns = new Set();
+                        geojsonTile.features.forEach(f => {
+                            Object.keys(f.properties).forEach(p => columns.add(p));
+                        });
+                        columns = Array.from(columns);
+                        const expected_columns = [
+                            '_cdb_feature_count', 'cartodb_id', 'first_column', 'second_column'
+                        ];
+                        assert.deepEqual(columns.sort(), expected_columns.sort());
+
+                        done();
+                    });
+                });
+            });
+
             it('should skip aggregation to create a layergroup with aggregation defined already', function (done) {
                 const mapConfig = createVectorMapConfig([
                     {
@@ -688,6 +785,45 @@ describe('aggregation', function () {
                     });
                 });
             });
+
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`dimensions with alias should work for ${placement} placement`, function(done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    placement: placement ,
+                                    threshold: 1,
+                                    dimensions: {
+                                        value2: "value"
+                                    }
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tileJSON = tile.toJSON();
+
+                        tileJSON[0].features.forEach(
+                            feature => assert.equal(typeof feature.properties.value2, 'number')
+                        );
+
+                        done();
+                    });
+                });
+            });
+
 
             it(`dimensions should trigger non-default aggregation`, function(done) {
                 this.mapConfig = createVectorMapConfig([

@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.1.0
+Released 2018-mm-dd
+
+New features:
+- Aggreation filters
+
+Bug Fixes:
+- Non-default aggregation selected the wrong columns (e.g. for vector tiles)
+- Aggregation dimensions with alias where broken
+
 ## 6.0.0
 Released 2018-03-19
 Backward incompatible changes:
@@ -9,6 +19,7 @@ New features:
  - Upgrades camshaft to 0.61.8
  - Upgrades cartodb-redis to 1.0.0
  - Rate limit feature (disabled by default)
+ - Fixes for tests with PG11
 
 ## 5.4.0
 Released 2018-03-15
