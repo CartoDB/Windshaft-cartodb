@@ -9,6 +9,7 @@ New features:
 Bug Fixes:
 - Non-default aggregation selected the wrong columns (e.g. for vector tiles)
 - Aggregation dimensions with alias where broken
+- cartodb_id was not unique accross aggregated vector tiles
 
 ## 6.0.0
 Released 2018-03-19
