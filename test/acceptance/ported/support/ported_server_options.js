@@ -7,7 +7,9 @@ var overviewsQueryRewriter = new OverviewsQueryRewriter({
 });
 
 module.exports = _.extend({}, serverOptions, {
+    // FIXME: Remove it. This is no longer needed, paths are defined in routers
     base_url: '/database/:dbname/table/:table',
+    // FIXME: Remove it. This is no longer needed, paths are defined in routers
     base_url_mapconfig: '/database/:dbname/layergroup',
     grainstore: {
         datasource: {
