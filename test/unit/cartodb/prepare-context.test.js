@@ -7,10 +7,10 @@ var PgConnection = require('../../../lib/cartodb/backends/pg_connection');
 var AuthApi = require('../../../lib/cartodb/api/auth_api');
 var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 
-const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/clean-up-query-params');
-const authorizeMiddleware = require('../../../lib/cartodb/middleware/authorize');
-const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/db-conn-setup');
-const credentialsMiddleware = require('../../../lib/cartodb/middleware/credentials');
+const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/routers/middlewares/clean-up-query-params');
+const authorizeMiddleware = require('../../../lib/cartodb/routers/middlewares/authorize');
+const dbConnSetupMiddleware = require('../../../lib/cartodb/routers/middlewares/db-conn-setup');
+const credentialsMiddleware = require('../../../lib/cartodb/routers/middlewares/credentials');
 
 var windshaft = require('windshaft');
 

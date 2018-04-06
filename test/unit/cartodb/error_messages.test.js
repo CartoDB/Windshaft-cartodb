@@ -2,7 +2,7 @@ require('../../support/test_helper');
 
 var assert = require('assert');
 
-var errorMiddleware = require('../../../lib/cartodb/middleware/error-middleware');
+var errorMiddleware = require('../../../lib/cartodb/routers/middlewares/error-middleware');
 
 describe('error messages clean up', function() {
 

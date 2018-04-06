@@ -6,10 +6,10 @@ const RedisPool = require('redis-mpool');
 const cartodbRedis = require('cartodb-redis');
 const TestClient = require('../support/test-client');
 const UserLimitsApi = require('../../lib/cartodb/api/user_limits_api');
-const rateLimitMiddleware = require('../../lib/cartodb/middleware/rate-limit');
+const rateLimitMiddleware = require('../../lib/cartodb/routers/middlewares/rate-limit');
 const { RATE_LIMIT_ENDPOINTS_GROUPS } = rateLimitMiddleware;
 
-let userLimitsApi; 
+let userLimitsApi;
 let rateLimit;
 let redisClient;
 let testClient;
@@ -112,11 +112,11 @@ function assertGetLayergroupRequest (status, limit, remaining, reset, retry, don
             'Carto-Rate-Limit-Reset': reset
         }
     };
-    
+
     if(retry) {
         response.headers['Retry-After'] = retry;
     }
-    
+
     testClient.getLayergroup({ response }, err => {
         assert.ifError(err);
         if (done) {
@@ -133,11 +133,11 @@ function assertRateLimitRequest (status, limit, remaining, reset, retry, done) {
             "Carto-Rate-Limit-Remaining": remaining,
             "Carto-Rate-Limit-Reset": reset
         };
-        
+
         if(retry) {
             expectedHeaders['Retry-After'] = retry;
         }
-    
+
         assert.deepEqual(res.headers, expectedHeaders);
 
         if(status === 200) {
@@ -160,7 +160,7 @@ describe('rate limit', function() {
     before(function() {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.anonymous = true;
-        
+
         redisClient = redis.createClient(global.environment.redis.port);
         testClient = new TestClient(createMapConfig(), 1234);
     });
@@ -183,7 +183,7 @@ describe('rate limit', function() {
                 done();
             });
         });
-    }); 
+    });
 
     it('should not be rate limited', function (done) {
         const count = 1;
@@ -257,9 +257,9 @@ describe('rate limit middleware', function () {
 
     it("1 req/sec: 2 req/seg should be limited, removing SHA script from Redis", function (done) {
         userLimitsApi.metadataBackend.redisCmd(
-            8, 
-            'SCRIPT', 
-            ['FLUSH'], 
+            8,
+            'SCRIPT',
+            ['FLUSH'],
             function () {
                 assertRateLimitRequest(200, 1, 0, 1);
                 setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
@@ -277,7 +277,7 @@ describe('rate limit and vector tiles', function () {
     before(function(done) {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.tile = true;
-        
+
         redisClient = redis.createClient(global.environment.redis.port);
         const count = 1;
         const period = 1;
@@ -287,9 +287,9 @@ describe('rate limit and vector tiles', function () {
         testClient = new TestClient(createMapConfig(), 1234);
         testClient.getLayergroup({status: 200}, (err, res) => {
             assert.ifError(err);
-            
+
             layergroupid = res.layergroupid;
-    
+
             done();
         });
     });
@@ -336,12 +336,12 @@ describe('rate limit and vector tiles', function () {
 
         testClient.getTile(0, 0, 0, tileParams(204, '1', '0', '1'), (err) => {
             assert.ifError(err);
-    
+
             testClient.getTile(
-                0, 
-                0, 
-                0, 
-                tileParams(429, '1', '0', '0', '1', 'application/x-protobuf'), 
+                0,
+                0,
+                0,
+                tileParams(429, '1', '0', '0', '1', 'application/x-protobuf'),
                 (err, res, tile) => {
                     assert.ifError(err);
 
@@ -350,11 +350,11 @@ describe('rate limit and vector tiles', function () {
                     assert.equal(tileJSON.length, 2);
                     assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
                     assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
-            
+
                     done();
                 }
-            );    
+            );
         });
-    
+
     });
 });

@@ -1,7 +1,7 @@
 var assert = require('assert');
 var testHelper = require('../../support/test_helper');
 
-var lzmaMiddleware = require('../../../lib/cartodb/middleware/lzma');
+var lzmaMiddleware = require('../../../lib/cartodb/routers/middlewares/lzma');
 
 describe('lzma-middleware', function() {
 
