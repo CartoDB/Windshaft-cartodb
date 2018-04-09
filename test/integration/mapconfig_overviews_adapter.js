@@ -6,7 +6,7 @@ var cartodbRedis = require('cartodb-redis');
 var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var OverviewsMetadataApi = require('../../lib/cartodb/backends/api/overviews_metadata_api');
-var FilterStatsApi = require('../../lib/cartodb/backends/api/filter_stats_api');
+var FilterStatsBackend = require('../../lib/cartodb/backends/filter-stats');
 var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-overviews-adapter');
 
 var redisPool = new RedisPool(global.environment.redis);
@@ -14,9 +14,9 @@ var metadataBackend = cartodbRedis({pool: redisPool});
 var pgConnection = new PgConnection(metadataBackend);
 var pgQueryRunner = new PgQueryRunner(pgConnection);
 var overviewsMetadataApi = new OverviewsMetadataApi(pgQueryRunner);
-var filterStatsApi = new FilterStatsApi(pgQueryRunner);
+var filterStatsBackend = new FilterStatsBackend(pgQueryRunner);
 
-var mapConfigOverviewsAdapter = new MapConfigOverviewsAdapter(overviewsMetadataApi, filterStatsApi);
+var mapConfigOverviewsAdapter = new MapConfigOverviewsAdapter(overviewsMetadataApi, filterStatsBackend);
 
 describe('MapConfigOverviewsAdapter', function() {
 
