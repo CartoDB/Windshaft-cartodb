@@ -7,7 +7,7 @@ var cartodbRedis = require('cartodb-redis');
 
 var PgConnection = require('../../lib/cartodb/backends/pg_connection');
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
-var OverviewsMetadataApi = require('../../lib/cartodb/api/overviews_metadata_api');
+var OverviewsMetadataApi = require('../../lib/cartodb/backends/api/overviews_metadata_api');
 
 
 describe('OverviewsMetadataApi', function() {

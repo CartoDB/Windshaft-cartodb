@@ -4,13 +4,13 @@ var _ = require('underscore');
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
 var PgConnection = require('../../../lib/cartodb/backends/pg_connection');
-var AuthApi = require('../../../lib/cartodb/api/auth_api');
+var AuthApi = require('../../../lib/cartodb/backends/api/auth_api');
 var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 
-const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/routers/middlewares/clean-up-query-params');
-const authorizeMiddleware = require('../../../lib/cartodb/routers/middlewares/authorize');
-const dbConnSetupMiddleware = require('../../../lib/cartodb/routers/middlewares/db-conn-setup');
-const credentialsMiddleware = require('../../../lib/cartodb/routers/middlewares/credentials');
+const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/api/middlewares/clean-up-query-params');
+const authorizeMiddleware = require('../../../lib/cartodb/api/middlewares/authorize');
+const dbConnSetupMiddleware = require('../../../lib/cartodb/api/middlewares/db-conn-setup');
+const credentialsMiddleware = require('../../../lib/cartodb/api/middlewares/credentials');
 
 var windshaft = require('windshaft');
 
