@@ -7,24 +7,24 @@ var cartodbRedis = require('cartodb-redis');
 
 var PgConnection = require('../../lib/cartodb/backends/pg_connection');
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
-var OverviewsMetadataApi = require('../../lib/cartodb/backends/api/overviews_metadata_api');
+var OverviewsMetadataBackend = require('../../lib/cartodb/backends/overviews-metadata');
 
 
-describe('OverviewsMetadataApi', function() {
+describe('OverviewsMetadataBackend', function() {
 
-    var overviewsMetadataApi;
+    var overviewsMetadataBackend;
 
     before(function() {
         var redisPool = new RedisPool(global.environment.redis);
         var metadataBackend = cartodbRedis({pool: redisPool});
         var pgConnection = new PgConnection(metadataBackend);
         var pgQueryRunner = new PgQueryRunner(pgConnection);
-        overviewsMetadataApi = new OverviewsMetadataApi(pgQueryRunner);
+        overviewsMetadataBackend = new OverviewsMetadataBackend(pgQueryRunner);
     });
 
     it('should return an empty relation for tables that have no overviews', function(done) {
         var query = 'select * from test_table';
-        overviewsMetadataApi.getOverviewsMetadata('localhost', query, function(err, result) {
+        overviewsMetadataBackend.getOverviewsMetadata('localhost', query, function(err, result) {
             assert.ok(!err, err);
 
             assert.deepEqual(result, {});
@@ -35,7 +35,7 @@ describe('OverviewsMetadataApi', function() {
 
     it('should return overviews metadata', function(done) {
         var query = 'select * from test_table_overviews';
-        overviewsMetadataApi.getOverviewsMetadata('localhost', query, function(err, result) {
+        overviewsMetadataBackend.getOverviewsMetadata('localhost', query, function(err, result) {
             assert.ok(!err, err);
 
             assert.deepEqual(result, {
