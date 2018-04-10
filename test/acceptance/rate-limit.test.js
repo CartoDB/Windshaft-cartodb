@@ -5,7 +5,7 @@ const redis = require('redis');
 const RedisPool = require('redis-mpool');
 const cartodbRedis = require('cartodb-redis');
 const TestClient = require('../support/test-client');
-const UserLimitsApi = require('../../lib/cartodb/backends/api/user_limits_api');
+const UserLimitsBackend = require('../../lib/cartodb/backends/user-limits');
 const rateLimitMiddleware = require('../../lib/cartodb/api/middlewares/rate-limit');
 const { RATE_LIMIT_ENDPOINTS_GROUPS } = rateLimitMiddleware;
 
@@ -218,7 +218,7 @@ describe('rate limit middleware', function () {
 
         const redisPool = new RedisPool(global.environment.redis);
         const metadataBackend = cartodbRedis({ pool: redisPool });
-        userLimitsApi = new UserLimitsApi(metadataBackend, {
+        userLimitsApi = new UserLimitsBackend(metadataBackend, {
             limits: {
                 rateLimitsEnabled: global.environment.enabledFeatures.rateLimitsEnabled
             }
