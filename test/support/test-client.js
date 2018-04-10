@@ -1254,6 +1254,36 @@ TestClient.prototype.getAnalysesCatalog = function (params, callback) {
     );
 };
 
+TestClient.prototype.getNamedMapList = function(params, callback) {
+    const request = {
+        url: `/api/v1/map/named?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'GET',
+        headers: {
+            host: 'localhost',
+            'Content-Type': 'application/json'
+        }
+    };
+
+    let expectedResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    if (params.response) {
+        expectedResponse = Object.assign(expectedResponse, params.response);
+    }
+
+    assert.response(this.server, request, expectedResponse, (res, err) => {
+        if (err) {
+            return callback(err);
+        }
+        const body = JSON.parse(res.body);
+        return callback(null, res, body);
+    });
+};
+
 TestClient.prototype.getNamedTile =  function (name, z, x, y, format, options, callback) {
     const { params }  = options;
 
