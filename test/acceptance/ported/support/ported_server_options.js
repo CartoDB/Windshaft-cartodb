@@ -11,6 +11,20 @@ module.exports = _.extend({}, serverOptions, {
     base_url: '/database/:dbname/table/:table',
     // FIXME: Remove it. This is no longer needed, paths are defined in routers
     base_url_mapconfig: '/database/:dbname/layergroup',
+
+    api_base_paths: [
+        '/tiles',
+        '/database/:dbname'
+    ],
+
+    map_base_paths: [
+        '/layergroup'
+    ],
+
+    template_base_paths: [
+        '/template'
+    ],
+
     grainstore: {
         datasource: {
             geometry_field: 'the_geom',
