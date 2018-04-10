@@ -37,7 +37,7 @@ describe('authorization', function() {
         });
     });
 
-    it('should create and get a named map tile using a regular apikey token', function (done) {
+    it.skip('should create and get a named map tile using a regular apikey token', function (done) {
         const apikeyToken = 'regular1';
         const mapConfig = {
             version: '1.7.0',
@@ -61,7 +61,7 @@ describe('authorization', function() {
 
             testClient.drain(done);
         });
-    });    
+    });
 
     it('should fail getting a named map tile with default apikey token', function (done) {
         const apikeyTokenCreate = 'regular1';
@@ -203,7 +203,7 @@ describe('authorization', function() {
             assert.ok(layergroupResult.hasOwnProperty('errors'));
             assert.equal(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
-            
+
             testClient.drain(done);
         });
     });
@@ -257,7 +257,7 @@ describe('authorization', function() {
                     type: 'source',
                     params: {
                         query: 'select * from populated_places_simple_reduced'
-                    }                        
+                    }
                 }
             ]
         };
@@ -354,7 +354,39 @@ describe('authorization', function() {
         });
     });
 
-    it('should create and get a named map tile using a regular apikey token', function (done) {
+    it('should fail while listing named maps with a regular apikey token', function (done) {
+        const apikeyToken = 'regular1';
+
+        const testClient = new TestClient({}, apikeyToken);
+
+        testClient.getNamedMapList({ response: {status: 403 }}, function (err, res, body) {
+            assert.ifError(err);
+
+            assert.equal(res.statusCode, 403);
+
+            assert.equal(body.errors.length, 1);
+            assert.ok(body.errors[0].match(/Forbidden/), body.errors[0]);
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should list named maps with master apikey token', function (done) {
+        const apikeyToken = 1234;
+
+        const testClient = new TestClient({}, apikeyToken);
+
+        testClient.getNamedMapList({}, function (err, res, body) {
+            assert.ifError(err);
+
+            assert.equal(res.statusCode, 200);
+            assert.ok(Array.isArray(body.template_ids));
+
+            testClient.drain(done);
+        });
+    });
+
+    it.skip('should create and get a named map tile using a regular apikey token', function (done) {
         const apikeyToken = 'regular1';
 
         const template = {
@@ -391,7 +423,7 @@ describe('authorization', function() {
         });
     });
 
-    it('should fail creating a named map using a regular apikey token and a private table', function (done) {
+    it.skip('should fail creating a named map using a regular apikey token and a private table', function (done) {
         const apikeyToken = 'regular1';
 
         const template = {

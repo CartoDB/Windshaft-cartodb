@@ -29,7 +29,7 @@ The value of this attribute can be `false` to explicitly disable aggregation for
         // object, defines the columns of the aggregated datasets. Each property corresponds to a columns name and
         // should contain an object with two properties: "aggregate_function" (one of "sum", "max", "min", "avg", "mode" or "count"),
         // and "aggregated_column" (the name of a column of the original layer query or "*")
-        // A column defined as `"_cdb_features_count": {"aggregate_function": "count", aggregated_column: "*"}`
+        // A column defined as `"_cdb_feature_count": {"aggregate_function": "count", aggregated_column: "*"}`
         // is always generated in addition to the defined columns.
         // The column names `cartodb_id`, `the_geom`, `the_geom_webmercator` and `_cdb_feature_count` cannot be used
         // for aggregated columns, as they correspond to columns always present in the result.
