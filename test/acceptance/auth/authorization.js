@@ -353,36 +353,72 @@ describe('authorization', function() {
             testClient.drain(done);
         });
     });
+    describe('Listing named maps', function() {
 
-    it('should fail while listing named maps with a regular apikey token', function (done) {
-        const apikeyToken = 'regular1';
+        it('should fail while listing named maps with a regular apikey token', function (done) {
+            const apikeyToken = 'regular1';
 
-        const testClient = new TestClient({}, apikeyToken);
+            const testClient = new TestClient({}, apikeyToken);
 
-        testClient.getNamedMapList({ response: {status: 403 }}, function (err, res, body) {
-            assert.ifError(err);
+            testClient.getNamedMapList({ response: { status: 403 } }, function (err, res, body) {
+                assert.ifError(err);
 
-            assert.equal(res.statusCode, 403);
+                assert.equal(res.statusCode, 403);
 
-            assert.equal(body.errors.length, 1);
-            assert.ok(body.errors[0].match(/Forbidden/), body.errors[0]);
+                assert.equal(body.errors.length, 1);
+                assert.ok(body.errors[0].match(/Forbidden/), body.errors[0]);
 
-            testClient.drain(done);
+                testClient.drain(done);
+            });
         });
-    });
 
-    it('should list named maps with master apikey token', function (done) {
-        const apikeyToken = 1234;
+        it('should fail while listing named maps with the default apikey token', function (done) {
+            const apikeyToken = 'default_public';
 
-        const testClient = new TestClient({}, apikeyToken);
+            const testClient = new TestClient({}, apikeyToken);
 
-        testClient.getNamedMapList({}, function (err, res, body) {
-            assert.ifError(err);
+            testClient.getNamedMapList({ response: { status: 403 } }, function (err, res, body) {
+                assert.ifError(err);
 
-            assert.equal(res.statusCode, 200);
-            assert.ok(Array.isArray(body.template_ids));
+                assert.equal(res.statusCode, 403);
 
-            testClient.drain(done);
+                assert.equal(body.errors.length, 1);
+                assert.ok(body.errors[0].match(/Forbidden/), body.errors[0]);
+
+                testClient.drain(done);
+            });
+        });
+
+        it('should fail while listing named maps with non-existent apikey token', function (done) {
+            const apikeyToken = 'wadus-wadus';
+
+            const testClient = new TestClient({}, apikeyToken);
+
+            testClient.getNamedMapList({ response: { status: 401 } }, function (err, res, body) {
+                assert.ifError(err);
+
+                assert.equal(res.statusCode, 401);
+
+                assert.equal(body.errors.length, 1);
+                assert.ok(body.errors[0].match(/Unauthorized/), body.errors[0]);
+
+                testClient.drain(done);
+            });
+        });
+
+        it('should list named maps with master apikey token', function (done) {
+            const apikeyToken = 1234;
+
+            const testClient = new TestClient({}, apikeyToken);
+
+            testClient.getNamedMapList({}, function (err, res, body) {
+                assert.ifError(err);
+
+                assert.equal(res.statusCode, 200);
+                assert.ok(Array.isArray(body.template_ids));
+
+                testClient.drain(done);
+            });
         });
     });
 
