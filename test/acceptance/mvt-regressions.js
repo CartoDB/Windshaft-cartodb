@@ -78,7 +78,7 @@ describe('aggregation', function () {
     });
 });
 
-describe.only('MVT Mapnik', function () {
+describe('MVT Mapnik', function () {
     const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
     before(function () {
