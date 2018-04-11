@@ -137,8 +137,8 @@ describe('MVT Mapnik', function () {
         Promise.all([tile487, tile497])
             .then(features => {
                 const [tile487SudanFeature, tile497SudanFeature] = features;
-                assert.equal(tile487SudanFeature.properties._2016_6_partcntry, 0);
-                assert.equal(tile497SudanFeature.properties._2016_6_partcntry, 0);
+                assert.strictEqual(tile487SudanFeature.properties._2016_6_partcntry, 0);
+                assert.strictEqual(tile497SudanFeature.properties._2016_6_partcntry, 0);
                 return done();
             })
             .catch(err => done(err));
