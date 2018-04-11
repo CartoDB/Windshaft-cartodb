@@ -73,6 +73,74 @@ describe('aggregation', function () {
                     done();
                 });
             });
+
         });
+    });
+});
+
+describe.only('MVT Mapnik', function () {
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
+    before(function () {
+        serverOptions.renderer.mvt.usePostGIS = false;
+    });
+
+    after(function (){
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+    });
+
+    afterEach(function (done) {
+        this.testClient.drain(done);
+    });
+
+    it('invalid properties', function (done) {
+        const mapConfig = {
+            version: '1.7.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: {
+                        sql: 'select * from countries_null_values',
+                    }
+                }
+            ]
+        };
+
+        const handler = (resolve, reject) => {
+            return (err, res, MVT) => {
+                if (err) {
+                    return reject(err);
+                }
+                try {
+                    const geojsonTile = JSON.parse(MVT.toGeoJSONSync(0));
+                    const sudanFeature = geojsonTile.features.filter(_ => {
+                        return _.properties.country === 'Sudan';
+                    })[0];
+                    if (!sudanFeature) {
+                        return reject(new Error(`Missing country='Sudan'`));
+                    }
+
+                    resolve(sudanFeature);
+                } catch (err) {
+                    resolve(err);
+                }
+            };
+        };
+
+        this.testClient = new TestClient(mapConfig);
+        const tile487 = new Promise((resolve, reject) => {
+            this.testClient.getTile(4, 8, 7, { format: 'mvt', layer: 0 }, handler(resolve, reject));
+        });
+        const tile497 = new Promise((resolve, reject) => {
+            this.testClient.getTile(4, 9, 7, { format: 'mvt', layer: 0 }, handler(resolve, reject));
+        });
+        Promise.all([tile487, tile497])
+            .then(features => {
+                const [tile487SudanFeature, tile497SudanFeature] = features;
+                assert.equal(tile487SudanFeature.properties._2016_6_partcntry, 0);
+                assert.equal(tile497SudanFeature.properties._2016_6_partcntry, 0);
+                return done();
+            })
+            .catch(err => done(err));
     });
 });
