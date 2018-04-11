@@ -5,18 +5,18 @@ const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
 
 const suites = [{
-    desc: 'regressions mvt (mapnik)',
+    desc: 'mapnik',
     usePostGIS: false
 }];
 
 if (process.env.POSTGIS_VERSION === '2.4') {
     suites.push({
-        desc: 'regressions mvt (postgis)',
+        desc: 'postgis',
         usePostGIS: true
     });
 }
 
-describe('aggregation', function () {
+describe('mvt regressions', function () {
 
     suites.forEach((suite) => {
         const { desc, usePostGIS } = suite;
@@ -36,7 +36,7 @@ describe('aggregation', function () {
                 this.testClient.drain(done);
             });
 
-            it('aggregates with centroid placement', function (done) {
+            it('should not error on missing column from aggregation', function (done) {
                 const mapConfig = {
                     version: '1.7.0',
                     layers: [
