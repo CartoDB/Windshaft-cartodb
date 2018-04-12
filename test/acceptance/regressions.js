@@ -1,5 +1,3 @@
-require('../support/test_helper');
-
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 const LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
@@ -40,12 +38,13 @@ describe('regressions', function() {
     });
 
     describe('map instantiation', function () {
+        const apikeyToken = 'regular1';
         const mapConfig = {
             version: '1.7.0',
             layers: [{
                 type: 'cartodb',
                 options: {
-                    sql: 'select * from test_table',
+                    sql: 'select * from test_table_localhost_regular1',
                     cartocss: TestClient.CARTOCSS.POINTS,
                     cartocss_version: '2.3.0'
                 }
@@ -53,7 +52,7 @@ describe('regressions', function() {
         };
 
         it('should have distint timestamps when the source was updated', function (done) {
-            const testClient = new TestClient(mapConfig);
+            const testClient = new TestClient(mapConfig, apikeyToken);
 
             testClient.getLayergroup({}, (err, layergroup) => {
                 if (err) {
@@ -64,7 +63,7 @@ describe('regressions', function() {
 
                 const conn = testClient.getDBConnection();
 
-                const sql = `select CDB_TableMetadataTouch('test_table'::regclass)`;
+                const sql = `select CDB_TableMetadataTouch('test_table_localhost_regular1'::regclass)`;
 
                 conn.query(sql, (err) => {
                     if (err) {

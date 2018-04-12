@@ -465,6 +465,8 @@ CREATE INDEX test_table_localhost_regular1_the_geom_webmercator_idx ON test_tabl
 GRANT ALL ON TABLE test_table_localhost_regular1 TO :TESTUSER;
 GRANT ALL ON TABLE test_table_localhost_regular1 TO test_windshaft_regular1;
 
+INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('test_table_localhost_regular1'::regclass, '2009-02-13T23:31:30.123Z');
+
 -- analysis tables -----------------------------------------------
 
 ALTER TABLE cdb_analysis_catalog OWNER TO :TESTUSER;
