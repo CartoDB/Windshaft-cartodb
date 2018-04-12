@@ -1,11 +1,10 @@
 ## Metrics
 
-Windshaft-cartodb metrics
-=========================
-See [Windshaft metrics documentation](https://github.com/CartoDB/Windshaft/blob/master/doc/metrics.md) to understand the full picture.
+See [metrics guide](https://github.com/CartoDB/Windshaft/blob/master/doc/metrics.md) to understand the full picture.
 
 The next list includes the API endpoints, each endpoint may have several inner timers, some of them are displayed within this list as subitems. Find the description for them in the Inner timers section.
-## Timers
+
+### Timers
 - **windshaft-cartodb.flush_cache**: time to flush the tile and sql cache
 - **windshaft-cartodb.get_template**: time to retrieve an specific template
 - **windshaft-cartodb.delete_template**: time to delete an specific template
