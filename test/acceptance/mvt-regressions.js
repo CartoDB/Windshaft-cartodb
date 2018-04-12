@@ -100,7 +100,7 @@ describe('MVT Mapnik', function () {
                 {
                     type: 'cartodb',
                     options: {
-                        sql: 'select * from countries_null_values',
+                        sql: "select ldc, cartodb_id, _2016_6_partcntry, the_geom_webmercator, country from countries_null_values where country = 'Kenya' OR country = 'Sudan' LIMIT 3",
                     }
                 }
             ]
@@ -142,5 +142,32 @@ describe('MVT Mapnik', function () {
                 return done();
             })
             .catch(err => done(err));
+    });
+
+    it('should not convert boolean to numeric', function (done) {
+        const geomWebmercator = 'st_transform(st_setsrid(st_makepoint(10, 10), 4326), 3857) as the_geom_webmercator';
+        const sql = `SELECT ${geomWebmercator}, FALSE as status, 0 as data`;
+
+        const mapConfig = {
+            version: '1.7.0',
+            layers: [
+                {
+                    type: 'cartodb',
+                    options: { sql }
+                }
+            ]
+        };
+
+        this.testClient = new TestClient(mapConfig);
+        this.testClient.getTile(0, 0, 0, { format: 'mvt', layer: 0 }, (err, res, MVT) => {
+            if (err) {
+                return done(err);
+            }
+
+            const geojsonTile = JSON.parse(MVT.toGeoJSONSync(0));
+            assert.strictEqual(geojsonTile.features[0].properties.status, false);
+            assert.strictEqual(geojsonTile.features[0].properties.data, undefined);
+            done();
+        });
     });
 });
