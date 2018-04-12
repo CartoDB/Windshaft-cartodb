@@ -1,3 +1,4 @@
+require('../support/test_helper');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 const LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
