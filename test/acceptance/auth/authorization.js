@@ -422,9 +422,7 @@ describe('authorization', function() {
         });
     });
 
-    it.skip('should create and get a named map tile using a regular apikey token', function (done) {
-        const apikeyToken = 'regular1';
-
+    describe.only('Create Named Map', function () {
         const template = {
             version: '0.0.1',
             name: 'auth-api-template',
@@ -447,16 +445,72 @@ describe('authorization', function() {
             }
         };
 
-        const testClient = new TestClient(template, apikeyToken);
+        it('should create and get a named map tile using the master apikey token', function (done) {
+            const apikeyToken = 1234;
 
-        testClient.getTile(0, 0, 0, function (err, res, tile) {
-            assert.ifError(err);
+            const testClient = new TestClient(template, apikeyToken);
 
-            assert.equal(res.statusCode, 200);
-            assert.ok(tile instanceof mapnik.Image);
+            testClient.getTile(0, 0, 0, function (err, res, tile) {
+                assert.ifError(err);
 
-            testClient.drain(done);
+                assert.equal(res.statusCode, 200);
+                assert.ok(tile instanceof mapnik.Image);
+
+                testClient.drain(done);
+            });
         });
+
+        it('should fail creating a named map using a regular apikey token', function (done) {
+            const apikeyToken = 'regular1';
+
+            const testClient = new TestClient(template, apikeyToken);
+
+            testClient.createTemplate({ response: { status: 403 } }, function (err, res, response) {
+                assert.ifError(err);
+
+                assert.equal(res.statusCode, 403);
+
+                assert.equal(response.errors.length, 1);
+                assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
+
+                testClient.drain(done);
+            });
+        });
+
+        it('should fail creating a named map using the default apikey token', function (done) {
+            const apikeyToken = 'default_public';
+
+            const testClient = new TestClient(template, apikeyToken);
+
+            testClient.createTemplate({ response: { status: 403 } }, function (err, res, response) {
+                assert.ifError(err);
+
+                assert.equal(res.statusCode, 403);
+
+                assert.equal(response.errors.length, 1);
+                assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
+
+                testClient.drain(done);
+            });
+        });
+
+        it('should fail creating a named map using a non-existent apikey token', function (done) {
+            const apikeyToken = 'wadus-wadus';
+
+            const testClient = new TestClient(template, apikeyToken);
+
+            testClient.createTemplate({ response: { status: 401 } }, function (err, res, response) {
+                assert.ifError(err);
+
+                assert.equal(res.statusCode, 401);
+
+                assert.equal(response.errors.length, 1);
+                assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
+
+                testClient.drain(done);
+            });
+        });
+
     });
 
     it.skip('should fail creating a named map using a regular apikey token and a private table', function (done) {

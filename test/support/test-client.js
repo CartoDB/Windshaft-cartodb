@@ -1367,3 +1367,34 @@ TestClient.prototype.getNamedTile =  function (name, z, x, y, format, options, c
         });
     });
 };
+
+TestClient.prototype.createTemplate = function (params, callback) {
+    if (!this.apiKey) {
+        return callback(new Error('apiKey param is mandatory to create a new template'));
+    }
+
+    const createTemplateRequest = {
+        url: `/api/v1/map/named?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'POST',
+        headers: {
+            host: 'localhost',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(this.template)
+    };
+
+    let createTemplateResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    if (params.response) {
+        createTemplateResponse = Object.assign(createTemplateResponse, params.response);
+    }
+
+    assert.response(this.server, createTemplateRequest, createTemplateResponse, (res, err) => {
+        return callback(err, res, JSON.parse(res.body));
+    });
+};
