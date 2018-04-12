@@ -37,31 +37,6 @@ describe('authorization', function() {
         });
     });
 
-    it.skip('should create and get a named map tile using a regular apikey token', function (done) {
-        const apikeyToken = 'regular1';
-        const mapConfig = {
-            version: '1.7.0',
-            layers: [
-                {
-                    options: {
-                        sql: 'select * FROM test_table_localhost_regular1',
-                        cartocss: TestClient.CARTOCSS.POINTS,
-                        cartocss_version: '2.3.0'
-                    }
-                }
-            ]
-        };
-        const testClient = new TestClient(mapConfig, apikeyToken);
-
-        testClient.getTile(0, 0, 0, function (err, res, tile) {
-            assert.ifError(err);
-
-            assert.equal(res.statusCode, 200);
-            assert.ok(tile instanceof mapnik.Image);
-
-            testClient.drain(done);
-        });
-    });
 
     it('should fail getting a named map tile with default apikey token', function (done) {
         const apikeyTokenCreate = 'regular1';
@@ -353,7 +328,8 @@ describe('authorization', function() {
             testClient.drain(done);
         });
     });
-    describe.only('Named maps', function () {
+
+    describe('Named maps', function () {
         describe('LIST Named maps', function () {
 
             it('should fail while listing named maps with a regular apikey token', function (done) {
