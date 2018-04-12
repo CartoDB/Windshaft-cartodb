@@ -1395,6 +1395,54 @@ TestClient.prototype.createTemplate = function (params, callback) {
     }
 
     assert.response(this.server, createTemplateRequest, createTemplateResponse, (res, err) => {
-        return callback(err, res, JSON.parse(res.body));
+        let body;
+        switch (res.headers['content-type']) {
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
+        }
+
+        return callback(err, res, body);
+    });
+};
+
+
+TestClient.prototype.deleteTemplate = function (params, callback) {
+    if (!this.apiKey) {
+        return callback(new Error('apiKey param is mandatory to create a new template'));
+    }
+
+    const deleteTemplateRequest = {
+        url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'DELETE',
+        headers: {
+            host: 'localhost',
+        }
+    };
+
+    let deleteTemplateResponse = {
+        status: 204,
+        headers: {}
+    };
+
+    if (params.response) {
+        deleteTemplateResponse = Object.assign(deleteTemplateResponse, params.response);
+    }
+
+    assert.response(this.server, deleteTemplateRequest, deleteTemplateResponse, (res, err) => {
+        let body;
+        switch (res.headers['content-type']) {
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
+        }
+
+        return callback(err, res, body);
     });
 };

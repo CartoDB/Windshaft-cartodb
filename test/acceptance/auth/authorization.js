@@ -353,6 +353,7 @@ describe('authorization', function() {
             testClient.drain(done);
         });
     });
+
     describe('Listing named maps', function() {
 
         it('should fail while listing named maps with a regular apikey token', function (done) {
@@ -422,7 +423,7 @@ describe('authorization', function() {
         });
     });
 
-    describe.only('Create Named Map', function () {
+    describe('Create Named Map', function () {
         const template = {
             version: '0.0.1',
             name: 'auth-api-template',
@@ -508,6 +509,128 @@ describe('authorization', function() {
                 assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                 testClient.drain(done);
+            });
+        });
+
+    });
+
+    describe('Delete Named Map', function () {
+        const templateBase = {
+            version: '0.0.1',
+            name: 'auth-api-template',
+            placeholders: {
+                buffersize: {
+                    type: 'number',
+                    default: 0
+                }
+            },
+            layergroup: {
+                version: '1.7.0',
+                layers: [{
+                    type: 'cartodb',
+                    options: {
+                        sql: 'select * from test_table_localhost_regular1',
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0',
+                    }
+                }]
+            }
+        };
+
+        it('should delete a named map using the master apikey token', function (done) {
+            const apikeyTokenCreate = 1234;
+            const apikeyTokenDelete = 1234;
+
+            const template = Object.assign({}, templateBase, { name: templateBase.name + '-master'});
+
+            const testClientCreate = new TestClient(template, apikeyTokenCreate);
+
+            testClientCreate.createTemplate({ }, function (err, res, template) {
+                assert.ifError(err);
+
+                const testClientDelete = new TestClient(template, apikeyTokenDelete);
+                testClientDelete.deleteTemplate({ templateId: template.template_id , response: { status: 204 } }, function (err, res, response) {
+                    assert.ifError(err);
+
+                    assert.equal(res.statusCode, 204);
+
+                    testClientDelete.drain(done);
+                });
+            });
+        });
+
+        it('should fail deleting a named map using a regular apikey token', function (done) {
+            const apikeyTokenCreate = 1234;
+            const apikeyTokenDelete = 'regular1';
+
+            const template = Object.assign({}, templateBase, { name: templateBase.name + '-regular' });
+
+            const testClientCreate = new TestClient(template, apikeyTokenCreate);
+
+            testClientCreate.createTemplate({}, function (err, res, template) {
+                assert.ifError(err);
+
+                const testClientDelete = new TestClient(template, apikeyTokenDelete);
+                testClientDelete.deleteTemplate({ templateId: template.template_id, response: { status: 403 } }, function (err, res, response) {
+                    assert.ifError(err);
+
+                    assert.equal(res.statusCode, 403);
+
+                    assert.equal(response.errors.length, 1);
+                    assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
+
+                    testClientDelete.drain(done);
+                });
+            });
+        });
+
+        it('should fail deleting a named map using the default apikey token', function (done) {
+            const apikeyTokenCreate = 1234;
+            const apikeyTokenDelete = 'default_public';
+
+            const template = Object.assign({}, templateBase, { name: templateBase.name + '-default' });
+
+            const testClientCreate = new TestClient(template, apikeyTokenCreate);
+
+            testClientCreate.createTemplate({}, function (err, res, template) {
+                assert.ifError(err);
+
+                const testClientDelete = new TestClient(template, apikeyTokenDelete);
+                testClientDelete.deleteTemplate({ templateId: template.template_id, response: { status: 403 } }, function (err, res, response) {
+                    assert.ifError(err);
+
+                    assert.equal(res.statusCode, 403);
+
+                    assert.equal(response.errors.length, 1);
+                    assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
+
+                    testClientDelete.drain(done);
+                });
+            });
+        });
+
+        it('should fail creating a named map using a non-existent apikey token', function (done) {
+            const apikeyTokenCreate = 1234;
+            const apikeyTokenDelete = 'wadus';
+
+            const template = Object.assign({}, templateBase, { name: templateBase.name + '-wadus' });
+
+            const testClientCreate = new TestClient(template, apikeyTokenCreate);
+
+            testClientCreate.createTemplate({}, function (err, res, template) {
+                assert.ifError(err);
+
+                const testClientDelete = new TestClient(template, apikeyTokenDelete);
+                testClientDelete.deleteTemplate({ templateId: template.template_id, response: { status: 401 } }, function (err, res, response) {
+                    assert.ifError(err);
+
+                    assert.equal(res.statusCode, 401);
+
+                    assert.equal(response.errors.length, 1);
+                    assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
+
+                    testClientDelete.drain(done);
+                });
             });
         });
 
