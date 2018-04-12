@@ -1486,3 +1486,43 @@ TestClient.prototype.updateTemplate = function (params, callback) {
         return callback(err, res, body);
     });
 };
+
+
+TestClient.prototype.getTemplate = function (params, callback) {
+    if (!this.apiKey) {
+        return callback(new Error('apiKey param is mandatory to create a new template'));
+    }
+
+    const getTemplateRequest = {
+        url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'GET',
+        headers: {
+            host: 'localhost'
+        }
+    };
+
+    let getTemplateResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    if (params.response) {
+        getTemplateResponse = Object.assign(getTemplateResponse, params.response);
+    }
+
+    assert.response(this.server, getTemplateRequest, getTemplateResponse, (res, err) => {
+        let body;
+        switch (res.headers['content-type']) {
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
+        }
+
+        return callback(err, res, body);
+    });
+};
