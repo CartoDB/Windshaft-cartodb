@@ -37,4 +37,78 @@ describe('regressions', function() {
             testClient.drain(done);
         });
     });
+
+    it('should create and instantiate a named map with filters', function (done) {
+        const apikeyToken = '1234';
+
+        const template = {
+            version: '0.0.1',
+            name: 'regression-dataview-filter-template',
+            placeholders: {
+                buffersize: {
+                    type: 'number',
+                    default: 0
+                }
+            },
+            layergroup: {
+                version: '1.6.0',
+                layers: [
+                    {
+                        type: 'cartodb',
+                        options: {
+                            source: {
+                                id: 'a1'
+                            },
+                            cartocss: TestClient.CARTOCSS.POINTS,
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ],
+                dataviews: {
+                    country_places_count: {
+                        source: {
+                            id: 'a1'
+                        },
+                        type: 'aggregation',
+                        options: {
+                            column: 'adm0_a3',
+                            aggregation: 'count'
+                        }
+                    }
+                },
+                analyses: [
+                    {
+                        id: 'a1',
+                        type: 'source',
+                        params: {
+                            query: 'select * from populated_places_simple_reduced'
+                        }
+                    }
+                ]
+            }
+        };
+
+        const testClient = new TestClient(template, apikeyToken);
+
+        const params = {
+            own_filter: 1,
+            filters: {
+                dataviews: {
+                    country_places_count: {
+                        accept: ['CAN']
+                    }
+                }
+            }
+        };
+
+        testClient.getDataview('country_places_count', params, (err, dataview) => {
+            assert.ifError(err);
+
+            assert.equal(dataview.type, 'aggregation');
+            assert.equal(dataview.categories.length, 1);
+            assert.deepEqual(dataview.categories[0], { value: 256, category: 'CAN', agg: false });
+
+            testClient.drain(done);
+        });
+    });
 });

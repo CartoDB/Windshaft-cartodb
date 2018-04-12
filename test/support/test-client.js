@@ -358,6 +358,8 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
     }
 
     var url = '/api/v1/map';
+    var urlNamed = url + '/named';
+
     if (Object.keys(extraParams).length > 0) {
         url += '?' + qs.stringify(extraParams);
     }
@@ -370,17 +372,73 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
     };
 
     step(
-        function createLayergroup() {
+        function createTemplate () {
             var next = this;
+
+            if (!self.template) {
+                return next();
+            }
+
+            if (!self.apiKey) {
+                return next(new Error('apiKey param is mandatory to create a new template'));
+            }
+
+            params.placeholders = params.placeholders || {};
+
             assert.response(self.server,
                 {
-                    url: url,
+                    url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
                     method: 'POST',
                     headers: {
                         host: 'localhost',
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(self.mapConfig)
+                    data: JSON.stringify(self.template)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function (res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    return next(null, JSON.parse(res.body).template_id);
+                }
+            );
+        },
+        function createLayergroup(err, templateId) {
+            assert.ifError(err);
+
+            var next = this;
+
+            var data = templateId ? params.placeholders : self.mapConfig;
+
+            const queryParams = {};
+
+            if (self.apiKey) {
+                queryParams.api_key = self.apiKey;
+            }
+
+            if (params.filters !== undefined) {
+                queryParams.filters = JSON.stringify(params.filters);
+            }
+
+            var path  = templateId ?
+                urlNamed + '/' + templateId  + '?' + qs.stringify(queryParams) :
+                url;
+
+            assert.response(self.server,
+                {
+                    url: path,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(data)
                 },
                 {
                     status: 200,
