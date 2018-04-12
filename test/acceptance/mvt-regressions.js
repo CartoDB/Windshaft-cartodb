@@ -166,8 +166,9 @@ describe('MVT Mapnik', function () {
 
             const geojsonTile = JSON.parse(MVT.toGeoJSONSync(0));
             assert.strictEqual(geojsonTile.features[0].properties.status, false);
-            assert.strictEqual(geojsonTile.features[0].properties.data, undefined);
+            assert.strictEqual(geojsonTile.features[0].properties.data, 0);
             done();
         });
     });
+
 });
