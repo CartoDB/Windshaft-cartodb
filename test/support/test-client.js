@@ -1183,6 +1183,19 @@ TestClient.prototype.setUserRenderTimeoutLimit = function (user, userTimeoutLimi
     helper.configureMetadata('hmset', params, callback);
 };
 
+TestClient.prototype.getDBConnection = function () {
+    const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
+
+    const psql = new PSQL({
+        user: 'postgres',
+        dbname: dbname,
+        host: global.environment.postgres.host,
+        port: global.environment.postgres.port
+    });
+
+    return psql;
+};
+
 TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callback) {
     const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
     const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
