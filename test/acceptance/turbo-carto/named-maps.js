@@ -4,11 +4,11 @@ var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 var testHelper = require('../../support/test_helper');
 var CartodbWindshaft = require('../../../lib/cartodb/server');
 var serverOptions = require('../../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 10;
 
 describe('turbo-carto for named maps', function() {
+    var server = new CartodbWindshaft(serverOptions);
 
     var keysToDelete;
 

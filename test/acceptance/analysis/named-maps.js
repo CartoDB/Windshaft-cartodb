@@ -4,12 +4,12 @@ var helper = require('../../support/test_helper');
 
 var CartodbWindshaft = require('../../../lib/cartodb/server');
 var serverOptions = require('../../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 var TestClient = require('../../support/test-client');
 
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('named-maps analysis', function() {
+    var server = new CartodbWindshaft(serverOptions);
 
     var IMAGE_TOLERANCE_PER_MIL = 20;
 

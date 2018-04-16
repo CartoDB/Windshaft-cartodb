@@ -10,10 +10,10 @@ var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var QueryTables = require('cartodb-query-tables');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 describe('tests from old api translated to multilayer', function() {
+    var server = new CartodbWindshaft(serverOptions);
+    server.setMaxListeners(0);
 
     var layergroupUrl = '/api/v1/map';
 

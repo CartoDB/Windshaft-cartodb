@@ -3,7 +3,6 @@ var test_helper = require('../support/test_helper');
 var assert = require('../support/assert');
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
@@ -13,8 +12,9 @@ var step = require('step');
 
 var windshaft = require('windshaft');
 
-
 describe('overviews metadata for named maps', function() {
+    var server = new CartodbWindshaft(serverOptions);
+
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 

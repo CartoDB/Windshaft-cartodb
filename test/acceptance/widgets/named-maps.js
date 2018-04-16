@@ -8,11 +8,11 @@ var helper = require('../../support/test_helper');
 
 var CartodbWindshaft = require('../../../lib/cartodb/server');
 var serverOptions = require('../../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('named-maps widgets', function() {
+    var server = new CartodbWindshaft(serverOptions);
 
     var username = 'localhost';
     var widgetsTemplateName = 'widgets-template';
