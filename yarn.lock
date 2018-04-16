@@ -2,20 +2,20 @@
 # yarn lockfile v1
 
 
-"@carto/mapnik@3.6.2-carto.4":
-  version "3.6.2-carto.4"
-  resolved "https://registry.yarnpkg.com/@carto/mapnik/-/mapnik-3.6.2-carto.4.tgz#54042a5dbea293c54e1bd286b32277694c5dc2d2"
+"@carto/mapnik@3.6.2-carto.7":
+  version "3.6.2-carto.7"
+  resolved "https://registry.yarnpkg.com/@carto/mapnik/-/mapnik-3.6.2-carto.7.tgz#ef057b0a379fec03bce92362a46f8d1729c950d9"
   dependencies:
     mapnik-vector-tile "1.5.0"
     nan "~2.7.0"
     node-pre-gyp "~0.6.30"
     protozero "1.5.1"
 
-"@carto/tilelive-bridge@cartodb/tilelive-bridge#2.5.1-cdb4":
-  version "2.5.1-cdb4"
-  resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/3eb554e5109199f50f457cec72ee288cffa5d6b3"
+"@carto/tilelive-bridge@cartodb/tilelive-bridge#2.5.1-cdb6":
+  version "2.5.1-cdb6"
+  resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/1d71bc845f257d635f54047f1d2be858341cd552"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.4"
+    "@carto/mapnik" "3.6.2-carto.7"
     "@mapbox/sphericalmercator" "~1.0.1"
     mapnik-pool "~0.1.3"
 
@@ -23,11 +23,11 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz#70237b9774095ed1cfdbcea7a8fd1fc82b2691f2"
 
-abaculus@cartodb/abaculus#2.0.3-cdb5:
-  version "2.0.3-cdb5"
-  resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/b899cbea04b3e6093aa3ef32331920acd5f839a1"
+abaculus@cartodb/abaculus#2.0.3-cdb7:
+  version "2.0.3-cdb7"
+  resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/fcdefbf39956c1c86ce3d39547b903857796657f"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.4"
+    "@carto/mapnik" "3.6.2-carto.7"
     d3-queue "^2.0.2"
     sphericalmercator "1.0.x"
 
@@ -861,9 +861,9 @@ graceful-fs@^4.1.2:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-grainstore@1.8.2:
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.8.2.tgz#79dd7a91a098bf8b0ea3189961775c8cc7474319"
+grainstore@1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.9.0.tgz#4f7604bb83538dbfe5d7dbe63be3a7fa345a14f8"
   dependencies:
     carto "0.16.3"
     debug "~3.1.0"
@@ -2239,11 +2239,11 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb8:
-  version "0.6.18-cdb8"
-  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/9cb4546c8fdd34ced0a41dbf70e143475b4e2067"
+tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb11:
+  version "0.6.18-cdb11"
+  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/90b7a2d4a7032b72c15b0d3ea1a6ec8258a4a250"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.4"
+    "@carto/mapnik" "3.6.2-carto.7"
     generic-pool "~2.4.0"
     mime "~1.6.0"
     sphericalmercator "~1.0.4"
@@ -2400,19 +2400,19 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.6.0.tgz#d9394aff73c0aa761207ad2b0f12d1c23ac41244"
+windshaft@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.7.0.tgz#6fdee3c8c9b28b15835981d1ef565a52884e951c"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.4"
-    "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb4
-    abaculus cartodb/abaculus#2.0.3-cdb5
+    "@carto/mapnik" "3.6.2-carto.7"
+    "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb6
+    abaculus cartodb/abaculus#2.0.3-cdb7
     canvas cartodb/node-canvas#1.6.2-cdb2
     carto cartodb/carto#0.15.1-cdb3
     cartodb-psql "^0.10.1"
     debug "^3.1.0"
     dot "~1.0.2"
-    grainstore "1.8.2"
+    grainstore "1.9.0"
     queue-async "~1.0.7"
     redis-mpool "^0.5.0"
     request "2.85.0"
@@ -2420,7 +2420,7 @@ windshaft@4.6.0:
     sphericalmercator "1.0.4"
     step "~0.0.6"
     tilelive "5.12.2"
-    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb8
+    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb11
     torque.js "~2.11.0"
     underscore "~1.6.0"
 
