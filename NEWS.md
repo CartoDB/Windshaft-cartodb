@@ -1,7 +1,7 @@
 # Changelog
 
 ## 6.1.0
-Released 2018-mm-dd
+Released 2018-04-16
 
 New features:
 - Aggreation filters
