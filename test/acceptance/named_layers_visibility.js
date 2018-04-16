@@ -12,7 +12,12 @@ var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE = 20;
 
 describe('layers visibility for previews', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
     var templateMaps = new TemplateMaps(redisPool, {

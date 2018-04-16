@@ -8,7 +8,11 @@ var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 10;
 
 describe('turbo-carto for named maps', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
 
     var keysToDelete;
 

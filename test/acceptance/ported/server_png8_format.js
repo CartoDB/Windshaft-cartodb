@@ -11,17 +11,22 @@ var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 
 describe('server_png8_format', function() {
-    var serverOptionsPng32 = ServerOptions;
-    serverOptionsPng32.grainstore = _.clone(ServerOptions.grainstore);
-    serverOptionsPng32.grainstore.mapnik_tile_format = 'png32';
-    var serverPng32 = cartodbServer(serverOptionsPng32);
-    serverPng32.setMaxListeners(0);
+    var serverPng32;
+    var serverPng8;
 
-    var serverOptionsPng8 = ServerOptions;
-    serverOptionsPng8.grainstore = _.clone(ServerOptions.grainstore);
-    serverOptionsPng8.grainstore.mapnik_tile_format = 'png8:m=h';
-    var serverPng8 = cartodbServer(serverOptionsPng8);
-    serverPng8.setMaxListeners(0);
+    before(function () {
+        var serverOptionsPng32 = ServerOptions;
+        serverOptionsPng32.grainstore = _.clone(ServerOptions.grainstore);
+        serverOptionsPng32.grainstore.mapnik_tile_format = 'png32';
+        serverPng32 = cartodbServer(serverOptionsPng32);
+        serverPng32.setMaxListeners(0);
+
+        var serverOptionsPng8 = ServerOptions;
+        serverOptionsPng8.grainstore = _.clone(ServerOptions.grainstore);
+        serverOptionsPng8.grainstore.mapnik_tile_format = 'png8:m=h';
+        serverPng8 = cartodbServer(serverOptionsPng8);
+        serverPng8.setMaxListeners(0);
+    });
 
     var layergroupId;
 

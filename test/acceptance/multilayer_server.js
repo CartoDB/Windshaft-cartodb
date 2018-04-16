@@ -12,8 +12,12 @@ var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 
 describe('tests from old api translated to multilayer', function() {
-    var server = new CartodbWindshaft(serverOptions);
-    server.setMaxListeners(0);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
 
     var layergroupUrl = '/api/v1/map';
 

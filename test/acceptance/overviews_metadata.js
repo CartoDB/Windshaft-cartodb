@@ -14,7 +14,11 @@ var windshaft = require('windshaft');
 
 
 describe('overviews metadata', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
 
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
@@ -112,7 +116,11 @@ describe('overviews metadata', function() {
 });
 
 describe('overviews metadata with filters', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
 
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);

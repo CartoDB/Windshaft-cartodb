@@ -9,7 +9,12 @@ var TestClient = require('../../support/test-client');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('named-maps analysis', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
 
     var IMAGE_TOLERANCE_PER_MIL = 20;
 

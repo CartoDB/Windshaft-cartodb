@@ -9,8 +9,13 @@ var serverOptions = require('../../../lib/cartodb/server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('get requests with cache headers', function() {
-    var server = new CartodbWindshaft(serverOptions);
-    server.setMaxListeners(0);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
+
 
     var keysToDelete;
     beforeEach(function() {

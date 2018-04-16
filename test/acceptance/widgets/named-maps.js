@@ -12,7 +12,11 @@ var serverOptions = require('../../../lib/cartodb/server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('named-maps widgets', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
 
     var username = 'localhost';
     var widgetsTemplateName = 'widgets-template';

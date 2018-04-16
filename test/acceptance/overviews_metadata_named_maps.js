@@ -13,7 +13,11 @@ var step = require('step');
 var windshaft = require('windshaft');
 
 describe('overviews metadata for named maps', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
 
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);

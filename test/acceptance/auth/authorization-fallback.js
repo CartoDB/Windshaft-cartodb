@@ -45,7 +45,11 @@ var pointSqlPublic = "select * from test_table";
 var keysToDelete;
 
 describe('authorization fallback', function () {
-    const server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
 
     beforeEach(function () {
         keysToDelete = {};

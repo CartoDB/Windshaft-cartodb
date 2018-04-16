@@ -25,8 +25,12 @@ var QueryTables = require('cartodb-query-tables');
 
 var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
 describe(suiteName, function() {
-    var server = new CartodbWindshaft(serverOptions);
-    server.setMaxListeners(0);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
 
     var keysToDelete;
 

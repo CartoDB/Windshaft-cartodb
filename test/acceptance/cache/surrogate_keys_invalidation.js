@@ -30,7 +30,12 @@ describe('templates surrogate keys', function() {
         serviceId: FAKE_FASTLY_SERVICE_ID
     };
 
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
 
     var templateOwner = 'localhost';
     var templateName = 'acceptance';

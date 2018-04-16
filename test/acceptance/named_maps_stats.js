@@ -10,7 +10,11 @@ var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
 
 describe('named maps preview stats', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
 
     var redisPool = new RedisPool(global.environment.redis);
 

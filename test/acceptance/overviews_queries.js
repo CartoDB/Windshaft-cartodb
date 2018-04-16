@@ -6,9 +6,12 @@ var ServerOptions = require('./ported/support/ported_server_options');
 var testClient = require('./ported/support/test_client');
 
 describe('overviews_queries', function() {
+    var server;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
 

@@ -12,7 +12,11 @@ var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var step = require('step');
 
 describe('named_layers', function() {
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
 
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
