@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.1.1
+Released 2018-mm-dd
+
+New features:
+
+
+Bug Fixes:
+
+
 ## 6.1.0
 Released 2018-04-16
 
