@@ -905,7 +905,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
 TestClient.prototype.getStaticCenter = function (params, callback) {
     var self = this;
 
-    let { layergroupid, z, lat, lng, width, height, format } = params;
+    let { layergroupid, zoom, lat, lng, width, height, format } = params;
 
     var url = `/api/v1/map/`;
 
@@ -954,7 +954,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            url = `/api/v1/map/static/center/${layergroupId}/${z}/${lat}/${lng}/${width}/${height}.${format}`;
+            url = `/api/v1/map/static/center/${layergroupId}/${zoom}/${lat}/${lng}/${width}/${height}.${format}`;
 
             if (self.apiKey) {
                 url += '?' + qs.stringify({api_key: self.apiKey});
