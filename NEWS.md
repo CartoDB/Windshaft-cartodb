@@ -8,6 +8,7 @@ New features:
 
 Bug Fixes:
 - Validates tile coordinates (z/x/y) from request params to be a valid integer value.
+- Upgrades Windshaft to 4.7.1, which includes a fix in mapnik-vector-tile to avoid grouping together properties with the same value but different type.
 
 
 ## 6.1.0
