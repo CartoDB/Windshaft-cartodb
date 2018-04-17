@@ -100,7 +100,8 @@ describe('MVT Mapnik', function () {
                 {
                     type: 'cartodb',
                     options: {
-                        sql: "select ldc, cartodb_id, _2016_6_partcntry, the_geom_webmercator, country from countries_null_values where country = 'Kenya' OR country = 'Sudan' LIMIT 3",
+                        sql: "select ldc, cartodb_id, _2016_6_partcntry, the_geom_webmercator, country " + 
+			     "from countries_null_values where country = 'Kenya' OR country = 'Sudan' LIMIT 3",
                     }
                 }
             ]
