@@ -7,6 +7,7 @@ New features:
 
 
 Bug Fixes:
+- Validates tile coordinates (z/x/y) from request params to be a valid integer value.
 
 
 ## 6.1.0
