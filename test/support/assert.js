@@ -87,30 +87,18 @@ assert.response = function(server, req, res, callback) {
         res = {};
     }
 
-    var port = 5555,
+    var port = 0, // let the OS to choose a free port
         host = '127.0.0.1';
 
-    var listeningAttempts = 0;
-    var listener;
-    function listen() {
-        if (listeningAttempts > 25) {
-            return callback(null, new Error('Tried too many ports'));
-        }
-        listener = server.listen(port, host);
-        listener.on('error', function() {
-            port++;
-            listeningAttempts++;
-            listen();
-        });
-        listener.on('listening', onServerListening);
-    }
+    var listener = server.listen(port, host);
+    listener.on('error', callback);
+    listener.on('listening', function onServerListening () {
+        // jshint maxcomplexity:9
+        const { address: host, port } = listener.address();
+        const address = `${host}:${port}`;
 
-    listen();
-
-    // jshint maxcomplexity:9
-    function onServerListening() {
         var requestParams = {
-            url: 'http://' + host + ':' + port + req.url,
+            url: 'http://' + address + req.url,
             method: req.method || 'GET',
             headers: req.headers || {},
             timeout: req.timeout || 0,
@@ -122,14 +110,17 @@ assert.response = function(server, req, res, callback) {
         }
 
         request(requestParams, function assert$response$requestHandler(error, response, body) {
-            listener.close(function() {
+            listener.close(function () {
+                if (error) {
+                    return callback(null, error);
+                }
+
                 response.body = response.body || body;
                 var err = validateResponse(response, res);
                 return callback(response, err);
             });
         });
-
-    }
+    });
 };
 
 function validateResponseBody(response, expected) {

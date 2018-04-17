@@ -12,7 +12,6 @@ var LZMA  = require('lzma').LZMA;
 var lzmaWorker = new LZMA();
 
 var redis = require('redis');
-var nock = require('nock');
 var log4js = require('log4js');
 var pg = require('pg');
 const setICUEnvVariable = require('../../lib/cartodb/utils/icu_data_env_setter');
@@ -103,10 +102,6 @@ beforeEach(function() {
 
 //global afterEach to capture test suites that leave keys in redis
 afterEach(function(done) {
-
-    // restoring nock globally after each suite
-    nock.cleanAll();
-    nock.enableNetConnect();
 
     var expectedKeys = {
         'rails:test_windshaft_cartodb_user_1_db:test_table_private_1': true,
@@ -223,4 +218,3 @@ module.exports = {
   configureMetadata,
   cleanPGPoolConnections
 };
-
