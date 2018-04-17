@@ -7,6 +7,7 @@ New features:
 
 
 Bug Fixes:
+- Upgrades Windshaft to 4.7.1, which includes a fix in mapnik-vector-tile to avoid grouping together properties with the same value but different type.
 
 
 ## 6.1.0
