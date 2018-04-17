@@ -16,7 +16,7 @@ describe('coordinates middleware', function () {
         coords(req, res, function (err) {
             assert.equal(
                 err.message,
-                'Invalid zoom value (-1). It should be an integer number greather or equal to 0'
+                'Invalid zoom value (-1). It should be an integer number greather than or equal to 0'
             );
             assert.equal(err.http_status, 400);
             done();
@@ -37,7 +37,7 @@ describe('coordinates middleware', function () {
         coords(req, res, function (err) {
             assert.equal(
                 err.message,
-                'Invalid zoom value (1.1). It should be an integer number greather or equal to 0'
+                'Invalid zoom value (1.1). It should be an integer number greather than or equal to 0'
             );
             assert.equal(err.http_status, 400);
             done();
@@ -58,7 +58,7 @@ describe('coordinates middleware', function () {
         coords(req, res, function (err) {
             assert.equal(
                 err.message,
-                'Invalid zoom value (0.1). It should be an integer number greather or equal to 0'
+                'Invalid zoom value (0.1). It should be an integer number greather than or equal to 0'
             );
             assert.equal(err.http_status, 400);
             done();
@@ -80,7 +80,7 @@ describe('coordinates middleware', function () {
         coords(req, res, function (err) {
             assert.equal(
                 err.message,
-                'Invalid zoom value (wadus). It should be an integer number greather or equal to 0'
+                'Invalid zoom value (wadus). It should be an integer number greather than or equal to 0'
             );
             assert.equal(err.http_status, 400);
             done();
@@ -171,7 +171,7 @@ describe('coordinates middleware', function () {
         coords(req, res, function (err) {
             assert.equal(
                 err.message,
-                `Invalid coodinate 'y' value (-1). It should be an integer number greather or equal to 0`
+                `Invalid coodinate 'y' value (-1). It should be an integer number greather than or equal to 0`
             );
             assert.equal(err.http_status, 400);
             done();
@@ -192,7 +192,7 @@ describe('coordinates middleware', function () {
         coords(req, res, function (err) {
             assert.equal(
                 err.message,
-                `Invalid coodinate 'y' value (1.1). It should be an integer number greather or equal to 0`
+                `Invalid coodinate 'y' value (1.1). It should be an integer number greather than or equal to 0`
             );
             assert.equal(err.http_status, 400);
             done();
@@ -213,7 +213,7 @@ describe('coordinates middleware', function () {
         coords(req, res, function (err) {
             assert.equal(
                 err.message,
-                `Invalid coodinate 'y' value (wadus). It should be an integer number greather or equal to 0`
+                `Invalid coodinate 'y' value (wadus). It should be an integer number greather than or equal to 0`
             );
             assert.equal(err.http_status, 400);
             done();
@@ -249,7 +249,7 @@ describe('coordinates middleware', function () {
         coords(req, res, function (err) {
             assert.equal(
                 err.message,
-                'Invalid zoom value (-1.1). It should be an integer number greather or equal to 0'
+                'Invalid zoom value (-1.1). It should be an integer number greather than or equal to 0'
             );
             assert.equal(err.http_status, 400);
             done();
