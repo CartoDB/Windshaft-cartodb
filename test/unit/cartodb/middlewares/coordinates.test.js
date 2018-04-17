@@ -44,6 +44,28 @@ describe('coordinates middleware', function () {
         });
     });
 
+    it('should return error: invalid zoom paramenter (0.1)', function (done) {
+        const coords = coordinates();
+        const req = {
+            params: {
+                z: '0.1',
+                x: '0',
+                y: '0'
+            }
+        };
+        const res = {};
+
+        coords(req, res, function (err) {
+            assert.equal(
+                err.message,
+                'Invalid zoom value (0.1). It should be an integer number greather or equal to 0'
+            );
+            assert.equal(err.http_status, 400);
+            done();
+        });
+    });
+
+
     it('should return error: invalid zoom paramenter (wadus)', function (done) {
         const coords = coordinates();
         const req = {
