@@ -358,6 +358,8 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
     }
 
     var url = '/api/v1/map';
+    var urlNamed = url + '/named';
+
     if (Object.keys(extraParams).length > 0) {
         url += '?' + qs.stringify(extraParams);
     }
@@ -370,17 +372,73 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
     };
 
     step(
-        function createLayergroup() {
+        function createTemplate () {
             var next = this;
+
+            if (!self.template) {
+                return next();
+            }
+
+            if (!self.apiKey) {
+                return next(new Error('apiKey param is mandatory to create a new template'));
+            }
+
+            params.placeholders = params.placeholders || {};
+
             assert.response(self.server,
                 {
-                    url: url,
+                    url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
                     method: 'POST',
                     headers: {
                         host: 'localhost',
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(self.mapConfig)
+                    data: JSON.stringify(self.template)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function (res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    return next(null, JSON.parse(res.body).template_id);
+                }
+            );
+        },
+        function createLayergroup(err, templateId) {
+            assert.ifError(err);
+
+            var next = this;
+
+            var data = templateId ? params.placeholders : self.mapConfig;
+
+            const queryParams = {};
+
+            if (self.apiKey) {
+                queryParams.api_key = self.apiKey;
+            }
+
+            if (params.filters !== undefined) {
+                queryParams.filters = JSON.stringify(params.filters);
+            }
+
+            var path  = templateId ?
+                urlNamed + '/' + templateId  + '?' + qs.stringify(queryParams) :
+                url;
+
+            assert.response(self.server,
+                {
+                    url: path,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(data)
                 },
                 {
                     status: 200,
@@ -847,7 +905,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
 TestClient.prototype.getStaticCenter = function (params, callback) {
     var self = this;
 
-    let { layergroupid, z, lat, lng, width, height, format } = params;
+    let { layergroupid, zoom, lat, lng, width, height, format } = params;
 
     var url = `/api/v1/map/`;
 
@@ -896,7 +954,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            url = `/api/v1/map/static/center/${layergroupId}/${z}/${lat}/${lng}/${width}/${height}.${format}`;
+            url = `/api/v1/map/static/center/${layergroupId}/${zoom}/${lat}/${lng}/${width}/${height}.${format}`;
 
             if (self.apiKey) {
                 url += '?' + qs.stringify({api_key: self.apiKey});
@@ -1183,6 +1241,19 @@ TestClient.prototype.setUserRenderTimeoutLimit = function (user, userTimeoutLimi
     helper.configureMetadata('hmset', params, callback);
 };
 
+TestClient.prototype.getDBConnection = function () {
+    const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
+
+    const psql = new PSQL({
+        user: 'postgres',
+        dbname: dbname,
+        host: global.environment.postgres.host,
+        port: global.environment.postgres.port
+    });
+
+    return psql;
+};
+
 TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callback) {
     const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
     const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
@@ -1365,5 +1436,164 @@ TestClient.prototype.getNamedTile =  function (name, z, x, y, format, options, c
 
             return callback(err, res, body);
         });
+    });
+};
+
+TestClient.prototype.createTemplate = function (params, callback) {
+    if (!this.apiKey) {
+        return callback(new Error('apiKey param is mandatory to create a new template'));
+    }
+
+    const createTemplateRequest = {
+        url: `/api/v1/map/named?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'POST',
+        headers: {
+            host: 'localhost',
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(this.template)
+    };
+
+    let createTemplateResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    if (params.response) {
+        createTemplateResponse = Object.assign(createTemplateResponse, params.response);
+    }
+
+    assert.response(this.server, createTemplateRequest, createTemplateResponse, (res, err) => {
+        let body;
+        switch (res.headers['content-type']) {
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
+        }
+
+        return callback(err, res, body);
+    });
+};
+
+TestClient.prototype.deleteTemplate = function (params, callback) {
+    if (!this.apiKey) {
+        return callback(new Error('apiKey param is mandatory to create a new template'));
+    }
+
+    const deleteTemplateRequest = {
+        url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'DELETE',
+        headers: {
+            host: 'localhost',
+        }
+    };
+
+    let deleteTemplateResponse = {
+        status: 204,
+        headers: {}
+    };
+
+    if (params.response) {
+        deleteTemplateResponse = Object.assign(deleteTemplateResponse, params.response);
+    }
+
+    assert.response(this.server, deleteTemplateRequest, deleteTemplateResponse, (res, err) => {
+        let body;
+        switch (res.headers['content-type']) {
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
+        }
+
+        return callback(err, res, body);
+    });
+};
+
+TestClient.prototype.updateTemplate = function (params, callback) {
+    if (!this.apiKey) {
+        return callback(new Error('apiKey param is mandatory to create a new template'));
+    }
+
+    const updateTemplateRequest = {
+        url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'PUT',
+        headers: {
+            host: 'localhost',
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        data: JSON.stringify(params.templateData)
+    };
+
+    let updateTemplateResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    if (params.response) {
+        updateTemplateResponse = Object.assign(updateTemplateResponse, params.response);
+    }
+
+    assert.response(this.server, updateTemplateRequest, updateTemplateResponse, (res, err) => {
+        let body;
+        switch (res.headers['content-type']) {
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
+        }
+
+        return callback(err, res, body);
+    });
+};
+
+
+TestClient.prototype.getTemplate = function (params, callback) {
+    if (!this.apiKey) {
+        return callback(new Error('apiKey param is mandatory to create a new template'));
+    }
+
+    const getTemplateRequest = {
+        url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
+        method: 'GET',
+        headers: {
+            host: 'localhost'
+        }
+    };
+
+    let getTemplateResponse = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    if (params.response) {
+        getTemplateResponse = Object.assign(getTemplateResponse, params.response);
+    }
+
+    assert.response(this.server, getTemplateRequest, getTemplateResponse, (res, err) => {
+        let body;
+        switch (res.headers['content-type']) {
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
+        }
+
+        return callback(err, res, body);
     });
 };
