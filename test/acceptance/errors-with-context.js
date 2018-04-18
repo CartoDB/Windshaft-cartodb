@@ -1,9 +1,15 @@
 var assert = require('../support/assert');
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 
 describe('error with context', function () {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
+
     var layerOK = {
         options: {
             sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator ' +

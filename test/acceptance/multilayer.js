@@ -18,8 +18,6 @@ var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
 
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 var QueryTables = require('cartodb-query-tables');
 
@@ -27,7 +25,12 @@ var QueryTables = require('cartodb-query-tables');
 
 var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
 describe(suiteName, function() {
+    var server;
 
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
 
     var keysToDelete;
 

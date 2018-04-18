@@ -6,11 +6,15 @@ var step        = require('step');
 
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 
 describe('server', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
 
     // TODO: I guess this should be a 404 instead...
     it("get call to server returns 200", function(done){
@@ -54,6 +58,12 @@ describe('server', function() {
 });
 
 describe('server old_api', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/115
     it.skip("get'ing tile with not-strictly-valid style", function(done) {
@@ -68,5 +78,4 @@ describe('server old_api', function() {
           done();
         });
     });
-
 });
