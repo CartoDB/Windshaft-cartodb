@@ -7,8 +7,12 @@ var PortedServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('attributes', function() {
-    var server = cartodbServer(PortedServerOptions);
-    server.setMaxListeners(0);
+    var server;
+
+    before(function () {
+        server = cartodbServer(PortedServerOptions);
+        server.setMaxListeners(0);
+    });
 
     var test_mapconfig_1 =  {
         version: '1.1.0',

@@ -5,7 +5,6 @@ const assert = require('../../support/assert');
 const testHelper = require('../../support/test_helper');
 const CartodbWindshaft = require('../../../lib/cartodb/server');
 const serverOptions = require('../../../lib/cartodb/server_options');
-const server = new CartodbWindshaft(serverOptions);
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 function singleLayergroupConfig(sql, cartocss) {
@@ -46,6 +45,12 @@ var pointSqlPublic = "select * from test_table";
 var keysToDelete;
 
 describe('authorization fallback', function () {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
     beforeEach(function () {
         keysToDelete = {};
     });
@@ -56,7 +61,7 @@ describe('authorization fallback', function () {
 
     it("succeed with master", function (done) {
         var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
-    
+
         assert.response(server,
             createRequest(layergroup, 'user_previous_to_project_auth', '4444'),
             {

@@ -20,13 +20,17 @@ var helper = require(__dirname + '/../support/test_helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
 describe('template_api', function() {
-    server.layergroupAffectedTablesCache.cache.reset();
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+        server.layergroupAffectedTablesCache.cache.reset();
+    });
 
     var httpRendererResourcesServer;
     before(function(done) {

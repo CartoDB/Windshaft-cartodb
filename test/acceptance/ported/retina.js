@@ -11,9 +11,12 @@ describe('retina support', function() {
 
     var layergroupId = null;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    var server;
 
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     var keysToDelete;
     beforeEach(function(done) {
