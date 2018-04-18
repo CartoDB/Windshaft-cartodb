@@ -7,6 +7,13 @@ var ServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('torque boundary points', function() {
+    var server;
+
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
+
     var layergroupIdToDelete = null;
 
     beforeEach(function() {
@@ -21,9 +28,6 @@ describe('torque boundary points', function() {
         keysToDelete[mapKey] = 0;
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
-
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
 
     var boundaryPointsMapConfig =  {
         version: '1.1.0',

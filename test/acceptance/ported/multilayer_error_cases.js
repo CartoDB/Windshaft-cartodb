@@ -8,9 +8,12 @@ var testClient = require('./support/test_client');
 var TestClient = require('../../support/test-client');
 
 describe('multilayer error cases', function() {
+    var server;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     // var client = null;
     afterEach(function(done) {

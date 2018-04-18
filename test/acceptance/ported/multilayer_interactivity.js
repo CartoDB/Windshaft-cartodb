@@ -8,9 +8,12 @@ var PortedServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('multilayer interactivity and layers order', function() {
+    var server;
 
-    var server = cartodbServer(PortedServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(PortedServerOptions);
+        server.setMaxListeners(0);
+    });
 
     function layerType(layer) {
         return layer.type || 'undefined';

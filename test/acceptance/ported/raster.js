@@ -8,8 +8,12 @@ var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('raster', function() {
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    var server;
+
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     function checkCORSHeaders(res) {
       assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');

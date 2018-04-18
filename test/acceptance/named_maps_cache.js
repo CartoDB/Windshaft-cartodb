@@ -5,10 +5,15 @@ var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 
 describe('named maps provider cache', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 

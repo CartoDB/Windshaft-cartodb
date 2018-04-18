@@ -5,12 +5,17 @@ var qs = require('querystring');
 
 var CartodbWindshaft = require('../../../lib/cartodb/server');
 var serverOptions = require('../../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('get requests with cache headers', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
+
 
     var keysToDelete;
     beforeEach(function() {
