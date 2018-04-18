@@ -10,9 +10,13 @@ var ServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('multilayer', function() {
+    var server;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
+
     mapnik.register_system_fonts();
     var available_system_fonts = _.keys(mapnik.fontFiles());
 

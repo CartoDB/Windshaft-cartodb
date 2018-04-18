@@ -39,9 +39,18 @@ module.exports = {
     getTileLayer: getTileLayer
 };
 
+var server;
 
-var server = new CartodbServer(PortedServerOptions);
-server.setMaxListeners(0);
+function getServer () {
+    if (server) {
+        return server;
+    }
+
+    server = new CartodbServer(PortedServerOptions);
+    server.setMaxListeners(0);
+
+    return server;
+}
 
 var jsonContentType = 'application/json; charset=utf-8';
 var jsContentType = 'text/javascript; charset=utf-8';
@@ -349,7 +358,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
             };
-            assert.response(server, request, expectedResponse, function (res, err) {
+            assert.response(getServer(), request, expectedResponse, function (res, err) {
                 next(err, res);
             });
         },
@@ -384,7 +393,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
                 request.encoding = 'binary';
             }
 
-            assert.response(server, request, expectedResponse, function (res, err) {
+            assert.response(getServer(), request, expectedResponse, function (res, err) {
                 next(err, res);
             });
         },
