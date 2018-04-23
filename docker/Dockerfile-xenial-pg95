@@ -71,13 +71,3 @@ RUN set -ex \
 
 WORKDIR /srv
 EXPOSE 5858
-
-CMD set -ex \
-    && /etc/init.d/postgresql start \
-    && node -v \
-    && export NPROCS=1 \
-    && export JOBS=1 \
-    && export CXX=g++-4.9 \
-    && npm install \
-    && export PGUSER=postgres \
-    && npm test
