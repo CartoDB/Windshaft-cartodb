@@ -1,0 +1,76 @@
+FROM ubuntu:xenial
+
+# Use UTF8 to avoid encoding problems with pgsql
+ENV LANG C.UTF-8
+
+# Add external repos
+RUN set -ex \
+    && apt-get update \
+    && apt-get install -y \
+        curl \
+        software-properties-common \
+        locales \
+    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && add-apt-repository -y ppa:cartodb/postgresql-10 \
+    && add-apt-repository -y ppa:cartodb/gis \
+    && curl -sL https://deb.nodesource.com/setup_6.x | bash \
+    && locale-gen en_US.UTF-8 \
+    && update-locale LANG=en_US.UTF-8
+
+# Install dependencies and PostGIS 2.4 from sources
+RUN set -ex \
+    && apt-get update \
+    && apt-get install -y \
+        g++-4.9 \
+        gcc-4.9 \
+        git \
+        libcairo2-dev \
+        libgdal-dev \
+        libgdal1i \
+        libgdal20=2.2.2+dfsg-1~xenial1 \
+        libgeos-dev \
+        libgif-dev \
+        libjpeg8-dev \
+        libjson-c-dev \
+        libpango1.0-dev \
+        libpixman-1-dev \
+        libproj-dev \
+        libprotobuf-c-dev \
+        libxml2-dev \
+        make \
+        nodejs \
+        protobuf-c-compiler \
+        pkg-config \
+        wget \
+        postgresql-10=10.1.2+carto-1 \
+        postgresql-10-plproxy=2.8-1.pgdg16.04+1carto1 \
+        postgresql-10-postgis-2.4=2.4.1.6+carto-1 \
+        postgresql-10-postgis-2.4-scripts=2.4.1.6+carto-1 \
+        postgresql-10-postgis-scripts=2.4.1.6+carto-1 \
+        postgresql-client-10=10.1.2+carto-1 \
+        postgresql-client-common=187.pgdg16.04+1carto1 \
+        postgresql-common=187.pgdg16.04+1carto1 \
+        postgresql-contrib=10+187.pgdg16.04+1carto1 \
+        postgresql-plpython-10=10.1.2+carto-1 \
+        postgresql-server-dev-10=10.1.2+carto-1 \
+        postgis=2.4.1.6+carto-1 \
+    && wget http://download.redis.io/releases/redis-4.0.8.tar.gz \
+    && tar xvzf redis-4.0.8.tar.gz \
+    && cd redis-4.0.8 \
+    && make \
+    && make install \
+    && cd .. \
+    && rm redis-4.0.8.tar.gz \
+    && rm -R redis-4.0.8 \
+    && apt-get purge -y wget protobuf-c-compiler \
+    && apt-get autoremove -y 
+    
+# Configure PostgreSQL
+RUN set -ex \
+    && echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf \
+    && echo "local     all       all                     trust" >  /etc/postgresql/10/main/pg_hba.conf \
+    && echo "host      all       all       0.0.0.0/0     trust" >> /etc/postgresql/10/main/pg_hba.conf \
+    && echo "host      all       all       ::1/128       trust" >> /etc/postgresql/10/main/pg_hba.conf
+
+WORKDIR /srv
+EXPOSE 5858
