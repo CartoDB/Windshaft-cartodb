@@ -8,8 +8,11 @@ before_install:
   - docker pull cartoimages/engine-xenial-pg101
   - docker pull cartoimages/engine-xenial-pg95
 
-script:
-  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
-  - docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg95 bash run_tests_docker.sh
+jobs:
+  include:
+    - stage: xenial and Postgres 10.1
+      script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
+    - stage: xenial and Postgres 9.5
+      script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg95 bash run_tests_docker.sh
 
 language: generic
