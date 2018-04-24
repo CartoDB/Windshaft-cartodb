@@ -1,11 +1,15 @@
-sudo: required
+jobs:
+  include:
+    - stage: Xenial and Postgres
 
-services:
-  - docker
+      sudo: required
 
-before_install:
-  - docker pull cartoimages/engine-xenial-pg101
-  - docker pull cartoimages/engine-xenial-pg95
+      services:
+        - docker
 
-script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
-script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg95 bash run_tests_docker.sh
+      before_install:
+        - docker pull cartoimages/engine-xenial-pg101
+        - docker pull cartoimages/engine-xenial-pg95
+
+      script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
+      script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg95 bash run_tests_docker.sh
