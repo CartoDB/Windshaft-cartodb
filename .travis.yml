@@ -7,5 +7,68 @@ jobs:
   include:
     - before_install: docker pull cartoimages/engine-xenial-pg101
       script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
-    - before_install: docker pull cartoimages/engine-xenial-pg95
-      script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg95 bash run_tests_docker.sh
+    - dist: precise
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - g++-4.8
+        postgresql: 9.5
+
+      before_install:
+        # Add custom PPAs from cartodb
+        - sudo add-apt-repository -y ppa:cartodb/postgresql-9.5
+        - sudo add-apt-repository -y ppa:cartodb/gis
+        - sudo add-apt-repository -y ppa:cartodb/gis-testing
+        - sudo apt-get update
+
+        # Force instalation of libgeos-3.5.0 (presumably needed because of existing version of postgis)
+        - sudo apt-get -y install libgeos-3.5.0=3.5.0-1cdb2
+
+        # Install postgres db and build deps
+        - sudo /etc/init.d/postgresql stop # stop travis default instance
+        - sudo apt-get -y remove --purge postgresql-9.1
+        - sudo apt-get -y remove --purge postgresql-9.2
+        - sudo apt-get -y remove --purge postgresql-9.3
+        - sudo apt-get -y remove --purge postgresql-9.4
+        - sudo apt-get -y remove --purge postgresql-9.5
+        - sudo apt-get -y remove --purge postgresql-9.6
+        - sudo rm -rf /var/lib/postgresql/
+        - sudo rm -rf /var/log/postgresql/
+        - sudo rm -rf /etc/postgresql/
+        - sudo apt-get -y remove --purge postgis-2.2
+        - sudo apt-get -y autoremove
+
+        - sudo apt-get -y install postgresql-9.5-postgis-scripts=2.2.2.0-cdb2
+        - sudo apt-get -y install postgresql-9.5=9.5.2-3cdb3 --allow-downgrades
+        - sudo apt-get -y install postgresql-server-dev-9.5=9.5.2-3cdb3
+        - sudo apt-get -y install postgresql-plpython-9.5=9.5.2-3cdb3 --allow-downgrades
+        - sudo apt-get -y install postgresql-9.5-postgis-2.2=2.2.2.0-cdb2
+        - sudo apt-get install -q gdal-bin
+        - sudo apt-get install -q ogr2ogr2-static-bin
+        - sudo apt-get install -y libc6
+
+        - wget http://download.redis.io/releases/redis-4.0.8.tar.gz
+        - tar xvzf redis-4.0.8.tar.gz
+        - cd redis-4.0.8
+        - make
+        - sudo make install
+        - cd ..
+        - rm redis-4.0.8.tar.gz
+        
+        # configure it to accept local connections from postgres
+        - echo -e "# TYPE  DATABASE        USER            ADDRESS                 METHOD \nlocal   all             postgres                                trust\nlocal   all             all                                     trust\nhost    all             all             127.0.0.1/32            trust" \
+          | sudo tee /etc/postgresql/9.5/main/pg_hba.conf
+        - sudo /etc/init.d/postgresql restart 9.5
+
+        - psql -c 'create database template_postgis;' -U postgres
+        - psql -c 'CREATE EXTENSION postgis;' -U postgres -d template_postgis
+        - ./configure
+
+      env:
+        - PGUSER=postgres CXX=g++-4.8
+
+      language: node_js
+      node_js:
+        - "6"
