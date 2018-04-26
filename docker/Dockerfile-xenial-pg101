@@ -27,7 +27,7 @@ RUN set -ex \
         libcairo2-dev \
         libgdal-dev \
         libgdal1i \
-        libgdal20=2.2.2+dfsg-1~xenial1 \
+        libgdal20 \
         libgeos-dev \
         libgif-dev \
         libjpeg8-dev \
@@ -37,23 +37,25 @@ RUN set -ex \
         libproj-dev \
         libprotobuf-c-dev \
         libxml2-dev \
+        gdal-bin \
         make \
         nodejs \
         protobuf-c-compiler \
         pkg-config \
         wget \
-        postgresql-10=10.1.2+carto-1 \
-        postgresql-10-plproxy=2.8-1.pgdg16.04+1carto1 \
-        postgresql-10-postgis-2.4=2.4.1.6+carto-1 \
-        postgresql-10-postgis-2.4-scripts=2.4.1.6+carto-1 \
-        postgresql-10-postgis-scripts=2.4.1.6+carto-1 \
-        postgresql-client-10=10.1.2+carto-1 \
-        postgresql-client-common=187.pgdg16.04+1carto1 \
-        postgresql-common=187.pgdg16.04+1carto1 \
-        postgresql-contrib=10+187.pgdg16.04+1carto1 \
-        postgresql-plpython-10=10.1.2+carto-1 \
-        postgresql-server-dev-10=10.1.2+carto-1 \
-        postgis=2.4.1.6+carto-1 \
+        zip \
+        postgresql-10 \
+        postgresql-10-plproxy \
+        postgresql-10-postgis-2.4 \
+        postgresql-10-postgis-2.4-scripts \
+        postgresql-10-postgis-scripts \
+        postgresql-client-10 \
+        postgresql-client-common \
+        postgresql-common \
+        postgresql-contrib \
+        postgresql-plpython-10 \
+        postgresql-server-dev-10 \
+        postgis \
     && wget http://download.redis.io/releases/redis-4.0.8.tar.gz \
     && tar xvzf redis-4.0.8.tar.gz \
     && cd redis-4.0.8 \
