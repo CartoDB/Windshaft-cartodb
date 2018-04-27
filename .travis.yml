@@ -67,6 +67,7 @@ jobs:
         - psql -c 'CREATE EXTENSION postgis;' -U postgres -d template_postgis
         - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.27.5
         - export PATH="$HOME/.yarn/bin:$PATH"
+        - CC=gcc-4.9 CXX=g++-4.9 yarn
 
       env:
         - NPROCS=1 JOBS=1 PGUSER=postgres CC=gcc-4.9 CXX=g++-4.9
