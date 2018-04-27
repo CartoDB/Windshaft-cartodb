@@ -1,11 +1,10 @@
 sudo: required
 
-services:
-  - docker
-
 jobs:
   include:
-    - before_install: docker pull cartoimages/engine-xenial-pg101
+    - services:
+        - docker
+      before_install: docker pull cartoimages/engine-xenial-pg101
       script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
     - dist: precise
       addons:
@@ -63,10 +62,10 @@ jobs:
         - sudo /etc/init.d/postgresql restart 9.5
 
         - psql -c 'create database template_postgis;' -U postgres
+        - psql -c 'createuser publicuser' -U postgres
         - psql -c 'CREATE EXTENSION postgis;' -U postgres -d template_postgis
         - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.27.5
         - export PATH="$HOME/.yarn/bin:$PATH"
-        - ./configure
 
       env:
         - NPROCS=1 JOBS=1 PGUSER=postgres CXX=g++-4.9
