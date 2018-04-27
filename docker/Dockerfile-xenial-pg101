@@ -2,6 +2,10 @@ FROM ubuntu:xenial
 
 # Use UTF8 to avoid encoding problems with pgsql
 ENV LANG C.UTF-8
+ENV NPROCS 1
+ENV JOBS 1
+ENV CXX g++-4.9
+ENV PGUSER postgres
 
 # Add external repos
 RUN set -ex \
@@ -72,7 +76,14 @@ RUN set -ex \
     && echo "listen_addresses='*'" >> /etc/postgresql/10/main/postgresql.conf \
     && echo "local     all       all                     trust" >  /etc/postgresql/10/main/pg_hba.conf \
     && echo "host      all       all       0.0.0.0/0     trust" >> /etc/postgresql/10/main/pg_hba.conf \
-    && echo "host      all       all       ::1/128       trust" >> /etc/postgresql/10/main/pg_hba.conf
+    && echo "host      all       all       ::1/128       trust" >> /etc/postgresql/10/main/pg_hba.conf \
+    && /etc/init.d/postgresql start \
+    && createdb template_postgis \
+    && createuser publicuser \
+    && psql -c "CREATE EXTENSION postgis" template_postgis \
+    && /etc/init.d/postgresql stop
 
 WORKDIR /srv
 EXPOSE 5858
+
+CMD /etc/init.d/postgresql start
