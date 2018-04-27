@@ -1,8 +1,7 @@
-sudo: required
-
 jobs:
   include:
-    - services:
+    - sudo: required
+      services:
         - docker
       language: generic
       before_install: docker pull cartoimages/engine-xenial-pg101
