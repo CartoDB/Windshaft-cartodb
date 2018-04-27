@@ -66,7 +66,7 @@
     "test": "make test-all",
     "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn",
     "docker-pull": "docker pull cartoimages/engine-xenial-pg101",
-    "docker-test": "docker run -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash docker-test.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
+    "docker-test": "docker run -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
     "docker-bash": "docker run  -it -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash",
     "docker-build": "docker build -t cartoimages/engine-xenial-pg101 -f docker/Dockerfile-xenial-pg101 docker/"
   },
