@@ -17,7 +17,3 @@ After running the tests with docker, you will need Docker installed and the dock
     - `docker tag cartoimages/engine-xenial-pg101 cartoimages/engine-xenial-pg101`
   - Upload: 
     - `docker push cartoimages/engine-xenial-pg101`
-
-
-## Useful commands 
-We have some useful commands created in package.json

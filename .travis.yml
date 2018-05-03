@@ -5,7 +5,7 @@ jobs:
         - docker
       language: generic
       before_install: docker pull cartoimages/engine-xenial-pg101
-      script: docker run -e POSTGIS_VERSION=2.4 -v `pwd`:/srv cartoimages/engine-xenial-pg101 bash run_tests_docker.sh
+      script: npm run docker-test
     - dist: precise
       addons:
         postgresql: "9.5"
