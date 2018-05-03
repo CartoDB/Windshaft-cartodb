@@ -4,7 +4,9 @@
 Released 2018-mm-dd
 
 New features:
-- Aggreation filters
+- Aggregation filters
+- Aggregation order
+- Aggregation dimensions
 
 Bug Fixes:
 - Non-default aggregation selected the wrong columns (e.g. for vector tiles)

@@ -8,7 +8,7 @@ Aggregation is available only for point geometries. During aggregation the point
 
 ### Special default aggregation
 
-When no placement or columns are specified a special default aggregation is performed.
+When no placement, columns, filters, order or dimensions are specified a special default aggregation is performed.
 
 This special mode performs only spatial aggregation (using a grid defined by the requested tile and the resolution, parameter, as all the other cases), and returns a _random_ record from each group (grid cell) with all its columns and an additional `_cdb_feature_count` with the number of features in the group.
 
@@ -18,7 +18,7 @@ The rationale behind having this special aggregation with all the original colum
 
 ### User defined aggregations
 
-When either a explicit placement or columns are requested we no longer use the special, query; we use one determined by the placement (which will default to "centroid"), and it will have as columns only the aggregated columns specified, in addition to `_cdb_feature_count`, which is always present.
+When either a explicit placement, columns, filters, order or dimensions are requested we no longer use the special, query; we use one determined by the placement (which will default to "centroid"), and it will have as columns only the aggregated columns specified, in addition to `_cdb_feature_count`, which is always present.
 
 We might decide in the future to allow sampling column values for any of the different placement modes.
 
@@ -262,3 +262,150 @@ Note that the filtered columns have to be defined with the `columns` parameter, 
     ]
 }
 ```
+
+### `order`
+
+The order of aggregated results is unspecified unless the `order` parameter is used.
+Even if the source query SQL includes an `ORDER BY` clause, it does not apply to the aggregated results.
+
+The order is specify as a list of columns with optional ordering direction: "asc" for ascending, which is the default, or "desc" for descending:
+
+```json
+[
+    "first_column",
+    "second_column:desc"
+]
+```
+
+The order direction, if present is separated with a colon.
+
+Only `cartodb_id`, `_cdb_features_coount` or columns defined with the `columns` parameter can be used in the ordering.
+
+```json
+{
+    "version": "1.7.0",
+    "extent": [-20037508.5, -20037508.5, 20037508.5, 20037508.5],
+    "srid": 3857,
+    "maxzoom": 18,
+    "minzoom": 3,
+    "layers": [
+        {
+            "type": "mapnik",
+            "options": {
+                "sql": "select * from table",
+                "cartocss": "#table { marker-width: [total]; marker-fill: ramp(value, (red, green, blue), jenks); }",
+                "cartocss_version": "2.3.0",
+                "aggregation": {
+                    "placement": "centroid",
+                    "columns": {
+                        "avg_rank": {
+                            "aggregate_function": "avg",
+                            "aggregated_column": "rank"
+                        },
+                        "total_value": {
+                            "aggregate_function": "sum",
+                            "aggregated_column": "value"
+                        }
+                    },
+                    "order": [ "total_value:desc", "_cdb_features_count" ],
+                    "resolution": 2,
+                    "threshold": 500000
+                }
+            }
+        }
+    ]
+}
+```
+
+### `dimensions`
+
+By default aggregation is only spatial: the point locations are agregated into a grid.
+Additional aggregation dimensions can be added with the `dimensions` parameters. The resulting aggregated table will represent
+a general [data cube](https://en.wikipedia.org/wiki/OLAP_cube) with the specified dimensions in addition to the placement location (`the_geom_webmercator`),
+and the requested columns (including `_cdb_feature_count`) as the measures.
+For example, given a `weather` table with columns `temperature`, `time`, `the_geom_webmercator`,
+we could request the average daily temperatures over our aggregation grid with this aggregation parameters:
+
+```json
+{
+    "layers": [
+        {
+            "type": "mapnik",
+            "options": {
+                "sql": "select * from weather",
+                "aggregation": {
+                    "placement": "point-grid",
+                    "columns": {
+                        "avg_temperature": {
+                            "aggregate_function": "avg",
+                            "aggregated_column": "temperature"
+                        }
+                    },
+                    "dimensions": {
+                        "day": {
+                            "column": "time",
+                            "classification": "day"
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
+```
+
+In our example, the dimensions are the `day` of the measure, which is computed by taking the day of the `time` of measure, and, implicitly,
+the point location (`the_geom_webmercator`) which is derived from the original location using the `point-grid` placement rule.
+This cube contains a single measure, the average temperature for each combination of dimension values (location and day).
+
+#### Format
+
+Example:
+
+```json
+{
+    "category": {
+        "column": "category"
+    },
+    "week_of_event": {
+        "column": "time_of_event",
+        "classification": "week"
+    },
+    "age_range": {
+        "column": "age_years",
+        "classification": [16, 30, 50]
+        // 0: age_years<16; 1: 16<=age_years<30; 2: 30<=age_years<50: 3: age_years>=50
+    }
+}
+```
+
+The `dimensions` parameter must contain entries for each defined dimension, where the key of each one is the name (alias) assigned to the dimension
+(as will appear for example in MVT properties). The definition of each dimension is in turn an object with a `column` parameter which specificies a columns of the original table and an optional `classification` operation. If a time or numeric columns with a large number of different values is used for a dimension, the result would contain a large number of aggregated values (one for each combination of unique values), defeating the original purpose of aggregating the data. In those cases the continuous values can be grouped or classified into a small set of values. We can do that for numeric values by providing a list of break points in the classification parameter.
+
+Time zone?
+
+For example, given a column `age_years` which contains the age in years of people, we could classify it into 4 ranges with this definition:
+
+
+
+```json
+{
+    "age_range": {
+        "column": "age_years",
+        "classification": [16, 30, 50]
+    }
+}
+```
+
+Now, the resulting `age_range` is a number with the possible values 0, 1, 2 or 3 (in addition to NULL), where:
+* 0 represents the ages less than 16, the first break point
+* 1 represents ages between 16 (inclusive) and 30 (exclusive)
+* 2 represents ages between 30 (inclusive) and 50 (exclusive)
+* 3 represents ages greater than 50
+
+For date or time columns, whe can classify any timestamp into a number representing years, months, weeks, days, or hours, by providing the name of the time unit desired as the value of the `classification` parameter. The numbers use the following format (note that, except for year, the numbers are not consecutive counts of time in the specified units):
+* year: YYYY
+* week: YYYYWW
+* month: YYYYMM
+* day: YYYYMMDD
+* hour: YYYYMMDD.HH
