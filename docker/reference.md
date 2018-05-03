@@ -4,16 +4,20 @@ After running the tests with docker, you will need Docker installed and the dock
 `sudo apt install docker.io && sudo usermod -aG docker $(whoami)`
 
 ## Download image
-`docker pull cartoimages/engine-xenial-pg101`
+`docker pull carto/IMAGE`
+
+## Carto account
+https://hub.docker.com/r/carto/
 
 ## Update image
 - Edit the docker image file with your desired changes
 - Build image: 
-  - `docker build -t cartoimages/engine-xenial-pg101 -f docker/Dockerfile-xenial-pg101 docker/`
+  - `docker build -t carto/IMAGE -f docker/DOCKER_FILE docker/`
+
 - Upload to docker hub:
   - Login into docker hub: 
     - `docker login`
   - Create tag: 
-    - `docker tag cartoimages/engine-xenial-pg101 cartoimages/engine-xenial-pg101`
+    - `docker tag carto/IMAGE carto/IMAGE`
   - Upload: 
-    - `docker push cartoimages/engine-xenial-pg101`
+    - `docker push carto/IMAGE`
