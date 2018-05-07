@@ -41,7 +41,7 @@ var pointSqlMaster = "select * from test_table_private_1";
 var pointSqlPublic = "select * from test_table";
 var keysToDelete;
 
-describe.only('Basic authorization use cases', function () {
+describe('Basic authorization use cases', function () {
     var server;
 
     before(function () {
