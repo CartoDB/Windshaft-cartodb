@@ -138,8 +138,8 @@ describe('Basic authorization use cases', function () {
         );
     });
 
-    describe('No api key provided fallback', function () {
-        it("succeed with default", function (done) {
+    describe('No api key provided - fallback to default_public', function () {
+        it("succeed with default - public dataset", function (done) {
             var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
             assert.response(server,
@@ -162,7 +162,7 @@ describe('Basic authorization use cases', function () {
             );
         });
 
-        it("fail with default", function (done) {
+        it("fail with default - private dataset", function (done) {
             var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
 
             assert.response(server,
