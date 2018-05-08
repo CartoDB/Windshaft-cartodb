@@ -5,6 +5,7 @@ Released 2018-mm-dd
 
 New features:
 - CI tests with Ubuntu Xenial + PostgreSQL 10.1 and Ubuntu Precise + PostgreSQL 9.5
+- Upgrades Windshaft to [4.7.2](https://github.com/CartoDB/Windshaft/blob/4.7.2/NEWS.md#version-472). Includes improvements in Mapnik and sets MVT's simplify_distance option to 0.
 
 
 Bug Fixes:
