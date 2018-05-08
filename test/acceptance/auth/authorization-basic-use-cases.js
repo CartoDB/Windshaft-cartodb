@@ -103,45 +103,6 @@ describe('Basic authorization use cases', function () {
         );
     });
 
-    it("succeed with default - sending no api key token", function (done) {
-        var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
-
-        assert.response(server,
-            createRequest(layergroup, 'localhost'),
-            {
-                status: 200
-            },
-            function (res, err) {
-                assert.ifError(err);
-
-                var parsed = JSON.parse(res.body);
-                assert.ok(parsed.layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
-
-                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
-                keysToDelete['user:localhost:mapviews:global'] = 5;
-
-                done();
-            }
-        );
-    });
-
-    it("fail with default - sending no api key token", function (done) {
-        var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
-
-        assert.response(server,
-            createRequest(layergroup, 'localhost'),
-            {
-                status: 403
-            },
-            function (res, err) {
-                assert.ifError(err);
-
-                done();
-            }
-        );
-    });
-
     it("fail with non-existent api key", function (done) {
         var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
@@ -175,5 +136,46 @@ describe('Basic authorization use cases', function () {
                 done();
             }
         );
+    });
+
+    describe('No api key provided fallback', function () {
+        it("succeed with default", function (done) {
+            var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
+
+            assert.response(server,
+                createRequest(layergroup, 'localhost'),
+                {
+                    status: 200
+                },
+                function (res, err) {
+                    assert.ifError(err);
+
+                    var parsed = JSON.parse(res.body);
+                    assert.ok(parsed.layergroupid);
+                    assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
+
+                    done();
+                }
+            );
+        });
+
+        it("fail with default", function (done) {
+            var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
+
+            assert.response(server,
+                createRequest(layergroup, 'localhost'),
+                {
+                    status: 403
+                },
+                function (res, err) {
+                    assert.ifError(err);
+
+                    done();
+                }
+            );
+        });
     });
 });
