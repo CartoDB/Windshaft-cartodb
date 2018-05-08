@@ -126,6 +126,22 @@ describe('Basic authorization use cases', function () {
         );
     });
 
+    it("fail with default - sending no api key token", function (done) {
+        var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
+
+        assert.response(server,
+            createRequest(layergroup, 'localhost'),
+            {
+                status: 403
+            },
+            function (res, err) {
+                assert.ifError(err);
+
+                done();
+            }
+        );
+    });
+
     it("fail with non-existent api key", function (done) {
         var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
