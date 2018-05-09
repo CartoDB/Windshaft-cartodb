@@ -373,6 +373,7 @@ describe('tests from old api translated to multilayer', function() {
                 };
 
                 // reset internal cacheChannel cache
+                // FIXME: we need a better way to reset cache while running tests
                 server.layergroupAffectedTablesCache.cache.reset();
 
                 assert.response(server,
