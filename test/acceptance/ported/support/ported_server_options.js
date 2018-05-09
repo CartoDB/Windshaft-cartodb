@@ -13,16 +13,20 @@ module.exports = _.extend({}, serverOptions, {
     base_url_mapconfig: '/database/:dbname/layergroup',
 
     routes: {
-        api: {
+        v0: {
             paths: [
                 '/tiles',
                 '/database/:dbname'
             ],
+            // Base url for the Detached Maps API
+            // "/tiles/layergroup" is for compatibility with versions up to 1.6.x
             map: {
                 paths: [
                     '/layergroup'
                 ]
             },
+            // Base url for the Templated Maps API
+            // "/tiles/template" is for compatibility with versions up to 1.6.x
             template: {
                 paths: [
                     '/template'
@@ -30,6 +34,7 @@ module.exports = _.extend({}, serverOptions, {
             }
         }
     },
+
 
     grainstore: {
         datasource: {
