@@ -296,6 +296,7 @@ describe('Create mapnik layergroup', function() {
         testClient.getLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
             const expectedColumns = {
                 cartodb_id: { type: 'number' },
                 the_geom: { type: 'geometry' },
@@ -320,6 +321,7 @@ describe('Create mapnik layergroup', function() {
         testClient.getLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
             const expectedColumns = {
                 cartodb_id: {
                     type: 'number',
@@ -374,6 +376,7 @@ describe('Create mapnik layergroup', function() {
         testClient.getLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
             assert.equal(layergroup.metadata.layers[0].meta.stats.featureCount, 5);
             testClient.drain(done);
         });
