@@ -319,6 +319,32 @@ describe('Create mapnik layergroup', function() {
             ]
         });
 
+        // metadata categories are ordered only partially by descending frequency;
+        // this orders them completely to avoid ambiguities when comparing
+        function withSortedCategories(columns) {
+            function catOrder(a, b) {
+                if (a.frequency !== b.frequency) {
+                    return b.frequency - a.frequency;
+                }
+                if (a.category < b.category) {
+                    return -1;
+                }
+                if (a.category > b.category) {
+                    return +1;
+                }
+                return 0;
+            }
+            let sorted = {};
+            Object.keys(columns).forEach(name => {
+                let data = columns[name];
+                if (data.hasOwnProperty('categories')) {
+                    data = Object.assign(data, { categories: data.categories.sort(catOrder)});
+                }
+                sorted[name] = data;
+            });
+            return sorted;
+        }
+
         testClient.getLayergroup(function(err, layergroup) {
             assert.ok(!err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
@@ -359,7 +385,10 @@ describe('Create mapnik layergroup', function() {
                     ]
                 }
             };
-            assert.deepEqual(layergroup.metadata.layers[0].meta.stats.columns, expectedColumns);
+            assert.deepEqual(
+                withSortedCategories(layergroup.metadata.layers[0].meta.stats.columns),
+                withSortedCategories(expectedColumns)
+            );
             testClient.drain(done);
         });
     });
