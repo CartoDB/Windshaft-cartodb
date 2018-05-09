@@ -273,6 +273,7 @@ describe('Create mapnik layergroup', function() {
             assert.ok(!layergroup.metadata.layers[1].meta.hasOwnProperty('stats'));
             assert.equal(layergroup.metadata.layers[2].id, typeLayerId('http', 1));
             assert.equal(layergroup.metadata.layers[2].type, 'http');
+            global.environment.enabledFeatures.layerStats = true;
             testClient.drain(done);
         });
     });
