@@ -146,10 +146,7 @@ describe('dataview error cases', function() {
         it('should work without filters', function(done) {
             this.testClient = new TestClient(createMapConfig());
             this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function(err, result) {
-                if (err) {
-                    return done(err);
-                }
-
+                assert.ifError(err);
                 done();
             });
         });
@@ -163,22 +160,43 @@ describe('dataview error cases', function() {
 
             this.testClient = new TestClient(createMapConfig());
             this.testClient.getDataview('aggregation_count_dataview', params, function(err, result) {
-                if (err) {
-                    return done(err);
-                }
-                
+                assert.ifError(err);
                 done();
             });
         });
 
+        it('should return an error if the column used by dataview does not exist', function(done) {
+            const query = 'select cartodb_id, the_geom, the_geom_webmercator from populated_places_simple_reduced';
+
+            const expectedResponse = {
+                status: 404,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            };
+
+            const expectedResponseBody = {
+                errors:['column "adm0name" does not exist'],
+                errors_with_context:[{
+                    type:'unknown',
+                    message:'column "adm0name" does not exist'
+                }]
+            };
+
+            this.testClient = new TestClient(createMapConfig(query));
+            this.testClient.getDataview('aggregation_count_dataview', { response: expectedResponse }, function(err, result) {
+                assert.ifError(err);
+                assert.deepEqual(result, expectedResponseBody);
+                done();
+            });
+        });
+        
         it('should return an error if query row equals to 0', function(done) {
             const query = 'select * from populated_places_simple_reduced limit 0';
+
             this.testClient = new TestClient(createMapConfig(query));
             this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function(err, result) {
-                if (err) {
-                    return done(err);
-                }
-
+                assert.ifError(err);
                 done();
             });
         });
