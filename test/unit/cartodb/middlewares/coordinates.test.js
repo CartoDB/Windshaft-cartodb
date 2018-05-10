@@ -1,5 +1,5 @@
 const assert = require('assert');
-const coordinates = require('../../../../lib/cartodb/middleware/coordinates');
+const coordinates = require('../../../../lib/cartodb/api/middlewares/coordinates');
 
 describe('coordinates middleware', function () {
     it('should return error: invalid zoom paramenter (-1)', function (done) {
