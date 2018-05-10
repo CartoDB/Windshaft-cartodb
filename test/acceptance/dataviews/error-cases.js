@@ -5,15 +5,16 @@ var TestClient = require('../../support/test-client');
 
 describe('dataview error cases', function() {
     
-    afterEach(function(done) {
-        if (this.testClient) {
-            this.testClient.drain(done);
-        } else {
-            done();
-        }
-    });
-
     describe('generic errors', function() {
+
+        afterEach(function(done) {
+            if (this.testClient) {
+                this.testClient.drain(done);
+            } else {
+                done();
+            }
+        });
+
         var ERROR_RESPONSE = {
             status: 400,
             headers: {
@@ -207,7 +208,6 @@ describe('dataview error cases', function() {
                 done();
             });
         });
-
 
     });
 });
