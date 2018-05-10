@@ -129,23 +129,14 @@ describe('dataview error cases', function() {
                             aggregation: "count",
                             aggregationColumn: "adm0name"
                         }
-                    },
-
-                    formula_count_dataview: {
-                        type: 'formula',
-                        source: { id: "a0" },
-                        options: {
-                            column: 'adm0_a3',
-                            operation: 'count'
-                        }
-                    },
+                    }
                 }
             };    
         }
 
         it('should work without filters', function(done) {
             this.testClient = new TestClient(createMapConfig());
-            this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function(err, result) {
+            this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function(err) {
                 assert.ifError(err);
                 done();
             });
@@ -159,7 +150,7 @@ describe('dataview error cases', function() {
             };
 
             this.testClient = new TestClient(createMapConfig());
-            this.testClient.getDataview('aggregation_count_dataview', params, function(err, result) {
+            this.testClient.getDataview('aggregation_count_dataview', params, function(err) {
                 assert.ifError(err);
                 done();
             });
@@ -168,10 +159,12 @@ describe('dataview error cases', function() {
         it('should return an error if the column used by dataview does not exist', function(done) {
             const query = 'select cartodb_id, the_geom, the_geom_webmercator from populated_places_simple_reduced';
 
-            const expectedResponse = {
-                status: 404,
-                headers: {
-                    'Content-Type': 'application/json; charset=utf-8'
+            const params = {
+                response: {
+                    status: 404,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
                 }
             };
 
@@ -184,19 +177,33 @@ describe('dataview error cases', function() {
             };
 
             this.testClient = new TestClient(createMapConfig(query));
-            this.testClient.getDataview('aggregation_count_dataview', { response: expectedResponse }, function(err, result) {
+            this.testClient.getDataview('aggregation_count_dataview', params, function(err, result) {
                 assert.ifError(err);
                 assert.deepEqual(result, expectedResponseBody);
                 done();
             });
         });
         
-        it('should return an error if query row equals to 0', function(done) {
+        it('should not fail if query does not return rows', function(done) {
             const query = 'select * from populated_places_simple_reduced limit 0';
+
+            const expectedResponseBody = {
+                aggregation: 'count',
+                count: 0,
+                nulls: 0,
+                nans: 0,
+                infinities: 0,
+                min: 0,
+                max: 0,
+                categoriesCount: 0,
+                categories: [],
+                type: 'aggregation' 
+            };
 
             this.testClient = new TestClient(createMapConfig(query));
             this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function(err, result) {
                 assert.ifError(err);
+                assert.deepEqual(result, expectedResponseBody);
                 done();
             });
         });
