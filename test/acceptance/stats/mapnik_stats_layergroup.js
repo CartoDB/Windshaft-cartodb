@@ -474,4 +474,6 @@ describe('Create mapnik layergroup', function() {
             testClient.drain(done);
         });
     });
+
+    // TODO: add tests for metadata with aggregation
 });
