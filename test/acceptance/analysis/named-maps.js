@@ -261,6 +261,41 @@ describe('named-maps analysis', function() {
             );
         });
 
+        it('should return and an error requesting unsupported image format', function(done) {
+            assert.response(
+                server,
+                {
+                    url: '/api/v1/map/static/center/' + layergroupid + '/4/42/-3/320/240.gif',
+                    method: 'GET',
+                    encoding: 'binary',
+                    headers: {
+                        host: username
+                    }
+                },
+                {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    assert.ifError(err);
+                    assert.deepEqual(
+                        JSON.parse(res.body),
+                        {
+                            errors:['Unsupported image format \"gif\"'],
+                            errors_with_context:[{
+                                type: 'unknown',
+                                message: 'Unsupported image format \"gif\"'
+                            }]
+                        }
+                    );
+                    done();
+
+                }
+            );
+        });
+
     });
 
     describe('auto-instantiation', function() {
