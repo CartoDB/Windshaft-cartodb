@@ -13,6 +13,8 @@ var config = {
     // from hostname. Must have a single grabbing block.
     ,user_from_host: '^(.*)\\.cartodb\\.com$'
 
+    // DEPRECATED: use routes property instead
+    // ---------------------------------------
     // Base URLs for the APIs
     //
     // See http://github.com/CartoDB/Windshaft-cartodb/wiki/Unified-Map-API
@@ -25,6 +27,52 @@ var config = {
     // "maps" is the the new API,
     // "tiles/layergroup" is for compatibility with versions up to 1.6.x
     ,base_url_detached: '(?:/api/v1/map|/user/:user/api/v1/map|/tiles/layergroup)'
+
+    // Base URLs for the APIs
+    //
+    // See https://github.com/CartoDB/Windshaft-cartodb/wiki/Unified-Map-API
+    ,routes: {
+        v1: {
+            paths: [
+                '/api/v1',
+                '/user/:user/api/v1',
+            ],
+            // Base url for the Detached Maps API
+            // "/api/v1/map" is the new API,
+            map: {
+                paths: [
+                    '/map',
+                ]
+            },
+            // Base url for the Templated Maps API
+            // "/api/v1/map/named" is the new API,
+            template: {
+                paths: [
+                    '/map/named'
+                ]
+            }
+        },
+        // For compatibility with versions up to 1.6.x
+        v0: {
+            paths: [
+                '/tiles'
+            ],
+            // Base url for the Detached Maps API
+            // "/tiles/layergroup" is for compatibility with versions up to 1.6.x
+            map: {
+                paths: [
+                    '/layergroup'
+                ]
+            },
+            // Base url for the Templated Maps API
+            // "/tiles/template" is for compatibility with versions up to 1.6.x
+            template: {
+                paths: [
+                    '/template'
+                ]
+            }
+        }
+    }
 
     // Resource URLs expose endpoints to request/retrieve metadata associated to Maps: dataviews, analysis node status.
     //
