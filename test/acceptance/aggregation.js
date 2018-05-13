@@ -100,6 +100,18 @@ describe('aggregation', function () {
     from generate_series(-3, 3) x
     `;
 
+    const POINTS_SQL_PAIRS = `
+    -- Generate pairs of near points
+    select
+        x + 4 as cartodb_id,
+        st_setsrid(st_makepoint(Floor(x/2)*10 + x/1000.0, Floor(x/2)*10 + x/1000.0), 4326) as the_geom,
+        st_transform(
+            st_setsrid(st_makepoint(Floor(x/2)*10 + x/1000.0, Floor(x/2)*10 + x/1000.0),4326),
+            3857) as the_geom_webmercator,
+        x as value
+    from generate_series(-6, 6) x
+    `;
+
     function createVectorMapConfig (layers = [
         {
             type: 'cartodb',
@@ -130,6 +142,7 @@ describe('aggregation', function () {
 
             before(function () {
                 serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+                this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
             });
 
             after(function (){
@@ -138,6 +151,7 @@ describe('aggregation', function () {
 
             afterEach(function (done) {
                 this.testClient.drain(done);
+                global.environment.enabledFeatures.layerStats = this.layerStatsConfig;
             });
 
             it('should return a layergroup indicating the mapconfig was aggregated', function (done) {
@@ -2173,6 +2187,168 @@ describe('aggregation', function () {
                 });
             });
 
+            ['default', 'centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it(`default pre-aggregation stats are available with ${placement} aggregation`, function (done) {
+                    global.environment.enabledFeatures.layerStats = true;
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_PAIRS,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    this.testClient.getLayergroup((err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        assert.equal(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
+                        assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
+                        assert.ok(body.metadata.layers[0].meta.stats.estimatedFeatureCount > 0);
+
+                        done();
+                    });
+                });
+
+                it(`on demand post-aggregation stats are available with ${placement} aggregation`, function (done) {
+                    global.environment.enabledFeatures.layerStats = true;
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_PAIRS,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    },
+                                    metadata: {
+                                        aggrFeatureCount: 10
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    this.testClient.getLayergroup((err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        assert.equal(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
+                        assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
+                        assert.equal(body.metadata.layers[0].meta.stats.aggrfeatureCount, 13);
+
+                        done();
+                    });
+                });
+
+                it(`post-aggregation count adapts to zoom level with ${placement} aggregation`, function (done) {
+                    global.environment.enabledFeatures.layerStats = true;
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_PAIRS,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    },
+                                    metadata: {
+                                        aggrFeatureCount: 0
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    this.testClient.getLayergroup((err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        assert.equal(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
+                        assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
+                        assert.equal(body.metadata.layers[0].meta.stats.aggrfeatureCount, 9);
+
+                        done();
+                    });
+                });
+
+                it(`on-demand pre-aggregation stats are available with ${placement} aggregation`, function (done) {
+                    global.environment.enabledFeatures.layerStats = true;
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_PAIRS,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    },
+                                    metadata: {
+                                        featureCount: true
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+                    this.testClient.getLayergroup((err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        assert.equal(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
+                        assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
+                        assert.equal(body.metadata.layers[0].meta.stats.featureCount, 13);
+
+                        done();
+                    });
+                });
+            });
 
         });
     });

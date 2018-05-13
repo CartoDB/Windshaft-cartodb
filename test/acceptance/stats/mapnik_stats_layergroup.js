@@ -475,5 +475,4 @@ describe('Create mapnik layergroup', function() {
         });
     });
 
-    // TODO: add tests for metadata with aggregation
 });
