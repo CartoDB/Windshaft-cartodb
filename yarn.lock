@@ -2,20 +2,20 @@
 # yarn lockfile v1
 
 
-"@carto/mapnik@3.6.2-carto.8":
-  version "3.6.2-carto.8"
-  resolved "https://registry.yarnpkg.com/@carto/mapnik/-/mapnik-3.6.2-carto.8.tgz#70448689d9b14d644bebd079f5714871c458a46d"
+"@carto/mapnik@3.6.2-carto.10":
+  version "3.6.2-carto.10"
+  resolved "https://registry.yarnpkg.com/@carto/mapnik/-/mapnik-3.6.2-carto.10.tgz#a97c951dcdac09d0eb35b3ea71e5eeaa206c1af6"
   dependencies:
     mapnik-vector-tile cartodb/mapnik-vector-tile#v1.6.1-carto.1
     nan "2.10.0"
-    node-pre-gyp "0.7.0"
+    node-pre-gyp "0.10.0"
     protozero "1.5.1"
 
-"@carto/tilelive-bridge@cartodb/tilelive-bridge#2.5.1-cdb7":
-  version "2.5.1-cdb7"
-  resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/ec881cb9ac52113f895f23857430e2d434bb99a6"
+"@carto/tilelive-bridge@github:cartodb/tilelive-bridge#2.5.1-cdb9":
+  version "2.5.1-cdb9"
+  resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/5129e43223cb55daed31373c7a36c98eb6178fc1"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.8"
+    "@carto/mapnik" "3.6.2-carto.10"
     "@mapbox/sphericalmercator" "~1.0.1"
     mapnik-pool "~0.1.3"
 
@@ -23,11 +23,11 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz#70237b9774095ed1cfdbcea7a8fd1fc82b2691f2"
 
-abaculus@cartodb/abaculus#2.0.3-cdb8:
-  version "2.0.3-cdb8"
-  resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/31c03f2442943d4c47740fa154cda753b5cccd8a"
+"abaculus@github:cartodb/abaculus#2.0.3-cdb10":
+  version "2.0.3-cdb10"
+  resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/90d537028bb8af8a35e7a40c46493066dd8a76b3"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.8"
+    "@carto/mapnik" "3.6.2-carto.10"
     d3-queue "^2.0.2"
     sphericalmercator "1.0.x"
 
@@ -249,7 +249,7 @@ camshaft@0.61.8:
     dot "^1.0.3"
     request "2.85.0"
 
-canvas@cartodb/node-canvas#1.6.2-cdb2:
+"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -275,7 +275,7 @@ carto@CartoDB/carto#0.15.1-cdb1:
     optimist "~0.6.0"
     underscore "~1.6.0"
 
-carto@cartodb/carto#0.15.1-cdb3:
+"carto@github:cartodb/carto#0.15.1-cdb3":
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
@@ -337,6 +337,10 @@ chalk@^1.1.3:
     has-ansi "^2.0.0"
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
+
+chownr@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.0.1.tgz#e2a75042a9551908bebd25b8523d5f9769d79181"
 
 chroma-js@~1.1.1:
   version "1.1.1"
@@ -455,7 +459,7 @@ debug@2.6.0:
   dependencies:
     ms "0.7.2"
 
-debug@2.6.9, debug@^2.2.0:
+debug@2.6.9, debug@^2.1.2, debug@^2.2.0:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
   dependencies:
@@ -748,6 +752,12 @@ fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
 
+fs-minipass@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/fs-minipass/-/fs-minipass-1.2.5.tgz#06c277218454ec288df77ada54a03b8702aacb9d"
+  dependencies:
+    minipass "^2.2.1"
+
 fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
@@ -1004,6 +1014,18 @@ husl@^6.0.1:
 iconv-lite@0.4.19:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
+
+iconv-lite@^0.4.4:
+  version "0.4.23"
+  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.23.tgz#297871f63be507adcfbfca715d0cd0eed84e9a63"
+  dependencies:
+    safer-buffer ">= 2.1.2 < 3"
+
+ignore-walk@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/ignore-walk/-/ignore-walk-3.0.1.tgz#a83e62e7d272ac0e3b551aaa82831a19b69f82f8"
+  dependencies:
+    minimatch "^3.0.4"
 
 inflight@^1.0.4:
   version "1.0.6"
@@ -1292,7 +1314,7 @@ mapnik-reference@~8.5.3:
   dependencies:
     semver "^5.1.0"
 
-mapnik-vector-tile@cartodb/mapnik-vector-tile#v1.6.1-carto.1:
+"mapnik-vector-tile@github:cartodb/mapnik-vector-tile#v1.6.1-carto.1":
   version "1.6.1-carto.1"
   resolved "https://codeload.github.com/cartodb/mapnik-vector-tile/tar.gz/0111f7117946179d62ec7a6eba2f4e9fb355d05e"
 
@@ -1363,6 +1385,19 @@ minimist@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.2.0.tgz#4dffe525dae2b864c66c2e23c6271d7afdecefce"
 
+minipass@^2.2.1, minipass@^2.2.4:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/minipass/-/minipass-2.3.0.tgz#2e11b1c46df7fe7f1afbe9a490280add21ffe384"
+  dependencies:
+    safe-buffer "^5.1.1"
+    yallist "^3.0.0"
+
+minizlib@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/minizlib/-/minizlib-1.1.0.tgz#11e13658ce46bc3a70a267aac58359d1e0c29ceb"
+  dependencies:
+    minipass "^2.2.1"
+
 mkdirp@0.5.1, mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
@@ -1429,6 +1464,14 @@ ncp@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ncp/-/ncp-2.0.0.tgz#195a21d6c46e361d2fb1281ba38b91e9df7bdbb3"
 
+needle@^2.2.0:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/needle/-/needle-2.2.1.tgz#b5e325bd3aae8c2678902fa296f729455d1d3a7d"
+  dependencies:
+    debug "^2.1.2"
+    iconv-lite "^0.4.4"
+    sax "^1.2.4"
+
 negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
@@ -1444,20 +1487,20 @@ nock@~2.11.0:
     mkdirp "^0.5.0"
     propagate "0.3.x"
 
-node-pre-gyp@0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.7.0.tgz#55aeffbaed93b50d0a4657d469198cd80ac9df36"
+node-pre-gyp@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.10.0.tgz#6e4ef5bb5c5203c6552448828c852c40111aac46"
   dependencies:
     detect-libc "^1.0.2"
     mkdirp "^0.5.1"
+    needle "^2.2.0"
     nopt "^4.0.1"
+    npm-packlist "^1.1.6"
     npmlog "^4.0.2"
     rc "^1.1.7"
-    request "2.83.0"
     rimraf "^2.6.1"
     semver "^5.3.0"
-    tar "^2.2.1"
-    tar-pack "^3.4.0"
+    tar "^4"
 
 node-pre-gyp@~0.6.30, node-pre-gyp@~0.6.36, node-pre-gyp@~0.6.38:
   version "0.6.39"
@@ -1500,6 +1543,17 @@ normalize-package-data@^2.3.2:
     is-builtin-module "^1.0.0"
     semver "2 || 3 || 4 || 5"
     validate-npm-package-license "^3.0.1"
+
+npm-bundled@^1.0.1:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/npm-bundled/-/npm-bundled-1.0.3.tgz#7e71703d973af3370a9591bafe3a63aca0be2308"
+
+npm-packlist@^1.1.6:
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/npm-packlist/-/npm-packlist-1.1.10.tgz#1039db9e985727e464df066f4cf0ab6ef85c398a"
+  dependencies:
+    ignore-walk "^3.0.1"
+    npm-bundled "^1.0.1"
 
 npmlog@^4.0.2:
   version "4.1.2"
@@ -1904,9 +1958,9 @@ request@2.81.0:
     tunnel-agent "^0.6.0"
     uuid "^3.0.0"
 
-request@2.83.0, request@2.x, request@^2.55.0:
-  version "2.83.0"
-  resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
+request@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.85.0.tgz#5a03615a47c61420b3eb99b7dba204f83603e1fa"
   dependencies:
     aws-sign2 "~0.7.0"
     aws4 "^1.6.0"
@@ -1931,9 +1985,9 @@ request@2.83.0, request@2.x, request@^2.55.0:
     tunnel-agent "^0.6.0"
     uuid "^3.1.0"
 
-request@2.85.0:
-  version "2.85.0"
-  resolved "https://registry.yarnpkg.com/request/-/request-2.85.0.tgz#5a03615a47c61420b3eb99b7dba204f83603e1fa"
+request@2.x, request@^2.55.0:
+  version "2.83.0"
+  resolved "https://registry.yarnpkg.com/request/-/request-2.83.0.tgz#ca0b65da02ed62935887808e6f510381034e3356"
   dependencies:
     aws-sign2 "~0.7.0"
     aws4 "^1.6.0"
@@ -1992,9 +2046,21 @@ safe-buffer@5.1.1, safe-buffer@^5.0.1, safe-buffer@^5.1.1, safe-buffer@~5.1.0, s
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.1.tgz#893312af69b2123def71f57889001671eeb2c853"
 
+safe-buffer@^5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.1.2.tgz#991ec69d296e0313747d59bdfd2b745c35f8828d"
+
 safe-json-stringify@~1:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/safe-json-stringify/-/safe-json-stringify-1.0.4.tgz#81a098f447e4bbc3ff3312a243521bc060ef5911"
+
+"safer-buffer@>= 2.1.2 < 3":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
+
+sax@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
 "semver@2 || 3 || 4 || 5", semver@^5.1.0, semver@^5.3.0, semver@~5.3.0:
   version "5.3.0"
@@ -2247,6 +2313,18 @@ tar@^2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
+tar@^4:
+  version "4.4.2"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.2.tgz#60685211ba46b38847b1ae7ee1a24d744a2cd462"
+  dependencies:
+    chownr "^1.0.1"
+    fs-minipass "^1.2.5"
+    minipass "^2.2.4"
+    minizlib "^1.1.0"
+    mkdirp "^0.5.0"
+    safe-buffer "^5.1.2"
+    yallist "^3.0.2"
+
 through2@~0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/through2/-/through2-0.2.3.tgz#eb3284da4ea311b6cc8ace3653748a52abf25a3f"
@@ -2258,11 +2336,11 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb12:
-  version "0.6.18-cdb12"
-  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/e3c0d80e604ca4a5dfad648ee6f6fb355d415a88"
+"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb14":
+  version "0.6.18-cdb14"
+  resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/6d06f728833d3e34d1adcd05567b3f4379f547bb"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.8"
+    "@carto/mapnik" "3.6.2-carto.10"
     generic-pool "~2.4.0"
     mime "~1.6.0"
     sphericalmercator "~1.0.4"
@@ -2419,13 +2497,13 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.7.1:
-  version "4.7.1"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.7.1.tgz#2b92753b2f6e97b239e15e1576ec312cc7dfeb13"
+windshaft@4.7.3:
+  version "4.7.3"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.7.3.tgz#86b6c9ae21f5ff9ad7a37bc344151e3d13da4f06"
   dependencies:
-    "@carto/mapnik" "3.6.2-carto.8"
-    "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb7
-    abaculus cartodb/abaculus#2.0.3-cdb8
+    "@carto/mapnik" "3.6.2-carto.10"
+    "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb9
+    abaculus cartodb/abaculus#2.0.3-cdb10
     canvas cartodb/node-canvas#1.6.2-cdb2
     carto cartodb/carto#0.15.1-cdb3
     cartodb-psql "^0.10.1"
@@ -2439,7 +2517,7 @@ windshaft@4.7.1:
     sphericalmercator "1.0.4"
     step "~0.0.6"
     tilelive "5.12.2"
-    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb12
+    tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb14
     torque.js "~2.11.0"
     underscore "~1.6.0"
 
@@ -2479,6 +2557,10 @@ xtend@~2.1.1:
 y18n@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/y18n/-/y18n-3.2.1.tgz#6d15fba884c08679c0d77e88e7759e811e07fa41"
+
+yallist@^3.0.0, yallist@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.2.tgz#8452b4bb7e83c7c188d8041c1a837c773d6d8bb9"
 
 yargs-parser@^2.4.1:
   version "2.4.1"
