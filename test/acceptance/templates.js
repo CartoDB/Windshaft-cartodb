@@ -29,6 +29,7 @@ describe('template_api', function() {
     before(function () {
         server = new CartodbWindshaft(serverOptions);
         server.setMaxListeners(0);
+        // FIXME: we need a better way to reset cache while running tests
         server.layergroupAffectedTablesCache.cache.reset();
     });
 
@@ -1060,6 +1061,7 @@ describe('template_api', function() {
           assert.ok(cc);
           assert.equal(cc, expectedCC);
           // hack simulating restart...
+          // FIXME: we need a better way to reset cache while running tests
           server.layergroupAffectedTablesCache.cache.reset(); // need to clean channel cache
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',

@@ -7,8 +7,35 @@ var overviewsQueryRewriter = new OverviewsQueryRewriter({
 });
 
 module.exports = _.extend({}, serverOptions, {
+    // FIXME: Remove it. This is no longer needed, paths are defined in routers
     base_url: '/database/:dbname/table/:table',
+    // FIXME: Remove it. This is no longer needed, paths are defined in routers
     base_url_mapconfig: '/database/:dbname/layergroup',
+
+    routes: {
+        v0: {
+            paths: [
+                '/tiles',
+                '/database/:dbname'
+            ],
+            // Base url for the Detached Maps API
+            // "/tiles/layergroup" is for compatibility with versions up to 1.6.x
+            map: {
+                paths: [
+                    '/layergroup'
+                ]
+            },
+            // Base url for the Templated Maps API
+            // "/tiles/template" is for compatibility with versions up to 1.6.x
+            template: {
+                paths: [
+                    '/template'
+                ]
+            }
+        }
+    },
+
+
     grainstore: {
         datasource: {
             geometry_field: 'the_geom',
