@@ -10,11 +10,13 @@ New features:
   - Performance improvements in the marker symbolizer (local cache, avoid building the collision matrix when possible).
   - MVT: Disable simplify_distance to avoid multiple simplifications.
   - Fix a bug with zero length lines not being rendered when using the marker symbolizer.
+- Upgrades Camshaft to [0.61.9](https://github.com/CartoDB/camshaft/releases/tag/0.61.9):
+  - Use Dollar-Quoted String Constants to avoid Syntax Error while running moran analyses.
 
 Bug Fixes:
 - Validates tile coordinates (z/x/y) from request params to be a valid integer value.
 - Static maps fails for unsupported formats
-- Handling errors extracting the column type on dataviews 
+- Handling errors extracting the column type on dataviews
 
 ## 6.1.0
 Released 2018-04-16
