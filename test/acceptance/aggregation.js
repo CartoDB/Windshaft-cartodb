@@ -2261,7 +2261,7 @@ describe('aggregation', function () {
                         assert.equal(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.aggrfeatureCount, 13);
+                        assert.equal(body.metadata.layers[0].meta.stats.aggrFeatureCount, 13);
 
                         done();
                     });
@@ -2302,7 +2302,7 @@ describe('aggregation', function () {
                         assert.equal(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.aggrfeatureCount, 9);
+                        assert.equal(body.metadata.layers[0].meta.stats.aggrFeatureCount, 9);
 
                         done();
                     });
