@@ -12,11 +12,13 @@ New features:
   - Fix a bug with zero length lines not being rendered when using the marker symbolizer.
 - Upgrades Camshaft to [0.61.9](https://github.com/CartoDB/camshaft/releases/tag/0.61.9):
   - Use Dollar-Quoted String Constants to avoid Syntax Error while running moran analyses.
+- Optional instantiation metadata stats (https://github.com/CartoDB/Windshaft-cartodb/pull/952)
 
 Bug Fixes:
 - Validates tile coordinates (z/x/y) from request params to be a valid integer value.
 - Static maps fails for unsupported formats
 - Handling errors extracting the column type on dataviews
+- Fix `meta.stats.estimatedFeatureCount` for aggregations and queries with tokens
 
 ## 6.1.0
 Released 2018-04-16
