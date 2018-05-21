@@ -31,11 +31,13 @@ New features:
   - moment: 2.22.1
   - nock: 9.2.6
   - strftime: 0.10.0
+- Optional instantiation metadata stats (https://github.com/CartoDB/Windshaft-cartodb/pull/952)
 
 Bug Fixes:
 - Validates tile coordinates (z/x/y) from request params to be a valid integer value.
 - Static maps fails for unsupported formats
 - Handling errors extracting the column type on dataviews
+- Fix `meta.stats.estimatedFeatureCount` for aggregations and queries with tokens
 
 ## 6.1.0
 Released 2018-04-16
