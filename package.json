@@ -48,7 +48,7 @@
     "step-profiler": "0.3.0",
     "turbo-carto": "0.20.2",
     "underscore": "1.6.0",
-    "windshaft": "cartodb/windshaft#upgrade-dependencies",
+    "windshaft": "4.8.0",
     "yargs": "11.1.0"
   },
   "devDependencies": {
