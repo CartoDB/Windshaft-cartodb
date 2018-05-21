@@ -2344,7 +2344,7 @@ step@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/step/-/step-1.0.0.tgz#b300e9d2ae9057d4d78633aae2303813a94bdff2"
 
-step@~0.0.5, step@~0.0.6:
+step@~0.0.5:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/step/-/step-0.0.6.tgz#143e7849a5d7d3f4a088fe29af94915216eeede2"
 
