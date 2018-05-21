@@ -58,7 +58,7 @@
     "moment": "~2.18.1",
     "nock": "~2.11.0",
     "redis": "2.8.0",
-    "strftime": "~0.8.2"
+    "strftime": "0.10.0"
   },
   "scripts": {
     "lint": "jshint lib test",
