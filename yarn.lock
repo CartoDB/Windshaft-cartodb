@@ -1574,9 +1574,9 @@ node-pre-gyp@~0.6.30, node-pre-gyp@~0.6.36, node-pre-gyp@~0.6.38:
     tar "^2.2.1"
     tar-pack "^3.4.0"
 
-node-statsd@~0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/node-statsd/-/node-statsd-0.0.7.tgz#96d4bbd21dff2d798b3374a3e9329cfecce3afa8"
+node-statsd@0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/node-statsd/-/node-statsd-0.1.1.tgz#27a59348763d0af7a037ac2a031fef3f051013d3"
 
 nopt@3.x:
   version "3.0.6"
