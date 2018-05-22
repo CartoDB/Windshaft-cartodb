@@ -468,9 +468,8 @@ describe('user database timeout limit', function () {
                         });
                     });
 
-                    afterEach(function (done) {
+                    afterEach(function () {
                         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
-                        this.testClient.drain(done);
                     });
 
                     describe('with user\'s timeout of 200 ms', function () {
