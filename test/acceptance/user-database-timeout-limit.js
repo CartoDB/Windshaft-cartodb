@@ -2,6 +2,7 @@ require('../support/test_helper');
 
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
+const serverOptions = require('../../lib/cartodb/server_options');
 
 const timeoutErrorTilePath = `${process.cwd()}/assets/render-timeout-fallback.png`;
 
@@ -438,6 +439,78 @@ describe('user database timeout limit', function () {
 
                 });
             });
+
+            if (process.env.POSTGIS_VERSION === '2.4') {
+                describe.only('fetching vector tiles via PostGIS renderer', function() {
+                    const usePostGIS = true;
+                    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
+                    beforeEach(function (done) {
+                        serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+
+                        const mapconfig = createMapConfig();
+                        this.testClient = new TestClient(mapconfig, 1234);
+                        const expectedResponse = {
+                            status: 200,
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8'
+                            }
+                        };
+
+                        this.testClient.getLayergroup({ response: expectedResponse }, (err, res) => {
+                            if (err) {
+                                return done(err);
+                            }
+
+                            this.layergroupid = res.layergroupid;
+
+                            done();
+                        });
+                    });
+
+                    afterEach(function (done) {
+                        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+                        this.testClient.drain(done);
+                    });
+
+                    describe('with user\'s timeout of 200 ms', function () {
+                        beforeEach(function (done) {
+                            this.testClient.setUserDatabaseTimeoutLimit(200, done);
+                        });
+
+                        afterEach(function (done) {
+                            this.testClient.setUserDatabaseTimeoutLimit(0, done);
+                        });
+
+                        it('"mvt" fails due to statement timeout', function (done) {
+                            const params = {
+                                layergroupid: this.layergroupid,
+                                format: 'mvt',
+                                layers: [ 0 ],
+                                response: {
+                                    status: 429,
+                                    headers: {
+                                        'Content-Type': 'application/x-protobuf'
+                                    }
+                                },
+                                cacheBuster: true
+                            };
+
+                            this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
+                                assert.ifError(err);
+
+                                var tileJSON = tile.toJSON();
+                                assert.equal(Array.isArray(tileJSON), true);
+                                assert.equal(tileJSON.length, 2);
+                                assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
+                                assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+
+                                done();
+                            });
+                        });
+                    });
+                });
+            }
         });
     });
 
