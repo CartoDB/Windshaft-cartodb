@@ -125,6 +125,14 @@ function resErr2errRes(callback) {
     };
 }
 
+function layergroupidTemplate (layergroupId, params) {
+    const { token, signer, cacheBuster } = LayergroupToken.parse(layergroupId);
+
+    // {user}@{token}:{cache_buster}
+    // {token}:{cache_buster}
+    return `${signer ? signer + '@' : ''}${token}:${params.cacheBuster ? Date.now() : cacheBuster }`;
+}
+
 TestClient.prototype.getWidget = function(widgetName, params, callback) {
     var self = this;
 
@@ -726,7 +734,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            url = '/api/v1/map/' + layergroupId + '/';
+            url = `/api/v1/map/${layergroupidTemplate(layergroupId, params)}/`;
 
             var layers = params.layers;
 
@@ -768,7 +776,6 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                     'Content-Type': 'image/png'
                 }
             }, params.response);
-
 
             var isPng = format.match(/png$/);
 
@@ -954,7 +961,9 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            url = `/api/v1/map/static/center/${layergroupId}/${zoom}/${lat}/${lng}/${width}/${height}.${format}`;
+            const layergroupid = layergroupidTemplate(layergroupId, params);
+
+            url = `/api/v1/map/static/center/${layergroupid}/${zoom}/${lat}/${lng}/${width}/${height}.${format}`;
 
             if (self.apiKey) {
                 url += '?' + qs.stringify({api_key: self.apiKey});
