@@ -139,7 +139,7 @@ describe('user render timeout limit', function () {
             });
 
             it('layergroup creation works but tile request fails due to render timeout', function (done) {
-                this.testClient.getTile(0, 0, 0, {}, (err, res, tile) => {
+                this.testClient.getTile(0, 0, 0, { cacheBuster: true }, (err, res, tile) => {
                     assert.ifError(err);
 
                     assert.imageIsSimilarToFile(tile, timeoutErrorTilePath, 0.05, (err) => {
@@ -180,7 +180,8 @@ describe('user render timeout limit', function () {
                         headers: {
                             'Content-Type': 'application/json; charset=utf-8'
                         }
-                    }
+                    },
+                    cacheBuster: true
                 };
 
                 this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
@@ -234,7 +235,8 @@ describe('user render timeout limit', function () {
                         headers: {
                             'Content-Type': 'application/x-protobuf'
                         }
-                    }
+                    },
+                    cacheBuster: true
                 };
 
                 this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
@@ -277,7 +279,8 @@ describe('user render timeout limit', function () {
                     headers: {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
-                }
+                },
+                cacheBuster: true
             };
 
             this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
@@ -365,7 +368,7 @@ describe('user render timeout limit', function () {
                 });
             });
 
-            it('layergroup creation works and render tile fails', function (done) {
+            it('layergroup creation works and render static center tile fails', function (done) {
                 const params = {
                     zoom: 0,
                     lat: 0,
@@ -378,7 +381,8 @@ describe('user render timeout limit', function () {
                         headers: {
                             'Content-Type': 'application/json; charset=utf-8'
                         }
-                    }
+                    },
+                    cacheBuster: true
                 };
 
                 this.testClient.getStaticCenter(params, function (err, res, timeoutError) {
