@@ -213,12 +213,12 @@ describe('user render timeout limit', function () {
                 serverOptions.renderer.mvt.usePostGIS = usePostGIS;
                 const mapconfig = createMapConfig();
                 this.testClient = new TestClient(mapconfig, 1234);
-                this.testClient.setUserDatabaseTimeoutLimit(50, done);
+                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
             });
 
             afterEach(function (done) {
                 serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
-                this.testClient.setUserDatabaseTimeoutLimit(0, (err) => {
+                this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
                     if (err) {
                         return done(err);
                     }
