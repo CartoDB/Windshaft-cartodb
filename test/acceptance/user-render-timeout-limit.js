@@ -202,57 +202,52 @@ describe('user render timeout limit', function () {
         });
     });
 
-    if (process.env.POSTGIS_VERSION === '2.4') {
-        describe('vector (PostGIS)', vector(true));
-    }
-
-    describe('vector (mapnik)', vector(false));
-    function vector(usePostGIS) {
+    describe('vector tile via mapnik renderer', function () {
+        const usePostGIS = false;
         const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
-        return function () {
-            beforeEach(function (done) {
-                serverOptions.renderer.mvt.usePostGIS = usePostGIS;
-                const mapconfig = createMapConfig();
-                this.testClient = new TestClient(mapconfig, 1234);
-                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
-            });
 
-            afterEach(function (done) {
-                serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
-                this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
-                    if (err) {
-                        return done(err);
+        beforeEach(function (done) {
+            serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+            const mapconfig = createMapConfig();
+            this.testClient = new TestClient(mapconfig, 1234);
+            this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+        });
+
+        afterEach(function (done) {
+            serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+            this.testClient.setUserRenderTimeoutLimit('localhost', 0, (err) => {
+                if (err) {
+                    return done(err);
+                }
+                this.testClient.drain(done);
+            });
+        });
+
+        it('layergroup creation works but vector tile request fails due to render timeout', function (done) {
+            const params = {
+                format: 'mvt',
+                response: {
+                    status: 429,
+                    headers: {
+                        'Content-Type': 'application/x-protobuf'
                     }
-                    this.testClient.drain(done);
-                });
+                },
+                cacheBuster: true
+            };
+
+            this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
+                assert.ifError(err);
+
+                var tileJSON = tile.toJSON();
+                assert.equal(Array.isArray(tileJSON), true);
+                assert.equal(tileJSON.length, 2);
+                assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
+                assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+
+                done();
             });
-
-            it('layergroup creation works but vector tile request fails due to render timeout', function (done) {
-                const params = {
-                    format: 'mvt',
-                    response: {
-                        status: 429,
-                        headers: {
-                            'Content-Type': 'application/x-protobuf'
-                        }
-                    },
-                    cacheBuster: true
-                };
-
-                this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
-                    assert.ifError(err);
-
-                    var tileJSON = tile.toJSON();
-                    assert.equal(Array.isArray(tileJSON), true);
-                    assert.equal(tileJSON.length, 2);
-                    assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
-                    assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
-
-                    done();
-                });
-            });
-        };
-    }
+        });
+    });
 
     describe('interativity', function () {
         beforeEach(function (done) {
