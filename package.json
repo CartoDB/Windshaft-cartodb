@@ -26,7 +26,7 @@
   "dependencies": {
     "basic-auth": "2.0.0",
     "body-parser": "1.18.3",
-    "camshaft": "0.61.9",
+    "camshaft": "cartodb/camshaft#e5d03ef42db438d856d9a6c21a8016d7d29cd4f0",
     "cartodb-psql": "0.10.2",
     "cartodb-query-tables": "0.3.0",
     "cartodb-redis": "1.0.0",
