@@ -74,6 +74,26 @@ describe('Create mapnik layergroup', function() {
         }
     };
 
+    var mapnikLayerNullCats = {
+        type: 'mapnik',
+        options: {
+            sql: `
+              WITH geom AS (
+                SELECT
+                  'SRID=4326;POINT(0 0)'::geometry AS the_geom,
+                  'SRID=3857;POINT(0 0)'::geometry AS the_geom_webmercator
+              )
+              SELECT 1 AS cartodb_id, 'A' As cat, geom.* FROM geom
+              UNION
+              SELECT 2 AS cartodb_id, 'B' As cat, geom.* FROM geom
+              UNION
+              SELECT 2 AS cartodb_id, NULL::text As cat, geom.* FROM geom
+            `,
+            cartocss_version: cartocssVersion,
+            cartocss: cartocss
+        }
+    };
+
     function mapnikBasicLayerId(index) {
         return 'layer' + index;
     }
@@ -309,6 +329,32 @@ describe('Create mapnik layergroup', function() {
         });
     });
 
+    // metadata categories are ordered only partially by descending frequency;
+    // this orders them completely to avoid ambiguities when comparing
+    function withSortedCategories(columns) {
+        function catOrder(a, b) {
+            if (a.frequency !== b.frequency) {
+                return b.frequency - a.frequency;
+            }
+            if (a.category < b.category) {
+                return -1;
+            }
+            if (a.category > b.category) {
+                return +1;
+            }
+            return 0;
+        }
+        let sorted = {};
+        Object.keys(columns).forEach(name => {
+            let data = columns[name];
+            if (data.hasOwnProperty('categories')) {
+                data = Object.assign(data, { categories: data.categories.sort(catOrder)});
+            }
+            sorted[name] = data;
+        });
+        return sorted;
+    }
+
     it('should provide column stats as optional metadata', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
@@ -318,32 +364,6 @@ describe('Create mapnik layergroup', function() {
                 })
             ]
         });
-
-        // metadata categories are ordered only partially by descending frequency;
-        // this orders them completely to avoid ambiguities when comparing
-        function withSortedCategories(columns) {
-            function catOrder(a, b) {
-                if (a.frequency !== b.frequency) {
-                    return b.frequency - a.frequency;
-                }
-                if (a.category < b.category) {
-                    return -1;
-                }
-                if (a.category > b.category) {
-                    return +1;
-                }
-                return 0;
-            }
-            let sorted = {};
-            Object.keys(columns).forEach(name => {
-                let data = columns[name];
-                if (data.hasOwnProperty('categories')) {
-                    data = Object.assign(data, { categories: data.categories.sort(catOrder)});
-                }
-                sorted[name] = data;
-            });
-            return sorted;
-        }
 
         testClient.getLayergroup(function(err, layergroup) {
             assert.ifError(err);
@@ -389,6 +409,63 @@ describe('Create mapnik layergroup', function() {
                 withSortedCategories(layergroup.metadata.layers[0].meta.stats.columns),
                 withSortedCategories(expectedColumns)
             );
+            testClient.drain(done);
+        });
+    });
+
+    it('should limit the number of categories as requested', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer4, {
+                    columnStats: { topCategories: 2 }
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
+            assert.equal(columnsMetadata.address.categories.length, 2);
+            testClient.drain(done);
+        });
+    });
+
+    it('should include null categories if requested', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayerNullCats, {
+                    columnStats: { includeNulls: true }
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
+            assert.equal(columnsMetadata.cat.categories.length, 3);
+            testClient.drain(done);
+        });
+    });
+
+    it('should not include null categories if not requested', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayerNullCats, {
+                    columnStats: { includeNulls: false }
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
+            assert.equal(columnsMetadata.cat.categories.length, 2);
             testClient.drain(done);
         });
     });
