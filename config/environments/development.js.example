@@ -118,7 +118,7 @@ var config = {
         user: "publicuser",
         password: "public",
         host: '127.0.0.1',
-        port: 6432
+        port: 5432
     }
     ,mapnik_version: undefined
     ,mapnik_tile_format: 'png8:m=h'
