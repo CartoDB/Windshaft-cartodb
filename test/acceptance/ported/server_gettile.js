@@ -51,19 +51,19 @@ describe('server_gettile', function() {
         var mapConfig = testClient.defaultTableMapConfig('test_table');
         testClient.withLayergroup(mapConfig, function (err, requestTile, finish) {
             requestTile(tileUrl, function (err, res) {
-                var xwc = res.headers['x-windshaft-cache'];
+                var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                 assert.ok(xwc);
                 assert.ok(xwc > 0);
                 lastXwc = xwc;
 
                 requestTile(tileUrl, function (err, res) {
-                    var xwc = res.headers['x-windshaft-cache'];
+                    var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                     assert.ok(xwc);
                     assert.ok(xwc > 0);
                     assert.ok(xwc >= lastXwc);
 
                     requestTile(tileUrl, { cache_buster: 'wadus' }, function (err, res) {
-                        var xwc = res.headers['x-windshaft-cache'];
+                        var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                         assert.ok(!xwc);
 
                         finish(done);
@@ -103,7 +103,7 @@ describe('server_gettile', function() {
 
         testClient.withLayergroup(mapConfig, validateLayergroup, function(err, requestTile, finish) {
             requestTile(tileUrl, function(err, res) {
-                var xwc = res.headers['x-windshaft-cache'];
+                var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                 assert.ok(!xwc);
 
                 requestTile(tileUrl, function (err, res) {
@@ -111,7 +111,7 @@ describe('server_gettile', function() {
                         res.headers.hasOwnProperty('x-windshaft-cache'),
                         "Did not hit renderer cache on second time"
                     );
-                    assert.ok(res.headers['x-windshaft-cache'] >= 0);
+                    assert.ok(parseInt(res.headers['x-windshaft-cache'], 10) >= 0);
 
                     assert.imageBufferIsSimilarToFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                         function(err) {
