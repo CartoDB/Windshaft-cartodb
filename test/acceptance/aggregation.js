@@ -622,7 +622,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it('when the layer\'s geometry type is not point should respond with error', function (done) {
+            it('when the layer\'s geometry type is not point should skip aggregation', function (done) {
                 const mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -638,32 +638,18 @@ describe('aggregation', function () {
                 ]);
 
                 this.testClient = new TestClient(mapConfig);
-                const options = {
-                    response: {
-                        status: 400
-                    }
-                };
+                const options = {};
 
                 this.testClient.getLayergroup(options, (err, body) => {
                     if (err) {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [
-                            'Unsupported geometry type: ST_Polygon.' +
-                                ' Aggregation is available only for geometry type: ST_Point'
-                        ],
-                        errors_with_context:[{
-                            type: 'layer',
-                            message: 'Unsupported geometry type: ST_Polygon.' +
-                            ' Aggregation is available only for geometry type: ST_Point',
-                            layer: {
-                                id: 'layer0',
-                                index: 0,
-                                type: 'mapnik'
-                            }
-                        }]
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer =>{
+                        assert.deepEqual(layer.meta.aggregation, { png: false, mvt: false });
                     });
 
                     done();
