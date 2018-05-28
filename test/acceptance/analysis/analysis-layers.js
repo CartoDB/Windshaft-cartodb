@@ -124,7 +124,7 @@ describe('analysis-layers', function() {
     ];
 
     useCases.forEach(function(useCase) {
-        it('should implement use case: "' + useCase.desc + '"', function(done) {
+        it.skip('should implement use case: "' + useCase.desc + '"', function(done) {
 
             var testClient = new TestClient(useCase.mapConfig, 1234);
 
