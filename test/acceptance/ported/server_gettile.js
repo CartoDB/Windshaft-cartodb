@@ -39,13 +39,13 @@ describe('server_gettile', function() {
     // --{
     ////////////////////////////////////////////////////////////////////
 
-    it("get'ing a tile with default style should return an expected tile", function(done){
+    it.only("get'ing a tile with default style should return an expected tile", function(done){
       testClient.getTile(testClient.defaultTableMapConfig('test_table'), 13, 4011, 3088,
           imageCompareFn('test_table_13_4011_3088.png', done)
       );
     });
 
-    it("response of get tile can be served by renderer cache",  function(done) {
+    it.only("response of get tile can be served by renderer cache",  function(done) {
         var tileUrl = '/13/4011/3088.png';
         var lastXwc;
         var mapConfig = testClient.defaultTableMapConfig('test_table');
@@ -60,7 +60,7 @@ describe('server_gettile', function() {
                     var xwc = res.headers['x-windshaft-cache'];
                     assert.ok(xwc);
                     assert.ok(xwc > 0);
-                    assert.ok(xwc >= lastXwc);
+                    assert.ok(xwc >= lastXwc, `xwc: ${xwc}, lastXwc: ${lastXwc}`);
 
                     requestTile(tileUrl, { cache_buster: 'wadus' }, function (err, res) {
                         var xwc = res.headers['x-windshaft-cache'];
