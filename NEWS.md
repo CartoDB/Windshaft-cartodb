@@ -5,16 +5,17 @@ Released 2018-mm-dd
 
 New features:
 - CI tests with Ubuntu Xenial + PostgreSQL 10.1 and Ubuntu Precise + PostgreSQL 9.5
-- Upgrades Windshaft to [4.8.0](https://github.com/CartoDB/Windshaft/blob/4.8.0/NEWS.md#version-480) which includes:
+- Upgrades Windshaft to [4.8.1](https://github.com/CartoDB/Windshaft/blob/4.8.1/NEWS.md#version-481) which includes:
   - Update internal deps.
   - A fix in mapnik-vector-tile to avoid grouping together properties with the same value but a different type.
   - Performance improvements in the marker symbolizer (local cache, avoid building the collision matrix when possible).
   - MVT: Disable simplify_distance to avoid multiple simplifications.
   - Fix a bug with zero length lines not being rendered when using the marker symbolizer.
-- Upgrades Camshaft to [0.61.9](https://github.com/CartoDB/camshaft/releases/tag/0.61.9):
+- Upgrades Camshaft to [0.61.10](https://github.com/CartoDB/camshaft/releases/tag/0.61.10):
   - Use Dollar-Quoted String Constants to avoid Syntax Error while running moran analyses.
 - Update other deps:
   - body-parser: 1.18.3
+  - cartodb-psql: 0.11.0
   - dot: 1.1.2
   - express: 4.16.3
   - lru-cache: 4.1.3
