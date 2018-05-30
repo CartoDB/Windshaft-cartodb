@@ -1,7 +1,10 @@
 require('../support/test_helper');
 var assert = require('../support/assert');
+const helper = require('../support/test_helper');
 var TestClient = require('../support/test-client');
 const LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
+const CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
+const serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
 
 describe('regressions', function() {
 
@@ -36,6 +39,49 @@ describe('regressions', function() {
 
             testClient.drain(done);
         });
+    });
+
+    // See: https://github.com/CartoDB/Windshaft-cartodb/pull/956
+    it('"/user/localhost/api/v1/map" should create an anonymous map', function (done) {
+        const server = new CartodbWindshaft(serverOptions);
+        const layergroup = {
+            version: '1.7.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: TestClient.SQL.ONE_POINT,
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0'
+                    }
+                }
+            ]
+        };
+
+        const keysToDelete = {};
+
+        assert.response(server,
+            {
+                url: '/user/localhost/api/v1/map',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify(layergroup)
+            },
+            function(res, err) {
+                if (err) {
+                    return done(err);
+                }
+
+                const body = JSON.parse(res.body);
+                assert.ok(body.layergroupid);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+                helper.deleteRedisKeys(keysToDelete, done);
+            }
+        );
     });
 
     describe('map instantiation', function () {
