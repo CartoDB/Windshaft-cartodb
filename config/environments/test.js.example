@@ -61,16 +61,17 @@ var config = {
 
     // Resource URLs expose endpoints to request/retrieve metadata associated to Maps: dataviews, analysis node status.
     //
-    // This URLs depend on how `base_url_detached` and `user_from_host` are configured: the application can be
+    // This URLs depend on how `routes` and `user_from_host` are configured: the application can be
     // configured to accept request with the {user} in the header host or in the request path.
     // It also might depend on the configured cdn_url via `serverMetadata.cdn_url`.
     //
     // This template allows to make the endpoints generation more flexible, the template exposes the following params:
     //  1. {{=it.cdn_url}}: will be used when `serverMetadata.cdn_url` exists.
-    //  2. {{=it.user}}: will use the username as extraced from `user_from_host` or `base_url_detached`.
+    //  2. {{=it.user}}: will use the username as extraced from `user_from_host` or `routes`.
     //  3. {{=it.port}}: will use the `port` from this very same configuration file.
     ,resources_url_templates: {
-        http: 'http://{{=it.user}}.localhost.lan:{{=it.port}}/api/v1/map'
+        http: 'http://{{=it.user}}.localhost.lan:{{=it.port}}/api/v1/map',
+        https: 'https://{{=it.user}}.localhost.lan:{{=it.port}}/api/v1/map'
     }
 
     // Maximum number of connections for one process
@@ -91,7 +92,7 @@ var config = {
     // If log_filename is given logs will be written
     // there, in append mode. Otherwise stdout is used (default).
     // Log file will be re-opened on receiving the HUP signal
-    //,log_filename: 'logs/node-windshaft.log'
+    ,log_filename: 'logs/node-windshaft.log'
     // Templated database username for authorized user
     // Supported labels: 'user_id' (read from redis)
     ,postgres_auth_user: 'test_windshaft_cartodb_user_<%= user_id %>'
@@ -114,12 +115,12 @@ var config = {
             reapInterval: 1000
         }
     }
-    ,mapnik_version: ''
+    ,mapnik_version: undefined
     ,mapnik_tile_format: 'png8:m=h'
     ,statsd: {
         host: 'localhost',
         port: 8125,
-        prefix: 'test.:host.',
+        prefix: 'test.:host.', // could be hostname, better not containing dots
         cacheDns: true
         // support all allowed node-statsd options
     }
@@ -131,15 +132,7 @@ var config = {
         //If enabled, MVTs will be generated with PostGIS directly, instead of using Mapnik,
         //PostGIS 2.4 is required for this to work
         //If disabled it will use Mapnik MVT generation
-        usePostGIS: false,
-        dbPoolParams: {
-              // maximum number of resources to create at any given time
-              size: 16,
-              // max milliseconds a resource can go unused before it should be destroyed
-              idleTimeout: 3000,
-              // frequency to check for idle resources
-              reapInterval: 1000
-          }
+        usePostGIS: false
       },
       mapnik: {
           // The size of the pool of internal mapnik backend
@@ -234,7 +227,12 @@ var config = {
           'cache-features': true,
 
           // Require metrics to the renderer
-          metrics: false
+          metrics: false,
+
+          // Options for markers attributes, ellipses and images caches
+          markers_symbolizer_caches: {
+              disabled: false
+          }
       },
       http: {
           timeout: 2000, // the timeout in ms for a http tile request
@@ -273,7 +271,7 @@ var config = {
             // If filename is given logs comming from analysis client  will be written
             // there, in append mode. Otherwise 'log_filename' is used. Otherwise stdout is used (default).
             // Log file will be re-opened on receiving the HUP signal
-            filename: 'node-windshaft.log'
+            filename: 'logs/node-windshaft-analysis.log'
         },
         // Define max execution time in ms for analyses or tags
         // If analysis or tag are not found in redis this values will be used as default.
@@ -343,6 +341,12 @@ var config = {
     // X-Tiler-Profile header containing elapsed timing for various
     // steps taken for producing the response.
     ,useProfiler:true
+    ,serverMetadata: {
+      cdn_url: {
+        http: undefined,
+        https: undefined
+      }
+    }
     // Settings for the health check available at /health
     ,health: {
       enabled: false,
