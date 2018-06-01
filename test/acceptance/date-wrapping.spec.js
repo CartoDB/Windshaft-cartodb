@@ -3,7 +3,7 @@ const assert = require('assert');
 const TestClient = require('../support/test-client');
 const mapConfigFactory = require('../fixtures/test_mapconfigFactory');
 
-describe.only('date-wrapping', () => {
+describe('date-wrapping', () => {
     let testClient;
 
     describe('when a map instantiation has the "dates_as_numbers" option enabled', () => {
