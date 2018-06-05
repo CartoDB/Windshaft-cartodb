@@ -207,7 +207,7 @@ var config = {
                simplify_geometries: true,
                use_overviews: true, // use overviews to retrieve raster
                max_size: 500,
-               twkb_encoding: true
+               twkb_encoding: false
           },
 
           limits: {
@@ -225,7 +225,7 @@ var config = {
 
           // If enabled Mapnik will reuse the features retrieved from the database
           // instead of requesting them once per style inside a layer
-          'cache-features': false,
+          'cache-features': true,
 
           // Require metrics to the renderer
           metrics: false,
