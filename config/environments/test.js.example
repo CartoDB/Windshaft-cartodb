@@ -92,7 +92,7 @@ var config = {
     // If log_filename is given logs will be written
     // there, in append mode. Otherwise stdout is used (default).
     // Log file will be re-opened on receiving the HUP signal
-    //,log_filename: 'logs/node-windshaft.log'
+    ,log_filename: '/tmp/node-windshaft.log'
     // Templated database username for authorized user
     // Supported labels: 'user_id' (read from redis)
     ,postgres_auth_user: 'test_windshaft_cartodb_user_<%= user_id %>'
@@ -225,7 +225,7 @@ var config = {
 
           // If enabled Mapnik will reuse the features retrieved from the database
           // instead of requesting them once per style inside a layer
-          'cache-features': true,
+          'cache-features': false,
 
           // Require metrics to the renderer
           metrics: false,
@@ -272,7 +272,7 @@ var config = {
             // If filename is given logs comming from analysis client  will be written
             // there, in append mode. Otherwise 'log_filename' is used. Otherwise stdout is used (default).
             // Log file will be re-opened on receiving the HUP signal
-            // filename: 'logs/node-windshaft-analysis.log'
+            filename: '/tmp/node-windshaft-analysis.log'
         },
         // Define max execution time in ms for analyses or tags
         // If analysis or tag are not found in redis this values will be used as default.
