@@ -38,6 +38,18 @@ describe('date-wrapping', () => {
                     done();
                 });
             });
+
+            it('should return metadata with casted columns', done => {
+
+                testClient.getLayergroup(function(err, layergroup) {
+                    const expected = ['date'];
+                    assert.ifError(err);
+                    assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers.sort(), expected.sort());
+                    testClient.drain(done);
+                });
+
+            });
+
         });
 
         describe('and the layer has the "dates_as_numbers" option disabled', () => {
