@@ -1,13 +1,20 @@
-
 function getVectorMapConfig(opts) {
     return {
         buffersize: {
             mvt: 1
         },
-        layers: Array(opts.numberOfLayers || 1).map(() => _generateLayerConfig(opts)),
+        layers: _generateLayers(opts),
     };
 }
 
+function _generateLayers(opts) {
+    const numberOfLayers = opts.numberOfLayers || 1;
+    const layers = [];
+    for (let index = 0; index <= numberOfLayers; index++) {
+        layers.push(_generateLayerConfig(opts));
+    }
+    return layers;
+}
 
 function _generateLayerConfig(opts) {
     return {
