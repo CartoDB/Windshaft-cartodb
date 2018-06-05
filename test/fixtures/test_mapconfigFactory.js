@@ -4,44 +4,47 @@ function getVectorMapConfig(opts) {
         buffersize: {
             mvt: 1
         },
-        layers: [
-            {
-                type: 'mapnik',
-                options: {
-                    sql: `
-                    SELECT
-                        (DATE '2018-06-01' + x) as date,
-                        x as cartodb_id,
-                        st_makepoint(x * 10, x * 10) as the_geom,
-                        st_makepoint(x * 10, x * 10) as the_geom_webmercator
-                    FROM 
-                        generate_series(0, 1) x`,
-                    aggregation: {
-                        columns: {},
-                        dimensions: {
-                            date: 'date'
-                        },
-                        placement: 'centroid',
-                        resolution: 1,
-                        threshold: 1
-                    },
-                    dates_as_numbers: opts.dates_as_numbers,
-                    metadata: {
-                        geometryType: true,
-                        columnStats: {
-                            topCategories: 32768,
-                            includeNulls: true
-                        },
-                        sample: {
-                            num_rows: 1000,
-                            include_columns: [
-                                'date'
-                            ]
-                        }
-                    }
+        layers: Array(opts.numberOfLayers ||  1).map(() => _generateLayerConfig(opts));
+    };
+}
+
+
+function _generateLayerConfig(opts) {
+    return {
+        type: 'mapnik',
+        options: {
+            sql: `
+            SELECT
+                (DATE '2018-06-01' + x) as date,
+                x as cartodb_id,
+                st_makepoint(x * 10, x * 10) as the_geom,
+                st_makepoint(x * 10, x * 10) as the_geom_webmercator
+            FROM 
+                generate_series(0, 1) x`,
+            aggregation: {
+                columns: {},
+                dimensions: {
+                    date: 'date'
+                },
+                placement: 'centroid',
+                resolution: 1,
+                threshold: 1
+            },
+            dates_as_numbers: opts.dates_as_numbers,
+            metadata: {
+                geometryType: true,
+                columnStats: {
+                    topCategories: 32768,
+                    includeNulls: true
+                },
+                sample: {
+                    num_rows: 1000,
+                    include_columns: [
+                        'date'
+                    ]
                 }
             }
-        ]
+        }
     };
 }
 
