@@ -4,7 +4,7 @@ function getVectorMapConfig(opts) {
         buffersize: {
             mvt: 1
         },
-        layers: Array(opts.numberOfLayers ||  1).map(() => _generateLayerConfig(opts));
+        layers: Array(opts.numberOfLayers || 1).map(() => _generateLayerConfig(opts)),
     };
 }
 
