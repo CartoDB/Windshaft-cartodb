@@ -42,9 +42,8 @@ describe('date-wrapping', () => {
             it('should return metadata with casted columns', done => {
 
                 testClient.getLayergroup(function(err, layergroup) {
-                    const expected = ['date'];
                     assert.ifError(err);
-                    assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers.sort(), expected.sort());
+                    assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
                     testClient.drain(done);
                 });
 
