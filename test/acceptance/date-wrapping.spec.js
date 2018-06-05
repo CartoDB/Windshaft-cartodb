@@ -45,6 +45,8 @@ describe('date-wrapping', () => {
                     assert.ifError(err);
                     assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
                     testClient.drain(done);
+                    assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers.sort(), expected.sort());
+                    done();
                 });
 
             });
