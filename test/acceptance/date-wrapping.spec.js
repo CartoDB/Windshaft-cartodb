@@ -6,7 +6,7 @@ const mapConfigFactory = require('../fixtures/test_mapconfigFactory');
 describe('date-wrapping', () => {
     let testClient;
 
-    describe('when a map instantiation has one single layer', () => {
+    describe.only('when a map instantiation has one single layer', () => {
         describe('and the layer has the "dates_as_numbers" option enabled', () => {
             beforeEach(() => {
                 const mapConfig = mapConfigFactory.getVectorMapConfig({ dates_as_numbers: true });
@@ -45,7 +45,7 @@ describe('date-wrapping', () => {
                     const expected = ['date'];
                     assert.ifError(err);
                     assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers.sort(), expected.sort());
-                    testClient.drain(done);
+                    done();
                 });
 
             });
