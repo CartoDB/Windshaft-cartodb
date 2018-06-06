@@ -13,7 +13,6 @@ var lzmaWorker = new LZMA();
 
 var redis = require('redis');
 var log4js = require('log4js');
-var pg = require('pg');
 const setICUEnvVariable = require('../../lib/cartodb/utils/icu_data_env_setter');
 
 // set environment specific variables
@@ -148,11 +147,6 @@ afterEach(function(done) {
     });
 });
 
-function cleanPGPoolConnections () {
-    // TODO: this method will be replaced by psql.end
-    pg.end();
-}
-
 function deleteRedisKeys(keysToDelete, callback) {
 
     if (Object.keys(keysToDelete).length === 0) {
@@ -215,6 +209,5 @@ module.exports = {
   checkSurrogateKey: checkSurrogateKey,
   checkCache: checkCache,
   rmdirRecursiveSync: rmdirRecursiveSync,
-  configureMetadata,
-  cleanPGPoolConnections
+  configureMetadata
 };
