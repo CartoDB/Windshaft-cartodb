@@ -24,7 +24,7 @@
     "Simon Martin <simon@carto.com>"
   ],
   "dependencies": {
-    "@carto/fqdn-sync": "0.2.1",
+    "@carto/fqdn-sync": "0.2.2",
     "basic-auth": "2.0.0",
     "body-parser": "1.18.3",
     "camshaft": "0.61.10",

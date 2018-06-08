@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@carto/fqdn-sync@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@carto/fqdn-sync/-/fqdn-sync-0.2.1.tgz#cd7428380c4411d523ff8f228f77affb25a5d0be"
+"@carto/fqdn-sync@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@carto/fqdn-sync/-/fqdn-sync-0.2.2.tgz#cd7c645ed66690a09249b554d254a0f53963b2dc"
 
 "@carto/mapnik@3.6.2-carto.10":
   version "3.6.2-carto.10"
