@@ -135,7 +135,7 @@ fi
 
 echo "Preparing the environment"
 cd ${BASEDIR}/test/support
-sh prepare_db.sh ${PREPARE_DB_OPTS} || die "database preparation failure"
+source prepare_db.sh ${PREPARE_DB_OPTS} || die "database preparation failure"
 cd -
 
 PATH=node_modules/.bin/:$PATH
