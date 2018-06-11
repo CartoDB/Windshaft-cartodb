@@ -25,6 +25,8 @@ while [ -n "$1" ]; do
   elif test "$1" = "--no-sql-download"; then
     DOWNLOAD_SQL_FILES=no
     shift; continue
+  else
+    shift; continue;
   fi
 done
 
