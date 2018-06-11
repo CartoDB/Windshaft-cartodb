@@ -8,6 +8,7 @@ var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var OverviewsMetadataBackend = require('../../lib/cartodb/backends/overviews-metadata');
 var FilterStatsBackend = require('../../lib/cartodb/backends/filter-stats');
 var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-overviews-adapter');
+const MapConfigAdapterProxy = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-adapter-proxy');
 
 var redisPool = new RedisPool(global.environment.redis);
 var metadataBackend = cartodbRedis({pool: redisPool});
@@ -40,9 +41,16 @@ describe('MapConfigOverviewsAdapter', function() {
         var params = {};
         var context = {};
 
-        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function(err, mapConfig) {
+        const mapConfigAdapterProxy = new MapConfigAdapterProxy(
+            'localhost', _mapConfig, params, context
+        );
+
+        mapConfigOverviewsAdapter.getMapConfig(mapConfigAdapterProxy, function(err, mapConfigAdapterProxy) {
             assert.ok(!err);
+
+            const mapConfig = mapConfigAdapterProxy.requestMapConfig;
             var layers = mapConfig.layers;
+
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
             assert.equal(layers[0].options.sql, sql);
@@ -76,9 +84,16 @@ describe('MapConfigOverviewsAdapter', function() {
         var params = {};
         var context = {};
 
-        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function(err, mapConfig) {
+        const mapConfigAdapterProxy = new MapConfigAdapterProxy(
+            'localhost', _mapConfig, params, context
+        );
+
+        mapConfigOverviewsAdapter.getMapConfig(mapConfigAdapterProxy, function(err, mapConfigAdapterProxy) {
             assert.ok(!err);
+
+            const mapConfig = mapConfigAdapterProxy.requestMapConfig;
             var layers = mapConfig.layers;
+
             assert.equal(layers.length, 1);
             assert.equal(layers[0].type, 'cartodb');
             assert.equal(layers[0].options.sql, sql);

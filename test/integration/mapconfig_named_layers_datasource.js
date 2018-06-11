@@ -5,6 +5,7 @@ var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
 var MapConfigNamedLayersAdapter = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-named-layers-adapter');
+var MapConfigAdapterProxy = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-adapter-proxy');
 
 // configure redis pool instance to use in tests
 var redisPool = new RedisPool(global.environment.redis);
@@ -296,12 +297,17 @@ describe('named_layers datasources', function() {
         it('should return a list of layers ' + testScenario.desc, function(done) {
             var params = {};
             var context = {};
-            mapConfigNamedLayersAdapter.getMapConfig(username, testScenario.config, params, context,
-                function(err, mapConfig) {
-                    assert.ifError(err);
-                    testScenario.test(err, mapConfig.layers, context.datasource, done);
-                }
-            );
+
+            const mapConfigAdapterProxy = new MapConfigAdapterProxy(username, testScenario.config, params, context);
+
+            mapConfigNamedLayersAdapter.getMapConfig(mapConfigAdapterProxy, function(err, mapConfigAdapterProxy) {
+                assert.ifError(err);
+
+                const mapConfig = mapConfigAdapterProxy.requestMapConfig;
+                const context = mapConfigAdapterProxy.context;
+
+                testScenario.test(err, mapConfig.layers, context.datasource, done);
+            });
         });
     });
 });
