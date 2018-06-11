@@ -1,6 +1,3 @@
-//Remove this file when Auth fallback is not used anymore
-// AUTH_FALLBACK
-
 const assert = require('../../support/assert');
 const testHelper = require('../../support/test_helper');
 const CartodbWindshaft = require('../../../lib/cartodb/server');
@@ -44,7 +41,7 @@ var pointSqlMaster = "select * from test_table_private_1";
 var pointSqlPublic = "select * from test_table";
 var keysToDelete;
 
-describe('authorization fallback', function () {
+describe('Basic authorization use cases', function () {
     var server;
 
     before(function () {
@@ -63,7 +60,7 @@ describe('authorization fallback', function () {
         var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
 
         assert.response(server,
-            createRequest(layergroup, 'user_previous_to_project_auth', '4444'),
+            createRequest(layergroup, 'localhost', '1234'),
             {
                 status: 200
             },
@@ -75,7 +72,7 @@ describe('authorization fallback', function () {
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
-                keysToDelete['user:user_previous_to_project_auth:mapviews:global'] = 5;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done();
             }
@@ -87,7 +84,7 @@ describe('authorization fallback', function () {
         var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
         assert.response(server,
-            createRequest(layergroup, 'user_previous_to_project_auth', 'default_public'),
+            createRequest(layergroup, 'localhost', 'default_public'),
             {
                 status: 200
             },
@@ -99,54 +96,27 @@ describe('authorization fallback', function () {
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
-                keysToDelete['user:user_previous_to_project_auth:mapviews:global'] = 5;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done();
             }
         );
     });
 
-    it("succeed with default - sending no api key token", function (done) {
+    it("fail with non-existent api key", function (done) {
         var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
         assert.response(server,
-            createRequest(layergroup, 'user_previous_to_project_auth'),
+            createRequest(layergroup, 'localhost', 'THIS-API-KEY-DOESNT-EXIST'),
             {
-                status: 200
+                status: 401
             },
             function (res, err) {
                 assert.ifError(err);
-
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
-
-                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
-                keysToDelete['user:user_previous_to_project_auth:mapviews:global'] = 5;
-
-                done();
-            }
-        );
-    });
-
-    it("succeed with non-existent api key - defaults to default", function (done) {
-        var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
-
-        assert.response(server,
-            createRequest(layergroup, 'user_previous_to_project_auth', 'THIS-API-KEY-DOESNT-EXIST'),
-            {
-                status: 200
-            },
-            function (res, err) {
-                assert.ifError(err);
-
-                var parsed = JSON.parse(res.body);
-                assert.ok(parsed.layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
-
-                keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
-                keysToDelete['user:user_previous_to_project_auth:mapviews:global'] = 5;
-
+                assert.ok(parsed.hasOwnProperty('errors'));
+                assert.equal(parsed.errors.length, 1);
+                assert.ok(parsed.errors[0].match(/Unauthorized/));
                 done();
             }
         );
@@ -156,7 +126,7 @@ describe('authorization fallback', function () {
         var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
 
         assert.response(server,
-            createRequest(layergroup, 'user_previous_to_project_auth', 'default_public'),
+            createRequest(layergroup, 'localhost', 'default_public'),
             {
                 status: 403
             },
@@ -168,19 +138,44 @@ describe('authorization fallback', function () {
         );
     });
 
-    it("fail with non-existent api key - defaults to default", function (done) {
-        var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
+    describe('No api key provided - fallback to default_public', function () {
+        it("succeed with default - public dataset", function (done) {
+            var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
-        assert.response(server,
-            createRequest(layergroup, 'user_previous_to_project_auth', 'THIS-API-KEY-DOESNT-EXIST'),
-            {
-                status: 403
-            },
-            function (res, err) {
-                assert.ifError(err);
+            assert.response(server,
+                createRequest(layergroup, 'localhost'),
+                {
+                    status: 200
+                },
+                function (res, err) {
+                    assert.ifError(err);
 
-                done();
-            }
-        );
+                    var parsed = JSON.parse(res.body);
+                    assert.ok(parsed.layergroupid);
+                    assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
+
+                    done();
+                }
+            );
+        });
+
+        it("fail with default - private dataset", function (done) {
+            var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
+
+            assert.response(server,
+                createRequest(layergroup, 'localhost'),
+                {
+                    status: 403
+                },
+                function (res, err) {
+                    assert.ifError(err);
+
+                    done();
+                }
+            );
+        });
     });
 });

@@ -261,6 +261,27 @@ describe('named-maps analysis', function() {
             );
         });
 
+        it('should fail to retrieve static map preview via layergroup ' +
+           'when filtering by invalid layers', function(done) {
+            assert.response(
+                server,
+                {
+                    url: '/api/v1/map/static/center/' + layergroupid + '/4/42/-3/320/240.png?layer=1',
+                    method: 'GET',
+                    encoding: 'binary',
+                    headers: {
+                        host: username
+                    }
+                },
+                {
+                    status: 400
+                },
+                function(res, err) {
+                    done(err);
+                }
+            );
+        });
+
         it('should return and an error requesting unsupported image format', function(done) {
             assert.response(
                 server,

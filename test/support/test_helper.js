@@ -13,7 +13,6 @@ var lzmaWorker = new LZMA();
 
 var redis = require('redis');
 var log4js = require('log4js');
-var pg = require('pg');
 const setICUEnvVariable = require('../../lib/cartodb/utils/icu_data_env_setter');
 
 // set environment specific variables
@@ -109,7 +108,6 @@ afterEach(function(done) {
         'rails:users:localhost:map_key': true,
         'rails:users:cartodb250user': true,
         'rails:users:localhost': true,
-        'rails:users:user_previous_to_project_auth': true, // AUTH_FALLBACK
         'api_keys:localhost:1234': true,
         'api_keys:localhost:default_public': true,
         'api_keys:cartodb250user:4321': true,
@@ -147,11 +145,6 @@ afterEach(function(done) {
         });
     });
 });
-
-function cleanPGPoolConnections () {
-    // TODO: this method will be replaced by psql.end
-    pg.end();
-}
 
 function deleteRedisKeys(keysToDelete, callback) {
 
@@ -215,6 +208,5 @@ module.exports = {
   checkSurrogateKey: checkSurrogateKey,
   checkCache: checkCache,
   rmdirRecursiveSync: rmdirRecursiveSync,
-  configureMetadata,
-  cleanPGPoolConnections
+  configureMetadata
 };

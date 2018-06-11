@@ -11,7 +11,7 @@ Begin by instantiating either a Named or Anonymous Map using the `layergroupid t
 #### Definition
 
 ```bash
-GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}
+GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}{{?}extra_options}
 ```
 
 #### Params
@@ -57,6 +57,9 @@ Note: you can see this endpoint as
 ```bash
 GET /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}`
 ```
+
+#### Extra options
+ * Layer: List of layers to be shown in the image (by default `all`), for example `?layer=0,1`.
 
 ### Named Map
 
