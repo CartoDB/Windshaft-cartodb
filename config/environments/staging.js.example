@@ -61,16 +61,16 @@ var config = {
 
     // Resource URLs expose endpoints to request/retrieve metadata associated to Maps: dataviews, analysis node status.
     //
-    // This URLs depend on how `base_url_detached` and `user_from_host` are configured: the application can be
+    // This URLs depend on how `routes` and `user_from_host` are configured: the application can be
     // configured to accept request with the {user} in the header host or in the request path.
     // It also might depend on the configured cdn_url via `serverMetadata.cdn_url`.
     //
     // This template allows to make the endpoints generation more flexible, the template exposes the following params:
     //  1. {{=it.cdn_url}}: will be used when `serverMetadata.cdn_url` exists.
-    //  2. {{=it.user}}: will use the username as extraced from `user_from_host` or `base_url_detached`.
+    //  2. {{=it.user}}: will use the username as extraced from `user_from_host` or `routes`.
     //  3. {{=it.port}}: will use the `port` from this very same configuration file.
     ,resources_url_templates: {
-        http: 'http://{{=it.user}}.localhost.lan:{{=it.port}}/api/v1/map',
+        http: 'http://{{=it.cdn_url}}/{{=it.user}}/api/v1/map',
         https: 'https://{{=it.cdn_url}}/{{=it.user}}/api/v1/map'
     }
 
@@ -88,7 +88,7 @@ var config = {
     ,socket_timeout: 600000
     ,enable_cors: true
     ,cache_enabled: true
-    ,log_format: ':req[X-Real-IP] :method :req[Host]:url :status :response-time ms (:res[X-Tiler-Profiler]) -> :res[Content-Type] (:res[X-Tiler-Errors])'
+    ,log_format: ':req[X-Real-IP] :method :req[Host]:url :status :response-time ms -> :res[Content-Type] (:res[X-Tiler-Profiler]) (:res[X-Tiler-Errors])'
     // If log_filename is given logs will be written
     // there, in append mode. Otherwise stdout is used (default).
     // Log file will be re-opened on receiving the HUP signal
@@ -118,7 +118,7 @@ var config = {
     ,statsd: {
         host: 'localhost',
         port: 8125,
-        prefix: 'stage.:host.',
+        prefix: 'stage.:host.', // could be hostname, better not containing dots
         cacheDns: true
         // support all allowed node-statsd options
     }
@@ -204,7 +204,8 @@ var config = {
                persist_connection: false,
                simplify_geometries: true,
                use_overviews: true, // use overviews to retrieve raster
-               max_size: 500
+               max_size: 500,
+               twkb_encoding: true
           },
 
           limits: {
@@ -267,7 +268,7 @@ var config = {
             // If filename is given logs comming from analysis client  will be written
             // there, in append mode. Otherwise 'log_filename' is used. Otherwise stdout is used (default).
             // Log file will be re-opened on receiving the HUP signal
-            filename: 'logs/analysis.log'
+            filename: 'logs/node-windshaft-analysis.log'
         },
         // Define max execution time in ms for analyses or tags
         // If analysis or tag are not found in redis this values will be used as default.
@@ -345,7 +346,7 @@ var config = {
     }
     // Settings for the health check available at /health
     ,health: {
-      enabled: false,
+      enabled: true,
       username: 'localhost',
       z: 0,
       x: 0,
