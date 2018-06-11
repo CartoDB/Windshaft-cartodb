@@ -10,8 +10,9 @@ function getVectorMapConfig(opts) {
 function _generateLayers(opts) {
     const numberOfLayers = opts.numberOfLayers || 1;
     const layers = [];
-    for (let index = 0; index <= numberOfLayers; index++) {
-        layers.push(_generateLayerConfig(opts));
+    for (let index = 0; index < numberOfLayers; index++) {
+        const layerOptions = (opts.layerOptions || {})[index] || {};
+        layers.push(_generateLayerConfig(layerOptions));
     }
     return layers;
 }
