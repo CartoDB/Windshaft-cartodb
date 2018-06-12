@@ -9,7 +9,7 @@ describe('date-wrapping', () => {
     describe('when a map instantiation has one single layer', () => {
         describe('and the layer has the "dates_as_numbers" option enabled', () => {
             beforeEach(() => {
-                const mapConfig = mapConfigFactory.getVectorMapConfig({ dates_as_numbers: true });
+                const mapConfig = mapConfigFactory.getVectorMapConfig({ layerOptions: [{ dates_as_numbers: true }]});
                 testClient = new TestClient(mapConfig);
             });
 
@@ -53,7 +53,7 @@ describe('date-wrapping', () => {
 
         describe('and the layer has the "dates_as_numbers" option disabled', () => {
             beforeEach(() => {
-                const mapConfig = mapConfigFactory.getVectorMapConfig({ dates_as_numbers: false });
+                const mapConfig = mapConfigFactory.getVectorMapConfig({ layerOptions: [{ dates_as_numbers: false }]});
                 testClient = new TestClient(mapConfig);
             });
 
