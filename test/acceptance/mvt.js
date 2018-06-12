@@ -20,7 +20,7 @@ function createMapConfig(sql = TestClient.SQL.ONE_POINT) {
 }
 
 describe('mvt (mapnik)', mvt(false));
-if (process.env.POSTGIS_VERSION === '2.4') {
+if (process.env.POSTGIS_VERSION >= '20400') {
     describe('mvt (postgis)', mvt(true));
 }
 

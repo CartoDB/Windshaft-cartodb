@@ -9,7 +9,7 @@ const suites = [{
     usePostGIS: false
 }];
 
-if (process.env.POSTGIS_VERSION === '2.4') {
+if (process.env.POSTGIS_VERSION >= '20400') {
     suites.push({
         desc: 'postgis',
         usePostGIS: true

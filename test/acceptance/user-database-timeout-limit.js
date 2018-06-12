@@ -440,7 +440,7 @@ describe('user database timeout limit', function () {
                 });
             });
 
-            if (process.env.POSTGIS_VERSION === '2.4') {
+            if (process.env.POSTGIS_VERSION >= '20400') {
                 describe('fetching vector tiles via PostGIS renderer', function() {
                     const usePostGIS = true;
                     const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;

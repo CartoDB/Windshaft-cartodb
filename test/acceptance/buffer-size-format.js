@@ -152,7 +152,7 @@ describe('buffer size per format', function () {
                 });
             });
         };
-        if (process.env.POSTGIS_VERSION === '2.4' && test.format === 'mvt'){
+        if (process.env.POSTGIS_VERSION >= '20400' && test.format === 'mvt'){
             testFn(true);
         }
         testFn(false);
@@ -465,7 +465,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
                     });
                 });
         };
-        if (process.env.POSTGIS_VERSION === '2.4' && test.format === 'mvt'){
+        if (process.env.POSTGIS_VERSION >= '20400' && test.format === 'mvt'){
             testFn(true);
         }
         testFn(false);
