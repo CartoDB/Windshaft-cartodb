@@ -2353,3 +2353,5 @@ describe('aggregation', function () {
         });
     });
 });
+
+// TODO: filters are applied only over threshold (always if no threshold)
