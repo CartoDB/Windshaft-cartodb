@@ -177,5 +177,7 @@ describe('pre-aggregation filters', function () {
         // can be combined with post-aggregation filters
         // metadata shows if filters were applied
         // metadata stats are not affected by filters
+        // filters should work with queries that use mapnik tokens
+        // filters should work with sql_wrap (?)
     });
 });
