@@ -278,7 +278,7 @@ describe('date-wrapping', () => {
 
         afterEach(done => testClient.drain(done));
 
-        it.only('should work', done => {
+        it('should work', done => {
             testClient.getLayergroup(function(err, layergroup) {
                 assert.ifError(err);
                 assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
@@ -287,7 +287,7 @@ describe('date-wrapping', () => {
 
         });
 
-        it.only('should return correct tiles', done => {
+        it('should return correct tiles', done => {
             testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
                 const expected = [
                     {
