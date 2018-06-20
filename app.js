@@ -1,3 +1,5 @@
+process.env.UV_THREADPOOL_SIZE = 96;
+
 var http = require('http');
 var https = require('https');
 var path = require('path');
@@ -57,10 +59,10 @@ if (!availableEnvironments[ENVIRONMENT]){
     process.exit(1);
 }
 
-process.env.NODE_ENV = ENVIRONMENT;
-if (global.environment.uv_threadpool_size) {
-    process.env.UV_THREADPOOL_SIZE = global.environment.uv_threadpool_size;
-}
+// process.env.NODE_ENV = ENVIRONMENT;
+// if (global.environment.uv_threadpool_size) {
+//     process.env.UV_THREADPOOL_SIZE = global.environment.uv_threadpool_size;
+// }
 
 // set global HTTP and HTTPS agent default configurations
 // ref https://nodejs.org/api/http.html#http_new_agent_options
