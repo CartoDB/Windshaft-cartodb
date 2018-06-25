@@ -4,7 +4,7 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 
 describe('layergroup metadata', function () {
-    [1234, false].forEach(api_key => {
+    [1234, 'default_public', false].forEach(api_key => {
         it(`tiles base urls ${api_key ? 'with api key' : 'without api key'}`, function (done) {
             const mapConfig = {
                 version: '1.7.0',
