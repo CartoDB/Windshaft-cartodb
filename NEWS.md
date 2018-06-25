@@ -3,6 +3,9 @@
 ## 6.2.0
 Released 2018-mm-dd
 
+Notice:
+- This release changes the way that authentication works internally. You'll need to run `bundle exec rake carto:api_key:create_default` in your development environment to keep working.
+
 New features:
 - CI tests with Ubuntu Xenial + PostgreSQL 10.1 and Ubuntu Precise + PostgreSQL 9.5
 - Upgrades Windshaft to [4.8.1](https://github.com/CartoDB/Windshaft/blob/4.8.1/NEWS.md#version-481) which includes:
@@ -13,7 +16,7 @@ New features:
   - Fix a bug with zero length lines not being rendered when using the marker symbolizer.
 - Upgrades Camshaft to [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
   - Use Dollar-Quoted String Constants to avoid Syntax Error while running moran analyses. [0.61.10](https://github.com/CartoDB/camshaft/releases/tag/0.61.10)
-  - Quote name columns when performing trade area analysis to avoid Syntax Errors. [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11) 
+  - Quote name columns when performing trade area analysis to avoid Syntax Errors. [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11)
 - Update other deps:
   - body-parser: 1.18.3
   - cartodb-psql: 0.11.0
