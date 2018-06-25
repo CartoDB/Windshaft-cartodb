@@ -18,16 +18,18 @@ function _generateLayers(opts) {
 }
 
 function _generateLayerConfig(opts) {
+    const additionalColumns = opts.additionalColumns ? opts.additionalColumns.join(',')+',' : '';
     return {
         type: 'mapnik',
         options: {
             sql: `
             SELECT
+                ${additionalColumns}
                 (DATE '2018-06-01' + x) as date,
                 x as cartodb_id,
                 st_makepoint(x * 10, x * 10) as the_geom,
                 st_makepoint(x * 10, x * 10) as the_geom_webmercator
-            FROM 
+            FROM
                 generate_series(0, 1) x`,
             aggregation: {
                 columns: {},
