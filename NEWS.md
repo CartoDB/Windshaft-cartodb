@@ -13,7 +13,7 @@ New features:
   - Fix a bug with zero length lines not being rendered when using the marker symbolizer.
 - Upgrades Camshaft to [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
   - Use Dollar-Quoted String Constants to avoid Syntax Error while running moran analyses. [0.61.10](https://github.com/CartoDB/camshaft/releases/tag/0.61.10)
-  - Quote name columns when performing trade area analysis to avoid Syntax Errors. [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11) 
+  - Quote name columns when performing trade area analysis to avoid Syntax Errors. [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11)
 - Update other deps:
   - body-parser: 1.18.3
   - cartodb-psql: 0.11.0
@@ -35,6 +35,7 @@ New features:
   - strftime: 0.10.0
 - Optional instantiation metadata stats (https://github.com/CartoDB/Windshaft-cartodb/pull/952)
 - Experimental dates_as_numbers support
+- Tiles base urls with api key
 
 Bug Fixes:
 - Validates tile coordinates (z/x/y) from request params to be a valid integer value.
