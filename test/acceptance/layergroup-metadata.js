@@ -5,7 +5,7 @@ const TestClient = require('../support/test-client');
 
 describe('layergroup metadata', function () {
     [1234, 'default_public', false].forEach(api_key => {
-        it(`tiles base urls ${api_key ? 'with api key' : 'without api key'}`, function (done) {
+        it(`tiles base urls ${api_key ? `with api key: ${api_key}` : 'without api key'}`, function (done) {
             const mapConfig = {
                 version: '1.7.0',
                 layers: [
