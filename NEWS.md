@@ -38,6 +38,7 @@ New features:
   - strftime: 0.10.0
 - Optional instantiation metadata stats (https://github.com/CartoDB/Windshaft-cartodb/pull/952)
 - Experimental dates_as_numbers support
+- Tiles base urls with api key
 
 Bug Fixes:
 - Validates tile coordinates (z/x/y) from request params to be a valid integer value.
