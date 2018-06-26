@@ -3,6 +3,9 @@
 ## 6.2.0
 Released 2018-mm-dd
 
+Notice:
+- This release changes the way that authentication works internally. You'll need to run `bundle exec rake carto:api_key:create_default` in your development environment to keep working.
+
 New features:
 - CI tests with Ubuntu Xenial + PostgreSQL 10.1 and Ubuntu Precise + PostgreSQL 9.5
 - Upgrades Windshaft to [4.8.1](https://github.com/CartoDB/Windshaft/blob/4.8.1/NEWS.md#version-481) which includes:

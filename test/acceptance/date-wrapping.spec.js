@@ -262,4 +262,55 @@ describe('date-wrapping', () => {
             });
         });
     });
+
+    describe('when sql queries use mapnik tokens', () => {
+        beforeEach(() => {
+            const mapConfig = mapConfigFactory.getVectorMapConfig({
+                layerOptions: [{
+                    dates_as_numbers: true,
+                    additionalColumns: [
+                        '!scale_denominator! AS sc'
+                    ]
+                }]
+            });
+            testClient = new TestClient(mapConfig);
+        });
+
+        afterEach(done => testClient.drain(done));
+
+        it('should work', done => {
+            testClient.getLayergroup(function(err, layergroup) {
+                assert.ifError(err);
+                assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
+                done();
+            });
+
+        });
+
+        it('should return correct tiles', done => {
+            testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
+                const expected = [
+                    {
+                        type: 'Feature',
+                        id: 1,
+                        geometry: { type: 'Point', coordinates: [0, 0] },
+                        properties: { cartodb_id: 0, date: 1527810000, sc: 559082000 }
+                    },
+                    {
+                        type: 'Feature',
+                        id: 2,
+                        geometry: { type: 'Point', coordinates: [0, 0] },
+                        properties: { cartodb_id: 1, date: 1527900000, sc: 559082000 }
+                    }
+                ];
+                const actual = JSON.parse(mvt.toGeoJSONSync(0)).features;
+
+                assert.deepEqual(actual, expected);
+                done();
+            });
+        });
+    });
+
 });
+
+
