@@ -58,7 +58,7 @@ function getMapConfig(operation, lastNumber) {
     ]);
 }
 
-describe('formula-dataview: should filter infinities out and count them in the summary', function() {
+describe('formula-dataview: special float values', function() {
     describe('easy numbers', function() { // not needed, but I keep it here to help human calc
         afterEach(function(done) {
             if (this.testClient) {
