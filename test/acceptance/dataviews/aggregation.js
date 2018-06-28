@@ -288,7 +288,7 @@ describe('aggregation-dataview: special float values', function() {
     filters.forEach(function (filter) {
         it('should handle special float values using filter: ' + JSON.stringify(filter), function(done) {
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('val_aggregation', { own_filter: 0 }, function(err, dataview) {
+            this.testClient.getDataview('val_aggregation', filter, function(err, dataview) {
                 assert.ifError(err);
                 assert.ok(dataview.infinities === (250 + 250));
                 assert.ok(dataview.nans === 250);
@@ -303,7 +303,7 @@ describe('aggregation-dataview: special float values', function() {
 
         it('should handle special numeric values using filter: ' + JSON.stringify(filter), function(done) {
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('sum_aggregation_numeric', { own_filter: 0 }, function(err, dataview) {
+            this.testClient.getDataview('sum_aggregation_numeric', filter, function(err, dataview) {
                 assert.ifError(err);
                 assert.ok(dataview.nans === 333);
                 assert.ok(dataview.categories.length === 2);
