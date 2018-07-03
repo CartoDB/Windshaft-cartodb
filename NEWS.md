@@ -28,6 +28,7 @@ New features:
   - request: 2.87.0
   - semver: 5.5.0
   - step: 1.0.0
+  - turbo-carto: 0.20.3
   - yargs: 11.1.0
 - Update devel deps:
   - istanbul: 0.4.5
