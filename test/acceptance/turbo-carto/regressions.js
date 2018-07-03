@@ -380,7 +380,7 @@ describe('turbo-carto regressions', function() {
         });
     });
 
-    describe.only('Buckets calculation', function () {
+    describe('Buckets calculation', function () {
         afterEach(function (done) {
             if (this.testClient) {
                 this.testClient.drain(done);
