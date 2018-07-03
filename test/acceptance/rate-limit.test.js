@@ -144,7 +144,8 @@ function assertRateLimitRequest (status, limit, remaining, reset, retry, done) {
             assert.ifError(err);
         } else {
             assert.ok(err);
-            assert.equal(err.message, 'You are over platform\'s limits. Please contact us to know more details');
+            assert.equal(err.message, 'You are over platform\'s limits: too many requests.' +
+                                      ' Please contact us to know more details');
             assert.equal(err.http_status, 429);
             assert.equal(err.type, 'limit');
             assert.equal(err.subtype, 'rate-limit');
