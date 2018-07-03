@@ -23,6 +23,9 @@ const validationPointSleepSql = `
         2 val
 `;
 
+const renderTimeoutErrorMessage = 'You are over platform\'s limits: Render timeout error.' +
+    ' Contact CARTO support for more details.';
+
 const createMapConfig = ({
     version = '1.6.0',
     type = 'cartodb',
@@ -96,11 +99,11 @@ describe('user render timeout limit', function () {
                 assert.ifError(err);
 
                 assert.deepEqual(timeoutError, {
-                    errors: ["You are over platform\'s limits. Please contact us to know more details"],
+                    errors: [renderTimeoutErrorMessage],
                     errors_with_context: [{
                         type: 'limit',
                         subtype: 'render',
-                        message: "You are over platform\'s limits. Please contact us to know more details",
+                        message: renderTimeoutErrorMessage,
                         layer: {
                             id: "layer0",
                             index: 0,
@@ -188,11 +191,11 @@ describe('user render timeout limit', function () {
                     assert.ifError(err);
 
                     assert.deepEqual(timeoutError, {
-                        errors: ["You are over platform\'s limits. Please contact us to know more details"],
+                        errors: [renderTimeoutErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'render',
-                            message: "You are over platform\'s limits. Please contact us to know more details"
+                            message: renderTimeoutErrorMessage
                         }]
                     });
 
@@ -282,11 +285,11 @@ describe('user render timeout limit', function () {
                 assert.ifError(err);
 
                 assert.deepEqual(tile, {
-                    errors: ['You are over platform\'s limits. Please contact us to know more details'],
+                    errors: [renderTimeoutErrorMessage],
                     errors_with_context: [{
                         type: 'limit',
                         subtype: 'render',
-                        message: 'You are over platform\'s limits. Please contact us to know more details'
+                        message: renderTimeoutErrorMessage
                     }]
                 });
 
@@ -384,11 +387,11 @@ describe('user render timeout limit', function () {
                     assert.ifError(err);
 
                     assert.deepEqual(timeoutError, {
-                        errors: ["You are over platform\'s limits. Please contact us to know more details"],
+                        errors: [renderTimeoutErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'render',
-                            message: "You are over platform\'s limits. Please contact us to know more details"
+                            message: renderTimeoutErrorMessage
                         }]
                     });
 
