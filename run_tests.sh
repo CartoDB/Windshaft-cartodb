@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 OPT_CREATE_REDIS=yes # create the redis test environment
 OPT_CREATE_PGSQL=yes # create the PostgreSQL test environment
