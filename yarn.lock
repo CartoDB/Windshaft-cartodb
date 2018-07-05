@@ -333,8 +333,8 @@ cartodb-query-tables@0.3.0:
   resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.3.0.tgz#56e18d869666eb2e8e2cb57d0baf3acc923f8756"
 
 cartodb-redis@cartodb/node-cartodb-redis#fix-rate-limit-endpoint-several-limits:
-  version "1.0.2"
-  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/4a2ca792845d2aaafcf5644d83b9d578292c956b"
+  version "2.0.1"
+  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/94b058216cb6837d80aabe36406e4ca9b6023477"
   dependencies:
     dot "~1.0.2"
     redis-mpool "^0.5.0"
