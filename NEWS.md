@@ -45,7 +45,11 @@ Bug Fixes:
 - Static maps fails for unsupported formats
 - Handling errors extracting the column type on dataviews
 - Fix `meta.stats.estimatedFeatureCount` for aggregations and queries with tokens
+- Fix numeric histogram bounds when `start` and `end` are specified (#991)
 - Static maps filters correctly if `layer` option is passed in the url.
+
+Announcements:
+  * Improve error message when the DB query is over the user's limits
 
 ## 6.1.0
 Released 2018-04-16
