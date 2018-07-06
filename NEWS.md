@@ -20,6 +20,7 @@ New features:
 - Update other deps:
   - body-parser: 1.18.3
   - cartodb-psql: 0.11.0
+  - cartodb-redis: 2.0.1
   - dot: 1.1.2
   - express: 4.16.3
   - lru-cache: 4.1.3
