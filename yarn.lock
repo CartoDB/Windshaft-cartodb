@@ -15,7 +15,7 @@
     node-pre-gyp "0.10.0"
     protozero "1.5.1"
 
-"@carto/tilelive-bridge@github:cartodb/tilelive-bridge#2.5.1-cdb9":
+"@carto/tilelive-bridge@cartodb/tilelive-bridge#2.5.1-cdb9":
   version "2.5.1-cdb9"
   resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/5129e43223cb55daed31373c7a36c98eb6178fc1"
   dependencies:
@@ -27,7 +27,7 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz#70237b9774095ed1cfdbcea7a8fd1fc82b2691f2"
 
-"abaculus@github:cartodb/abaculus#2.0.3-cdb10":
+abaculus@cartodb/abaculus#2.0.3-cdb10:
   version "2.0.3-cdb10"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/90d537028bb8af8a35e7a40c46493066dd8a76b3"
   dependencies:
@@ -280,7 +280,7 @@ camshaft@0.61.11:
     dot "^1.0.3"
     request "2.85.0"
 
-"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
+canvas@cartodb/node-canvas#1.6.2-cdb2:
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -298,7 +298,7 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-"carto@github:cartodb/carto#0.15.1-cdb3":
+carto@cartodb/carto#0.15.1-cdb3:
   version "0.15.1-cdb3"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
@@ -306,7 +306,7 @@ carto@0.16.3:
     optimist "~0.6.0"
     underscore "1.8.3"
 
-"carto@github:cartodb/carto#master":
+carto@cartodb/carto#master:
   version "0.15.1"
   resolved "https://codeload.github.com/cartodb/carto/tar.gz/31abb8bee02df605521247b0223d508320f7d4c8"
   dependencies:
@@ -332,9 +332,9 @@ cartodb-query-tables@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.3.0.tgz#56e18d869666eb2e8e2cb57d0baf3acc923f8756"
 
-cartodb-redis@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/cartodb-redis/-/cartodb-redis-1.0.1.tgz#b4ecf2d9460170a5e7928dc0b97d2de44772b6d2"
+cartodb-redis@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/cartodb-redis/-/cartodb-redis-2.0.1.tgz#6fec0ecbf4aae2603446115559f73e714052c7c7"
   dependencies:
     dot "~1.0.2"
     redis-mpool "^0.5.0"
@@ -1437,7 +1437,7 @@ mapnik-reference@~8.5.3:
   dependencies:
     semver "^5.1.0"
 
-"mapnik-vector-tile@github:cartodb/mapnik-vector-tile#v1.6.1-carto.1":
+mapnik-vector-tile@cartodb/mapnik-vector-tile#v1.6.1-carto.1:
   version "1.6.1-carto.1"
   resolved "https://codeload.github.com/cartodb/mapnik-vector-tile/tar.gz/0111f7117946179d62ec7a6eba2f4e9fb355d05e"
 
@@ -1895,7 +1895,7 @@ pg-types@1.*:
     postgres-date "~1.0.0"
     postgres-interval "^1.1.0"
 
-"pg@github:CartoDB/node-postgres#6.4.2-cdb1":
+pg@CartoDB/node-postgres#6.4.2-cdb1:
   version "6.4.2"
   resolved "https://codeload.github.com/CartoDB/node-postgres/tar.gz/449fac1d6da711ffcc6694ae3c89f85244f48bdc"
   dependencies:
@@ -2603,7 +2603,7 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb14":
+tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb14:
   version "0.6.18-cdb14"
   resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/6d06f728833d3e34d1adcd05567b3f4379f547bb"
   dependencies:

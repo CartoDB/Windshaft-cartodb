@@ -30,7 +30,7 @@
     "camshaft": "0.61.11",
     "cartodb-psql": "0.11.0",
     "cartodb-query-tables": "0.3.0",
-    "cartodb-redis": "1.0.1",
+    "cartodb-redis": "2.0.1",
     "debug": "3.1.0",
     "dot": "1.1.2",
     "express": "4.16.3",
