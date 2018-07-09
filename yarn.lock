@@ -2625,9 +2625,9 @@ turbo-carto@0.19.0:
     postcss "5.0.19"
     postcss-value-parser "3.3.0"
 
-turbo-carto@CartoDB/turbo-carto#buckets-calc:
+turbo-carto@0.20.3:
   version "0.20.3"
-  resolved "https://codeload.github.com/CartoDB/turbo-carto/tar.gz/c7800628361f3c9bacf27296ebd4cfe283979d79"
+  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.20.3.tgz#ab9ee1357f63a3e3f317a31f92f81adc5ea97475"
   dependencies:
     cartocolor "4.0.0"
     colorbrewer "1.0.0"
