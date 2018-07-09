@@ -380,4 +380,123 @@ describe('turbo-carto regressions', function() {
         });
     });
 
+    describe('Buckets calculation', function () {
+        afterEach(function (done) {
+            if (this.testClient) {
+                this.testClient.drain(done);
+            } else {
+                done();
+            }
+        });
+
+        const scenarios = [
+            {
+                numBuckets: 1,
+                bucketResponse: [
+                    {
+                        filter: {
+                            type: 'range',
+                            start: 0,
+                            end: 8
+                        },
+                        value: 1
+                    }
+                ],
+            },
+            {
+                numBuckets: 2,
+                bucketResponse: [
+                    {
+                        filter: {
+                            type: 'range',
+                            start: 0,
+                            end: 3
+                        },
+                        value: 1
+                    },
+                    {
+                        filter: {
+                            type: 'range',
+                            start: 3,
+                            end: 8
+                        },
+                        value: 20
+                    }
+                ],
+            },
+            {
+                numBuckets: 3,
+                bucketResponse: [
+                    {
+                        filter: {
+                            type: 'range',
+                            start: 0,
+                            end: 2
+                        },
+                        value: 1
+                    },
+                    {
+                        filter: {
+                            type: 'range',
+                            start: 2,
+                            end: 5
+                        },
+                        value: 10.5
+                    },
+                    {
+                        filter: {
+                            type: 'range',
+                            start: 5,
+                            end: 8
+                        },
+                        value: 20
+                    }
+                ],
+            },
+        ];
+
+        scenarios.forEach(function (scenario) {
+            it('Buckets: ' + scenario.numBuckets, function (done) {
+                const bucketsMapConfig = makeMapconfig({ numQuantiles: scenario.numBuckets });
+
+                this.testClient = new TestClient(bucketsMapConfig);
+                this.testClient.getLayergroup({ response: OK_RESPONSE }, function (err, layergroup) {
+                    const rule = layergroup.metadata.layers[0].meta.cartocss_meta.rules[0];
+
+                    assert.ok(!err, err);
+                    assert.equal(rule.buckets.length, scenario.numBuckets);
+                    assert.deepEqual(rule.buckets, scenario.bucketResponse);
+
+                    done();
+                });
+            });
+        });        
+
+        function makeMapconfig({numQuantiles = 1}) {
+            return {
+                "version": "1.4.0",
+                "layers": [
+                    {
+                        "type": 'mapnik',
+                        "options": {
+                            "cartocss_version": '2.3.0',
+                            "sql": 'SELECT * FROM populated_places_simple_reduced',
+                            "cartocss": `#layer {\n  
+                                        marker-width: ramp([labelrank], range(1, 20), quantiles(${numQuantiles}));\n  
+                                        marker-fill: #EE4D5A;\n  marker-fill-opacity: 0.9;\n  
+                                        marker-allow-overlap: true;\n  marker-line-width: 1;\n  
+                                        marker-line-color: #FFFFFF;\n  marker-line-opacity: 1;\n}`,
+                        }
+                    }
+                ]
+            };
+        }
+
+        const OK_RESPONSE = {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+    });
 });
