@@ -47,7 +47,7 @@
     "semver": "5.5.0",
     "step": "1.0.0",
     "step-profiler": "0.3.0",
-    "turbo-carto": "github:cartodb/turbo-carto#buckets-calc",
+    "turbo-carto": "0.2.30",
     "underscore": "1.6.0",
     "windshaft": "4.8.1",
     "yargs": "11.1.0"
