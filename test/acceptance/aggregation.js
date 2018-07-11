@@ -2139,138 +2139,134 @@ describe('aggregation', function () {
             });
 
             ['default', 'centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                // describe('without points between tiles', function () {
-                    it(`aggregated ids are unique for ${placement} aggregation`, function (done) {
-                        this.mapConfig = {
-                            version: '1.6.0',
-                            buffersize: { 'mvt': 0 },
-                            layers: [
-                                {
-                                    type: 'cartodb',
+                it(`for ${placement} and no points between tiles has unique ids`, function (done) {
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
 
-                                    options: {
-                                        sql: POINTS_SQL_0,
-                                        resolution: 1,
-                                        aggregation: {
-                                            threshold: 1
-                                        }
+                                options: {
+                                    sql: POINTS_SQL_0,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
                                     }
                                 }
-                            ]
-                        };
-                        if (placement !== 'default') {
-                            this.mapConfig.layers[0].options.aggregation.placement = placement;
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getTile(1, 0, 1, { format: 'mvt' },  (err, res, mvt) => {
+                        if (err) {
+                            return done(err);
                         }
 
-                        this.testClient = new TestClient(this.mapConfig);
+                        const tile1 = JSON.parse(mvt.toGeoJSONSync(0));
 
-                        this.testClient.getTile(1, 0, 1, { format: 'mvt' },  (err, res, mvt) => {
+                        assert.ok(Array.isArray(tile1.features));
+                        assert.ok(tile1.features.length > 0);
+
+                        this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
                             if (err) {
                                 return done(err);
                             }
 
-                            const tile1 = JSON.parse(mvt.toGeoJSONSync(0));
+                            const tile2 = JSON.parse(mvt.toGeoJSONSync(0));
 
-                            assert.ok(Array.isArray(tile1.features));
-                            assert.ok(tile1.features.length > 0);
+                            assert.ok(Array.isArray(tile2.features));
+                            assert.ok(tile2.features.length > 0);
 
-                            this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
-                                if (err) {
-                                    return done(err);
-                                }
+                            const tile1Ids = tile1.features.map(f => f.properties.cartodb_id);
+                            const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
+                            const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
 
-                                const tile2 = JSON.parse(mvt.toGeoJSONSync(0));
+                            assert.equal(repeatedIds.length, 0);
 
-                                assert.ok(Array.isArray(tile2.features));
-                                assert.ok(tile2.features.length > 0);
-
-                                const tile1Ids = tile1.features.map(f => f.properties.cartodb_id);
-                                const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
-                                const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
-
-                                assert.equal(repeatedIds.length, 0);
-
-                                done();
-                            });
-
+                            done();
                         });
-                    });
-                // });
-                // describe('with points between tiles', function () {
-                    it(`aggregated ids are unique for ${placement} aggregation save for points between tiles`, function (done) {
-                        this.mapConfig = {
-                            version: '1.6.0',
-                            buffersize: { 'mvt': 0 },
-                            layers: [
-                                {
-                                    type: 'cartodb',
 
-                                    options: {
-                                        sql: POINTS_SQL_1,
-                                        resolution: 1,
-                                        aggregation: {
-                                            threshold: 1
-                                        }
+                    });
+                });
+                it(`for ${placement} has unique ids save between tiles`, function (done) {
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_1,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
                                     }
                                 }
-                            ]
-                        };
-                        if (placement !== 'default') {
-                            this.mapConfig.layers[0].options.aggregation.placement = placement;
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getTile(1, 0, 1, { format: 'mvt' },  (err, res, mvt) => {
+                        if (err) {
+                            return done(err);
                         }
 
-                        this.testClient = new TestClient(this.mapConfig);
+                        const tile1 = JSON.parse(mvt.toGeoJSONSync(0));
 
-                        this.testClient.getTile(1, 0, 1, { format: 'mvt' },  (err, res, mvt) => {
+                        assert.ok(Array.isArray(tile1.features));
+                        assert.ok(tile1.features.length > 0);
+
+                        this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
                             if (err) {
                                 return done(err);
                             }
 
-                            const tile1 = JSON.parse(mvt.toGeoJSONSync(0));
+                            const tile2 = JSON.parse(mvt.toGeoJSONSync(0));
 
-                            assert.ok(Array.isArray(tile1.features));
-                            assert.ok(tile1.features.length > 0);
+                            assert.ok(Array.isArray(tile2.features));
+                            assert.ok(tile2.features.length > 0);
 
-                            this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
-                                if (err) {
-                                    return done(err);
-                                }
+                            const tile1Ids = tile1.features.map(f => f.properties.cartodb_id);
+                            const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
+                            const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
 
-                                const tile2 = JSON.parse(mvt.toGeoJSONSync(0));
-
-                                assert.ok(Array.isArray(tile2.features));
-                                assert.ok(tile2.features.length > 0);
-
-                                const tile1Ids = tile1.features.map(f => f.properties.cartodb_id);
-                                const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
-                                const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
-
-                                // It is not guaranteed that features appear in a single tile:
-                                // features on the border of tiles can appear in multiple tiles
-                                if (repeatedIds.length > 0) {
-                                    repeatedIds.forEach(id => {
-                                        const tile1Features = tile1.features.filter(f => f.properties.cartodb_id === id);
-                                        const tile2Features = tile2.features.filter(f => f.properties.cartodb_id === id);
-                                        // repetitions cannot occur inside a tile
-                                        assert.equal(tile1Features.length, 1);
-                                        assert.equal(tile2Features.length, 1);
-                                        const feature1 = tile1Features[0];
-                                        const feature2 = tile2Features[0];
-                                        // features should be identical (geometry and properties)
-                                        assert.deepEqual(feature1.properties, feature2.properties);
-                                        assert.deepEqual(feature1.geometry, feature2.geometry);
-                                        // and geometry should be on the border;
-                                        // for the dataset and zoom 1, only point with cartodb_id=4 (0,0)
-                                        assert.equal(feature1.properties.cartodb_id, 4);
-                                        assert.equal(feature2.properties.cartodb_id, 4);
-                                    });
-                                }
-                                done();
-                            });
-
+                            // It is not guaranteed that features appear in a single tile:
+                            // features on the border of tiles can appear in multiple tiles
+                            if (repeatedIds.length > 0) {
+                                repeatedIds.forEach(id => {
+                                    const tile1Features = tile1.features.filter(f => f.properties.cartodb_id === id);
+                                    const tile2Features = tile2.features.filter(f => f.properties.cartodb_id === id);
+                                    // repetitions cannot occur inside a tile
+                                    assert.equal(tile1Features.length, 1);
+                                    assert.equal(tile2Features.length, 1);
+                                    const feature1 = tile1Features[0];
+                                    const feature2 = tile2Features[0];
+                                    // features should be identical (geometry and properties)
+                                    assert.deepEqual(feature1.properties, feature2.properties);
+                                    assert.deepEqual(feature1.geometry, feature2.geometry);
+                                    // and geometry should be on the border;
+                                    // for the dataset and zoom 1, only point with cartodb_id=4 (0,0)
+                                    assert.equal(feature1.properties.cartodb_id, 4);
+                                    assert.equal(feature2.properties.cartodb_id, 4);
+                                });
+                            }
+                            done();
                         });
+
                     });
-                // });
+                });
             });
 
             ['default', 'centroid', 'point-sample', 'point-grid'].forEach(placement => {
