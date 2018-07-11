@@ -188,6 +188,7 @@ describe('regressions', function() {
         };
 
         const testClient = new TestClient(template, apikeyToken);
+        testClient.keysToDelete['map_tpl|localhost'] = 0;
 
         const params = {
             own_filter: 1,

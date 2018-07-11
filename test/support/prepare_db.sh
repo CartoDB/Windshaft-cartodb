@@ -16,13 +16,14 @@ DOWNLOAD_SQL_FILES=yes
 PG_PARALLEL=$(pg_config --version | (awk '{$2*=1000; if ($2 >= 9600) print 1; else print 0;}' 2> /dev/null || echo 0))
 
 while [ -n "$1" ]; do
-  if test "$1" = "--skip-pg"; then
+  OPTION=$(echo "$1" | tr -d '[:space:]')
+  if [[ "$OPTION" == "--skip-pg" ]]; then
     PREPARE_PGSQL=no
     shift; continue
-  elif test "$1" = "--skip-redis"; then
+  elif [[ "$OPTION" == "--skip-redis" ]]; then
     PREPARE_REDIS=no
     shift; continue
-  elif test "$1" = "--no-sql-download"; then
+  elif [[ "$OPTION" == "--no-sql-download" ]]; then
     DOWNLOAD_SQL_FILES=no
     shift; continue
   else
@@ -95,12 +96,12 @@ if test x"$PREPARE_PGSQL" = xyes; then
   LOCAL_SQL_SCRIPTS='analysis_catalog windshaft.test gadm4 countries_null_values ported/populated_places_simple_reduced cdb_analysis_check cdb_invalidate_varnish'
   REMOTE_SQL_SCRIPTS='CDB_QueryStatements CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_ZoomFromScale CDB_OverviewsSupport CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ CDB_EstimateRowCount CDB_RectangleGrid'
 
-  CURL_ARGS=""
-  for i in ${REMOTE_SQL_SCRIPTS}
-  do
-    CURL_ARGS="${CURL_ARGS}\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql "
-  done
   if test x"$DOWNLOAD_SQL_FILES" = xyes; then
+    CURL_ARGS=""
+    for i in ${REMOTE_SQL_SCRIPTS}
+    do
+        CURL_ARGS="${CURL_ARGS}\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql "
+    done
     echo "Downloading and updating: ${REMOTE_SQL_SCRIPTS}"
     echo ${CURL_ARGS} | xargs curl -L -s
   fi
