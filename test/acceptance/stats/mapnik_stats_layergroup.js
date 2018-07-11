@@ -56,6 +56,17 @@ describe('Create mapnik layergroup', function() {
         }
     };
 
+    var mapnikLayer100 = {
+        type: 'mapnik',
+        options: {
+            sql: [
+                'SELECT * FROM test_table_100'
+            ].join(''),
+            cartocss_version: cartocssVersion,
+            cartocss: cartocss
+        }
+    };
+
     var httpLayer = {
         type: 'http',
         options: {
@@ -512,8 +523,8 @@ describe('Create mapnik layergroup', function() {
         var testClient = new TestClient({
             version: '1.4.0',
             layers: [
-                layerWithMetadata(mapnikLayer4, {
-                    sample: { num_rows: 3 }
+                layerWithMetadata(mapnikLayer100, {
+                    sample: { num_rows: 30 }
                 })
             ]
         });
@@ -521,9 +532,9 @@ describe('Create mapnik layergroup', function() {
         testClient.getLayergroup(function(err, layergroup) {
             assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
             assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
-            const expectedCols = [ 'cartodb_id', 'address', 'the_geom', 'the_geom_webmercator' ].sort();
+            const expectedCols = [ 'cartodb_id', 'value', 'the_geom', 'the_geom_webmercator' ].sort();
             assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
             testClient.drain(done);
         });
@@ -533,10 +544,10 @@ describe('Create mapnik layergroup', function() {
         var testClient = new TestClient({
             version: '1.4.0',
             layers: [
-                layerWithMetadata(mapnikLayer4, {
+                layerWithMetadata(mapnikLayer100, {
                     sample: {
-                        num_rows: 3,
-                        include_columns:  [ 'cartodb_id', 'address', 'the_geom' ]
+                        num_rows: 30,
+                        include_columns:  [ 'cartodb_id', 'the_geom' ]
                     }
                 })
             ]
@@ -545,9 +556,9 @@ describe('Create mapnik layergroup', function() {
         testClient.getLayergroup(function(err, layergroup) {
             assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
             assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
-            const expectedCols = [ 'cartodb_id', 'address', 'the_geom' ].sort();
+            const expectedCols = [ 'cartodb_id', 'the_geom' ].sort();
             assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
             testClient.drain(done);
         });
