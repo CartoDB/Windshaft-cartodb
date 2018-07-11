@@ -112,10 +112,10 @@ describe('aggregation', function () {
     const POINTS_SQL_PAIRS = `
     -- Generate pairs of near points
     select
-        x + 4 as cartodb_id,
-        st_setsrid(st_makepoint(Floor(x/2)*10 + x/1000.0, Floor(x/2)*10 + x/1000.0), 4326) as the_geom,
+        x + 7 as cartodb_id,
+        st_setsrid(st_makepoint(Floor(x/2)*10 + 9E-3*(x % 2), Floor(x/2)*10 + 9E-3*(x % 2)), 4326) as the_geom,
         st_transform(
-            st_setsrid(st_makepoint(Floor(x/2)*10 + x/1000.0, Floor(x/2)*10 + x/1000.0),4326),
+            st_setsrid(st_makepoint(Floor(x/2)*10 + 9E-3*(x % 2), Floor(x/2)*10 + 9E-3*(x % 2)),4326),
             3857) as the_geom_webmercator,
         x as value
     from generate_series(-6, 6) x
