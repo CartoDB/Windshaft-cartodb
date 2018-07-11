@@ -113,10 +113,23 @@ describe('aggregation', function () {
     -- Generate pairs of near points
     select
         x + 1 as cartodb_id,
-        st_setsrid(st_makepoint(Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1), Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1)), 4326) as the_geom,
+        st_setsrid(
+            st_makepoint(
+                Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1),
+                Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1)
+            ),
+            4326
+        ) as the_geom,
         st_transform(
-            st_setsrid(st_makepoint(Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1), Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1)),4326),
-            3857) as the_geom_webmercator,
+            st_setsrid(
+                st_makepoint(
+                    Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1),
+                    Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1)
+                ),
+                4326
+            ),
+            3857
+        ) as the_geom_webmercator,
         x as value
     from generate_series(0, 13) x
     `;
@@ -2425,7 +2438,7 @@ describe('aggregation', function () {
                         assert.equal(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.featureCount, 13);
+                        assert.equal(body.metadata.layers[0].meta.stats.featureCount, 14);
 
                         done();
                     });
