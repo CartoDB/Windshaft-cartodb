@@ -778,4 +778,46 @@ CREATE OR REPLACE FUNCTION cdb_crankshaft.CDB_KMeans(query text, no_clusters int
 $$ LANGUAGE plpgsql;
 GRANT ALL ON FUNCTION cdb_crankshaft.CDB_KMeans(text, integer, integer) TO :TESTUSER;
 
+-- Table with 100 rows
+-- first table
+CREATE TABLE test_table_100 (
+    cartodb_id integer NOT NULL,
+    value int,
+    the_geom geometry,
+    the_geom_webmercator geometry,
+    CONSTRAINT enforce_dims_the_geom CHECK ((st_ndims(the_geom) = 2)),
+    CONSTRAINT enforce_dims_the_geom_webmercator CHECK ((st_ndims(the_geom_webmercator) = 2)),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'POINT'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom_webmercator CHECK (((geometrytype(the_geom_webmercator) = 'POINT'::text) OR (the_geom_webmercator IS NULL))),
+    CONSTRAINT enforce_srid_the_geom CHECK ((st_srid(the_geom) = 4326)),
+    CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
+);
+
+CREATE SEQUENCE test_table_100_cartodb_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE test_table_100_cartodb_id_seq OWNED BY test_table_100.cartodb_id;
+
+SELECT pg_catalog.setval('test_table_100_cartodb_id_seq', 60, true);
+
+ALTER TABLE test_table_100 ALTER COLUMN cartodb_id SET DEFAULT nextval('test_table_100_cartodb_id_seq'::regclass);
+
+INSERT INTO test_table_100(the_geom, value)
+  SELECT
+    ST_SetSRID(ST_MakePoint(n*10 + 9E-3, n*10 + 9E-3), 4326) AS the_geom,n AS value
+    FROM generate_series(1, 100) n;
+
+ALTER TABLE ONLY test_table_100 ADD CONSTRAINT test_table_100_pkey PRIMARY KEY (cartodb_id);
+
+CREATE INDEX test_table_100_the_geom_idx ON test_table_100 USING gist (the_geom);
+CREATE INDEX test_table_100_the_geom_webmercator_idx ON test_table_100 USING gist (the_geom_webmercator);
+
+GRANT ALL ON TABLE test_table_100 TO :TESTUSER;
+GRANT SELECT ON TABLE test_table_100 TO :PUBLICUSER;
+
+
 ANALYZE;

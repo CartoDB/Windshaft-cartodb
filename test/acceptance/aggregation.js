@@ -27,6 +27,15 @@ describe('aggregation', function () {
     from generate_series(-3, 3) x
     `;
 
+    const POINTS_SQL_0 = `
+    select
+        x + 4 as cartodb_id,
+        st_setsrid(st_makepoint(x*10+1, x*10+1), 4326) as the_geom,
+        st_transform(st_setsrid(st_makepoint(x*10+1, x*10+1), 4326), 3857) as the_geom_webmercator,
+        x as value
+    from generate_series(-3, 3) x
+    `;
+
     const POINTS_SQL_TIMESTAMP_1 = `
     select
         row_number() over() AS cartodb_id,
@@ -103,13 +112,26 @@ describe('aggregation', function () {
     const POINTS_SQL_PAIRS = `
     -- Generate pairs of near points
     select
-        x + 4 as cartodb_id,
-        st_setsrid(st_makepoint(Floor(x/2)*10 + x/1000.0, Floor(x/2)*10 + x/1000.0), 4326) as the_geom,
+        x + 1 as cartodb_id,
+        st_setsrid(
+            st_makepoint(
+                Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1),
+                Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1)
+            ),
+            4326
+        ) as the_geom,
         st_transform(
-            st_setsrid(st_makepoint(Floor(x/2)*10 + x/1000.0, Floor(x/2)*10 + x/1000.0),4326),
-            3857) as the_geom_webmercator,
+            st_setsrid(
+                st_makepoint(
+                    Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1),
+                    Floor((x-6)/2)*10 + 9E-3*(x % 2 + 1)
+                ),
+                4326
+            ),
+            3857
+        ) as the_geom_webmercator,
         x as value
-    from generate_series(-6, 6) x
+    from generate_series(0, 13) x
     `;
 
     function createVectorMapConfig (layers = [
@@ -2129,9 +2151,63 @@ describe('aggregation', function () {
                 });
             });
 
-
             ['default', 'centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it(`aggregated ids are unique for ${placement} aggregation`, function (done) {
+                it(`for ${placement} and no points between tiles has unique ids`, function (done) {
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_0,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getTile(1, 0, 1, { format: 'mvt' },  (err, res, mvt) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        const tile1 = JSON.parse(mvt.toGeoJSONSync(0));
+
+                        assert.ok(Array.isArray(tile1.features));
+                        assert.ok(tile1.features.length > 0);
+
+                        this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
+                            if (err) {
+                                return done(err);
+                            }
+
+                            const tile2 = JSON.parse(mvt.toGeoJSONSync(0));
+
+                            assert.ok(Array.isArray(tile2.features));
+                            assert.ok(tile2.features.length > 0);
+
+                            const tile1Ids = tile1.features.map(f => f.properties.cartodb_id);
+                            const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
+                            const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
+
+                            assert.equal(repeatedIds.length, 0);
+
+                            done();
+                        });
+
+                    });
+                });
+                it(`for ${placement} has unique ids save between tiles`, function (done) {
                     this.mapConfig = {
                         version: '1.6.0',
                         buffersize: { 'mvt': 0 },
@@ -2178,8 +2254,27 @@ describe('aggregation', function () {
                             const tile1Ids = tile1.features.map(f => f.properties.cartodb_id);
                             const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
                             const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
-                            assert.equal(repeatedIds.length, 0);
 
+                            // It is not guaranteed that features appear in a single tile:
+                            // features on the border of tiles can appear in multiple tiles
+                            if (repeatedIds.length > 0) {
+                                repeatedIds.forEach(id => {
+                                    const tile1Features = tile1.features.filter(f => f.properties.cartodb_id === id);
+                                    const tile2Features = tile2.features.filter(f => f.properties.cartodb_id === id);
+                                    // repetitions cannot occur inside a tile
+                                    assert.equal(tile1Features.length, 1);
+                                    assert.equal(tile2Features.length, 1);
+                                    const feature1 = tile1Features[0];
+                                    const feature2 = tile2Features[0];
+                                    // features should be identical (geometry and properties)
+                                    assert.deepEqual(feature1.properties, feature2.properties);
+                                    assert.deepEqual(feature1.geometry, feature2.geometry);
+                                    // and geometry should be on the border;
+                                    // for the dataset and zoom 1, only point with cartodb_id=4 (0,0)
+                                    assert.equal(feature1.properties.cartodb_id, 4);
+                                    assert.equal(feature2.properties.cartodb_id, 4);
+                                });
+                            }
                             done();
                         });
 
@@ -2302,7 +2397,7 @@ describe('aggregation', function () {
                         assert.equal(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.aggrFeatureCount, 9);
+                        assert.equal(body.metadata.layers[0].meta.stats.aggrFeatureCount, 7);
 
                         done();
                     });
@@ -2343,7 +2438,7 @@ describe('aggregation', function () {
                         assert.equal(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.featureCount, 13);
+                        assert.equal(body.metadata.layers[0].meta.stats.featureCount, 14);
 
                         done();
                     });
