@@ -134,6 +134,57 @@ describe('aggregation', function () {
     from generate_series(0, 13) x
     `;
 
+    // Some points at corners and centers of aggregation grids (zoom=1, resolution=1)
+    //     @ = point location
+    //     --+---+---+---+---+---+---+--
+    //       |   |   |   |   |   |   |
+    //     --+---+---@---@---@---+---+--
+    //       |   |   | @ | @ |   |   |
+    //     --+---+---@---@---@---+---+--- Y = 0
+    //       |   |   | @ | @ |   |   |
+    //     --+---+---@---@---@---+---+--
+    //       |   |   |   |   |   |   |
+    //     --+---+---+---+---+---+---+--
+    //                   |
+    //                 X = 0
+    // Point identifiers (cartodb_id)
+    //     --+---+---+---+---+---+---+--
+    //       |   |   |   |   |   |   |
+    //     --+---+---7---8---9---+---+--
+    //       |   |   |12 |13 |   |   |
+    //     --+---+---4---5---6---+---+---
+    //       |   |   |10 |11 |   |   |
+    //     --+---+---1---2---3---+---+--
+    //       |   |   |   |   |   |   |
+    //     --+---+---+---+---+---+---+--
+    // Point count per aggregation cell and Z=1 tiles
+    //
+    //    Tile 0,0  -+---+---+---+- Tile 1,0
+    //       |   |   | 1 | 1 | 1 |   |
+    //     --+---+---@---@---@---+---+--
+    //       |   |   | 2 | 2 | 1 |   |
+    //     --+---+---@---@---@---+---+---
+    //       |   |   | 2 | 2 | 1 |   |
+    //     --+---+---@---@---@---+---+--
+    //       |   |   |   |   |   |   |
+    //    Tile 0, 1 -+---+---+---+- Tile 1,1
+    //
+    const POINTS_SQL_GRID = `
+        WITH params AS (
+            SELECT CDB_XYZ_Resolution(1) AS l -- cell size for Z=1 res=1
+        )
+        SELECT
+            row_number() OVER () AS cartodb_id,
+            ST_SetSRID(ST_MakePoint(x*l, y*l), 3857) AS the_geom_webmercator,
+            ST_Transform(ST_SetSRID(ST_MakePoint(x*l, y*l), 3857), 4326) AS the_geom
+            FROM params, generate_series(-1,1) x, generate_series(-1,1) y
+        UNION
+        SELECT
+            row_number() OVER () + 9 AS cartodb_id,
+            ST_SetSRID(ST_MakePoint(x*l-l/2, y*l-l/2), 3857) AS the_geom_webmercator,
+            ST_Transform(ST_SetSRID(ST_MakePoint(x*l-l/2, y*l-l/2), 3857), 4326) AS the_geom
+            FROM params, generate_series(0,1) x, generate_series(0,1) y
+    `;
     function createVectorMapConfig (layers = [
         {
             type: 'cartodb',
@@ -2276,6 +2327,86 @@ describe('aggregation', function () {
                                 });
                             }
                             done();
+                        });
+
+                    });
+                });
+
+                it(`for ${placement} each aggr. cell is in a single tile`, function (done) {
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_GRID,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getTile(1, 0, 0, { format: 'mvt' },  (err, res, mvt) => {
+                        if (err) {
+                            return done(err);
+                        }
+                        const tile00 = JSON.parse(mvt.toGeoJSONSync(0));
+                        this.testClient.getTile(1, 0, 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                            if (err) {
+                                return done(err);
+                            }
+                            const tile01 = JSON.parse(mvt.toGeoJSONSync(0));
+                            this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
+                                if (err) {
+                                    return done(err);
+                                }
+                                const tile10 = JSON.parse(mvt.toGeoJSONSync(0));
+                                this.testClient.getTile(1, 1, 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                                    if (err) {
+                                        return done(err);
+                                    }
+                                    const tile11 = JSON.parse(mvt.toGeoJSONSync(0));
+
+                                    const tile00Expected = [
+                                        { cartodb_id: 4, _cdb_feature_count: 2 },
+                                        { cartodb_id: 7, _cdb_feature_count: 1 }
+                                    ];
+                                    const tile10Expected = [
+                                        { cartodb_id: 5, _cdb_feature_count: 2 },
+                                        { cartodb_id: 6, _cdb_feature_count: 1 },
+                                        { cartodb_id: 8, _cdb_feature_count: 1 },
+                                        { cartodb_id: 9, _cdb_feature_count: 1 }
+                                    ];
+                                    const tile01Expected = [
+                                        { cartodb_id: 1, _cdb_feature_count: 2 }
+                                    ];
+                                    const tile11Expected = [
+                                        { cartodb_id: 2, _cdb_feature_count: 2 },
+                                        { cartodb_id: 3, _cdb_feature_count: 1 }
+                                    ];
+                                    const tile00Actual = tile00.features.map(f => f.properties);
+                                    const tile10Actual = tile10.features.map(f => f.properties);
+                                    const tile01Actual = tile01.features.map(f => f.properties);
+                                    const tile11Actual = tile11.features.map(f => f.properties);
+                                    const orderById = (a, b) => a.cartodb_id - b.cartodb_id;
+                                    assert.deepEqual(tile00Actual.sort(orderById), tile00Expected);
+                                    assert.deepEqual(tile10Actual.sort(orderById), tile10Expected);
+                                    assert.deepEqual(tile01Actual.sort(orderById), tile01Expected);
+                                    assert.deepEqual(tile11Actual.sort(orderById), tile11Expected);
+
+                                    done();
+                                });
+                            });
                         });
 
                     });
