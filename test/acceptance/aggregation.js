@@ -185,6 +185,49 @@ describe('aggregation', function () {
             ST_Transform(ST_SetSRID(ST_MakePoint(x*l-l/2, y*l-l/2), 3857), 4326) AS the_geom
             FROM params, generate_series(0,1) x, generate_series(0,1) y
     `;
+
+    // Points positioned inside one cell of Z=20, X=1000000, X=1000000 (the SW corner)
+    // The center of the cell is x = 18181005.874444414, y = -18181043.94366749
+    const POINTS_SQL_CELL = `
+      SELECT
+        1 AS cartodb_id,
+        ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857), 4326) AS the_geom
+      UNION SELECT
+        2 AS cartodb_id,
+        ST_SetSRID(ST_MakePoint(18181005.9, -18181044.0), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.9, -18181044.0), 3857), 4326) AS the_geom
+      UNION SELECT
+        3 AS cartodb_id,
+        ST_SetSRID(ST_MakePoint(18181005.87, -18181043.94), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.87, -18181043.94), 3857), 4326) AS the_geom
+      UNION SELECT
+        4 AS cartodb_id,
+        ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857), 4326) AS the_geom
+    `;
+
+    // Points positioned inside one cell of Z=20, X=1000000, X=1000000 (inner cell not on border)
+    // The center of the cell is x = 18181006.023735486, y = -18181043.794376418
+    const POINTS_SQL_CELL_INNER = `
+      SELECT
+        1 AS cartodb_id,
+        ST_SetSRID(ST_MakePoint(18181005.95, -18181043.8), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.95, -18181043.8), 3857), 4326) AS the_geom
+      UNION SELECT
+        2 AS cartodb_id,
+        ST_SetSRID(ST_MakePoint(18181006.09, -18181043.72), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181006.09, -18181043.72), 3857), 4326) AS the_geom
+      UNION SELECT
+        3 AS cartodb_id,
+        ST_SetSRID(ST_MakePoint(18181006.02, -18181043.79), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181006.02, -18181043.79), 3857), 4326) AS the_geom
+      UNION SELECT
+        4 AS cartodb_id,
+        ST_SetSRID(ST_MakePoint(18181006.01, -18181043.75), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181006.01, -18181043.75), 3857), 4326) AS the_geom
+    `;
+
     function createVectorMapConfig (layers = [
         {
             type: 'cartodb',
@@ -2409,6 +2452,87 @@ describe('aggregation', function () {
                             });
                         });
 
+                    });
+                });
+
+                it.skip(`for ${placement} points aggregated into corner cluster`, function (done) {
+                    // this test will fail due to !bbox! lack of accuracy if strict cell filtering is in place
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_CELL,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getTile(20, 1000000, 1000000, { format: 'mvt' },  (err, res, mvt) => {
+                        if (err) {
+                            return done(err);
+                        }
+                        const tile = JSON.parse(mvt.toGeoJSONSync(0));
+                        assert.equal(tile.features.length, 1);
+                        assert.equal(tile.features[0].properties._cdb_feature_count, 4);
+                        console.log(tile.features[0].properties);
+                        if (placement === 'point-grid') {
+                            // check geometry x = 18181005.874444414, y = -18181043.94366749
+                            assert.deepEqual(tile.features[0].geometry.coordinates, [ 163.322754576802, -83.3823797469878 ]);
+                        }
+                        done();
+                    });
+                });
+
+                it(`for ${placement} points aggregated into correct cluster`, function (done) {
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 0 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: POINTS_SQL_CELL_INNER,
+                                    resolution: 1,
+                                    aggregation: {
+                                        threshold: 1
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getTile(20, 1000000, 1000000, { format: 'mvt' },  (err, res, mvt) => {
+                        if (err) {
+                            return done(err);
+                        }
+                        const tile = JSON.parse(mvt.toGeoJSONSync(0));
+                        assert.equal(tile.features.length, 1);
+                        assert.equal(tile.features[0].properties._cdb_feature_count, 4);
+                        console.log(tile.features[0].properties);
+                        if (placement === 'point-grid') {
+                            // check geometry x = 18181006.023735486, y = -18181043.794376418
+                            assert.deepEqual(tile.features[0].geometry.coordinates, [ 163.322755917907, -83.3823795924354 ]);
+                        }
+                        done();
                     });
                 });
             });
