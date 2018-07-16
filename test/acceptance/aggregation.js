@@ -2375,7 +2375,7 @@ describe('aggregation', function () {
                     });
                 });
 
-                it.only(`for ${placement} each aggr. cell is in a single tile`, function (done) {
+                it(`for ${placement} each aggr. cell is in a single tile`, function (done) {
                     this.mapConfig = {
                         version: '1.6.0',
                         buffersize: { 'mvt': 0 },
@@ -2496,7 +2496,7 @@ describe('aggregation', function () {
                     });
                 });
 
-                it.only(`for ${placement} points aggregated into correct cluster`, function (done) {
+                it(`for ${placement} points aggregated into correct cluster`, function (done) {
                     this.mapConfig = {
                         version: '1.6.0',
                         buffersize: { 'mvt': 0 },
