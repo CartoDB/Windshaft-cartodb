@@ -2375,7 +2375,7 @@ describe('aggregation', function () {
                     });
                 });
 
-                it(`for ${placement} each aggr. cell is in a single tile`, function (done) {
+                it.only(`for ${placement} each aggr. cell is in a single tile`, function (done) {
                     this.mapConfig = {
                         version: '1.6.0',
                         buffersize: { 'mvt': 0 },
@@ -2487,16 +2487,16 @@ describe('aggregation', function () {
                         const tile = JSON.parse(mvt.toGeoJSONSync(0));
                         assert.equal(tile.features.length, 1);
                         assert.equal(tile.features[0].properties._cdb_feature_count, 4);
-                        console.log(tile.features[0].properties);
                         if (placement === 'point-grid') {
                             // check geometry x = 18181005.874444414, y = -18181043.94366749
-                            assert.deepEqual(tile.features[0].geometry.coordinates, [ 163.322754576802, -83.3823797469878 ]);
+                            const expectedPoint = [ 163.322754576802, -83.3823797469878 ];
+                            assert.deepEqual(tile.features[0].geometry.coordinates, expectedPoint);
                         }
                         done();
                     });
                 });
 
-                it(`for ${placement} points aggregated into correct cluster`, function (done) {
+                it.only(`for ${placement} points aggregated into correct cluster`, function (done) {
                     this.mapConfig = {
                         version: '1.6.0',
                         buffersize: { 'mvt': 0 },
@@ -2527,10 +2527,10 @@ describe('aggregation', function () {
                         const tile = JSON.parse(mvt.toGeoJSONSync(0));
                         assert.equal(tile.features.length, 1);
                         assert.equal(tile.features[0].properties._cdb_feature_count, 4);
-                        console.log(tile.features[0].properties);
                         if (placement === 'point-grid') {
                             // check geometry x = 18181006.023735486, y = -18181043.794376418
-                            assert.deepEqual(tile.features[0].geometry.coordinates, [ 163.322755917907, -83.3823795924354 ]);
+                            const expectedPoint = [ 163.322755917907, -83.3823795924354 ];
+                            assert.deepEqual(tile.features[0].geometry.coordinates, expectedPoint);
                         }
                         done();
                     });
