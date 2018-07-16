@@ -2455,7 +2455,7 @@ describe('aggregation', function () {
                     });
                 });
 
-                it.skip(`for ${placement} points aggregated into corner cluster`, function (done) {
+                it(`for ${placement} points aggregated into corner cluster`, function (done) {
                     // this test will fail due to !bbox! lack of accuracy if strict cell filtering is in place
                     this.mapConfig = {
                         version: '1.6.0',
