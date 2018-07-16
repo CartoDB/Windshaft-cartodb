@@ -1246,8 +1246,7 @@ describe('aggregation', function () {
                         options: {
                             sql: POINTS_SQL_1,
                             aggregation: {
-                                threshold: 1,
-                                resolution: 256
+                                threshold: 1
                             }
                         }
                     }
