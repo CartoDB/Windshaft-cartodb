@@ -178,7 +178,7 @@ describe('aggregation', function () {
             ST_SetSRID(ST_MakePoint(x*l, y*l), 3857) AS the_geom_webmercator,
             ST_Transform(ST_SetSRID(ST_MakePoint(x*l, y*l), 3857), 4326) AS the_geom
             FROM params, generate_series(-1,1) x, generate_series(-1,1) y
-        UNION
+        UNION ALL
         SELECT
             row_number() OVER () + 9 AS cartodb_id,
             ST_SetSRID(ST_MakePoint(x*l-l/2, y*l-l/2), 3857) AS the_geom_webmercator,
@@ -193,15 +193,15 @@ describe('aggregation', function () {
         1 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857) AS the_geom_webmercator,
         ST_Transform(ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857), 4326) AS the_geom
-      UNION SELECT
+      UNION ALL SELECT
         2 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181005.9, -18181044.0), 3857) AS the_geom_webmercator,
         ST_Transform(ST_SetSRID(ST_MakePoint(18181005.9, -18181044.0), 3857), 4326) AS the_geom
-      UNION SELECT
+      UNION ALL SELECT
         3 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181005.87, -18181043.94), 3857) AS the_geom_webmercator,
         ST_Transform(ST_SetSRID(ST_MakePoint(18181005.87, -18181043.94), 3857), 4326) AS the_geom
-      UNION SELECT
+      UNION ALL SELECT
         4 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857) AS the_geom_webmercator,
         ST_Transform(ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857), 4326) AS the_geom
@@ -214,15 +214,15 @@ describe('aggregation', function () {
         1 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181005.95, -18181043.8), 3857) AS the_geom_webmercator,
         ST_Transform(ST_SetSRID(ST_MakePoint(18181005.95, -18181043.8), 3857), 4326) AS the_geom
-      UNION SELECT
+      UNION ALL SELECT
         2 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181006.09, -18181043.72), 3857) AS the_geom_webmercator,
         ST_Transform(ST_SetSRID(ST_MakePoint(18181006.09, -18181043.72), 3857), 4326) AS the_geom
-      UNION SELECT
+      UNION ALL SELECT
         3 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181006.02, -18181043.79), 3857) AS the_geom_webmercator,
         ST_Transform(ST_SetSRID(ST_MakePoint(18181006.02, -18181043.79), 3857), 4326) AS the_geom
-      UNION SELECT
+      UNION ALL SELECT
         4 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181006.01, -18181043.75), 3857) AS the_geom_webmercator,
         ST_Transform(ST_SetSRID(ST_MakePoint(18181006.01, -18181043.75), 3857), 4326) AS the_geom
