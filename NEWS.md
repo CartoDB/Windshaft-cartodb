@@ -50,6 +50,8 @@ Bug Fixes:
 - Fix `meta.stats.estimatedFeatureCount` for aggregations and queries with tokens
 - Fix numeric histogram bounds when `start` and `end` are specified (#991)
 - Static maps filters correctly if `layer` option is passed in the url.
+- Aggregation doesn't return out-of-tile, partially aggregated clusters
+- Aggregation was not accurate for high zoom, far away from the origin tiles
 
 Announcements:
   * Improve error message when the DB query is over the user's limits
