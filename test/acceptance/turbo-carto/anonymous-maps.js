@@ -21,13 +21,13 @@ function makeMapconfig(cartocss) {
                     "sql": [
                         'SELECT test_table.*, _prices.price FROM test_table JOIN (' +
                         '  SELECT 1 AS cartodb_id, 10.00 AS price',
-                        '  UNION',
+                        '  UNION ALL',
                         '  SELECT 2, 10.50',
-                        '  UNION',
+                        '  UNION ALL',
                         '  SELECT 3, 11.00',
-                        '  UNION',
+                        '  UNION ALL',
                         '  SELECT 4, 12.00',
-                        '  UNION',
+                        '  UNION ALL',
                         '  SELECT 5, 21.00',
                         ') _prices ON _prices.cartodb_id = test_table.cartodb_id'
                     ].join('\n'),
