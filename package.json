@@ -49,7 +49,7 @@
     "step-profiler": "0.3.0",
     "turbo-carto": "0.20.4",
     "underscore": "1.6.0",
-    "windshaft": "4.8.2",
+    "windshaft": "cartodb/Windshaft#639-aggregation-validation",
     "yargs": "11.1.0"
   },
   "devDependencies": {
