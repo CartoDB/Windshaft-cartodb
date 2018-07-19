@@ -15,9 +15,10 @@ New features:
   - MVT: Disable simplify_distance to avoid multiple simplifications.
   - Fix a bug with zero length lines not being rendered when using the marker symbolizer.
   - Reduce size of npm package
-- Upgrades Camshaft to [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
+- Upgrades Camshaft to [0.62.0](https://github.com/CartoDB/camshaft/releases/tag/0.62.0):
   - Use Dollar-Quoted String Constants to avoid Syntax Error while running moran analyses. [0.61.10](https://github.com/CartoDB/camshaft/releases/tag/0.61.10)
   - Quote name columns when performing trade area analysis to avoid Syntax Errors. [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11)
+  - Support for batch street-level geocoding. [0.62.0](https://github.com/CartoDB/camshaft/releases/tag/0.62.0)
 - Update other deps:
   - body-parser: 1.18.3
   - cartodb-psql: 0.11.0
