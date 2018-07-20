@@ -1,5 +1,8 @@
 # Changelog
 
+## 6.2.1
+Released 2018-mm-dd
+
 ## 6.2.0
 Released 2018-07-20
 
