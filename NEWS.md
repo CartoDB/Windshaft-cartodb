@@ -1,7 +1,7 @@
 # Changelog
 
 ## 6.2.0
-Released 2018-mm-dd
+Released 2018-07-20
 
 Notice:
 - This release changes the way that authentication works internally. You'll need to run `bundle exec rake carto:api_key:create_default` in your development environment to keep working.
