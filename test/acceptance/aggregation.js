@@ -2336,6 +2336,151 @@ describe('aggregation', function () {
                 });
             });
 
+            
+        });
+
+        describe.only('TurboCartoCSS', function () {
+            const POINTS_SQL_AGGREGATIONS = `select * from test_aggregations`;
+
+            afterEach(function (done) {
+                this.testClient.drain(done);
+            });
+
+            it('should succeed whith aggregated column in cartocss', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_AGGREGATIONS,
+                            aggregation: {
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    },
+                                },
+                                threshold: 1
+                            },
+                            cartocss: '#layer { marker-width: [total]; }',
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                const options = {
+                    format: 'mvt'
+                };
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    console.log(JSON.stringify(body, null, 2)); //DEBUG
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+
+                    done();
+                });
+            });
+
+            it('should succeed whith original column in cartocss', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_AGGREGATIONS,
+                            aggregation: {
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    },
+                                },
+                                threshold: 1
+                            },
+                            cartocss: `#layer { marker-fill: ramp([value], 
+                                                             (#d7191c, #fdae61, #abdda4, #2b83ba), 
+                                                             quantiles); 
+                                            }`,
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+                const options = {
+                    format: 'mvt'
+                };
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup(options, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    console.log(JSON.stringify(body, null, 2)); //DEBUG
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+
+                    done();
+                });
+            });
+
+            it('should succeed whith aggregated and original column in cartocss', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_AGGREGATIONS,
+                            aggregation: {
+                                columns: {
+                                    total: {
+                                        aggregate_function: 'sum',
+                                        aggregated_column: 'value'
+                                    },
+                                },
+                                dimensions: {
+                                    value: 'value'
+                                },
+                                threshold: 1
+                            },
+                            cartocss: `#layer { marker-width: [total]; 
+                                                marker-fill: ramp([value], 
+                                                             (#d7191c, #fdae61, #abdda4, #2b83ba), 
+                                                             quantiles); 
+                                            }`,
+                            cartocss_version: '2.3.0'
+                        }
+                    }
+                ]);
+
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    console.log(JSON.stringify(body, null, 2)); //DEBUG
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+
+                    done();
+                });
+            });
         });
     });
 });
