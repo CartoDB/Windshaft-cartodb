@@ -2,8 +2,8 @@
 
 ## 6.3.0
 Released 2018-mm-dd
-- Upgrades Camshaft to [0.62.0](https://github.com/CartoDB/camshaft/releases/tag/0.62.0):
-  - Support for batch street-level geocoding. [0.62.0](https://github.com/CartoDB/camshaft/releases/tag/0.62.0)
+- Upgrades Camshaft to [0.62.1](https://github.com/CartoDB/camshaft/releases/tag/0.62.1):
+  - Support for batch street-level geocoding. [0.62.1](https://github.com/CartoDB/camshaft/releases/tag/0.62.1)
 
 ## 6.2.0
 Released 2018-07-20
