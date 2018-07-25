@@ -1,24 +1,29 @@
 # Changelog
 
-## 6.2.0
+## 6.3.0
 Released 2018-mm-dd
+- Upgrades Camshaft to [0.62.0](https://github.com/CartoDB/camshaft/releases/tag/0.62.0):
+  - Support for batch street-level geocoding. [0.62.0](https://github.com/CartoDB/camshaft/releases/tag/0.62.0)
+
+## 6.2.0
+Released 2018-07-20
 
 Notice:
 - This release changes the way that authentication works internally. You'll need to run `bundle exec rake carto:api_key:create_default` in your development environment to keep working.
 
 New features:
 - CI tests with Ubuntu Xenial + PostgreSQL 10.1 and Ubuntu Precise + PostgreSQL 9.5
-- Upgrades Windshaft to [4.8.2](https://github.com/CartoDB/Windshaft/blob/4.8.2/NEWS.md#version-482) which includes:
+- Upgrades Windshaft to [4.8.3](https://github.com/CartoDB/Windshaft/blob/4.8.3/NEWS.md#version-483) which includes:
   - Update internal deps.
   - A fix in mapnik-vector-tile to avoid grouping together properties with the same value but a different type.
   - Performance improvements in the marker symbolizer (local cache, avoid building the collision matrix when possible).
   - MVT: Disable simplify_distance to avoid multiple simplifications.
   - Fix a bug with zero length lines not being rendered when using the marker symbolizer.
   - Reduce size of npm package
-- Upgrades Camshaft to [0.62.0](https://github.com/CartoDB/camshaft/releases/tag/0.62.0):
+  - Omit attributes validation in layers with aggregation to avoid potentially long instantiation times
+- Upgrades Camshaft to [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
   - Use Dollar-Quoted String Constants to avoid Syntax Error while running moran analyses. [0.61.10](https://github.com/CartoDB/camshaft/releases/tag/0.61.10)
   - Quote name columns when performing trade area analysis to avoid Syntax Errors. [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11)
-  - Support for batch street-level geocoding. [0.62.0](https://github.com/CartoDB/camshaft/releases/tag/0.62.0)
 - Update other deps:
   - body-parser: 1.18.3
   - cartodb-psql: 0.11.0
