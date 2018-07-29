@@ -19,9 +19,10 @@ describe('MapConfigAdapter', function() {
 
     function createAdapter(valOperatorFn) {
         return function ValMapConfigAdapter() {
-            this.getMapConfig = function(user, requestMapConfig, params, context, callback) {
+            this.getMapConfig = function(mapConfigAdapterProxy, callback) {
+                const requestMapConfig = mapConfigAdapterProxy.requestMapConfig;
                 requestMapConfig.val = valOperatorFn(requestMapConfig.val);
-                return callback(null, requestMapConfig);
+                return callback(null, mapConfigAdapterProxy);
             };
         };
     }

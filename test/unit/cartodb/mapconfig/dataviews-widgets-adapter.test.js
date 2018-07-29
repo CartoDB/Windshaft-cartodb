@@ -2,6 +2,7 @@
 var assert = require('assert');
 
 var DataviewsMapConfigAdapter = require('../../../../lib/cartodb/models/mapconfig/adapter/dataviews-widgets-adapter');
+const MapConfigAdapterProxy = require('../../../../lib/cartodb/models/mapconfig/adapter/mapconfig-adapter-proxy');
 
 describe('dataviews-widgets-adapter', function() {
 
@@ -248,8 +249,9 @@ describe('dataviews-widgets-adapter', function() {
 
     widgetsMapConfigs.forEach(function(mapConfig, index) {
         it('should adapt widgets ' + index, function(done) {
-            dataviewsMapConfigAdapter.getMapConfig(user, mapConfig.input, params(), context(), function(err, result) {
-                assert.deepEqual(result, mapConfig.expected);
+            const mapConfigAdapterProxy = new MapConfigAdapterProxy(user, mapConfig.input, params(), context());
+            dataviewsMapConfigAdapter.getMapConfig(mapConfigAdapterProxy, function(err, result) {
+                assert.deepEqual(result.requestMapConfig, mapConfig.expected);
                 done();
             });
         });
