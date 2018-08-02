@@ -3,6 +3,8 @@
 ## 6.3.1
 Released 2018-mm-dd
 
+- Remove use of `step` module to handle asynchronous code, now it's defined as development dependency.
+
 
 ## 6.3.0
 Released 2018-07-26
