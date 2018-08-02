@@ -2,7 +2,8 @@
 
 ## 6.3.1
 Released 2018-mm-dd
-
+- Upgrades Camshaft to [0.62.2](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
+  - Build query from node's cache to compute output columns when building analysis
 
 ## 6.3.0
 Released 2018-07-26
