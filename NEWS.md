@@ -3,8 +3,9 @@
 ## 6.3.1
 Released 2018-mm-dd
 
-- Upgrades Camshaft to [0.62.2](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
+- Upgrades Camshaft to [0.62.3](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
   - Build query from node's cache to compute output columns when building analysis
+  - Adds metadata columns for street level geocoding
 - Remove use of `step` module to handle asynchronous code, now it's defined as development dependency.
 
 
