@@ -9,7 +9,8 @@
             "redis": ">=3.0.0",
             "postgresql": ">=9.5",
             "postgis": ">=2.2",
-            "mapnik": ">=3.0.15"
+            "mapnik": ">=3.0.15",
+            "carto_postgresql_ext": ">=0.19"
         }
     }
 }
