@@ -96,7 +96,7 @@ describe('health checks', function () {
         });
     });
 
-    it('not err if disabled file does not exists', function(done) {
+    it('not err if disabled file does not exist', function(done) {
         global.environment.disabled_file = '/tmp/ftreftrgtrccre';
 
         var server = new CartodbWindshaft(serverOptions);
