@@ -1,0 +1,882 @@
+openapi: 3.0.0
+info:
+  title: Maps API
+  description: >
+    # Introduction
+
+    The CARTO Maps API allows you to generate maps based on data hosted in your
+    CARTO account  and apply custom SQL and CartoCSS to the data. The API
+    generates a XYZ-based URL to fetch  Web Mercator projected tiles using web
+    clients such as Leaflet, Google Maps, or OpenLayers.
+
+    # Authorization
+
+    In order to access Maps API you must provide an API key. The CARTO
+    Authorization guide explains how these keys are sent (TLDR: _HTTP basic
+    auth_ or _query string param_ with the API key token). Depending on the
+    permissions granted to the provided API key, the request will be authorized
+    or not.
+  version: '1'
+  contact:
+    name: Have you found an error? Github issues
+    url: 'https://github.com/CartoDB/Windshaft-cartodb/issues'
+servers:
+  - url: 'https://{user}.{domain}/api/v1'
+    description: Production server (uses live data)
+    variables:
+      domain:
+        default: carto.com
+        description: 'If on premise, change it to your domain'
+      user:
+        default: username
+        description: Your username
+tags:
+  - name: Anonymous Maps
+    description: Anonymous Maps allow you to instantiate a map given SQL and CartoCSS
+    externalDocs:
+      url: 'https://carto.com/developers/maps-api/guides/anonymous-maps/'
+  - name: Named Maps
+    description: Run a single SQL statement
+    externalDocs:
+      url: 'https://carto.com/developers/maps-api/guides/named-maps/'
+  - name: Static Maps
+    description: Create static images of parts of maps
+    externalDocs:
+      url: 'https://carto.com/developers/maps-api/guides/static-maps-API/'
+paths:
+  /map:
+    post:
+      summary: Create map
+      description: |
+      tags:
+        - Anonymous Maps
+      operationId: instantiateAnonymousMap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MapConfig'
+            example:
+              version: 1.3.0
+              layers:
+                - type: mapnik
+                  options:
+                    cartocss_version: 2.1.1
+                    cartocss: '#layer { polygon-fill: #FFF; }'
+                    sql: select * from european_countries_e
+                    interactivity:
+                      - cartodb_id
+                      - iso3
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnonymousMapResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - ApiKeyHTTPBasicAuth: []
+        - ApiKeyQueryParam: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X POST -H "Content-Type: application/json" -d '{ \
+              "q": "SELECT count(*) FROM cities", \
+              "filename": "number_of_cities.json" \
+            }' "https://username.carto.com/api/v2/sql"      
+  '/map/{layergroupid}/{z}/{x}/{y}.png':
+    get:
+      parameters:
+        - $ref: '#/components/parameters/layergroupId'
+        - $ref: '#/components/parameters/z'
+        - $ref: '#/components/parameters/x'
+        - $ref: '#/components/parameters/y'
+      summary: Get tile
+      description: |
+        Get a tile
+      tags:
+        - Anonymous Maps
+      operationId: getTile
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - ApiKeyHTTPBasicAuth: []
+        - ApiKeyQueryParam: []
+      x-code-samples:
+        - lang: Curl
+          source: >
+            curl -X GET \
+
+            https://username.carto.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/2/3/4.png
+  '/map/{layergroupid}/{layers_filter}/{z}/{x}/{y}.png':
+    get:
+      parameters:
+        - $ref: '#/components/parameters/layergroupId'
+        - $ref: '#/components/parameters/layersFilter'
+        - $ref: '#/components/parameters/z'
+        - $ref: '#/components/parameters/x'
+        - $ref: '#/components/parameters/y'
+      summary: Get tile - Layer filter
+      description: |
+      tags:
+        - Anonymous Maps
+      operationId: getTileWithLayerFilter
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - ApiKeyHTTPBasicAuth: []
+        - ApiKeyQueryParam: []
+      x-code-samples:
+        - lang: Curl
+          source: >
+            curl -X GET \
+
+            https://username.carto.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/2/3/4.png
+  '/map/{layergroupid}/{layer}/{z}/{x}/{y}.torque.json':
+    get:
+      parameters:
+        - $ref: '#/components/parameters/layergroupId'
+        - $ref: '#/components/parameters/layerIndex'
+        - $ref: '#/components/parameters/z'
+        - $ref: '#/components/parameters/x'
+        - $ref: '#/components/parameters/y'
+      summary: Get Torque layer
+      description: |
+        If the MapConfig had a Torque layer it could be possible to request it
+      tags:
+        - Anonymous Maps
+      operationId: getTorqueLayer
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - ApiKeyHTTPBasicAuth: []
+        - ApiKeyQueryParam: []
+      x-code-samples:
+        - lang: Curl
+          source: >
+            curl -X GET \
+
+            https://username.carto.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/2/3/4.png
+
+  '/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}':
+    get:
+      parameters:
+        - $ref: '#/components/parameters/layergroupId'
+        - $ref: '#/components/parameters/z'
+        - $ref: '#/components/parameters/lat'
+        - $ref: '#/components/parameters/lng'
+        - $ref: '#/components/parameters/width'
+        - $ref: '#/components/parameters/height'
+        - $ref: '#/components/parameters/format'
+      summary: Zoom + center
+      description: |
+        Zoom + center
+      tags:
+        - Static Maps
+      operationId: getStaticZoomCenter
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - ApiKeyHTTPBasicAuth: []
+        - ApiKeyQueryParam: []
+      x-code-samples:
+        - lang: Curl
+          source: >
+            curl -X GET \
+
+            https://username.carto.com/api/v1/map/static/center/c01a54877c62831bb51720263f91fb33/4/20/40/500/500.png
+            
+  '/map/static/bbox/{layergroupid}/{west},{south},{east},{north}/{width}/{height}.{format}':
+    get:
+      parameters:
+        - $ref: '#/components/parameters/layergroupId'
+        - $ref: '#/components/parameters/west'
+        - $ref: '#/components/parameters/south'
+        - $ref: '#/components/parameters/east'
+        - $ref: '#/components/parameters/north'
+        - $ref: '#/components/parameters/width'
+        - $ref: '#/components/parameters/height'
+        - $ref: '#/components/parameters/format'
+      summary: Bounding Box
+      description: |
+        Bounding Box in WGS 84 (EPSG:4326), comma separated values
+      tags:
+        - Static Maps
+      operationId: getStaticBoundingBox
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - ApiKeyHTTPBasicAuth: []
+        - ApiKeyQueryParam: []
+      x-code-samples:
+        - lang: Curl
+          source: >
+            curl -X GET \
+
+            https://username.carto.com/api/map/static/bbox/c01a54877c62831bb51720263f91fb33/0/0/30/30/500/500.png
+  '/map/static/named/{name}/{width}/{height}.{format}':
+    get:
+      parameters:
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/width'
+        - $ref: '#/components/parameters/height'
+        - $ref: '#/components/parameters/format'
+      summary: Named map
+      description: |
+        Named map
+      tags:
+        - Static Maps
+      operationId: getStaticNamedMap
+      responses:
+        '200':
+          description: Ok
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - ApiKeyHTTPBasicAuth: []
+        - ApiKeyQueryParam: []
+      x-code-samples:
+        - lang: Curl
+          source: >
+            curl -X GET \
+
+            https://username.carto.com/api/map/static/named/mynamedmap/500/500.png  
+
+components:
+  schemas:
+    MapConfig:
+      type: object
+      properties:
+        version:
+          type: string
+          description: Spec version to use for validation.
+          default: 1.0.0
+        extent:
+          type: string
+          description: |
+            The default map extent for the map projection.
+            **Note:** Currently, only webmercator is supported.
+        srid:
+          type: string
+          description: The spatial reference identifier for the map.
+          default: 3857
+        maxzoom:
+          type: string
+          description: >-
+            The maximum zoom level for your map. A request beyond the defined
+            maxzoom returns a 404 error.
+          default: undefined (infinite)
+        minzoom:
+          type: string
+          description: >-
+            The minimum zoom level for your map. A request beyond the defined
+            minzoom returns a 404 error.
+          default: 0
+        layers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Layer'
+      required:
+        - layers
+    Layer:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/LayerType'
+        options:
+          oneOf:
+            - $ref: '#/components/schemas/LayerOptionsMapnik'
+            - $ref: '#/components/schemas/LayerOptionsTorque'
+            - $ref: '#/components/schemas/LayerOptionsHTTP'
+            - $ref: '#/components/schemas/LayerOptionsPlain'
+            - $ref: '#/components/schemas/LayerOptionsNamedMap'
+          description: Sets different options for each layer type.
+      required:
+        - type
+        - options
+    LayerOptionsMapnik:
+      type: object
+      title: Layer options Mapnik
+      description: >
+        If you are using Mapnik as a layer resource, the following
+        configurations are required in your MapConfig file.
+      properties:
+        sql:
+          type: string
+          description: >
+            The SQL request to the user database that will fetch the rendered
+            data.
+
+
+            **Tip:** The SQL request should include the following Mapnik layer
+            configurations: 
+              * ```geom_column```
+              * ```interactivity```
+              * ```attributes```
+
+
+            **Note:** The SQL request may contain substitutions tokens, such as
+            ```!bbox!```, ```!pixel_width!``` and ```!pixel_height!```. It is
+            suggested to define the layergroup ```minzoom``` and ```extent```
+            variables to prevent errors.
+        cartocss:
+          $ref: '#/components/schemas/CartoCSS'
+        cartocss_version:
+          $ref: '#/components/schemas/CartoCSSVersion'
+        geom_column:
+          type: string
+          description: >
+            The name of the column containing the geometry.
+
+
+            *You **must** specify this value as part of the Mapnik layer
+            SQLconfiguration.
+          default: the_geom_webmercator
+        geom_type:
+          type: string
+          enum:
+            - geometry
+            - raster
+          description: >
+            Defines the type of column as either _geometry_ or _raster_.
+
+
+            **Note:** ```geom_type``` is not compatible with the Mapnik layer
+            interactivity option.
+          default: geometry
+        raster_band:
+          type: string
+          description: >
+            Defines the raster band (this option is only applicable when the
+            ```geom_type=raster```.
+
+
+            **Note:** If the default, or no value is specified, raster bands are
+            interpreted as either: 
+              * grayscale (for single bands)
+              * RGB (for 3 bands)
+              * RGBA (for 4 bands).
+          default: 0
+        srid:
+          $ref: '#/components/schemas/Srid'
+        affected_tables:
+          $ref: '#/components/schemas/Affected_tables'
+        interactivity:
+          type: string
+          description: >
+            A string of values that contains the fields rendered inside
+            grid.json.  All the parameters should be exposed as a result of
+            executing the Mapnik layer SQL query.
+
+
+            **Note:** interactivity is not compatible with the Mapnik layer
+            ```geom_type``` option.  For example, you cannot create a layergroup
+            instance with a raster layer by defining the ```geom_type=raster```.
+
+            *You **must** specify this value as part of the Mapnik layer SQL
+            configuration.
+        attributes:
+          description: >
+            The id and column values returned by the Mapnik attributes service.
+            (This option is disabled if no configuration is defined).
+
+            *You **must** specify this value as part of the Mapnik layer SQL
+            configuration.
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The key value used to fetch columns.
+              columns:
+                type: string
+                description: >-
+                  A string of values (columns) returned by the Mapnik attribute
+                  service.
+            required:
+              - id
+              - columns
+      required:
+        - sql
+        - cartocss
+        - cartocss_version
+    LayerOptionsTorque:
+      type: object
+      title: Layer options Torque
+      description: >
+        If you are using Torque as a layer resource, the following
+        configurations are required in your MapConfig file. For more details
+        about Torque layers in general, see the Torque API documentation.
+      properties:
+        sql:
+          type: string
+          description: >
+            The SQL request to the user database that will fetch the rendered
+            data.
+
+
+            **Tip:** The SQL request should include the following Mapnik layer
+            configurations: 
+              * geom_column
+              * interactivity
+              * attributes
+        cartocss:
+          $ref: '#/components/schemas/CartoCSS'
+        cartocss_version:
+          $ref: '#/components/schemas/CartoCSSVersion'
+        step:
+          type: integer
+          description: >-
+            The number of animation steps to render when requesting a torque.png
+            tile.
+          default: 0
+        geom_column:
+          type: string
+          description: >
+            The name of the column containing the geometry.
+
+
+            *You **must** specify this value as part of the Torque layer
+            SQLconfiguration.
+          default: the_geom_webmercator
+        srid:
+          $ref: '#/components/schemas/Srid'
+        affected_tables:
+          $ref: '#/components/schemas/Affected_tables'
+        attributes:
+          description: >
+            The id and column values returned by the Torque attributes service.
+            (This option is disabled if no configuration is defined).
+
+            *You **must** specify this value as part of the Torque layer SQL
+            configuration.
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The key value used to fetch columns.
+              columns:
+                type: string
+                description: >-
+                  A string of values (columns) returned by the Torque attribute
+                  service.
+            required:
+              - id
+              - columns
+      required:
+        - sql
+        - cartocss
+        - cartocss_version
+    LayerOptionsHTTP:
+      title: Layer options HTTP
+      type: object
+      properties:
+        urlTemplate:
+          type: string
+          description: >
+            URL from where the tile data is retrieved. _URLs must be included in
+            the configuration whitelist to be valid._ 
+
+
+            **Note:** It includes
+
+            * ```{z}``` as the zoom level
+
+            * ```{x} ```and ```{y}``` as the tile coordinates
+
+            * Optionally, the subdomain ```{s}``` may be included as part of the
+            ```urlTemplate``` configuration. Otherwise, you can define the
+            ```subdomains``` separately, as shown below.
+        subdomains:
+          type: string
+          description: >
+            A string of values used to retrieve tiles from different
+            subdomains.  The default value is [```a```, ```b```, ```c```] when
+            ```{s}``` is defined in the urlTemplate configuration. Otherwise,
+            the default value is ```[ ]```.
+
+
+            **Note:** The subdomains value will consistently replace the
+            ```{s}``` value defined in the ```urlTemplate```.
+        tms:
+          type: boolean
+          description: >
+            Specifies whether the tile is using Tile Map Service format
+
+
+            **Note:** If the value is ```true```, the TMS inverses the Y axis
+            numbering for tiles.
+          default: true
+        tms2:
+          type: boolean
+          description: >
+            Specifies whether the tile is using Tile Map Service format
+
+
+            **Note:** If the value is ```true```, the TMS inverses the Y axis
+            numbering for tiles.
+          default: false
+      required:
+        - urlTemplate
+    LayerOptionsPlain:
+      title: Layer options Plain
+      type: object
+      properties:
+        color:
+          type: string
+          description: >
+            Numbers that define the valid colors to include. Valid colors:
+
+              - A string value that includes CSS colors (i.e. ```blue```) or a hex color string (i.e. ```#0000ff```)
+
+              - An integer array of r,g,b values (i.e. ```[255,0,0]```)
+
+              - An integer array of r,g,b,a values (i.e. ```[255,0,0,128]```)
+
+              
+              
+            If **only** the ```color``` value is used for a plain layer, this
+            value is Required.
+
+
+            If **both** ```color``` and ```imageUrl``` are defined, only the
+            color value is used for the plain layer configuration.
+          default: null
+        imageUrl:
+          type: string
+          description: >
+            URL from where the image is retrieved
+
+            * If **only** the ```imageUrl``` value is used for a plain layer,
+            this value is Required.
+
+            * If ```color``` is defined, this ```imageUrl``` value is ignored.
+          default: null
+    LayerOptionsNamedMap:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 'A string value, the name for the Named Map to use.'
+        config:
+          type: object
+          description: >-
+            An object, the replacement values for the Named Map’s template
+            placeholders.
+        auth_tokens:
+          type: array
+          items:
+            type: string
+            description: token
+          description: >-
+            Strings array, the authorized tokens in case the Named Map has auth
+            method set to ```token```.
+      required:
+        - name
+    CartoCSS:
+      type: string
+      title: cartocss
+      description: >
+        Specifies the CartoCSS style to render the tiles.
+
+
+        **Note:** The CartoCSS specification is dependent on the layer type. For
+        details, see mapnik-reference.json.
+    CartoCSSVersion:
+      type: string
+      title: cartocss version
+      description: >
+        A string value, specifying the CartoCSS style version of the CartoCSS
+        attribute.
+
+
+        **Note:** The CartoCSS version is specific to the layer type.
+    Srid:
+      type: string
+      description: The spatial reference identifier for the geometry column.
+      default: 3857
+    Affected_tables:
+      type: string
+      title: Affected Tables
+      description: >
+        A string of values containing the tables that the Mapnik layer SQL
+        configuration is using. This value is used if there is a problem
+        guessing what the affected tables are from the SQL configuration (i.e.
+        when using PL/SQL functions).
+    LayerType:
+      title: Layer type
+      type: string
+      enum:
+        - mapnik
+        - cartodb
+        - torque
+        - http
+        - plain
+        - named
+      description: |
+        A string value that defines the layer type:
+        * **mapnik** - rasterized tiles
+        * **cartodb** -  an alias for mapnik (for backward compatibility)
+        * **torque** - render vector tiles in torque format
+        * **http** - load tiles over HTTP
+        * **plain** - color or background image url
+        * **named** - use a Named Map as a layer
+    AnonymousMapResponse:
+      type: object
+      properties:
+        layergroupid:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          properties:
+            layers:
+              type: array
+              items:
+                type: object
+                properties:
+                  type:
+                    $ref: '#/components/schemas/LayerType'
+                  meta:
+                    type: object
+        cdn_url:
+          type: object
+          properties:
+            http:
+              type: string
+            https:
+              type: string
+  securitySchemes:
+    ApiKeyHTTPBasicAuth:
+      type: http
+      scheme: basic
+    ApiKeyQueryParam:
+      type: apiKey
+      in: header
+      name: api_key
+  parameters:
+    layergroupId:
+      in: path
+      name: layergroupid
+      required: true
+      schema:
+        type: string
+      description: The layergroup ID.
+    z:
+      in: path
+      name: z
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+      description: Zoom level.
+    x:
+      in: path
+      name: x
+      required: true
+      schema:
+        type: integer
+      description: X coordinate.
+    'y':
+      in: path
+      name: 'y'
+      required: true
+      schema:
+        type: integer
+      description: Y coordinate.
+    lng:
+      in: path
+      name: lng
+      required: true
+      schema:
+        type: number
+        format: float
+      description: The longitude for the center of the map.
+    lat:
+      in: path
+      name: lat
+      required: true
+      schema:
+        type: number
+        format: float
+      description: The latitude for the center of the map.
+    width:
+      in: path
+      name: width
+      required: true
+      schema:
+        type: integer
+      description: Width in pixels for the output image.
+    height:
+      in: path
+      name: height
+      required: true
+      schema:
+        type: integer
+      description: Height in pixels for the output image.
+    format:
+      in: path
+      name: format
+      required: true
+      schema:
+        type: string
+        enum:
+        - png
+        - jpg
+      description: Output image format
+    west:
+      in: path
+      name: west
+      required: true
+      schema:
+        type: number
+        format: float
+      description: LowerCorner longitude, in decimal degrees (aka most western) in WGS 84 (EPSG:4326)
+    south:
+      in: path
+      name: south
+      required: true
+      schema:
+        type: number
+        format: float
+      description: LowerCorner latitude, in decimal degrees (aka most southern) in WGS 84 (EPSG:4326)  
+    east:
+      in: path
+      name: east
+      required: true
+      schema:
+        type: number
+        format: float
+      description: UpperCorner longitude, in decimal degrees (aka most eastern) in WGS 84 (EPSG:4326)  
+    north:
+      in: path
+      name: north
+      required: true
+      schema:
+        type: number
+        format: float
+      description: UpperCorner latitude, in decimal degrees (aka most northern) in WGS 84 (EPSG:4326) 
+    name:
+      in: path
+      name: name
+      required: true
+      schema:
+        type: string
+      description: The named map name
+
+    layersFilter:
+      in: path
+      name: layers_filter
+      required: true
+      schema:
+        oneOf:
+          - type: string
+            title: all
+          - type: string
+            title: list of indexes
+      description: |
+        Layers to be rendered together.
+
+        Supports 2 format options:
+        * a comma separated list of layer indexes (0-based). Examples: 
+
+          * **0,1,3** - will filter and blend layers with indexes 0, 1 and 3
+          * **2** - only one layer
+
+        * **all** will blend all layers in the layergroup
+    layerIndex:
+      in: path
+      name: layer
+      required: true
+      schema:
+        type: number
+        title: layer index
+        minimum: 0
+      description: 0 based layer index
+  responses:
+    NotFound:
+      description: The specified resource was not found
+    Unauthorized:
+      description: Unauthorized. No authentication provided.
+    Forbidden:
+      description: Forbidden. The API key does not authorize this request.
+    BadInput:
+      description: Request's parameters error
