@@ -9,7 +9,7 @@
         "works_with": {
             "redis": ">=3.0.0",
             "postgresql": ">=9.5.0",
-            "postgis": ">=2.2.0",
+            "postgis": ">=2.2.0.0",
             "carto_postgresql_ext": ">=0.19.0"
         }
     }
