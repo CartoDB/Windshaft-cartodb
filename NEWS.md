@@ -7,7 +7,9 @@ Released 2018-mm-dd
   - Build query from node's cache to compute output columns when building analysis
   - Adds metadata columns for street level geocoding
 - Remove use of `step` module to handle asynchronous code, now it's defined as development dependency.
-
+- Bug Fixes: (#1020)
+  - Fix bug in date-wrapper regarding columns with spaces
+  - Fix bug in aggregation-query regarding columns with spaces
 
 ## 6.3.0
 Released 2018-07-26
