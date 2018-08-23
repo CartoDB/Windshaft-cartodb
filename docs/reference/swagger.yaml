@@ -36,11 +36,11 @@ tags:
     externalDocs:
       url: 'https://carto.com/developers/maps-api/guides/anonymous-maps/'
   - name: Named Maps
-    description: Run a single SQL statement
+    description: Instantiate a map from private data, and users without an API Key can view your Named Map.
     externalDocs:
       url: 'https://carto.com/developers/maps-api/guides/named-maps/'
   - name: Static Maps
-    description: Create static images of parts of maps
+    description: Create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
     externalDocs:
       url: 'https://carto.com/developers/maps-api/guides/static-maps-API/'
 paths:
@@ -88,7 +88,7 @@ paths:
             curl -X POST -H "Content-Type: application/json" -d '{ \
               "q": "SELECT count(*) FROM cities", \
               "filename": "number_of_cities.json" \
-            }' "https://username.carto.com/api/v2/sql"      
+            }' "https://username.carto.com/api/v2/sql"
   '/map/{layergroupid}/{z}/{x}/{y}.png':
     get:
       parameters:
@@ -197,7 +197,113 @@ paths:
             curl -X GET \
 
             https://username.carto.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/2/3/4.png
-
+  'map/named':
+    post:
+      summary: Upload template
+      description: |
+      tags:
+        - Named Maps
+      security:
+        - ApiKeyHTTPBasicAuth: []
+        - ApiKeyQueryParam: []
+      operationId: instantiateAnonymousMap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Template'
+            example:
+              version: 0.0.1
+              name: 'template_name'
+              auth:
+                method: 'token'
+                valid_tokens:
+                  - 'auth_token1'
+                  - 'auth_token2'
+              placeholders:
+                color:
+                  type: 'css_color'
+                  default: 'red'
+                cartodb_id:
+                  type: 'number'
+                  default: 1
+              layergroup:
+                version: 1.7.0
+                layers:
+                  - type: mapnik
+                    options:
+                      cartocss_version: 2.1.1
+                      cartocss: '#layer { polygon-fill: #FFF; }'
+                      sql: select * from european_countries_e
+                      interactivity:
+                        - cartodb_id
+                        - iso3
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedMapResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X POST -H "Content-Type: application/json" -d '{ \
+              "version": "0.0.1", \
+              "name": "template_name", \
+              "auth": { \
+                "method": "token", \
+                "valid_tokens": [ \
+                  "auth_token1", \
+                  "auth_token2" \
+                ] \
+              }, \
+              "placeholders": { \
+                "color": { \
+                  "type": "css_color", \
+                  "default": "red" \
+                }, \
+                "cartodb_id": { \
+                  "type": "number", \
+                  "default": 1 \
+                } \
+              }, \
+              "layergroup": { \
+                "version": "1.7.0", \
+                "layers": [ \
+                  { \
+                    "type": "cartodb", \
+                    "options": { \
+                      "cartocss_version": "2.3.0", \
+                      "cartocss": "#layer { polygon-fill: <%= color %>; }", \
+                      "sql": "select * from european_countries_e WHERE cartodb_id = <%= cartodb_id %>" \
+                    } \
+                  } \
+                ] \
+              }, \
+              "view": { \
+                "zoom": 4, \
+                "center": { \
+                  "lng": 0, \
+                  "lat": 0 \
+                }, \
+                "bounds": { \
+                  "west": -45, \
+                  "south": -45, \
+                  "east": 45, \
+                  "north": 45 \
+                }, \
+                "preview_layers": { \
+                  "0": true, \
+                  "layer1": false \
+                } \
+              } \
+            }' "https://{username}.carto.com/api/v1/map/named?api_key={api_key}"
   '/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}':
     get:
       parameters:
@@ -237,7 +343,7 @@ paths:
             curl -X GET \
 
             https://username.carto.com/api/v1/map/static/center/c01a54877c62831bb51720263f91fb33/4/20/40/500/500.png
-            
+
   '/map/static/bbox/{layergroupid}/{west},{south},{east},{north}/{width}/{height}.{format}':
     get:
       parameters:
@@ -313,7 +419,7 @@ paths:
           source: >
             curl -X GET \
 
-            https://username.carto.com/api/map/static/named/mynamedmap/500/500.png  
+            https://username.carto.com/api/map/static/named/mynamedmap/500/500.png
 
 components:
   schemas:
@@ -382,7 +488,7 @@ components:
 
 
             **Tip:** The SQL request should include the following Mapnik layer
-            configurations: 
+            configurations:
               * ```geom_column```
               * ```interactivity```
               * ```attributes```
@@ -425,7 +531,7 @@ components:
 
 
             **Note:** If the default, or no value is specified, raster bands are
-            interpreted as either: 
+            interpreted as either:
               * grayscale (for single bands)
               * RGB (for 3 bands)
               * RGBA (for 4 bands).
@@ -490,7 +596,7 @@ components:
 
 
             **Tip:** The SQL request should include the following Mapnik layer
-            configurations: 
+            configurations:
               * geom_column
               * interactivity
               * attributes
@@ -551,7 +657,7 @@ components:
           type: string
           description: >
             URL from where the tile data is retrieved. _URLs must be included in
-            the configuration whitelist to be valid._ 
+            the configuration whitelist to be valid._
 
 
             **Note:** It includes
@@ -609,8 +715,8 @@ components:
 
               - An integer array of r,g,b,a values (i.e. ```[255,0,0,128]```)
 
-              
-              
+
+
             If **only** the ```color``` value is used for a plain layer, this
             value is Required.
 
@@ -724,6 +830,89 @@ components:
               type: string
             https:
               type: string
+    Template:
+      type: object
+      properties:
+        version:
+          type: string
+          description: Spec version to use for validation.
+          default: 0.0.1
+        name:
+          type: string
+          description: There can only be one template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-), or underscores (_)
+        auth:
+          type: object
+          properties:
+            method:
+              type: string
+              description: token or open
+              default: open
+            valid_tokens:
+              type: array
+              description: when `"method"` is set to `"token"`, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.carto.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
+        placeholders:
+          type: object
+          description: >
+            Variables that can be placed in layergroup's definition (SQL or CartoCSS of any layer). Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergroup configurations](http://docs.carto.com/carto-engine/maps-api/mapconfig/#layergroup-configurations).
+
+            Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced inside the Named Maps API.
+
+            ```javascript
+            <%= my_color %>
+            ````
+
+            The set of supported placeholders for a template need to be explicitly defined with a specific type, and default value, for each placeholder.
+
+            The placeholder type will determine the kind of escaping for the associated value. Supported types are:
+
+            Types | Description
+            --- | ---
+            sql_literal | internal single-quotes will be sql-escaped
+            sql_ident | internal double-quotes will be sql-escaped
+            number | can only contain numerical representation
+            css_color | can only contain color names or hex-values
+
+            Placeholder default values will be used whenever new values are not provided as options, at the time of creation on the client. They can also be used to test the template by creating a default version with new options provided.
+
+            When using templates, be very careful about your selections as they can give broad access to your data if they are defined loosely.
+          example: <%= my_color %>
+        layergroup:
+          type: object
+          description: The layergroup configurations, as specified in the template. See [MapConfig File Format](http://docs.carto.com/carto-engine/maps-api/mapconfig/) for more information
+        view:
+          type: object
+          description: Extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box. Also it is possible to choose which layers are visible or not with `preview_layers` indicating its visibility by layer index or id (visible by default).
+          properties:
+            zoom:
+              type: number
+              description: The zoom level to use
+            center:
+              type: object
+              properties:
+                lng:
+                  type: number
+                  description: The longitude to use for the center
+                lat:
+                  type: number
+                  description: The latitude to use for the center
+            bounds:
+              type: object
+              properties:
+                west: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
+                south: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
+                east: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
+                north: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
+      required:
+        - version
+        - name
+        - auth
+        - placeholders
+        - layergroup
+    NamedMapResponse:
+      type: object
+      properties:
+        template_id:
+          type: string
   securitySchemes:
     ApiKeyHTTPBasicAuth:
       type: http
@@ -817,7 +1006,7 @@ components:
       schema:
         type: number
         format: float
-      description: LowerCorner latitude, in decimal degrees (aka most southern) in WGS 84 (EPSG:4326)  
+      description: LowerCorner latitude, in decimal degrees (aka most southern) in WGS 84 (EPSG:4326)
     east:
       in: path
       name: east
@@ -825,7 +1014,7 @@ components:
       schema:
         type: number
         format: float
-      description: UpperCorner longitude, in decimal degrees (aka most eastern) in WGS 84 (EPSG:4326)  
+      description: UpperCorner longitude, in decimal degrees (aka most eastern) in WGS 84 (EPSG:4326)
     north:
       in: path
       name: north
@@ -833,7 +1022,7 @@ components:
       schema:
         type: number
         format: float
-      description: UpperCorner latitude, in decimal degrees (aka most northern) in WGS 84 (EPSG:4326) 
+      description: UpperCorner latitude, in decimal degrees (aka most northern) in WGS 84 (EPSG:4326)
     name:
       in: path
       name: name
@@ -856,7 +1045,7 @@ components:
         Layers to be rendered together.
 
         Supports 2 format options:
-        * a comma separated list of layer indexes (0-based). Examples: 
+        * a comma separated list of layer indexes (0-based). Examples:
 
           * **0,1,3** - will filter and blend layers with indexes 0, 1 and 3
           * **2** - only one layer
