@@ -197,7 +197,7 @@ paths:
             curl -X GET \
 
             https://username.carto.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/2/3/4.png
-  'map/named':
+  '/map/named':
     post:
       summary: Upload template
       description: |
@@ -848,8 +848,8 @@ components:
               description: token or open
               default: open
             valid_tokens:
-              type: array
-              description: when `"method"` is set to `"token"`, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.carto.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
+              type: string
+              description: when method is set to token, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.carto.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
         placeholders:
           type: object
           description: >
@@ -897,11 +897,20 @@ components:
                   description: The latitude to use for the center
             bounds:
               type: object
+              description: View area for the map. It can be used to have a static preview with bounding box `bbox
               properties:
-                west: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
-                south: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
-                east: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
-                north: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
+                west:
+                  type: number
+                  description: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
+                south:
+                  type: number
+                  description: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
+                east:
+                  type: number
+                  description: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
+                north:
+                  type: number
+                  description: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
       required:
         - version
         - name
