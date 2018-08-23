@@ -855,37 +855,7 @@ components:
         layergroup:
           $ref: '#/components/schemas/MapConfig'
         view:
-          type: object
-          description: Extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box. Also it is possible to choose which layers are visible or not with `preview_layers` indicating its visibility by layer index or id (visible by default).
-          properties:
-            zoom:
-              type: number
-              description: The zoom level to use
-            center:
-              type: object
-              properties:
-                lng:
-                  type: number
-                  description: The longitude to use for the center
-                lat:
-                  type: number
-                  description: The latitude to use for the center
-            bounds:
-              type: object
-              description: View area for the map. It can be used to have a static preview with bounding box `bbox
-              properties:
-                west:
-                  type: number
-                  description: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
-                south:
-                  type: number
-                  description: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
-                east:
-                  type: number
-                  description: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
-                north:
-                  type: number
-                  description: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
+          $ref: '#/components/schemas/TemplateView'
       required:
         - version
         - name
@@ -910,10 +880,65 @@ components:
             number: can only contain numerical representation
             css_color: can only contain color names or hex-values
         default:
-          type: 'string or number or hex-value'
+          type: string
       required:
         - type
         - default
+    TemplateView:
+      type: object
+      description: Extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box. Also it is possible to choose which layers are visible or not with `preview_layers` indicating its visibility by layer index or id (visible by default).
+      properties:
+        zoom:
+          $ref: '#/components/schemas/TemplateViewZoom'
+        center:
+          $ref: '#/components/schemas/TemplateViewZoom'
+        bounds:
+          $ref: '#/components/schemas/TemplateViewBounds'
+        preview_layers:
+          $ref: '#/components/schemas/TemplateViewPreviewLayers'
+    TemplateViewZoom:
+      type: number
+      description: The zoom level to use
+      example: 4
+    TemplateViewCenter:
+      type: object
+      properties:
+        lng:
+          type: number
+          description: The longitude to use for the center
+        lat:
+          type: number
+          description: The latitude to use for the center
+      example:
+        lng: 0
+        lat: 0
+    TemplateViewBounds:
+      type: object
+      description: View area for the map. It can be used to have a static preview with bounding box `bbox
+      properties:
+        west:
+          type: number
+          description: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
+        south:
+          type: number
+          description: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
+        east:
+          type: number
+          description: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
+        north:
+          type: number
+          description: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
+      example:
+        west: -45
+        south: -45
+        east: 45
+        north: 45
+    TemplateViewPreviewLayers:
+      type: object
+      description: Indicates which layers are visible or not by layer index or id (visible by default).
+      example:
+        0: true
+        layer1: false
     NamedMapResponse:
       type: object
       properties:
