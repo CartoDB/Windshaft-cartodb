@@ -317,9 +317,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/NamedMapResponseList'
+                $ref: '#/components/schemas/NamedMapResponseList'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -331,6 +329,131 @@ paths:
         - lang: Curl
           source: |
             curl -X GET 'https://{username}.carto.com/api/v1/map/named?api_key={api_key}'
+  '/map/named/{template_name}':
+    get:
+      summary: Get template definition
+      description: Get the definition of a requested template
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X GET 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
+    put:
+      summary: Update template definition
+      description: Update the definition of the template
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedMapResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X PUT \
+              -H 'Content-Type: application/json' \
+              -d '{ \
+                "version": "0.0.1", \
+                "name": "template_name", \
+                "auth": { \
+                  "method": "token", \
+                  "valid_tokens": [ \
+                    "auth_token1", \
+                    "auth_token2" \
+                  ] \
+                }, \
+                "placeholders": { \
+                  "color": { \
+                    "type": "css_color", \
+                    "default": "red" \
+                  }, \
+                  "cartodb_id": { \
+                    "type": "number", \
+                    "default": 1 \
+                  } \
+                }, \
+                "layergroup": { \
+                  "version": "1.7.0", \
+                  "layers": [ \
+                    { \
+                      "type": "cartodb", \
+                      "options": { \
+                        "cartocss_version": "2.3.0", \
+                        "cartocss": "#layer { polygon-fill: <%= color %>; }", \
+                        "sql": "select * from european_countries_e WHERE cartodb_id = <%= cartodb_id %>" \
+                      } \
+                    } \
+                  ] \
+                }, \
+                "view": { \
+                  "zoom": 4, \
+                  "center": { \
+                    "lng": 0, \
+                    "lat": 0 \
+                  }, \
+                  "bounds": { \
+                    "west": -45, \
+                    "south": -45, \
+                    "east": 45, \
+                    "north": 45 \
+                  }, \
+                  "preview_layers": { \
+                    "0": true, \
+                    "layer1": false \
+                  } \
+                } \
+              }' \
+              'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
+    delete:
+      summary: Delete template
+      description: Deletes the specified template map from the server, and disables any previously initialized versions of the map.
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+      responses:
+        '204':
+          description: No Content
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X DELETE 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
   '/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}':
     get:
       parameters:
@@ -1100,7 +1223,6 @@ components:
       schema:
         type: string
       description: The named map name
-
     layersFilter:
       in: path
       name: layers_filter
@@ -1130,6 +1252,13 @@ components:
         title: layer index
         minimum: 0
       description: 0 based layer index
+    templateName:
+      in: path
+      name: template_name
+      required: true
+      schema:
+        type: string
+      description: Name of the requested template
   responses:
     NotFound:
       description: The specified resource was not found
