@@ -611,7 +611,6 @@ paths:
         - lang: Curl
           source: >
             curl -X GET \
-
             https://{username}.carto.com/api/map/static/bbox/{layergroupid}/{west},{south},{east},{north}/{width}/{height}.{format}?layer=all
   '/map/static/named/{name}/{width}/{height}.{format}':
     get:
