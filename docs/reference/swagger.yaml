@@ -201,11 +201,9 @@ paths:
     post:
       summary: Upload template
       description: |
+        Upload template
       tags:
         - Named Maps
-      security:
-        - ApiKeyHTTPBasicAuth: []
-        - ApiKeyQueryParam: []
       operationId: instantiateAnonymousMap
       requestBody:
         required: true
@@ -250,6 +248,9 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
       x-code-samples:
         - lang: Curl
           source: |
@@ -304,6 +305,32 @@ paths:
                 } \
               } \
             }' "https://{username}.carto.com/api/v1/map/named?api_key={api_key}"
+    get:
+      summary: List user's templates
+      description: |
+        List user's templates
+      tags:
+        - Named Maps
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NamedMapResponseList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X GET 'https://{username}.carto.com/api/v1/map/named?api_key={api_key}'
   '/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}':
     get:
       parameters:
@@ -891,11 +918,15 @@ components:
         zoom:
           $ref: '#/components/schemas/TemplateViewZoom'
         center:
-          $ref: '#/components/schemas/TemplateViewZoom'
+          $ref: '#/components/schemas/TemplateViewCenter'
         bounds:
           $ref: '#/components/schemas/TemplateViewBounds'
         preview_layers:
           $ref: '#/components/schemas/TemplateViewPreviewLayers'
+      required:
+        - zoom
+        - center
+        - bounds
     TemplateViewZoom:
       type: number
       description: The zoom level to use
@@ -944,13 +975,21 @@ components:
       properties:
         template_id:
           type: string
+    NamedMapResponseList:
+      type: object
+      properties:
+        template_ids:
+          type: array
+          items:
+            type: string
+            description: template name
   securitySchemes:
     ApiKeyHTTPBasicAuth:
       type: http
       scheme: basic
     ApiKeyQueryParam:
       type: apiKey
-      in: header
+      in: query
       name: api_key
   parameters:
     layergroupId:
