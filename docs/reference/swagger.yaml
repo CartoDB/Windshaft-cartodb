@@ -454,6 +454,56 @@ paths:
         - lang: Curl
           source: |
             curl -X DELETE 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
+    post:
+      summary: Instantiate a Named Map
+      description: Instantiating a Named Map allows you to fetch the map tiles. You can use the Maps API to instantiate, or use the CARTO.js createLayer() function. The result is an Anonymous Map
+      tags:
+        - Named Maps
+      parameters:
+        - in: query
+          name: auth_token
+          description: >
+            `"token"` or `"open"` ("open" is the default if not specified. Use "token" to password-protect your map)
+          schema:
+            type: string
+      operationId: instantiateNamedMap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateParams'
+            example:
+              color: '#ff0000'
+              cartodb_id: 3
+      responses:
+        '200':
+          description: Ok. You can then use the layergroupid for fetching tiles and grids as you would normally
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateInstantiationResponse'
+              example:
+                layergroupid: 'docs@fd2861af@c01a54877c62831bb51720263f91fb33:123456788'
+                last_updated: '2013-11-14T11:20:15.000Z'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X POST \
+              -H 'Content-Type: application/json' \
+              -d '{ \
+                "color": "#ff0000", \
+                "cartodb_id": 3 \
+              }' \
+              'https://{username}.carto.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
+  '/map/named/{template_name}/jsonp':
   '/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}':
     get:
       parameters:
@@ -982,6 +1032,7 @@ components:
               type: string
     Template:
       type: object
+      title: Template
       properties:
         version:
           type: string
@@ -1012,8 +1063,12 @@ components:
         - auth
         - placeholders
         - layergroup
+    TemplateParams:
+      type: object
+      title: Template Parameters
     TemplatePlaceholders:
       type: object
+      title: Template Placeholders
       description: >
         Variables that can be placed in layergroup's definition (SQL or CartoCSS of any layer). Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergroup configurations](http://docs.carto.com/carto-engine/maps-api/mapconfig/#layergroup-configurations). Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced inside the Named Maps API.
 
@@ -1036,6 +1091,7 @@ components:
         - default
     TemplateView:
       type: object
+      title: Template View
       description: Extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box. Also it is possible to choose which layers are visible or not with `preview_layers` indicating its visibility by layer index or id (visible by default).
       properties:
         zoom:
@@ -1052,10 +1108,12 @@ components:
         - bounds
     TemplateViewZoom:
       type: number
+      title: Template View Zoom
       description: The zoom level to use
       example: 4
     TemplateViewCenter:
       type: object
+      title: Template View Center
       properties:
         lng:
           type: number
@@ -1068,6 +1126,7 @@ components:
         lat: 0
     TemplateViewBounds:
       type: object
+      title: Template View Bounds
       description: View area for the map. It can be used to have a static preview with bounding box `bbox
       properties:
         west:
@@ -1089,23 +1148,35 @@ components:
         north: 45
     TemplateViewPreviewLayers:
       type: object
+      title: Template View Preview Layers
       description: Indicates which layers are visible or not by layer index or id (visible by default).
       example:
         0: true
         layer1: false
     NamedMapResponse:
       type: object
+      title: Named Map Response
       properties:
         template_id:
           type: string
     NamedMapResponseList:
       type: object
+      title: Named Map Response List
       properties:
         template_ids:
           type: array
           items:
             type: string
             description: template name
+    TemplateInstantiationResponse:
+      type: object
+      title: Template Instantiation Response
+      poperties:
+        layergroupid:
+          type: string
+        last_updated:
+          type: string
+          format: date-time
   securitySchemes:
     ApiKeyHTTPBasicAuth:
       type: http
