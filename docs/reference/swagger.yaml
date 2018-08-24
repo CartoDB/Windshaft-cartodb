@@ -74,7 +74,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnonymousMapResponse'
+                $ref: '#/components/schemas/MapResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -482,17 +482,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TemplateInstantiationResponse'
-              example:
-                layergroupid: 'docs@fd2861af@c01a54877c62831bb51720263f91fb33:123456788'
-                last_updated: '2013-11-14T11:20:15.000Z'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-      security:
-        - ApiKeyQueryParam: []
-        - ApiKeyHTTPBasicAuth: []
+                $ref: '#/components/schemas/MapResponse'
       x-code-samples:
         - lang: Curl
           source: |
@@ -504,6 +494,38 @@ paths:
               }' \
               'https://{username}.carto.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
   '/map/named/{template_name}/jsonp':
+    get:
+      summary: Instantiate a Named Map using JSONP
+      description: Instantiating a Named Map allows you to fetch the map tiles. The result is an Anonymous Map
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+        - in: query
+          name: auth_token
+          description: >
+            `"token"` or `"open"` ("open" is the default if not specified. Use "token" to password-protect your map)
+          schema:
+            type: string
+        - in: query
+          name: config
+          description: >
+            Encoded JSON with the params (variables) needed for the Named Map
+          schema:
+            type: string
+        - in: query
+          name: callback
+          description: >
+            JSON callback name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok. You can then use the layergroupid for fetching tiles and grids as you would normally
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MapResponse'
   '/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}':
     get:
       parameters:
@@ -1003,7 +1025,7 @@ components:
         * **http** - load tiles over HTTP
         * **plain** - color or background image url
         * **named** - use a Named Map as a layer
-    AnonymousMapResponse:
+    MapResponse:
       type: object
       properties:
         layergroupid:
@@ -1168,15 +1190,6 @@ components:
           items:
             type: string
             description: template name
-    TemplateInstantiationResponse:
-      type: object
-      title: Template Instantiation Response
-      poperties:
-        layergroupid:
-          type: string
-        last_updated:
-          type: string
-          format: date-time
   securitySchemes:
     ApiKeyHTTPBasicAuth:
       type: http
