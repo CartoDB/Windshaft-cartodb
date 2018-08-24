@@ -245,6 +245,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NamedMapResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -319,6 +321,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NamedMapResponseList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -345,10 +349,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Template'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       security:
         - ApiKeyQueryParam: []
         - ApiKeyHTTPBasicAuth: []
@@ -370,10 +378,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NamedMapResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       security:
         - ApiKeyQueryParam: []
         - ApiKeyHTTPBasicAuth: []
@@ -444,10 +456,14 @@ paths:
       responses:
         '204':
           description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
       security:
         - ApiKeyQueryParam: []
         - ApiKeyHTTPBasicAuth: []
@@ -485,6 +501,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MapResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
       x-code-samples:
         - lang: Curl
           source: |
@@ -528,6 +548,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MapResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
       x-code-samples:
         - lang: Curl
           source: |
@@ -558,6 +582,8 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -598,6 +624,8 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -633,6 +661,8 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1367,6 +1397,8 @@ components:
         type: string
       description: Name of the requested template
   responses:
+    BadRequest:
+      description: The server could not understand the request due to invalid syntax.
     NotFound:
       description: The specified resource was not found
     Unauthorized:
