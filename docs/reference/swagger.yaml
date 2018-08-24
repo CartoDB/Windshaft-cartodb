@@ -40,7 +40,8 @@ tags:
     externalDocs:
       url: 'https://carto.com/developers/maps-api/guides/named-maps/'
   - name: Static Maps
-    description: Create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
+    description: >
+      Create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats. Begin by instantiating either a Named or Anonymous Map using the layergroupid token to generate static images.
     externalDocs:
       url: 'https://carto.com/developers/maps-api/guides/static-maps-API/'
 paths:
@@ -542,9 +543,10 @@ paths:
         - $ref: '#/components/parameters/width'
         - $ref: '#/components/parameters/height'
         - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/layersQueryParam'
       summary: Zoom + center
       description: |
-        Zoom + center
+        Get static image by defining both the zoom level and geographic center (longitude & latitude)
       tags:
         - Static Maps
       operationId: getStaticZoomCenter
@@ -569,9 +571,7 @@ paths:
         - lang: Curl
           source: >
             curl -X GET \
-
-            https://username.carto.com/api/v1/map/static/center/c01a54877c62831bb51720263f91fb33/4/20/40/500/500.png
-
+            https://{username}.carto.com/api/v1/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}?layer=all
   '/map/static/bbox/{layergroupid}/{west},{south},{east},{north}/{width}/{height}.{format}':
     get:
       parameters:
@@ -583,9 +583,10 @@ paths:
         - $ref: '#/components/parameters/width'
         - $ref: '#/components/parameters/height'
         - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/layersQueryParam'
       summary: Bounding Box
       description: |
-        Bounding Box in WGS 84 (EPSG:4326), comma separated values
+        Get static image by defining bounding box in WGS 84 (EPSG:4326), comma separated values
       tags:
         - Static Maps
       operationId: getStaticBoundingBox
@@ -611,7 +612,7 @@ paths:
           source: >
             curl -X GET \
 
-            https://username.carto.com/api/map/static/bbox/c01a54877c62831bb51720263f91fb33/0/0/30/30/500/500.png
+            https://{username}.carto.com/api/map/static/bbox/{layergroupid}/{west},{south},{east},{north}/{width}/{height}.{format}?layer=all
   '/map/static/named/{name}/{width}/{height}.{format}':
     get:
       parameters:
@@ -621,7 +622,7 @@ paths:
         - $ref: '#/components/parameters/format'
       summary: Named map
       description: |
-        Named map
+        Get the static image of a Named Map by defining width, height and, format. It will use the default vaules defined in the template
       tags:
         - Static Maps
       operationId: getStaticNamedMap
@@ -646,9 +647,7 @@ paths:
         - lang: Curl
           source: >
             curl -X GET \
-
-            https://username.carto.com/api/map/static/named/mynamedmap/500/500.png
-
+            https://{username}.carto.com/api/map/static/named/{name}/{width}/{height}.{format}
 components:
   schemas:
     MapConfig:
@@ -1333,6 +1332,25 @@ components:
           * **2** - only one layer
 
         * **all** will blend all layers in the layergroup
+    layersQueryParam:
+      in: query
+      name: layer
+      schema:
+        oneOf:
+          - type: string
+            title: all
+          - type: string
+            title: list of indexes
+      description: |
+        Layers to be rendered together.
+
+        Supports 2 format options:
+        * a comma separated list of layer indexes (0-based). Examples:
+
+          * **0,1,3** - will filter and blend layers with indexes 0, 1 and 3
+          * **2** - only one layer
+
+        * **all** will blend all layers in the layergroup (**default value**)
     layerIndex:
       in: path
       name: layer
