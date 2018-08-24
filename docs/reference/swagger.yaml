@@ -460,6 +460,7 @@ paths:
       tags:
         - Named Maps
       parameters:
+        - $ref: '#/components/parameters/templateName'
         - in: query
           name: auth_token
           description: >
@@ -526,6 +527,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MapResponse'
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X GET \
+            'https://{username}.carto.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config={"color":  "#ff0000", "cartodb_id": 3}'
   '/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}':
     get:
       parameters:
