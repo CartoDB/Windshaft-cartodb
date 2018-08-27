@@ -473,7 +473,7 @@ paths:
             curl -X DELETE 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
     post:
       summary: Instantiate a Named Map
-      description: Instantiating a Named Map allows you to fetch the map tiles. You can use the Maps API to instantiate, or use the CARTO.js createLayer() function. The result is an Anonymous Map
+      description: Instantiating a Named Map allows you to fetch the map tiles. The result is an Anonymous Map
       tags:
         - Named Maps
       parameters:
