@@ -80,6 +80,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -117,6 +119,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -153,6 +157,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -189,6 +195,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -251,6 +259,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyQueryParam: []
         - ApiKeyHTTPBasicAuth: []
@@ -327,6 +337,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyQueryParam: []
         - ApiKeyHTTPBasicAuth: []
@@ -357,6 +369,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyQueryParam: []
         - ApiKeyHTTPBasicAuth: []
@@ -386,6 +400,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyQueryParam: []
         - ApiKeyHTTPBasicAuth: []
@@ -464,6 +480,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyQueryParam: []
         - ApiKeyHTTPBasicAuth: []
@@ -505,6 +523,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       x-code-samples:
         - lang: Curl
           source: |
@@ -552,6 +572,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       x-code-samples:
         - lang: Curl
           source: |
@@ -590,6 +612,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -632,6 +656,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -669,6 +695,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -1397,8 +1425,10 @@ components:
         type: string
       description: Name of the requested template
   responses:
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request.
     BadRequest:
-      description: The server could not understand the request due to invalid syntax.
+      description: The server could not understand the request due to invalid syntax or unexpected condition.
     NotFound:
       description: The specified resource was not found
     Unauthorized:
