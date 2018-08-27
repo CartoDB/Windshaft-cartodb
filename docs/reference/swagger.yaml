@@ -80,6 +80,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -119,6 +121,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -157,6 +161,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -195,6 +201,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -259,6 +267,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -337,6 +347,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -369,6 +381,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -400,6 +414,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -480,6 +496,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -523,6 +541,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       x-code-samples:
@@ -572,6 +592,8 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       x-code-samples:
@@ -612,6 +634,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -656,6 +680,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -695,6 +721,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -1430,10 +1458,12 @@ components:
     BadRequest:
       description: The server could not understand the request due to invalid syntax or unexpected condition.
     NotFound:
-      description: The specified resource was not found
+      description: The specified resource was not found.
     Unauthorized:
       description: Unauthorized. No authentication provided.
     Forbidden:
       description: Forbidden. The API key does not authorize this request.
     BadInput:
-      description: Request's parameters error
+      description: Request's parameters error.
+    TooManyRequest:
+      description: The user has sent too many requests in a given amount of time ("rate limiting" or "database timeout").
