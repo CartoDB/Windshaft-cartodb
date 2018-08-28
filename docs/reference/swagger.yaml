@@ -36,11 +36,12 @@ tags:
     externalDocs:
       url: 'https://carto.com/developers/maps-api/guides/anonymous-maps/'
   - name: Named Maps
-    description: Run a single SQL statement
+    description: Instantiate a map from private data, and users without an API Key can view your Named Map.
     externalDocs:
       url: 'https://carto.com/developers/maps-api/guides/named-maps/'
   - name: Static Maps
-    description: Create static images of parts of maps
+    description: >
+      Create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats. Begin by instantiating either a Named or Anonymous Map using the layergroupid token to generate static images.
     externalDocs:
       url: 'https://carto.com/developers/maps-api/guides/static-maps-API/'
 paths:
@@ -74,11 +75,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnonymousMapResponse'
+                $ref: '#/components/schemas/MapResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -88,7 +93,7 @@ paths:
             curl -X POST -H "Content-Type: application/json" -d '{ \
               "q": "SELECT count(*) FROM cities", \
               "filename": "number_of_cities.json" \
-            }' "https://username.carto.com/api/v2/sql"      
+            }' "https://username.carto.com/api/v2/sql"
   '/map/{layergroupid}/{z}/{x}/{y}.png':
     get:
       parameters:
@@ -116,6 +121,10 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -152,6 +161,10 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -188,6 +201,10 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -197,7 +214,393 @@ paths:
             curl -X GET \
 
             https://username.carto.com/api/v1/map/c01a54877c62831bb51720263f91fb33:0/2/3/4.png
-
+  '/map/named':
+    post:
+      summary: Upload template
+      description: |
+        Upload template
+      tags:
+        - Named Maps
+      operationId: instantiateAnonymousMap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Template'
+            example:
+              version: 0.0.1
+              name: 'template_name'
+              auth:
+                method: 'token'
+                valid_tokens:
+                  - 'auth_token1'
+                  - 'auth_token2'
+              placeholders:
+                color:
+                  type: 'css_color'
+                  default: 'red'
+                cartodb_id:
+                  type: 'number'
+                  default: 1
+              layergroup:
+                version: 1.7.0
+                layers:
+                  - type: mapnik
+                    options:
+                      cartocss_version: 2.1.1
+                      cartocss: '#layer { polygon-fill: #FFF; }'
+                      sql: select * from european_countries_e
+                      interactivity:
+                        - cartodb_id
+                        - iso3
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedMapResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X POST -H "Content-Type: application/json" -d '{ \
+              "version": "0.0.1", \
+              "name": "template_name", \
+              "auth": { \
+                "method": "token", \
+                "valid_tokens": [ \
+                  "auth_token1", \
+                  "auth_token2" \
+                ] \
+              }, \
+              "placeholders": { \
+                "color": { \
+                  "type": "css_color", \
+                  "default": "red" \
+                }, \
+                "cartodb_id": { \
+                  "type": "number", \
+                  "default": 1 \
+                } \
+              }, \
+              "layergroup": { \
+                "version": "1.7.0", \
+                "layers": [ \
+                  { \
+                    "type": "cartodb", \
+                    "options": { \
+                      "cartocss_version": "2.3.0", \
+                      "cartocss": "#layer { polygon-fill: <%= color %>; }", \
+                      "sql": "select * from european_countries_e WHERE cartodb_id = <%= cartodb_id %>" \
+                    } \
+                  } \
+                ] \
+              }, \
+              "view": { \
+                "zoom": 4, \
+                "center": { \
+                  "lng": 0, \
+                  "lat": 0 \
+                }, \
+                "bounds": { \
+                  "west": -45, \
+                  "south": -45, \
+                  "east": 45, \
+                  "north": 45 \
+                }, \
+                "preview_layers": { \
+                  "0": true, \
+                  "layer1": false \
+                } \
+              } \
+            }' "https://{username}.carto.com/api/v1/map/named?api_key={api_key}"
+    get:
+      summary: List user's templates
+      description: |
+        List user's templates
+      tags:
+        - Named Maps
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedMapResponseList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X GET 'https://{username}.carto.com/api/v1/map/named?api_key={api_key}'
+  '/map/named/{template_name}':
+    get:
+      summary: Get template definition
+      description: Get the definition of a requested template
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X GET 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
+    put:
+      summary: Update template definition
+      description: Update the definition of the template
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedMapResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X PUT \
+              -H 'Content-Type: application/json' \
+              -d '{ \
+                "version": "0.0.1", \
+                "name": "template_name", \
+                "auth": { \
+                  "method": "token", \
+                  "valid_tokens": [ \
+                    "auth_token1", \
+                    "auth_token2" \
+                  ] \
+                }, \
+                "placeholders": { \
+                  "color": { \
+                    "type": "css_color", \
+                    "default": "red" \
+                  }, \
+                  "cartodb_id": { \
+                    "type": "number", \
+                    "default": 1 \
+                  } \
+                }, \
+                "layergroup": { \
+                  "version": "1.7.0", \
+                  "layers": [ \
+                    { \
+                      "type": "cartodb", \
+                      "options": { \
+                        "cartocss_version": "2.3.0", \
+                        "cartocss": "#layer { polygon-fill: <%= color %>; }", \
+                        "sql": "select * from european_countries_e WHERE cartodb_id = <%= cartodb_id %>" \
+                      } \
+                    } \
+                  ] \
+                }, \
+                "view": { \
+                  "zoom": 4, \
+                  "center": { \
+                    "lng": 0, \
+                    "lat": 0 \
+                  }, \
+                  "bounds": { \
+                    "west": -45, \
+                    "south": -45, \
+                    "east": 45, \
+                    "north": 45 \
+                  }, \
+                  "preview_layers": { \
+                    "0": true, \
+                    "layer1": false \
+                  } \
+                } \
+              }' \
+              'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
+    delete:
+      summary: Delete template
+      description: Deletes the specified template map from the server, and disables any previously initialized versions of the map.
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - ApiKeyQueryParam: []
+        - ApiKeyHTTPBasicAuth: []
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X DELETE 'https://{username}.carto.com/api/v1/map/named/{template_name}?api_key={api_key}'
+    post:
+      summary: Instantiate a Named Map
+      description: Instantiating a Named Map allows you to fetch the map tiles. The result is an Anonymous Map
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+        - in: query
+          name: auth_token
+          description: >
+            `"token"` or `"open"` ("open" is the default if not specified. Use "token" to password-protect your map)
+          schema:
+            type: string
+      operationId: instantiateNamedMap
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TemplateParams'
+            example:
+              color: '#ff0000'
+              cartodb_id: 3
+      responses:
+        '200':
+          description: Ok. You can then use the layergroupid for fetching tiles and grids as you would normally
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MapResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X POST \
+              -H 'Content-Type: application/json' \
+              -d '{ \
+                "color": "#ff0000", \
+                "cartodb_id": 3 \
+              }' \
+              'https://{username}.carto.com/api/v1/map/named/{template_name}?auth_token={auth_token}'
+  '/map/named/{template_name}/jsonp':
+    get:
+      summary: Instantiate a Named Map using JSONP
+      description: Instantiating a Named Map allows you to fetch the map tiles. The result is an Anonymous Map
+      tags:
+        - Named Maps
+      parameters:
+        - $ref: '#/components/parameters/templateName'
+        - in: query
+          name: auth_token
+          description: >
+            `"token"` or `"open"` ("open" is the default if not specified. Use "token" to password-protect your map)
+          schema:
+            type: string
+        - in: query
+          name: config
+          description: >
+            Encoded JSON with the params (variables) needed for the Named Map
+          schema:
+            type: string
+        - in: query
+          name: callback
+          description: >
+            JSON callback name
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok. You can then use the layergroupid for fetching tiles and grids as you would normally
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MapResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-code-samples:
+        - lang: Curl
+          source: |
+            curl -X GET \
+            'https://{username}.carto.com/api/v1/map/named/{template_name}/jsonp?auth_token={auth_token}&callback=callback&config={"color":  "#ff0000", "cartodb_id": 3}'
   '/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}':
     get:
       parameters:
@@ -208,9 +611,10 @@ paths:
         - $ref: '#/components/parameters/width'
         - $ref: '#/components/parameters/height'
         - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/layersQueryParam'
       summary: Zoom + center
       description: |
-        Zoom + center
+        Get static image by defining both the zoom level and geographic center (longitude & latitude)
       tags:
         - Static Maps
       operationId: getStaticZoomCenter
@@ -222,12 +626,18 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -235,9 +645,7 @@ paths:
         - lang: Curl
           source: >
             curl -X GET \
-
-            https://username.carto.com/api/v1/map/static/center/c01a54877c62831bb51720263f91fb33/4/20/40/500/500.png
-            
+            https://{username}.carto.com/api/v1/map/static/center/{layergroupid}/{z}/{lat}/{lng}/{width}/{height}.{format}?layer=all
   '/map/static/bbox/{layergroupid}/{west},{south},{east},{north}/{width}/{height}.{format}':
     get:
       parameters:
@@ -249,9 +657,10 @@ paths:
         - $ref: '#/components/parameters/width'
         - $ref: '#/components/parameters/height'
         - $ref: '#/components/parameters/format'
+        - $ref: '#/components/parameters/layersQueryParam'
       summary: Bounding Box
       description: |
-        Bounding Box in WGS 84 (EPSG:4326), comma separated values
+        Get static image by defining bounding box in WGS 84 (EPSG:4326), comma separated values
       tags:
         - Static Maps
       operationId: getStaticBoundingBox
@@ -263,12 +672,18 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -276,8 +691,7 @@ paths:
         - lang: Curl
           source: >
             curl -X GET \
-
-            https://username.carto.com/api/map/static/bbox/c01a54877c62831bb51720263f91fb33/0/0/30/30/500/500.png
+            https://{username}.carto.com/api/map/static/bbox/{layergroupid}/{west},{south},{east},{north}/{width}/{height}.{format}?layer=all
   '/map/static/named/{name}/{width}/{height}.{format}':
     get:
       parameters:
@@ -287,7 +701,7 @@ paths:
         - $ref: '#/components/parameters/format'
       summary: Named map
       description: |
-        Named map
+        Get the static image of a Named Map by defining width, height and, format. It will use the default vaules defined in the template
       tags:
         - Static Maps
       operationId: getStaticNamedMap
@@ -299,12 +713,18 @@ paths:
               schema:
                 type: string
                 format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/TooManyRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
       security:
         - ApiKeyHTTPBasicAuth: []
         - ApiKeyQueryParam: []
@@ -312,9 +732,7 @@ paths:
         - lang: Curl
           source: >
             curl -X GET \
-
-            https://username.carto.com/api/map/static/named/mynamedmap/500/500.png  
-
+            https://{username}.carto.com/api/map/static/named/{name}/{width}/{height}.{format}
 components:
   schemas:
     MapConfig:
@@ -382,7 +800,7 @@ components:
 
 
             **Tip:** The SQL request should include the following Mapnik layer
-            configurations: 
+            configurations:
               * ```geom_column```
               * ```interactivity```
               * ```attributes```
@@ -425,7 +843,7 @@ components:
 
 
             **Note:** If the default, or no value is specified, raster bands are
-            interpreted as either: 
+            interpreted as either:
               * grayscale (for single bands)
               * RGB (for 3 bands)
               * RGBA (for 4 bands).
@@ -490,7 +908,7 @@ components:
 
 
             **Tip:** The SQL request should include the following Mapnik layer
-            configurations: 
+            configurations:
               * geom_column
               * interactivity
               * attributes
@@ -551,7 +969,7 @@ components:
           type: string
           description: >
             URL from where the tile data is retrieved. _URLs must be included in
-            the configuration whitelist to be valid._ 
+            the configuration whitelist to be valid._
 
 
             **Note:** It includes
@@ -609,8 +1027,8 @@ components:
 
               - An integer array of r,g,b,a values (i.e. ```[255,0,0,128]```)
 
-              
-              
+
+
             If **only** the ```color``` value is used for a plain layer, this
             value is Required.
 
@@ -697,7 +1115,7 @@ components:
         * **http** - load tiles over HTTP
         * **plain** - color or background image url
         * **named** - use a Named Map as a layer
-    AnonymousMapResponse:
+    MapResponse:
       type: object
       properties:
         layergroupid:
@@ -724,13 +1142,154 @@ components:
               type: string
             https:
               type: string
+    Template:
+      type: object
+      title: Template
+      properties:
+        version:
+          type: string
+          description: Spec version to use for validation.
+          default: 0.0.1
+        name:
+          type: string
+          description: There can only be one template with the same name for any user. Valid names start with a letter or a number, and only contain letters, numbers, dashes (-), or underscores (_)
+        auth:
+          type: object
+          properties:
+            method:
+              type: string
+              description: token or open
+              default: open
+            valid_tokens:
+              type: string
+              description: when method is set to token, the values listed here allow you to instantiate the Named Map. See this [example](http://docs.carto.com/faqs/manipulating-your-data/#how-to-create-a-password-protected-named-map) for how to create a password-protected map.
+        placeholders:
+          $ref: '#/components/schemas/TemplatePlaceholders'
+        layergroup:
+          $ref: '#/components/schemas/MapConfig'
+        view:
+          $ref: '#/components/schemas/TemplateView'
+      required:
+        - version
+        - name
+        - auth
+        - placeholders
+        - layergroup
+    TemplateParams:
+      type: object
+      title: Template Parameters
+    TemplatePlaceholders:
+      type: object
+      title: Template Placeholders
+      description: >
+        Variables that can be placed in layergroup's definition (SQL or CartoCSS of any layer). Placeholders need to be defined with a `type` and a default value for MapConfigs. See details about defining a MapConfig `type` for [Layergroup configurations](http://docs.carto.com/carto-engine/maps-api/mapconfig/#layergroup-configurations). Valid placeholder names start with a letter and can only contain letters, numbers, or underscores. They have to be written between the `<%=` and `%>` strings in order to be replaced inside the Named Maps API.
+
+        **Example**:```<%= my_color %>```
+
+        The set of supported placeholders for a template need to be explicitly defined with a specific type, and default value, for each placeholder. Placeholder default values will be used whenever new values are not provided as options, at the time of creation on the client. They can also be used to test the template by creating a default version with new options provided. When using templates, be very careful about your selections as they can give broad access to your data if they are defined loosely.
+      properties:
+        type:
+          type: string
+          enum: [sql_literal, sql_ident, number, css_color]
+          description: >
+            sql_literal: internal single-quotes will be sql-escaped
+            sql_ident: internal double-quotes will be sql-escaped
+            number: can only contain numerical representation
+            css_color: can only contain color names or hex-values
+        default:
+          anyOf:
+            - type: string
+            - type: number
+            - type: boolean
+      required:
+        - type
+        - default
+    TemplateView:
+      type: object
+      title: Template View
+      description: Extra keys to specify the view area for the map. It can be used to have a static preview of a Named Map without having to instantiate it. It is possible to specify it with `center` + `zoom` or with a bounding box `bbox`. Center+zoom takes precedence over bounding box. Also it is possible to choose which layers are visible or not with `preview_layers` indicating its visibility by layer index or id (visible by default).
+      properties:
+        zoom:
+          $ref: '#/components/schemas/TemplateViewZoom'
+        center:
+          $ref: '#/components/schemas/TemplateViewCenter'
+        bounds:
+          $ref: '#/components/schemas/TemplateViewBounds'
+        preview_layers:
+          $ref: '#/components/schemas/TemplateViewPreviewLayers'
+      required:
+        - zoom
+        - center
+        - bounds
+    TemplateViewZoom:
+      type: number
+      title: Template View Zoom
+      description: The zoom level to use
+      example: 4
+    TemplateViewCenter:
+      type: object
+      title: Template View Center
+      properties:
+        lng:
+          type: number
+          description: The longitude to use for the center
+        lat:
+          type: number
+          description: The latitude to use for the center
+      example:
+        lng: 0
+        lat: 0
+    TemplateViewBounds:
+      type: object
+      title: Template View Bounds
+      description: View area for the map. It can be used to have a static preview with bounding box `bbox
+      properties:
+        west:
+          type: number
+          description: LowerCorner longitude for the bounding box, in decimal degrees (aka most western)
+        south:
+          type: number
+          description: LowerCorner latitude for the bounding box, in decimal degrees (aka most southern)
+        east:
+          type: number
+          description: UpperCorner longitude for the bounding box, in decimal degrees (aka most eastern)
+        north:
+          type: number
+          description: UpperCorner latitude for the bounding box, in decimal degrees (aka most northern)
+      example:
+        west: -45
+        south: -45
+        east: 45
+        north: 45
+    TemplateViewPreviewLayers:
+      type: object
+      title: Template View Preview Layers
+      description: Indicates which layers are visible or not by layer index or id (visible by default).
+      example:
+        0: true
+        layer1: false
+    NamedMapResponse:
+      type: object
+      title: Named Map Response
+      properties:
+        template_id:
+          type: string
+    NamedMapResponseList:
+      type: object
+      title: Named Map Response List
+      properties:
+        template_ids:
+          type: array
+          items:
+            type: string
+            description: template name
   securitySchemes:
     ApiKeyHTTPBasicAuth:
       type: http
       scheme: basic
     ApiKeyQueryParam:
       type: apiKey
-      in: header
+      in: query
       name: api_key
   parameters:
     layergroupId:
@@ -817,7 +1376,7 @@ components:
       schema:
         type: number
         format: float
-      description: LowerCorner latitude, in decimal degrees (aka most southern) in WGS 84 (EPSG:4326)  
+      description: LowerCorner latitude, in decimal degrees (aka most southern) in WGS 84 (EPSG:4326)
     east:
       in: path
       name: east
@@ -825,7 +1384,7 @@ components:
       schema:
         type: number
         format: float
-      description: UpperCorner longitude, in decimal degrees (aka most eastern) in WGS 84 (EPSG:4326)  
+      description: UpperCorner longitude, in decimal degrees (aka most eastern) in WGS 84 (EPSG:4326)
     north:
       in: path
       name: north
@@ -833,7 +1392,7 @@ components:
       schema:
         type: number
         format: float
-      description: UpperCorner latitude, in decimal degrees (aka most northern) in WGS 84 (EPSG:4326) 
+      description: UpperCorner latitude, in decimal degrees (aka most northern) in WGS 84 (EPSG:4326)
     name:
       in: path
       name: name
@@ -841,7 +1400,6 @@ components:
       schema:
         type: string
       description: The named map name
-
     layersFilter:
       in: path
       name: layers_filter
@@ -856,12 +1414,31 @@ components:
         Layers to be rendered together.
 
         Supports 2 format options:
-        * a comma separated list of layer indexes (0-based). Examples: 
+        * a comma separated list of layer indexes (0-based). Examples:
 
           * **0,1,3** - will filter and blend layers with indexes 0, 1 and 3
           * **2** - only one layer
 
         * **all** will blend all layers in the layergroup
+    layersQueryParam:
+      in: query
+      name: layer
+      schema:
+        oneOf:
+          - type: string
+            title: all
+          - type: string
+            title: list of indexes
+      description: |
+        Layers to be rendered together.
+
+        Supports 2 format options:
+        * a comma separated list of layer indexes (0-based). Examples:
+
+          * **0,1,3** - will filter and blend layers with indexes 0, 1 and 3
+          * **2** - only one layer
+
+        * **all** will blend all layers in the layergroup (**default value**)
     layerIndex:
       in: path
       name: layer
@@ -871,12 +1448,25 @@ components:
         title: layer index
         minimum: 0
       description: 0 based layer index
+    templateName:
+      in: path
+      name: template_name
+      required: true
+      schema:
+        type: string
+      description: Name of the requested template
   responses:
+    InternalServerError:
+      description: Server encountered an unexpected condition that prevented it from fulfilling the request.
+    BadRequest:
+      description: The server could not understand the request due to invalid syntax or unexpected condition.
     NotFound:
-      description: The specified resource was not found
+      description: The specified resource was not found.
     Unauthorized:
       description: Unauthorized. No authentication provided.
     Forbidden:
       description: Forbidden. The API key does not authorize this request.
     BadInput:
-      description: Request's parameters error
+      description: Request's parameters error.
+    TooManyRequest:
+      description: The user has sent too many requests in a given amount of time ("rate limiting" or "database timeout").
