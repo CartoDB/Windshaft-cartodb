@@ -1197,15 +1197,13 @@ components:
             number: can only contain numerical representation
             css_color: can only contain color names or hex-values
         default:
-          $ref: '#/components/schemas/PlaceholderDefaultValue'
+          anyOf:
+            - type: string
+            - type: number
+            - type: boolean
       required:
         - type
         - default
-    PlaceholderDefaultValue:
-      anyOf:
-        - type: string
-        - type: number
-        - type: boolean
     TemplateView:
       type: object
       title: Template View
