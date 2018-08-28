@@ -215,9 +215,9 @@ camelcase@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-3.0.0.tgz#32fc4b9fcdaf845fcdf7e73bb97cac2261f0ab0a"
 
-camshaft@0.62.1:
-  version "0.62.1"
-  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.62.1.tgz#75f8734c4089aaeae3b9067eb94d3c669cebbcaf"
+camshaft@0.62.3:
+  version "0.62.3"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.62.3.tgz#f76c4dff45d00f7750675d0b573ae12975c9138f"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
