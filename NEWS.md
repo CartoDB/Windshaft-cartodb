@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.0.3
+Released 2018-08-28
+
+Announcements:
+- Upgrades camshaft to [0.62.3](https://github.com/CartoDB/camshaft/releases/tag/0.62.3):
+  - Build query from node's cache to compute output columns when building analysis
+  - Adds metadata columns for street level geocoding
+
+
 ## 5.0.2
 Released 2018-07-27
 
