@@ -197,7 +197,7 @@ return function () {
 
 
     if (usePostGIS){
-        describe('use only needed columns', onlyNeededColumns);
+        describe.skip('use only needed columns', onlyNeededColumns);
     }else{
         describe.skip('use only needed columns', onlyNeededColumns);
     }
