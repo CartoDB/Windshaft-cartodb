@@ -271,6 +271,7 @@ describe('dataviews using tables with overviews', function() {
                 "type":"formula"
             });
             assert.ok(getUsesOverviewsFromHeaders(headers));  //Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
 
             testClient.drain(done);
         });
@@ -291,6 +292,7 @@ describe('dataviews using tables with overviews', function() {
                 "nans": 0
             });
             assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
 
             testClient.drain(done);
         });
@@ -311,6 +313,7 @@ describe('dataviews using tables with overviews', function() {
                 "nans": 0
             });
             assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
 
             testClient.drain(done);
         });
@@ -386,6 +389,8 @@ describe('dataviews using tables with overviews', function() {
             assert.equal(histogram.type, 'histogram');
             assert.ok(Array.isArray(histogram.bins));
             assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'histogram'); //Overviews logging
+
             testClient.drain(done);
         });
     });
@@ -594,10 +599,11 @@ describe('dataviews using tables with overviews', function() {
 
             it("should expose an aggregation dataview filtering special float values out", function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_categories_special_values', params, function (err, dataview) {
+                testClient.getDataview('test_categories_special_values', params, function (err, dataview, headers) {
                     if (err) {
                         return done(err);
                     }
+
                     assert.deepEqual(dataview, {
                         aggregation: 'sum',
                         count: 5,
@@ -610,6 +616,10 @@ describe('dataviews using tables with overviews', function() {
                         categories: [ { category: 'Hawai', value: 6, agg: false } ],
                         type: 'aggregation'
                     });
+
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+                    assert(getDataviewTypeFromHeaders(headers) === 'aggregation'); //Overviews logging
+
                     testClient.drain(done);
                 });
             });
@@ -656,7 +666,10 @@ describe('dataviews using tables with overviews', function() {
     });
 });
 
-
 function getUsesOverviewsFromHeaders(headers) {
     return headers && headers['x-tiler-profiler'] && JSON.parse(headers['x-tiler-profiler']).usesOverviews;
+}
+
+function getDataviewTypeFromHeaders(headers) {
+    return headers && headers['x-tiler-profiler'] && JSON.parse(headers['x-tiler-profiler']).dataviewType;
 }
