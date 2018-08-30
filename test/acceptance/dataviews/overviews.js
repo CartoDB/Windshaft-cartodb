@@ -48,11 +48,12 @@ describe('dataviews using tables without overviews', function() {
 
     it("should expose a formula", function(done) {
         var testClient = new TestClient(nonOverviewsMapConfig);
-        testClient.getDataview('country_places_count', { own_filter: 0 }, function(err, formula_result) {
+        testClient.getDataview('country_places_count', { own_filter: 0 }, function(err, formula_result, headers) {
             if (err) {
                 return done(err);
             }
             assert.deepEqual(formula_result, { operation: 'count', result: 7313, nulls: 0, type: 'formula' });
+            assert(getUsesOverviewsFromHeaders(headers) === false); //Overviews logging
 
             testClient.drain(done);
         });
@@ -257,7 +258,7 @@ describe('dataviews using tables with overviews', function() {
 
     it("should expose a sum formula", function(done) {
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_sum', { own_filter: 0 }, function(err, formula_result) {
+        testClient.getDataview('test_sum', { own_filter: 0 }, function(err, formula_result, headers) {
             if (err) {
                 return done(err);
             }
@@ -269,6 +270,8 @@ describe('dataviews using tables with overviews', function() {
                 "nulls":0,
                 "type":"formula"
             });
+            assert.ok(getUsesOverviewsFromHeaders(headers));  //Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
 
             testClient.drain(done);
         });
@@ -276,7 +279,7 @@ describe('dataviews using tables with overviews', function() {
 
     it("should expose an avg formula", function(done) {
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_avg', { own_filter: 0 }, function(err, formula_result) {
+        testClient.getDataview('test_avg', { own_filter: 0 }, function(err, formula_result, headers) {
             if (err) {
                 return done(err);
             }
@@ -288,6 +291,8 @@ describe('dataviews using tables with overviews', function() {
                 "infinities": 0,
                 "nans": 0
             });
+            assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
 
             testClient.drain(done);
         });
@@ -295,7 +300,7 @@ describe('dataviews using tables with overviews', function() {
 
     it("should expose a count formula", function(done) {
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_count', { own_filter: 0 }, function(err, formula_result) {
+        testClient.getDataview('test_count', { own_filter: 0 }, function(err, formula_result, headers) {
             if (err) {
                 return done(err);
             }
@@ -307,6 +312,8 @@ describe('dataviews using tables with overviews', function() {
                 "infinities": 0,
                 "nans": 0
             });
+            assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
 
             testClient.drain(done);
         });
@@ -374,13 +381,16 @@ describe('dataviews using tables with overviews', function() {
 
     it("should expose a histogram", function (done) {
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_histogram', function (err, histogram) {
+        testClient.getDataview('test_histogram', function (err, histogram, headers) {
             if (err) {
                 return done(err);
             }
             assert.ok(histogram);
             assert.equal(histogram.type, 'histogram');
             assert.ok(Array.isArray(histogram.bins));
+            assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'histogram'); //Overviews logging
+
             testClient.drain(done);
         });
     });
@@ -462,7 +472,7 @@ describe('dataviews using tables with overviews', function() {
 
             it("should expose a filtered sum formula", function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_sum', params, function (err, formula_result) {
+                testClient.getDataview('test_sum', params, function (err, formula_result, headers) {
                     if (err) {
                         return done(err);
                     }
@@ -474,13 +484,14 @@ describe('dataviews using tables with overviews', function() {
                         "nans": 0,
                         "type":"formula"
                     });
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
                     testClient.drain(done);
                 });
             });
 
             it("should expose a filtered  avg formula", function(done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_avg', params, function(err, formula_result) {
+                testClient.getDataview('test_avg', params, function(err, formula_result, headers) {
                     if (err) {
                         return done(err);
                     }
@@ -492,6 +503,7 @@ describe('dataviews using tables with overviews', function() {
                         "nans": 0,
                         "type":"formula"
                     });
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
 
                     testClient.drain(done);
                 });
@@ -499,7 +511,7 @@ describe('dataviews using tables with overviews', function() {
 
             it("should expose a filtered count formula", function(done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_count', params, function(err, formula_result) {
+                testClient.getDataview('test_count', params, function(err, formula_result, headers) {
                     if (err) {
                         return done(err);
                     }
@@ -511,6 +523,7 @@ describe('dataviews using tables with overviews', function() {
                         "nulls":0,
                         "type":"formula"
                     });
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
 
                     testClient.drain(done);
                 });
@@ -586,10 +599,11 @@ describe('dataviews using tables with overviews', function() {
 
             it("should expose an aggregation dataview filtering special float values out", function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_categories_special_values', params, function (err, dataview) {
+                testClient.getDataview('test_categories_special_values', params, function (err, dataview, headers) {
                     if (err) {
                         return done(err);
                     }
+
                     assert.deepEqual(dataview, {
                         aggregation: 'sum',
                         count: 5,
@@ -602,6 +616,10 @@ describe('dataviews using tables with overviews', function() {
                         categories: [ { category: 'Hawai', value: 6, agg: false } ],
                         type: 'aggregation'
                     });
+
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+                    assert(getDataviewTypeFromHeaders(headers) === 'aggregation'); //Overviews logging
+
                     testClient.drain(done);
                 });
             });
@@ -647,3 +665,11 @@ describe('dataviews using tables with overviews', function() {
         });
     });
 });
+
+function getUsesOverviewsFromHeaders(headers) {
+    return headers && headers['x-tiler-profiler'] && JSON.parse(headers['x-tiler-profiler']).usesOverviews;
+}
+
+function getDataviewTypeFromHeaders(headers) {
+    return headers && headers['x-tiler-profiler'] && JSON.parse(headers['x-tiler-profiler']).dataviewType;
+}
