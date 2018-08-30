@@ -53,7 +53,7 @@ describe('dataviews using tables without overviews', function() {
                 return done(err);
             }
             assert.deepEqual(formula_result, { operation: 'count', result: 7313, nulls: 0, type: 'formula' });
-            assert(getUsesOverviewsFromHeaders(headers) === undefined); //Overviews logging
+            assert(getUsesOverviewsFromHeaders(headers) === false); //Overviews logging
 
             testClient.drain(done);
         });
