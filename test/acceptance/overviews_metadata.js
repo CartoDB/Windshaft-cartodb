@@ -72,7 +72,12 @@ describe('overviews metadata', function() {
                   data: JSON.stringify(layergroup)
               }, {}, function(res) {
                   assert.equal(res.statusCode, 200, res.body);
-                  assert.ok(JSON.parse(res.headers['x-tiler-profiler']).overviewsAddedToMapconfig);
+
+                  const headers = JSON.parse(res.headers['x-tiler-profiler']);
+
+                  assert.ok(headers.overviewsAddedToMapconfig);
+                  assert.equal(headers.mapType, 'anonymous');
+
                   var parsedBody = JSON.parse(res.body);
                   assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                   expected_token = parsedBody.layergroupid;
