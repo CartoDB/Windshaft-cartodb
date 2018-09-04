@@ -119,6 +119,11 @@ describe('overviews metadata for named maps', function() {
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
 
+                const headers = JSON.parse(res.headers['x-tiler-profiler']);
+
+                assert.ok(headers.overviewsAddedToMapconfig);
+                assert.equal(headers.mapType, 'named');
+
                 next(null, parsedBody.layergroupid);
             },
 
