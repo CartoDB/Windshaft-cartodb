@@ -1,6 +1,6 @@
 # Changelog
 
-## 6.3.1
+## 6.4.0
 Released 2018-mm-dd
 
 - Upgrades Camshaft to [0.62.3](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
