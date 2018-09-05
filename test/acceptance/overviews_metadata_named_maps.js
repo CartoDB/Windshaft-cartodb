@@ -119,11 +119,6 @@ describe('overviews metadata for named maps', function() {
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
 
-                const headers = JSON.parse(res.headers['x-tiler-profiler']);
-
-                assert.ok(headers.overviewsAddedToMapconfig);
-                assert.equal(headers.mapType, 'named');
-
                 next(null, parsedBody.layergroupid);
             },
 
@@ -176,6 +171,61 @@ describe('overviews metadata for named maps', function() {
 
                 return null;
             },
+            function finish(err) {
+                done(err);
+            }
+        );
+    });
+
+    it("Flags overviews usage", function (done) {
+        step(
+            function postTemplate() {
+                var next = this;
+
+                assert.response(server, {
+                    url: '/api/v1/map/named?api_key=1234',
+                    method: 'POST',
+                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                    data: JSON.stringify(template)
+                }, {}, function (res, err) {
+                    next(err, res);
+                });
+            },
+            function instantiateTemplate(err) {
+                assert.ifError(err);
+
+                var next = this;
+                assert.response(server, {
+                    url: '/api/v1/map/named/' + templateId,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    }
+                }, {},
+                    function (res, err) {
+                        return next(err, res);
+                    });
+
+            },
+            function checkFlags(err, res) {
+                assert.ifError(err);
+
+                var next = this;
+
+                var parsedBody = JSON.parse(res.body);
+
+                keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+
+                const headers = JSON.parse(res.headers['x-tiler-profiler']);
+
+                assert.ok(headers.overviewsAddedToMapconfig);
+                assert.equal(headers.mapType, 'named');
+
+                next();
+            },
+
             function finish(err) {
                 done(err);
             }
