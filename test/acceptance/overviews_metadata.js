@@ -115,42 +115,81 @@ describe('overviews metadata', function() {
         );
     });
 
-    it("Flags overviews usage", function (done) {
-        var layergroup = {
-            version: '1.0.0',
-            layers: [overviews_layer, non_overviews_layer]
-        };
+    describe('Overviews Flags', function () {
+        it("Overviews used", function (done) {
+            var layergroup = {
+                version: '1.0.0',
+                layers: [overviews_layer, non_overviews_layer]
+            };
 
-        var layergroup_url = '/api/v1/map';
+            var layergroup_url = '/api/v1/map';
 
-        var expected_token;
-        step(
-            function do_post() {
-                var next = this;
-                assert.response(server, {
-                    url: layergroup_url,
-                    method: 'POST',
-                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(layergroup)
-                }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
+            var expected_token;
+            step(
+                function do_post() {
+                    var next = this;
+                    assert.response(server, {
+                        url: layergroup_url,
+                        method: 'POST',
+                        headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                        data: JSON.stringify(layergroup)
+                    }, {}, function (res) {
+                        assert.equal(res.statusCode, 200, res.body);
 
-                    const headers = JSON.parse(res.headers['x-tiler-profiler']);
+                        const headers = JSON.parse(res.headers['x-tiler-profiler']);
 
-                    assert.ok(headers.overviewsAddedToMapconfig);
-                    assert.equal(headers.mapType, 'anonymous');
-                    
-                    const parsedBody = JSON.parse(res.body);
-                    expected_token = parsedBody.layergroupid;
-                    next();
-                });
-            },
-            function finish(err) {
-                keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
-                keysToDelete['user:localhost:mapviews:global'] = 5;
-                done(err);
-            }
-        );
+                        assert.ok(headers.overviewsAddedToMapconfig);
+                        assert.equal(headers.mapType, 'anonymous');
+
+                        const parsedBody = JSON.parse(res.body);
+                        expected_token = parsedBody.layergroupid;
+                        next();
+                    });
+                },
+                function finish(err) {
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
+                    done(err);
+                }
+            );
+        });
+        it("Overviews NOT used", function (done) {
+            var layergroup = {
+                version: '1.0.0',
+                layers: [non_overviews_layer]
+            };
+
+            var layergroup_url = '/api/v1/map';
+
+            var expected_token;
+            step(
+                function do_post() {
+                    var next = this;
+                    assert.response(server, {
+                        url: layergroup_url,
+                        method: 'POST',
+                        headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                        data: JSON.stringify(layergroup)
+                    }, {}, function (res) {
+                        assert.equal(res.statusCode, 200, res.body);
+
+                        const headers = JSON.parse(res.headers['x-tiler-profiler']);
+
+                        assert.equal(headers.overviewsAddedToMapconfig, false);
+                        assert.equal(headers.mapType, 'anonymous');
+
+                        const parsedBody = JSON.parse(res.body);
+                        expected_token = parsedBody.layergroupid;
+                        next();
+                    });
+                },
+                function finish(err) {
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
+                    done(err);
+                }
+            );
+        });
     });
 });
 
