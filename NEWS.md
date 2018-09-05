@@ -10,6 +10,15 @@ Released 2018-mm-dd
 - Bug Fixes: (#1020)
   - Fix bug in date-wrapper regarding columns with spaces
   - Fix bug in aggregation-query regarding columns with spaces
+- Upgrades Windshaft to [4.9.0](https://github.com/CartoDB/Windshaft/blob/4.9.0/NEWS.md#version-490)
+  - `pg-mvt`:
+    - Now matches the behaviour of the `mapnik` renderer for MVTs.
+    - Removed undocummented filtering by `layer.options.columns`.
+    - Several bugfixes.
+  - Dependency updates: Fixed a bug in Mapnik MVT renderer and cleanup in `tilelive-mapnik`.
+  - [MapConfig 1.8.0 released](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.8.0.md) with new options for MVTs:
+    - Add **`vector_extent`** option in MapConfig to setup the layer extent.
+    - Add **`vector_simplify_extent`** option in MapConfig to configure the simplification process.
 
 ## 6.3.0
 Released 2018-07-26
