@@ -50,7 +50,7 @@ describe('Overviews', function() {
 
         it("should expose a formula", function (done) {
             var testClient = new TestClient(nonOverviewsMapConfig);
-            testClient.getDataview('country_places_count', { own_filter: 0 }, function (err, formula_result, headers) {
+            testClient.getDataview('country_places_count', { own_filter: 0 }, function (err, formula_result) {
                 if (err) {
                     return done(err);
                 }
@@ -90,7 +90,12 @@ describe('Overviews', function() {
                         if (err) {
                             return done(err);
                         }
-                        assert.deepEqual(formula_result, { operation: 'count', result: 256, nulls: 0, type: 'formula' });
+                        assert.deepEqual(formula_result, { 
+                            operation: 'count', 
+                            result: 256, 
+                            nulls: 0, 
+                            type: 'formula' 
+                        });
                         testClient.drain(done);
                     });
                 });
@@ -107,7 +112,12 @@ describe('Overviews', function() {
                         if (err) {
                             return done(err);
                         }
-                        assert.deepEqual(formula_result, { operation: 'count', result: 254, nulls: 0, type: 'formula' });
+                        assert.deepEqual(formula_result, { 
+                            operation: 'count', 
+                            result: 254, 
+                            nulls: 0, 
+                            type: 'formula' 
+                        });
                         testClient.drain(done);
                     });
                 });
@@ -260,7 +270,7 @@ describe('Overviews', function() {
 
         it("should expose a sum formula", function (done) {
             var testClient = new TestClient(overviewsMapConfig);
-            testClient.getDataview('test_sum', { own_filter: 0 }, function (err, formula_result, headers) {
+            testClient.getDataview('test_sum', { own_filter: 0 }, function (err, formula_result) {
                 if (err) {
                     return done(err);
                 }
@@ -279,7 +289,7 @@ describe('Overviews', function() {
 
         it("should expose an avg formula", function (done) {
             var testClient = new TestClient(overviewsMapConfig);
-            testClient.getDataview('test_avg', { own_filter: 0 }, function (err, formula_result, headers) {
+            testClient.getDataview('test_avg', { own_filter: 0 }, function (err, formula_result) {
                 if (err) {
                     return done(err);
                 }
@@ -298,7 +308,7 @@ describe('Overviews', function() {
 
         it("should expose a count formula", function (done) {
             var testClient = new TestClient(overviewsMapConfig);
-            testClient.getDataview('test_count', { own_filter: 0 }, function (err, formula_result, headers) {
+            testClient.getDataview('test_count', { own_filter: 0 }, function (err, formula_result) {
                 if (err) {
                     return done(err);
                 }
@@ -377,7 +387,7 @@ describe('Overviews', function() {
 
         it("should expose a histogram", function (done) {
             var testClient = new TestClient(overviewsMapConfig);
-            testClient.getDataview('test_histogram', function (err, histogram, headers) {
+            testClient.getDataview('test_histogram', function (err, histogram) {
                 if (err) {
                     return done(err);
                 }
@@ -466,7 +476,7 @@ describe('Overviews', function() {
 
                 it("should expose a filtered sum formula", function (done) {
                     var testClient = new TestClient(overviewsMapConfig);
-                    testClient.getDataview('test_sum', params, function (err, formula_result, headers) {
+                    testClient.getDataview('test_sum', params, function (err, formula_result) {
                         if (err) {
                             return done(err);
                         }
@@ -484,7 +494,7 @@ describe('Overviews', function() {
 
                 it("should expose a filtered  avg formula", function (done) {
                     var testClient = new TestClient(overviewsMapConfig);
-                    testClient.getDataview('test_avg', params, function (err, formula_result, headers) {
+                    testClient.getDataview('test_avg', params, function (err, formula_result) {
                         if (err) {
                             return done(err);
                         }
@@ -503,7 +513,7 @@ describe('Overviews', function() {
 
                 it("should expose a filtered count formula", function (done) {
                     var testClient = new TestClient(overviewsMapConfig);
-                    testClient.getDataview('test_count', params, function (err, formula_result, headers) {
+                    testClient.getDataview('test_count', params, function (err, formula_result) {
                         if (err) {
                             return done(err);
                         }
@@ -590,11 +600,10 @@ describe('Overviews', function() {
 
                 it("should expose an aggregation dataview filtering special float values out", function (done) {
                     var testClient = new TestClient(overviewsMapConfig);
-                    testClient.getDataview('test_categories_special_values', params, function (err, dataview, headers) {
+                    testClient.getDataview('test_categories_special_values', params, function (err, dataview) {
                         if (err) {
                             return done(err);
                         }
-                        console.log(global.environment.enabledFeatures.useOverviewsTables);
                         assert.deepEqual(dataview, {
                             aggregation: 'sum',
                             count: 5,
