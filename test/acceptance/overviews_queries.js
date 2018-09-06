@@ -9,16 +9,26 @@ describe('overviews_queries', function() {
     var server;
 
     before(function () {
+        this.resetOverviewsStatus = global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables ?
+            enableOverviews :
+            disableOverviews;
+        enableOverviews();
         server = cartodbServer(ServerOptions);
         server.setMaxListeners(0);
     });
+
+    beforeEach(function () {
+        enableOverviews();
+    });
+
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
 
     after(function() {
         testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
+        this.resetOverviewsStatus();
     });
-
+    
     function imageCompareFn(fixture, done) {
         return function(err, tile) {
             if (err) {
@@ -64,4 +74,12 @@ describe('overviews_queries', function() {
           imageCompareFn('test_table_3_3_3.png', done)
       );
     });
+
+    function enableOverviews() {
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
+    }
+
+    function disableOverviews() {
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = false;
+    }
 });
