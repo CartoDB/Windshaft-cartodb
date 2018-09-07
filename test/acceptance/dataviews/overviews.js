@@ -4,6 +4,20 @@ var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
 describe('Overviews', function() {
+
+    before(function () {
+        this.resetOverviewsStatus = global.environment.enabledFeatures.useOverviewsTables ?
+            enableOverviews :
+            disableOverviews;
+    });
+
+    after(function () {
+        this.resetOverviewsStatus();
+    });
+    
+    beforeEach(function () {
+        enableOverviews();
+    });
     describe('dataviews using tables without overviews', function () {
 
         var nonOverviewsMapConfig = {
@@ -599,6 +613,7 @@ describe('Overviews', function() {
                 var params = {};
 
                 it("should expose an aggregation dataview filtering special float values out", function (done) {
+                    enableOverviews();
                     var testClient = new TestClient(overviewsMapConfig);
                     testClient.getDataview('test_categories_special_values', params, function (err, dataview) {
                         if (err) {
@@ -699,20 +714,6 @@ describe('Overviews', function() {
     function disableOverviews() {
         global.environment.enabledFeatures.useOverviewsTables = false;
     }
-
-    before(function () {
-        this.resetOverviewsStatus = global.environment.enabledFeatures.useOverviewsTables ?
-            enableOverviews :
-            disableOverviews;
-    });
-
-    beforeEach(function () {
-        enableOverviews();
-    });
-
-    after(function () {
-        this.resetOverviewsStatus();
-    });
 });
 
 

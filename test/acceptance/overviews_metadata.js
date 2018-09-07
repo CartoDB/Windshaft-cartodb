@@ -17,8 +17,15 @@ describe('Overviews metadata', function() {
         var server;
 
         before(function () {
+            this.resetOverviewsStatus = global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables ?
+                enableOverviews :
+                disableOverviews;
             enableOverviews(); //It must be enabled before 
             server = new CartodbWindshaft(serverOptions);
+        });
+
+        after(function () {
+            this.resetOverviewsStatus();
         });
 
         // configure redis pool instance to use in tests
@@ -313,6 +320,11 @@ describe('Overviews metadata', function() {
             );
         });
     });
+
+    function disableOverviews() {
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = false;
+    }
+
     function enableOverviews() {
         global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
     }
@@ -329,6 +341,17 @@ describe('Use Overviews FLAG', function () {
                 cartocss_version: '2.3.0'
             }
         };
+        
+        before(function() {
+            this.resetOverviewsStatus = global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables ?
+                enableOverviews :
+                disableOverviews;
+
+        });
+
+        after(function() {
+            this.resetOverviewsStatus();
+        });
 
         it("Overviews enabled", function (done) {
             var layergroup = {

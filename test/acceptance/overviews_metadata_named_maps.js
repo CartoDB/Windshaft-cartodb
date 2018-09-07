@@ -16,8 +16,15 @@ describe('overviews metadata for named maps', function() {
     var server;
 
     before(function () {
+        this.resetOverviewsStatus = global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables ?
+            enableOverviews :
+            disableOverviews;
         enableOverviews(); //It must be enabled before server initialization
         server = new CartodbWindshaft(serverOptions);
+    });
+
+    after(function () {
+        this.resetOverviewsStatus();
     });
 
     // configure redis pool instance to use in tests
@@ -302,6 +309,10 @@ describe('overviews metadata for named maps', function() {
             );
         });
     });
+
+    function disableOverviews() {
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = false;
+    }
 
     function enableOverviews() {
         global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
