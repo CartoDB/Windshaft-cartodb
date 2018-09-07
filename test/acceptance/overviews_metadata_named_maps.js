@@ -16,6 +16,7 @@ describe('overviews metadata for named maps', function() {
     var server;
 
     before(function () {
+        enableOverviews(); //It must be enabled before server initialization
         server = new CartodbWindshaft(serverOptions);
     });
 
@@ -301,4 +302,8 @@ describe('overviews metadata for named maps', function() {
             );
         });
     });
+
+    function enableOverviews() {
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
+    }
 });

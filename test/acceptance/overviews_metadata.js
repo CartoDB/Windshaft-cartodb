@@ -115,7 +115,7 @@ describe('Overviews metadata', function() {
             );
         });
 
-        describe('Overviews Flags', function () {
+        describe('Overviews Usage', function () {
             it("Overviews used", function (done) {
                 var layergroup = {
                     version: '1.0.0',
@@ -295,7 +295,7 @@ describe('Overviews metadata', function() {
                                     2: { table: '_vovw_2_test_table_overviews' }
                                 }
                             },
-                            filters: { test_names: { type: 'category', column: 'name', params: { accept: ['Hawai'] } } },
+                            filters: { test_names: { type: 'category', column: 'name', params: { accept: ['Hawai'] }}},
                             unfiltered_query: 'select * from test_table_overviews',
                             filter_stats: { unfiltered_rows: 5, filtered_rows: 1 }
                         };
@@ -314,12 +314,150 @@ describe('Overviews metadata', function() {
         });
     });
 
-    function enableOverviews() {
-        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
-    }
+    describe('Overviews deprecation', function () {
+        it("should use overviews if Overviews are enabled", function (done) {
+            enableOverviews();
+            var testClient = new TestClient(overviewsMapConfig);
+            testClient.getDataview('test_sum', { own_filter: 0 }, function (err, formula_result, headers) {
+                if (err) {
+                    return done(err);
+                }
+                assert.ok(getUsesOverviewsFromHeaders(headers));
+                assert(getDataviewTypeFromHeaders(headers) === 'formula');
 
+                testClient.drain(done);
+            });
+        });
+
+        it("should not use overviews if Overviews are disabled", function (done) {
+            disableOverviews();
+            var testClient = new TestClient(overviewsMapConfig);
+            testClient.getDataview('test_sum', { own_filter: 0 }, function (err, formula_result, headers) {
+                if (err) {
+                    return done(err);
+                }
+                assert.equal(getUsesOverviewsFromHeaders(headers), false);
+
+                testClient.drain(done);
+
+            });
+        });
+    });
     function disableOverviews() {
         global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = false;
     }
+
+    function enableOverviews() {
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
+    }
 });
 
+describe('Use Overviews FLAG', function () {
+        var server;
+
+        var overviews_layer = {
+            type: 'cartodb',
+            options: {
+                sql: 'SELECT * FROM test_table_overviews',
+                cartocss: '#layer { marker-fill: black; }',
+                cartocss_version: '2.3.0'
+            }
+        };
+
+        it("Overviews enabled", function (done) {
+            var layergroup = {
+                version: '1.0.0',
+                layers: [overviews_layer]
+            };
+
+            var layergroup_url = '/api/v1/map';
+
+            var expected_token;
+            var keysToDelete = {};
+
+            step(
+                function createServer() {
+                    enableOverviews(); //It must be enabled before 
+                    server = new CartodbWindshaft(serverOptions);
+                    this();
+                },
+                function do_post() {
+                    var next = this;
+                    assert.response(server, {
+                        url: layergroup_url,
+                        method: 'POST',
+                        headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                        data: JSON.stringify(layergroup)
+                    }, {}, function (res) {
+                        assert.equal(res.statusCode, 200, res.body);
+
+                        const headers = JSON.parse(res.headers['x-tiler-profiler']);
+
+                        assert.ok(headers.overviewsAddedToMapconfig);
+                        assert.equal(headers.mapType, 'anonymous');
+
+                        const parsedBody = JSON.parse(res.body);
+                        expected_token = parsedBody.layergroupid;
+                        next();
+                    });
+                },
+                function finish(err) {
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
+                    test_helper.deleteRedisKeys(keysToDelete, done);
+                }
+            );
+        });
+
+    it("Overviews disabled", function (done) {
+        var layergroup = {
+            version: '1.0.0',
+            layers: [overviews_layer]
+        };
+
+        var layergroup_url = '/api/v1/map';
+
+        var expected_token;
+        var keysToDelete = {};
+
+        step(
+            function createServer() {
+                disableOverviews(); //It must be enabled before 
+                server = new CartodbWindshaft(serverOptions);
+                this();
+            },
+            function do_post() {
+                var next = this;
+                assert.response(server, {
+                    url: layergroup_url,
+                    method: 'POST',
+                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                    data: JSON.stringify(layergroup)
+                }, {}, function (res) {
+                    assert.equal(res.statusCode, 200, res.body);
+
+                    const headers = JSON.parse(res.headers['x-tiler-profiler']);
+                    assert.equal(headers.overviewsAddedToMapconfig, undefined);
+                    assert.equal(headers.mapType, 'anonymous');
+
+                    const parsedBody = JSON.parse(res.body);
+                    expected_token = parsedBody.layergroupid;
+                    next();
+                });
+            },
+            function finish(err) {
+                keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+                test_helper.deleteRedisKeys(keysToDelete, done);
+            }
+        );
+    });
+        
+    function disableOverviews() {
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = false;
+    }
+
+    function enableOverviews() {
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
+    }
+});
