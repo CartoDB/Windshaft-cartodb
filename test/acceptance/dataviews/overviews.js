@@ -613,7 +613,6 @@ describe('Overviews', function() {
                 var params = {};
 
                 it("should expose an aggregation dataview filtering special float values out", function (done) {
-                    enableOverviews();
                     var testClient = new TestClient(overviewsMapConfig);
                     testClient.getDataview('test_categories_special_values', params, function (err, dataview) {
                         if (err) {
@@ -709,10 +708,12 @@ describe('Overviews', function() {
     });
     function enableOverviews() {
         global.environment.enabledFeatures.useOverviewsTables = true;
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
     }
 
     function disableOverviews() {
         global.environment.enabledFeatures.useOverviewsTables = false;
+        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = false;
     }
 });
 
