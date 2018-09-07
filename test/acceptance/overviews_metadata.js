@@ -313,40 +313,6 @@ describe('Overviews metadata', function() {
             );
         });
     });
-
-    describe('Overviews deprecation', function () {
-        it("should use overviews if Overviews are enabled", function (done) {
-            enableOverviews();
-            var testClient = new TestClient(overviewsMapConfig);
-            testClient.getDataview('test_sum', { own_filter: 0 }, function (err, formula_result, headers) {
-                if (err) {
-                    return done(err);
-                }
-                assert.ok(getUsesOverviewsFromHeaders(headers));
-                assert(getDataviewTypeFromHeaders(headers) === 'formula');
-
-                testClient.drain(done);
-            });
-        });
-
-        it("should not use overviews if Overviews are disabled", function (done) {
-            disableOverviews();
-            var testClient = new TestClient(overviewsMapConfig);
-            testClient.getDataview('test_sum', { own_filter: 0 }, function (err, formula_result, headers) {
-                if (err) {
-                    return done(err);
-                }
-                assert.equal(getUsesOverviewsFromHeaders(headers), false);
-
-                testClient.drain(done);
-
-            });
-        });
-    });
-    function disableOverviews() {
-        global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = false;
-    }
-
     function enableOverviews() {
         global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
     }
@@ -401,7 +367,7 @@ describe('Use Overviews FLAG', function () {
                         next();
                     });
                 },
-                function finish(err) {
+                function finish() {
                     keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
                     test_helper.deleteRedisKeys(keysToDelete, done);
@@ -445,7 +411,7 @@ describe('Use Overviews FLAG', function () {
                     next();
                 });
             },
-            function finish(err) {
+            function finish() {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
                 test_helper.deleteRedisKeys(keysToDelete, done);
