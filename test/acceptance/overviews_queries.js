@@ -67,6 +67,7 @@ describe('overviews_queries', function() {
     });
 
     function enableOverviews() {
+        global.environment.enabledFeatures.useOverviewsTables = true;
         global.environment.enabledFeatures.adaptMapConfigWithOverviewsTables = true;
     }
 });
