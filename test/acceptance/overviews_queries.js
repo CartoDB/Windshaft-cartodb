@@ -5,7 +5,7 @@ var cartodbServer = require('../../lib/cartodb/server');
 var ServerOptions = require('./ported/support/ported_server_options');
 var testClient = require('./ported/support/test_client');
 
-describe.only('overviews_queries', function() {
+describe('overviews_queries', function() {
     var server;
 
     before(function () {
