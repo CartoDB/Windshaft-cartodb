@@ -6,7 +6,6 @@ var _ = require('underscore');
 
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
-var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var QueryTables = require('cartodb-query-tables');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
@@ -65,6 +64,39 @@ describe('tests from old api translated to multilayer', function() {
             data: JSON.stringify(layergroup)
         };
     }
+
+    it("creates layergroup fails when postgresql queries fail to figure affected tables in query", function (done) {
+        const getAffectedTablesFromQueryFn = QueryTables.getAffectedTablesFromQuery;
+        QueryTables.getAffectedTablesFromQuery = function (connection, sql, callback) {
+            return callback(new Error('fake error message'), []);
+        };
+
+        var layergroup = singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
+
+        assert.response(server,
+            {
+                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
+            },
+            {
+                status: 400
+            },
+            function (res) {
+                QueryTables.getAffectedTablesFromQuery = getAffectedTablesFromQueryFn;
+                keysToDelete['user:localhost:mapviews:global'] = 5;
+
+                assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+
+                var parsed = JSON.parse(res.body);
+                assert.deepEqual(parsed.errors, ["fake error message"]);
+
+                done();
+            }
+        );
+    });
 
     it("layergroup creation fails if CartoCSS is bogus", function(done) {
         var layergroup = singleLayergroupConfig(wadusSql, '#my_table3{');
@@ -314,38 +346,6 @@ describe('tests from old api translated to multilayer', function() {
         );
     });
 
-    it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
-
-        var runQueryFn = PgQueryRunner.prototype.run;
-        PgQueryRunner.prototype.run = function(username, query, callback) {
-            return callback(new Error('fake error message'), []);
-        };
-
-        var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
-
-        assert.response(server,
-            {
-                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
-                method: 'GET',
-                headers: {
-                    host: 'localhost'
-                }
-            },
-            {
-                status: 400
-            },
-            function(res) {
-                PgQueryRunner.prototype.run = runQueryFn;
-
-                assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-
-                var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed.errors, ["fake error message"]);
-
-                done();
-            }
-        );
-    });
 
     it("tile requests works when postgresql queries fail to figure affected tables in query",  function(done) {
         var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
