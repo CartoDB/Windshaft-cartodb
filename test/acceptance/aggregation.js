@@ -171,7 +171,7 @@ describe('aggregation', function () {
     //
     const POINTS_SQL_GRID = `
         WITH params AS (
-            SELECT CDB_XYZ_Resolution(1) AS l -- cell size for Z=1 res=1
+            SELECT CDB_XYZ_Resolution($Z)*$resolution AS l -- cell size for Z, resolution
         )
         SELECT
             row_number() OVER () AS cartodb_id,
@@ -2380,6 +2380,9 @@ describe('aggregation', function () {
                 });
 
                 it(`for ${placement} each aggr. cell is in a single tile`, function (done) {
+                    const z = 1;
+                    const resolution = 1;
+                    const query = POINTS_SQL_GRID.replace('$Z', z).replace('$resolution', resolution);
                     this.mapConfig = {
                         version: '1.6.0',
                         buffersize: { 'mvt': 0 },
@@ -2388,10 +2391,10 @@ describe('aggregation', function () {
                                 type: 'cartodb',
 
                                 options: {
-                                    sql: POINTS_SQL_GRID,
+                                    sql: query,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 1
+                                        resolution: resolution
                                     }
                                 }
                             }
@@ -2403,22 +2406,24 @@ describe('aggregation', function () {
 
                     this.testClient = new TestClient(this.mapConfig);
 
-                    this.testClient.getTile(1, 0, 0, { format: 'mvt' },  (err, res, mvt) => {
+                    const c = Math.pow(2, z - 1) - 1; // center tile coordinates
+
+                    this.testClient.getTile(z, c + 0, c + 0, { format: 'mvt' },  (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
                         const tile00 = JSON.parse(mvt.toGeoJSONSync(0));
-                        this.testClient.getTile(1, 0, 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                        this.testClient.getTile(z, c + 0, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
                             if (err) {
                                 return done(err);
                             }
                             const tile01 = JSON.parse(mvt.toGeoJSONSync(0));
-                            this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
+                            this.testClient.getTile(z, c + 1, c + 0, { format: 'mvt' }, (err, res, mvt) =>  {
                                 if (err) {
                                     return done(err);
                                 }
                                 const tile10 = JSON.parse(mvt.toGeoJSONSync(0));
-                                this.testClient.getTile(1, 1, 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
                                     if (err) {
                                         return done(err);
                                     }
@@ -2462,6 +2467,11 @@ describe('aggregation', function () {
                 it(`for ${placement} no partially aggregated cells`, function (done) {
                     // Use level 1 with resolution 2 tiles and buffersize 1 (half the cell size)
                     // Only the cells completely inside the buffer are aggregated
+                    const z = 1;
+                    const resolution = 2;
+                    // space the test points by half the resolution:
+                    const query = POINTS_SQL_GRID.replace('$Z', z).replace('$resolution', resolution/2);
+
                     this.mapConfig = {
                         version: '1.6.0',
                         buffersize: { 'mvt': 1 },
@@ -2470,10 +2480,10 @@ describe('aggregation', function () {
                                 type: 'cartodb',
 
                                 options: {
-                                    sql: POINTS_SQL_GRID,
+                                    sql: query,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 2
+                                        resolution: resolution
                                     }
                                 }
                             }
@@ -2485,22 +2495,24 @@ describe('aggregation', function () {
 
                     this.testClient = new TestClient(this.mapConfig);
 
-                    this.testClient.getTile(1, 0, 0, { format: 'mvt' },  (err, res, mvt) => {
+                    const c = Math.pow(2, z - 1) - 1; // center tile coordinates
+
+                    this.testClient.getTile(z, c, c, { format: 'mvt' },  (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
                         const tile00 = JSON.parse(mvt.toGeoJSONSync(0));
-                        this.testClient.getTile(1, 0, 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                        this.testClient.getTile(z, c, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
                             if (err) {
                                 return done(err);
                             }
                             const tile01 = JSON.parse(mvt.toGeoJSONSync(0));
-                            this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
+                            this.testClient.getTile(z, c + 1, c, { format: 'mvt' }, (err, res, mvt) =>  {
                                 if (err) {
                                     return done(err);
                                 }
                                 const tile10 = JSON.parse(mvt.toGeoJSONSync(0));
-                                this.testClient.getTile(1, 1, 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
                                     if (err) {
                                         return done(err);
                                     }
@@ -2517,6 +2529,119 @@ describe('aggregation', function () {
                                     ];
                                     const tile11Expected = [
                                         { cartodb_id: 2, _cdb_feature_count: 3 }
+                                    ];
+                                    const tile00Actual = tile00.features.map(f => f.properties);
+                                    const tile10Actual = tile10.features.map(f => f.properties);
+                                    const tile01Actual = tile01.features.map(f => f.properties);
+                                    const tile11Actual = tile11.features.map(f => f.properties);
+                                    const orderById = (a, b) => a.cartodb_id - b.cartodb_id;
+                                    assert.deepEqual(tile00Actual.sort(orderById), tile00Expected);
+                                    assert.deepEqual(tile10Actual.sort(orderById), tile10Expected);
+                                    assert.deepEqual(tile01Actual.sort(orderById), tile01Expected);
+                                    assert.deepEqual(tile11Actual.sort(orderById), tile11Expected);
+
+                                    done();
+                                });
+                            });
+                        });
+
+                    });
+                });
+
+                it(`for ${placement} includes complete cells in buffer`, function (done) {
+                    if (!usePostGIS && placement !== 'point-grid') {
+                        // Mapnik seem to filter query results by its (inaccurate) bbox,
+                        // which makes some aggregated clusters get lost here.
+                        // The point-grid placement is resilient to this problem because the result
+                        // coordinates are moved to cluster cell centers, so they're well within
+                        // bbox limits.
+                        this.testClient = new TestClient({});
+                        return done();
+                    }
+
+                    // use buffersize coincident with resolution, the buffer should include neighbour cells
+                    const z = 2;
+                    const resolution = 1;
+                    const query = POINTS_SQL_GRID.replace('$Z', z).replace('$resolution', resolution);
+
+                    this.mapConfig = {
+                        version: '1.6.0',
+                        buffersize: { 'mvt': 1 },
+                        layers: [
+                            {
+                                type: 'cartodb',
+
+                                options: {
+                                    sql: query,
+                                    aggregation: {
+                                        threshold: 1,
+                                        resolution: resolution
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    const c = Math.pow(2, z - 1) - 1; // center tile coordinates
+
+                    this.testClient.getTile(z, c, c, { format: 'mvt' },  (err, res, mvt) => {
+                        if (err) {
+                            return done(err);
+                        }
+                        const tile00 = JSON.parse(mvt.toGeoJSONSync(0));
+                        this.testClient.getTile(z, c, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                            if (err) {
+                                return done(err);
+                            }
+                            const tile01 = JSON.parse(mvt.toGeoJSONSync(0));
+                            this.testClient.getTile(z, c + 1, c, { format: 'mvt' }, (err, res, mvt) =>  {
+                                if (err) {
+                                    return done(err);
+                                }
+                                const tile10 = JSON.parse(mvt.toGeoJSONSync(0));
+                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                                    if (err) {
+                                        return done(err);
+                                    }
+                                    const tile11 = JSON.parse(mvt.toGeoJSONSync(0));
+
+                                    const tile00Expected = [
+                                        { _cdb_feature_count: 2, cartodb_id: 1 },
+                                        { _cdb_feature_count: 2, cartodb_id: 2 },
+                                        { _cdb_feature_count: 2, cartodb_id: 4 },
+                                        { _cdb_feature_count: 2, cartodb_id: 5 },
+                                        { _cdb_feature_count: 1, cartodb_id: 7 },
+                                        { _cdb_feature_count: 1, cartodb_id: 8 }
+                                    ];
+                                    const tile10Expected = [
+                                        { _cdb_feature_count: 2, cartodb_id: 1 },
+                                        { _cdb_feature_count: 2, cartodb_id: 2 },
+                                        { _cdb_feature_count: 1, cartodb_id: 3 },
+                                        { _cdb_feature_count: 2, cartodb_id: 4 },
+                                        { _cdb_feature_count: 2, cartodb_id: 5 },
+                                        { _cdb_feature_count: 1, cartodb_id: 6 },
+                                        { _cdb_feature_count: 1, cartodb_id: 7 },
+                                        { _cdb_feature_count: 1, cartodb_id: 8 },
+                                        { _cdb_feature_count: 1, cartodb_id: 9 }
+                                    ];
+                                    const tile01Expected = [
+                                        { _cdb_feature_count: 2, cartodb_id: 1 },
+                                        { _cdb_feature_count: 2, cartodb_id: 2 },
+                                        { _cdb_feature_count: 2, cartodb_id: 4 },
+                                        { _cdb_feature_count: 2, cartodb_id: 5 }
+                                    ];
+                                    const tile11Expected = [
+                                        { _cdb_feature_count: 2, cartodb_id: 1 },
+                                        { _cdb_feature_count: 2, cartodb_id: 2 },
+                                        { _cdb_feature_count: 1, cartodb_id: 3 },
+                                        { _cdb_feature_count: 2, cartodb_id: 4 },
+                                        { _cdb_feature_count: 2, cartodb_id: 5 },
+                                        { _cdb_feature_count: 1, cartodb_id: 6 }
                                     ];
                                     const tile00Actual = tile00.features.map(f => f.properties);
                                     const tile10Actual = tile10.features.map(f => f.properties);
