@@ -1648,7 +1648,8 @@ describe('aggregation', function () {
                             options: {
                                 sql: POINTS_SQL_1,
                                 aggregation: {
-                                    threshold: 1
+                                    threshold: 1,
+                                    placement: placement !== 'default' ? placement : undefined
                                 },
                                 cartocss: '#layer { marker-width: 1; }',
                                 cartocss_version: '2.3.0',
@@ -1656,9 +1657,6 @@ describe('aggregation', function () {
                             }
                         }
                     ]);
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
                     this.testClient.getLayergroup((err, body) => {
@@ -1683,14 +1681,12 @@ describe('aggregation', function () {
                             options: {
                                 sql: POINTS_SQL_ONLY_WEBMERCATOR,
                                 aggregation: {
-                                    threshold: 1
+                                    threshold: 1,
+                                    placement: placement !== 'default' ? placement : undefined
                                 }
                             }
                         }
                     ]);
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
                     this.testClient = new TestClient(this.mapConfig);
 
                     this.testClient.getLayergroup((err, body) => {
@@ -2262,15 +2258,13 @@ describe('aggregation', function () {
                                     sql: POINTS_SQL_0,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 1
+                                        resolution: 1,
+                                        placement: placement !== 'default' ? placement : undefined
                                     }
                                 }
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
 
@@ -2317,15 +2311,13 @@ describe('aggregation', function () {
                                     sql: POINTS_SQL_1,
                                     resolution: 1,
                                     aggregation: {
-                                        threshold: 1
+                                        threshold: 1,
+                                        placement: placement !== 'default' ? placement : undefined
                                     }
                                 }
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
 
@@ -2394,15 +2386,13 @@ describe('aggregation', function () {
                                     sql: query,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: resolution
+                                        resolution: resolution,
+                                        placement: placement !== 'default' ? placement : undefined
                                     }
                                 }
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
 
@@ -2483,15 +2473,13 @@ describe('aggregation', function () {
                                     sql: query,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: resolution
+                                        resolution: resolution,
+                                        placement: placement !== 'default' ? placement : undefined
                                     }
                                 }
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
 
@@ -2575,15 +2563,13 @@ describe('aggregation', function () {
                                     sql: query,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: resolution
+                                        resolution: resolution,
+                                        placement: placement !== 'default' ? placement : undefined
                                     }
                                 }
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
 
@@ -2674,15 +2660,13 @@ describe('aggregation', function () {
                                     sql: POINTS_SQL_CELL,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 1
+                                        resolution: 1,
+                                        placement: placement !== 'default' ? placement : undefined
                                     }
                                 }
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
 
@@ -2714,15 +2698,13 @@ describe('aggregation', function () {
                                     sql: POINTS_SQL_CELL_INNER,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 1
+                                        resolution: 1,
+                                        placement: placement !== 'default' ? placement : undefined
                                     }
                                 }
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
 
@@ -2757,15 +2739,13 @@ describe('aggregation', function () {
                                     sql: POINTS_SQL_PAIRS,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 1
+                                        resolution: 1,
+                                        placement: placement !== 'default' ? placement : undefined
                                     }
                                 }
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
                     this.testClient.getLayergroup((err, body) => {
@@ -2795,7 +2775,8 @@ describe('aggregation', function () {
                                     sql: POINTS_SQL_PAIRS,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 1
+                                        resolution: 1,
+                                        placement: placement !== 'default' ? placement : undefined
                                     },
                                     metadata: {
                                         aggrFeatureCount: 10
@@ -2804,9 +2785,6 @@ describe('aggregation', function () {
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
                     this.testClient.getLayergroup((err, body) => {
@@ -2836,7 +2814,8 @@ describe('aggregation', function () {
                                     sql: POINTS_SQL_PAIRS,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 1
+                                        resolution: 1,
+                                        placement: placement !== 'default' ? placement : undefined
                                     },
                                     metadata: {
                                         aggrFeatureCount: 0
@@ -2845,9 +2824,6 @@ describe('aggregation', function () {
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
                     this.testClient.getLayergroup((err, body) => {
@@ -2877,7 +2853,8 @@ describe('aggregation', function () {
                                     sql: POINTS_SQL_PAIRS,
                                     aggregation: {
                                         threshold: 1,
-                                        resolution: 1
+                                        resolution: 1,
+                                        placement: placement !== 'default' ? placement : undefined
                                     },
                                     metadata: {
                                         featureCount: true
@@ -2886,9 +2863,6 @@ describe('aggregation', function () {
                             }
                         ]
                     };
-                    if (placement !== 'default') {
-                        this.mapConfig.layers[0].options.aggregation.placement = placement;
-                    }
 
                     this.testClient = new TestClient(this.mapConfig);
                     this.testClient.getLayergroup((err, body) => {
