@@ -1640,7 +1640,7 @@ describe('aggregation', function () {
                 });
             });
 
-            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+            ['centroid', 'point-sample', 'point-grid', 'default'].forEach(placement => {
                 it(`cartodb_id should be present in ${placement} aggregation`, function(done) {
                     this.mapConfig = createVectorMapConfig([
                         {
@@ -1648,7 +1648,6 @@ describe('aggregation', function () {
                             options: {
                                 sql: POINTS_SQL_1,
                                 aggregation: {
-                                    placement: placement,
                                     threshold: 1
                                 },
                                 cartocss: '#layer { marker-width: 1; }',
@@ -1657,6 +1656,9 @@ describe('aggregation', function () {
                             }
                         }
                     ]);
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
+                    }
 
                     this.testClient = new TestClient(this.mapConfig);
                     this.testClient.getLayergroup((err, body) => {
@@ -1673,71 +1675,74 @@ describe('aggregation', function () {
                         done();
                     });
                 });
-            });
 
-            it('should only require the_geom_webmercator for aggregation', function (done) {
-                this.mapConfig = createVectorMapConfig([
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POINTS_SQL_ONLY_WEBMERCATOR,
-                            aggregation: {
-                                threshold: 1
+                it(`should only require the_geom_webmercator for ${placement} aggregation`, function (done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_ONLY_WEBMERCATOR,
+                                aggregation: {
+                                    threshold: 1
+                                }
                             }
                         }
+                    ]);
+                    if (placement !== 'default') {
+                        this.mapConfig.layers[0].options.aggregation.placement = placement;
                     }
-                ]);
-                this.testClient = new TestClient(this.mapConfig);
+                    this.testClient = new TestClient(this.mapConfig);
 
-                this.testClient.getLayergroup((err, body) => {
-                    if (err) {
-                        return done(err);
-                    }
+                    this.testClient.getLayergroup((err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
 
-                    assert.equal(typeof body.metadata, 'object');
-                    assert.ok(Array.isArray(body.metadata.layers));
+                        assert.equal(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
-                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
+                        body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                        body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
 
-                    done();
+                        done();
+                    });
                 });
-            });
 
-            it('aggregation should work with attributes', function (done) {
-                this.mapConfig = createVectorMapConfig([
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POINTS_SQL_1,
-                            cartocss: '#layer { marker-width: 7; }',
-                            cartocss_version: '2.3.0',
-                            aggregation: {
-                                threshold: 1
-                            },
-                            attributes: {
-                                id: 'cartodb_id',
-                                columns: [
-                                    'value'
-                                ]
+                it(`${placement} aggregation should work with attributes`, function (done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                cartocss: '#layer { marker-width: 7; }',
+                                cartocss_version: '2.3.0',
+                                aggregation: {
+                                    threshold: 1
+                                },
+                                attributes: {
+                                    id: 'cartodb_id',
+                                    columns: [
+                                        'value'
+                                    ]
+                                }
                             }
                         }
-                    }
-                ]);
-                this.testClient = new TestClient(this.mapConfig);
+                    ]);
+                    this.testClient = new TestClient(this.mapConfig);
 
-                this.testClient.getLayergroup((err, body) => {
-                    if (err) {
-                        return done(err);
-                    }
+                    this.testClient.getLayergroup((err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
 
-                    assert.equal(typeof body.metadata, 'object');
-                    assert.ok(Array.isArray(body.metadata.layers));
+                        assert.equal(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
-                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+                        body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                        body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
 
-                    done();
+                        done();
+                    });
                 });
             });
 
