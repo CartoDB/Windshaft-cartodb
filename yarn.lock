@@ -14,7 +14,7 @@
     nan "2.10.0"
     node-pre-gyp "0.10.0"
 
-"@carto/tilelive-bridge@github:cartodb/tilelive-bridge#2.5.1-cdb10":
+"@carto/tilelive-bridge@cartodb/tilelive-bridge#2.5.1-cdb10":
   version "2.5.1-cdb10"
   resolved "https://codeload.github.com/cartodb/tilelive-bridge/tar.gz/118ac7e7f6582ac7be0fc0246ea2afd1a7795a43"
   dependencies:
@@ -26,7 +26,7 @@
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@mapbox/sphericalmercator/-/sphericalmercator-1.0.5.tgz#70237b9774095ed1cfdbcea7a8fd1fc82b2691f2"
 
-"abaculus@github:cartodb/abaculus#2.0.3-cdb11":
+abaculus@cartodb/abaculus#2.0.3-cdb11:
   version "2.0.3-cdb11"
   resolved "https://codeload.github.com/cartodb/abaculus/tar.gz/b2d4dce48c50fefc5b06f21c6365d82ccf75358d"
   dependencies:
@@ -275,7 +275,7 @@ camshaft@0.62.3:
     dot "^1.0.3"
     request "2.85.0"
 
-"canvas@github:cartodb/node-canvas#1.6.2-cdb2":
+canvas@cartodb/node-canvas#1.6.2-cdb2:
   version "1.6.2-cdb2"
   resolved "https://codeload.github.com/cartodb/node-canvas/tar.gz/8acf04557005c633f9e68524488a2657c04f3766"
   dependencies:
@@ -293,17 +293,17 @@ carto@0.16.3:
     semver "^5.1.0"
     yargs "^4.2.0"
 
-carto@cartodb/carto#master:
-  version "0.15.1"
-  resolved "https://codeload.github.com/cartodb/carto/tar.gz/31abb8bee02df605521247b0223d508320f7d4c8"
+carto@cartodb/carto#0.15.1-cdb3:
+  version "0.15.1-cdb3"
+  resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
   dependencies:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
     underscore "1.8.3"
 
-"carto@github:cartodb/carto#0.15.1-cdb3":
-  version "0.15.1-cdb3"
-  resolved "https://codeload.github.com/cartodb/carto/tar.gz/945f5efb74fd1af1f5e1f69f409f9567f94fb5a7"
+carto@cartodb/carto#master:
+  version "0.15.1"
+  resolved "https://codeload.github.com/cartodb/carto/tar.gz/31abb8bee02df605521247b0223d508320f7d4c8"
   dependencies:
     mapnik-reference "~6.0.2"
     optimist "~0.6.0"
@@ -1432,7 +1432,7 @@ mapnik-reference@~8.5.3:
   dependencies:
     semver "^5.1.0"
 
-"mapnik-vector-tile@github:cartodb/mapnik-vector-tile#v1.6.1-carto.2":
+mapnik-vector-tile@cartodb/mapnik-vector-tile#v1.6.1-carto.2:
   version "1.6.1-carto.2"
   resolved "https://codeload.github.com/cartodb/mapnik-vector-tile/tar.gz/e7ca5471f9e5de81243e6035e70444321fc0a82f"
 
@@ -2580,7 +2580,7 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
-"tilelive-mapnik@github:cartodb/tilelive-mapnik#0.6.18-cdb15":
+tilelive-mapnik@cartodb/tilelive-mapnik#0.6.18-cdb15:
   version "0.6.18-cdb15"
   resolved "https://codeload.github.com/cartodb/tilelive-mapnik/tar.gz/b6c1404a9e37fc60e545d977081867a86eb42b2b"
   dependencies:
@@ -2759,9 +2759,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.9.0:
+windshaft@cartodb/Windshaft#remove-step-map:
   version "4.9.0"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.9.0.tgz#adaeb7adcbe45aa9f196292b7130f255d39513b1"
+  resolved "https://codeload.github.com/cartodb/Windshaft/tar.gz/d88ac271300d9b1ac04c4d02a918db0b58e616f5"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.11"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb10
