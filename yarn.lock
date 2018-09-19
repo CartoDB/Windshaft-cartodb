@@ -2761,7 +2761,7 @@ window-size@^0.2.0:
 
 windshaft@cartodb/Windshaft#remove-step-map:
   version "4.9.0"
-  resolved "https://codeload.github.com/cartodb/Windshaft/tar.gz/d88ac271300d9b1ac04c4d02a918db0b58e616f5"
+  resolved "https://codeload.github.com/cartodb/Windshaft/tar.gz/754532410c85f1dab44c58cc097470b4bb308324"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.11"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb10
