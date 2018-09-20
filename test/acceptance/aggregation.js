@@ -878,6 +878,46 @@ describe('aggregation', function () {
                 });
             });
 
+            it('time dimensions',
+            function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_TIMESTAMP_1,
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    dow: {
+                                        column: 'date',
+                                        group_by: 'dayOfWeek'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.dow, 'number'));
+
+                    done();
+                });
+            });
+
+
+
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
                 it(`dimensions should work for ${placement} placement`, function(done) {
                     this.mapConfig = createVectorMapConfig([
