@@ -314,7 +314,7 @@ describe('tests from old api translated to multilayer', function() {
         );
     });
 
-    it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
+    it.skip("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
 
         var runQueryFn = PgQueryRunner.prototype.run;
         PgQueryRunner.prototype.run = function(username, query, callback) {

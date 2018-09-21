@@ -3,7 +3,7 @@ require('../../support/test_helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('dataviews using tables without overviews', function() {
+describe.skip('dataviews using tables without overviews', function() {
 
     var nonOverviewsMapConfig =  {
         version: '1.5.0',
@@ -115,7 +115,7 @@ describe('dataviews using tables without overviews', function() {
     });
 });
 
-describe('dataviews using tables with overviews', function() {
+describe.skip('dataviews using tables with overviews', function() {
 
     var overviewsMapConfig =  {
         version: '1.5.0',

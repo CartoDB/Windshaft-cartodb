@@ -13,7 +13,7 @@ var step = require('step');
 var windshaft = require('windshaft');
 
 
-describe('overviews metadata', function() {
+describe.skip('overviews metadata', function() {
     var server;
 
     before(function () {
@@ -193,7 +193,7 @@ describe('overviews metadata', function() {
     });
 });
 
-describe('overviews metadata with filters', function() {
+describe.skip('overviews metadata with filters', function() {
     var server;
 
     before(function () {
