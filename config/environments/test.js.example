@@ -385,6 +385,14 @@ var config = {
             named_delete: false,
             named_tiles: false
         }
+    },
+    // Aggregatse dinamically layers that reach the configured threshold.
+    aggregation: {
+        enabled: true,
+        threshold: {
+            raster: 5e5, // 500K
+            vector: 1e5 // 100K
+        }
     }
 };
 
