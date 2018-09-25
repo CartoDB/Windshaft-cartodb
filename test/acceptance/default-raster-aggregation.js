@@ -72,7 +72,6 @@ describe('default raster aggregation', function () {
         this.testClient.drain(done);
     });
 
-
     it('should return a layergroup indicating the mapconfig was aggregated', function (done) {
         this.mapConfig = createMapConfig();
         this.testClient = new TestClient(this.mapConfig);
