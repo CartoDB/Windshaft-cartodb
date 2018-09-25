@@ -329,7 +329,8 @@ describe('aggregation', function () {
                     assert.equal(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.equal(layer.meta.aggregation, undefined));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.mvt));
+                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
 
                     done();
                 });
