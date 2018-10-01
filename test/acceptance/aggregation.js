@@ -732,7 +732,7 @@ describe('aggregation', function () {
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer =>{
-                        assert.deepEqual(layer.meta.aggregation, { png: false, mvt: false });
+                        assert.deepEqual(layer.meta.aggregation, { isDefaultAgg: false, png: false, mvt: false });
                     });
 
                     done();
