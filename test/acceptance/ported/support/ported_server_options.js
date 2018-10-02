@@ -1,10 +1,6 @@
 var _ = require('underscore');
 var serverOptions = require('../../../../lib/cartodb/server_options');
 var mapnik = require('windshaft').mapnik;
-var OverviewsQueryRewriter = require('../../../../lib/cartodb/utils/overviews_query_rewriter');
-var overviewsQueryRewriter = new OverviewsQueryRewriter({
-  zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'
-});
 
 module.exports = _.extend({}, serverOptions, {
     // FIXME: Remove it. This is no longer needed, paths are defined in routers
@@ -57,8 +53,7 @@ module.exports = _.extend({}, serverOptions, {
             limits: {
                 render: 0,
                 cacheOnTimeout: true
-            },
-            queryRewriter: overviewsQueryRewriter
+            }
         },
         http: {
             timeout: 5000,
