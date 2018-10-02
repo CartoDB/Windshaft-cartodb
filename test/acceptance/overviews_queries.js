@@ -47,18 +47,6 @@ describe('overviews_queries', function() {
       );
     });
 
-    it("should use overview for zoom level 1", function(done){
-      testClient.getTile(testClient.defaultTableMapConfig('test_table_overviews'), 1, 0, 0,
-          imageCompareFn('_vovw_1_test_table_1_0_0.png', done)
-      );
-    });
-
-    it("should use overview for zoom level 1", function(done){
-      testClient.getTile(testClient.defaultTableMapConfig('test_table_overviews'), 2, 1, 1,
-          imageCompareFn('_vovw_2_test_table_2_1_1.png', done)
-      );
-    });
-
     it("should not use overview for zoom level 3", function(done){
       testClient.getTile(testClient.defaultTableMapConfig('test_table_overviews'), 3, 3, 3,
           imageCompareFn('test_table_3_3_3.png', done)
