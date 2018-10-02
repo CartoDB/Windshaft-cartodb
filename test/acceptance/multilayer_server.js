@@ -314,40 +314,6 @@ describe('tests from old api translated to multilayer', function() {
         );
     });
 
-    it.skip("creates layergroup fails when postgresql queries fail to figure affected tables in query",
-    function(done) {
-
-        var runQueryFn = PgQueryRunner.prototype.run;
-        PgQueryRunner.prototype.run = function(username, query, callback) {
-            return callback(new Error('fake error message'), []);
-        };
-
-        var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
-
-        assert.response(server,
-            {
-                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
-                method: 'GET',
-                headers: {
-                    host: 'localhost'
-                }
-            },
-            {
-                status: 400
-            },
-            function(res) {
-                PgQueryRunner.prototype.run = runQueryFn;
-
-                assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-
-                var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed.errors, ["fake error message"]);
-
-                done();
-            }
-        );
-    });
-
     it("tile requests works when postgresql queries fail to figure affected tables in query",  function(done) {
         var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
         assert.response(server,
