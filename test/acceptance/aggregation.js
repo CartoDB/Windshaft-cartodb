@@ -878,8 +878,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it('time dimensions',
-            function (done) {
+            it('time dimensions', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -891,7 +890,9 @@ describe('aggregation', function () {
                                 dimensions: {
                                     dow: {
                                         column: 'date',
-                                        group_by: 'dayOfWeek'
+                                        group: {
+                                            units: 'dayOfWeek'
+                                        }
                                     }
                                 }
                             }
@@ -916,7 +917,50 @@ describe('aggregation', function () {
                 });
             });
 
+            // TODO: cyclic with timezone, serial, serial with count/starting/timezone, serial iso / with timezone
 
+            it('time dimensions stats', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_TIMESTAMP_1,
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    dow: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'dayOfWeek'
+                                        }
+                                    }
+                                }
+                            },
+                            metadata: {
+                                dimensions: true
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup(function(err, layergroup) {
+                    assert.ifError(err);
+                    const expectedDimensions = {
+                        dow:
+                        { params:
+                           { time: 'to_timestamp("date")',
+                             timezone: 'utc',
+                             units: 'dayOfWeek',
+                             count: 1 },
+                          min: 4,
+                          max: 7,
+                          type: 'number' }
+                    };
+                    assert.deepEqual(layergroup.metadata.layers[0].meta.stats.dimensions, expectedDimensions);
+                });
+            });
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
                 it(`dimensions should work for ${placement} placement`, function(done) {
