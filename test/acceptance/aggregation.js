@@ -959,6 +959,7 @@ describe('aggregation', function () {
                           type: 'number' }
                     };
                     assert.deepEqual(layergroup.metadata.layers[0].meta.stats.dimensions, expectedDimensions);
+                    done();
                 });
             });
 
