@@ -140,7 +140,7 @@ By default aggregated data is grouped only by the the spatial discretization int
 The `dimensions` parameters permits to define additional aggregation dimensions. Currently only date (time, timestamp) columns can be used as dimensions. Just like the spatial position is discretized using a grid, for every
 additional dimension, a grouping into discrete periods of time must be defined.
 
-```json
+```js
 {
     "dimensions": {
         "time_in_days": { // Name of the resulting dimension column
@@ -164,7 +164,7 @@ There are two kind of `units`:
 * serial: `second`, `minute`, `hour`, `day`, `year`, `week`, `quarter`, `trimester`, `semester`, `decade`, `century`, `millenium`.
 * cyclic: `dayOfWeek` (day of the week), `dayOfMonth` (day of the month), `dayOfYear` (day of the year), `hourofDay` (hour of the day), `monthOfYear` (month of the year), `quarterOfYear`, `semesterOfYear`, `trimesterOfYear`, `weekOfDay`, `minuteOfHour`.
 
-Serial units correspond to time series counted from a starting time; for serial units, unless `format` is ISO, a `count` greater than one can be specified, so that the grouping period could be 5 days, 2 monthos or 10 minutes.
+Serial units correspond to time series counted from a starting time; for serial units, unless `format` is ISO, a `count` greater than one can be specified, so that the grouping period could be 5 days, 2 months or 10 minutes.
 
 Cyclic units repeat over a second period given by another unit (day of the month, day of the week...). For example month of the year, which will produce values from 1 to 12, will group the values corresponding of januray of any year to 1. The numbers follow conventional use with units smaller than the day starting at value 0 and the rest at 1, so we have for example months 1 to 12, day of the month 1 to 31, hour of the day 0 to 23, etc. For days of the week the ISO standard convention is followed with 1=monday to 7=sunday; weeks also follow the ISO convention with the first week of a year containing the first thursday.
 
