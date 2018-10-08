@@ -948,11 +948,12 @@ describe('aggregation', function () {
             });
 
             it('aggregation dimensions only used if present', function (done) {
+                const nPoints = 50;
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
                         options: {
-                            sql: pointsWithTimeSQL(50, '2018-01-01T00:00:00+00', '2018-12-31T23:59:59+00', 0),
+                            sql: pointsWithTimeSQL(nPoints, '2000-01-01T00:00:00+00', '2019-12-31T23:59:59+00', 0),
                             dates_as_numbers: true,
                             aggregation: {
                                 threshold: 1,
@@ -970,25 +971,28 @@ describe('aggregation', function () {
                         return done(err);
                     }
                     const tileJSON = tile.toJSON();
-                    assert.equal(tileJSON[0].features.length, 1);
+                    // Everything's aggregated into a single feature because the only
+                    // dimension is space and all points are in the same place.
+                    assert.deepEqual(tileJSON[0].features.map(f => f.properties._cdb_feature_count), [nPoints]);
                     done();
                 });
             });
 
-            it('aggregation dimension month used', function (done) {
+            it('aggregation dimension year used', function (done) {
+                const nPoints = 50;
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
                         options: {
-                            sql: pointsWithTimeSQL(50, '2018-01-01T00:00:00+00', '2018-12-31T23:59:59+00', 0),
+                            sql: pointsWithTimeSQL(nPoints, '2000-01-01T00:00:00+00', '2019-12-31T23:59:59+00', 0),
                             dates_as_numbers: true,
                             aggregation: {
                                 threshold: 1,
                                 dimensions: {
-                                    month: {
+                                    year: {
                                         column: 'date',
                                         group: {
-                                            units: 'month'
+                                            units: 'year'
                                         }
                                     }
                                 }
@@ -1007,7 +1011,11 @@ describe('aggregation', function () {
                         return done(err);
                     }
                     const tileJSON = tile.toJSON();
-                    assert.equal(tileJSON[0].features.length, 12);
+                    // Now all features have same location, but the year is an additional dimension
+                    // with 20 different values, so we'll have an aggregated feature for each.
+                    const expectedYears = Array.from({length: 20}, (_, k) => 2000 + k); // 2000 to 2019
+                    const resultYears = tileJSON[0].features.map(f => f.properties.year).sort((a, b) => a - b);
+                    assert.deepEqual(resultYears, expectedYears);
 
                     done();
                 });
