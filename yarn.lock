@@ -1432,7 +1432,7 @@ mapnik-reference@~8.5.3:
   dependencies:
     semver "^5.1.0"
 
-"mapnik-vector-tile@github:cartodb/mapnik-vector-tile#v1.6.1-carto.2":
+mapnik-vector-tile@cartodb/mapnik-vector-tile#v1.6.1-carto.2:
   version "1.6.1-carto.2"
   resolved "https://codeload.github.com/cartodb/mapnik-vector-tile/tar.gz/e7ca5471f9e5de81243e6035e70444321fc0a82f"
 
@@ -2759,9 +2759,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.9.0:
-  version "4.9.0"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.9.0.tgz#adaeb7adcbe45aa9f196292b7130f255d39513b1"
+windshaft@4.10.0:
+  version "4.10.0"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.10.0.tgz#ed9e1117b7d9ab035c93dbb4f11c1b7046a43edf"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.11"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb10
@@ -2777,7 +2777,6 @@ windshaft@4.9.0:
     request "2.87.0"
     semver "5.5.0"
     sphericalmercator "1.0.5"
-    step "1.0.0"
     tilelive "5.12.3"
     tilelive-mapnik cartodb/tilelive-mapnik#0.6.18-cdb15
     torque.js "2.16.2"

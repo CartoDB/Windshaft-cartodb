@@ -1,12 +1,13 @@
 # Changelog
 
 ## 6.5.0
+Released 2018-10-dd
 
 New features
 - Aggregation time dimensions
 
 ## 6.4.0
-Released 2018-mm-dd
+Released 2018-09-24
 
 - Upgrades Camshaft to [0.62.3](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
   - Build query from node's cache to compute output columns when building analysis
@@ -15,15 +16,17 @@ Released 2018-mm-dd
 - Bug Fixes: (#1020)
   - Fix bug in date-wrapper regarding columns with spaces
   - Fix bug in aggregation-query regarding columns with spaces
-- Upgrades Windshaft to [4.9.0](https://github.com/CartoDB/Windshaft/blob/4.9.0/NEWS.md#version-490)
+- Upgrades Windshaft to [4.10.0](https://github.com/CartoDB/Windshaft/blob/4.10.0/NEWS.md#version-4100)
   - `pg-mvt`:
     - Now matches the behaviour of the `mapnik` renderer for MVTs.
     - Removed undocummented filtering by `layer.options.columns`.
+    - Implement timeout in getTile.
     - Several bugfixes.
   - Dependency updates: Fixed a bug in Mapnik MVT renderer and cleanup in `tilelive-mapnik`.
   - [MapConfig 1.8.0 released](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.8.0.md) with new options for MVTs:
     - Add **`vector_extent`** option in MapConfig to setup the layer extent.
     - Add **`vector_simplify_extent`** option in MapConfig to configure the simplification process.
+  - Remove use of `step` module to handle asynchronous code, now it's defined as development dependency.
 
 ## 6.3.0
 Released 2018-07-26
