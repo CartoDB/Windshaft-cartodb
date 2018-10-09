@@ -134,57 +134,6 @@ of the original dataset applying three different aggregate functions.
 
 > Note that you can use the original column names as names of the result, but all the result column names must be unique.  In particular, the names `cartodb_id`, `the_geom`, `the_geom_webmercator` and `_cdb_feature_count` cannot be used for aggregated columns, as they correspond to columns always present in the result.
 
-### `dimensions`
-
-By default aggregated data is grouped only by the the spatial discretization into grid cells.
-The `dimensions` parameters permits to define additional aggregation dimensions. Currently only date (time, timestamp) columns can be used as dimensions. Just like the spatial position is discretized using a grid, for every
-additional dimension, a grouping into discrete periods of time must be defined.
-
-```js
-{
-    "dimensions": {
-        "time_in_days": { // Name of the resulting dimension column
-            "column": "the_time", // column discretized for the dimension
-            "group": { // defines how to group the values of the column
-                "units": "day", // grouping units
-                "count": 1, // optional, number of grouping units per period, 1 by default
-                "timezone": "Europe/Madrid", // optional (by default 'utc' == '+0000')
-                "starting": "2018-01-01" // by default '0001-01-01T00:00:00', periods counted from this time
-            },
-            "format": "number" // optional, "iso" indicates ISO 8601 format
-        }
-    }
-}
-```
-
-The `column` used as an aggregation dimension must be of type date, time or timestamp (preferably with time zone), and `dates_as_numbers` must be active.
-
-There are two kind of `units`:
-
-* serial: `second`, `minute`, `hour`, `day`, `year`, `week`, `quarter`, `trimester`, `semester`, `decade`, `century`, `millenium`.
-* cyclic: `dayOfWeek` (day of the week), `dayOfMonth` (day of the month), `dayOfYear` (day of the year), `hourofDay` (hour of the day), `monthOfYear` (month of the year), `quarterOfYear`, `semesterOfYear`, `trimesterOfYear`, `weekOfDay`, `minuteOfHour`.
-
-Serial units correspond to time series counted from a starting time; for serial units, unless `format` is ISO, a `count` greater than one can be specified, so that the grouping period could be 5 days, 2 months or 10 minutes.
-
-Cyclic units repeat over a second period given by another unit (day of the month, day of the week...). For example month of the year, which will produce values from 1 to 12, will group the values corresponding of januray of any year to 1. The numbers follow conventional use with units smaller than the day starting at value 0 and the rest at 1, so we have for example months 1 to 12, day of the month 1 to 31, hour of the day 0 to 23, etc. For days of the week the ISO standard convention is followed with 1=monday to 7=sunday; weeks also follow the ISO convention with the first week of a year containing the first thursday.
-
-In numeric form (the default `format: 'number'`), serial units count the grouping periods since the `starting` time. The starting time is by default the first proleptic Gregorian year CE (0001-01-01T00:00:00), so that if the periods are years, the numeric values are as expected.
-
-The `timezone` is used to delimit the start of days when grouping a time. A fixed offset from UTC can be given as a signed number of seconds, or [IANA](https://www.iana.org/time-zones) timezone [names](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) such as `Europe/Madrid` can be used, which can define non-fixed offsets due to daylight saving time changes.
-
-The starting time is given as a string in [ISO format](https://en.wikipedia.org/wiki/ISO_8601). It is interpreted in the same timezone used for grouping, and should not include a timezone offset. It can be defined partially, e.g. `2018-01` for
-`2018-01-01T00:00:00`.
-
-In ISO form, serial units are structured in text form always counted in the conventional form year-month-day etc.
-This format is based on ISO 8601 (YYYY-MM, YYYY-MM-DD, YYYY-MM-DDTHH, etc.), with some additional convention:
-* Weeks are represented as; 2018W03 (third week of 2018:, 2018-01-15 to 2018-01-21)
-* Quarters as 2018Q2 (second quarter of 2018, i.e. 2018-04 to 2018-06)
-* Semesters as 2018S2 (second semester of 2018, i.e. 2018-07 to 2018-12)
-* Trimesters as 2018t2 (second trimester of 2018, i.e. 2018-05 to 2018-08)
-* Decades as D201 (decade 201, i.e. 2010 to 2019)
-* Centuries as C21 (21st century, ie. 2001 to 2100)
-* Millenniums as M3 (3rd millinnium: 2001 to 3000)
-
 #### Limitations:
 * The iso text format does not admit `starting` or `count` parameters
 * Cyclic units (day of the week, etc.) don't admit `count` or `starting` either.
