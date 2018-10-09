@@ -16,6 +16,36 @@ if (process.env.POSTGIS_VERSION >= '20400') {
     });
 }
 
+// Generate points with values and times.
+// The point location is spanned over a given length, by default it is 0 so
+// all points have the same location, which can be used to test aggregation dimensions
+// the default point is in tile
+function pointsWithTimeSQL(n, startTime, endTime, span = 0, x0 = 0.1, y0 = 0.1) {
+    return `
+        WITH params AS (
+        SELECT
+        '${startTime}'::timestamp with time zone AS min_t,
+        '${endTime}'::timestamp with time zone AS max_t,
+        ${x0} AS x0, ${y0} AS y0,
+        ${span} AS length,
+        ${n} AS n
+        ),
+        positions AS (
+        SELECT
+            step::float8/n AS s,
+            x0 + (step::float8/n - 0.5)*length AS x, y0 AS y
+        FROM params, generate_series(1, n) AS step
+        )
+        SELECT
+        row_number() over () AS cartodb_id,
+        n*10 AS value,
+        min_t + (max_t - min_t)*s AS date,
+        ST_SetSRID(ST_MakePoint(x, y), 4326) AS the_geom,
+        ST_Transform(ST_SetSRID(ST_MakePoint(x, y), 4326), 3857) AS the_geom_webmercator
+        FROM params, positions
+    `;
+}
+
 describe('aggregation', function () {
 
     const POINTS_SQL_1 = `
@@ -874,6 +904,440 @@ describe('aggregation', function () {
 
                     tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.value, 'number'));
 
+                    done();
+                });
+            });
+
+            it('time dimensions', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_TIMESTAMP_1,
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    dow: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'dayOfWeek'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const tileJSON = tile.toJSON();
+
+                    tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.dow, 'number'));
+
+                    done();
+                });
+            });
+
+            it('aggregation dimensions only used if present', function (done) {
+                const nPoints = 50;
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: pointsWithTimeSQL(nPoints, '2000-01-01T00:00:00+00', '2019-12-31T23:59:59+00', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    // Everything's aggregated into a single feature because the only
+                    // dimension is space and all points are in the same place.
+                    assert.deepEqual(tileJSON[0].features.map(f => f.properties._cdb_feature_count), [nPoints]);
+                    done();
+                });
+            });
+
+            it('aggregation dimension year used', function (done) {
+                const nPoints = 50;
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: pointsWithTimeSQL(nPoints, '2000-01-01T00:00:00+00', '2019-12-31T23:59:59+00', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    year: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'year'
+                                        }
+                                    }
+                                }
+
+                            },
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    // Now all features have same location, but the year is an additional dimension
+                    // with 20 different values, so we'll have an aggregated feature for each.
+                    const expectedYears = Array.from({length: 20}, (_, k) => 2000 + k); // 2000 to 2019
+                    const resultYears = tileJSON[0].features.map(f => f.properties.year).sort((a, b) => a - b);
+                    assert.deepEqual(resultYears, expectedYears);
+
+                    done();
+                });
+            });
+
+            it('aggregation dimension month with count', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: pointsWithTimeSQL(50, '2018-01-01T00:00:00+00', '2018-12-31T23:59:59+00', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    month: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'month',
+                                            count: 5,
+                                            starting: '2018-01'
+                                        }
+                                    }
+                                }
+
+                            },
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    assert.equal(tileJSON[0].features.length, 3);
+                    const resultQuimesters = tileJSON[0].features.map(f => f.properties.month).sort((a, b) => a - b);
+                    assert.deepEqual(resultQuimesters, [1, 2, 3]);
+
+                    done();
+                });
+            });
+
+            it('aggregation dimension month with starting', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: pointsWithTimeSQL(50, '2018-01-01T00:00:00+00', '2018-12-31T23:59:59+00', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    month: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'month',
+                                            starting: '2017-01'
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort((a, b) => a - b);
+                    assert.deepEqual(resultMonths, [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
+
+                    done();
+                });
+            });
+
+            it('aggregation dimension month by default UTC', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: pointsWithTimeSQL(50, '2018-01-01T00:00:00+00', '2018-01-31T23:59:59+00', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    dow: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'month',
+                                            timezone: '+00'
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    // In UTC all times are in the same month 2018-01
+                    assert.equal(tileJSON[0].features.length, 1);
+
+                    done();
+                });
+            });
+
+            it('aggregation dimension month with timezone', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: pointsWithTimeSQL(50, '2018-01-01T00:00:00+00', '2018-01-31T23:59:59+00', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    dow: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'month',
+                                            timezone: '+7200'
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    // In UTC+2 some times are in a different month
+                    assert.equal(tileJSON[0].features.length, 2);
+                    done();
+                });
+            });
+
+            it('time dimensions stats', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_TIMESTAMP_1,
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    dow: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'dayOfWeek'
+                                        }
+                                    }
+                                }
+                            },
+                            metadata: {
+                                dimensions: true
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup(function(err, layergroup) {
+                    assert.ifError(err);
+                    const expectedDimensions = {
+                        dow:
+                        { params:
+                           { time: 'to_timestamp("date")',
+                             timezone: 'utc',
+                             units: 'dayOfWeek',
+                             count: 1 },
+                          min: 4,
+                          max: 7,
+                          type: 'number' }
+                    };
+                    assert.deepEqual(layergroup.metadata.layers[0].meta.stats.dimensions, expectedDimensions);
+                    done();
+                });
+            });
+
+            it('no time dimensions stats by default', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_TIMESTAMP_1,
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    dow: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'dayOfWeek'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                this.testClient.getLayergroup(function(err, layergroup) {
+                    assert.ifError(err);
+                    assert(!layergroup.metadata.layers[0].meta.stats.dimensions);
+                    done();
+                });
+            });
+
+            it('aggregation dimension month iso format', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: pointsWithTimeSQL(50, '2018-01-01T00:00:00+00', '2018-12-31T23:59:59+00', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    month: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'month',
+                                        },
+                                        format: 'iso'
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort();
+                    assert.deepEqual(resultMonths, [
+                        '2018-01', '2018-02', '2018-03', '2018-04', '2018-05','2018-06',
+                        '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12'
+                    ]);
+                    done();
+                });
+            });
+
+            it('aggregation dimension month iso format with timezone', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: pointsWithTimeSQL(50, '2018-01-01T00:00:00+00', '2018-12-31T23:59:59+00', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    month: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'month',
+                                            timezone: '+7200'
+                                        },
+                                        format: 'iso',
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort();
+                    assert.deepEqual(resultMonths, [
+                        '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06',
+                        '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12',
+                        '2019-01'
+                    ]);
                     done();
                 });
             });

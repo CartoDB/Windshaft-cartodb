@@ -1,8 +1,10 @@
 # Changelog
 
-## 6.4.1
-Released 2018-mm-dd
+## 6.5.0
+Released 2018-10-dd
 
+New features
+- Aggregation time dimensions
 
 ## 6.4.0
 Released 2018-09-24

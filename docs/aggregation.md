@@ -134,6 +134,10 @@ of the original dataset applying three different aggregate functions.
 
 > Note that you can use the original column names as names of the result, but all the result column names must be unique.  In particular, the names `cartodb_id`, `the_geom`, `the_geom_webmercator` and `_cdb_feature_count` cannot be used for aggregated columns, as they correspond to columns always present in the result.
 
+#### Limitations:
+* The iso text format does not admit `starting` or `count` parameters
+* Cyclic units (day of the week, etc.) don't admit `count` or `starting` either.
+
 ### `resolution`
 
 Defines the cell-size of the spatial aggregation grid. This is equivalent to the [CartoCSS `-torque-resolution`](https://carto.com/docs/carto-engine/cartocss/properties-for-torque/#-torque-resolution-float) property of Torque maps.
