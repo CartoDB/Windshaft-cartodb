@@ -66,7 +66,7 @@
     "preinstall": "make pre-install",
     "test": "make test-all",
     "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn",
-    "docker-test": "docker run -v `pwd`:/srv carto/nodejs6-xenial-pg101 bash run_tests_docker.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
+    "docker-test": "docker run -v `pwd`:/srv carto/nodejs6-xenial-pg101:postgis-2.4.4.5 bash run_tests_docker.sh && docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v",
     "docker-bash": "docker run  -it -v `pwd`:/srv carto/nodejs6-xenial-pg101 bash"
   },
   "engines": {
