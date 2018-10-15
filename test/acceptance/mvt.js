@@ -207,7 +207,7 @@ return function () {
         }
 
         it('should use overviews to fetch mvt data', function (done) {
-            var mapConfig = createMapConfig(
+            const mapConfig = createMapConfig(
                 [
                     {
                         "type": "cartodb",
@@ -220,15 +220,17 @@ return function () {
                 ]
             );
 
-            var testClient = new TestClient(mapConfig);
+            const testClient = new TestClient(mapConfig);
 
-            testClient.getTile(0, 0, 0, { format: 'mvt', layers: 0 }, function (err, res, MVT) {
-                var geojsonTile = JSON.parse(MVT.toGeoJSONSync(0));
-                assert.ok(!err, err);
+            testClient.getTile(0, 0, 0, { format: 'mvt', layers: 0 }, function (err, res, mvt) {
+                assert.ifError(err);
+
+                const geojsonTile = JSON.parse(mvt.toGeoJSONSync(0));
 
                 assert.ok(Array.isArray(geojsonTile.features));
                 assert.ok(geojsonTile.features.length > 0);
-                var feature = geojsonTile.features[0];
+
+                const feature = geojsonTile.features[0];
 
                 assert.ok(feature.properties.hasOwnProperty('_feature_count'), 'Missing _feature_count property');
                 assert.equal(feature.properties.cartodb_id, 1);
