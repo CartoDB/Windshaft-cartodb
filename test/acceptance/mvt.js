@@ -278,9 +278,11 @@ return function () {
 
                 assert.ok(Array.isArray(tileWithOverviews.features));
                 assert.equal(tileWithOverviews.features.length, 1);
+                assert.equal(tileWithOverviews.features[0].properties._feature_count, 5);
 
                 assert.ok(Array.isArray(tileWithoutOverviews.features));
                 assert.equal(tileWithoutOverviews.features.length, 5);
+                assert.equal(tileWithoutOverviews.features[0].properties._feature_count, undefined);
 
                 testClient.drain(done);
             });
