@@ -195,5 +195,98 @@ return function () {
             });
         });
     });
+
+    describe('overviews', function () {
+        function createMapConfig(layers, dataviews, analysis) {
+            return {
+                version: '1.8.0',
+                layers: layers,
+                dataviews: dataviews || {},
+                analyses: analysis || []
+            };
+        }
+
+        it('should use overviews to fetch mvt data', function (done) {
+            const mapConfig = createMapConfig(
+                [
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "sql": 'SELECT * FROM test_table_overviews',
+                            "cartocss": TestClient.CARTOCSS.POINTS,
+                            "cartocss_version": "2.3.0"
+                        }
+                    }
+                ]
+            );
+
+            const testClient = new TestClient(mapConfig);
+            const [ z, x, y ] = [ 0, 0, 0 ];
+            const options = { format: 'mvt' };
+
+            testClient.getTile(z, x, y, options, function (err, res, mvt) {
+                assert.ifError(err);
+
+                const geojsonTile = JSON.parse(mvt.toGeoJSONSync(0));
+
+                assert.ok(Array.isArray(geojsonTile.features));
+                assert.ok(geojsonTile.features.length > 0);
+
+                const feature = geojsonTile.features[0];
+
+                assert.ok(feature.properties.hasOwnProperty('_feature_count'), 'Missing _feature_count property');
+                assert.equal(feature.properties.cartodb_id, 1);
+                assert.equal(feature.properties.name, 'Hawai');
+                assert.equal(feature.properties._feature_count, 5); // original table has _feature_count = 1
+                assert.equal(feature.properties.value, 3); // original table has value = 1.0
+
+                testClient.drain(done);
+            });
+        });
+
+        it('first layer should use overviews, second layer shouldn\'t', function (done) {
+            const mapConfig = createMapConfig(
+                [
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "sql": 'SELECT * FROM test_table_overviews',
+                            "cartocss": TestClient.CARTOCSS.POINTS,
+                            "cartocss_version": "2.3.0"
+                        }
+                    },
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "sql": 'SELECT * FROM test_table',
+                            "cartocss": TestClient.CARTOCSS.POINTS,
+                            "cartocss_version": "2.3.0"
+                        }
+                    }
+                ]
+            );
+
+            const testClient = new TestClient(mapConfig);
+            const [ z, x, y ] = [ 0, 0, 0 ];
+            const options = { format: 'mvt' };
+
+            testClient.getTile(z, x, y, options, function (err, res, mvt) {
+                assert.ifError(err);
+
+                const tileWithOverviews = JSON.parse(mvt.toGeoJSONSync(0));
+                const tileWithoutOverviews = JSON.parse(mvt.toGeoJSONSync(1));
+
+                assert.ok(Array.isArray(tileWithOverviews.features));
+                assert.equal(tileWithOverviews.features.length, 1);
+                assert.equal(tileWithOverviews.features[0].properties._feature_count, 5);
+
+                assert.ok(Array.isArray(tileWithoutOverviews.features));
+                assert.equal(tileWithoutOverviews.features.length, 5);
+                assert.equal(tileWithoutOverviews.features[0].properties._feature_count, undefined);
+
+                testClient.drain(done);
+            });
+        });
+    });
 };
 }
