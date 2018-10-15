@@ -196,7 +196,7 @@ return function () {
         });
     });
 
-    describe('overviews-mvt', function () {
+    describe('overviews', function () {
         function createMapConfig(layers, dataviews, analysis) {
             return {
                 version: '1.8.0',
@@ -221,8 +221,10 @@ return function () {
             );
 
             const testClient = new TestClient(mapConfig);
+            const [ z, x, y ] = [ 0, 0, 0 ];
+            const options = { format: 'mvt' };
 
-            testClient.getTile(0, 0, 0, { format: 'mvt', layers: 0 }, function (err, res, mvt) {
+            testClient.getTile(z, x, y, options, function (err, res, mvt) {
                 assert.ifError(err);
 
                 const geojsonTile = JSON.parse(mvt.toGeoJSONSync(0));
@@ -242,7 +244,7 @@ return function () {
             });
         });
 
-        it('two layers, first should use overviews, second shouldn\'t', function (done) {
+        it('first layer should use overviews, second layer shouldn\'t', function (done) {
             const mapConfig = createMapConfig(
                 [
                     {
@@ -264,9 +266,11 @@ return function () {
                 ]
             );
 
-            var testClient = new TestClient(mapConfig);
+            const testClient = new TestClient(mapConfig);
+            const [ z, x, y ] = [ 0, 0, 0 ];
+            const options = { format: 'mvt' };
 
-            testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, res, mvt) {
+            testClient.getTile(z, x, y, options, function (err, res, mvt) {
                 assert.ifError(err);
 
                 const tileWithOverviews = JSON.parse(mvt.toGeoJSONSync(0));
