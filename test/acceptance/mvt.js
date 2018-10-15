@@ -239,6 +239,46 @@ return function () {
                 testClient.drain(done);
             });
         });
+
+        it('two layers, first should use overviews, second shouldn\'t', function (done) {
+            const mapConfig = createMapConfig(
+                [
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "sql": 'SELECT * FROM test_table_overviews',
+                            "cartocss": TestClient.CARTOCSS.POINTS,
+                            "cartocss_version": "2.3.0"
+                        }
+                    },
+                    {
+                        "type": "cartodb",
+                        "options": {
+                            "sql": 'SELECT * FROM test_table',
+                            "cartocss": TestClient.CARTOCSS.POINTS,
+                            "cartocss_version": "2.3.0"
+                        }
+                    }
+                ]
+            );
+
+            var testClient = new TestClient(mapConfig);
+
+            testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, res, mvt) {
+                assert.ifError(err);
+
+                const tileWithOverviews = JSON.parse(mvt.toGeoJSONSync(0));
+                const tileWithoutOverviews = JSON.parse(mvt.toGeoJSONSync(1));
+
+                assert.ok(Array.isArray(tileWithOverviews.features));
+                assert.equal(tileWithOverviews.features.length, 1);
+
+                assert.ok(Array.isArray(tileWithoutOverviews.features));
+                assert.equal(tileWithoutOverviews.features.length, 5);
+
+                testClient.drain(done);
+            });
+        });
     });
 };
 }
