@@ -19,7 +19,7 @@ let layergroupid;
 
 const query = `
     SELECT
-        ST_Transform('SRID=4326;POINT(-180 85.05112877)'::geometry, 3857) the_geom_webmercator,
+        ST_Transform('SRID=4326;POINT(-70 42)'::geometry, 3857) the_geom_webmercator,
         1 cartodb_id,
         2 val
 `;
@@ -335,7 +335,7 @@ describe('rate limit and vector tiles', function () {
             };
         };
 
-        testClient.getTile(0, 0, 0, tileParams(204, '1', '0', '1'), (err) => {
+        testClient.getTile(0, 0, 0, tileParams(200, '1', '0', '1'), (err) => {
             assert.ifError(err);
 
             testClient.getTile(
