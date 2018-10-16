@@ -294,13 +294,13 @@ describe('date-wrapping', () => {
                         type: 'Feature',
                         id: 0,
                         geometry: { type: 'Point', coordinates: [0, 0] },
-                        properties: { cartodb_id: 0, date: 1527810000, sc: 559082000 }
+                        properties: { cartodb_id: 0, date: 1527810000, sc: 559082264.0287178839788058162356 }
                     },
                     {
                         type: 'Feature',
                         id: 1,
                         geometry: { type: 'Point', coordinates: [0, 0] },
-                        properties: { cartodb_id: 1, date: 1527900000, sc: 559082000 }
+                        properties: { cartodb_id: 1, date: 1527900000, sc: 559082264.0287178839788058162356 }
                     }
                 ];
                 const actual = JSON.parse(mvt.toGeoJSONSync(0)).features;
