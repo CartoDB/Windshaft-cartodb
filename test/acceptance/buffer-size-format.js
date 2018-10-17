@@ -54,6 +54,8 @@ function createMapConfig (bufferSize, cartocss) {
 }
 
 describe('buffer size per format', function () {
+    let testClient;
+
     var testCases = [
         {
             desc: 'should get png tile using buffer-size 0',
@@ -126,25 +128,27 @@ describe('buffer size per format', function () {
     ];
 
     afterEach(function(done) {
-        if (this.testClient) {
-            return this.testClient.drain(done);
+        if (testClient) {
+            return testClient.drain(done);
         }
         return done();
     });
 
     const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+    after(function () {
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+    });
+
     testCases.forEach(function (test) {
-        var testFn = (usePostGIS) => {
+        var testFn = () => {
             it(test.desc, function (done) {
-                serverOptions.renderer.mvt.usePostGIS = usePostGIS;
-                this.testClient = new TestClient(test.mapConfig, 1234);
-                serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+                testClient = new TestClient(test.mapConfig, 1234);
                 var coords = test.coords;
                 var options = {
                     format: test.format,
                     layers: test.layers
                 };
-                this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+                testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                     assert.ifError(err);
                     // To generate images use:
                     // tile.save(test.fixturePath);
@@ -152,10 +156,23 @@ describe('buffer size per format', function () {
                 });
             });
         };
-        if (process.env.POSTGIS_VERSION >= '20400' && test.format === 'mvt'){
-            testFn(true);
+        if (test.format === 'mvt') {
+            const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
+            describe('using mapnik mvt renderer', function() {
+                before(function () {
+                    serverOptions.renderer.mvt.usePostGIS = false;
+                });
+                testFn();
+            });
+            describe_pg('using postgis mvt renderer', function() {
+                before(function () {
+                    serverOptions.renderer.mvt.usePostGIS = true;
+                });
+                testFn();
+            });
+        } else {
+            testFn();
         }
-        testFn(false);
     });
 });
 
@@ -444,7 +461,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
     const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
     testCases.forEach(function (test) {
         var testFn = (usePostGIS) => {
-                it(test.desc + `(${usePostGIS? 'PostGIS':'mapnik'})`, function (done) {
+            it(test.desc + `(${usePostGIS? 'PostGIS':'mapnik'})`, function (done) {
                     serverOptions.renderer.mvt.usePostGIS = usePostGIS;
                     test.template.name += '_1';
                     this.testClient = new TestClient(test.template, 1234);
