@@ -156,24 +156,27 @@ describe('buffer size per format', function () {
         });
     };
 
-    testCases.forEach(function (test) {
-        if (test.format === 'mvt') {
-            const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
-            describe('using mapnik mvt renderer', function() {
-                before(function () {
-                    serverOptions.renderer.mvt.usePostGIS = false;
-                });
-                testFn(test);
-            });
-            describe_pg('using postgis mvt renderer', function() {
-                before(function () {
-                    serverOptions.renderer.mvt.usePostGIS = true;
-                });
-                testFn(test);
-            });
-        } else {
+    testCases.filter(test => test.format !== 'mvt').forEach(function (test) {
+        testFn(test);
+    });
+
+    describe('using mapnik mvt renderer', function() {
+        before(function () {
+            serverOptions.renderer.mvt.usePostGIS = false;
+        });
+        testCases.filter(test => test.format === 'mvt').forEach(function (test) {
             testFn(test);
-        }
+        });
+    });
+
+    const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
+    describe_pg('using postgis mvt renderer', function() {
+        before(function () {
+            serverOptions.renderer.mvt.usePostGIS = true;
+        });
+        testCases.filter(test => test.format === 'mvt').forEach(function (test) {
+            testFn(test);
+        });
     });
 });
 
