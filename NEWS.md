@@ -5,7 +5,7 @@ Released 2018-mm-dd
 
 New features
 - Aggregation time dimensions
-- Use overviews query rewriter for mvt-renderer. Upgrades Windshaft to [4.11.1](https://github.com/CartoDB/Windshaft/blob/4.11.0/NEWS.md#version-4111)
+- Upgrades Windshaft to [4.11.2](https://github.com/CartoDB/Windshaft/blob/4.11.2/NEWS.md#version-4112)
   - `pg-mvt`: Use `query-rewriter` to compose the query to render a MVT tile. If not defined, it will use a Default Query Rewriter.
   - `pg-mvt`: Fix bug while building query and there is no columns defined for the layer.
   - `pg-mvt`: Accept trailing semicolon in input queries.
