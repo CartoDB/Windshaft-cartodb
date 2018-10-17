@@ -139,39 +139,40 @@ describe('buffer size per format', function () {
         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
-    testCases.forEach(function (test) {
-        var testFn = () => {
-            it(test.desc, function (done) {
-                testClient = new TestClient(test.mapConfig, 1234);
-                var coords = test.coords;
-                var options = {
-                    format: test.format,
-                    layers: test.layers
-                };
-                testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
-                    assert.ifError(err);
-                    // To generate images use:
-                    // tile.save(test.fixturePath);
-                    test.assert(tile, done);
-                });
+    var testFn = (test) => {
+        it(test.desc, function (done) {
+            testClient = new TestClient(test.mapConfig, 1234);
+            var coords = test.coords;
+            var options = {
+                format: test.format,
+                layers: test.layers
+            };
+            testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
+                assert.ifError(err);
+                // To generate images use:
+                // tile.save(test.fixturePath);
+                test.assert(tile, done);
             });
-        };
+        });
+    };
+
+    testCases.forEach(function (test) {
         if (test.format === 'mvt') {
             const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
             describe('using mapnik mvt renderer', function() {
                 before(function () {
                     serverOptions.renderer.mvt.usePostGIS = false;
                 });
-                testFn();
+                testFn(test);
             });
             describe_pg('using postgis mvt renderer', function() {
                 before(function () {
                     serverOptions.renderer.mvt.usePostGIS = true;
                 });
-                testFn();
+                testFn(test);
             });
         } else {
-            testFn();
+            testFn(test);
         }
     });
 });
