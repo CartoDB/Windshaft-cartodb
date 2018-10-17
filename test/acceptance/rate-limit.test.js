@@ -7,6 +7,7 @@ const cartodbRedis = require('cartodb-redis');
 const TestClient = require('../support/test-client');
 const UserLimitsBackend = require('../../lib/cartodb/backends/user-limits');
 const rateLimitMiddleware = require('../../lib/cartodb/api/middlewares/rate-limit');
+const serverOptions = require('../../lib/cartodb/server_options');
 const { RATE_LIMIT_ENDPOINTS_GROUPS } = rateLimitMiddleware;
 
 let userLimitsApi;
@@ -273,7 +274,21 @@ describe('rate limit middleware', function () {
     });
 });
 
-describe('rate limit and vector tiles', function () {
+const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
+const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
+describe('rate limit and vector tiles (mapnik)', () => { rateLimitAndVectorTilesTest(false); });
+describe_pg('rate limit and vector tiles (postgis)', () => { rateLimitAndVectorTilesTest(true); });
+
+function rateLimitAndVectorTilesTest(usePostGIS) {
+
+    before(function() {
+        serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+    });
+
+    after(function () {
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+    });
 
     before(function(done) {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
@@ -358,4 +373,4 @@ describe('rate limit and vector tiles', function () {
         });
 
     });
-});
+}
