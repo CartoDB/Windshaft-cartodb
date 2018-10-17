@@ -325,7 +325,7 @@ function rateLimitAndVectorTilesTest(usePostGIS) {
 
             redisClient.SELECT(5, () => {
                 redisClient.del('user:localhost:mapviews:global');
-                done();
+                setTimeout(done, 1000);
             });
         });
     });
