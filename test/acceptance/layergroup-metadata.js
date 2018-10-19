@@ -2,8 +2,21 @@ require('../support/test_helper');
 
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
+const serverOptions = require('../../lib/cartodb/server_options');
 
 describe('layergroup metadata', function () {
+
+    const usePgMvtRenderer = process.env.POSTGIS_VERSION >= '20400';
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
+    before(function () {
+        serverOptions.renderer.mvt.usePostGIS = usePgMvtRenderer;
+    });
+
+    after(function () {
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+    });
+
     [1234, 'default_public', false].forEach(api_key => {
         it(`tiles base urls ${api_key ? `with api key: ${api_key}` : 'without api key'}`, function (done) {
             const mapConfig = {

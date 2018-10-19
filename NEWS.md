@@ -5,6 +5,7 @@ Released 2018-mm-dd
 
 New features
 - Aggregation time dimensions
+- Update sample configurations to use PostGIS to generate MVT's by default (as in production)
 - Upgrades Windshaft to [4.11.3](https://github.com/CartoDB/Windshaft/blob/4.11.3/NEWS.md#version-4113)
   - `pg-mvt`: Use `query-rewriter` to compose the query to render a MVT tile. If not defined, it will use a Default Query Rewriter.
   - `pg-mvt`: Fix bug while building query and there is no columns defined for the layer.

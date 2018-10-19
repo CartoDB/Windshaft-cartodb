@@ -2,8 +2,13 @@
 const assert = require('assert');
 const TestClient = require('../support/test-client');
 const mapConfigFactory = require('../fixtures/test_mapconfigFactory');
+const serverOptions = require('../../lib/cartodb/server_options');
 
-describe('date-wrapping', () => {
+const usePgMvtRenderer = serverOptions.renderer.mvt.usePostGIS;
+const postgisVersion = process.env.POSTGIS_VERSION;
+const describe_mvt = postgisVersion >= '20400' || !usePgMvtRenderer ? describe : describe.skip;
+
+describe_mvt('date-wrapping', () => {
     let testClient;
 
     describe('when a map instantiation has one single layer', () => {
@@ -21,13 +26,13 @@ describe('date-wrapping', () => {
                     const expected = [
                         {
                             type: 'Feature',
-                            id: 1,
+                            id: 0,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 0, date: 1527810000 }
                         },
                         {
                             type: 'Feature',
-                            id: 2,
+                            id: 1,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 1, date: 1527900000 }
                         }
@@ -65,13 +70,13 @@ describe('date-wrapping', () => {
                     const expected = [
                         {
                             type: 'Feature',
-                            id: 1,
+                            id: 0,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 0 }
                         },
                         {
                             type: 'Feature',
-                            id: 2,
+                            id: 1,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 1 }
                         }
@@ -111,13 +116,13 @@ describe('date-wrapping', () => {
                     const expected0 = [
                         {
                             type: 'Feature',
-                            id: 1,
+                            id: 0,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 0, date: 1527810000 }
                         },
                         {
                             type: 'Feature',
-                            id: 2,
+                            id: 1,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 1, date: 1527900000 }
                         }
@@ -125,13 +130,13 @@ describe('date-wrapping', () => {
                     const expected1 = [
                         {
                             type: 'Feature',
-                            id: 1,
+                            id: 0,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 0, date: 1527810000 }
                         },
                         {
                             type: 'Feature',
-                            id: 2,
+                            id: 1,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 1, date: 1527900000 }
                         }
@@ -169,13 +174,13 @@ describe('date-wrapping', () => {
                     const expected0 = [
                         {
                             type: 'Feature',
-                            id: 1,
+                            id: 0,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 0 }
                         },
                         {
                             type: 'Feature',
-                            id: 2,
+                            id: 1,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 1 }
                         }
@@ -183,13 +188,13 @@ describe('date-wrapping', () => {
                     const expected1 = [
                         {
                             type: 'Feature',
-                            id: 1,
+                            id: 0,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 0, date: 1527810000 }
                         },
                         {
                             type: 'Feature',
-                            id: 2,
+                            id: 1,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 1, date: 1527900000 }
                         }
@@ -227,13 +232,13 @@ describe('date-wrapping', () => {
                     const expected0 = [
                         {
                             type: 'Feature',
-                            id: 1,
+                            id: 0,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 0 }
                         },
                         {
                             type: 'Feature',
-                            id: 2,
+                            id: 1,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 1 }
                         }
@@ -241,13 +246,13 @@ describe('date-wrapping', () => {
                     const expected1 = [
                         {
                             type: 'Feature',
-                            id: 1,
+                            id: 0,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 0 }
                         },
                         {
                             type: 'Feature',
-                            id: 2,
+                            id: 1,
                             geometry: { type: 'Point', coordinates: [0, 0] },
                             properties: { _cdb_feature_count: 1, cartodb_id: 1 }
                         }
@@ -292,19 +297,18 @@ describe('date-wrapping', () => {
                 const expected = [
                     {
                         type: 'Feature',
-                        id: 1,
+                        id: 0,
                         geometry: { type: 'Point', coordinates: [0, 0] },
-                        properties: { cartodb_id: 0, date: 1527810000, sc: 559082000 }
+                        properties: { cartodb_id: 0, date: 1527810000, sc: 559082264.0287178839788058162356 }
                     },
                     {
                         type: 'Feature',
-                        id: 2,
+                        id: 1,
                         geometry: { type: 'Point', coordinates: [0, 0] },
-                        properties: { cartodb_id: 1, date: 1527900000, sc: 559082000 }
+                        properties: { cartodb_id: 1, date: 1527900000, sc: 559082264.0287178839788058162356 }
                     }
                 ];
                 const actual = JSON.parse(mvt.toGeoJSONSync(0)).features;
-
                 assert.deepEqual(actual, expected);
                 done();
             });
