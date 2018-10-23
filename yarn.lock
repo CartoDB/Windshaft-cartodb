@@ -995,9 +995,9 @@ graceful-fs@^4.1.2:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-grainstore@1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.9.0.tgz#4f7604bb83538dbfe5d7dbe63be3a7fa345a14f8"
+grainstore@1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/grainstore/-/grainstore-1.9.1.tgz#8efa8f20bad7027fe2eabbb9592f229bd7cf9264"
   dependencies:
     carto "0.16.3"
     debug "~3.1.0"
@@ -1523,9 +1523,9 @@ mime-db@~1.33.0:
   version "1.33.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.33.0.tgz#a3492050a5cb9b63450541e39d9788d2272783db"
 
-mime-db@~1.36.0:
-  version "1.36.0"
-  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.36.0.tgz#5020478db3c7fe93aad7bbcc4dcf869c43363397"
+mime-db@~1.37.0:
+  version "1.37.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.37.0.tgz#0b6a0ce6fdbe9576e25f1f2d2fde8830dc0ad0d8"
 
 mime-types@^2.1.12, mime-types@~2.1.17, mime-types@~2.1.18:
   version "2.1.18"
@@ -1534,10 +1534,10 @@ mime-types@^2.1.12, mime-types@~2.1.17, mime-types@~2.1.18:
     mime-db "~1.33.0"
 
 mime-types@~2.1.19, mime-types@~2.1.7:
-  version "2.1.20"
-  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.20.tgz#930cb719d571e903738520f8470911548ca2cc19"
+  version "2.1.21"
+  resolved "https://registry.yarnpkg.com/mime-types/-/mime-types-2.1.21.tgz#28995aa1ecb770742fe6ae7e58f9181c744b3f96"
   dependencies:
-    mime-db "~1.36.0"
+    mime-db "~1.37.0"
 
 mime@1.4.1:
   version "1.4.1"
@@ -1997,7 +1997,7 @@ pgpass@1.*:
 
 pify@^2.0.0:
   version "2.3.0"
-  resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
+  resolved "http://registry.npmjs.org/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"
 
 pinkie-promise@^2.0.0:
   version "2.0.1"
@@ -2899,9 +2899,9 @@ window-size@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/window-size/-/window-size-0.2.0.tgz#b4315bb4214a3d7058ebeee892e13fa24d98b075"
 
-windshaft@4.11.3:
-  version "4.11.3"
-  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.11.3.tgz#7ed82311090e4364eafc3fea42a1412b2d678183"
+windshaft@4.11.4:
+  version "4.11.4"
+  resolved "https://registry.yarnpkg.com/windshaft/-/windshaft-4.11.4.tgz#e8f0de00c1de5f6ed0f34aa4fe386ce02d4a910a"
   dependencies:
     "@carto/mapnik" "3.6.2-carto.11"
     "@carto/tilelive-bridge" cartodb/tilelive-bridge#2.5.1-cdb10
@@ -2911,7 +2911,7 @@ windshaft@4.11.3:
     cartodb-psql "0.11.0"
     debug "3.1.0"
     dot "1.1.2"
-    grainstore "1.9.0"
+    grainstore "1.9.1"
     queue-async "1.1.0"
     redis-mpool "0.5.0"
     request "2.87.0"
