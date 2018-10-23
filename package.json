@@ -62,7 +62,7 @@
     "strftime": "0.10.0"
   },
   "scripts": {
-    "lint": "jshint lib test",
+    "lint": "jshint lib test app.js",
     "preinstall": "make pre-install",
     "test": "make test-all",
     "update-internal-deps": "rm -rf node_modules && rm -f yarn.lock && yarn",
