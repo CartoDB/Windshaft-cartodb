@@ -2,14 +2,32 @@ require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
+const serverOptions = require('../../../lib/cartodb/server_options');
 
-describe('Create mapnik layergroup', function() {
+const suites = [{
+    desc: 'mvt (mapnik)',
+    usePostGIS: false
+}];
+
+if (process.env.POSTGIS_VERSION >= '20400') {
+    suites.push({
+        desc: 'mvt (postgis)',
+        usePostGIS: true
+    });
+}
+
+suites.forEach(({desc, usePostGIS}) => {
+describe(`[${desc}] Create mapnik layergroup`, function() {
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
     before(function() {
+        serverOptions.renderer.mvt.usePostGIS = usePostGIS;
         this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
         global.environment.enabledFeatures.layerStats = true;
     });
 
     after(function() {
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
         global.environment.enabledFeatures.layerStats = this.layerStatsConfig;
     });
 
@@ -613,4 +631,5 @@ describe('Create mapnik layergroup', function() {
         });
     });
 
+});
 });
