@@ -2,6 +2,8 @@ require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
+const serverOptions = require('../../lib/cartodb/server_options');
+
 
 describe('Create mapnik layergroup', function() {
     before(function() {
@@ -520,6 +522,9 @@ describe('Create mapnik layergroup', function() {
     });
 
     it(`should not fail "TypeError: ... 'geom_type' of undefined" for empty results`, function(done) {
+        const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+        serverOptions.renderer.mvt.usePostGIS = true;
+
         var testClient = new TestClient({
             version: '1.8.0',
             layers: [
@@ -541,6 +546,7 @@ describe('Create mapnik layergroup', function() {
             assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 0);
             assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, undefined);
             testClient.drain(done);
+            serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
         });
     });
 
