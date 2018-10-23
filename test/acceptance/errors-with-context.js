@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('../support/assert');
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');

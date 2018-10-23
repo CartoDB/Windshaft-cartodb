@@ -1,3 +1,5 @@
+'use strict';
+
 var assert      = require('../support/assert');
 var _           = require('underscore');
 var redis       = require('redis');

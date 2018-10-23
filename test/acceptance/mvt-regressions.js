@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 const assert = require('../support/assert');
@@ -95,7 +97,7 @@ describe('MVT Mapnik', function () {
     it('invalid properties', function (done) {
         const query = `
             select ldc, cartodb_id, _2016_6_partcntry, the_geom_webmercator, country
-            from countries_null_values 
+            from countries_null_values
             where country = 'Kenya' OR country = 'Sudan' LIMIT 3
         `;
 
