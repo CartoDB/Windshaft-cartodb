@@ -519,6 +519,31 @@ describe('Create mapnik layergroup', function() {
         });
     });
 
+    it(`should not fail "TypeError: ... 'geom_type' of undefined" for empty results`, function(done) {
+        var testClient = new TestClient({
+            version: '1.8.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from test_table where false',
+                        metadata: {
+                            geometryType: true
+                        }
+                    }
+                }
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 0);
+            assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, undefined);
+            testClient.drain(done);
+        });
+    });
+
     it('should provide a sample as optional metadata', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
