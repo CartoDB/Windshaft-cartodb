@@ -12,6 +12,9 @@ New features
   - `pg-mvt`: Accept trailing semicolon in input queries.
   - `Renderer Cache Entry`: Do not throw errors for integrity checks.
 
+Bug Fixes:
+- Prevent from uncaught exception: Range filter Error from camshaft when getting analysis query.
+
 ## 6.4.0
 Released 2018-09-24
 
