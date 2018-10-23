@@ -556,7 +556,6 @@ describe(`[${desc}] Create mapnik layergroup`, function() {
         testClient.getLayergroup(function(err, layergroup) {
             assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 0);
             assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, undefined);
             testClient.drain(done);
         });
