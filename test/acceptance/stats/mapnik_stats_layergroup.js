@@ -2,14 +2,32 @@ require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
+const serverOptions = require('../../../lib/cartodb/server_options');
 
-describe('Create mapnik layergroup', function() {
+const suites = [{
+    desc: 'mvt (mapnik)',
+    usePostGIS: false
+}];
+
+if (process.env.POSTGIS_VERSION >= '20400') {
+    suites.push({
+        desc: 'mvt (postgis)',
+        usePostGIS: true
+    });
+}
+
+suites.forEach(({desc, usePostGIS}) => {
+describe(`[${desc}] Create mapnik layergroup`, function() {
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
     before(function() {
+        serverOptions.renderer.mvt.usePostGIS = usePostGIS;
         this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
         global.environment.enabledFeatures.layerStats = true;
     });
 
     after(function() {
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
         global.environment.enabledFeatures.layerStats = this.layerStatsConfig;
     });
 
@@ -519,6 +537,30 @@ describe('Create mapnik layergroup', function() {
         });
     });
 
+    it(`should not fail "TypeError: ... 'geom_type' of undefined" for empty results`, function(done) {
+        var testClient = new TestClient({
+            version: '1.8.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from test_table where false',
+                        metadata: {
+                            geometryType: true
+                        }
+                    }
+                }
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, undefined);
+            testClient.drain(done);
+        });
+    });
+
     it('should provide a sample as optional metadata', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
@@ -588,4 +630,5 @@ describe('Create mapnik layergroup', function() {
         });
     });
 
+});
 });
