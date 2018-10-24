@@ -944,8 +944,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient.getDataview('datetime_histogram_tz', {}, function (err, dataview) {
             assert.ok(!err, err);
 
-            this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('datetime_histogram_tz', params, function (err, filteredDataview) {
+            const _testClient = new TestClient(mapConfig, 1234);
+            _testClient.getDataview('datetime_histogram_tz', params, function (err, filteredDataview) {
                 assert.ok(!err, err);
 
                 assert.deepEqual(dataview, filteredDataview);
