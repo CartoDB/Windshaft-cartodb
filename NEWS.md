@@ -16,6 +16,7 @@ New features
 
 Bug Fixes:
 - Prevent from uncaught exception: Range filter Error from camshaft when getting analysis query.
+- Make all modules to use strict mode semantics.
 
 ## 6.4.0
 Released 2018-09-24
