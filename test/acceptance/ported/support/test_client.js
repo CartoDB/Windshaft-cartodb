@@ -131,7 +131,7 @@ function serverInstance(options) {
         return otherServer;
     }
 
-    return server;
+    return getServer();
 }
 
 function layergroupRequest(layergroupConfig, method, callbackName, extraParams) {
