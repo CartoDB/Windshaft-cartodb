@@ -1,3 +1,5 @@
+'use strict';
+
 var step = require('step');
 var test_helper = require('../support/test_helper');
 

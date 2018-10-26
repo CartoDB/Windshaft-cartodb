@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('../support/assert');
 var step = require('step');
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');

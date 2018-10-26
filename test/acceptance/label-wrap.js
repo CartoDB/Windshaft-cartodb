@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 var TestClient = require('../support/test-client');
 
@@ -7,10 +9,10 @@ var IMAGE_TOLERANCE = 5;
 describe('CartoCSS wrap', function () {
     const options = {
         sql: `
-            SELECT 
-                5 as cartodb_id, 
-                ST_Transform(ST_SetSRID(ST_MakePoint(-57.65625,-15.6230368),4326),3857) as the_geom_webmercator,  
-                ST_SetSRID(ST_MakePoint(-57.65625,-15.62303683),4326) as the_geom, 
+            SELECT
+                5 as cartodb_id,
+                ST_Transform(ST_SetSRID(ST_MakePoint(-57.65625,-15.6230368),4326),3857) as the_geom_webmercator,
+                ST_SetSRID(ST_MakePoint(-57.65625,-15.62303683),4326) as the_geom,
                 'South America' as continent
         `,
         cartocss: `

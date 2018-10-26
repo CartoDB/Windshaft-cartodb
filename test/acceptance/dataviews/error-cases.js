@@ -1,10 +1,12 @@
+'use strict';
+
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
 describe('dataview error cases', function() {
-    
+
     describe('generic errors', function() {
 
         afterEach(function(done) {
@@ -21,7 +23,7 @@ describe('dataview error cases', function() {
                 'Content-Type': 'application/json; charset=utf-8'
             }
         };
-    
+
         function createMapConfig(dataviews) {
             return {
                 version: '1.5.0',
@@ -49,40 +51,40 @@ describe('dataview error cases', function() {
                 ]
             };
         }
-    
+
         it('should fail when invalid dataviews object is provided, string case', function(done) {
             var mapConfig = createMapConfig("wadus-string");
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, errObj) {
                 assert.ok(!err, err);
-    
+
                 assert.deepEqual(errObj.errors, [ '"dataviews" must be a valid JSON object: "string" type found' ]);
-    
+
                 done();
             });
         });
-    
+
         it('should fail when invalid dataviews object is provided, array case', function(done) {
             var mapConfig = createMapConfig([]);
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, errObj) {
                 assert.ok(!err, err);
-    
+
                 assert.deepEqual(errObj.errors, [ '"dataviews" must be a valid JSON object: "array" type found' ]);
-    
+
                 done();
             });
         });
-    
+
         it('should work with empty but valid objects', function(done) {
             var mapConfig = createMapConfig({});
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getLayergroup(function(err, layergroup) {
                 assert.ok(!err, err);
-    
+
                 assert.ok(layergroup);
                 assert.ok(layergroup.layergroupid);
-    
+
                 done();
             });
         });
@@ -132,7 +134,7 @@ describe('dataview error cases', function() {
                         }
                     }
                 }
-            };    
+            };
         }
 
         it('should work without filters', function(done) {
@@ -184,7 +186,7 @@ describe('dataview error cases', function() {
                 done();
             });
         });
-        
+
         it('should not fail if query does not return rows', function(done) {
             const query = 'select * from populated_places_simple_reduced limit 0';
 
@@ -198,7 +200,7 @@ describe('dataview error cases', function() {
                 max: 0,
                 categoriesCount: 0,
                 categories: [],
-                type: 'aggregation' 
+                type: 'aggregation'
             };
 
             this.testClient = new TestClient(createMapConfig(query));

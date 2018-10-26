@@ -1,3 +1,5 @@
+'use strict';
+
 require(__dirname + '/../support/test_helper');
 
 var fs = require('fs');

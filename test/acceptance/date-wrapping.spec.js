@@ -1,3 +1,5 @@
+'use strict';
+
 /* eslint-env mocha */
 const assert = require('assert');
 const TestClient = require('../support/test-client');
@@ -316,5 +318,3 @@ describe_mvt('date-wrapping', () => {
     });
 
 });
-
-

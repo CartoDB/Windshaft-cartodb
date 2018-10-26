@@ -1,3 +1,5 @@
+'use strict';
+
 var PostgresDatasource = require('../../../../lib/cartodb/backends/turbo-carto-postgres-datasource');
 var PSQL = require('cartodb-psql');
 var _ = require('underscore');
