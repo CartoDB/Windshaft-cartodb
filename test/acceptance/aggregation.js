@@ -1349,7 +1349,7 @@ describe('aggregation', function () {
                     {
                         type: 'cartodb',
                         options: {
-                            // take two points per hour over two days
+                            // take four points per hour over two days
                             sql: pointsWithTimeSQL(96, '2018-01-01T00:00:00+02', '2018-01-01T23:59:59+02', 0),
                             dates_as_numbers: true,
                             aggregation: {
