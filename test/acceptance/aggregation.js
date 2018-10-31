@@ -1344,6 +1344,73 @@ describe('aggregation', function () {
                 });
             });
 
+            it.only('aggregation dimension hour iso format with timezone', function (done) {
+                this.mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            // take two points per hour over two days
+                            sql: pointsWithTimeSQL(96, '2018-01-01T00:00:00+02', '2018-01-01T23:59:59+02', 0),
+                            dates_as_numbers: true,
+                            aggregation: {
+                                threshold: 1,
+                                dimensions: {
+                                    hour: {
+                                        column: 'date',
+                                        group: {
+                                            units: 'hour',
+                                            timezone: '+7200'
+                                        },
+                                        format: 'iso',
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(this.mapConfig);
+                const options = {
+                    format: 'mvt'
+                };
+                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    const tileJSON = tile.toJSON();
+                    const resultHours = tileJSON[0].features.map(f => f.properties.hour).sort();
+                    assert.deepEqual(resultHours, [
+                        "2018-01-01T00",
+                        "2018-01-01T01",
+                        "2018-01-01T02",
+                        "2018-01-01T03",
+                        "2018-01-01T04",
+                        "2018-01-01T05",
+                        "2018-01-01T06",
+                        "2018-01-01T07",
+                        "2018-01-01T08",
+                        "2018-01-01T09",
+                        "2018-01-01T10",
+                        "2018-01-01T11",
+                        "2018-01-01T12",
+                        "2018-01-01T13",
+                        "2018-01-01T14",
+                        "2018-01-01T15",
+                        "2018-01-01T16",
+                        "2018-01-01T17",
+                        "2018-01-01T18",
+                        "2018-01-01T19",
+                        "2018-01-01T20",
+                        "2018-01-01T21",
+                        "2018-01-01T22",
+                        "2018-01-01T23"
+                    ]);
+                    tileJSON[0].features.forEach(f => assert.equal(f.properties._cdb_feature_count, 4));
+                    done();
+                });
+            });
+
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
                 it(`dimensions should work for ${placement} placement`, function(done) {
                     this.mapConfig = createVectorMapConfig([
