@@ -1344,7 +1344,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it.only('aggregation dimension hour iso format with timezone', function (done) {
+            it('aggregation dimension hour iso format with timezone', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
