@@ -25,6 +25,8 @@ then
 elif [ "$NODEJS_VERSION" = "nodejs6" ];
 then
     npm install -g yarn@0.27.5
+    echo "yarn version on install:"
+    yarn --version
     yarn
 else
     usage
