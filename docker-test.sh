@@ -20,4 +20,4 @@ else
 fi
 
 docker run -v `pwd`:/srv carto/${DOCKER} bash run_tests_docker.sh ${NODEJS_VERSION} && \
-    docker ps --filter status=dead --filter status=exited -aq | xargs -r docker rm -v
+    docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v
