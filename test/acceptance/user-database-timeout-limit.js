@@ -432,8 +432,6 @@ describe('user database timeout limit', function () {
                     this.testClient.setUserDatabaseTimeoutLimit(0, done);
                 });
 
-                console.log(`>>>>>> Use Postgis Renderer?`, serverOptions.renderer.mvt.usePostGIS);
-
                 it.only('"mvt" fails due to statement timeout', function (done) {
                     const params = {
                         layergroupid: this.layergroupid,
@@ -446,6 +444,8 @@ describe('user database timeout limit', function () {
                             }
                         }
                     };
+
+                    console.log(`>>>>>> Use Postgis Renderer?`, serverOptions.renderer.mvt.usePostGIS);
 
                     this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
                         assert.ifError(err);
