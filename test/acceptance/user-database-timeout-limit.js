@@ -444,7 +444,7 @@ describe('user database timeout limit', function () {
                     this.testClient.setUserDatabaseTimeoutLimit(0, done);
                 });
 
-                it.only('"mvt" fails due to statement timeout', function (done) {
+                it.skip('"mvt" fails due to statement timeout', function (done) {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'mvt',
