@@ -24,23 +24,11 @@ const validationPointSleepSql = `
         2 val
 `;
 
-const cartoCSSPoints = () => `
-// cache buster: ${Date.now()}
-#layer{
-  marker-placement: point;
-  marker-allow-overlap: true;
-  marker-line-opacity: 0.2;
-  marker-line-width: 0.5;
-  marker-opacity: 1;
-  marker-width: 5;
-  marker-fill: red;
-}`;
-
 const createMapConfig = ({
     version = '1.6.0',
     type = 'cartodb',
     sql = pointSleepSql,
-    cartocss = cartoCSSPoints(),
+    cartocss = TestClient.CARTOCSS.POINTS,
     cartocss_version = '2.3.0',
     interactivity = 'cartodb_id',
     countBy = 'cartodb_id',
