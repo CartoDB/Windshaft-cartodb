@@ -19,7 +19,7 @@ NODEJS_VERSION=${1-nodejs10}
 
 if [ "$NODEJS_VERSION" = "nodejs10" ];
 then
-    echo "Node.js version:"
+    echo "npm version on install:"
     npm -v
     npm install
 elif [ "$NODEJS_VERSION" = "nodejs6" ];
@@ -31,4 +31,7 @@ else
 fi
 
 # run tests
+echo "npm version on tests:"
+npm -v
+
 npm test
