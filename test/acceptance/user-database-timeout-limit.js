@@ -425,7 +425,6 @@ describe('user database timeout limit', function () {
 
             describe('with user\'s timeout of 200 ms', function () {
                 beforeEach(function (done) {
-                    console.log(`>>>>>> Use Postgis Renderer?`, serverOptions.renderer.mvt.usePostGIS);
                     this.testClient.setUserDatabaseTimeoutLimit(200, done);
                 });
 
@@ -445,6 +444,8 @@ describe('user database timeout limit', function () {
                             }
                         }
                     };
+
+                    console.log(`>>>>>> Use Postgis Renderer?`, serverOptions.renderer.mvt.usePostGIS);
 
                     this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
                         assert.ifError(err);
