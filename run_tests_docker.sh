@@ -31,4 +31,4 @@ else
 fi
 
 # run tests
-DEBUG=windshaft:renderer:pg_mvt npm test
+npm test
