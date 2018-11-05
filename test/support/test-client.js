@@ -1262,8 +1262,6 @@ TestClient.prototype.getDBConnection = function () {
     return psql;
 };
 
-const pg = require('pg');
-
 TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callback) {
     const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
     const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
@@ -1290,8 +1288,7 @@ TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callb
         },
         // we need to guarantee all new connections have the new settings
         function refreshPoolConnection () {
-            pg.once('end', () => callback());
-            pg.end();
+            psql.end(() => callback());
         }
     );
 };
