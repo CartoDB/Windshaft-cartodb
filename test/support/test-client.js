@@ -1267,30 +1267,36 @@ TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callb
     const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
     const publicuser = global.environment.postgres.user;
 
-    const psql = new PSQL({
-        user: 'postgres',
-        dbname: dbname,
-        host: global.environment.postgres.host,
-        port: global.environment.postgres.port
-    });
 
     // we need to guarantee all new connections have the new settings
-    psql.end();
+    const pg = require('pg');
 
-    step(
-        function configureTimeouts () {
-            const timeoutSQLs = [
-                `ALTER ROLE "${publicuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
-                `ALTER ROLE "${dbuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
-                `ALTER DATABASE "${dbname}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
-            ];
+    pg.once('end', () => {
 
-            const group = this.group();
+        const psql = new PSQL({
+            user: 'postgres',
+            dbname: dbname,
+            host: global.environment.postgres.host,
+            port: global.environment.postgres.port
+        });
 
-            timeoutSQLs.forEach(sql => psql.query(sql, group()));
-        },
-        callback
-    );
+        step(
+            function configureTimeouts () {
+                const timeoutSQLs = [
+                    `ALTER ROLE "${publicuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                    `ALTER ROLE "${dbuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                    `ALTER DATABASE "${dbname}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
+                ];
+
+                const group = this.group();
+
+                timeoutSQLs.forEach(sql => psql.query(sql, group()));
+            },
+            callback
+        );
+    });
+
+    pg.end();
 };
 
 TestClient.prototype.getAnalysesCatalog = function (params, callback) {
