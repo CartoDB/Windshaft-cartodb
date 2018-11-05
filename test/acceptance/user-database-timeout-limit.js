@@ -94,7 +94,7 @@ const DATASOURCE_TIMEOUT_ERROR = {
     }]
 };
 
-describe.skip('user database timeout limit', function () {
+describe('user database timeout limit', function () {
     describe('dataview', function () {
         beforeEach(function (done) {
             const mapconfig = createMapConfig();
@@ -576,7 +576,7 @@ describe.skip('user database timeout limit', function () {
         });
     });
 
-    describe('torque', function () {
+    describe.skip('torque', function () {
         describe('while validating in layergroup creation', function () {
             beforeEach(function (done) {
                 const mapconfig = createMapConfig({

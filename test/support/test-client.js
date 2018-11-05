@@ -1275,11 +1275,6 @@ TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callb
     });
 
     step(
-        // we need to guarantee all new connections have the new settings
-        function beforeRefreshPoolConnection () {
-            const next = this;
-            psql.end(() => next());
-        },
         function configureTimeouts () {
             const timeoutSQLs = [
                 `ALTER ROLE "${publicuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
