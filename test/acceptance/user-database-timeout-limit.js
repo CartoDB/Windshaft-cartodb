@@ -94,7 +94,7 @@ const DATASOURCE_TIMEOUT_ERROR = {
     }]
 };
 
-describe.only('user database timeout limit', function () {
+describe.skip('user database timeout limit', function () {
     describe('dataview', function () {
         beforeEach(function (done) {
             const mapconfig = createMapConfig();
