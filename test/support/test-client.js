@@ -1262,41 +1262,38 @@ TestClient.prototype.getDBConnection = function () {
     return psql;
 };
 
+const pg = require('pg');
+
 TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callback) {
     const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
     const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
     const publicuser = global.environment.postgres.user;
 
-
-    // we need to guarantee all new connections have the new settings
-    const pg = require('pg');
-
-    pg.once('end', () => {
-
-        const psql = new PSQL({
-            user: 'postgres',
-            dbname: dbname,
-            host: global.environment.postgres.host,
-            port: global.environment.postgres.port
-        });
-
-        step(
-            function configureTimeouts () {
-                const timeoutSQLs = [
-                    `ALTER ROLE "${publicuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
-                    `ALTER ROLE "${dbuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
-                    `ALTER DATABASE "${dbname}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
-                ];
-
-                const group = this.group();
-
-                timeoutSQLs.forEach(sql => psql.query(sql, group()));
-            },
-            callback
-        );
+    const psql = new PSQL({
+        user: 'postgres',
+        dbname: dbname,
+        host: global.environment.postgres.host,
+        port: global.environment.postgres.port
     });
 
-    pg.end();
+    step(
+        function configureTimeouts () {
+            const timeoutSQLs = [
+                `ALTER ROLE "${publicuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                `ALTER ROLE "${dbuser}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`,
+                `ALTER DATABASE "${dbname}" SET STATEMENT_TIMEOUT TO ${timeoutLimit}`
+            ];
+
+            const group = this.group();
+
+            timeoutSQLs.forEach(sql => psql.query(sql, group()));
+        },
+        // we need to guarantee all new connections have the new settings
+        function refreshPoolConnection () {
+            pg.once('end', () => callback());
+            pg.end();
+        }
+    );
 };
 
 TestClient.prototype.getAnalysesCatalog = function (params, callback) {
