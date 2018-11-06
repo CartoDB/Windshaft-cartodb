@@ -576,7 +576,7 @@ describe('user database timeout limit', function () {
         });
     });
 
-    describe.skip('torque', function () {
+    describe('torque', function () {
         describe('while validating in layergroup creation', function () {
             beforeEach(function (done) {
                 const mapconfig = createMapConfig({

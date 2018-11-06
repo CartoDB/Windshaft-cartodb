@@ -1267,6 +1267,11 @@ TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callb
     const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
     const publicuser = global.environment.postgres.user;
 
+    // IMPORTANT: node-postgres uses internallly a singleton, to refresh all pull connections
+    // you need to ensure that your dependency tree has only one working version of `cartodb-psql` & `node-postgres`
+    // if not, test using this function cannot ensure that all connections have the new settings (STATEMENT_TIMEOUT)
+    //
+    // TODO: upgrade to node-postgres@7.x
     const psql = new PSQL({
         user: 'postgres',
         dbname: dbname,
