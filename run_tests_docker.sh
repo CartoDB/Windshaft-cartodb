@@ -21,7 +21,7 @@ if [ "$NODEJS_VERSION" = "nodejs10" ];
 then
     echo "npm version on install:"
     npm -v
-    npm install
+    npm ci
     npm ls
 elif [ "$NODEJS_VERSION" = "nodejs6" ];
 then
