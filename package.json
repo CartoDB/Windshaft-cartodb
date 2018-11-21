@@ -48,7 +48,7 @@
     "step-profiler": "0.3.0",
     "turbo-carto": "github:cartodb/turbo-carto#nodejs-10",
     "underscore": "1.6.0",
-    "windshaft": "github:cartodb/windshaft#nodejs-10",
+    "windshaft": "4.12.0",
     "yargs": "11.1.0"
   },
   "devDependencies": {
