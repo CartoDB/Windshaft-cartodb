@@ -28,7 +28,7 @@
     "basic-auth": "2.0.0",
     "body-parser": "1.18.3",
     "camshaft": "github:cartodb/camshaft#nodejs-10",
-    "cartodb-psql": "github:cartodb/node-cartodb-psql#nodejs-10",
+    "cartodb-psql": "0.13.0",
     "cartodb-query-tables": "github:cartodb/node-cartodb-query-tables#nodejs-10",
     "cartodb-redis": "github:cartodb/node-cartodb-redis#nodejs-10",
     "debug": "3.1.0",
