@@ -4,15 +4,19 @@
 Released 2018-mm-dd
 
 New features
+- Suport Node.js 10
 - Aggregation time dimensions
 - Update sample configurations to use PostGIS to generate MVT's by default (as in production)
-- Upgrades Windshaft to [4.11.4](https://github.com/CartoDB/Windshaft/blob/4.11.4/NEWS.md#version-4114)
+- Upgrades Windshaft to [4.12.0](https://github.com/CartoDB/Windshaft/blob/4.12.0/NEWS.md#version-4120)
   - `pg-mvt`: Use `query-rewriter` to compose the query to render a MVT tile. If not defined, it will use a Default Query Rewriter.
   - `pg-mvt`: Fix bug while building query and there is no columns defined for the layer.
   - `pg-mvt`: Accept trailing semicolon in input queries.
   - `Renderer Cache Entry`: Do not throw errors for integrity checks.
   - Fix bug when releasing the renderer cache entry in some scenarios.
-  - Upgrade grainstore to [1.9.1](https://github.com/CartoDB/grainstore/releases/tag/1.9.1).
+  - Upgrade grainstore to [1.10.0](https://github.com/CartoDB/grainstore/releases/tag/1.10.0)
+- Upgrade cartodb-redis to [2.1.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/2.1.0)
+- Upgrade cartodb-query-tables to [0.4.0](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.4.0)
+- Update cartodb-psql to [0.13.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.13.0)
 
 Bug Fixes:
 - Prevent from uncaught exception: Range filter Error from camshaft when getting analysis query.
