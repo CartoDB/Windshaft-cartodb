@@ -46,7 +46,7 @@
     "request": "2.87.0",
     "semver": "5.5.0",
     "step-profiler": "0.3.0",
-    "turbo-carto": "github:cartodb/turbo-carto#nodejs-10",
+    "turbo-carto": "0.21.0",
     "underscore": "1.6.0",
     "windshaft": "4.12.0",
     "yargs": "11.1.0"
