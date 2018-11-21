@@ -5,6 +5,7 @@ Released 2018-mm-dd
 
 New features
 - Suport Node.js 10
+- Configure travis to run docker tests against Node.js 6 & 10 versions
 - Aggregation time dimensions
 - Update sample configurations to use PostGIS to generate MVT's by default (as in production)
 - Upgrades Windshaft to [4.12.0](https://github.com/CartoDB/Windshaft/blob/4.12.0/NEWS.md#version-4120)
