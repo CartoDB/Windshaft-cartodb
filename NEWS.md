@@ -17,7 +17,10 @@ New features
   - Upgrade grainstore to [1.10.0](https://github.com/CartoDB/grainstore/releases/tag/1.10.0)
 - Upgrade cartodb-redis to [2.1.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/2.1.0)
 - Upgrade cartodb-query-tables to [0.4.0](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.4.0)
-- Update cartodb-psql to [0.13.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.13.0)
+- Upgrade cartodb-psql to [0.13.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.13.0)
+- Upgrade turbo-carto to [0.21.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.21.0)
+- Upgrade camshaft to [0.63.0](https://github.com/CartoDB/camshaft/releases/tag/0.63.0)
+- Upgrade redis-mpool to [0.7.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.7.0)
 
 Bug Fixes:
 - Prevent from uncaught exception: Range filter Error from camshaft when getting analysis query.
