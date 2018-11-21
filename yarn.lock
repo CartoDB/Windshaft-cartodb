@@ -246,13 +246,13 @@ camelcase@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-4.1.0.tgz#d545635be1e33c542649c69173e5de6acfae34dd"
 
-"camshaft@github:cartodb/camshaft#nodejs-10":
-  version "0.62.5"
-  resolved "https://codeload.github.com/cartodb/camshaft/tar.gz/48ebf36f0c0cb5bbaae07f4af4080285a7dac1a0"
+camshaft@0.63.0:
+  version "0.63.0"
+  resolved "https://registry.yarnpkg.com/camshaft/-/camshaft-0.63.0.tgz#944b207aa942c3bd3229c460042d80cbef6fbc67"
   dependencies:
     async "^1.5.2"
     bunyan "1.8.1"
-    cartodb-psql "github:cartodb/node-cartodb-psql#nodejs-10"
+    cartodb-psql "0.13.0"
     debug "^3.1.0"
     dot "^1.0.3"
     request "2.85.0"
@@ -297,24 +297,16 @@ cartodb-psql@0.13.0:
     pg "github:cartodb/node-postgres#6.4.2-cdb2"
     underscore "~1.6.0"
 
-"cartodb-psql@github:cartodb/node-cartodb-psql#nodejs-10":
-  version "0.13.0"
-  resolved "https://codeload.github.com/cartodb/node-cartodb-psql/tar.gz/4029f37a6e6d22a74e8ae2ea672daa6c319d323b"
-  dependencies:
-    debug "^3.1.0"
-    pg "github:cartodb/node-postgres#6.4.2-cdb2"
-    underscore "~1.6.0"
+cartodb-query-tables@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/cartodb-query-tables/-/cartodb-query-tables-0.4.0.tgz#c323d99358565fc74bf6eddd9a9ad6f91151d2b2"
 
-"cartodb-query-tables@github:cartodb/node-cartodb-query-tables#nodejs-10":
-  version "0.3.0"
-  resolved "https://codeload.github.com/cartodb/node-cartodb-query-tables/tar.gz/31760f95863ca695532504dfb7dfbe57003965a2"
-
-"cartodb-redis@github:cartodb/node-cartodb-redis#nodejs-10":
-  version "2.0.3"
-  resolved "https://codeload.github.com/cartodb/node-cartodb-redis/tar.gz/76227a34b87b2b767a653b134fde8376aefdb64f"
+cartodb-redis@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/cartodb-redis/-/cartodb-redis-2.1.0.tgz#a38fac99f90bfee16b21b1e698182d6127952f29"
   dependencies:
     dot "~1.0.2"
-    redis-mpool "github:cartodb/node-redis-mpool#nodejs-10"
+    redis-mpool "0.7.0"
     underscore "~1.6.0"
 
 caseless@~0.12.0:
@@ -2067,15 +2059,6 @@ redis-mpool@0.7.0:
     redis "^2.8.0"
     underscore "~1.6.0"
 
-"redis-mpool@github:cartodb/node-redis-mpool#nodejs-10":
-  version "0.7.0"
-  resolved "https://codeload.github.com/cartodb/node-redis-mpool/tar.gz/8699ecb90b6200e1fb94835c237cb9258d1821c5"
-  dependencies:
-    generic-pool "~2.1.1"
-    hiredis "~0.5.0"
-    redis "^2.8.0"
-    underscore "~1.6.0"
-
 redis-parser@^2.6.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/redis-parser/-/redis-parser-2.6.0.tgz#52ed09dacac108f1a631c07e9b69941e7a19504b"
@@ -2558,9 +2541,9 @@ turbo-carto@0.19.0:
     postcss "5.0.19"
     postcss-value-parser "3.3.0"
 
-"turbo-carto@github:cartodb/turbo-carto#nodejs-10":
-  version "0.20.5"
-  resolved "https://codeload.github.com/cartodb/turbo-carto/tar.gz/736fa4c2b8cccb4b2deebfca1d1915f9a042ae1a"
+turbo-carto@0.21.0:
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/turbo-carto/-/turbo-carto-0.21.0.tgz#85da4b9f869c485cefc8fa0394fcddda0c639022"
   dependencies:
     cartocolor "4.0.0"
     colorbrewer "1.0.0"
