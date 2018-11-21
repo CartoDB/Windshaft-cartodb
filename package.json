@@ -42,7 +42,7 @@
     "node-statsd": "0.1.1",
     "on-headers": "1.0.1",
     "queue-async": "1.1.0",
-    "redis-mpool": "github:cartodb/node-redis-mpool#nodejs-10",
+    "redis-mpool": "0.7.0",
     "request": "2.87.0",
     "semver": "5.5.0",
     "step-profiler": "0.3.0",
