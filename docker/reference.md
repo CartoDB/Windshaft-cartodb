@@ -11,13 +11,13 @@ https://hub.docker.com/r/carto/
 
 ## Update image
 - Edit the docker image file with your desired changes
-- Build image: 
+- Build image:
   - `docker build -t carto/IMAGE -f docker/DOCKER_FILE docker/`
 
 - Upload to docker hub:
-  - Login into docker hub: 
+  - Login into docker hub:
     - `docker login`
-  - Create tag: 
+  - Create tag:
     - `docker tag carto/IMAGE carto/IMAGE`
-  - Upload: 
+  - Upload:
     - `docker push carto/IMAGE`
