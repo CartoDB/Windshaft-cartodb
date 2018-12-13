@@ -8,7 +8,7 @@ New features
 - Configure travis to run docker tests against Node.js 6 & 10 versions
 - Aggregation time dimensions
 - Update sample configurations to use PostGIS to generate MVT's by default (as in production)
-- Upgrades Windshaft to [4.12.0](https://github.com/CartoDB/Windshaft/blob/4.12.0/NEWS.md#version-4120)
+- Upgrades Windshaft to [4.12.1](https://github.com/CartoDB/Windshaft/blob/4.12.1/NEWS.md#version-4121)
   - `pg-mvt`: Use `query-rewriter` to compose the query to render a MVT tile. If not defined, it will use a Default Query Rewriter.
   - `pg-mvt`: Fix bug while building query and there is no columns defined for the layer.
   - `pg-mvt`: Accept trailing semicolon in input queries.
@@ -17,9 +17,9 @@ New features
   - Upgrade grainstore to [1.10.0](https://github.com/CartoDB/grainstore/releases/tag/1.10.0)
 - Upgrade cartodb-redis to [2.1.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/2.1.0)
 - Upgrade cartodb-query-tables to [0.4.0](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.4.0)
-- Upgrade cartodb-psql to [0.13.0](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.13.0)
+- Upgrade cartodb-psql to [0.13.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.13.1)
 - Upgrade turbo-carto to [0.21.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.21.0)
-- Upgrade camshaft to [0.63.0](https://github.com/CartoDB/camshaft/releases/tag/0.63.0)
+- Upgrade camshaft to [0.63.1](https://github.com/CartoDB/camshaft/releases/tag/0.63.1)
 - Upgrade redis-mpool to [0.7.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.7.0)
 
 Bug Fixes:
