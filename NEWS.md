@@ -1,7 +1,7 @@
 # Changelog
 
 ## 6.5.0
-Released 2018-mm-dd
+Released 2018-12-26
 
 New features
 - Suport Node.js 10
