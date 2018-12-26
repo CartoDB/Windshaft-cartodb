@@ -1,7 +1,7 @@
 # Changelog
 
 ## 6.5.1
-Released 2018-mm-dd
+Released 2018-12-26
 
 Bug Fixes:
 - Update carto-package.json
