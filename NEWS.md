@@ -1,8 +1,11 @@
 # Changelog
 
-## 6.5.1
+## 7.0.0
 Released 2018-mm-dd
 
+Breaking changes:
+- Drop support for Node.js 6
+- Drop support to install dependencies through `yarn`. Use `npm ci` instead
 
 ## 6.5.0
 Released 2018-12-26

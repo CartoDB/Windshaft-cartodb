@@ -4,14 +4,8 @@ jobs:
       services:
         - docker
       language: generic
-      before_install: docker pull carto/nodejs6-xenial-pg101:postgis-2.4.4.5
-      script: npm run docker-test -- nodejs6
-    - sudo: required
-      services:
-        - docker
-      language: generic
       before_install: docker pull carto/nodejs10-xenial-pg101:postgis-2.4.4.5
-      script: npm run docker-test -- nodejs10
+      script: npm run docker-test
     - dist: precise
       addons:
         postgresql: "9.5"
@@ -69,10 +63,6 @@ jobs:
         - psql -c "select version();" template_postgis
         - psql -c "select postgis_version();" template_postgis
 
-        # install yarn 0.27.5
-        - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.27.5
-        - export PATH="$HOME/.yarn/bin:$PATH"
-
         # instal redis 4
         - wget http://download.redis.io/releases/redis-4.0.8.tar.gz
         - tar xvzf redis-4.0.8.tar.gz
@@ -87,4 +77,4 @@ jobs:
 
       language: node_js
       node_js:
-        - "6"
+        - "10"

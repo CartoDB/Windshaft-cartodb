@@ -4,10 +4,10 @@ The CARTO Maps API allows you to generate maps based on data hosted in your CART
 
 You can create two types of maps with the Maps API:
 
-- **Anonymous Maps**  
+- **Anonymous Maps**
   You can create maps using your CARTO public data. Any client can change the read-only SQL and CartoCSS parameters that generate the map tiles. These maps can be created from a JavaScript application alone and no authenticated calls are needed. See [this CARTO.js example](/carto-engine/carto-js/getting-started/).
 
-- **Named Maps**  
+- **Named Maps**
   There are also maps that have access to your private data. These maps require an owner to setup and modify any SQL and CartoCSS parameters and are not modifiable without new setup calls.
 
 ## Documentation
@@ -17,4 +17,4 @@ You can create two types of maps with the Maps API:
 * [Anonymous Maps](anonymous_maps.md)
 * [Named Maps](named_maps.md)
 * [Static Maps API](static_maps_api.md)
-* [MapConfig File Format]([local file in the docs repo](https://github.com/CartoDB/docs/blob/master/_app/_mapsapi/06-mapconfig.md))
+* [MapConfig File Format](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-specification.md)
