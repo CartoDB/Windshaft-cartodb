@@ -3,6 +3,8 @@
 ## 6.5.1
 Released 2018-mm-dd
 
+Bug Fixes:
+- Update carto-package.json
 
 ## 6.5.0
 Released 2018-12-26
