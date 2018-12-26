@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.5.2
+Released 2018-mm-dd
+
+
 ## 6.5.1
 Released 2018-12-26
 
