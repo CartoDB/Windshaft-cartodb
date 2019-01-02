@@ -31,8 +31,16 @@ Upgrading
 
 Checkout your commit/branch. If you need to reinstall dependencies (you can check [NEWS](NEWS.md)) do the following:
 
+- Node.js >= 10.14.2:
+```sh
+$ rm -rf node_modules
+$ npm install
 ```
-rm -rf node_modules; yarn
+
+- Node.js 6.9.2:
+```
+$ rm -rf node_modules
+$ yarn
 ```
 
 Run
@@ -75,6 +83,14 @@ to use `yarn link`. You can read more about it at [yarn-link: Symlink a package 
 
 **Quick start**:
 
+- Node.js >= 10.14.2:
+```shell
+~/windshaft-directory $ npm ci
+~/windshaft-directory $ npm link
+~/windshaft-cartodb-directory $ npm link windshaft
+```
+
+- Node.js 6.9.2:
 ```shell
 ~/windshaft-directory $ yarn
 ~/windshaft-directory $ yarn link

@@ -1,7 +1,12 @@
 # Changelog
 
+**Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 7.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
+
 ## 6.5.2
 Released 2018-mm-dd
+
+Announcements:
+ - Update docs: compatible Node.js and npm versions
 
 
 ## 6.5.1
