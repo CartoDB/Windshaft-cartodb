@@ -3,6 +3,9 @@
 ## 6.5.2
 Released 2018-mm-dd
 
+Announcements:
+ - Update docs: compatible Node.js and npm versions
+
 
 ## 6.5.1
 Released 2018-12-26

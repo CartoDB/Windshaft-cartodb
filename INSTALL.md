@@ -4,8 +4,8 @@
 Make sure that you have the requirements needed. These are
 
 - Core
-  - Node.js >=6.9.x
-  - yarn >=0.27.5 <1.0.0
+  - Node >= 10.14.2 or 6.9.2
+  - npm >= 6.4.1 or yarn >= 0.27.5
   - PostgreSQL >8.3.x, PostGIS >1.5.x
   - Redis >2.4.0 (http://www.redis.io)
   - Mapnik >3.x. See [Installing Mapnik](https://github.com/CartoDB/Windshaft#installing-mapnik).
@@ -42,12 +42,18 @@ psql -d template_postgis -c 'CREATE EXTENSION postgis;'
 
 To fetch and build all node-based dependencies, run:
 
+- Node.js >= 10.14.2:
+```shell
+npm ci
 ```
+
+- Node.js 6.9.2:
+```shell
 yarn
 ```
 
-Note that the ```yarn``` step will populate the node_modules/
+Note that the  ```npm``` (or ```yarn```) step will populate the node_modules/
 directory with modules, some of which being compiled on demand. If you
 happen to have startup errors you may need to force rebuilding those
 modules. At any time just wipe out the node_modules/ directory and run
-```yarn``` again.
+```npm``` again.
