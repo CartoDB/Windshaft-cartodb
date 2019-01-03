@@ -7,7 +7,7 @@ Released 2018-mm-dd
 
 Announcements:
  - Update docs: compatible Node.js and npm versions
-
+ - Report fine-grained Garbage Collector stats
 
 ## 6.5.1
 Released 2018-12-26
