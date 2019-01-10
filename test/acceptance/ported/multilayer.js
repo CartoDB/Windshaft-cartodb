@@ -25,8 +25,11 @@ describe('multilayer', function() {
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
     function checkCORSHeaders(res) {
-      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.equal(
+            res.headers['access-control-allow-headers'],
+            'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
+        );
+        assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
     // See https://github.com/Vizzuality/Windshaft/issues/70
@@ -1027,7 +1030,8 @@ describe('multilayer', function() {
     //
     ////////////////////////////////////////////////////////////////////
 
-    it("get'ing options on layergroup should return CORS headers",  function(done){
+    it("geting options on layergroup should return CORS headers",  function(done){
+        const allowHeaders = 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, Content-Type';
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'OPTIONS'
@@ -1035,7 +1039,7 @@ describe('multilayer', function() {
             status: 200,
             // TODO: use checkCORSHeaders() function
             headers: {
-              'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Content-Type',
+              'Access-Control-Allow-Headers': allowHeaders,
               'Access-Control-Allow-Origin': '*'
             }
         }, function() { done(); });
