@@ -16,17 +16,17 @@ Rate limit is on a per-user basis (or more accurately described, per user access
 We are using the [generic cell rate algorithm](https://en.wikipedia.org/wiki/Generic_cell_rate_algorithm), a [leaky bucket](https://en.wikipedia.org/wiki/Leaky_bucket) algorithm type.
 
 The main keys to keep in mind about this algorithm and our implementation are:
-- We allow a request every a certain time period 
+- We allow a request every a certain time period
 ```
 If an endpoint has a limit of 5 requests per second, you will have a request available every 200ms and when you spend all the available requests, you will need to wait 200ms to have another available request, instead of 1 second
 ```
-- Most of the endpoints are limited per second 
+- Most of the endpoints are limited per second
 ```
 If an endpoint has a limit of 5 requests per second, after a second without requests, you will have at least 5 available requests
 ```
-- Most of the endpoints allow an initial burst equal to the number of requests per second 
+- Most of the endpoints allow an initial burst equal to the number of requests per second
 ```
-If an endpoint has a limit of 5 requests per second, initially you will have 5 available requests 
+If an endpoint has a limit of 5 requests per second, initially you will have 5 available requests
 ```
 
 ### Caches
@@ -44,7 +44,7 @@ When an application exceeds the rate limit for a given API endpoint, the API wil
 
 Use the HTTP headers in order to understand where the application is at for a given rate limit, on the method that was just utilized. Note that the HTTP headers are contextual. That is, they indicate the rate limit for the user context. If you have multiple apps (maps) accessing to their resources with the same user, HTTP headers are related to that user.
 
-- **Carto-Rate-Limit-Limit**: total allowed requests 
+- **Carto-Rate-Limit-Limit**: total allowed requests
 - **Carto-Rate-Limit-Remaining**: remaining requests
 - **Retry-After**: seconds until next available request (returns `-1` if the current request is allowed)
 - **Carto-Rate-Limit-Reset**: seconds until the limit will reset to its maximum capacity
@@ -63,43 +63,41 @@ Below, you can find the values of the rate limit by user account type and endpoi
 |Endpoint   |Request   |Time period  |Burst  |
 | :---         |          ---: |          ---: |          ---: |
 | GET  /api/v1/map <br> POST /api/v1/map  |10  |1  |10  |
-| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}  |2  |1  |2  |
-| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |10  |1  |10  |
-| GET  /api/v1/map/analyses/catalog  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |20  |1  |20  |
-| GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search  |1  |1  |1  |
-| GET  /api/v1/map/{token}/analysis/node/{nodeId}  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |120<br> 1200  |1<br> 60  |120<br> 600  |
-| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |4  |1  |4  |
-| GET  /api/v1/map/named  |1  |1  |1  |
-| POST /api/v1/map/named  |2  |1  |2  |
-| GET  /api/v1/map/named/{template_id}  |15  |1  |15  |
-| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |2  |1  |2  |
-| PUT  /api/v1/map/named/{template_id}  |15  |1  |15  |
-| DELETE  /api/v1/map/named/{template_id}  |2  |1  |2  |
-| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |1  |1  |1  |
+| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}  |3  |1  |3  |
+| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |3  |1  |3  |
+| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |25  |1  |25  |
+| GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search  |3  |1  |3  |
+| GET  /api/v1/map/{token}/analysis/node/{nodeId}  |3  |1  |3  |
+| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |120<br> 1500  |1<br> 60  |120<br> 750  |
+| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |10  |1  |10  |
+| GET  /api/v1/map/named  |3  |1  |3  |
+| POST /api/v1/map/named  |3  |1  |3  |
+| GET  /api/v1/map/named/{template_id}  |10  |1  |10  |
+| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |10  |1  |10  |
+| PUT  /api/v1/map/named/{template_id}  |10  |1  |10  |
+| DELETE  /api/v1/map/named/{template_id}  |3  |1  |3  |
+| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |25  |1  |25  |
 
 
 #### Professional plans
 
 |Endpoint   |Request   |Time period  |Burst  |
 | :---         |          ---: |          ---: |          ---: |
-| GET  /api/v1/map <br> POST /api/v1/map  |8  |1  |8  |
-| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}  |2  |1  |2  |
-| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |8  |1  |8  |
-| GET  /api/v1/map/analyses/catalog  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |18  |1  |18  |
+| GET  /api/v1/map <br> POST /api/v1/map  |5  |1  |5  |
+| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}  |1  |1  |1  |
+| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |1  |1  |1  |
+| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |15  |1  |15  |
 | GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search  |1  |1  |1  |
 | GET  /api/v1/map/{token}/analysis/node/{nodeId}  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |100<br> 1000  |1<br> 60  |100<br> 500  |
-| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |4  |1  |4  |
+| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |40<br> 600  |1<br> 60  |40<br> 300  |
+| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |5  |1  |5  |
 | GET  /api/v1/map/named  |1  |1  |1  |
-| POST /api/v1/map/named  |2  |1  |2  |
-| GET  /api/v1/map/named/{template_id}  |12  |1  |12  |
-| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |2  |1  |2  |
-| PUT  /api/v1/map/named/{template_id}  |12  |1  |12  |
-| DELETE  /api/v1/map/named/{template_id}  |2  |1  |2  |
-| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |1  |1  |1  |
+| POST /api/v1/map/named  |1  |1  |1  |
+| GET  /api/v1/map/named/{template_id}  |5  |1  |5  |
+| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |5  |1  |5  |
+| PUT  /api/v1/map/named/{template_id}  |5  |1  |5  |
+| DELETE  /api/v1/map/named/{template_id}  |1  |1  |1  |
+| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |10  |1  |10  |
 
 
 #### Free plans
@@ -108,17 +106,16 @@ Below, you can find the values of the rate limit by user account type and endpoi
 | :---         |          ---: |          ---: |          ---: |
 | GET  /api/v1/map <br> POST /api/v1/map  |2  |1  |2  |
 | GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}  |1  |1  |1  |
-| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |2  |1  |2  |
-| GET  /api/v1/map/analyses/catalog  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |1  |1  |1  |
+| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |1  |1  |1  |
+| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |10  |1  |10  |
 | GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search  |1  |1  |1  |
 | GET  /api/v1/map/{token}/analysis/node/{nodeId}  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |30<br> 150  |1<br> 60  |30<br> 75  |
-| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |1  |1  |1  |
+| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |20<br> 600  |1<br> 60  |20<br> 300  |
+| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |2  |1  |2  |
 | GET  /api/v1/map/named  |1  |1  |1  |
 | POST /api/v1/map/named  |1  |1  |1  |
-| GET  /api/v1/map/named/{template_id}  |4  |1  |4  |
-| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |1  |1  |1  |
+| GET  /api/v1/map/named/{template_id}  |2  |1  |2  |
+| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |2  |1  |2  |
 | PUT  /api/v1/map/named/{template_id}  |2  |1  |2  |
 | DELETE  /api/v1/map/named/{template_id}  |1  |1  |1  |
-| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |1  |1  |1  |
+| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |10  |1  |10  |
