@@ -54,8 +54,8 @@
   },
   "devDependencies": {
     "istanbul": "0.4.5",
-    "jshint": "^2.9.7",
-    "mocha": "^5.2.0",
+    "jshint": "2.9.7",
+    "mocha": "5.2.0",
     "moment": "2.22.1",
     "nock": "9.2.6",
     "redis": "2.8.0",
