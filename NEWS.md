@@ -9,6 +9,8 @@ Announcements:
 - Update docs: compatible Node.js and npm versions
 - Report fine-grained Garbage Collector stats
 - Adding Authorization to Access-Control-Allow-Headers (https://github.com/CartoDB/CartoDB-SQL-API/issues/534)
+- Update deps:
+  - windshaft@4.12.2
 - Update dev deps:
   - jshint@2.9.7
   - mocha@5.2.0
