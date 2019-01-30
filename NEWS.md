@@ -2,7 +2,7 @@
 
 **Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 7.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
 
-## 6.5.2
+## 6.6.0
 Released 2018-mm-dd
 
 Announcements:
@@ -14,7 +14,8 @@ Announcements:
 - Update dev deps:
   - jshint@2.9.7
   - mocha@5.2.0
-
+- Be able to customize max waiting workers parameter
+- Handle max number of waiting workers error as `429 Too many requests` error.
 
 ## 6.5.1
 Released 2018-12-26

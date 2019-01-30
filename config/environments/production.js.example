@@ -139,6 +139,10 @@ var config = {
           // Important: check the configuration of uv_threadpool_size to use suitable value
           poolSize: 8,
 
+          // The maximum number of waiting clients of the pool of internal mapnik backend
+          // This maximum number is per mapnik renderer created in Windshaft's RendererFactory
+          poolMaxWaitingClients: 64,
+
           // Whether grainstore will use a child process or not to transform CartoCSS into Mapnik XML.
           // This will prevent blocking the main thread.
           useCartocssWorkers: false,
