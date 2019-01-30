@@ -87,8 +87,6 @@ function getTile ({ testClient, layergroupid, coord }) {
 }
 
 describe('exceeding max waiting workers', function () {
-    const limitErrorMessage = 'You are over platform\'s limits:' +
-        ' Max render capacity exceeded Contact CARTO support for more details.';
     const originalPoolSize = global.environment.renderer.mapnik.poolSize;
     const poolMaxWaitingClients = global.environment.renderer.mapnik.poolMaxWaitingClients;
     const apikey = 1234;
@@ -121,7 +119,7 @@ describe('exceeding max waiting workers', function () {
             .then((results) => {
                 const errs = results
                     .filter(({ res }) => res.headers['content-type'] === 'application/json; charset=utf-8')
-                    .filter(({ tile }) => tile.errors && tile.errors[0] === limitErrorMessage);
+                    .filter(({ tile }) => tile.errors && tile.errors_with_context[0].subtype === 'render-capacity');
 
                 assert.ok(errs.length > 0);
                 testClient.drain(done);
