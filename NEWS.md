@@ -15,7 +15,7 @@ Announcements:
   - jshint@2.9.7
   - mocha@5.2.0
 - Be able to customize max waiting workers parameter
-- Handle max number of waiting workers error as `429 Too many requests` error.
+- Handle 'max waitingClients count exceeded' error as "429, You are over platfor's limits"
 
 ## 6.5.1
 Released 2018-12-26
