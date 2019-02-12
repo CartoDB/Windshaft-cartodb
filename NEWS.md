@@ -3,7 +3,7 @@
 **Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 7.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
 
 ## 6.6.0
-Released 2018-mm-dd
+Released 2019-mm-dd
 
 Announcements:
 - Update docs: compatible Node.js and npm versions
@@ -11,6 +11,7 @@ Announcements:
 - Adding Authorization to Access-Control-Allow-Headers (https://github.com/CartoDB/CartoDB-SQL-API/issues/534)
 - Update deps:
   - windshaft@4.13.1: Upgrade tilelive-mapnik to version 0.6.18-cdb18
+  - camshaft@0.63.3: Improve error message for exceeded batch SQL API payload size: add suggestions about what the user can do about it.
 - Update dev deps:
   - jshint@2.9.7
   - mocha@5.2.0
