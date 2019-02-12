@@ -6,7 +6,7 @@ ENV NPROCS 1
 ENV JOBS 1
 ENV CXX g++-4.9
 ENV PGUSER postgres
-ENV NODEJS_VERSION 10.15.1
+ENV NODEJS_VERSION --lts
 
 # Add external repos
 RUN set -ex \
@@ -19,6 +19,7 @@ RUN set -ex \
     && add-apt-repository -y ppa:cartodb/postgresql-10 \
     && add-apt-repository -y ppa:cartodb/gis \
     && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash \
+    && . ~/.nvm/nvm.sh \
     && locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8
 
@@ -83,14 +84,11 @@ RUN set -ex \
     && psql -c "CREATE EXTENSION postgis" template_postgis \
     && /etc/init.d/postgresql stop
 
-RUN set -ex \
-    && . ~/.nvm/nvm.sh \
+WORKDIR /srv
+EXPOSE 5858
+
+CMD /etc/init.d/postgresql start \
     && nvm install $NODEJS_VERSION \
     && nvm alias default $NODEJS_VERSION \
     && nvm use default
 
-
-WORKDIR /srv
-EXPOSE 5858
-
-CMD /etc/init.d/postgresql start
