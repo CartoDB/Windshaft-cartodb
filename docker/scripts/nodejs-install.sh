@@ -5,10 +5,10 @@ export NVM_DIR="$HOME/.nvm"
 
 if [ -z $NODEJS_VERSION ]; then
     NODEJS_VERSION="10"
-    NODEJS_VERSION_LTS="--lts"
+    NODEJS_VERSION_OPTIONS="--lts"
 fi
 
-nvm install $NODEJS_VERSION $NODEJS_VERSION_LTS
+nvm install $NODEJS_VERSION $NODEJS_VERSION_OPTIONS
 nvm alias default $NODEJS_VERSION
 nvm use default
 
