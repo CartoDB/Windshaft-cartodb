@@ -86,8 +86,7 @@ RUN set -ex \
 WORKDIR /srv
 EXPOSE 5858
 
-COPY ./scripts/init.sh /tmp/init.sh
-RUN chmod 777 /tmp/init.sh
-
-CMD /tmp/init.sh
+COPY ./scripts/nodejs-install.sh /src/nodejs-install.sh
+RUN chmod 777 /src/nodejs-install.sh
+CMD /src/nodejs-install.sh
 
