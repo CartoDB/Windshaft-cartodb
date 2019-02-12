@@ -11,5 +11,3 @@ fi
 nvm install $NODEJS_VERSION $NODEJS_VERSION_OPTIONS
 nvm alias default $NODEJS_VERSION
 nvm use default
-
-/etc/init.d/postgresql start

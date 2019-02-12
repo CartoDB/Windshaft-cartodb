@@ -1,5 +1,7 @@
 #!/bin/bash
 
+/etc/init.d/postgresql start
+
 source /src/nodejs-install.sh
 
 echo "Node.js version: "
