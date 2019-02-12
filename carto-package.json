@@ -4,7 +4,8 @@
         "requires": {
             "node": ">=6.9.2 <11.0.0",
             "yarn": ">=0.27.5 <1.0.0",
-            "mapnik": ">=3.0.15"
+            "mapnik": "==3.0.15.9",
+            "crankshaft": "~0.8.1"
         },
         "works_with": {
             "redis": ">=3.0.0",
