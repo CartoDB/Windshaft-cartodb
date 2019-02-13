@@ -5,7 +5,7 @@ jobs:
         - docker
       language: generic
       before_install: docker pull carto/nodejs-xenial-pg101:latest
-      script: npm run docker-test -- 6
+      script: npm run docker-test -- 6.9.2
     - sudo: required
       services:
         - docker
