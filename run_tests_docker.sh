@@ -8,7 +8,7 @@ echo "Node.js version: "
 node -v
 
 # install dependencies
-if [ "$NODEJS_VERSION" = "6" ];
+if [ "$NODEJS_VERSION" = "6.9.2" ];
 then
     npm install -g yarn@0.27.5
     echo "yarn version on install:"
