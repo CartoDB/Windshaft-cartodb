@@ -4,10 +4,12 @@
 Released 2018-mm-dd
 
 Breaking changes:
-- Drop support for Postgres 9.5
 - Drop support for Node.js 6
 - Drop support for npm 3
 - Stop supporting `yarn.lock`
+- Drop support for Postgres 9.5
+- Drop support for PosGIS 2.2
+- Drop support for Redis 3
 
 Announcements:
 - Update docs: compatible Node.js and npm versions

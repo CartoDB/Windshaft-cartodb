@@ -4,12 +4,12 @@
 Make sure that you have the requirements needed. These are
 
 - Core
-  - Node >= 10
-  - npm >= 6
-  - gcc == 4.9
-  - PostgreSQL >= 9.5
-  - PostGIS >= 2.2
-  - CartoDB Postgres Extension == 0.24.1
+  - Node 10.x
+  - npm 6.x
+  - gcc 4.9
+  - PostgreSQL >= 10.0
+  - PostGIS >= 2.4
+  - CartoDB Postgres Extension >= 0.24.1
   - Redis >= 4
   - Mapnik == 3.0.15.9. See [Installing Mapnik](https://github.com/CartoDB/Windshaft#installing-mapnik).
   - Windshaft: check [Windshaft dependencies and installation notes](https://github.com/CartoDB/Windshaft#dependencies)
