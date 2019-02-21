@@ -1,7 +1,7 @@
 # Changelog
 
 ## 7.0.0
-Released 2018-mm-dd
+Released 2019-mm-dd
 
 Breaking changes:
 - Drop support for Node.js 6
