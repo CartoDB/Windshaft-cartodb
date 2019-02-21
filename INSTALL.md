@@ -9,7 +9,7 @@ Make sure that you have the requirements needed. These are:
   - gcc 4.9
   - PostgreSQL >= 10.0
   - PostGIS >= 2.4
-  - CartoDB Postgres Extension >= 0.24.1
+  - CARTO Postgres Extension >= 0.24.1
   - Redis >= 4
   - libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 
