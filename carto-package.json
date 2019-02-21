@@ -3,6 +3,7 @@
     "current_version": {
         "requires": {
             "node": "^10.15.1",
+            "npm": "^6.4.1",
             "mapnik": "==3.0.15.9",
             "crankshaft": "~0.8.1"
         },
