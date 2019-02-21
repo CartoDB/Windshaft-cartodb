@@ -1,9 +1,13 @@
 # Changelog
 
-**Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 7.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
+## 7.0.0
+Released 2018-mm-dd
 
-## 6.6.0
-Released 2019-mm-dd
+Breaking changes:
+- Drop support for Postgres 9.5
+- Drop support for Node.js 6
+- Drop support for npm 3
+- Stop supporting `yarn.lock`
 
 Announcements:
 - Update docs: compatible Node.js and npm versions
