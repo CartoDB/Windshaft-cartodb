@@ -6,17 +6,16 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
 
-const suites = [{
-    desc: 'mapnik',
-    usePostGIS: false
-}];
-
-if (process.env.POSTGIS_VERSION >= '20400') {
-    suites.push({
+const suites = [
+    {
+        desc: 'mapnik',
+        usePostGIS: false
+    },
+    {
         desc: 'postgis',
         usePostGIS: true
-    });
-}
+    }
+];
 
 describe('mvt regressions', function () {
 
