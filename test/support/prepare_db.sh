@@ -110,13 +110,6 @@ if test x"$PREPARE_PGSQL" = xyes; then
   ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
   for i in ${ALL_SQL_SCRIPTS}
   do
-    # Strip PARALLEL labels for PostgreSQL releases before 9.6
-    if [ $PG_PARALLEL -eq 0 ]; then
-        TMPFILE=$(mktemp /tmp/$(basename $0).XXXXXXXX)
-        sed -e 's/PARALLEL \= [A-Z]*,/''/g' \
-            -e 's/PARALLEL [A-Z]*/''/g' sql/$i.sql > $TMPFILE
-        mv $TMPFILE sql/$i.sql
-    fi
     cat sql/${i}.sql |
       sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
       sed "s/:PUBLICUSER/${PUBLICUSER}/" |
