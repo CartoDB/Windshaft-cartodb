@@ -12,6 +12,7 @@ Breaking changes:
 - Drop support for Redis 3
 
 Announcements:
+- In configuration, set `clipByBox2d` to true by default
 - Update docs: compatible Node.js and npm versions
 - Report fine-grained Garbage Collector stats
 - Adding Authorization to Access-Control-Allow-Headers (https://github.com/CartoDB/CartoDB-SQL-API/issues/534)

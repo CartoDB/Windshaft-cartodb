@@ -127,9 +127,8 @@ var config = {
       cache_ttl: 60000,
       statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
       mvt: {
-        //If enabled, MVTs will be generated with PostGIS directly, instead of using Mapnik,
-        //PostGIS 2.4 is required for this to work
-        //If disabled it will use Mapnik MVT generation
+        //If enabled, MVTs will be generated with PostGIS directly
+        //If disabled, MVTs will be generated with Mapnik MVT
         usePostGIS: true
       },
       mapnik: {
@@ -186,7 +185,7 @@ var config = {
           // SQL queries will be wrapped with ST_ClipByBox2D
           // Returning the portion of a geometry falling within a rectangle
           // It will only work if snapToGrid is enabled
-          clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
+          clipByBox2d: true,
 
           postgis: {
               // Parameters to pass to datasource plugin of mapnik
