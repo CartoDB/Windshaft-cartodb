@@ -1,7 +1,7 @@
 # Changelog
 
 ## 7.0.0
-Released 2019-mm-dd
+Released 2019-02-22
 
 Breaking changes:
 - Drop support for Node.js 6
@@ -23,7 +23,7 @@ Announcements:
   - jshint@2.9.7
   - mocha@5.2.0
 - Be able to customize max waiting workers parameter
-- Handle 'max waitingClients count exceeded' error as "429, You are over platfor's limits"
+- Handle 'max waitingClients count exceeded' error as "429, You are over platform's limits"
 
 ## 6.5.1
 Released 2018-12-26
