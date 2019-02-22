@@ -276,11 +276,11 @@ describe('rate limit middleware', function () {
     });
 });
 
-const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
+
 const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
-describe('rate limit and vector tiles (mapnik)', () => { rateLimitAndVectorTilesTest(false); });
-describe_pg('rate limit and vector tiles (postgis)', () => { rateLimitAndVectorTilesTest(true); });
+describe('rate limit and vector tiles (mapnik)', () => rateLimitAndVectorTilesTest(false));
+describe('rate limit and vector tiles (postgis)', () => rateLimitAndVectorTilesTest(true));
 
 function rateLimitAndVectorTilesTest(usePostGIS) {
 

@@ -7,8 +7,7 @@ const mapConfigFactory = require('../fixtures/test_mapconfigFactory');
 const serverOptions = require('../../lib/cartodb/server_options');
 
 const usePgMvtRenderer = serverOptions.renderer.mvt.usePostGIS;
-const postgisVersion = process.env.POSTGIS_VERSION;
-const describe_mvt = postgisVersion >= '20400' || !usePgMvtRenderer ? describe : describe.skip;
+const describe_mvt = !usePgMvtRenderer ? describe : describe.skip;
 
 describe_mvt('date-wrapping', () => {
     let testClient;

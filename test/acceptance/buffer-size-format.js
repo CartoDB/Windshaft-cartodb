@@ -171,8 +171,7 @@ describe('buffer size per format', function () {
         });
     });
 
-    const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
-    describe_pg('using postgis mvt renderer', function() {
+    describe('using postgis mvt renderer', function() {
         before(function () {
             serverOptions.renderer.mvt.usePostGIS = true;
         });
@@ -505,8 +504,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
         });
     });
 
-    const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
-    describe_pg('using postgis mvt renderer', function() {
+    describe('using postgis mvt renderer', function() {
         before(function () {
             serverOptions.renderer.mvt.usePostGIS = true;
         });

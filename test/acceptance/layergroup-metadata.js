@@ -7,12 +7,10 @@ const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
 
 describe('layergroup metadata', function () {
-
-    const usePgMvtRenderer = process.env.POSTGIS_VERSION >= '20400';
     const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
     before(function () {
-        serverOptions.renderer.mvt.usePostGIS = usePgMvtRenderer;
+        serverOptions.renderer.mvt.usePostGIS = true;
     });
 
     after(function () {

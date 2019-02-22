@@ -1,11 +1,18 @@
 # Changelog
 
-**Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 7.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
-
-## 6.6.0
+## 7.0.0
 Released 2019-mm-dd
 
+Breaking changes:
+- Drop support for Node.js 6
+- Drop support for npm 3
+- Stop supporting `yarn.lock`
+- Drop support for Postgres 9.5
+- Drop support for PosGIS 2.2
+- Drop support for Redis 3
+
 Announcements:
+- In configuration, set `clipByBox2d` to true by default
 - Update docs: compatible Node.js and npm versions
 - Report fine-grained Garbage Collector stats
 - Adding Authorization to Access-Control-Allow-Headers (https://github.com/CartoDB/CartoDB-SQL-API/issues/534)

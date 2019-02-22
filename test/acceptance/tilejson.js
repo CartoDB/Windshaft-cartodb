@@ -6,11 +6,10 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
 
-const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
 const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
-describe('tilejson via mapnik renderer', () => { tileJsonSuite(false); });
-describe_pg('tilejson via postgis renderer', () => { tileJsonSuite(true); });
+describe('tilejson via mapnik renderer', () => tileJsonSuite(false));
+describe('tilejson via postgis renderer', () => tileJsonSuite(true));
 
 function tileJsonSuite(usePostGIS) {
 

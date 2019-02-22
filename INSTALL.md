@@ -1,35 +1,23 @@
-# Installing Windshaft-CartoDB #
+# Installing Windshaft-CartoDB
 
-## Requirements ##
-Make sure that you have the requirements needed. These are
+## Requirements
 
-- Core
-  - Node >= 10.14.2 or 6.9.2
-  - npm >= 6.4.1 or yarn >= 0.27.5
-  - PostgreSQL >8.3.x, PostGIS >1.5.x
-  - Redis >2.4.0 (http://www.redis.io)
-  - Mapnik >3.x. See [Installing Mapnik](https://github.com/CartoDB/Windshaft#installing-mapnik).
-  - Windshaft: check [Windshaft dependencies and installation notes](https://github.com/CartoDB/Windshaft#dependencies)
-  - libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
+Make sure that you have the requirements needed. These are:
 
-- For cache control (optional)
-  - CartoDB 0.9.5+ (for `CDB_QueryTables`)
-  - Varnish (http://www.varnish-cache.org)
+- Node 10.x
+- npm 6.x
+- PostgreSQL >= 10.0
+- PostGIS >= 2.4
+- CARTO Postgres Extension >= 0.24.1
+- Redis >= 4
+- libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
+- C++11 (to build internal dependencies if needed)
 
-On Ubuntu 14.04 the dependencies can be installed with
+### Optional
 
-```shell
-sudo apt-get update
-sudo apt-get install -y make g++ pkg-config git-core \
-  libgif-dev libjpeg-dev libcairo2-dev \
-  libhiredis-dev redis-server \
-  nodejs nodejs-legacy npm \
-  postgresql-9.3-postgis-2.1 postgresql-plpython-9.3 postgresql-server-dev-9.3
-```
+- Varnish (http://www.varnish-cache.org)
 
-On Ubuntu 12.04 the [cartodb/cairo PPA](https://launchpad.net/~cartodb/+archive/ubuntu/cairo) may be useful.
-
-## PostGIS setup ##
+## PostGIS setup
 
 A `template_postgis` database is expected. One can be set up with
 
@@ -38,21 +26,15 @@ createdb --owner postgres --template template0 template_postgis
 psql -d template_postgis -c 'CREATE EXTENSION postgis;'
 ```
 
-## Build/install ##
+## Build/install
 
 To fetch and build all node-based dependencies, run:
 
-- Node.js >= 10.14.2:
 ```shell
-npm ci
+npm install
 ```
 
-- Node.js 6.9.2:
-```shell
-yarn
-```
-
-Note that the  ```npm``` (or ```yarn```) step will populate the node_modules/
+Note that the  ```npm``` step will populate the node_modules/
 directory with modules, some of which being compiled on demand. If you
 happen to have startup errors you may need to force rebuilding those
 modules. At any time just wipe out the node_modules/ directory and run
