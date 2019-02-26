@@ -620,6 +620,106 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
     );
 };
 
+TestClient.prototype.getClusterFeatures = function(clusterId, layerId, params, callback) {
+    var self = this;
+
+    if (!callback) {
+        callback = params;
+        params = {};
+    }
+
+    var extraParams = {};
+
+    if (this.apiKey) {
+        extraParams.api_key = this.apiKey;
+    }
+
+    // if (params && params.filters) {
+    //     extraParams.filters = JSON.stringify(params.filters);
+    // }
+
+    var url = '/api/v1/map';
+    if (Object.keys(extraParams).length > 0) {
+        url += '?' + qs.stringify(extraParams);
+    }
+
+    var expectedResponse = params.response || {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    step(
+        function createLayergroup() {
+            var next = this;
+            assert.response(self.server,
+                {
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.mapConfig)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    var parsedBody = JSON.parse(res.body);
+
+                    if (parsedBody.layergroupid) {
+                        self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                        self.keysToDelete['user:localhost:mapviews:global'] = 5;
+                    }
+
+                    return next(null, parsedBody.layergroupid);
+                }
+            );
+        },
+        function getCLusterFeatures(err, layergroupId) {
+            assert.ifError(err);
+
+            var next = this;
+
+            url = '/api/v1/map/' + layergroupId + '/' + layerId + '/cluster/' + clusterId;
+
+            assert.response(self.server,
+                {
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
+                },
+                expectedResponse,
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next(null, JSON.parse(res.body));
+                }
+            );
+        },
+        function finish(err, attributes) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback(null, attributes);
+        }
+    );
+};
+
 TestClient.prototype.getTile = function(z, x, y, params, callback) {
     var self = this;
 
