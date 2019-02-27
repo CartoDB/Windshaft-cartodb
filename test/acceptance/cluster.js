@@ -2,7 +2,7 @@
 
 require('../support/test_helper');
 
-// const assert = require('../support/assert');
+const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 
 const POINTS_SQL_1 = `
@@ -18,7 +18,9 @@ const defaultLayers = [{
     type: 'cartodb',
     options: {
         sql: POINTS_SQL_1,
-        aggregation: true
+        aggregation: {
+            threshold: 1
+        }
     }
 }];
 
@@ -30,20 +32,106 @@ function createVectorMapConfig (layers = defaultLayers) {
 }
 
 describe('cluster', function () {
-    it.only('should get aggregated features of an aggregated map', function (done) {
-        const mapConfig = createVectorMapConfig();
-        const testClient = new TestClient(mapConfig);
-        const clusterId = 1;
-        const layerId = 0;
-        const params = {};
-
-        testClient.getClusterFeatures(clusterId, layerId, params, (err, body) => {
-            if (err) {
-                return done(err);
+    describe('resolution = 1', function () {
+        const suite = [
+            {
+                cartodb_id: 1,
+                expected: [ { cartodb_id: 1, value: -3 } ]
+            },
+            {
+                cartodb_id: 2,
+                expected: [ { cartodb_id: 2, value: -2 } ]
+            },
+            {
+                cartodb_id: 3,
+                expected: [ { cartodb_id: 3, value: -1 } ]
+            },
+            {
+                cartodb_id: 4,
+                expected: [ { cartodb_id: 4, value: 0 } ]
+            },
+            {
+                cartodb_id: 5,
+                expected: [ { cartodb_id: 5, value: 1 } ]
+            },
+            {
+                cartodb_id: 6,
+                expected: [ { cartodb_id: 6, value: 2 } ]
             }
+        ];
 
-            console.log('>>>>>>>>>>>>', body.rows);
-            testClient.drain(done);
+        suite.forEach(({ cartodb_id, expected }) => {
+            it(`should get just one disaggregated feature: cartodb_id = ${cartodb_id}`, function (done) {
+                const mapConfig = createVectorMapConfig();
+                const testClient = new TestClient(mapConfig);
+                const zoom = 0;
+                const clusterId = cartodb_id;
+                const layerId = 0;
+                const params = {};
+
+                testClient.getClusterFeatures(zoom, clusterId, layerId, params, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(body.rows, expected);
+                    testClient.drain(done);
+                });
+            });
+        });
+    });
+
+    describe('resolution = 50', function () {
+        const suite = [
+            {
+                cartodb_id: 1,
+                resolution: 50,
+                expected: [
+                    { cartodb_id: 1, value: -3 },
+                    { cartodb_id: 2, value: -2 },
+                    { cartodb_id: 3, value: -1 },
+                    { cartodb_id: 4, value: 0 },
+                ]
+            },
+            {
+                cartodb_id: 5,
+                resolution: 50,
+                expected: [
+                    { cartodb_id: 5, value: 1 },
+                    { cartodb_id: 6, value: 2 },
+                    { cartodb_id: 7, value: 3 }
+                ]
+            }
+        ];
+
+        suite.forEach(({ cartodb_id, resolution, expected }) => {
+            it(`should get just one disaggregated feature: cartodb_id = ${cartodb_id}`, function (done) {
+                const mapConfig = createVectorMapConfig([{
+                    type: 'cartodb',
+                    options: {
+                        sql: POINTS_SQL_1,
+                        aggregation: {
+                            threshold: 1,
+                            resolution: resolution
+                        }
+                    }
+                }]);
+
+                const testClient = new TestClient(mapConfig);
+                const zoom = 0;
+                const clusterId = cartodb_id;
+                const layerId = 0;
+                const params = {};
+
+                testClient.getClusterFeatures(zoom, clusterId, layerId, params, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(body.rows, expected);
+                    testClient.drain(done);
+                });
+            });
         });
     });
 });

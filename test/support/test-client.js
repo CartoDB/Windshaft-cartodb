@@ -620,7 +620,7 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
     );
 };
 
-TestClient.prototype.getClusterFeatures = function(clusterId, layerId, params, callback) {
+TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, params, callback) {
     var self = this;
 
     if (!callback) {
@@ -685,12 +685,12 @@ TestClient.prototype.getClusterFeatures = function(clusterId, layerId, params, c
                 }
             );
         },
-        function getCLusterFeatures(err, layergroupId) {
+        function getCLusterFeatures (err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
 
-            url = '/api/v1/map/' + layergroupId + '/' + layerId + '/cluster/' + clusterId;
+            url = '/api/v1/map/' + layergroupId + '/' + layerId + '/' + zoom + '/cluster/' + clusterId;
 
             assert.response(self.server,
                 {
