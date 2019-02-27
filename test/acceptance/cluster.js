@@ -32,58 +32,133 @@ function createVectorMapConfig (layers = defaultLayers) {
 }
 
 describe('cluster', function () {
-    describe('resolution = 1', function () {
-        const suite = [
-            {
-                cartodb_id: 1,
-                expected: [ { cartodb_id: 1, value: -3 } ]
-            },
-            {
-                cartodb_id: 2,
-                expected: [ { cartodb_id: 2, value: -2 } ]
-            },
-            {
-                cartodb_id: 3,
-                expected: [ { cartodb_id: 3, value: -1 } ]
-            },
-            {
-                cartodb_id: 4,
-                expected: [ { cartodb_id: 4, value: 0 } ]
-            },
-            {
-                cartodb_id: 5,
-                expected: [ { cartodb_id: 5, value: 1 } ]
-            },
-            {
-                cartodb_id: 6,
-                expected: [ { cartodb_id: 6, value: 2 } ]
-            }
-        ];
+    describe('map-config w/o aggregation', function () {
+        it('should return error while fetching disaggregated features', function (done) {
+            const mapConfig = createVectorMapConfig([{
+                type: 'cartodb',
+                options: {
+                    sql: POINTS_SQL_1,
+                    cartocss: TestClient.CARTOCSS.POINTS,
+                    cartocss_version: '2.3.0'
+                }
+            }]);
+            const testClient = new TestClient(mapConfig);
+            const zoom = 0;
+            const cartodb_id = 1;
+            const layerId = 0;
+            const params = {
+                response: {
+                    status: 400
+                }
+            };
 
-        suite.forEach(({ cartodb_id, expected }) => {
-            it(`should get just one disaggregated feature: cartodb_id = ${cartodb_id}`, function (done) {
-                const mapConfig = createVectorMapConfig();
-                const testClient = new TestClient(mapConfig);
-                const zoom = 0;
-                const clusterId = cartodb_id;
-                const layerId = 0;
-                const params = {};
+            testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+                if (err) {
+                    return done(err);
+                }
 
-                testClient.getClusterFeatures(zoom, clusterId, layerId, params, (err, body) => {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    assert.deepStrictEqual(body.rows, expected);
-                    testClient.drain(done);
+                assert.deepStrictEqual(body, {
+                    errors:[ 'Map d725a568ab961af8197d311eececb83a has no aggregation defined for layer 0' ],
+                    errors_with_context:[
+                        {
+                            type: 'unknown',
+                            message: 'Map d725a568ab961af8197d311eececb83a has no aggregation defined for layer 0'
+                        }
+                    ]
                 });
+                testClient.drain(done);
             });
         });
     });
 
-    describe('resolution = 50', function () {
+    describe('map-config with aggregation', function () {
         const suite = [
             {
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 0.5,
+                expected: [ { cartodb_id: 1, value: -3 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 2,
+                resolution: 0.5,
+                expected: [ { cartodb_id: 2, value: -2 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 3,
+                resolution: 0.5,
+                expected: [ { cartodb_id: 3, value: -1 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 4,
+                resolution: 0.5,
+                expected: [ { cartodb_id: 4, value: 0 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 5,
+                resolution: 0.5,
+                expected: [ { cartodb_id: 5, value: 1 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 6,
+                resolution: 0.5,
+                expected: [ { cartodb_id: 6, value: 2 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 7,
+                resolution: 0.5,
+                expected: [ { cartodb_id: 7, value: 3 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                expected: [ { cartodb_id: 1, value: -3 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 2,
+                resolution: 1,
+                expected: [ { cartodb_id: 2, value: -2 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 3,
+                resolution: 1,
+                expected: [ { cartodb_id: 3, value: -1 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 4,
+                resolution: 1,
+                expected: [ { cartodb_id: 4, value: 0 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 5,
+                resolution: 1,
+                expected: [ { cartodb_id: 5, value: 1 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 6,
+                resolution: 1,
+                expected: [ { cartodb_id: 6, value: 2 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 7,
+                resolution: 1,
+                expected: [ { cartodb_id: 7, value: 3 } ]
+            },
+            {
+                zoom: 0,
                 cartodb_id: 1,
                 resolution: 50,
                 expected: [
@@ -94,6 +169,70 @@ describe('cluster', function () {
                 ]
             },
             {
+                zoom: 0,
+                cartodb_id: 5,
+                resolution: 50,
+                expected: [
+                    { cartodb_id: 5, value: 1 },
+                    { cartodb_id: 6, value: 2 },
+                    { cartodb_id: 7, value: 3 }
+                ]
+            },
+            {
+                zoom: 1,
+                cartodb_id: 1,
+                resolution: 1,
+                expected: [ { cartodb_id: 1, value: -3 } ]
+            },
+            {
+                zoom: 1,
+                cartodb_id: 2,
+                resolution: 1,
+                expected: [ { cartodb_id: 2, value: -2 } ]
+            },
+            {
+                zoom: 1,
+                cartodb_id: 3,
+                resolution: 1,
+                expected: [ { cartodb_id: 3, value: -1 } ]
+            },
+            {
+                zoom: 1,
+                cartodb_id: 4,
+                resolution: 1,
+                expected: [ { cartodb_id: 4, value: 0 } ]
+            },
+            {
+                zoom: 1,
+                cartodb_id: 5,
+                resolution: 1,
+                expected: [ { cartodb_id: 5, value: 1 } ]
+            },
+            {
+                zoom: 1,
+                cartodb_id: 6,
+                resolution: 1,
+                expected: [ { cartodb_id: 6, value: 2 } ]
+            },
+            {
+                zoom: 1,
+                cartodb_id: 7,
+                resolution: 1,
+                expected: [ { cartodb_id: 7, value: 3 } ]
+            },
+            {
+                zoom: 1,
+                cartodb_id: 1,
+                resolution: 50,
+                expected: [
+                    { cartodb_id: 1, value: -3 },
+                    { cartodb_id: 2, value: -2 },
+                    { cartodb_id: 3, value: -1 },
+                    { cartodb_id: 4, value: 0 },
+                ]
+            },
+            {
+                zoom: 1,
                 cartodb_id: 5,
                 resolution: 50,
                 expected: [
@@ -104,8 +243,9 @@ describe('cluster', function () {
             }
         ];
 
-        suite.forEach(({ cartodb_id, resolution, expected }) => {
-            it(`should get just one disaggregated feature: cartodb_id = ${cartodb_id}`, function (done) {
+        suite.forEach(({ zoom, cartodb_id, resolution, expected }) => {
+            const description = `should get features for z: ${zoom} cartodb_id: ${cartodb_id}, res: ${resolution}`;
+            it(description, function (done) {
                 const mapConfig = createVectorMapConfig([{
                     type: 'cartodb',
                     options: {
@@ -116,14 +256,11 @@ describe('cluster', function () {
                         }
                     }
                 }]);
-
                 const testClient = new TestClient(mapConfig);
-                const zoom = 0;
-                const clusterId = cartodb_id;
                 const layerId = 0;
                 const params = {};
 
-                testClient.getClusterFeatures(zoom, clusterId, layerId, params, (err, body) => {
+                testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
                     if (err) {
                         return done(err);
                     }
