@@ -61,11 +61,59 @@ describe('cluster', function () {
                     errors:[ 'Map d725a568ab961af8197d311eececb83a has no aggregation defined for layer 0' ],
                     errors_with_context:[
                         {
-                            type: 'unknown',
-                            message: 'Map d725a568ab961af8197d311eececb83a has no aggregation defined for layer 0'
+                            layer: {
+                                index: '0',
+                                type: 'cartodb'
+                            },
+                            message: 'Map d725a568ab961af8197d311eececb83a has no aggregation defined for layer 0',
+                            subtype: 'aggregation',
+                            type: 'layer'
                         }
                     ]
                 });
+
+                testClient.drain(done);
+            });
+        });
+
+        it('with aggregation disabled should return error while fetching disaggregated features', function (done) {
+            const mapConfig = createVectorMapConfig([{
+                type: 'cartodb',
+                options: {
+                    sql: POINTS_SQL_1,
+                    aggregation: false
+                }
+            }]);
+            const testClient = new TestClient(mapConfig);
+            const zoom = 0;
+            const cartodb_id = 1;
+            const layerId = 0;
+            const params = {
+                response: {
+                    status: 400
+                }
+            };
+
+            testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+                if (err) {
+                    return done(err);
+                }
+
+                assert.deepStrictEqual(body, {
+                    errors:[ 'Map 3a09728f8c08444820336ea9983ce92b has no aggregation defined for layer 0' ],
+                    errors_with_context:[
+                        {
+                            layer: {
+                                index: '0',
+                                type: 'cartodb'
+                            },
+                            message: 'Map 3a09728f8c08444820336ea9983ce92b has no aggregation defined for layer 0',
+                            subtype: 'aggregation',
+                            type: 'layer'
+                        }
+                    ]
+                });
+
                 testClient.drain(done);
             });
         });
