@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -6,21 +8,6 @@ var testClient = require('./support/test_client');
 describe('regressions', function() {
     after(function() {
         testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
-    });
-
-    // See https://github.com/Vizzuality/Windshaft/issues/65
-    it("#65 catching non-Error exception doesn't kill the backend", function(done) {
-        var mapConfig = testClient.defaultTableMapConfig('test_table');
-        testClient.withLayergroup(mapConfig, function(err, requestTile, finish) {
-            var options = {
-                statusCode: 400,
-                contentType: 'application/json; charset=utf-8'
-            };
-            requestTile('/0/0/0.png?testUnexpectedError=1', options, function(err, res) {
-                assert.deepEqual(JSON.parse(res.body).errors, ["test unexpected error"]);
-                finish(done);
-            });
-        });
     });
 
     // Test that you cannot write to the database from a tile request

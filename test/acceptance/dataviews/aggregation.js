@@ -1,3 +1,5 @@
+'use strict';
+
 require('../../support/test_helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
@@ -70,12 +72,8 @@ describe('aggregations happy cases', function() {
     ].join(' UNION ALL ');
 
     operations.forEach(function (operation) {
-        var not = operation === 'count' ? ' not ' : ' ';
-        var description = 'should' +
-            not +
-            'handle NULL values in category and aggregation columns using "' +
-            operation +
-            '" as aggregation operation';
+        var description = 'should handle NULL values in category and aggregation columns using "' +
+            operation + '" as aggregation operation';
 
         it(description, function (done) {
             this.testClient = new TestClient(aggregationOperationMapConfig(operation, query, 'cat', 'val'));
@@ -96,12 +94,7 @@ describe('aggregations happy cases', function() {
                     }
                 });
 
-                if (operation === 'count') {
-                    assert.ok(hasNullCategory, 'aggregation has not a category NULL');
-                } else {
-                    assert.ok(!hasNullCategory, 'aggregation has category NULL');
-                }
-
+                assert.ok(!hasNullCategory, 'aggregation has category NULL');
                 done();
             });
         });
@@ -297,7 +290,7 @@ describe('aggregation-dataview: special float values', function() {
     filters.forEach(function (filter) {
         it('should handle special float values using filter: ' + JSON.stringify(filter), function(done) {
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('val_aggregation', { own_filter: 0 }, function(err, dataview) {
+            this.testClient.getDataview('val_aggregation', filter, function(err, dataview) {
                 assert.ifError(err);
                 assert.ok(dataview.infinities === (250 + 250));
                 assert.ok(dataview.nans === 250);
@@ -312,7 +305,7 @@ describe('aggregation-dataview: special float values', function() {
 
         it('should handle special numeric values using filter: ' + JSON.stringify(filter), function(done) {
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('sum_aggregation_numeric', { own_filter: 0 }, function(err, dataview) {
+            this.testClient.getDataview('sum_aggregation_numeric', filter, function(err, dataview) {
                 assert.ifError(err);
                 assert.ok(dataview.nans === 333);
                 assert.ok(dataview.categories.length === 2);
@@ -422,6 +415,82 @@ describe('aggregation dataview tuned by categories query param', function () {
                 assert.equal(dataview.categories.length, scenario.categoriesExpected);
                 done();
             });
+        });
+    });
+});
+
+
+
+describe('Count aggregation', function () {
+    const mapConfig = {
+        version: '1.5.0',
+        layers: [
+            {
+                type: "cartodb",
+                options: {
+                    source: {
+                        "id": "a0"
+                    },
+                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
+                    cartocss_version: "2.3.0"
+                }
+            }
+        ],
+        dataviews: {
+            categories: {
+                source: {
+                    id: 'a0'
+                },
+                type: 'aggregation',
+                options: {
+                    column: 'cat',
+                    aggregation: 'count'
+                }
+            }
+        },
+        analyses: [
+            {
+                id: "a0",
+                type: "source",
+                params: {
+                    query: `
+                        SELECT
+                            null::geometry the_geom_webmercator,
+                            CASE
+                                WHEN x % 4 = 0 THEN 1
+                                WHEN x % 4 = 1 THEN 2
+                                WHEN x % 4 = 2 THEN 3
+                                ELSE null
+                            END AS val,
+                            CASE
+                                WHEN x % 4 = 0 THEN 'category_1'
+                                WHEN x % 4 = 1 THEN 'category_2'
+                                WHEN x % 4 = 2 THEN 'category_3'
+                                ELSE null
+                            END AS cat
+                        FROM generate_series(1, 1000) x
+                    `
+                }
+            }
+        ]
+    };
+
+    it(`should handle null values correctly when aggregationColumn isn't provided`, function (done) {
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('categories', { own_filter: 0, categories: 0 }, (err, dataview) => {
+            assert.ifError(err);
+            assert.equal(dataview.categories.length, 3);
+            this.testClient.drain(done);
+        });
+    });
+
+    it(`should handle null values correctly when aggregationColumn is provided`, function (done) {
+        mapConfig.dataviews.categories.options.aggregationColumn = 'val';
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('categories', { own_filter: 0, categories: 0 }, (err, dataview) => {
+            assert.ifError(err);
+            assert.equal(dataview.categories.length, 3);
+            this.testClient.drain(done);
         });
     });
 });

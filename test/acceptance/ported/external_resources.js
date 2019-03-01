@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -11,12 +13,11 @@ describe('external resources', function() {
 
     var res_serv; // resources server
     var res_serv_status = { numrequests:0 }; // status of resources server
-    var res_serv_port = 8033; // FIXME: make configurable ?
+    var res_serv_port;
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
     before(function(done) {
-        nock.enableNetConnect('127.0.0.1');
         // Start a server to test external resources
         res_serv = http.createServer( function(request, response) {
             ++res_serv_status.numrequests;
@@ -32,11 +33,23 @@ describe('external resources', function() {
               response.end();
             });
         });
-        res_serv.listen(res_serv_port, done);
+
+        const host = '127.0.0.1';
+        const markersServer = res_serv.listen(0);
+
+        res_serv_port = markersServer.address().port;
+
+        nock.disableNetConnect();
+        nock.enableNetConnect(host);
+
+        markersServer.on('listening', done);
     });
 
     after(function(done) {
         testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
+
+        nock.cleanAll();
+        nock.enableNetConnect();
 
         // Close the resources server
         res_serv.close(done);

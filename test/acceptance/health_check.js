@@ -1,3 +1,5 @@
+'use strict';
+
 require(__dirname + '/../support/test_helper');
 
 var fs = require('fs');
@@ -96,7 +98,7 @@ describe('health checks', function () {
         });
     });
 
-    it('not err if disabled file does not exists', function(done) {
+    it('not err if disabled file does not exist', function(done) {
         global.environment.disabled_file = '/tmp/ftreftrgtrccre';
 
         var server = new CartodbWindshaft(serverOptions);

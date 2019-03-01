@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -8,9 +10,12 @@ var PortedServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('multilayer interactivity and layers order', function() {
+    var server;
 
-    var server = cartodbServer(PortedServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(PortedServerOptions);
+        server.setMaxListeners(0);
+    });
 
     function layerType(layer) {
         return layer.type || 'undefined';
@@ -23,13 +28,12 @@ describe('multilayer interactivity and layers order', function() {
                 layers: testScenario.layers
             };
 
-            PortedServerOptions.afterLayergroupCreateCalls = 0;
-
             assert.response(server,
                 {
                     url: '/database/windshaft_test/layergroup',
                     method: 'POST',
                     headers: {
+                        host: 'localhost',
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify(layergroup)
@@ -48,8 +52,6 @@ describe('multilayer interactivity and layers order', function() {
                             '\n\tResponse body: ' + response.body +
                             '\n\tLayer types: ' + layergroup.layers.map(layerType).join(', ')
                     );
-
-//                    assert.equal(PortedServerOptions.afterLayergroupCreateCalls, 1);
 
                     var layergroupResponse = JSON.parse(response.body);
                     assert.ok(layergroupResponse);

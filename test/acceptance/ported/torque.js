@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -9,9 +11,12 @@ var ServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('torque', function() {
+    var server;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     var keysToDelete;
     beforeEach(function() {
@@ -23,8 +28,11 @@ describe('torque', function() {
     });
 
     function checkCORSHeaders(res) {
-      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.equal(
+            res.headers['access-control-allow-headers'],
+            'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
+        );
+        assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
     it("missing required property from torque layer", function(done) {
@@ -48,7 +56,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },
@@ -71,7 +79,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },
@@ -94,7 +102,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },
@@ -136,7 +144,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
           }, {}, function(res) { next(null, res); });
         },
@@ -161,7 +169,7 @@ describe('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: "select 1 as id, '1970-01-02'::date as d, 'POINT(0 0)'::geometry as the_geom UNION select 2, " +
+               sql: "select 1 as id, '1970-01-02'::date as d, 'POINT(0 0)'::geometry as the_geom UNION ALL select 2, " +
                    "'1970-01-01'::date, 'POINT(1 1)'::geometry",
                geom_column: 'the_geom',
                cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; ' +
@@ -179,7 +187,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
           }, {}, function(res, err) { next(err, res); });
         },
@@ -218,7 +226,10 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: {
+                  host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_mapnik_error_1(err, res) {
@@ -235,7 +246,10 @@ describe('torque', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.grid.json',
-              method: 'GET'
+              method: 'GET',
+              headers: {
+                host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_mapnik_error_2(err, res) {
@@ -252,7 +266,10 @@ describe('torque', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.json.torque',
-              method: 'GET'
+              method: 'GET',
+              headers: {
+                host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_torque0_response(err, res) {
@@ -270,7 +287,10 @@ describe('torque', function() {
           var next = this;
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.torque.json',
-              method: 'GET'
+              method: 'GET',
+              headers: {
+                host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_torque0_response_1(err, res) {
@@ -315,7 +335,7 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
           }, {}, function(res, err) { next(err, res); });
         },
@@ -344,7 +364,7 @@ describe('torque', function() {
         version: '1.1.0',
         layers: [
            { type: 'torque', options: {
-               sql: "select 1 as id, '1970-01-03'::date as d, 'POINT(0 0)'::geometry as the_geom UNION select 2, " +
+               sql: "select 1 as id, '1970-01-03'::date as d, 'POINT(0 0)'::geometry as the_geom UNION ALL select 2, " +
                    "'1970-01-01'::date, 'POINT(1 1)'::geometry",
                geom_column: 'the_geom',
                cartocss: 'Map { -torque-frame-count:2; -torque-resolution:3; -torque-time-attribute:d; ' +
@@ -354,19 +374,25 @@ describe('torque', function() {
         ]
       };
 
+      let defautlPort = global.environment.postgres.port;
+
       step(
         function do_post()
         {
           var next = this;
+          global.environment.postgres.port = 54777;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup?dbport=54777',
+              url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
           }, {}, function(res, err) { next(err, res); });
         },
         function checkPost(err, res) {
           assert.ifError(err);
+
+          global.environment.postgres.port = defautlPort;
+
           assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed.errors, parsed);
@@ -407,9 +433,9 @@ describe('torque', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
-          }, {}, function(res) { next(null, res); });
+          }, {}, function (res) { next(null, res); });
         },
         function checkResponse(err, res) {
           assert.ifError(err);

@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -8,9 +10,12 @@ var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
 describe('server_gettile', function() {
+    var server;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
@@ -48,19 +53,19 @@ describe('server_gettile', function() {
         var mapConfig = testClient.defaultTableMapConfig('test_table');
         testClient.withLayergroup(mapConfig, function (err, requestTile, finish) {
             requestTile(tileUrl, function (err, res) {
-                var xwc = res.headers['x-windshaft-cache'];
+                var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                 assert.ok(xwc);
                 assert.ok(xwc > 0);
                 lastXwc = xwc;
 
                 requestTile(tileUrl, function (err, res) {
-                    var xwc = res.headers['x-windshaft-cache'];
+                    var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                     assert.ok(xwc);
                     assert.ok(xwc > 0);
                     assert.ok(xwc >= lastXwc);
 
-                    requestTile(tileUrl + '?cache_buster=wadus', function (err, res) {
-                        var xwc = res.headers['x-windshaft-cache'];
+                    requestTile(tileUrl, { cache_buster: 'wadus' }, function (err, res) {
+                        var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                         assert.ok(!xwc);
 
                         finish(done);
@@ -99,18 +104,25 @@ describe('server_gettile', function() {
         }
 
         testClient.withLayergroup(mapConfig, validateLayergroup, function(err, requestTile, finish) {
-
             requestTile(tileUrl, function(err, res) {
-                assert.ok(res.headers.hasOwnProperty('x-windshaft-cache'), "Did not hit renderer cache on second time");
-                assert.ok(res.headers['x-windshaft-cache'] >= 0);
+                var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
+                assert.ok(!xwc);
 
-                assert.imageBufferIsSimilarToFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL,
-                    function(err) {
-                        finish(function(finishErr) {
-                            done(err || finishErr);
-                        });
-                    }
-                );
+                requestTile(tileUrl, function (err, res) {
+                    assert.ok(
+                        res.headers.hasOwnProperty('x-windshaft-cache'),
+                        "Did not hit renderer cache on second time"
+                    );
+                    assert.ok(parseInt(res.headers['x-windshaft-cache'], 10) >= 0);
+
+                    assert.imageBufferIsSimilarToFile(res.body, imageFixture, IMAGE_EQUALS_TOLERANCE_PER_MIL,
+                        function(err) {
+                            finish(function(finishErr) {
+                                done(err || finishErr);
+                            });
+                        }
+                    );
+                });
             });
         });
     });

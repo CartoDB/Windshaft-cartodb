@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -11,9 +13,12 @@ describe('retina support', function() {
 
     var layergroupId = null;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    var server;
 
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     var keysToDelete;
     beforeEach(function(done) {
@@ -38,6 +43,7 @@ describe('retina support', function() {
                 url: '/database/windshaft_test/layergroup',
                 method: 'POST',
                 headers: {
+                    host: 'localhost',
                     'Content-Type': 'application/json'
                 },
                 data: JSON.stringify(retinaSampleMapConfig)
@@ -67,7 +73,10 @@ describe('retina support', function() {
             {
                 url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/0/0' + scaleFactor + '.png',
                 method: 'GET',
-                encoding: 'binary'
+                encoding: 'binary',
+                headers: {
+                    host: 'localhost'
+                }
             },
             responseHead,
             assertFn

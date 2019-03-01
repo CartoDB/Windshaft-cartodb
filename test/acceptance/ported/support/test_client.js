@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../../support/test_helper');
 var LayergroupToken = require('../../../../lib/cartodb/models/layergroup-token');
 
@@ -39,9 +41,18 @@ module.exports = {
     getTileLayer: getTileLayer
 };
 
+var server;
 
-var server = new CartodbServer(PortedServerOptions);
-server.setMaxListeners(0);
+function getServer () {
+    if (server) {
+        return server;
+    }
+
+    server = new CartodbServer(PortedServerOptions);
+    server.setMaxListeners(0);
+
+    return server;
+}
 
 var jsonContentType = 'application/json; charset=utf-8';
 var jsContentType = 'text/javascript; charset=utf-8';
@@ -72,7 +83,7 @@ function createLayergroup(layergroupConfig, options, callback) {
             });
         },
         function validateLayergroup(err, res) {
-            assert.ok(!err, 'Failed to request layergroup');
+            assert.ifError(err);
 
             var parsedBody;
             var layergroupid;
@@ -120,7 +131,7 @@ function serverInstance(options) {
         return otherServer;
     }
 
-    return server;
+    return getServer();
 }
 
 function layergroupRequest(layergroupConfig, method, callbackName, extraParams) {
@@ -129,6 +140,7 @@ function layergroupRequest(layergroupConfig, method, callbackName, extraParams) 
     var request = {
         url: '/database/windshaft_test/layergroup',
         headers: {
+            host: 'localhost',
             'Content-Type': 'application/json'
         }
     };
@@ -337,6 +349,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
                 url: '/database/windshaft_test/layergroup',
                 method: 'POST',
                 headers: {
+                    host: 'localhost',
                     'Content-Type': 'application/json'
                 },
                 data: JSON.stringify(layergroupConfig)
@@ -347,7 +360,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
             };
-            assert.response(server, request, expectedResponse, function (res, err) {
+            assert.response(getServer(), request, expectedResponse, function (res, err) {
                 next(err, res);
             });
         },
@@ -372,14 +385,17 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
 
             var request = {
                 url: finalUrl,
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
             };
 
             if (contentType === pngContentType) {
                 request.encoding = 'binary';
             }
 
-            assert.response(server, request, expectedResponse, function (res, err) {
+            assert.response(getServer(), request, expectedResponse, function (res, err) {
                 next(err, res);
             });
         },
@@ -449,12 +465,28 @@ function withLayergroup(layergroupConfig, options, callback) {
                     };
                 }
 
-                var baseUrlTpl = '/database/windshaft_test/layergroup/<%= layergroupid %>';
-                var finalUrl = _.template(baseUrlTpl, { layergroupid: layergroupid }) + layergroupUrl;
+                const signerTpl = function ({ signer }) {
+                    return `${signer ? `:${signer}@` : ''}`;
+                };
+
+                const cacheTpl = function ({ cache_buster, cacheBuster }) {
+                    return `${cache_buster ? `:${cache_buster}` : `:${cacheBuster}`}`;
+                };
+
+                const urlTpl = function ({layergroupid, cache_buster = null, tile }) {
+                    const { signer, token , cacheBuster } = LayergroupToken.parse(layergroupid);
+                    const base = '/database/windshaft_test/layergroup/';
+                    return `${base}${signerTpl({signer})}${token}${cacheTpl({cache_buster, cacheBuster})}${tile}`;
+                };
+
+                const finalUrl = urlTpl({ layergroupid, cache_buster: options.cache_buster, tile: layergroupUrl });
 
                 var request = {
                     url: finalUrl,
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
                 };
 
                 if (options.contentType === pngContentType) {

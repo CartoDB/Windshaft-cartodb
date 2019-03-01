@@ -1,7 +1,9 @@
+'use strict';
+
 require('../../support/test_helper.js');
 
 var assert = require('assert');
-var errorMiddleware = require('../../../lib/cartodb/middleware/error-middleware');
+var errorMiddleware = require('../../../lib/cartodb/api/middlewares/error-middleware');
 
 describe('error-middleware', function() {
 
@@ -28,7 +30,7 @@ describe('error-middleware', function() {
         error.subtype = 'test subtype';
 
         const errors = [error, error];
-        
+
         const req = {};
         const res = {
             headers: {},
@@ -43,7 +45,7 @@ describe('error-middleware', function() {
             send () {}
         };
 
-        const errorHeader = {      
+        const errorHeader = {
             mainError: {
                 statusCode: 400,
                 message: error.message,
@@ -133,7 +135,7 @@ describe('error-middleware', function() {
         error.subtype = badString;
 
         const errors = [error, error];
-        
+
         const req = {};
         const res = {
             headers: {},
@@ -148,7 +150,7 @@ describe('error-middleware', function() {
             send () {}
         };
 
-        const errorHeader = {      
+        const errorHeader = {
             mainError: {
                 statusCode: 400,
                 message: escapedString,

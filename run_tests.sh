@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 OPT_CREATE_REDIS=yes # create the redis test environment
 OPT_CREATE_PGSQL=yes # create the PostgreSQL test environment
@@ -6,6 +6,7 @@ OPT_DROP_REDIS=yes   # drop the redis test environment
 OPT_DROP_PGSQL=yes   # drop the PostgreSQL test environment
 OPT_COVERAGE=no      # run tests with coverage
 OPT_DOWNLOAD_SQL=yes # download a fresh copy of sql files
+OPT_REDIS_CELL=yes   # download redis cell
 
 export PGAPPNAME=cartodb_tiler_tester
 
@@ -88,6 +89,10 @@ while [ -n "$1" ]; do
                 OPT_CREATE_PGSQL=no
                 shift
                 continue
+        elif test "$1" = "--norediscell"; then
+                OPT_REDIS_CELL=no
+                shift
+                continue
         else
                 break
         fi
@@ -99,6 +104,7 @@ if [ -z "$1" ]; then
         echo " --nocreate   do not create the test environment on start" >&2
         echo " --nodrop     do not drop the test environment on exit" >&2
         echo " --with-coverage   use istanbul to determine code coverage" >&2
+        echo " --norediscell  do not download redis-cell" >&2
         exit 1
 fi
 
@@ -106,7 +112,12 @@ TESTS=$@
 
 if test x"$OPT_CREATE_REDIS" = xyes; then
   echo "Starting redis on port ${REDIS_PORT}"
-  echo "port ${REDIS_PORT}" | redis-server - > ${BASEDIR}/test.log &
+  REDIS_CELL_PATH="${BASEDIR}/test/support/libredis_cell.so"
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    REDIS_CELL_PATH="${BASEDIR}/test/support/libredis_cell.dylib"
+  fi
+
+  echo "port ${REDIS_PORT}" | redis-server - --loadmodule ${REDIS_CELL_PATH} > ${BASEDIR}/test.log &
   PID_REDIS=$!
   echo ${PID_REDIS} > ${BASEDIR}/redis.pid
 fi
@@ -124,7 +135,7 @@ fi
 
 echo "Preparing the environment"
 cd ${BASEDIR}/test/support
-sh prepare_db.sh ${PREPARE_DB_OPTS} || die "database preparation failure"
+source prepare_db.sh "${PREPARE_DB_OPTS}" || die "database preparation failure"
 cd -
 
 PATH=node_modules/.bin/:$PATH
@@ -134,10 +145,10 @@ PATH=node_modules/.bin/:$PATH
 
 if test x"$OPT_COVERAGE" = xyes; then
   echo "Running tests with coverage"
-  ./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u tdd -t 5000 ${TESTS}
+  ./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u tdd -t 5000 --exit ${TESTS}
 else
   echo "Running tests"
-  ./node_modules/.bin/_mocha -c -u tdd -t 5000 ${TESTS}
+  ./node_modules/.bin/_mocha -c -u tdd -t 5000  --exit ${TESTS}
 fi
 ret=$?
 

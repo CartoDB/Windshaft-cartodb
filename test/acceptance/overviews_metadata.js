@@ -1,9 +1,10 @@
+'use strict';
+
 var test_helper = require('../support/test_helper');
 
 var assert = require('../support/assert');
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
@@ -15,6 +16,12 @@ var windshaft = require('windshaft');
 
 
 describe('overviews metadata', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 
@@ -67,6 +74,7 @@ describe('overviews metadata', function() {
                   data: JSON.stringify(layergroup)
               }, {}, function(res) {
                   assert.equal(res.statusCode, 200, res.body);
+
                   var parsedBody = JSON.parse(res.body);
                   assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                   expected_token = parsedBody.layergroupid;
@@ -108,9 +116,92 @@ describe('overviews metadata', function() {
             }
         );
     });
+
+    describe('Overviews Flags', function () {
+        it("Overviews used", function (done) {
+            var layergroup = {
+                version: '1.0.0',
+                layers: [overviews_layer, non_overviews_layer]
+            };
+
+            var layergroup_url = '/api/v1/map';
+
+            var expected_token;
+            step(
+                function do_post() {
+                    var next = this;
+                    assert.response(server, {
+                        url: layergroup_url,
+                        method: 'POST',
+                        headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                        data: JSON.stringify(layergroup)
+                    }, {}, function (res) {
+                        assert.equal(res.statusCode, 200, res.body);
+
+                        const headers = JSON.parse(res.headers['x-tiler-profiler']);
+
+                        assert.ok(headers.overviewsAddedToMapconfig);
+                        assert.equal(headers.mapType, 'anonymous');
+
+                        const parsedBody = JSON.parse(res.body);
+                        expected_token = parsedBody.layergroupid;
+                        next();
+                    });
+                },
+                function finish(err) {
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
+                    done(err);
+                }
+            );
+        });
+        it("Overviews NOT used", function (done) {
+            var layergroup = {
+                version: '1.0.0',
+                layers: [non_overviews_layer]
+            };
+
+            var layergroup_url = '/api/v1/map';
+
+            var expected_token;
+            step(
+                function do_post() {
+                    var next = this;
+                    assert.response(server, {
+                        url: layergroup_url,
+                        method: 'POST',
+                        headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                        data: JSON.stringify(layergroup)
+                    }, {}, function (res) {
+                        assert.equal(res.statusCode, 200, res.body);
+
+                        const headers = JSON.parse(res.headers['x-tiler-profiler']);
+
+                        assert.equal(headers.overviewsAddedToMapconfig, false);
+                        assert.equal(headers.mapType, 'anonymous');
+
+                        const parsedBody = JSON.parse(res.body);
+                        expected_token = parsedBody.layergroupid;
+                        next();
+                    });
+                },
+                function finish(err) {
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                    keysToDelete['user:localhost:mapviews:global'] = 5;
+                    done(err);
+                }
+            );
+        });
+    });
 });
 
 describe('overviews metadata with filters', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 

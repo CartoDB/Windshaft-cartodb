@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper =require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -8,12 +10,19 @@ var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('raster', function() {
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    var server;
+
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     function checkCORSHeaders(res) {
-      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.equal(
+            res.headers['access-control-allow-headers'],
+            'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
+        );
+        assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
@@ -41,7 +50,7 @@ describe('raster', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup',
               method: 'POST',
-              headers: {'Content-Type': 'application/json' },
+              headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
           }, {}, function(res, err) { next(err, res); });
         },
@@ -66,7 +75,8 @@ describe('raster', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: { host: 'localhost' }
           }, {}, function(res, err) { next(err, res); });
         },
         function check_response(err, res) {
@@ -124,6 +134,7 @@ describe('raster', function() {
                 url: '/database/windshaft_test/layergroup',
                 method: 'POST',
                 headers: {
+                    host: 'localhost',
                     'Content-Type': 'application/json'
                 },
                 data: JSON.stringify(mapconfig)

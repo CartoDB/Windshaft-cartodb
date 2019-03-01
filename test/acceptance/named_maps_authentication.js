@@ -1,3 +1,5 @@
+'use strict';
+
 var test_helper = require('../support/test_helper');
 var RedisPool = require('redis-mpool');
 var querystring = require('querystring');
@@ -6,11 +8,16 @@ var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
 
 describe('named maps authentication', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 

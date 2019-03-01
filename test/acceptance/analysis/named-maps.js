@@ -1,15 +1,22 @@
+'use strict';
+
 var assert = require('../../support/assert');
 
 var helper = require('../../support/test_helper');
 
 var CartodbWindshaft = require('../../../lib/cartodb/server');
 var serverOptions = require('../../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
 var TestClient = require('../../support/test-client');
 
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('named-maps analysis', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+    });
+
 
     var IMAGE_TOLERANCE_PER_MIL = 20;
 
@@ -251,6 +258,62 @@ describe('named-maps analysis', function() {
                         assert.ok(!err, err);
                         done();
                     });
+
+                }
+            );
+        });
+
+        it('should fail to retrieve static map preview via layergroup ' +
+           'when filtering by invalid layers', function(done) {
+            assert.response(
+                server,
+                {
+                    url: '/api/v1/map/static/center/' + layergroupid + '/4/42/-3/320/240.png?layer=1',
+                    method: 'GET',
+                    encoding: 'binary',
+                    headers: {
+                        host: username
+                    }
+                },
+                {
+                    status: 400
+                },
+                function(res, err) {
+                    done(err);
+                }
+            );
+        });
+
+        it('should return and an error requesting unsupported image format', function(done) {
+            assert.response(
+                server,
+                {
+                    url: '/api/v1/map/static/center/' + layergroupid + '/4/42/-3/320/240.gif',
+                    method: 'GET',
+                    encoding: 'binary',
+                    headers: {
+                        host: username
+                    }
+                },
+                {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    assert.ifError(err);
+                    assert.deepEqual(
+                        JSON.parse(res.body),
+                        {
+                            errors:['Unsupported image format \"gif\"'],
+                            errors_with_context:[{
+                                type: 'unknown',
+                                message: 'Unsupported image format \"gif\"'
+                            }]
+                        }
+                    );
+                    done();
 
                 }
             );

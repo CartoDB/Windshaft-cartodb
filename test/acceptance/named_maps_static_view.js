@@ -1,3 +1,5 @@
+'use strict';
+
 var qs = require('querystring');
 var testHelper = require('../support/test_helper');
 var RedisPool = require('redis-mpool');
@@ -278,6 +280,59 @@ describe('named maps static view', function() {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('zoom-center', 'jpeg'),
                                             JPG_IMAGE_TOLERANCE, done, 'jpeg');
+            });
+        });
+    });
+
+    it('should return an error requesting unsupported image format', function (done) {
+        var view = {
+            zoom: 4,
+            center: {
+                lng: 40,
+                lat: 20
+            }
+        };
+
+        templateMaps.addTemplate(username, createTemplate(view), function (err) {
+            if (err) {
+                return done(err);
+            }
+
+            var url = `/api/v1/map/static/named/${templateName}/640/480.gif`;
+
+
+            var requestOptions = {
+                url: url,
+                method: 'GET',
+                headers: {
+                    host: username
+                },
+                encoding: 'binary'
+            };
+
+            var expectedResponse = {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            };
+
+            // this could be removed once named maps are invalidated, otherwise you hits the cache
+            var server = new CartodbWindshaft(serverOptions);
+
+            assert.response(server, requestOptions, expectedResponse, function (res, err) {
+                assert.ifError(err);
+                assert.deepEqual(
+                    JSON.parse(res.body),
+                    {
+                        errors:['Unsupported image format \"gif\"'],
+                        errors_with_context:[{
+                            type: 'unknown',
+                            message: 'Unsupported image format \"gif\"'
+                        }]
+                    }
+                );
+                done();
             });
         });
     });

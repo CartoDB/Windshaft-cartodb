@@ -1,3 +1,5 @@
+'use strict';
+
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -260,17 +262,17 @@ describe('widgets-regressions', function() {
                 ]]
             };
 
-            const query = `  
+            const query = `
                 SELECT
                     ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
                         '${JSON.stringify(notIntersectingLeftTriangle)}'
                     ), 4326), 3857) AS the_geom_webmercator, 1 AS cartodb_id, 'notIntersectingLeftTriangle' AS name
-                UNION
+                UNION ALL
                 SELECT
                     ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
                         '${JSON.stringify(notIntersectingRightTriangle)}'
                     ), 4326), 3857), 2, 'notIntersectingRightTriangle'
-                UNION
+                UNION ALL
                 SELECT
                     ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
                         '${JSON.stringify(intersectingTriangle)}'

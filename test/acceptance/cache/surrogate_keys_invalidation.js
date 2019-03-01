@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert      = require('../../support/assert');
@@ -7,7 +9,7 @@ var _ = require('underscore');
 
 var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cartodb/cache/model/named_maps_entry');
 var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/server');
-
+var nock = require('nock');
 
 describe('templates surrogate keys', function() {
 
@@ -30,7 +32,13 @@ describe('templates surrogate keys', function() {
         serviceId: FAKE_FASTLY_SERVICE_ID
     };
 
-    var server = new CartodbWindshaft(serverOptions);
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        nock.disableNetConnect();
+        nock.enableNetConnect(/(127.0.0.1|cartocdn.com)/);
+    });
 
     var templateOwner = 'localhost';
     var templateName = 'acceptance';
@@ -70,9 +78,6 @@ describe('templates surrogate keys', function() {
     var invalidationMatchHeader = '\\b' + cacheEntryKey + '\\b';
     var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + cacheEntryKey;
 
-    var nock = require('nock');
-    nock.enableNetConnect(/(127.0.0.1:5555|cartocdn.com)/);
-
     after(function(done) {
         serverOptions.varnish_purge_enabled = false;
         serverOptions.varnish_host = varnishHost;
@@ -80,7 +85,9 @@ describe('templates surrogate keys', function() {
 
         serverOptions.fastly = fastlyConfig;
 
-        nock.restore();
+        nock.cleanAll();
+        nock.enableNetConnect();
+
         done();
     });
 

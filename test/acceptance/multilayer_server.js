@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../support/test_helper');
 
 var assert = require('../support/assert');
@@ -10,10 +12,14 @@ var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var QueryTables = require('cartodb-query-tables');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 describe('tests from old api translated to multilayer', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
 
     var layergroupUrl = '/api/v1/map';
 
@@ -230,7 +236,7 @@ describe('tests from old api translated to multilayer', function() {
                     var parsed = JSON.parse(res.body);
                     assert.ok(parsed.errors);
                     assert.equal(parsed.errors.length, 1);
-                    assert.ok(parsed.errors[0].match(/^Unexpected token W/));
+                    assert.ok(parsed.errors[0].match(/Unexpected token W/));
 
                     done();
                 }
@@ -369,6 +375,7 @@ describe('tests from old api translated to multilayer', function() {
                 };
 
                 // reset internal cacheChannel cache
+                // FIXME: we need a better way to reset cache while running tests
                 server.layergroupAffectedTablesCache.cache.reset();
 
                 assert.response(server,

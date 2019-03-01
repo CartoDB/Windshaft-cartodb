@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * User: simon
  * Date: 30/08/2011
@@ -12,9 +14,7 @@ var LZMA  = require('lzma').LZMA;
 var lzmaWorker = new LZMA();
 
 var redis = require('redis');
-var nock = require('nock');
 var log4js = require('log4js');
-var pg = require('pg');
 const setICUEnvVariable = require('../../lib/cartodb/utils/icu_data_env_setter');
 
 // set environment specific variables
@@ -104,16 +104,18 @@ beforeEach(function() {
 //global afterEach to capture test suites that leave keys in redis
 afterEach(function(done) {
 
-    // restoring nock globally after each suite
-    nock.cleanAll();
-    nock.enableNetConnect();
-
     var expectedKeys = {
         'rails:test_windshaft_cartodb_user_1_db:test_table_private_1': true,
         'rails:test_windshaft_cartodb_user_1_db:my_table': true,
         'rails:users:localhost:map_key': true,
         'rails:users:cartodb250user': true,
-        'rails:users:localhost': true
+        'rails:users:localhost': true,
+        'api_keys:localhost:1234': true,
+        'api_keys:localhost:default_public': true,
+        'api_keys:cartodb250user:4321': true,
+        'api_keys:cartodb250user:default_public': true,
+        'api_keys:localhost:regular1': true,
+        'api_keys:localhost:regular2': true,
     };
     var databasesTasks = { 0: 'users', 5: 'meta'};
 
@@ -145,11 +147,6 @@ afterEach(function(done) {
         });
     });
 });
-
-function cleanPGPoolConnections () {
-    // TODO: this method will be replaced by psql.end
-    pg.end();
-}
 
 function deleteRedisKeys(keysToDelete, callback) {
 
@@ -213,7 +210,5 @@ module.exports = {
   checkSurrogateKey: checkSurrogateKey,
   checkCache: checkCache,
   rmdirRecursiveSync: rmdirRecursiveSync,
-  configureMetadata,
-  cleanPGPoolConnections
+  configureMetadata
 };
-

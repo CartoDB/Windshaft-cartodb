@@ -10,7 +10,7 @@ Aggregation is available only for point geometries. During aggregation the point
 
 When no placement or columns are specified a special default aggregation is performed.
 
-This special mode performs only spatial aggregation (using a grid defined by the requested tile and the resolution, parameter, as all the other cases), and returns a _random_ record from each group (grid cell) with all its columns and an additional `_cdb_features_count` with the number of features in the group.
+This special mode performs only spatial aggregation (using a grid defined by the requested tile and the resolution, parameter, as all the other cases), and returns a _random_ record from each group (grid cell) with all its columns and an additional `_cdb_feature_count` with the number of features in the group.
 
 Regarding the randomness of the sample: currently we use the row with the minimum `cartodb_id` value in each group.
 
@@ -18,7 +18,7 @@ The rationale behind having this special aggregation with all the original colum
 
 ### User defined aggregations
 
-When either a explicit placement or columns are requested we no longer use the special, query; we use one determined by the placement (which will default to "centroid"), and it will have as columns only the aggregated columns specified, in addition to `_cdb_features_count`, which is always present.
+When either a explicit placement or columns are requested we no longer use the special, query; we use one determined by the placement (which will default to "centroid"), and it will have as columns only the aggregated columns specified, in addition to `_cdb_feature_count`, which is always present.
 
 We might decide in the future to allow sampling column values for any of the different placement modes.
 
@@ -134,6 +134,10 @@ of the original dataset applying three different aggregate functions.
 
 > Note that you can use the original column names as names of the result, but all the result column names must be unique.  In particular, the names `cartodb_id`, `the_geom`, `the_geom_webmercator` and `_cdb_feature_count` cannot be used for aggregated columns, as they correspond to columns always present in the result.
 
+#### Limitations:
+* The iso text format does not admit `starting` or `count` parameters
+* Cyclic units (day of the week, etc.) don't admit `count` or `starting` either.
+
 ### `resolution`
 
 Defines the cell-size of the spatial aggregation grid. This is equivalent to the [CartoCSS `-torque-resolution`](https://carto.com/docs/carto-engine/cartocss/properties-for-torque/#-torque-resolution-float) property of Torque maps.
@@ -176,6 +180,83 @@ This is the minimum number of (estimated) rows in the dataset (query results) fo
                             "aggregate_function": "sum",
                             "aggregated_column": "value"
                         }
+                    },
+                    "resolution": 2,
+                    "threshold": 500000
+                }
+            }
+        }
+    ]
+}
+```
+
+### `filters`
+
+Aggregated data can be filtered by imposing filtering conditions on the aggregated columns.
+
+Each condition is represented by one or more parameters:
+
+* `{ "equal": V }` selects an specific value of the aggregated column.
+* `{ "not_equal": V }` selects values different from the one specified.
+* `{ "in": [v1, v2, v3] }` selects any value from a list.
+* `{ "not_in": [v1, v2, v3] }` selects any value not in a list.
+* `{ "less_than": v }` selects values strictly less than the one given.
+* `{ "less_than_or_equal_to": v }` selects values less than or equal to the one given.
+* `{ "greater_than": v }` selects values strictly greater than the one given.
+* `{ "greater_than_or_equal_to": v }` selects values  greater than or equal to the one given.
+
+One of the *less* conditions can be combined with one of the *greater* conditions to select a range of values, for example:
+* `{ "greater_than": v1, "less_than": v2 }`
+* `{ "greater_than_or_equal_to": v1, "less_than": v2 }`
+* `{ "greater_than": v1, "less_than_or_equal_to": v2 }`
+* `{ "greater_than_or_equal_to": v1, "less_than_or_equal_to": v2 }`
+
+For a given column, multiple conditions can be passed in an array; the conditions will logically ORed (any of the conditions have to be verifid for the value to be selected):
+
+* `"myvalue": [ { "equal": 10 }, { "less_than": 0 }]` will select values of the column `myvalue` which are equal to 10 **or** less than 0.
+
+In addition, the filters applied to different columns are logically combined with AND (all the conditions have to be satisfied for an element to be selected); for example with the following `filters` parameter we'll select aggregated records which have a `total_value` > 100 **and** a category equal to "a".
+
+```json
+{
+    "total_value": { "greater_than": 100 },
+    "category":    { "equal": "a" }
+}
+```
+
+Note that the filtered columns have to be defined with the `columns` parameter, except for `_cdb_feature_count`, which is always implicitly defined and can be filtered too.
+
+#### Example
+
+```json
+{
+    "version": "1.7.0",
+    "extent": [-20037508.5, -20037508.5, 20037508.5, 20037508.5],
+    "srid": 3857,
+    "maxzoom": 18,
+    "minzoom": 3,
+    "layers": [
+        {
+            "type": "mapnik",
+            "options": {
+                "sql": "select * from table",
+                "cartocss": "#table { marker-width: [total]; marker-fill: ramp(value, (red, green, blue), jenks); }",
+                "cartocss_version": "2.3.0",
+                "aggregation": {
+                    "placement": "centroid",
+                    "columns": {
+                        "total_value": {
+                            "aggregate_function": "sum",
+                            "aggregated_column": "value"
+                        },
+                        "category": {
+                            "aggregate_function": "mode",
+                            "aggregated_column": "category"
+                        }
+                    },
+                    "filters" : {
+                        "total_value": { "greater_than": 100 },
+                        "category":   { "equal": "a" }
                     },
                     "resolution": 2,
                     "threshold": 500000

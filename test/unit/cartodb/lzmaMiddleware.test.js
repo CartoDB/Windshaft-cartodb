@@ -1,7 +1,9 @@
+'use strict';
+
 var assert = require('assert');
 var testHelper = require('../../support/test_helper');
 
-var lzmaMiddleware = require('../../../lib/cartodb/middleware/lzma');
+var lzmaMiddleware = require('../../../lib/cartodb/api/middlewares/lzma');
 
 describe('lzma-middleware', function() {
 
@@ -12,6 +14,7 @@ describe('lzma-middleware', function() {
             }
         };
         testHelper.lzma_compress_to_base64(JSON.stringify(qo), 1, function(err, data) {
+            const lzma = lzmaMiddleware();
             var req = {
                 headers: {
                     host:'localhost'
@@ -19,9 +22,13 @@ describe('lzma-middleware', function() {
                 query: {
                     api_key: 'test',
                     lzma: data
+                },
+                profiler: {
+                    done: function () {}
                 }
             };
-            lzmaMiddleware(req, {}, function(err) {
+
+            lzma(req, {}, function(err) {
                 if ( err ) {
                     return done(err);
                 }

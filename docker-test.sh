@@ -1,11 +1,4 @@
-export NPROCS=1 && export JOBS=1 && export CXX=g++-4.9 && export PGUSER=postgres
+#!/bin/bash
 
-npm install -g yarn@0.27.5
-yarn
-
- /etc/init.d/postgresql start
-
-createdb template_postgis && createuser publicuser
-psql -c "CREATE EXTENSION postgis" template_postgis
-
-POSTGIS_VERSION=2.4 npm test
+docker run -e "NODEJS_VERSION=${1}" -v `pwd`:/srv carto/nodejs-xenial-pg101:latest bash run_tests_docker.sh && \
+    docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v

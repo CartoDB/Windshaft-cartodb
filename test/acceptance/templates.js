@@ -1,3 +1,5 @@
+'use strict';
+
 var assert      = require('../support/assert');
 var _           = require('underscore');
 var redis       = require('redis');
@@ -20,13 +22,18 @@ var helper = require(__dirname + '/../support/test_helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
 var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
 describe('template_api', function() {
-    server.layergroupAffectedTablesCache.cache.reset();
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+        // FIXME: we need a better way to reset cache while running tests
+        server.layergroupAffectedTablesCache.cache.reset();
+    });
 
     var httpRendererResourcesServer;
     before(function(done) {
@@ -300,16 +307,17 @@ describe('template_api', function() {
           assert.response(server, post_request, {}, function(res) { next(null, res); });
         },
         function testCORS() {
-          assert.response(server, {
-              url: '/api/v1/map/named/acceptance1',
-              method: 'OPTIONS'
-          },{
-              status: 200,
-              headers: {
-                'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Content-Type',
-                'Access-Control-Allow-Origin': '*'
-              }
-          }, function() { done(); });
+            const allowHeaders = 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, Content-Type';
+            assert.response(server, {
+                url: '/api/v1/map/named/acceptance1',
+                method: 'OPTIONS'
+            },{
+                status: 200,
+                headers: {
+                    'Access-Control-Allow-Headers': allowHeaders,
+                    'Access-Control-Allow-Origin': '*'
+                }
+            }, function() { done(); });
       });
     });
 
@@ -1056,6 +1064,7 @@ describe('template_api', function() {
           assert.ok(cc);
           assert.equal(cc, expectedCC);
           // hack simulating restart...
+          // FIXME: we need a better way to reset cache while running tests
           server.layergroupAffectedTablesCache.cache.reset(); // need to clean channel cache
           var get_request = {
               url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',

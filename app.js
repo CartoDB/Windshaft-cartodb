@@ -1,3 +1,5 @@
+'use strict';
+
 var http = require('http');
 var https = require('https');
 var path = require('path');
@@ -100,8 +102,6 @@ if ( global.environment.log_filename ) {
 global.log4js.configure(log4jsConfig);
 global.logger = global.log4js.getLogger();
 
-global.environment.api_hostname = require('os').hostname().split('.')[0];
-
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
 var cartodbWindshaft = require('./lib/cartodb/server');
@@ -127,6 +127,40 @@ listener.on('listening', function() {
         version, serverOptions.bind.host, serverOptions.bind.port, process.pid, ENVIRONMENT
     );
 });
+
+function getCPUUsage (oldUsage) {
+    let usage;
+
+    if (oldUsage && oldUsage._start) {
+        usage = Object.assign({}, process.cpuUsage(oldUsage._start.cpuUsage));
+        usage.time = Date.now() - oldUsage._start.time;
+    } else {
+        usage = Object.assign({}, process.cpuUsage());
+        usage.time = process.uptime() * 1000; // s to ms
+    }
+
+    usage.percent = (usage.system + usage.user) / (usage.time * 10);
+
+    Object.defineProperty(usage, '_start', {
+        value: {
+            cpuUsage: process.cpuUsage(),
+            time: Date.now()
+        }
+    });
+
+    return usage;
+}
+
+let previousCPUUsage = getCPUUsage();
+setInterval(function cpuUsageMetrics () {
+    const CPUUsage = getCPUUsage(previousCPUUsage);
+
+    Object.keys(CPUUsage).forEach(property => {
+        global.statsClient.gauge(`windshaft.cpu.${property}`, CPUUsage[property]);
+    });
+
+    previousCPUUsage = CPUUsage;
+}, 5000);
 
 setInterval(function() {
     var memoryUsage = process.memoryUsage();
@@ -154,9 +188,46 @@ if (global.gc) {
 
     if (gcInterval > 0) {
         setInterval(function gcForcedCycle() {
-            var start = Date.now();
             global.gc();
-            global.statsClient.timing('windshaft.gc', Date.now() - start);
         }, gcInterval);
     }
+}
+
+const gcStats = require('gc-stats')();
+
+gcStats.on('stats', function ({ pauseMS, gctype }) {
+    global.statsClient.timing('windshaft.gc', pauseMS);
+    global.statsClient.timing(`windshaft.gctype.${getGCTypeValue(gctype)}`, pauseMS);
+});
+
+function getGCTypeValue (type) {
+    // 1: Scavenge (minor GC)
+    // 2: Mark/Sweep/Compact (major GC)
+    // 4: Incremental marking
+    // 8: Weak/Phantom callback processing
+    // 15: All
+    let value;
+
+    switch (type) {
+        case 1:
+            value = 'Scavenge';
+            break;
+        case 2:
+            value = 'MarkSweepCompact';
+            break;
+        case 4:
+            value = 'IncrementalMarking';
+            break;
+        case 8:
+            value = 'ProcessWeakCallbacks';
+            break;
+        case 15:
+            value = 'All';
+            break;
+        default:
+            value = 'Unkown';
+            break;
+    }
+
+    return value;
 }

@@ -1,16 +1,18 @@
+'use strict';
+
 var assert = require('assert');
 var _ = require('underscore');
 
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
 var PgConnection = require('../../../lib/cartodb/backends/pg_connection');
-var AuthApi = require('../../../lib/cartodb/api/auth_api');
+var AuthBackend = require('../../../lib/cartodb/backends/auth');
 var TemplateMaps = require('../../../lib/cartodb/backends/template_maps');
 
-const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/middleware/context/clean-up-query-params');
-const authorizeMiddleware = require('../../../lib/cartodb/middleware/context/authorize');
-const dbConnSetupMiddleware = require('../../../lib/cartodb/middleware/context/db-conn-setup');
-const localsMiddleware =  require('../../../lib/cartodb/middleware/context/locals');
+const cleanUpQueryParamsMiddleware = require('../../../lib/cartodb/api/middlewares/clean-up-query-params');
+const authorizeMiddleware = require('../../../lib/cartodb/api/middlewares/authorize');
+const dbConnSetupMiddleware = require('../../../lib/cartodb/api/middlewares/db-conn-setup');
+const credentialsMiddleware = require('../../../lib/cartodb/api/middlewares/credentials');
 
 var windshaft = require('windshaft');
 
@@ -23,6 +25,7 @@ describe('prepare-context', function() {
     let cleanUpQueryParams;
     let dbConnSetup;
     let authorize;
+    let setCredentials;
 
     before(function() {
         var redisPool = new RedisPool(global.environment.redis);
@@ -30,11 +33,12 @@ describe('prepare-context', function() {
         var metadataBackend = cartodbRedis({pool: redisPool});
         var pgConnection = new PgConnection(metadataBackend);
         var templateMaps = new TemplateMaps(redisPool);
-        var authApi = new AuthApi(pgConnection, metadataBackend, mapStore, templateMaps);
+        var authBackend = new AuthBackend(pgConnection, metadataBackend, mapStore, templateMaps);
 
         cleanUpQueryParams = cleanUpQueryParamsMiddleware();
-        authorize = authorizeMiddleware(authApi);
+        authorize = authorizeMiddleware(authBackend);
         dbConnSetup = dbConnSetupMiddleware(pgConnection);
+        setCredentials = credentialsMiddleware();
     });
 
 
@@ -58,20 +62,11 @@ describe('prepare-context', function() {
         }
         res.locals.user = 'localhost';
 
+        res.set = function () {};
+
         return res;
     }
 
-    it('res.locals are created', function(done) {
-        let req = {};
-        let res = {};
-
-        localsMiddleware(prepareRequest(req), prepareResponse(res), function(err) {
-            if ( err ) { done(err); return; }
-            assert.ok(res.hasOwnProperty('locals'), 'response has locals');
-            done();
-        });
-    });
-    
     it('cleans up request', function(done){
       var req = {headers: { host:'localhost' }, query: {dbuser:'hacker',dbname:'secret'}};
       var res = {};
@@ -103,8 +98,20 @@ describe('prepare-context', function() {
     });
 
     it('sets also dbuser for authenticated requests', function(done){
-        var req = { headers: { host: 'localhost' }, query: { map_key: '1234' }};
-        var res = { set: function () {} };
+        var req = {
+            headers: {
+                host: 'localhost'
+            },
+            query: {
+                api_key: '1234'
+            }
+        };
+        var res = {
+            set: function () {},
+            locals: {
+                api_key: '1234'
+            }
+        };
 
         // FIXME: review authorize-pgconnsetup workflow, It might we are doing authorization twice.
         authorize(prepareRequest(req), prepareResponse(res), function (err) {
@@ -154,18 +161,79 @@ describe('prepare-context', function() {
             }
         };
         var res = {};
-        
+
         cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function (err) {
             if ( err ) {
                 return done(err);
             }
 
-            var query = res.locals;
-            assert.deepEqual(config, query.config);
-            assert.equal('test', query.api_key);
-            assert.equal(undefined, query.non_included);
+            assert.deepEqual(config, req.query.config);
+            assert.equal('test', req.query.api_key);
+            assert.equal(undefined, req.query.non_included);
             done();
         });
     });
 
+    describe('Set apikey token', function(){
+        it('from query param', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost'
+                },
+                query: {
+                    api_key: '1234',
+                }
+            };
+            var res = {};
+            setCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+
+        it('from body param', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost'
+                },
+                body: {
+                    api_key: '1234',
+                }
+            };
+            var res = {};
+            setCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+
+        it('from http header', function (done) {
+            var req = {
+                headers: {
+                    host: 'localhost',
+                    authorization: 'Basic bG9jYWxob3N0OjEyMzQ=', // user: localhost, password: 1234
+                }
+            };
+            var res = {};
+            setCredentials(prepareRequest(req), prepareResponse(res), function (err) {
+                if (err) {
+                    return done(err);
+                }
+                var query = res.locals;
+
+                assert.equal('1234', query.api_key);
+                done();
+            });
+        });
+    });
 });

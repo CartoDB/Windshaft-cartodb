@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -7,6 +9,13 @@ var ServerOptions = require('./support/ported_server_options');
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('torque boundary points', function() {
+    var server;
+
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
+
     var layergroupIdToDelete = null;
 
     beforeEach(function() {
@@ -21,9 +30,6 @@ describe('torque boundary points', function() {
         keysToDelete[mapKey] = 0;
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
-
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
 
     var boundaryPointsMapConfig =  {
         version: '1.1.0',
@@ -237,7 +243,7 @@ describe('torque boundary points', function() {
             assert.response(server, {
                 url: '/database/windshaft_test/layergroup',
                 method: 'POST',
-                headers: {'Content-Type': 'application/json' },
+                headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(boundaryPointsMapConfig)
             }, {}, function (res, err) {
 
@@ -250,7 +256,10 @@ describe('torque boundary points', function() {
                 var partialUrl = tileRequest.z + '/' + tileRequest.x + '/' + tileRequest.y;
                 assert.response(server, {
                     url: '/database/windshaft_test/layergroup/' + expected_token + '/0/' + partialUrl + '.json.torque',
-                    method: 'GET'
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
                 }, {}, function (res, err) {
                     assert.ok(!err, 'Failed to get json');
 
@@ -351,7 +360,7 @@ describe('torque boundary points', function() {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'POST',
-            headers: {'Content-Type': 'application/json' },
+            headers: { host: 'localhost', 'Content-Type': 'application/json' },
             data: JSON.stringify(londonPointMapConfig)
         }, {}, function (res, err) {
             assert.ok(!err, 'Failed to create layergroup');
@@ -363,7 +372,10 @@ describe('torque boundary points', function() {
 
             assert.response(server, {
                 url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/2/1/1.json.torque',
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
             }, {}, function (res, err) {
                 assert.ok(!err, 'Failed to request torque.json');
 
@@ -414,7 +426,7 @@ describe('torque boundary points', function() {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'POST',
-            headers: {'Content-Type': 'application/json' },
+            headers: { host: 'localhost', 'Content-Type': 'application/json' },
             data: JSON.stringify(londonPointMapConfig)
         }, {}, function (res, err) {
             assert.ok(!err, 'Failed to create layergroup');
@@ -426,7 +438,10 @@ describe('torque boundary points', function() {
 
             assert.response(server, {
                 url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/13/4255/2765.json.torque',
-                method: 'GET'
+                method: 'GET',
+                headers: {
+                    host: 'localhost'
+                }
             }, {}, function (res, err) {
                 assert.ok(!err, 'Failed to request torque.json');
 

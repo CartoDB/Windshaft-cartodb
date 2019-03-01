@@ -1,7 +1,10 @@
+'use strict';
+
 require('../support/test_helper');
 
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
+const serverOptions = require('../../lib/cartodb/server_options');
 
 const timeoutErrorTilePath = `${process.cwd()}/assets/render-timeout-fallback.png`;
 
@@ -21,11 +24,23 @@ const validationPointSleepSql = `
         2 val
 `;
 
+const cartoCSSPoints = () => `
+// cache buster: ${Date.now()}
+#layer{
+  marker-placement: point;
+  marker-allow-overlap: true;
+  marker-line-opacity: 0.2;
+  marker-line-width: 0.5;
+  marker-opacity: 1;
+  marker-width: 5;
+  marker-fill: red;
+}`;
+
 const createMapConfig = ({
     version = '1.6.0',
     type = 'cartodb',
     sql = pointSleepSql,
-    cartocss = TestClient.CARTOCSS.POINTS,
+    cartocss = cartoCSSPoints(),
     cartocss_version = '2.3.0',
     interactivity = 'cartodb_id',
     countBy = 'cartodb_id',
@@ -67,12 +82,15 @@ const createMapConfig = ({
     }
 });
 
+const db_limit_error_message = 'You are over platform\'s limits: SQL query timeout error.' +
+    ' Refactor your query before running again or contact CARTO support for more details.';
+
 const DATASOURCE_TIMEOUT_ERROR = {
-    errors: ['You are over platform\'s limits. Please contact us to know more details'],
+    errors: [db_limit_error_message],
     errors_with_context: [{
         type: 'limit',
         subtype: 'datasource',
-        message: 'You are over platform\'s limits. Please contact us to know more details'
+        message: db_limit_error_message
     }]
 };
 
@@ -140,11 +158,11 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
+                        errors: [db_limit_error_message ],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: 'You are over platform\'s limits. Please contact us to know more details',
+                            message: db_limit_error_message,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -362,11 +380,11 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
+                        errors: [ db_limit_error_message ],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: 'You are over platform\'s limits. Please contact us to know more details',
+                            message: db_limit_error_message,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -376,7 +394,21 @@ describe('user database timeout limit', function () {
             });
         });
 
-        describe('fetching vector tiles', function () {
+        describe('fetching vector tiles via mapnik renderer', () => testFetchingVectorTiles(false));
+        describe('fetching vector tiles via postgis renderer', () => testFetchingVectorTiles(true));
+
+        function testFetchingVectorTiles(usePostGIS) {
+            const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
+            before(function () {
+                serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+            });
+
+            after(function () {
+                serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+            });
+
+
             beforeEach(function (done) {
                 const mapconfig = createMapConfig();
                 this.testClient = new TestClient(mapconfig, 1234);
@@ -438,7 +470,7 @@ describe('user database timeout limit', function () {
 
                 });
             });
-        });
+        }
     });
 
 
@@ -469,11 +501,11 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
+                        errors: [ db_limit_error_message ],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: 'You are over platform\'s limits. Please contact us to know more details',
+                            message: db_limit_error_message,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -573,11 +605,11 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
+                        errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: 'You are over platform\'s limits. Please contact us to know more details',
+                            message: db_limit_error_message,
                             layer: { id: 'torque-layer0', index: 0, type: 'torque' }
                         }]
                     });
@@ -704,11 +736,11 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ 'You are over platform\'s limits. Please contact us to know more details' ],
+                        errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: 'You are over platform\'s limits. Please contact us to know more details',
+                            message: db_limit_error_message,
                             layer: {
                                 id: 'layer0',
                                 index: 0,

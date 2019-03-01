@@ -1,15 +1,34 @@
+'use strict';
+
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
+const serverOptions = require('../../../lib/cartodb/server_options');
 
-describe('Create mapnik layergroup', function() {
+const suites = [
+    {
+        desc: 'mvt (mapnik)',
+        usePostGIS: false
+    },
+    {
+        desc: 'mvt (postgis)',
+        usePostGIS: true
+    }
+];
+
+suites.forEach(({desc, usePostGIS}) => {
+describe(`[${desc}] Create mapnik layergroup`, function() {
+    const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
     before(function() {
+        serverOptions.renderer.mvt.usePostGIS = usePostGIS;
         this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
         global.environment.enabledFeatures.layerStats = true;
     });
 
     after(function() {
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
         global.environment.enabledFeatures.layerStats = this.layerStatsConfig;
     });
 
@@ -49,7 +68,18 @@ describe('Create mapnik layergroup', function() {
             sql: [
                 'select t1.cartodb_id, t1.the_geom, t1.the_geom_webmercator, t2.address',
                 ' from test_table t1, test_table_2 t2',
-                ' where t1.cartodb_id = t2.cartodb_id;'
+                ' where t1.cartodb_id = t2.cartodb_id'
+            ].join(''),
+            cartocss_version: cartocssVersion,
+            cartocss: cartocss
+        }
+    };
+
+    var mapnikLayer100 = {
+        type: 'mapnik',
+        options: {
+            sql: [
+                'SELECT * FROM test_table_100'
             ].join(''),
             cartocss_version: cartocssVersion,
             cartocss: cartocss
@@ -74,6 +104,26 @@ describe('Create mapnik layergroup', function() {
         }
     };
 
+    var mapnikLayerNullCats = {
+        type: 'mapnik',
+        options: {
+            sql: `
+              WITH geom AS (
+                SELECT
+                  'SRID=4326;POINT(0 0)'::geometry AS the_geom,
+                  'SRID=3857;POINT(0 0)'::geometry AS the_geom_webmercator
+              )
+              SELECT 1 AS cartodb_id, 'A' As cat, geom.* FROM geom
+              UNION
+              SELECT 2 AS cartodb_id, 'B' As cat, geom.* FROM geom
+              UNION
+              SELECT 2 AS cartodb_id, NULL::text As cat, geom.* FROM geom
+            `,
+            cartocss_version: cartocssVersion,
+            cartocss: cartocss
+        }
+    };
+
     function mapnikBasicLayerId(index) {
         return 'layer' + index;
     }
@@ -90,7 +140,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
             testClient.drain(done);
@@ -107,7 +157,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
@@ -127,7 +177,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
@@ -147,7 +197,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
             testClient.drain(done);
@@ -164,7 +214,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
@@ -183,7 +233,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 3);
             assert.ok(!layergroup.metadata.layers[0].meta.stats[1]);
@@ -204,7 +254,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             assert.equal(layergroup.metadata.layers[0].type, 'mapnik');
             assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
@@ -224,7 +274,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function (err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
             assert.equal(layergroup.metadata.layers[0].type, 'http');
             assert.ok(!layergroup.metadata.layers[0].meta.cartocss);
@@ -245,7 +295,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
             // we don't care about stats here as is an aliased column
             assert.ok(layergroup.metadata.layers[0].meta.stats.hasOwnProperty('estimatedFeatureCount'));
@@ -265,7 +315,7 @@ describe('Create mapnik layergroup', function() {
         });
 
         testClient.getLayergroup(function(err, layergroup) {
-            assert.ok(!err);
+            assert.ifError(err);
             assert.equal(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
             assert.equal(layergroup.metadata.layers[0].type, 'http');
             assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
@@ -273,7 +323,313 @@ describe('Create mapnik layergroup', function() {
             assert.ok(!layergroup.metadata.layers[1].meta.hasOwnProperty('stats'));
             assert.equal(layergroup.metadata.layers[2].id, typeLayerId('http', 1));
             assert.equal(layergroup.metadata.layers[2].type, 'http');
+            global.environment.enabledFeatures.layerStats = true;
             testClient.drain(done);
         });
     });
+
+    function layerWithMetadata(layer, metadata) {
+        return Object.assign(layer, {
+            options: Object.assign(layer.options, { metadata })
+        });
+    }
+
+    it('should provide columns as optional metadata', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer4, {
+                    columns: true
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+            const expectedColumns = {
+                cartodb_id: { type: 'number' },
+                the_geom: { type: 'geometry' },
+                the_geom_webmercator: { type: 'geometry' },
+                address: { type: 'string' }
+            };
+            assert.deepEqual(layergroup.metadata.layers[0].meta.stats.columns, expectedColumns);
+            testClient.drain(done);
+        });
+    });
+
+    // metadata categories are ordered only partially by descending frequency;
+    // this orders them completely to avoid ambiguities when comparing
+    function withSortedCategories(columns) {
+        function catOrder(a, b) {
+            if (a.frequency !== b.frequency) {
+                return b.frequency - a.frequency;
+            }
+            if (a.category < b.category) {
+                return -1;
+            }
+            if (a.category > b.category) {
+                return +1;
+            }
+            return 0;
+        }
+        let sorted = {};
+        Object.keys(columns).forEach(name => {
+            let data = columns[name];
+            if (data.hasOwnProperty('categories')) {
+                data = Object.assign(data, { categories: data.categories.sort(catOrder)});
+            }
+            sorted[name] = data;
+        });
+        return sorted;
+    }
+
+    it('should provide column stats as optional metadata', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer4, {
+                    columnStats: true
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+            const expectedColumns = {
+                cartodb_id: {
+                    type: 'number',
+                    avg: 3,
+                    max: 5,
+                    min: 1,
+                    sum: 15
+                },
+                the_geom: { type: 'geometry' },
+                the_geom_webmercator: { type: 'geometry' },
+                address: {
+                    type: 'string',
+                    categories: [
+                        {
+                            category: "Calle de la Palma 72, Madrid, Spain",
+                            frequency: 1
+                        },
+                        {
+                            category: "Calle de Pérez Galdós 9, Madrid, Spain",
+                            frequency: 1
+                        },
+                        {
+                            category: "Calle Divino Pastor 12, Madrid, Spain",
+                            frequency: 1
+                        },
+                        {
+                            category: "Manuel Fernández y González 8, Madrid, Spain",
+                            frequency: 1
+                        },
+                        {
+                            category: "Plaza Conde de Toreno 2, Madrid, Spain",
+                            frequency: 1
+                        }
+                    ]
+                }
+            };
+            assert.deepEqual(
+                withSortedCategories(layergroup.metadata.layers[0].meta.stats.columns),
+                withSortedCategories(expectedColumns)
+            );
+            testClient.drain(done);
+        });
+    });
+
+    it('should limit the number of categories as requested', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer4, {
+                    columnStats: { topCategories: 2 }
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
+            assert.equal(columnsMetadata.address.categories.length, 2);
+            testClient.drain(done);
+        });
+    });
+
+    it('should include null categories if requested', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayerNullCats, {
+                    columnStats: { includeNulls: true }
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
+            assert.equal(columnsMetadata.cat.categories.length, 3);
+            testClient.drain(done);
+        });
+    });
+
+    it('should not include null categories if not requested', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayerNullCats, {
+                    columnStats: { includeNulls: false }
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
+            assert.equal(columnsMetadata.cat.categories.length, 2);
+            testClient.drain(done);
+        });
+    });
+
+    it('should provide row count as optional metadata', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer4, {
+                    featureCount: true
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats.featureCount, 5);
+            testClient.drain(done);
+        });
+    });
+
+    it('should provide geometry type as optional metadata', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer4, {
+                    geometryType: true
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, 'ST_Point');
+            testClient.drain(done);
+        });
+    });
+
+    it(`should not fail "TypeError: ... 'geom_type' of undefined" for empty results`, function(done) {
+        var testClient = new TestClient({
+            version: '1.8.0',
+            layers: [
+                {
+                    type: 'mapnik',
+                    options: {
+                        sql: 'select * from test_table where false',
+                        metadata: {
+                            geometryType: true
+                        }
+                    }
+                }
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, undefined);
+            testClient.drain(done);
+        });
+    });
+
+    it('should provide a sample as optional metadata', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer100, {
+                    sample: { num_rows: 30 }
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
+            assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
+            const expectedCols = [ 'cartodb_id', 'value', 'the_geom', 'the_geom_webmercator' ].sort();
+            assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
+            testClient.drain(done);
+        });
+    });
+
+    it('can specify sample columns', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer100, {
+                    sample: {
+                        num_rows: 30,
+                        include_columns:  [ 'cartodb_id', 'the_geom' ]
+                    }
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
+            assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
+            const expectedCols = [ 'cartodb_id', 'the_geom' ].sort();
+            assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
+            testClient.drain(done);
+        });
+    });
+
+
+    it('should only provide requested optional metadata', function(done) {
+        var testClient = new TestClient({
+            version: '1.4.0',
+            layers: [
+                layerWithMetadata(mapnikLayer4, {
+                    geometryType: true,
+                    featureCount: true
+                })
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, 'ST_Point');
+            assert.equal(layergroup.metadata.layers[0].meta.stats.featureCount, 5);
+            assert.equal(layergroup.metadata.layers[0].meta.stats.sample, undefined);
+            assert.equal(layergroup.metadata.layers[0].meta.stats.columns, undefined);
+            testClient.drain(done);
+        });
+    });
+
+});
 });

@@ -1,3 +1,5 @@
+'use strict';
+
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -8,9 +10,12 @@ var testClient = require('./support/test_client');
 var TestClient = require('../../support/test-client');
 
 describe('multilayer error cases', function() {
+    var server;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     // var client = null;
     afterEach(function(done) {
@@ -24,7 +29,10 @@ describe('multilayer error cases', function() {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded' }
+            headers: {
+                host: 'localhost',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
         }, {}, function(res) {
             assert.equal(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
@@ -37,7 +45,10 @@ describe('multilayer error cases', function() {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'POST',
-            headers: {'Content-Type': 'application/json' }
+            headers: {
+                host: 'localhost',
+                'Content-Type': 'application/json'
+            }
         }, {}, function(res) {
             assert.equal(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
@@ -50,7 +61,10 @@ describe('multilayer error cases', function() {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup?callback=test',
             method: 'POST',
-            headers: {'Content-Type': 'application/json' }
+            headers: {
+                host: 'localhost',
+                'Content-Type': 'application/json'
+            }
         }, {}, function(res) {
             assert.equal(res.statusCode, 200);
             assert.equal(
@@ -65,27 +79,30 @@ describe('multilayer error cases', function() {
     });
 
     it("layergroup with no cartocss_version", function(done) {
-      var layergroup =  {
-        version: '1.0.0',
-        layers: [
-           { options: {
-               sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
-               cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-               geom_column: 'the_geom'
-             } }
-        ]
-      };
-      assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
-          method: 'POST',
-          headers: {'Content-Type': 'application/json' },
-          data: JSON.stringify(layergroup)
-      }, {}, function(res) {
-          assert.equal(res.statusCode, 400, res.body);
-          var parsedBody = JSON.parse(res.body);
-          assert.deepEqual(parsedBody.errors, ["Missing cartocss_version for layer 0 options"]);
-          done();
-      });
+        var layergroup =  {
+            version: '1.0.0',
+            layers: [
+            { options: {
+                sql: 'select cartodb_id, ST_Translate(the_geom, 50, 0) as the_geom from test_table limit 2',
+                cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
+                geom_column: 'the_geom'
+                } }
+            ]
+        };
+        assert.response(server, {
+            url: '/database/windshaft_test/layergroup',
+            method: 'POST',
+            headers: {
+                host: 'localhost',
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(layergroup)
+        }, {}, function(res) {
+            assert.equal(res.statusCode, 400, res.body);
+            var parsedBody = JSON.parse(res.body);
+            assert.deepEqual(parsedBody.errors, ["Missing cartocss_version for layer 0 options"]);
+            done();
+        });
     });
 
     it("sql/cartocss combination errors", function(done) {
@@ -98,17 +115,18 @@ describe('multilayer error cases', function() {
             geom_column: 'the_geom'
         }}]
       };
-      ServerOptions.afterLayergroupCreateCalls = 0;
       assert.response(server, {
           url: '/database/windshaft_test/layergroup',
           method: 'POST',
-          headers: {'Content-Type': 'application/json' },
+          headers: {
+              host: 'localhost',
+              'Content-Type': 'application/json'
+          },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
         try {
           assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
           // See http://github.com/CartoDB/Windshaft/issues/159
-          assert.equal(ServerOptions.afterLayergroupCreateCalls, 0);
           var parsed = JSON.parse(res.body);
           assert.ok(parsed);
           assert.equal(parsed.errors.length, 1);
@@ -149,12 +167,9 @@ describe('multilayer error cases', function() {
           }}
         ]
       };
-      ServerOptions.afterLayergroupCreateCalls = 0;
       this.client = new TestClient(layergroup);
       this.client.getLayergroup({ response: { status: 400 } }, function(err, parsed) {
         assert.ok(!err, err);
-        // See http://github.com/CartoDB/Windshaft/issues/159
-        assert.equal(ServerOptions.afterLayergroupCreateCalls, 0);
         assert.ok(parsed);
         assert.equal(parsed.errors.length, 1);
         var error = parsed.errors[0];
@@ -186,7 +201,10 @@ describe('multilayer error cases', function() {
       assert.response(server, {
           url: '/database/windshaft_test/layergroup',
           method: 'POST',
-          headers: {'Content-Type': 'application/json' },
+          headers: {
+            host: 'localhost',
+            'Content-Type': 'application/json'
+          },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
         try {
@@ -222,7 +240,10 @@ describe('multilayer error cases', function() {
       assert.response(server, {
           url: '/database/windshaft_test/layergroup',
           method: 'POST',
-          headers: {'Content-Type': 'application/json' },
+          headers: {
+              host: 'localhost',
+              'Content-Type': 'application/json'
+          },
           data: JSON.stringify(layergroup)
       }, {}, function(res) {
         try {
@@ -264,7 +285,10 @@ describe('multilayer error cases', function() {
         assert.response(server, {
             url: '/database/windshaft_test/layergroup',
             method: 'POST',
-            headers: {'Content-Type': 'application/json' },
+            headers: {
+                host: 'localhost',
+                'Content-Type': 'application/json'
+            },
             data: JSON.stringify(layergroup)
         }, {}, function(res) {
             assert.equal(res.statusCode, 400, res.body);
@@ -367,7 +391,10 @@ describe('multilayer error cases', function() {
           assert.response(server, {
               url: '/database/windshaft_test/layergroup/deadbeef/0/0/0/0.grid.json',
               method: 'GET',
-              encoding: 'binary'
+              encoding: 'binary',
+              headers: {
+                  host: 'localhost'
+              }
           }, {}, function(res, err) { next(err, res); });
         },
         function checkResponse(err, res) {

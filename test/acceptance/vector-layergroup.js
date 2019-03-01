@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 const assert = require('../support/assert');
@@ -67,17 +69,16 @@ const INVALID_FORMAT_ERROR = {
     ]
 };
 
-const suites = [{
-    desc: 'mvt (mapnik)',
-    usePostGIS: false
-}];
-
-if (process.env.POSTGIS_VERSION === '2.4') {
-    suites.push({
+const suites = [
+    {
+        desc: 'mvt (mapnik)',
+        usePostGIS: false
+    },
+    {
         desc: 'mvt (postgis)',
         usePostGIS: true
-    });
-}
+    }
+];
 
 suites.forEach((suite) => {
     const { desc, usePostGIS } = suite;

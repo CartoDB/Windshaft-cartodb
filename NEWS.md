@@ -1,8 +1,191 @@
 # Changelog
 
-## 5.3.2
-Released yyyy-mm-dd
- - Upgrades Windshaft to 4.5.3
+## 7.0.1
+Released 2019-mm-dd
+
+
+## 7.0.0
+Released 2019-02-22
+
+Breaking changes:
+- Drop support for Node.js 6
+- Drop support for npm 3
+- Stop supporting `yarn.lock`
+- Drop support for Postgres 9.5
+- Drop support for PosGIS 2.2
+- Drop support for Redis 3
+
+Announcements:
+- In configuration, set `clipByBox2d` to true by default
+- Update docs: compatible Node.js and npm versions
+- Report fine-grained Garbage Collector stats
+- Adding Authorization to Access-Control-Allow-Headers (https://github.com/CartoDB/CartoDB-SQL-API/issues/534)
+- Update deps:
+  - windshaft@4.13.1: Upgrade tilelive-mapnik to version 0.6.18-cdb18
+  - camshaft@0.63.4: Improve error message for exceeded batch SQL API payload size: add suggestions about what the user can do about it.
+- Update dev deps:
+  - jshint@2.9.7
+  - mocha@5.2.0
+- Be able to customize max waiting workers parameter
+- Handle 'max waitingClients count exceeded' error as "429, You are over platform's limits"
+
+## 6.5.1
+Released 2018-12-26
+
+Bug Fixes:
+- Update carto-package.json
+
+## 6.5.0
+Released 2018-12-26
+
+New features
+- Suport Node.js 10
+- Configure travis to run docker tests against Node.js 6 & 10 versions
+- Aggregation time dimensions
+- Update sample configurations to use PostGIS to generate MVT's by default (as in production)
+- Upgrades Windshaft to [4.12.1](https://github.com/CartoDB/Windshaft/blob/4.12.1/NEWS.md#version-4121)
+  - `pg-mvt`: Use `query-rewriter` to compose the query to render a MVT tile. If not defined, it will use a Default Query Rewriter.
+  - `pg-mvt`: Fix bug while building query and there is no columns defined for the layer.
+  - `pg-mvt`: Accept trailing semicolon in input queries.
+  - `Renderer Cache Entry`: Do not throw errors for integrity checks.
+  - Fix bug when releasing the renderer cache entry in some scenarios.
+  - Upgrade grainstore to [1.10.0](https://github.com/CartoDB/grainstore/releases/tag/1.10.0)
+- Upgrade cartodb-redis to [2.1.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/2.1.0)
+- Upgrade cartodb-query-tables to [0.4.0](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.4.0)
+- Upgrade cartodb-psql to [0.13.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.13.1)
+- Upgrade turbo-carto to [0.21.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.21.0)
+- Upgrade camshaft to [0.63.1](https://github.com/CartoDB/camshaft/releases/tag/0.63.1)
+- Upgrade redis-mpool to [0.7.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.7.0)
+
+Bug Fixes:
+- Prevent from uncaught exception: Range filter Error from camshaft when getting analysis query.
+- Make all modules to use strict mode semantics.
+
+## 6.4.0
+Released 2018-09-24
+
+- Upgrades Camshaft to [0.62.3](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
+  - Build query from node's cache to compute output columns when building analysis
+  - Adds metadata columns for street level geocoding
+- Remove use of `step` module to handle asynchronous code, now it's defined as development dependency.
+- Bug Fixes: (#1020)
+  - Fix bug in date-wrapper regarding columns with spaces
+  - Fix bug in aggregation-query regarding columns with spaces
+- Upgrades Windshaft to [4.10.0](https://github.com/CartoDB/Windshaft/blob/4.10.0/NEWS.md#version-4100)
+  - `pg-mvt`:
+    - Now matches the behaviour of the `mapnik` renderer for MVTs.
+    - Removed undocummented filtering by `layer.options.columns`.
+    - Implement timeout in getTile.
+    - Several bugfixes.
+  - Dependency updates: Fixed a bug in Mapnik MVT renderer and cleanup in `tilelive-mapnik`.
+  - [MapConfig 1.8.0 released](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.8.0.md) with new options for MVTs:
+    - Add **`vector_extent`** option in MapConfig to setup the layer extent.
+    - Add **`vector_simplify_extent`** option in MapConfig to configure the simplification process.
+  - Remove use of `step` module to handle asynchronous code, now it's defined as development dependency.
+
+## 6.3.0
+Released 2018-07-26
+
+- Upgrades Camshaft to [0.62.1](https://github.com/CartoDB/camshaft/releases/tag/0.62.1):
+  - Support for batch street-level geocoding. [0.62.1](https://github.com/CartoDB/camshaft/releases/tag/0.62.1)
+
+## 6.2.0
+Released 2018-07-20
+
+Notice:
+- This release changes the way that authentication works internally. You'll need to run `bundle exec rake carto:api_key:create_default` in your development environment to keep working.
+
+New features:
+- CI tests with Ubuntu Xenial + PostgreSQL 10.1 and Ubuntu Precise + PostgreSQL 9.5
+- Upgrades Windshaft to [4.8.3](https://github.com/CartoDB/Windshaft/blob/4.8.3/NEWS.md#version-483) which includes:
+  - Update internal deps.
+  - A fix in mapnik-vector-tile to avoid grouping together properties with the same value but a different type.
+  - Performance improvements in the marker symbolizer (local cache, avoid building the collision matrix when possible).
+  - MVT: Disable simplify_distance to avoid multiple simplifications.
+  - Fix a bug with zero length lines not being rendered when using the marker symbolizer.
+  - Reduce size of npm package
+  - Omit attributes validation in layers with aggregation to avoid potentially long instantiation times
+- Upgrades Camshaft to [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11):
+  - Use Dollar-Quoted String Constants to avoid Syntax Error while running moran analyses. [0.61.10](https://github.com/CartoDB/camshaft/releases/tag/0.61.10)
+  - Quote name columns when performing trade area analysis to avoid Syntax Errors. [0.61.11](https://github.com/CartoDB/camshaft/releases/tag/0.61.11)
+- Update other deps:
+  - body-parser: 1.18.3
+  - cartodb-psql: 0.11.0
+  - cartodb-redis: 2.0.1
+  - dot: 1.1.2
+  - express: 4.16.3
+  - lru-cache: 4.1.3
+  - node-statsd: 0.1.1,
+  - queue-async: 1.1.0
+  - request: 2.87.0
+  - semver: 5.5.0
+  - step: 1.0.0
+  - turbo-carto: 0.20.4
+  - yargs: 11.1.0
+- Update devel deps:
+  - istanbul: 0.4.5
+  - jshint: 2.9.5
+  - mocha: 3.5.3
+  - moment: 2.22.1
+  - nock: 9.2.6
+  - strftime: 0.10.0
+- Optional instantiation metadata stats (https://github.com/CartoDB/Windshaft-cartodb/pull/952)
+- Experimental dates_as_numbers support
+- Tiles base urls with api key
+
+Bug Fixes:
+- Validates tile coordinates (z/x/y) from request params to be a valid integer value.
+- Static maps fails for unsupported formats
+- Handling errors extracting the column type on dataviews
+- Fix `meta.stats.estimatedFeatureCount` for aggregations and queries with tokens
+- Fix numeric histogram bounds when `start` and `end` are specified (#991)
+- Static maps filters correctly if `layer` option is passed in the url.
+- Aggregation doesn't return out-of-tile, partially aggregated clusters
+- Aggregation was not accurate for high zoom, far away from the origin tiles
+
+Announcements:
+  * Improve error message when the DB query is over the user's limits
+
+## 6.1.0
+Released 2018-04-16
+
+New features:
+- Aggreation filters
+- Upgrades Windshaft to 4.7.0, which includes @carto/mapnik v3.6.2-carto.7 with improvements to metrics and markers caching. It also adds an option to disable the markers symbolizer caches in mapnik.
+
+Bug Fixes:
+- Non-default aggregation selected the wrong columns (e.g. for vector tiles)
+- Aggregation dimensions with alias where broken
+- cartodb_id was not unique accross aggregated vector tiles
+
+## 6.0.0
+Released 2018-03-19
+Backward incompatible changes:
+ - Needs Redis v4
+
+New features:
+ - Upgrades camshaft to 0.61.8
+ - Upgrades cartodb-redis to 1.0.0
+ - Rate limit feature (disabled by default)
+ - Fixes for tests with PG11
+
+## 5.4.0
+Released 2018-03-15
+ - Upgrades Windshaft to 4.5.7 ([Mapnik top metrics](https://github.com/CartoDB/Windshaft/pull/597), [AttributesBackend allows multiple features if all the attributes are the same](https://github.com/CartoDB/Windshaft/pull/602))
+ - Implemented middleware to authorize users via new Api Key system
+ - Keep the old authorization system as fallback
+ - Aggregation widget: Remove NULL categories in 'count' aggregations too
+ - Update request to 2.85.0
+ - Update camshaft to 0.61.4 (Fixes for AOI and Merge analyses)
+ - Update windshaft to 4.6.0, which in turn updates @carto/mapnik to 3.6.2-carto.4 and related dependencies. It brings in a cache for rasterized symbols. See https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto/CHANGELOG.carto.md#362-carto4
+ - PostGIS: Variables in postgis SQL queries must now additionally be wrapped in `!` (refs [#29](https://github.com/CartoDB/mapnik/issues/29), [mapnik/#3618](https://github.com/mapnik/mapnik/pull/3618)):
+```sql
+-- Before
+SELECT ... WHERE trait = @variable
+
+-- Now
+SELECT ... WHERE trait = !@variable!
+```
 
 ## 5.3.1
 Released 2018-02-13

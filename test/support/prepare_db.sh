@@ -16,15 +16,18 @@ DOWNLOAD_SQL_FILES=yes
 PG_PARALLEL=$(pg_config --version | (awk '{$2*=1000; if ($2 >= 9600) print 1; else print 0;}' 2> /dev/null || echo 0))
 
 while [ -n "$1" ]; do
-  if test "$1" = "--skip-pg"; then
+  OPTION=$(echo "$1" | tr -d '[:space:]')
+  if [[ "$OPTION" == "--skip-pg" ]]; then
     PREPARE_PGSQL=no
     shift; continue
-  elif test "$1" = "--skip-redis"; then
+  elif [[ "$OPTION" == "--skip-redis" ]]; then
     PREPARE_REDIS=no
     shift; continue
-  elif test "$1" = "--no-sql-download"; then
+  elif [[ "$OPTION" == "--no-sql-download" ]]; then
     DOWNLOAD_SQL_FILES=no
     shift; continue
+  else
+    shift; continue;
   fi
 done
 
@@ -76,15 +79,15 @@ if test x"$PREPARE_PGSQL" = xyes; then
   dropdb "${TEST_DB}"
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
 
-  LOCAL_SQL_SCRIPTS='analysis_catalog windshaft.test gadm4 ported/populated_places_simple_reduced cdb_analysis_check cdb_invalidate_varnish'
+  LOCAL_SQL_SCRIPTS='analysis_catalog windshaft.test gadm4 countries_null_values ported/populated_places_simple_reduced cdb_analysis_check cdb_invalidate_varnish'
   REMOTE_SQL_SCRIPTS='CDB_QueryStatements CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_ZoomFromScale CDB_OverviewsSupport CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ CDB_EstimateRowCount CDB_RectangleGrid'
 
-  CURL_ARGS=""
-  for i in ${REMOTE_SQL_SCRIPTS}
-  do
-    CURL_ARGS="${CURL_ARGS}\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql "
-  done
   if test x"$DOWNLOAD_SQL_FILES" = xyes; then
+    CURL_ARGS=""
+    for i in ${REMOTE_SQL_SCRIPTS}
+    do
+        CURL_ARGS="${CURL_ARGS}\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql "
+    done
     echo "Downloading and updating: ${REMOTE_SQL_SCRIPTS}"
     echo ${CURL_ARGS} | xargs curl -L -s
   fi
@@ -93,13 +96,6 @@ if test x"$PREPARE_PGSQL" = xyes; then
   ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
   for i in ${ALL_SQL_SCRIPTS}
   do
-    # Strip PARALLEL labels for PostgreSQL releases before 9.6
-    if [ $PG_PARALLEL -eq 0 ]; then
-        TMPFILE=$(mktemp /tmp/$(basename $0).XXXXXXXX)
-        sed -e 's/PARALLEL \= [A-Z]*,/''/g' \
-            -e 's/PARALLEL [A-Z]*/''/g' sql/$i.sql > $TMPFILE
-        mv $TMPFILE sql/$i.sql
-    fi
     cat sql/${i}.sql |
       sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
       sed "s/:PUBLICUSER/${PUBLICUSER}/" |
@@ -131,11 +127,85 @@ HMSET rails:users:cartodb250user id ${TESTUSERID} \
                                  map_key 4321
 EOF
 
+
   cat <<EOF | redis-cli -p ${REDIS_PORT} -n 0
 HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"
 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"
 EOF
 
 fi
+
+# API keys ==============================
+
+# User localhost -----------------------
+
+# API Key Master
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:1234 \
+    user "localhost" \
+    type "master" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "${TESTUSER}" \
+    database_password "${TESTPASS}"
+EOF
+
+# API Key Default public
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:default_public \
+    user "localhost" \
+    type "default" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
+# API Key Regular
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:regular1 \
+    user "localhost" \
+    type "regular" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_regular1" \
+    database_password "regular1"
+EOF
+
+# API Key Regular 2 no Maps API access, only to check grants permissions to the API
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:localhost:regular2 \
+    user "localhost" \
+    type "regular" \
+    grants_sql "true" \
+    grants_maps "false" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
+# User cartodb250user -----------------------
+
+# API Key Master
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:cartodb250user:4321 \
+    user "localhost" \
+    type "master" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "${TESTUSER}" \
+    database_password "${TESTPASS}"
+EOF
+
+# API Key Default
+cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5
+  HMSET api_keys:cartodb250user:default_public \
+    user "localhost" \
+    type "default" \
+    grants_sql "true" \
+    grants_maps "true" \
+    database_role "test_windshaft_publicuser" \
+    database_password "public"
+EOF
+
 
 echo "Finished preparing data. Ready to run tests"

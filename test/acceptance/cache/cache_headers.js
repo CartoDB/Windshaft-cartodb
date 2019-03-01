@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -5,12 +7,17 @@ var qs = require('querystring');
 
 var CartodbWindshaft = require('../../../lib/cartodb/server');
 var serverOptions = require('../../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
 
 describe('get requests with cache headers', function() {
+    var server;
+
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
+
 
     var keysToDelete;
     beforeEach(function() {
@@ -155,6 +162,7 @@ describe('get requests with cache headers', function() {
 
             assert.ok(res.headers['x-cache-channel']);
             assert.ok(res.headers['surrogate-key']);
+            assert.equal(res.headers.vary, 'Authorization');
             if (expectedCacheHeaders) {
                 validateXChannelHeaders(res.headers, expectedCacheHeaders);
                 assert.equal(res.headers['surrogate-key'], expectedCacheHeaders.surrogate_keys);

@@ -1,3 +1,5 @@
+'use strict';
+
 var assert      = require('../support/assert');
 var _           = require('underscore');
 var redis       = require('redis');
@@ -18,8 +20,6 @@ var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
 
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var server = new CartodbWindshaft(serverOptions);
-server.setMaxListeners(0);
 
 var QueryTables = require('cartodb-query-tables');
 
@@ -27,7 +27,12 @@ var QueryTables = require('cartodb-query-tables');
 
 var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
 describe(suiteName, function() {
+    var server;
 
+    before(function () {
+        server = new CartodbWindshaft(serverOptions);
+        server.setMaxListeners(0);
+    });
 
     var keysToDelete;
 
@@ -1272,6 +1277,8 @@ describe(suiteName, function() {
     it("cache control for layergroup default value", function(done) {
         global.environment.varnish.layergroupTtl = null;
 
+        var server = new CartodbWindshaft(serverOptions);
+
         assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
             function(res) {
                 assert.equal(res.headers['cache-control'], 'public,max-age=86400,must-revalidate');
@@ -1286,6 +1293,8 @@ describe(suiteName, function() {
     it("cache control for layergroup uses configuration for max-age", function(done) {
         var layergroupTtl = 300;
         global.environment.varnish.layergroupTtl = layergroupTtl;
+
+        var server = new CartodbWindshaft(serverOptions);
 
         assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
             function(res) {
@@ -1336,7 +1345,7 @@ describe(suiteName, function() {
                 status: 403
             },
             function(res) {
-                assert.ok(res.body.match(/permission denied for relation test_table_private_1/));
+                assert.ok(res.body.match(/permission denied for .+?test_table_private_1/));
                 done();
             }
         );

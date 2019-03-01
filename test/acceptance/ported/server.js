@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -6,9 +8,12 @@ var ServerOptions = require('./support/ported_server_options');
 var testClient = require('./support/test_client');
 
 describe('server', function() {
+    var server;
 
-    var server = cartodbServer(ServerOptions);
-    server.setMaxListeners(0);
+    before(function () {
+        server = cartodbServer(ServerOptions);
+        server.setMaxListeners(0);
+    });
 
     after(function() {
         testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);

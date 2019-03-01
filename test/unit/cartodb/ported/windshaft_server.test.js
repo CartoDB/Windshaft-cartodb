@@ -1,6 +1,7 @@
+'use strict';
+
 require('../../../support/test_helper.js');
 
-var _ = require('underscore');
 var assert = require('assert');
 var cartodbServer = require('../../../../lib/cartodb/server');
 var serverOptions = require('../../../../lib/cartodb/server_options');
@@ -30,15 +31,7 @@ describe('windshaft', function() {
             function(){
                 var ws = cartodbServer({unbuffered_logging:true});
                 ws.listen();
-            }, /Cannot read property 'mapnik' of undefined/
+            }, /Must initialise server with/
         );
     });
-
-    it('options are set on main windshaft object',  function(){
-        var ws = cartodbServer(serverOptions);
-        assert.ok(_.isObject(ws.bind));
-        assert.ok(_.isObject(ws.grainstore));
-        assert.equal(ws.base_url, '/tiles/:table');
-    });
-
 });
