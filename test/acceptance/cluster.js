@@ -403,7 +403,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -418,7 +418,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -433,7 +433,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -448,7 +448,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -463,7 +463,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -478,7 +478,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -493,7 +493,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -508,7 +508,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -526,7 +526,7 @@ describe('cluster', function () {
                     columns: [ 'type' ],
                     expressions: {
                         max_value: {
-                            aggregated_function: 'max',
+                            aggregate_function: 'max',
                             aggregated_column: 'value',
                         }
                     }
@@ -567,7 +567,7 @@ describe('cluster', function () {
         });
     });
 
-    describe('invalid aggregation', function () {
+    describe.only('invalid aggregation', function () {
         const expectedColumnsError = {
             errors:[ 'Invalid aggregation input, columns should be and array of column names' ],
             errors_with_context:[
@@ -592,6 +592,57 @@ describe('cluster', function () {
                         type: 'cartodb'
                     },
                     message: 'Invalid aggregation input, expressions should be and object with valid functions',
+                    subtype: 'aggregation',
+                    type: 'layer'
+                }
+            ]
+        };
+
+        const invalidFunctionExpressionsError = {
+            errors:[ 'function wadus(integer) does not exist' ],
+            errors_with_context:[
+                {
+                    message: 'function wadus(integer) does not exist',
+                    type: 'unknown'
+                }
+            ]
+        };
+
+        const invalidColumnExpressionsError = {
+            errors:[ 'column \"wadus\" does not exist' ],
+            errors_with_context:[
+                {
+                    message: 'column \"wadus\" does not exist',
+                    type: 'unknown'
+                }
+            ]
+        };
+
+
+        const expectedAggregatedColumnError = {
+            errors:[ 'Invalid aggregation input, aggregated column should be an string' ],
+            errors_with_context:[
+                {
+                    layer: {
+                        index: '0',
+                        type: 'cartodb'
+                    },
+                    message: 'Invalid aggregation input, aggregated column should be an string',
+                    subtype: 'aggregation',
+                    type: 'layer'
+                }
+            ]
+        };
+
+        const expectedAggregateFunctionError = {
+            errors:[ 'Invalid aggregation input, aggregate function should be an string' ],
+            errors_with_context:[
+                {
+                    layer: {
+                        index: '0',
+                        type: 'cartodb'
+                    },
+                    message: 'Invalid aggregation input, aggregate function should be an string',
                     subtype: 'aggregation',
                     type: 'layer'
                 }
@@ -686,10 +737,75 @@ describe('cluster', function () {
                 resolution: 1,
                 aggregation: { columns: [ 'type' ], expressions: null },
                 expected: expectedExpressionsError
+            },
+            {
+                description: 'invalid aggregation function should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregate_function: 'wadus',
+                            aggregated_column: 'value'
+                        }
+                    }
+                },
+                expected: invalidFunctionExpressionsError
+            },
+            {
+                description: 'invalid aggregation column should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregate_function: 'max',
+                            aggregated_column: 'wadus'
+                        }
+                    }
+                },
+                status: 404,
+                expected: invalidColumnExpressionsError
+            },
+            {
+                description: 'aggregated column as non string should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregate_function: 'max',
+                            aggregated_column: 1
+                        }
+                    }
+                },
+                expected: expectedAggregatedColumnError
+            },
+            {
+                description: 'aggregate function as non string should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregate_function: 1,
+                            aggregated_column: 'value'
+                        }
+                    }
+                },
+                expected: expectedAggregateFunctionError
             }
         ];
 
-        suite.forEach(({ description, zoom, cartodb_id, resolution, aggregation, expected }) => {
+        suite.forEach(({ description, zoom, cartodb_id, resolution, aggregation, expected, status = 400 }) => {
             it(description, function (done) {
                 const mapConfig = createVectorMapConfig([{
                     type: 'cartodb',
@@ -704,9 +820,7 @@ describe('cluster', function () {
                 const testClient = new TestClient(mapConfig);
                 const layerId = 0;
                 const params = {
-                    response: {
-                        status: 400
-                    },
+                    response: { status },
                     aggregation
                 };
 
