@@ -690,7 +690,12 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
 
             var next = this;
 
-            url = '/api/v1/map/' + layergroupId + '/' + layerId + '/' + zoom + '/cluster/' + clusterId;
+            let queryParams = '';
+            if (params.aggregation) {
+                queryParams = qs.stringify({ aggregation: JSON.stringify(params.aggregation) });
+            }
+
+            url = `/api/v1/map/${layergroupId}/${layerId}/${zoom}/cluster/${clusterId}?${queryParams}`;
 
             assert.response(self.server,
                 {

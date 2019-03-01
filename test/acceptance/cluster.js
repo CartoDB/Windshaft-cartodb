@@ -10,7 +10,11 @@ const POINTS_SQL_1 = `
         x + 4 as cartodb_id,
         st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
         st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
-        x as value
+        x as value,
+        CASE
+            WHEN x % 2 = 0 THEN 'even'
+            ELSE 'odd'
+        END AS type
     from generate_series(-3, 3) x
 `;
 
@@ -58,14 +62,14 @@ describe('cluster', function () {
                 }
 
                 assert.deepStrictEqual(body, {
-                    errors:[ 'Map d725a568ab961af8197d311eececb83a has no aggregation defined for layer 0' ],
+                    errors:[ 'Map c502fc8fc1cb0d5e412db3deabffeee5 has no aggregation defined for layer 0' ],
                     errors_with_context:[
                         {
                             layer: {
                                 index: '0',
                                 type: 'cartodb'
                             },
-                            message: 'Map d725a568ab961af8197d311eececb83a has no aggregation defined for layer 0',
+                            message: 'Map c502fc8fc1cb0d5e412db3deabffeee5 has no aggregation defined for layer 0',
                             subtype: 'aggregation',
                             type: 'layer'
                         }
@@ -100,14 +104,14 @@ describe('cluster', function () {
                 }
 
                 assert.deepStrictEqual(body, {
-                    errors:[ 'Map 3a09728f8c08444820336ea9983ce92b has no aggregation defined for layer 0' ],
+                    errors:[ 'Map 18792467ae296929d04e32dfe7f81a80 has no aggregation defined for layer 0' ],
                     errors_with_context:[
                         {
                             layer: {
                                 index: '0',
                                 type: 'cartodb'
                             },
-                            message: 'Map 3a09728f8c08444820336ea9983ce92b has no aggregation defined for layer 0',
+                            message: 'Map 18792467ae296929d04e32dfe7f81a80 has no aggregation defined for layer 0',
                             subtype: 'aggregation',
                             type: 'layer'
                         }
@@ -125,95 +129,95 @@ describe('cluster', function () {
                 zoom: 0,
                 cartodb_id: 1,
                 resolution: 0.5,
-                expected: [ { cartodb_id: 1, value: -3 } ]
+                expected: [ { cartodb_id: 1, value: -3, type: 'odd' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 2,
                 resolution: 0.5,
-                expected: [ { cartodb_id: 2, value: -2 } ]
+                expected: [ { cartodb_id: 2, value: -2, type: 'even' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 3,
                 resolution: 0.5,
-                expected: [ { cartodb_id: 3, value: -1 } ]
+                expected: [ { cartodb_id: 3, value: -1, type: 'odd' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 4,
                 resolution: 0.5,
-                expected: [ { cartodb_id: 4, value: 0 } ]
+                expected: [ { cartodb_id: 4, value: 0, type: 'even' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 5,
                 resolution: 0.5,
-                expected: [ { cartodb_id: 5, value: 1 } ]
+                expected: [ { cartodb_id: 5, value: 1, type: 'odd' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 6,
                 resolution: 0.5,
-                expected: [ { cartodb_id: 6, value: 2 } ]
+                expected: [ { cartodb_id: 6, value: 2, type: 'even' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 7,
                 resolution: 0.5,
-                expected: [ { cartodb_id: 7, value: 3 } ]
+                expected: [ { cartodb_id: 7, value: 3, type: 'odd' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 1,
                 resolution: 1,
-                expected: [ { cartodb_id: 1, value: -3 } ]
+                expected: [ { cartodb_id: 1, value: -3, type: 'odd' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 2,
                 resolution: 1,
-                expected: [ { cartodb_id: 2, value: -2 } ]
+                expected: [ { cartodb_id: 2, value: -2, type: 'even' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 3,
                 resolution: 1,
-                expected: [ { cartodb_id: 3, value: -1 } ]
+                expected: [ { cartodb_id: 3, value: -1, type: 'odd' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 4,
                 resolution: 1,
-                expected: [ { cartodb_id: 4, value: 0 } ]
+                expected: [ { cartodb_id: 4, value: 0, type: 'even' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 5,
                 resolution: 1,
-                expected: [ { cartodb_id: 5, value: 1 } ]
+                expected: [ { cartodb_id: 5, value: 1, type: 'odd' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 6,
                 resolution: 1,
-                expected: [ { cartodb_id: 6, value: 2 } ]
+                expected: [ { cartodb_id: 6, value: 2, type: 'even' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 7,
                 resolution: 1,
-                expected: [ { cartodb_id: 7, value: 3 } ]
+                expected: [ { cartodb_id: 7, value: 3, type: 'odd' } ]
             },
             {
                 zoom: 0,
                 cartodb_id: 1,
                 resolution: 50,
                 expected: [
-                    { cartodb_id: 1, value: -3 },
-                    { cartodb_id: 2, value: -2 },
-                    { cartodb_id: 3, value: -1 },
-                    { cartodb_id: 4, value: 0 },
+                    { cartodb_id: 1, value: -3, type: 'odd' },
+                    { cartodb_id: 2, value: -2, type: 'even' },
+                    { cartodb_id: 3, value: -1, type: 'odd' },
+                    { cartodb_id: 4, value: 0, type: 'even' },
                 ]
             },
             {
@@ -221,62 +225,62 @@ describe('cluster', function () {
                 cartodb_id: 5,
                 resolution: 50,
                 expected: [
-                    { cartodb_id: 5, value: 1 },
-                    { cartodb_id: 6, value: 2 },
-                    { cartodb_id: 7, value: 3 }
+                    { cartodb_id: 5, value: 1, type: 'odd' },
+                    { cartodb_id: 6, value: 2, type: 'even' },
+                    { cartodb_id: 7, value: 3, type: 'odd' }
                 ]
             },
             {
                 zoom: 1,
                 cartodb_id: 1,
                 resolution: 1,
-                expected: [ { cartodb_id: 1, value: -3 } ]
+                expected: [ { cartodb_id: 1, value: -3, type: 'odd' } ]
             },
             {
                 zoom: 1,
                 cartodb_id: 2,
                 resolution: 1,
-                expected: [ { cartodb_id: 2, value: -2 } ]
+                expected: [ { cartodb_id: 2, value: -2, type: 'even' } ]
             },
             {
                 zoom: 1,
                 cartodb_id: 3,
                 resolution: 1,
-                expected: [ { cartodb_id: 3, value: -1 } ]
+                expected: [ { cartodb_id: 3, value: -1, type: 'odd' } ]
             },
             {
                 zoom: 1,
                 cartodb_id: 4,
                 resolution: 1,
-                expected: [ { cartodb_id: 4, value: 0 } ]
+                expected: [ { cartodb_id: 4, value: 0, type: 'even' } ]
             },
             {
                 zoom: 1,
                 cartodb_id: 5,
                 resolution: 1,
-                expected: [ { cartodb_id: 5, value: 1 } ]
+                expected: [ { cartodb_id: 5, value: 1, type: 'odd' } ]
             },
             {
                 zoom: 1,
                 cartodb_id: 6,
                 resolution: 1,
-                expected: [ { cartodb_id: 6, value: 2 } ]
+                expected: [ { cartodb_id: 6, value: 2, type: 'even' } ]
             },
             {
                 zoom: 1,
                 cartodb_id: 7,
                 resolution: 1,
-                expected: [ { cartodb_id: 7, value: 3 } ]
+                expected: [ { cartodb_id: 7, value: 3, type: 'odd' } ]
             },
             {
                 zoom: 1,
                 cartodb_id: 1,
                 resolution: 50,
                 expected: [
-                    { cartodb_id: 1, value: -3 },
-                    { cartodb_id: 2, value: -2 },
-                    { cartodb_id: 3, value: -1 },
-                    { cartodb_id: 4, value: 0 },
+                    { cartodb_id: 1, value: -3, type: 'odd' },
+                    { cartodb_id: 2, value: -2, type: 'even'},
+                    { cartodb_id: 3, value: -1, type: 'odd' },
+                    { cartodb_id: 4, value: 0, type: 'even' },
                 ]
             },
             {
@@ -284,9 +288,9 @@ describe('cluster', function () {
                 cartodb_id: 5,
                 resolution: 50,
                 expected: [
-                    { cartodb_id: 5, value: 1 },
-                    { cartodb_id: 6, value: 2 },
-                    { cartodb_id: 7, value: 3 }
+                    { cartodb_id: 5, value: 1, type: 'odd' },
+                    { cartodb_id: 6, value: 2, type: 'even' },
+                    { cartodb_id: 7, value: 3, type: 'odd' }
                 ]
             }
         ];
@@ -314,6 +318,109 @@ describe('cluster', function () {
                     }
 
                     assert.deepStrictEqual(body.rows, expected);
+                    testClient.drain(done);
+                });
+            });
+        });
+    });
+
+    describe('map-config w/o aggregation', function () {
+        const suite = [
+            {
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: ['type'] },
+                expected: [ { _cdb_feature_count: 1, type: 'odd' } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 2,
+                resolution: 1,
+                aggregation: { columns: ['type'] },
+                expected: [ { _cdb_feature_count: 1, type: 'even' } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 3,
+                resolution: 1,
+                aggregation: { columns: ['type'] },
+                expected: [ { _cdb_feature_count: 1, type: 'odd' } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 4,
+                resolution: 1,
+                aggregation: { columns: ['type'] },
+                expected: [ { _cdb_feature_count: 1, type: 'even' } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 5,
+                resolution: 1,
+                aggregation: { columns: ['type'] },
+                expected: [ { _cdb_feature_count: 1, type: 'odd' } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 6,
+                resolution: 1,
+                aggregation: { columns: ['type'] },
+                expected: [ { _cdb_feature_count: 1, type: 'even' } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 7,
+                resolution: 1,
+                aggregation: { columns: ['type'] },
+                expected: [ { _cdb_feature_count: 1, type: 'odd' } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 50,
+                aggregation: { columns: ['type'] },
+                expected: [
+                    { _cdb_feature_count: 2, type: 'even' },
+                    { _cdb_feature_count: 2, type: 'odd' }
+                ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 5,
+                resolution: 50,
+                aggregation: { columns: ['type'] },
+                expected: [
+                    { _cdb_feature_count: 1, type: 'even' },
+                    { _cdb_feature_count: 2, type: 'odd' }
+                ]
+            }
+        ];
+
+
+        suite.forEach(({ zoom, cartodb_id, resolution, aggregation, expected }) => {
+            it('should return features aggregated by type', function (done) {
+                const mapConfig = createVectorMapConfig([{
+                    type: 'cartodb',
+                    options: {
+                        sql: POINTS_SQL_1,
+                        aggregation: {
+                            threshold: 1,
+                            resolution
+                        }
+                    }
+                }]);
+                const testClient = new TestClient(mapConfig);
+                const layerId = 0;
+                const params = { aggregation };
+
+                testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(body.rows, expected);
+
                     testClient.drain(done);
                 });
             });
