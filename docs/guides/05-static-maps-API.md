@@ -11,7 +11,7 @@ Begin by instantiating either a Named or Anonymous Map using the `layergroupid t
 ##### Definition
 
 ```bash
-GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}{{?}extra_options}
+GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}
 ```
 
 ##### Params
