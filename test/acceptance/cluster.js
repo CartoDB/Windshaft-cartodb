@@ -324,7 +324,7 @@ describe('cluster', function () {
         });
     });
 
-    describe('map-config w/o aggregation', function () {
+    describe('with aggregation', function () {
         const suite = [
             {
                 zoom: 0,
@@ -397,7 +397,6 @@ describe('cluster', function () {
             }
         ];
 
-
         suite.forEach(({ zoom, cartodb_id, resolution, aggregation, expected }) => {
             it('should return features aggregated by type', function (done) {
                 const mapConfig = createVectorMapConfig([{
@@ -420,6 +419,162 @@ describe('cluster', function () {
                     }
 
                     assert.deepStrictEqual(body.rows, expected);
+
+                    testClient.drain(done);
+                });
+            });
+        });
+    });
+
+    describe('invalid aggregation', function () {
+        const expectedColumnsError = {
+            errors:[ 'Invalid aggregation input, columns should be and array of column names' ],
+            errors_with_context:[
+                {
+                    layer: {
+                        index: '0',
+                        type: 'cartodb'
+                    },
+                    message: 'Invalid aggregation input, columns should be and array of column names',
+                    subtype: 'aggregation',
+                    type: 'layer'
+                }
+            ]
+        };
+
+        const expectedExpressionsError = {
+            errors:[ 'Invalid aggregation input, expressions should be and object with expressions' ],
+            errors_with_context:[
+                {
+                    layer: {
+                        index: '0',
+                        type: 'cartodb'
+                    },
+                    message: 'Invalid aggregation input, expressions should be and object with expressions',
+                    subtype: 'aggregation',
+                    type: 'layer'
+                }
+            ]
+        };
+
+        const suite = [
+            {
+                description: 'empty aggregation object should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: {},
+                expected: expectedColumnsError
+            },
+            {
+                description: 'empty aggregation array should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: [],
+                expected: expectedColumnsError
+            },
+            {
+                description: 'aggregation as string should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: 'wadus',
+                expected: expectedColumnsError
+            },
+            {
+                description: 'empty columns array should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: [] },
+                expected: expectedColumnsError
+            },
+            {
+                description: 'empty columns object should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: {} },
+                expected: expectedColumnsError
+            },
+            {
+                description: 'columns as string should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: 'wadus' },
+                expected: expectedColumnsError
+            },
+            {
+                description: 'columns as null should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: null },
+                expected: expectedColumnsError
+            },
+            {
+                description: 'empty expressions array should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: [ 'type' ], expressions: [] },
+                expected: expectedExpressionsError
+            },
+            {
+                description: 'empty expressions number should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: [ 'type' ], expressions: 1 },
+                expected: expectedExpressionsError
+            },
+            {
+                description: 'expressions as string should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: [ 'type' ], expressions: 'wadus' },
+                expected: expectedExpressionsError
+            },
+            {
+                description: 'expressions as null should respond with error',
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: { columns: [ 'type' ], expressions: null },
+                expected: expectedExpressionsError
+            }
+        ];
+
+        suite.forEach(({ description, zoom, cartodb_id, resolution, aggregation, expected }) => {
+            it(description, function (done) {
+                const mapConfig = createVectorMapConfig([{
+                    type: 'cartodb',
+                    options: {
+                        sql: POINTS_SQL_1,
+                        aggregation: {
+                            threshold: 1,
+                            resolution
+                        }
+                    }
+                }]);
+                const testClient = new TestClient(mapConfig);
+                const layerId = 0;
+                const params = {
+                    response: {
+                        status: 400
+                    },
+                    aggregation
+                };
+
+                testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(body, expected);
 
                     testClient.drain(done);
                 });
