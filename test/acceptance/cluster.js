@@ -36,7 +36,7 @@ function createVectorMapConfig (layers = defaultLayers) {
 }
 
 describe('cluster', function () {
-    describe('map-config w/o aggregation', function () {
+    describe('w/o aggregation', function () {
         it('should return error while fetching disaggregated features', function (done) {
             const mapConfig = createVectorMapConfig([{
                 type: 'cartodb',
@@ -123,7 +123,7 @@ describe('cluster', function () {
         });
     });
 
-    describe('map-config with aggregation', function () {
+    describe('fetch features within a cluster grid', function () {
         const suite = [
             {
                 zoom: 0,
@@ -324,7 +324,7 @@ describe('cluster', function () {
         });
     });
 
-    describe('with aggregation', function () {
+    describe('valid aggregation input', function () {
         const suite = [
             {
                 zoom: 0,
@@ -567,7 +567,7 @@ describe('cluster', function () {
         });
     });
 
-    describe('invalid aggregation', function () {
+    describe('invalid aggregation input', function () {
         const expectedColumnsError = {
             errors:[ 'Invalid aggregation input, columns should be and array of column names' ],
             errors_with_context:[
