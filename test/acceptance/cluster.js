@@ -394,6 +394,147 @@ describe('cluster', function () {
                     { _cdb_feature_count: 1, type: 'even' },
                     { _cdb_feature_count: 2, type: 'odd' }
                 ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [ { _cdb_feature_count: 1, type: 'odd', max_value: -3 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 2,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [ { _cdb_feature_count: 1, type: 'even', max_value: -2 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 3,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [ { _cdb_feature_count: 1, type: 'odd', max_value: -1 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 4,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [ { _cdb_feature_count: 1, type: 'even', max_value: 0 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 5,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [ { _cdb_feature_count: 1, type: 'odd', max_value: 1 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 6,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [ { _cdb_feature_count: 1, type: 'even', max_value: 2 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 7,
+                resolution: 1,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [ { _cdb_feature_count: 1, type: 'odd', max_value: 3 } ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 1,
+                resolution: 50,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [
+                    { _cdb_feature_count: 2, type: 'even', max_value: 0 },
+                    { _cdb_feature_count: 2, type: 'odd', max_value: -1 }
+                ]
+            },
+            {
+                zoom: 0,
+                cartodb_id: 5,
+                resolution: 50,
+                aggregation: {
+                    columns: [ 'type' ],
+                    expressions: {
+                        max_value: {
+                            aggregated_function: 'max',
+                            aggregated_column: 'value',
+                        }
+                    }
+                },
+                expected: [
+                    { _cdb_feature_count: 1, type: 'even', max_value: 2 },
+                    { _cdb_feature_count: 2, type: 'odd', max_value: 3 }
+                ]
             }
         ];
 
@@ -443,14 +584,14 @@ describe('cluster', function () {
         };
 
         const expectedExpressionsError = {
-            errors:[ 'Invalid aggregation input, expressions should be and object with expressions' ],
+            errors:[ 'Invalid aggregation input, expressions should be and object with valid functions' ],
             errors_with_context:[
                 {
                     layer: {
                         index: '0',
                         type: 'cartodb'
                     },
-                    message: 'Invalid aggregation input, expressions should be and object with expressions',
+                    message: 'Invalid aggregation input, expressions should be and object with valid functions',
                     subtype: 'aggregation',
                     type: 'layer'
                 }
