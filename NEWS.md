@@ -1,7 +1,10 @@
 # Changelog
 
-## 7.0.1
+## 7.1.0
 Released 2019-mm-dd
+
+Announcements:
+- Experimental support for listing features in a grid when the map uses the dynamic agregation.
 
 
 ## 7.0.0
