@@ -567,7 +567,7 @@ describe('cluster', function () {
         });
     });
 
-    describe.only('invalid aggregation', function () {
+    describe('invalid aggregation', function () {
         const expectedColumnsError = {
             errors:[ 'Invalid aggregation input, columns should be and array of column names' ],
             errors_with_context:[
