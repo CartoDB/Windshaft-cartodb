@@ -1,24 +1,26 @@
 ## Static Maps API
 
-The Static Maps API can be initiated using both Named and Anonymous Maps using the 'layergroupid' token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
+The Static Maps API can be initiated using both Named and Anonymous Maps using the `layergroupid` token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
 
 ### Maps API endpoints
 
-Begin by instantiating either a Named or Anonymous Map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
+Begin by instantiating either a Named or Anonymous Map using the `layergroupid` token as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
 
 #### Zoom + center
 
 ##### Definition
 
 ```bash
-GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}
+{% raw %}
+  GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}{{?}extra_options}
+{% endraw %}
 ```
 
 ##### Params
 
 Param | Description
 --- | ---
-token | the layergroupid token from the map instantiation
+token | the `layergroupid` token from the map instantiation
 z | the zoom level of the map
 lat | the latitude for the center of the map
 
@@ -38,7 +40,7 @@ GET /api/v1/map/static/bbox/{token}/{bbox}/{width}/{height}.{format}`
 
 Param | Description
 --- | ---
-token | the layergroupid token from the map instantiation
+token | the `layergroupid` token from the map instantiation
 
 bbox | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
 --- | ---
@@ -145,7 +147,7 @@ Additionally, static images from Torque maps and other map layers can be used to
 
 #### Caching
 
-It is important to note that generated images are cached from the live data referenced with the `layergroupid token` on the specified CARTO account. This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. To obtain a static snapshot of the map as it is today and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
+It is important to note that generated images are cached from the live data referenced with the `layergroupid` token on the specified CARTO account. This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. To obtain a static snapshot of the map as it is today and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
 
 #### Limits
 
