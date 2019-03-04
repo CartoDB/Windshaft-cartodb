@@ -90,6 +90,26 @@ describe('histogram-dataview', function() {
         });
     });
 
+    it('should work with min >= start and max <= end, autodetect bins', function(done) {
+        var params = {
+            start: 50,
+            end: 500
+        };
+
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('pop_max_histogram', params, function(err, dataview) {
+            assert.ok(!err, err);
+
+            assert.ok(6 === dataview.bins_count, 'Unexpected bin count: ' + dataview.bins_count);
+            assert.ok(6 === dataview.bins.length, 'Unexpected number of bins: ' + dataview.bins.length);
+            dataview.bins.forEach(function(bin) {
+                assert.ok(bin.min >= params.start, 'bin min < start: ' + JSON.stringify(bin));
+                assert.ok(bin.max <= params.end, 'bin max > end: ' + JSON.stringify(bin));
+            });
+            done();
+        });
+    });
+
     it('should get bin_width right when max > min in filter', function(done) {
         var params = {
             bins: 10,
