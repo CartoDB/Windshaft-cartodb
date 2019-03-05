@@ -92,6 +92,8 @@ describe('aggregation', function () {
     from generate_series(-3, 3) x
     `;
 
+    const POINTS_OVER_THRESHOLD = 'SELECT * FROM test_table_200k';
+
     const POLYGONS_SQL_1 = `
     select
         x + 4 as cartodb_id,
@@ -666,7 +668,9 @@ describe('aggregation', function () {
                     {
                         type: 'cartodb',
                         options: {
-                            sql: POINTS_SQL_2,
+                            // Note that we need the table to have more than AggregationMapConfig.THRESHOLD rows
+                            // otherwise it won't get aggregated in any case
+                            sql: POINTS_OVER_THRESHOLD,
                             aggregation: false
                         }
                     }
