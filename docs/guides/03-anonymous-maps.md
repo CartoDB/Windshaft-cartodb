@@ -29,7 +29,7 @@ POST /api/v1/map
 }
 ```
 
-See [MapConfig File Formats](http://docs.carto.com/carto-engine/maps-api/mapconfig/) for details.
+See [MapConfig File Formats]({{site.mapsapi_docs}}/guides/MapConfig-file-format/) for details.
 
 ##### Response
 
@@ -149,7 +149,7 @@ The following example instantiates an anonymous map with layer options:
 
 **Note**: If no layer type is specified, Mapnik tiles are used by default. To access MVT tiles, specify `https://{username}.cartodb.com/api/v1/map/HASH/{z}/{x}/{y}.mvt` as the `maps_api_template` variable.
 
-**Tip:** If you are using [Named Maps](https://carto.com/docs/carto-engine/maps-api/named-maps/) to instantiate a layer, indicate the MVT file format and layer in the response:
+**Tip:** If you are using [Named Maps]({{site.mapasapi_docs}}/guides/named-maps/) to instantiate a layer, indicate the MVT file format and layer in the response:
 
 ```bash
 https://{username}.cartodb.com/api/v1/map/named/:templateId/:layer/{z}/{x}/{y}.mvt
@@ -223,7 +223,7 @@ cartocss: "...",
 
 5) Request Tiles (from CARTO) and Set to Map Object (Mapbox):
 
-**Note:** By default, [CARTO core functions](https://carto.com/docs/carto-engine/carto-js/core-api/) retrieve URLs for fully rendered tiles. You must replace the default format (.png) with the MVT format (.mvt).
+**Note:** By default, [CARTO core functions]({{site.cartojs_docs}}/v3/guides/core-API-functionality/) retrieve URLs for fully rendered tiles. You must replace the default format (.png) with the MVT format (.mvt).
 
 
 ```bash

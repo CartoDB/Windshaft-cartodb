@@ -5,7 +5,7 @@ https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.4.0.md. However
 
 ## MapConfig File Format
 
-CARTO uses Windshaft as the map tiler library to render multilayer maps with the [Maps API]({{ site.baseurl }}/carto-engine/maps-api/). The MapConfig file is where these Windshaft layers are stored and applied. You can configure tiles and use the MapConfig document to request different resources for your map.
+CARTO uses Windshaft as the map tiler library to render multilayer maps with the [Maps API]({{ site.mapsapi_docs }}/). The MapConfig file is where these Windshaft layers are stored and applied. You can configure tiles and use the MapConfig document to request different resources for your map.
 
 This section describes the MapConfig specifications, and required formats, when using the Maps API.
 
@@ -91,14 +91,14 @@ Mapnik Layer Option | Description | Optional or Required?
 
 ### Torque Layer Options
 
-If you are using Torque as a layer resource, the following configurations are required in your MapConfig file. For more details about Torque layers in general, see the [Torque API]({{ site.baseurl }}/carto-engine/torque/torqueapi/#torque-api) documentation.
+If you are using Torque as a layer resource, the following configurations are required in your MapConfig file. For more details about Torque layers in general, see the [Torque API]({{ site.torque_docs}}/reference/) documentation.
 
 Torque Layer Option | Description | Optional or Required?
 --- | ---
 `sql` | A string value, the SQL request to the user database that will fetch the rendered data.<br /><br />**Tip:** The SQL request should include the following Torque layer configurations: `geom_column`, `interactivity`, and `attributes`, as described in this section. | Required
 `cartocss` | A string value, specifying the CartoCSS style to render the tiles.<br /><br />**Note:** The CartoCSS specification is dependent on the layer type. For details, see [Torque cartocss-reference.js](https://github.com/CartoDB/torque/blob/master/lib/torque/cartocss_reference.js).| Required
 `cartocss_version` | A string value, specifying the CartoCSS style version of the CartoCSS attribute.<br /><br />**Note:** The CartoCSS version is specific to the layer type. | Required
-`step` | The number of [animation steps]({{ site.baseurl }}/carto-engine/cartocss/properties-for-torque/#torque-frame-count-number) to render when requesting a torque.png tile. The default value is `0`. | Optional
+`step` | The number of [animation steps]({{site.styling_cartocss}}/-#torque-frame-count-number) to render when requesting a torque.png tile. The default value is `0`. | Optional
 `geom_column` | The name of the column containing the geometry. The default is `the_geom_webmercator`.<br /><br />*You must specify this value as part of the Torque layer `SQL`configuration. | *Optional
 `srid` | The spatial reference identifier for the geometry column. The default is `3857`. | Optional
 `affected_tables` | A string of values containing the tables that the Mapnik layer `SQL` configuration is using. This value is used if there is a problem guessing what the affected tables are from the SQL configuration (i.e. when using PL/SQL functions). | Optional
@@ -169,7 +169,7 @@ Plain Layer Option | Description | Optional or Required?
 
 ### Named Map Layer Options
 
-You can use a [Named Map]({{ site.baseurl }}/carto-engine/maps-api/named-maps/#named-maps) as a map layer. Note the following limitations before referencing the MapConfig options for a Named Map layer.
+You can use a [Named Map]({{site.mapsapi_docs}}/guides/named-maps/) as a map layer. Note the following limitations before referencing the MapConfig options for a Named Map layer.
 
 _**Limitations:**_
 
@@ -201,7 +201,7 @@ Named Layer Option | Description | Optional or Required?
 
 ### Aggregation Options
 
-The data used to render tiles, or contained in the tiles (for the case of vector tiles), can be spatially [aggregated](https://carto.com/docs/carto-engine/maps-api/named-maps/) under some circumstances.
+The data used to render tiles, or contained in the tiles (for the case of vector tiles), can be spatially [aggregated]({{site.mapsapi_docs}}/guides/named-maps/) under some circumstances.
 
 An `aggregation` attribute can be used in the layer `options` to control the aggregation. A value of `false` will disable aggregation for the layer. Otherwise, an object can be passed with the following aggregation parameters:
 
@@ -250,7 +250,7 @@ Parameter|Description|Default value
 
 ### MapConfig Requirements
 
-All of these are MapConfig requirements for [Anonymous Maps]({{ site.baseurl }}/carto-engine/maps-api/anonymous-maps/#retrieve-resources-from-the-layergroup).
+All of these are MapConfig requirements for [Anonymous Maps]({{site.mapsapi_docs}}/guides/anonymous-maps/#retrieve-resources-from-the-layergroup).
 
 - Identified by `{z}/{x}/{y}` path
 

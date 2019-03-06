@@ -136,7 +136,7 @@ of the original dataset applying three different aggregate functions.
 
 #### `resolution`
 
-Defines the cell-size of the spatial aggregation grid. This is equivalent to the [CartoCSS `-torque-resolution`](https://carto.com/docs/carto-engine/cartocss/properties-for-torque/#-torque-resolution-float) property of Torque maps.
+Defines the cell-size of the spatial aggregation grid. This is equivalent to the [CartoCSS `-torque-resolution`]({{site.styling_cartocss}}/#-torque-resolution-float) property of Torque maps.
 
 The aggregation cells are `resolution`×`resolution` pixels in size, where pixels here are defined to be 1/256 of the (linear) size of a tile.
 The default value is 1, so that aggregation coincides with raster pixels. A value of 2 would make each cell to be 4 (2×2) pixels, and a value of

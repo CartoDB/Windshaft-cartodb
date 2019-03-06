@@ -81,7 +81,7 @@ format | the format for the image, supported types: `png`, `jpg`
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
-A Named Maps static image will get its constraints from the [`view` argument of the Create Named Map function](http://docs.carto.com/carto-engine/maps-api/named-maps/#arguments). If `view` is not defined, it will estimate the extent based on the involved tables, otherwise it fallbacks to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
+A Named Maps static image will get its constraints from the [`view` argument of the Create Named Map function]({{site.mapasapi_docs}}/guides/named-maps/). If `view` is not defined, it will estimate the extent based on the involved tables, otherwise it fallbacks to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
 
 ##### Layers
 
@@ -127,7 +127,7 @@ By manipulating the `"urlTemplate"` custom basemaps can be used in generating st
 
 **CARTO**
 
-As described in the [MapConfig File Format](http://docs.carto.com/carto-engine/maps-api/mapconfig/), a "cartodb" type layer is now just an alias to a "mapnik" type layer as above, intended for backwards compatibility.
+As described in the [MapConfig File Format]({{site.mapsapi_docs}}/guides/MapConfig-file-format/), a "cartodb" type layer is now just an alias to a "mapnik" type layer as above, intended for backwards compatibility.
 
 ```javascript
 {
