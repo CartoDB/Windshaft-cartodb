@@ -694,6 +694,66 @@ describe('aggregation', function () {
                 });
             });
 
+            it('use default aggregation by setting `aggregation: true`', function (done) {
+                const mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_OVER_THRESHOLD,
+                            cartocss: '#layer { marker-width: 7; }',
+                            cartocss_version: '2.3.0',
+                            aggregation: true
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, true);
+                    assert.equal(body.metadata.layers[0].meta.aggregation.png, true);
+
+                    done();
+                });
+            });
+
+            it('but do not aggregate below threshold by setting `aggregation: true`', function (done) {
+                const mapConfig = createVectorMapConfig([
+                    {
+                        type: 'cartodb',
+                        options: {
+                            sql: POINTS_SQL_2,
+                            cartocss: '#layer { marker-width: 7; }',
+                            cartocss_version: '2.3.0',
+                            aggregation: true
+                        }
+                    }
+                ]);
+
+                this.testClient = new TestClient(mapConfig);
+
+                this.testClient.getLayergroup((err, body) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.equal(typeof body.metadata, 'object');
+                    assert.ok(Array.isArray(body.metadata.layers));
+
+                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, false);
+                    assert.equal(body.metadata.layers[0].meta.aggregation.png, false);
+
+                    done();
+                });
+            });
+
             it('when the aggregation param is not valid should respond with error', function (done) {
                 const mapConfig = createVectorMapConfig([
                     {
