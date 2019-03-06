@@ -486,7 +486,7 @@ You can use a Named Map that you created (which is defined by its `name`), to cr
 
 **Note:** Instantiating a Named Map over a `createLayer` does not require an API Key and by default, does not include auth tokens. _If_ you defined auth tokens for the Named Map configuration, then you will have to include them.
 
-[CARTO.js]({{site.cartojs_docs/v3/}) has methods for accessing your Named Maps.
+[CARTO.js]({{site.cartojs_docs}}/v3/) has methods for accessing your Named Maps.
 
 1. [layer.setParams()]({{site.cartojs_docs}}/v3/reference/#layersetparamskey-value) allows you to change the template variables (in the placeholders object) via JavaScript
 
