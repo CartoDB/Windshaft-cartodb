@@ -1,14 +1,16 @@
-# 1. Purpose
+## MapConfig Aggregation Extension
+
+### 1. Purpose
 
 This specification describes an extension for
 [MapConfig 1.7.0](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.7.0.md) version.
 
 
-# 2. Changes over specification
+### 2. Changes over specification
 
 This extension introduces a new layer options for aggregated data tile generation.
 
-## 2.1 Aggregation options
+#### 2.1 Aggregation options
 
 The layer options attribute is extended with a new optional `aggregation` attribute.
 The value of this attribute can be `false` to explicitly disable aggregation for the layer.
@@ -55,8 +57,8 @@ The value of this attribute can be `false` to explicitly disable aggregation for
 }
 ```
 
-# History
+### History
 
-## 1.0.0
+#### 1.0.0
 
  - Initial version

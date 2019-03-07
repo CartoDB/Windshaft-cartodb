@@ -1,24 +1,24 @@
-# Static Maps API
+## Static Maps API
 
-The Static Maps API can be initiated using both Named and Anonymous Maps using the 'layergroupid' token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
+The Static Maps API can be initiated using both Named and Anonymous Maps using the `layergroupid` token. The API can be used to create static images of parts of maps and thumbnails for use in web design, graphic design, print, field work, and many other applications that require standard image formats.
 
-## Maps API endpoints
+### Maps API endpoints
 
-Begin by instantiating either a Named or Anonymous Map using the `layergroupid token` as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
+Begin by instantiating either a Named or Anonymous Map using the `layergroupid` token as demonstrated in the Maps API documentation above. The `layergroupid` token calls to the map and allows for parameters in the definition to generate static images.
 
-### Zoom + center
+#### Zoom + center
 
-#### Definition
+##### Definition
 
 ```bash
-GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}{{?}extra_options}
+{% raw %}GET /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format}{{?}extra_options}{% endraw %}
 ```
 
-#### Params
+##### Params
 
 Param | Description
 --- | ---
-token | the layergroupid token from the map instantiation
+token | the `layergroupid` token from the map instantiation
 z | the zoom level of the map
 lat | the latitude for the center of the map
 
@@ -26,19 +26,19 @@ format | the format for the image, supported types: `png`, `jpg`
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
-### Bounding Box
+#### Bounding Box
 
-#### Definition
+##### Definition
 
 ```bash
 GET /api/v1/map/static/bbox/{token}/{bbox}/{width}/{height}.{format}`
 ```
 
-#### Params
+##### Params
 
 Param | Description
 --- | ---
-token | the layergroupid token from the map instantiation
+token | the `layergroupid` token from the map instantiation
 
 bbox | the bounding box in WGS 84 (EPSG:4326), comma separated values for:
 --- | ---
@@ -57,19 +57,19 @@ Note: you can see this endpoint as
 ```bash
 GET /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}`
 ```
-
 #### Extra options
  * Layer: List of layers to be shown in the image (by default `all`), for example `?layer=0,1`.
 
-### Named Map
 
-#### Definition
+#### Named Map
+
+##### Definition
 
 ```bash
 GET /api/v1/map/static/named/{name}/{width}/{height}.{format}
 ```
 
-#### Params
+##### Params
 
 Param | Description
 --- | ---
@@ -81,9 +81,9 @@ format | the format for the image, supported types: `png`, `jpg`
 --- | ---
 &#124;_ jpg | will have a default quality of 85.
 
-A Named Maps static image will get its constraints from the [`view` argument of the Create Named Map function](http://docs.carto.com/carto-engine/maps-api/named-maps/#arguments). If `view` is not defined, it will estimate the extent based on the involved tables, otherwise it fallbacks to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
+A Named Maps static image will get its constraints from the [`view` argument of the Create Named Map function]({{site.mapasapi_docs}}/guides/named-maps/). If `view` is not defined, it will estimate the extent based on the involved tables, otherwise it fallbacks to `"zoom": 1`, `"lng": 0` and `"lat": 0`.
 
-#### Layers
+##### Layers
 
 The Static Maps API allows for multiple layers of incorporation into the `MapConfig` to allow for maximum versatility in creating a static map. The examples below were used to generate the static image example in the next section, and appear in the specific order designated.
 
@@ -127,7 +127,7 @@ By manipulating the `"urlTemplate"` custom basemaps can be used in generating st
 
 **CARTO**
 
-As described in the [MapConfig File Format](http://docs.carto.com/carto-engine/maps-api/mapconfig/), a "cartodb" type layer is now just an alias to a "mapnik" type layer as above, intended for backwards compatibility.
+As described in the [MapConfig File Format]({{site.mapsapi_docs}}/guides/MapConfig-file-format/), a "cartodb" type layer is now just an alias to a "mapnik" type layer as above, intended for backwards compatibility.
 
 ```javascript
 {
@@ -143,11 +143,11 @@ As described in the [MapConfig File Format](http://docs.carto.com/carto-engine/m
 Additionally, static images from Torque maps and other map layers can be used together to generate highly customizable and versatile static maps.
 
 
-### Caching
+#### Caching
 
-It is important to note that generated images are cached from the live data referenced with the `layergroupid token` on the specified CARTO account. This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. To obtain a static snapshot of the map as it is today and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
+It is important to note that generated images are cached from the live data referenced with the `layergroupid` token on the specified CARTO account. This means that if the data changes, the cached image will also change. When linking dynamically, it is important to take into consideration the state of the data and longevity of the static image to avoid broken images or changes in how the image is displayed. To obtain a static snapshot of the map as it is today and preserve the image long-term regardless of changes in data, the image must be saved and stored locally.
 
-### Limits
+#### Limits
 
 * While images can encompass an entirety of a map, the limit for pixel range is 8192 x 8192.
 * Image resolution is set to 72 DPI
@@ -159,21 +159,21 @@ It is important to note that generated images are cached from the live data refe
 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attributions">CARTO</a>
 {% endhighlight %}
 
-## Examples
+### Examples
 
 After instantiating a map from a CARTO account:
 
-#### Call
+##### Call
 
 ```bash
  GET /api/v1/map/static/center/{layergroupid}/{z}/{x}/{y}/{width}/{height}.png
 ```
 
-#### Response
+##### Response
 
 <p class="wrap-border"><img src="https://raw.githubusercontent.com/namessanti/Pictures/master/static_api.png" alt="static-api"/></p>
 
-### MapConfig
+#### MapConfig
 
 For this map, the multiple layers, order, and stylings are defined by the MapConfig.
 

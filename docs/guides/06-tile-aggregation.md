@@ -1,4 +1,4 @@
-# Tile Aggregation
+## Tile Aggregation
 
 To be able to represent a large amount of data (say, hundred of thousands to millions of points) in a tile. This can be useful both for raster tiles (where the aggregation reduces the number of features to be rendered) and vector tiles (the tile contais less features).
 
@@ -6,7 +6,7 @@ Aggregation is available only for point geometries. During aggregation the point
  - The position of the aggregated point is controlled by the `placement` parameter.
  - The aggregated rows always contain at least a column, named `_cdb_feature_count`, which contains the number of the original points that the aggregated point represents.
 
-### Special default aggregation
+#### Special default aggregation
 
 When no placement or columns are specified a special default aggregation is performed.
 
@@ -16,13 +16,13 @@ Regarding the randomness of the sample: currently we use the row with the minimu
 
 The rationale behind having this special aggregation with all the original columns is to provide a mostly transparent way to handle large datasets without having to provide special map configurations for those cases (i.e. preserving the logic used to produce the maps with smaller datasets). [Overviews have been used so far with this intent](https://carto.com/docs/tips-and-tricks/back-end-data-performance/), but they are inflexible.
 
-### User defined aggregations
+#### User defined aggregations
 
 When either a explicit placement or columns are requested we no longer use the special, query; we use one determined by the placement (which will default to "centroid"), and it will have as columns only the aggregated columns specified, in addition to `_cdb_feature_count`, which is always present.
 
 We might decide in the future to allow sampling column values for any of the different placement modes.
 
-### Behaviour for raster and vector tiles
+#### Behaviour for raster and vector tiles
 
 The vector tiles from a vector-only map will be aggregated by default.
 However, Raster tiles (or vector tiles from a map which defines CartoCSS styles) will be aggregated only upon request.
@@ -79,7 +79,7 @@ layer will be aggregated when tiles are requested, both for vector (mvt) and ras
 }
 ```
 
-## Aggregation parameters
+### Aggregation parameters
 
 The aggregation parameters for a layer are defined inside an `aggregation` option of the layer:
 
@@ -96,24 +96,24 @@ The aggregation parameters for a layer are defined inside an `aggregation` optio
 }
 ```
 
-### `placement`
+#### `placement`
 
 Determines the kind of aggregated geometry generated:
 
-#### `point-sample`
+##### `point-sample`
 
 This is the default placement. It will place the aggregated point at a random sample of the grouped points,
 like the default aggregation does. No other attribute is sampled, though, the point will contain the aggregated attributes determined by the `columns` parameter.
 
-#### `point-grid`
+##### `point-grid`
 
 Generates points at the center of the aggregation grid cells (squares).
 
-#### `centroid`
+##### `centroid`
 
 Generates points with the averaged coordinated of the grouped points (i.e. the points inside each grid cell).
 
-### `columns`
+#### `columns`
 
 The aggregated attributes defined by `columns` are computed by a applying an _aggregate function_ to all the points in each group.
 Valid aggregate functions are `sum`, `avg` (average), `min` (minimum), `max` (maximum) and `mode` (the most frequent value in the group).
@@ -134,13 +134,9 @@ of the original dataset applying three different aggregate functions.
 
 > Note that you can use the original column names as names of the result, but all the result column names must be unique.  In particular, the names `cartodb_id`, `the_geom`, `the_geom_webmercator` and `_cdb_feature_count` cannot be used for aggregated columns, as they correspond to columns always present in the result.
 
-#### Limitations:
-* The iso text format does not admit `starting` or `count` parameters
-* Cyclic units (day of the week, etc.) don't admit `count` or `starting` either.
+#### `resolution`
 
-### `resolution`
-
-Defines the cell-size of the spatial aggregation grid. This is equivalent to the [CartoCSS `-torque-resolution`](https://carto.com/docs/carto-engine/cartocss/properties-for-torque/#-torque-resolution-float) property of Torque maps.
+Defines the cell-size of the spatial aggregation grid. This is equivalent to the [CartoCSS `-torque-resolution`]({{site.styling_cartocss}}/#-torque-resolution-float) property of Torque maps.
 
 The aggregation cells are `resolution`×`resolution` pixels in size, where pixels here are defined to be 1/256 of the (linear) size of a tile.
 The default value is 1, so that aggregation coincides with raster pixels. A value of 2 would make each cell to be 4 (2×2) pixels, and a value of
@@ -149,11 +145,11 @@ The default value is 1, so that aggregation coincides with raster pixels. A valu
 > Note that is independent of the number of pixels for raster tile or the coordinate resolution (mvt_extent) of vector tiles.
 
 
-### `threshold`
+#### `threshold`
 
 This is the minimum number of (estimated) rows in the dataset (query results) for aggregation to be applied. If the number of rows estimate is less than the threshold aggregation will be disabled for the layer; the instantiation response will reflect that and tiles will be generated without aggregation.
 
-### Example
+#### Example
 
 ```json
 {

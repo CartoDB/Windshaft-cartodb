@@ -1,14 +1,16 @@
-# 1. Purpose
+## MapConfig Named Maps Extension
+
+### 1. Purpose
 
 This specification describes an extension for
 [MapConfig 1.3.0](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.3.0.md) version.
 
 
-# 2. Changes over specification
+### 2. Changes over specification
 
 This extension introduces a new layer type so it's possible to use a Named Map by its name as a layer.
 
-## 2.1 Named layers definition
+#### 2.1 Named layers definition
 
 ```javascript
 {
@@ -42,15 +44,15 @@ This extension introduces a new layer type so it's possible to use a Named Map b
 }
 ```
 
-## 2.2 Limitations
+#### 2.2 Limitations
 
 1. A Named Map will not allow to have `named` type layers inside their templates layergroup's layers definition.
 2. A `named` layer does not allow Named Maps form other accounts, it's only possible to use Named Maps from the very
 same user account.
 
 
-# History
+### History
 
-## 1.0.0
+#### 1.0.0
 
  - Initial version

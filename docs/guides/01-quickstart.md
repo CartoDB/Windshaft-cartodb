@@ -1,6 +1,6 @@
-# Quickstart
+## Quickstart
 
-## Anonymous Maps
+### Anonymous Maps
 
 Here is an example of how to create an Anonymous Map with JavaScript:
 
@@ -31,7 +31,7 @@ $.ajax({
 })
 ```
 
-## Named Maps
+### Named Maps
 
 Let's create a Named Map using some private tables in a CARTO account.
 The following map config sets up a map of European countries that have a white fill color:
@@ -58,7 +58,7 @@ The following map config sets up a map of European countries that have a white f
 
 The MapConfig needs to be sent to CARTO's Map API using an authenticated call. Here we will use a command line tool called `curl`. For more info about this tool, see [this blog post](http://quickleft.com/blog/command-line-tutorials-curl), or type `man curl` in bash. Using `curl`, and storing the config from above in a file `MapConfig.json`, the call would look like:
 
-#### Call
+##### Call
 
 ```bash
 curl 'https://{username}.carto.com/api/v1/map/named?api_key={api_key}' -H 'Content-Type: application/json' -d @mapconfig.json
@@ -66,7 +66,7 @@ curl 'https://{username}.carto.com/api/v1/map/named?api_key={api_key}' -H 'Conte
 
 To get the `URL` to fetch the tiles you need to instantiate the map, where `template_id` is the template name from the previous response.
 
-#### Call
+##### Call
 
 ```bash
 curl -X POST 'https://{username}.carto.com/api/v1/map/named/{template_id}' -H 'Content-Type: application/json'
@@ -76,7 +76,7 @@ The response will return JSON with properties for the `layergroupid`, the timest
 
 Note: all `layers` in `metadata` will always have a `type` string and a `meta` dictionary with the key/value pairs.
 
-#### Response
+##### Response
 
 ```javascript
 {
