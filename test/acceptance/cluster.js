@@ -8,8 +8,8 @@ const TestClient = require('../support/test-client');
 const POINTS_SQL_1 = `
     select
         x + 4 as cartodb_id,
-        st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
-        st_transform(st_setsrid(st_makepoint(x*10, x*10), 4326), 3857) as the_geom_webmercator,
+        st_setsrid(st_makepoint(x*10 + 18, x*10 + 5), 4326) as the_geom,
+        st_transform(st_setsrid(st_makepoint(x*10 + 18, x*10 + 5), 4326), 3857) as the_geom_webmercator,
         x as value,
         CASE
             WHEN x % 2 = 0 THEN 'even'
@@ -62,14 +62,14 @@ describe('cluster', function () {
                 }
 
                 assert.deepStrictEqual(body, {
-                    errors:[ 'Map c502fc8fc1cb0d5e412db3deabffeee5 has no aggregation defined for layer 0' ],
+                    errors:[ 'Map f697fb370c6479559ae2f66d684e8227 has no aggregation defined for layer 0' ],
                     errors_with_context:[
                         {
                             layer: {
                                 index: '0',
                                 type: 'cartodb'
                             },
-                            message: 'Map c502fc8fc1cb0d5e412db3deabffeee5 has no aggregation defined for layer 0',
+                            message: 'Map f697fb370c6479559ae2f66d684e8227 has no aggregation defined for layer 0',
                             subtype: 'aggregation',
                             type: 'layer'
                         }
@@ -104,14 +104,14 @@ describe('cluster', function () {
                 }
 
                 assert.deepStrictEqual(body, {
-                    errors:[ 'Map 18792467ae296929d04e32dfe7f81a80 has no aggregation defined for layer 0' ],
+                    errors:[ 'Map 7521bcd1029c401289dd651ce91d5d9d has no aggregation defined for layer 0' ],
                     errors_with_context:[
                         {
                             layer: {
                                 index: '0',
                                 type: 'cartodb'
                             },
-                            message: 'Map 18792467ae296929d04e32dfe7f81a80 has no aggregation defined for layer 0',
+                            message: 'Map 7521bcd1029c401289dd651ce91d5d9d has no aggregation defined for layer 0',
                             subtype: 'aggregation',
                             type: 'layer'
                         }
@@ -215,9 +215,7 @@ describe('cluster', function () {
                 resolution: 50,
                 expected: [
                     { cartodb_id: 1, value: -3, type: 'odd' },
-                    { cartodb_id: 2, value: -2, type: 'even' },
-                    { cartodb_id: 3, value: -1, type: 'odd' },
-                    { cartodb_id: 4, value: 0, type: 'even' },
+                    { cartodb_id: 2, value: -2, type: 'even' }
                 ]
             },
             {
@@ -225,6 +223,7 @@ describe('cluster', function () {
                 cartodb_id: 5,
                 resolution: 50,
                 expected: [
+                    { cartodb_id: 4, value: 0, type: 'even' },
                     { cartodb_id: 5, value: 1, type: 'odd' },
                     { cartodb_id: 6, value: 2, type: 'even' },
                     { cartodb_id: 7, value: 3, type: 'odd' }
@@ -278,9 +277,7 @@ describe('cluster', function () {
                 resolution: 50,
                 expected: [
                     { cartodb_id: 1, value: -3, type: 'odd' },
-                    { cartodb_id: 2, value: -2, type: 'even'},
-                    { cartodb_id: 3, value: -1, type: 'odd' },
-                    { cartodb_id: 4, value: 0, type: 'even' },
+                    { cartodb_id: 2, value: -2, type: 'even'}
                 ]
             },
             {
@@ -288,9 +285,8 @@ describe('cluster', function () {
                 cartodb_id: 5,
                 resolution: 50,
                 expected: [
-                    { cartodb_id: 5, value: 1, type: 'odd' },
-                    { cartodb_id: 6, value: 2, type: 'even' },
-                    { cartodb_id: 7, value: 3, type: 'odd' }
+                    { cartodb_id: 4, value: 0, type: 'even' },
+                    { cartodb_id: 5, value: 1, type: 'odd' }
                 ]
             }
         ];
@@ -381,8 +377,8 @@ describe('cluster', function () {
                 resolution: 50,
                 aggregation: { columns: ['type'] },
                 expected: [
-                    { _cdb_feature_count: 2, type: 'even' },
-                    { _cdb_feature_count: 2, type: 'odd' }
+                    { _cdb_feature_count: 1, type: 'even' },
+                    { _cdb_feature_count: 1, type: 'odd' }
                 ]
             },
             {
@@ -391,7 +387,7 @@ describe('cluster', function () {
                 resolution: 50,
                 aggregation: { columns: ['type'] },
                 expected: [
-                    { _cdb_feature_count: 1, type: 'even' },
+                    { _cdb_feature_count: 2, type: 'even' },
                     { _cdb_feature_count: 2, type: 'odd' }
                 ]
             },
@@ -514,8 +510,8 @@ describe('cluster', function () {
                     }
                 },
                 expected: [
-                    { _cdb_feature_count: 2, type: 'even', max_value: 0 },
-                    { _cdb_feature_count: 2, type: 'odd', max_value: -1 }
+                    { _cdb_feature_count: 1, type: 'even', max_value: -2 },
+                    { _cdb_feature_count: 1, type: 'odd', max_value: -3 }
                 ]
             },
             {
@@ -532,14 +528,14 @@ describe('cluster', function () {
                     }
                 },
                 expected: [
-                    { _cdb_feature_count: 1, type: 'even', max_value: 2 },
+                    { _cdb_feature_count: 2, type: 'even', max_value: 2 },
                     { _cdb_feature_count: 2, type: 'odd', max_value: 3 }
                 ]
             }
         ];
 
         suite.forEach(({ zoom, cartodb_id, resolution, aggregation, expected }) => {
-            it('should return features aggregated by type', function (done) {
+            it(`should aggregate by type; z: ${zoom}, cartodb_id: ${cartodb_id}, res: ${resolution}`, function (done) {
                 const mapConfig = createVectorMapConfig([{
                     type: 'cartodb',
                     options: {
