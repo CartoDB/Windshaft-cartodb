@@ -1,11 +1,27 @@
 # Changelog
 
-**Deprecation warning**: Next major release will drop support for `Node.js 6 LTS`, `npm 3.x` and `yarn`. You'll be able to use the latest ES features as soon as we release 7.0.0. In the meantime, as a developer, you should keep compatibility with Node.js 6 LTS and keep updated both `package-lock.json` and `yarn.lock` files.
-
-## 6.6.0
+## 7.1.0
 Released 2019-mm-dd
 
 Announcements:
+- Experimental support for listing features in a grid when the map uses the dynamic agregation.
+- Numeric histogram performance improvement (#1080)
+- Update deps:
+  - windshaft@4.13.3: Upgrade grainstore to version 1.11.0, do not hang when child process is not able to generate a Mapnik XML
+
+## 7.0.0
+Released 2019-02-22
+
+Breaking changes:
+- Drop support for Node.js 6
+- Drop support for npm 3
+- Stop supporting `yarn.lock`
+- Drop support for Postgres 9.5
+- Drop support for PosGIS 2.2
+- Drop support for Redis 3
+
+Announcements:
+- In configuration, set `clipByBox2d` to true by default
 - Update docs: compatible Node.js and npm versions
 - Report fine-grained Garbage Collector stats
 - Adding Authorization to Access-Control-Allow-Headers (https://github.com/CartoDB/CartoDB-SQL-API/issues/534)
@@ -16,7 +32,7 @@ Announcements:
   - jshint@2.9.7
   - mocha@5.2.0
 - Be able to customize max waiting workers parameter
-- Handle 'max waitingClients count exceeded' error as "429, You are over platfor's limits"
+- Handle 'max waitingClients count exceeded' error as "429, You are over platform's limits"
 
 ## 6.5.1
 Released 2018-12-26

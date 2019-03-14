@@ -394,9 +394,8 @@ describe('user database timeout limit', function () {
             });
         });
 
-        const describe_pg = process.env.POSTGIS_VERSION >= '20400' ? describe : describe.skip;
-        describe('fetching vector tiles via mapnik renderer', () => { testFetchingVectorTiles(false); });
-        describe_pg('fetching vector tiles via postgis renderer', () => { testFetchingVectorTiles(true); });
+        describe('fetching vector tiles via mapnik renderer', () => testFetchingVectorTiles(false));
+        describe('fetching vector tiles via postgis renderer', () => testFetchingVectorTiles(true));
 
         function testFetchingVectorTiles(usePostGIS) {
             const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;

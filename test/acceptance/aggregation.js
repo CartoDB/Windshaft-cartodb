@@ -6,17 +6,16 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
 
-const suites = [{
-    desc: 'mvt (mapnik)',
-    usePostGIS: false
-}];
-
-if (process.env.POSTGIS_VERSION >= '20400') {
-    suites.push({
+const suites = [
+    {
+        desc: 'mvt (mapnik)',
+        usePostGIS: false
+    },
+    {
         desc: 'mvt (postgis)',
         usePostGIS: true
-    });
-}
+    }
+];
 
 // Generate points with values and times.
 // The point location is spanned over a given length, by default it is 0 so

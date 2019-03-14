@@ -6,17 +6,16 @@ var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 const serverOptions = require('../../../lib/cartodb/server_options');
 
-const suites = [{
-    desc: 'mvt (mapnik)',
-    usePostGIS: false
-}];
-
-if (process.env.POSTGIS_VERSION >= '20400') {
-    suites.push({
+const suites = [
+    {
+        desc: 'mvt (mapnik)',
+        usePostGIS: false
+    },
+    {
         desc: 'mvt (postgis)',
         usePostGIS: true
-    });
-}
+    }
+];
 
 suites.forEach(({desc, usePostGIS}) => {
 describe(`[${desc}] Create mapnik layergroup`, function() {
