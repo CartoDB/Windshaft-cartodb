@@ -5,7 +5,8 @@ Released 2019-mm-dd
 
 Announcements:
 - Experimental support for listing features in a grid when the map uses the dynamic agregation.
-
+- Update deps:
+  - windshaft@4.13.3: Upgrade grainstore to version 1.11.0, do not hang when child process is not able to generate a Mapnik XML
 
 ## 7.0.0
 Released 2019-02-22
