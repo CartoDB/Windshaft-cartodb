@@ -8,8 +8,8 @@ Announcements:
 - Numeric histogram performance improvement (#1080)
 - Fix boolean aggregation layer option not working when numbers of rows are above the threshold (#1082)
 - Update deps:
-  - windshaft@4.13.4:
-    - Upgrade `tilelive-mapnik` to version `0.6.18-cdb19`
+  - windshaft@4.13.5:
+    - Upgrade `tilelive-mapnik` to version `0.6.18-cdb20`
     - Upgrade `@carto/tilelive-bridge` to version `2.5.1-cdb12`
     - Upgrade `grainstore` to version `1.11.0`, do not hang when child process is not able to generate a Mapnik XML
 
