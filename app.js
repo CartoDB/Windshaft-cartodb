@@ -228,7 +228,7 @@ function getGCTypeValue (type) {
     return value;
 }
 
-addHandlers(listener, logger, 45000);
+addHandlers(listener, global.logger, 45000);
 
 function addHandlers(listener, logger, killTimeout) {
     process.on('uncaughtException', exitProcess(listener, logger, killTimeout));
@@ -255,7 +255,7 @@ function exitProcess (listener, logger, killTimeout) {
         }
 
         logger.info(`Process is going to exit with code: ${code}`);
-        listener.close(() => log4js.shutdown(() => process.exit(1)));
+        listener.close(() => global.log4js.shutdown(() => process.exit(1)));
     };
 }
 
