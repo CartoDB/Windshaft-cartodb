@@ -255,7 +255,7 @@ function exitProcess (listener, logger, killTimeout) {
         }
 
         logger.info(`Process is going to exit with code: ${code}`);
-        listener.close(() => global.log4js.shutdown(() => process.exit(1)));
+        listener.close(() => global.log4js.shutdown(() => process.exit(code)));
     };
 }
 
