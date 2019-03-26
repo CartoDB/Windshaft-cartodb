@@ -14,8 +14,9 @@ var logError = console.error.bind(console);
 // jshint undef:true
 
 var nodejsVersion = process.versions.node;
-if (!semver.satisfies(nodejsVersion, '>=10.15.1')) {
-    logError(`Node version ${nodejsVersion} is not supported, please use Node.js 6.9 or higher.`);
+const { engines } = require('./package.json');
+if (!semver.satisfies(nodejsVersion, engines.node)) {
+    logError(`Node version ${nodejsVersion} is not supported, please use Node.js ${engines.node}.`);
     process.exit(1);
 }
 
