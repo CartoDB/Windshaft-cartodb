@@ -14,7 +14,7 @@ var logError = console.error.bind(console);
 // jshint undef:true
 
 var nodejsVersion = process.versions.node;
-if (!semver.satisfies(nodejsVersion, '>=6.9.0')) {
+if (!semver.satisfies(nodejsVersion, '>=10.15.1')) {
     logError(`Node version ${nodejsVersion} is not supported, please use Node.js 6.9 or higher.`);
     process.exit(1);
 }
@@ -177,10 +177,6 @@ process.on('SIGHUP', function() {
     });
 });
 
-process.on('uncaughtException', function(err) {
-    global.logger.error('Uncaught exception: ' + err.stack);
-});
-
 if (global.gc) {
     var gcInterval = Number.isFinite(global.environment.gc_interval) ?
         global.environment.gc_interval :
@@ -230,4 +226,45 @@ function getGCTypeValue (type) {
     }
 
     return value;
+}
+
+addHandlers(listener, logger, 45000);
+
+function addHandlers(listener, logger, killTimeout) {
+    process.on('uncaughtException', exitProcess(listener, logger, killTimeout));
+    process.on('unhandledRejection', exitProcess(listener, logger, killTimeout));
+    process.on('SIGINT', exitProcess(listener, logger, killTimeout));
+    process.on('SIGTERM', exitProcess(listener, logger, killTimeout));
+}
+
+function exitProcess (listener, logger, killTimeout) {
+    return function exitProcessFn (signal) {
+        scheduleForcedExit(killTimeout, logger);
+
+        let code = 0;
+
+        if (!['SIGINT', 'SIGTERM'].includes(signal)) {
+            const err = signal instanceof Error ? signal : new Error(signal);
+            signal = undefined;
+            code = 1;
+
+            logger.fatal(err);
+        } else {
+            logger.info(`Process has received signal: ${signal}`);
+        }
+
+        logger.info(`Process is going to exit with code: ${code}`);
+        listener.close(() => log4js.shutdown(() => process.exit(1)));
+    };
+}
+
+function scheduleForcedExit (killTimeout, logger) {
+    // Schedule exit if there is still ongoing work to deal with
+    const killTimer = setTimeout(() => {
+        logger.info('Process didn\'t close on time. Force exit');
+        process.exit(1);
+    }, killTimeout);
+
+    // Don't keep the process open just for this
+    killTimer.unref();
 }
