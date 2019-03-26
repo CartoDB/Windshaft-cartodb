@@ -233,6 +233,7 @@ addHandlers(listener, logger, 45000);
 function addHandlers(listener, logger, killTimeout) {
     process.on('uncaughtException', exitProcess(listener, logger, killTimeout));
     process.on('unhandledRejection', exitProcess(listener, logger, killTimeout));
+    process.on('ENOMEM', exitProcess(listener, logger, killTimeout));
     process.on('SIGINT', exitProcess(listener, logger, killTimeout));
     process.on('SIGTERM', exitProcess(listener, logger, killTimeout));
 }
