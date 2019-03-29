@@ -27,7 +27,7 @@
     "@carto/fqdn-sync": "0.2.2",
     "basic-auth": "2.0.0",
     "body-parser": "1.18.3",
-    "camshaft": "0.63.4",
+    "camshaft": "^0.64.0",
     "cartodb-psql": "0.13.1",
     "cartodb-query-tables": "0.4.0",
     "cartodb-redis": "2.1.0",
@@ -49,7 +49,7 @@
     "step-profiler": "0.3.0",
     "turbo-carto": "0.21.0",
     "underscore": "1.6.0",
-    "windshaft": "4.13.5",
+    "windshaft": "^5.0.0",
     "yargs": "11.1.0"
   },
   "devDependencies": {
