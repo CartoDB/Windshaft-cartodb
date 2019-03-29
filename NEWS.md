@@ -4,14 +4,19 @@
 Released 2019-mm-dd
 
 Announcements:
+- Implements graceful shutdown for:
+  - system signals `SIGINT` and `SIGTERM`
+  - events `uncaughtException`, `unhandledRejection` and, `ENOMEM`
 - Experimental support for listing features in a grid when the map uses the dynamic agregation.
 - Numeric histogram performance improvement (#1080)
 - Fix boolean aggregation layer option not working when numbers of rows are above the threshold (#1082)
 - Update deps:
-  - windshaft@4.13.5:
+  - camshat@0.64.0
+  - windshaft@5.0.0:
     - Upgrade `tilelive-mapnik` to version `0.6.18-cdb20`
     - Upgrade `@carto/tilelive-bridge` to version `2.5.1-cdb12`
-    - Upgrade `grainstore` to version `1.11.0`, do not hang when child process is not able to generate a Mapnik XML
+    - Upgrade `grainstore` to version `2.0.0`
+    - Upgrade `torque.js` to version `3.0.0`
 
 ## 7.0.0
 Released 2019-02-22
