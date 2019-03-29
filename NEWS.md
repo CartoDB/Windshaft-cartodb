@@ -4,6 +4,7 @@
 Released 2019-mm-dd
 
 Announcements:
+- Fix uncaught exception: TypeError: Cannot read property 'id' of undefined
 - Implements graceful shutdown for:
   - system signals `SIGINT` and `SIGTERM`
   - events `uncaughtException`, `unhandledRejection` and, `ENOMEM`
@@ -17,6 +18,7 @@ Announcements:
     - Upgrade `@carto/tilelive-bridge` to version `2.5.1-cdb12`
     - Upgrade `grainstore` to version `2.0.0`
     - Upgrade `torque.js` to version `3.0.0`
+
 
 ## 7.0.0
 Released 2019-02-22
