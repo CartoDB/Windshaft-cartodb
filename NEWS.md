@@ -13,11 +13,12 @@ Announcements:
 - Fix boolean aggregation layer option not working when numbers of rows are above the threshold (#1082)
 - Update deps:
   - camshat@0.64.0
-  - windshaft@5.0.0:
+  - windshaft@5.1.0:
     - Upgrade `tilelive-mapnik` to version `0.6.18-cdb20`
     - Upgrade `@carto/tilelive-bridge` to version `2.5.1-cdb12`
     - Upgrade `grainstore` to version `2.0.0`
-    - Upgrade `torque.js` to version `3.0.0`
+    - Upgrade `torque.js` to version `3.1.0`
+    - Upgrade `canvas` to version `2.4.1`
 
 
 ## 7.0.0
