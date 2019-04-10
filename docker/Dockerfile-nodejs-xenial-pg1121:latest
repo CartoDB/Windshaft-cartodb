@@ -17,11 +17,10 @@ RUN set -ex \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && add-apt-repository -y ppa:cartodb/postgresql-11 \
     && add-apt-repository -y ppa:cartodb/redis-next \
-    && curl -sL https://deb.nodesource.com/setup_10.x | bash \
+    && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash \
+    && . ~/.nvm/nvm.sh \
     && locale-gen en_US.UTF-8 \
     && update-locale LANG=en_US.UTF-8
-
-COPY template/gdal_abi.txt /tmp/gdal_abi/
 
 RUN set -ex \
     && apt-get update \
@@ -81,4 +80,6 @@ RUN set -ex \
 WORKDIR /srv
 EXPOSE 5858
 
-CMD /etc/init.d/postgresql start
+COPY ./scripts/nodejs-install.sh /src/nodejs-install.sh
+RUN chmod 777 /src/nodejs-install.sh
+CMD /src/nodejs-install.sh
