@@ -108,7 +108,7 @@ describe('named maps static view', function() {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('estimated'), PNG_IMAGE_TOLERANCE,  err => {
                     if (err) {
-                        assert.imageIsSimilarToFile(img, previewFixture('estimated') + ".proj5", PNG_IMAGE_TOLERANCE, done);
+                        assert.imageIsSimilarToFile(img, previewFixture('estimated-proj5'), PNG_IMAGE_TOLERANCE, done);
                     }
                     else
                     {
