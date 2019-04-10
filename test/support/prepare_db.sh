@@ -13,7 +13,6 @@
 PREPARE_REDIS=yes
 PREPARE_PGSQL=yes
 DOWNLOAD_SQL_FILES=yes
-PG_PARALLEL=$(pg_config --version | (awk '{$2*=1000; if ($2 >= 9600) print 1; else print 0;}' 2> /dev/null || echo 0))
 
 while [ -n "$1" ]; do
   OPTION=$(echo "$1" | tr -d '[:space:]')
