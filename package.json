@@ -48,7 +48,6 @@
     "semver": "5.5.0",
     "step-profiler": "0.3.0",
     "turbo-carto": "0.21.0",
-    "underscore": "1.6.0",
     "windshaft": "5.1.1",
     "yargs": "11.1.0"
   },
@@ -60,7 +59,8 @@
     "nock": "9.2.6",
     "redis": "2.8.0",
     "step": "1.0.0",
-    "strftime": "0.10.0"
+    "strftime": "0.10.0",
+    "underscore": "1.6.0"
   },
   "scripts": {
     "lint": "jshint lib test app.js",
