@@ -555,7 +555,14 @@ describe('cluster', function () {
                         return done(err);
                     }
 
-                    assert.deepStrictEqual(body.rows, expected);
+                    const sort_f = ((a, b) => {
+                        return (a._cdb_feature_count < b._cdb_feature_count) ||
+                               (a._cdb_feature_count === b._cdb_feature_count &&
+                                    (a.type < b.type ||
+                                     a.type === b.type && a.max_value < b.max_value));
+                    });
+
+                    assert.deepStrictEqual(body.rows.sort(sort_f), expected.sort(sort_f));
 
                     testClient.drain(done);
                 });
