@@ -37,7 +37,7 @@ All the endpoints, which might be accessed using a web browser, add CORS headers
 
  **Note:** By default, CARTO uses vector graphics for map rendering. Please [contact us](mailto:support@carto.com) if you need raster rendering enabled as part of your requirements.
 
- ### Mapbox Vector Tiles (MVT)
+### Mapbox Vector Tiles (MVT)
 
  [Mapbox Vector Tiles (MVT)](https://www.mapbox.com/vector-tiles/specification/) are map tiles that store geographic vector data on the client-side. Browser performance is fast since you can pan and zoom without having to query the server.
 
