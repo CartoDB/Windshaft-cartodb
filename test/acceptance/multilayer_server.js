@@ -8,7 +8,6 @@ var _ = require('underscore');
 
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
-var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
 var QueryTables = require('cartodb-query-tables');
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
@@ -310,39 +309,6 @@ describe('tests from old api translated to multilayer', function() {
                 assert.equal(res.headers['x-cache-channel'], expectedCacheChannel);
 
                 assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
-
-                done();
-            }
-        );
-    });
-
-    it("creates layergroup fails when postgresql queries fail to figure affected tables in query",  function(done) {
-
-        var runQueryFn = PgQueryRunner.prototype.run;
-        PgQueryRunner.prototype.run = function(username, query, callback) {
-            return callback(new Error('fake error message'), []);
-        };
-
-        var layergroup =  singleLayergroupConfig('select * from gadm4', '#gadm4 { marker-fill: red; }');
-
-        assert.response(server,
-            {
-                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
-                method: 'GET',
-                headers: {
-                    host: 'localhost'
-                }
-            },
-            {
-                status: 400
-            },
-            function(res) {
-                PgQueryRunner.prototype.run = runQueryFn;
-
-                assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-
-                var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed.errors, ["fake error message"]);
 
                 done();
             }

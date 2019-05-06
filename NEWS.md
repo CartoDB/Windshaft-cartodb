@@ -1,5 +1,11 @@
 # Changelog
 
+## 8.0.0
+Released 2019-mm-dd
+
+Breaking changes:
+ - Overviews has been deprecated, the entire functionality that uses overview tables to render tiles with big datasets (>500K points) has been removed. There is no replacement for this functionality, we encourage you to use [aggregations](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/aggregation.md) instead.
+
 ## 7.1.0
 Released 2019-05-06
 

@@ -509,15 +509,15 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                     if (err) {
                         return next(err);
                     }
-                    next(null, JSON.parse(res.body), res.headers);
+                    next(null, JSON.parse(res.body));
                 }
             );
         },
-        function finish(err, dataview, headers = null) {
+        function finish(err, dataview) {
             if (err) {
                 return callback(err);
             }
-            return callback(null, dataview, headers);
+            return callback(null, dataview);
         }
     );
 };
