@@ -1,7 +1,7 @@
 # Changelog
 
 ## 7.1.0
-Released 2019-mm-dd
+Released 2019-05-06
 
 Announcements:
 - Fix uncaught exception: TypeError: Cannot read property 'id' of undefined
