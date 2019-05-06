@@ -1,3 +1,5 @@
+'use strict';
+
 var test_helper = require('../support/test_helper');
 var RedisPool = require('redis-mpool');
 var querystring = require('querystring');

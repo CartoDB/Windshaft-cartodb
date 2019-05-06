@@ -127,10 +127,9 @@ var config = {
       cache_ttl: 60000,
       statsInterval: 5000, // milliseconds between each report to statsd about number of renderers and mapnik pool status
       mvt: {
-        //If enabled, MVTs will be generated with PostGIS directly, instead of using Mapnik,
-        //PostGIS 2.4 is required for this to work
-        //If disabled it will use Mapnik MVT generation
-        usePostGIS: false
+        //If enabled, MVTs will be generated with PostGIS directly
+        //If disabled, MVTs will be generated with Mapnik MVT
+        usePostGIS: true
       },
       mapnik: {
           // The size of the pool of internal mapnik backend
@@ -138,6 +137,10 @@ var config = {
           // See https://github.com/CartoDB/Windshaft/blob/master/lib/windshaft/renderers/renderer_factory.js
           // Important: check the configuration of uv_threadpool_size to use suitable value
           poolSize: 8,
+
+          // The maximum number of waiting clients of the pool of internal mapnik backend
+          // This maximum number is per mapnik renderer created in Windshaft's RendererFactory
+          poolMaxWaitingClients: 64,
 
           // Whether grainstore will use a child process or not to transform CartoCSS into Mapnik XML.
           // This will prevent blocking the main thread.
@@ -182,7 +185,7 @@ var config = {
           // SQL queries will be wrapped with ST_ClipByBox2D
           // Returning the portion of a geometry falling within a rectangle
           // It will only work if snapToGrid is enabled
-          clipByBox2d: false, // this requires postgis >=2.2 and geos >=3.5
+          clipByBox2d: true,
 
           postgis: {
               // Parameters to pass to datasource plugin of mapnik

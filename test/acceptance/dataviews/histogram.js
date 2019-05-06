@@ -1,3 +1,5 @@
+'use strict';
+
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -80,6 +82,26 @@ describe('histogram-dataview', function() {
 
             assert.ok(3 === dataview.bins_count, 'Unexpected bin count: ' + dataview.bins_count);
             assert.ok(3 === dataview.bins.length, 'Unexpected number of bins: ' + dataview.bins.length);
+            dataview.bins.forEach(function(bin) {
+                assert.ok(bin.min >= params.start, 'bin min < start: ' + JSON.stringify(bin));
+                assert.ok(bin.max <= params.end, 'bin max > end: ' + JSON.stringify(bin));
+            });
+            done();
+        });
+    });
+
+    it('should work with min >= start and max <= end, autodetect bins', function(done) {
+        var params = {
+            start: 50,
+            end: 500
+        };
+
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('pop_max_histogram', params, function(err, dataview) {
+            assert.ok(!err, err);
+
+            assert.ok(6 === dataview.bins_count, 'Unexpected bin count: ' + dataview.bins_count);
+            assert.ok(6 === dataview.bins.length, 'Unexpected number of bins: ' + dataview.bins.length);
             dataview.bins.forEach(function(bin) {
                 assert.ok(bin.min >= params.start, 'bin min < start: ' + JSON.stringify(bin));
                 assert.ok(bin.max <= params.end, 'bin max > end: ' + JSON.stringify(bin));
@@ -942,8 +964,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient.getDataview('datetime_histogram_tz', {}, function (err, dataview) {
             assert.ok(!err, err);
 
-            this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('datetime_histogram_tz', params, function (err, filteredDataview) {
+            const _testClient = new TestClient(mapConfig, 1234);
+            _testClient.getDataview('datetime_histogram_tz', params, function (err, filteredDataview) {
                 assert.ok(!err, err);
 
                 assert.deepEqual(dataview, filteredDataview);

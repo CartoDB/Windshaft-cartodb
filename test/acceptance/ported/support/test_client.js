@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../../support/test_helper');
 var LayergroupToken = require('../../../../lib/cartodb/models/layergroup-token');
 
@@ -129,7 +131,7 @@ function serverInstance(options) {
         return otherServer;
     }
 
-    return server;
+    return getServer();
 }
 
 function layergroupRequest(layergroupConfig, method, callbackName, extraParams) {

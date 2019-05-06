@@ -1,3 +1,5 @@
+'use strict';
+
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -260,7 +262,7 @@ describe('widgets-regressions', function() {
                 ]]
             };
 
-            const query = `  
+            const query = `
                 SELECT
                     ST_TRANSFORM(ST_SETSRID(ST_GeomFromGeoJSON(
                         '${JSON.stringify(notIntersectingLeftTriangle)}'

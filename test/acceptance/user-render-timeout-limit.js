@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 const assert = require('../support/assert');
@@ -127,7 +129,13 @@ describe('user render timeout limit', function () {
 
                 const mapconfig = createMapConfig();
                 this.testClient = new TestClient(mapconfig, 1234);
-                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+                this.testClient.getLayergroup(mapconfig, (err, layergroup) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    this.layergroup = layergroup;
+                    this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+                });
             });
 
             afterEach(function (done) {
@@ -142,7 +150,12 @@ describe('user render timeout limit', function () {
             });
 
             it('layergroup creation works but tile request fails due to render timeout', function (done) {
-                this.testClient.getTile(0, 0, 0, { cacheBuster: true }, (err, res, tile) => {
+                const params = {
+                    layergroupid: this.layergroup.layergroupid,
+                    cacheBuster: true
+                };
+
+                this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
                     assert.ifError(err);
 
                     assert.imageIsSimilarToFile(tile, timeoutErrorTilePath, 0.05, (err) => {
@@ -162,7 +175,13 @@ describe('user render timeout limit', function () {
 
                 const mapconfig = createMapConfig();
                 this.testClient = new TestClient(mapconfig, 1234);
-                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+                this.testClient.getLayergroup(mapconfig, (err, layergroup) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    this.layergroup = layergroup;
+                    this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+                });
             });
 
             afterEach(function (done) {
@@ -178,6 +197,7 @@ describe('user render timeout limit', function () {
 
             it('layergroup creation works and render tile fails', function (done) {
                 var params = {
+                    layergroupid: this.layergroup.layergroupid,
                     response: {
                         status: 429,
                         headers: {
@@ -213,7 +233,13 @@ describe('user render timeout limit', function () {
             serverOptions.renderer.mvt.usePostGIS = usePostGIS;
             const mapconfig = createMapConfig();
             this.testClient = new TestClient(mapconfig, 1234);
-            this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+            this.testClient.getLayergroup(mapconfig, (err, layergroup) => {
+                if (err) {
+                    return done(err);
+                }
+                this.layergroup = layergroup;
+                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+            });
         });
 
         afterEach(function (done) {
@@ -228,6 +254,7 @@ describe('user render timeout limit', function () {
 
         it('layergroup creation works but vector tile request fails due to render timeout', function (done) {
             const params = {
+                layergroupid: this.layergroup.layergroupid,
                 format: 'mvt',
                 response: {
                     status: 429,
@@ -256,7 +283,13 @@ describe('user render timeout limit', function () {
         beforeEach(function (done) {
             const mapconfig = createMapConfig();
             this.testClient = new TestClient(mapconfig, 1234);
-            this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+            this.testClient.getLayergroup(mapconfig, (err, layergroup) => {
+                if (err) {
+                    return done(err);
+                }
+                this.layergroup = layergroup;
+                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+            });
         });
 
         afterEach(function (done) {
@@ -270,6 +303,7 @@ describe('user render timeout limit', function () {
 
         it('layergroup creation works but "grid.json" tile request fails due to render timeout', function (done) {
             const params = {
+                layergroupid: this.layergroup.layergroupid,
                 layers: 'mapnik',
                 format: 'grid.json',
                 response: {
@@ -308,7 +342,13 @@ describe('user render timeout limit', function () {
 
                 const mapconfig = createMapConfig();
                 this.testClient = new TestClient(mapconfig, 1234);
-                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+                this.testClient.getLayergroup(mapconfig, (err, layergroup) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    this.layergroup = layergroup;
+                    this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+                });
             });
 
             afterEach(function (done) {
@@ -324,6 +364,7 @@ describe('user render timeout limit', function () {
 
             it('layergroup creation works but static image fails due to render timeout', function (done) {
                 const params = {
+                    layergroupid: this.layergroup.layergroupid,
                     zoom: 0,
                     lat: 0,
                     lng: 0,
@@ -352,7 +393,13 @@ describe('user render timeout limit', function () {
 
                 const mapconfig = createMapConfig();
                 this.testClient = new TestClient(mapconfig, 1234);
-                this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+                this.testClient.getLayergroup(mapconfig, (err, layergroup) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    this.layergroup = layergroup;
+                    this.testClient.setUserRenderTimeoutLimit('localhost', 50, done);
+                });
             });
 
             afterEach(function (done) {
@@ -368,6 +415,7 @@ describe('user render timeout limit', function () {
 
             it('layergroup creation works and render static center tile fails', function (done) {
                 const params = {
+                    layergroupid: this.layergroup.layergroupid,
                     zoom: 0,
                     lat: 0,
                     lng: 0,

@@ -1,3 +1,5 @@
+'use strict';
+
 var assert = require('../../support/assert');
 
 var helper = require('../../support/test_helper');

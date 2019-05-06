@@ -620,6 +620,111 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
     );
 };
 
+TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, params, callback) {
+    var self = this;
+
+    if (!callback) {
+        callback = params;
+        params = {};
+    }
+
+    var extraParams = {};
+
+    if (this.apiKey) {
+        extraParams.api_key = this.apiKey;
+    }
+
+    // if (params && params.filters) {
+    //     extraParams.filters = JSON.stringify(params.filters);
+    // }
+
+    var url = '/api/v1/map';
+    if (Object.keys(extraParams).length > 0) {
+        url += '?' + qs.stringify(extraParams);
+    }
+
+    var expectedResponse = params.response || {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    };
+
+    step(
+        function createLayergroup() {
+            var next = this;
+            assert.response(self.server,
+                {
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        host: 'localhost',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(self.mapConfig)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    var parsedBody = JSON.parse(res.body);
+
+                    if (parsedBody.layergroupid) {
+                        self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                        self.keysToDelete['user:localhost:mapviews:global'] = 5;
+                    }
+
+                    return next(null, parsedBody.layergroupid);
+                }
+            );
+        },
+        function getCLusterFeatures (err, layergroupId) {
+            assert.ifError(err);
+
+            var next = this;
+
+            let queryParams = '';
+            if (params.aggregation) {
+                queryParams = qs.stringify({ aggregation: JSON.stringify(params.aggregation) });
+            }
+
+            url = `/api/v1/map/${layergroupId}/${layerId}/${zoom}/cluster/${clusterId}?${queryParams}`;
+
+            assert.response(self.server,
+                {
+                    url: url,
+                    method: 'GET',
+                    headers: {
+                        host: 'localhost'
+                    }
+                },
+                expectedResponse,
+                function(res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next(null, JSON.parse(res.body));
+                }
+            );
+        },
+        function finish(err, attributes) {
+            if (err) {
+                return callback(err);
+            }
+
+            return callback(null, attributes);
+        }
+    );
+};
+
 TestClient.prototype.getTile = function(z, x, y, params, callback) {
     var self = this;
 
@@ -1267,15 +1372,17 @@ TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callb
     const dbuser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
     const publicuser = global.environment.postgres.user;
 
+    // IMPORTANT: node-postgres uses internallly a singleton, to refresh all pull connections
+    // you need to ensure that your dependency tree has only one working version of `cartodb-psql` & `node-postgres`
+    // if not, test using this function cannot ensure that all connections have the new settings (STATEMENT_TIMEOUT)
+    //
+    // TODO: upgrade to node-postgres@7.x
     const psql = new PSQL({
         user: 'postgres',
         dbname: dbname,
         host: global.environment.postgres.host,
         port: global.environment.postgres.port
     });
-
-    // we need to guarantee all new connections have the new settings
-    psql.end();
 
     step(
         function configureTimeouts () {
@@ -1289,7 +1396,10 @@ TestClient.prototype.setUserDatabaseTimeoutLimit = function (timeoutLimit, callb
 
             timeoutSQLs.forEach(sql => psql.query(sql, group()));
         },
-        callback
+        // we need to guarantee all new connections have the new settings
+        function refreshPoolConnection () {
+            psql.end(() => callback());
+        }
     );
 };
 

@@ -1,3 +1,5 @@
+'use strict';
+
 var qs = require('querystring');
 var testHelper = require('../support/test_helper');
 var RedisPool = require('redis-mpool');
@@ -104,7 +106,15 @@ describe('named maps static view', function() {
             }
             getStaticMap(function(err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('estimated'), PNG_IMAGE_TOLERANCE, done);
+                assert.imageIsSimilarToFile(img, previewFixture('estimated'), PNG_IMAGE_TOLERANCE,  err => {
+                    if (err) {
+                        assert.imageIsSimilarToFile(img, previewFixture('estimated-proj5'), PNG_IMAGE_TOLERANCE, done);
+                    }
+                    else
+                    {
+                        done();
+                    }
+                });
             });
         });
     });
@@ -295,10 +305,10 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            
+
             var url = `/api/v1/map/static/named/${templateName}/640/480.gif`;
 
-            
+
             var requestOptions = {
                 url: url,
                 method: 'GET',

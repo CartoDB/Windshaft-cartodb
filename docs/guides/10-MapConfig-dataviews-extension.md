@@ -1,18 +1,20 @@
-# 1. Purpose
+## MapConfig Dataviews Extension
+
+### 1. Purpose
 
 This specification describes an extension for
 [MapConfig 1.4.0](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.4.0.md) version.
 
 
-# 2. Changes over specification
+### 2. Changes over specification
 
 This extension depends on Analyses extension. It extends MapConfig with a new attribute: `dataviews`.
 
 It makes possible to get tabular data from analysis nodes: aggregated lists, aggregations, and histograms.
 
-## 2.1. Dataview types
+#### 2.1. Dataview types
 
-### Aggregation
+##### Aggregation
 
 An aggregation is a list with aggregated results by a column and a given aggregation function.
 
@@ -56,7 +58,7 @@ Expected output
 }
 ```
 
-### Histograms
+##### Histograms
 
 Histograms represent the data distribution for a column.
 
@@ -88,7 +90,7 @@ Expected output
 }
 ```
 
-### Formula
+##### Formula
 
 Formulas given a final value representing the whole dataset.
 
@@ -124,7 +126,7 @@ Result
 ```
 
 
-## 2.2 Dataviews attribute
+#### 2.2 Dataviews attribute
 
 The new dataviews attribute must be a dictionary of dataviews.
 
@@ -145,7 +147,7 @@ The layer consuming the output must reference it with the following option:
 }
 ```
 
-## 2.3. Complete example
+#### 2.3. Complete example
 
 ```
 {
@@ -185,16 +187,16 @@ The layer consuming the output must reference it with the following option:
 }
 ```
 
-## 3. Filters
+#### 3. Filters
 
 Camshaft's analyses expose a filtering capability and `aggregation` and `histogram` dataviews get them for free with
  this extension. Filters are available with the very dataview id, so if you have a "basic_histogram" histogram dataview
  you can filter with a range filter with "basic_histogram" name.
 
 
-## 3.1 Filter types
+#### 3.1 Filter types
 
-### Category
+##### Category
 
 Allows to remove results that are not contained within a set of elements.
 Initially this filter can be applied to a `numeric` or `text` columns.
@@ -208,7 +210,7 @@ Params
 }
 ```
 
-### Range filter
+##### Range filter
 
 Allows to remove results that don’t satisfy numeric min and max values.
 Filter is applied to a numeric column.
@@ -222,13 +224,13 @@ Params
 }
 ```
 
-## 3.2. How to apply filters
+#### 3.2. How to apply filters
 
 Filters must be applied at map instantiation time.
 
 With :mapconfig as a valid MapConfig and with :filters (a valid JSON) as:
 
-### Anonymous map
+##### Anonymous map
 
 `GET /api/v1/map?config=:mapconfig&filters=:filters`
 
@@ -241,7 +243,7 @@ If in the future we need to support a bigger filters param and it doesn’t fit 
 `POST /api/v1/map`
 with `BODY={“config”: :mapconfig, “filters”: :filters}`
 
-### Named map
+##### Named map
 
 Assume :params (a valid JSON) as named maps params, like in: `{“color”: “red”}`
 
@@ -257,7 +259,7 @@ If, again, in the future we need to support a bigger filters param that doesn’
 with `BODY={“config”: :params, “filters”: :filters}`
 
 
-## 3.3 Bounding box special filter
+#### 3.3 Bounding box special filter
 
 A bounding box filter allows to remove results that don’t satisfy a geospatial range.
 
@@ -270,8 +272,8 @@ param must be in the form `west,south,east,north`.
 So applying a bbox filter to a dataview looks like:
 GET /api/v1/map/:layergroupid/dataview/:dataview_name?bbox=-90,-45,90,45
 
-# History
+### History
 
-## 1.0.0-alpha
+#### 1.0.0-alpha
 
  - WIP document

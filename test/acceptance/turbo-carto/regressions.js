@@ -1,3 +1,5 @@
+'use strict';
+
 require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -470,7 +472,7 @@ describe('turbo-carto regressions', function() {
                     done();
                 });
             });
-        });        
+        });
 
         function makeMapconfig({numQuantiles = 1}) {
             return {
@@ -481,10 +483,10 @@ describe('turbo-carto regressions', function() {
                         "options": {
                             "cartocss_version": '2.3.0',
                             "sql": 'SELECT * FROM populated_places_simple_reduced',
-                            "cartocss": `#layer {\n  
-                                        marker-width: ramp([labelrank], range(1, 20), quantiles(${numQuantiles}));\n  
-                                        marker-fill: #EE4D5A;\n  marker-fill-opacity: 0.9;\n  
-                                        marker-allow-overlap: true;\n  marker-line-width: 1;\n  
+                            "cartocss": `#layer {\n
+                                        marker-width: ramp([labelrank], range(1, 20), quantiles(${numQuantiles}));\n
+                                        marker-fill: #EE4D5A;\n  marker-fill-opacity: 0.9;\n
+                                        marker-allow-overlap: true;\n  marker-line-width: 1;\n
                                         marker-line-color: #FFFFFF;\n  marker-line-opacity: 1;\n}`,
                         }
                     }

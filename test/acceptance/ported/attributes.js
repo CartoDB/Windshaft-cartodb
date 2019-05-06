@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -34,7 +36,7 @@ describe('attributes', function() {
     function checkCORSHeaders(res) {
         assert.equal(
             res.headers['access-control-allow-headers'],
-            'X-Requested-With, X-Prototype-Version, X-CSRF-Token'
+            'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
         );
         assert.equal(res.headers['access-control-allow-origin'], '*');
     }

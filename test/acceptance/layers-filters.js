@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 var TestClient = require('../support/test-client');
 

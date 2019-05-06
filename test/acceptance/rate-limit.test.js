@@ -1,3 +1,5 @@
+'use strict';
+
 require('../support/test_helper');
 
 const assert = require('../support/assert');
@@ -7,6 +9,7 @@ const cartodbRedis = require('cartodb-redis');
 const TestClient = require('../support/test-client');
 const UserLimitsBackend = require('../../lib/cartodb/backends/user-limits');
 const rateLimitMiddleware = require('../../lib/cartodb/api/middlewares/rate-limit');
+const serverOptions = require('../../lib/cartodb/server_options');
 const { RATE_LIMIT_ENDPOINTS_GROUPS } = rateLimitMiddleware;
 
 let userLimitsApi;
@@ -19,7 +22,7 @@ let layergroupid;
 
 const query = `
     SELECT
-        ST_Transform('SRID=4326;POINT(-180 85.05112877)'::geometry, 3857) the_geom_webmercator,
+        ST_Transform('SRID=4326;POINT(-70 42)'::geometry, 3857) the_geom_webmercator,
         1 cartodb_id,
         2 val
 `;
@@ -273,7 +276,21 @@ describe('rate limit middleware', function () {
     });
 });
 
-describe('rate limit and vector tiles', function () {
+
+const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
+describe('rate limit and vector tiles (mapnik)', () => rateLimitAndVectorTilesTest(false));
+describe('rate limit and vector tiles (postgis)', () => rateLimitAndVectorTilesTest(true));
+
+function rateLimitAndVectorTilesTest(usePostGIS) {
+
+    before(function() {
+        serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+    });
+
+    after(function () {
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+    });
 
     before(function(done) {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
@@ -310,7 +327,7 @@ describe('rate limit and vector tiles', function () {
 
             redisClient.SELECT(5, () => {
                 redisClient.del('user:localhost:mapviews:global');
-                done();
+                setTimeout(done, 1000);
             });
         });
     });
@@ -335,7 +352,7 @@ describe('rate limit and vector tiles', function () {
             };
         };
 
-        testClient.getTile(0, 0, 0, tileParams(204, '1', '0', '1'), (err) => {
+        testClient.getTile(0, 0, 0, tileParams(200, '1', '0', '1'), (err) => {
             assert.ifError(err);
 
             testClient.getTile(
@@ -358,4 +375,4 @@ describe('rate limit and vector tiles', function () {
         });
 
     });
-});
+}

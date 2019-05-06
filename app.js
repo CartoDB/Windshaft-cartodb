@@ -1,3 +1,5 @@
+'use strict';
+
 var http = require('http');
 var https = require('https');
 var path = require('path');
@@ -12,8 +14,9 @@ var logError = console.error.bind(console);
 // jshint undef:true
 
 var nodejsVersion = process.versions.node;
-if (!semver.satisfies(nodejsVersion, '>=6.9.0')) {
-    logError(`Node version ${nodejsVersion} is not supported, please use Node.js 6.9 or higher.`);
+const { engines } = require('./package.json');
+if (!semver.satisfies(nodejsVersion, engines.node)) {
+    logError(`Node version ${nodejsVersion} is not supported, please use Node.js ${engines.node}.`);
     process.exit(1);
 }
 
@@ -126,6 +129,40 @@ listener.on('listening', function() {
     );
 });
 
+function getCPUUsage (oldUsage) {
+    let usage;
+
+    if (oldUsage && oldUsage._start) {
+        usage = Object.assign({}, process.cpuUsage(oldUsage._start.cpuUsage));
+        usage.time = Date.now() - oldUsage._start.time;
+    } else {
+        usage = Object.assign({}, process.cpuUsage());
+        usage.time = process.uptime() * 1000; // s to ms
+    }
+
+    usage.percent = (usage.system + usage.user) / (usage.time * 10);
+
+    Object.defineProperty(usage, '_start', {
+        value: {
+            cpuUsage: process.cpuUsage(),
+            time: Date.now()
+        }
+    });
+
+    return usage;
+}
+
+let previousCPUUsage = getCPUUsage();
+setInterval(function cpuUsageMetrics () {
+    const CPUUsage = getCPUUsage(previousCPUUsage);
+
+    Object.keys(CPUUsage).forEach(property => {
+        global.statsClient.gauge(`windshaft.cpu.${property}`, CPUUsage[property]);
+    });
+
+    previousCPUUsage = CPUUsage;
+}, 5000);
+
 setInterval(function() {
     var memoryUsage = process.memoryUsage();
     Object.keys(memoryUsage).forEach(function(k) {
@@ -141,10 +178,6 @@ process.on('SIGHUP', function() {
     });
 });
 
-process.on('uncaughtException', function(err) {
-    global.logger.error('Uncaught exception: ' + err.stack);
-});
-
 if (global.gc) {
     var gcInterval = Number.isFinite(global.environment.gc_interval) ?
         global.environment.gc_interval :
@@ -152,9 +185,88 @@ if (global.gc) {
 
     if (gcInterval > 0) {
         setInterval(function gcForcedCycle() {
-            var start = Date.now();
             global.gc();
-            global.statsClient.timing('windshaft.gc', Date.now() - start);
         }, gcInterval);
     }
+}
+
+const gcStats = require('gc-stats')();
+
+gcStats.on('stats', function ({ pauseMS, gctype }) {
+    global.statsClient.timing('windshaft.gc', pauseMS);
+    global.statsClient.timing(`windshaft.gctype.${getGCTypeValue(gctype)}`, pauseMS);
+});
+
+function getGCTypeValue (type) {
+    // 1: Scavenge (minor GC)
+    // 2: Mark/Sweep/Compact (major GC)
+    // 4: Incremental marking
+    // 8: Weak/Phantom callback processing
+    // 15: All
+    let value;
+
+    switch (type) {
+        case 1:
+            value = 'Scavenge';
+            break;
+        case 2:
+            value = 'MarkSweepCompact';
+            break;
+        case 4:
+            value = 'IncrementalMarking';
+            break;
+        case 8:
+            value = 'ProcessWeakCallbacks';
+            break;
+        case 15:
+            value = 'All';
+            break;
+        default:
+            value = 'Unkown';
+            break;
+    }
+
+    return value;
+}
+
+addHandlers(listener, global.logger, 45000);
+
+function addHandlers(listener, logger, killTimeout) {
+    process.on('uncaughtException', exitProcess(listener, logger, killTimeout));
+    process.on('unhandledRejection', exitProcess(listener, logger, killTimeout));
+    process.on('ENOMEM', exitProcess(listener, logger, killTimeout));
+    process.on('SIGINT', exitProcess(listener, logger, killTimeout));
+    process.on('SIGTERM', exitProcess(listener, logger, killTimeout));
+}
+
+function exitProcess (listener, logger, killTimeout) {
+    return function exitProcessFn (signal) {
+        scheduleForcedExit(killTimeout, logger);
+
+        let code = 0;
+
+        if (!['SIGINT', 'SIGTERM'].includes(signal)) {
+            const err = signal instanceof Error ? signal : new Error(signal);
+            signal = undefined;
+            code = 1;
+
+            logger.fatal(err);
+        } else {
+            logger.info(`Process has received signal: ${signal}`);
+        }
+
+        logger.info(`Process is going to exit with code: ${code}`);
+        listener.close(() => global.log4js.shutdown(() => process.exit(code)));
+    };
+}
+
+function scheduleForcedExit (killTimeout, logger) {
+    // Schedule exit if there is still ongoing work to deal with
+    const killTimer = setTimeout(() => {
+        logger.info('Process didn\'t close on time. Force exit');
+        process.exit(1);
+    }, killTimeout);
+
+    // Don't keep the process open just for this
+    killTimer.unref();
 }

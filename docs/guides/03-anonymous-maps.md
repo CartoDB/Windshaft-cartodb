@@ -1,18 +1,18 @@
-# Anonymous Maps
+## Anonymous Maps
 
 Anonymous Maps allows you to instantiate a map given SQL and CartoCSS. It also allows you to add interaction capabilities using [UTF Grid.](https://github.com/mapbox/utfgrid-spec).
 Alternatively, you can get the data for the map (geometry and attributes for each layer) using vector tiles (in which case CartoCSS is not required).
 
 
-## Instantiate
+### Instantiate
 
-#### Definition
+##### Definition
 
 ```html
 POST /api/v1/map
 ```
 
-#### Params
+##### Params
 
 ```javascript
 {
@@ -29,9 +29,9 @@ POST /api/v1/map
 }
 ```
 
-See [MapConfig File Formats](http://docs.carto.com/carto-engine/maps-api/mapconfig/) for details.
+See [MapConfig File Formats]({{site.mapsapi_docs}}/guides/MapConfig-file-format/) for details.
 
-#### Response
+##### Response
 
 The response includes:
 
@@ -49,15 +49,15 @@ Now, for convenience, the layergroup includes the final URLs in two formats:
 1. Leaflet's urlTemplate alike: useful when working with raster tiles or with libraries with an API similar to Leaflet's one.
 1. [TileJSON spec](https://github.com/mapbox/tilejson-spec): useful when working with Mapbox GL or any other library that supports TileJSON.
 
-### Example
+#### Example
 
-#### Call
+##### Call
 
 ```bash
 curl 'https://{username}.carto.com/api/v1/map' -H 'Content-Type: application/json' -d @mapconfig.json
 ```
 
-#### Response
+##### Response
 
 ```javascript
 {
@@ -97,7 +97,7 @@ curl 'https://{username}.carto.com/api/v1/map' -H 'Content-Type: application/jso
 }
 ```
 
-## Map Tile Rendering
+### Map Tile Rendering
 
 Map tiles are used to create the graphic representation of your map in a web browser. Tiles can be requested either as pre-rendered *raster* tiles (images) or as *vector* map data to be rendered by the client (browser).
 
@@ -105,11 +105,11 @@ Map tiles are used to create the graphic representation of your map in a web bro
 
 - **Vector**: Tiles can also be requested as MVT (Mapbox Vector Tiles). In this case, only the geospatial vector data, without any styling, is returned. These tiles should be processed in the client-side to render the map.  In this case layers do not need to define CartoCSS, as any rendering and styling will be performed on the client side. The vector data of a tile represents real-world geometries by defining the vertices of points, lines or polygons in a tile-specific coordinate system.
 
-## Retrieve resources from the layergroup
+### Retrieve resources from the layergroup
 
 When you have a layergroup, there are several resources for retrieving layergoup details such as, accessing Mapnik tiles, getting individual layers, accessing defined Attributes, and blending and layer selection.
 
-### Raster tiles
+#### Raster tiles
 
 These raster tiles are PNG images that represent only the Mapnik layers of a map. See [individual layers](#individual-layers) for details about how to retrieve other layers.
 
@@ -117,7 +117,7 @@ These raster tiles are PNG images that represent only the Mapnik layers of a map
 https://{username}.carto.com/api/v1/map/{layergroupid}/{z}/{x}/{y}.png
 ```
 
-### Mapbox Vector Tiles (MVT)
+#### Mapbox Vector Tiles (MVT)
 
 [Mapbox Vector Tiles (MVT)](https://www.mapbox.com/vector-tiles/specification/) are map tiles that transfer geographic vector data to the client-side. Browser performance is fast since you can pan and zoom without having to query the server.
 
@@ -125,7 +125,7 @@ CARTO uses Web Graphics Library (WebGL) to process MVT files on the browser. Thi
 
 The following examples describe how to fetch MVT tiles with a cURL request.
 
-#### MVT and Windshaft
+##### MVT and Windshaft
 
 CARTO uses Windshaft as the map tiler library to render multilayer maps with the Maps API. You can use Windshaft to request MVT using the same layer type that is used for requesting raster tiles (Mapnik layer). Simply change the file format `.mvt` in the URL.
 
@@ -149,7 +149,7 @@ The following example instantiates an anonymous map with layer options:
 
 **Note**: If no layer type is specified, Mapnik tiles are used by default. To access MVT tiles, specify `https://{username}.cartodb.com/api/v1/map/HASH/{z}/{x}/{y}.mvt` as the `maps_api_template` variable.
 
-**Tip:** If you are using [Named Maps](https://carto.com/docs/carto-engine/maps-api/named-maps/) to instantiate a layer, indicate the MVT file format and layer in the response:
+**Tip:** If you are using [Named Maps]({{site.mapasapi_docs}}/guides/named-maps/) to instantiate a layer, indicate the MVT file format and layer in the response:
 
 ```bash
 https://{username}.cartodb.com/api/v1/map/named/:templateId/:layer/{z}/{x}/{y}.mvt
@@ -161,7 +161,7 @@ For all layers in a Named Map, you must indicate Mapnik as the layer filter:
 https://{username}.cartodb.com/api/v1/map/named/:templateId/mapnik/{z}/{x}/{y}.mvt
 ```
 
-#### Layergroup Filter for MVT Tiles
+##### Layergroup Filter for MVT Tiles
 
 To filter layers using Windshaft, use the following request where layers are numbered:
 
@@ -181,7 +181,7 @@ To filter a specific layer:
 https://{username}.cartodb.com/api/v1/map/HASH/2/{z}/{x}/{y}.mvt
 ```
 
-#### Example 1: MVT Tiles with Windshaft, CARTO.js, and MapboxGL
+##### Example 1: MVT Tiles with Windshaft, CARTO.js, and MapboxGL
 
 1) Import the required libraries:
 
@@ -223,7 +223,7 @@ cartocss: "...",
 
 5) Request Tiles (from CARTO) and Set to Map Object (Mapbox):
 
-**Note:** By default, [CARTO core functions](https://carto.com/docs/carto-engine/carto-js/core-api/) retrieve URLs for fully rendered tiles. You must replace the default format (.png) with the MVT format (.mvt).
+**Note:** By default, [CARTO core functions]({{site.cartojs_docs}}/v3/guides/core-API-functionality/) retrieve URLs for fully rendered tiles. You must replace the default format (.png) with the MVT format (.mvt).
 
 
 ```bash
@@ -237,7 +237,7 @@ map.setStyle(simpleStyle(tiles));
 });
 ```
 
-#### Example 2: MVT Libraries with Windshaft and MapboxGL
+##### Example 2: MVT Libraries with Windshaft and MapboxGL
 
 When you are not including CARTO.js to implement MVT tiles, you must use the `map.setStyle` parameter to specify vector map rendering.
 
@@ -291,7 +291,7 @@ map.setStyle({
 - [MapboxGL Style Specifications](https://www.mapbox.com/mapbox-gl-js/style-spec/)
 - [Example of MapboxGL Implementation](https://www.mapbox.com/mapbox-gl-js/examples/)
 
-### Individual layers
+#### Individual layers
 
 The MapConfig specification holds the layers definition in a 0-based index. Layers can be requested individually, in different formats, depending on the layer type.
 
@@ -309,7 +309,7 @@ If the MapConfig had a Torque layer at index 1 it could be possible to request i
 https://{username}.carto.com/api/v1/map/{layergroupid}/1/{z}/{x}/{y}.torque.json
 ```
 
-### Attributes defined in `attributes` section
+#### Attributes defined in `attributes` section
 
 ```bash
 https://{username}.carto.com/api/v1/map/{layergroupid}/{layer}/attributes/{feature_id}
@@ -321,7 +321,7 @@ Which returns JSON with the attributes defined, such as:
 { "c": 1, "d": 2 }
 ```
 
-### Blending and layer selection
+#### Blending and layer selection
 
 ```bash
 https://{username}.carto.com/api/v1/map/{layergroupid}/{layer_filter}/{z}/{x}/{y}.png
@@ -352,17 +352,17 @@ Some notes about filtering:
   - Invalid index values or out of bounds indexes will end in `Invalid layer filtering` errors.
   - Ordering is not considered. So right now filtering layers 0,3,4 is the very same thing as filtering 3,4,0. As this may change in the future, **it is recommended** to always select the layers in ascending order so that you will always get consistent behavior.
 
-## Create JSONP
+### Create JSONP
 
 The JSONP endpoint is provided in order to allow web browsers access which don't support CORS.
 
-#### Definition
+##### Definition
 
 ```bash
 GET /api/v1/map?callback=method
 ```
 
-#### Params
+##### Params
 
 Param | Description
 --- | ---
@@ -370,15 +370,15 @@ config | Encoded JSON with the params for creating Named Maps (the variables def
 lmza | This attribute contains the same as config but LZMA compressed. It cannot be used at the same time as `config`.
 callback | JSON callback name.
 
-### Example
+#### Example
 
-#### Call
+##### Call
 
 ```bash
 curl "https://{username}.carto.com/api/v1/map?callback=callback&config=%7B%22version%22%3A%221.0.1%22%2C%22layers%22%3A%5B%7B%22type%22%3A%22cartodb%22%2C%22options%22%3A%7B%22sql%22%3A%22select+%2A+from+european_countries_e%22%2C%22cartocss%22%3A%22%23european_countries_e%7B+polygon-fill%3A+%23FF6600%3B+%7D%22%2C%22cartocss_version%22%3A%222.3.0%22%2C%22interactivity%22%3A%5B%22cartodb_id%22%5D%7D%7D%5D%7D"
 ```
 
-#### Response
+##### Response
 
 ```javascript
 callback({
@@ -391,6 +391,6 @@ callback({
 })
 ```
 
-## Remove
+### Remove
 
 Anonymous Maps cannot be removed by an API call. They will expire after about five minutes, or sometimes longer. If an Anonymous Map expires and tiles are requested from it, an error will be raised. This could happen if a user leaves a map open and after time, returns to the map and attempts to interact with it in a way that requires new tiles (e.g. zoom). The client will need to go through the steps of creating the map again to fix the problem.
