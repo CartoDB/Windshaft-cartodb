@@ -1,3 +1,5 @@
+'use strict';
+
 // Cribbed from the ever prolific Konstantin Kaefer
 // https://github.com/mapbox/tilelive-mapnik/blob/master/test/support/assert.js
 
@@ -140,16 +142,18 @@ function validateResponseBody(response, expected) {
 
 function validateResponseStatus(response, expected) {
     var status = expected.status || expected.statusCode;
+    const message = colorize('[red]{Invalid response status code.}\n' +
+                    '     Expected: [green]{' + status + '}\n' +
+                    '     Got: [red]{' + response.statusCode + '}\n' +
+                    '     Body: ' + response.body);
+
     // Assert response status
-    if (typeof status === 'number') {
-        if (response.statusCode !== status) {
-            return new Error(colorize(
-                '[red]{Invalid response status code.}\n' +
-                '     Expected: [green]{' + status + '}\n' +
-                '     Got: [red]{' + response.statusCode + '}\n' +
-                '     Body: ' + response.body)
-            );
-        }
+    if (typeof status === 'number' && response.statusCode !== status) {
+        return new Error(message);
+    }
+
+    if (Array.isArray(status) && !status.includes(response.statusCode)) {
+        return new Error(message);
     }
 }
 

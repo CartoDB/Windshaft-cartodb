@@ -1,11 +1,88 @@
 # Changelog
 
-## 7.0.0
-Released 2018-mm-dd
+## 8.0.0
+Released 2019-mm-dd
 
 Breaking changes:
  - Overviews has been deprecated, the entire functionality that uses overview tables to render tiles with big datasets (>500K points) has been removed. There is no replacement for this functionality, we encourage you to use [aggregations](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/aggregation.md) instead.
 
+## 7.1.0
+Released 2019-mm-dd
+
+Announcements:
+- Fix uncaught exception: TypeError: Cannot read property 'id' of undefined
+- Implements graceful shutdown for:
+  - system signals `SIGINT` and `SIGTERM`
+  - events `uncaughtException`, `unhandledRejection` and, `ENOMEM`
+- Experimental support for listing features in a grid when the map uses the dynamic agregation.
+- Numeric histogram performance improvement (#1080)
+- Fix boolean aggregation layer option not working when numbers of rows are above the threshold (#1082)
+- Update deps:
+  - camshat@0.64.0
+  - windshaft@5.2.0:
+    - Use [`@carto/cartonik`](https://github.com/CartoDB/cartonik/releases/tag/v0.5.0) instead of `@mapbox/tilelive` to fetch raster/vertor tiles.
+    - Upgrade `grainstore` to version `2.0.0`
+    - Upgrade `torque.js` to version `3.1.0`
+    - Upgrade `canvas` to version `2.4.1`
+    - Update @carto/mapnik to [`3.6.2-carto.13`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.13/CHANGELOG.carto.md#362-carto13).
+
+
+## 7.0.0
+Released 2019-02-22
+
+Breaking changes:
+- Drop support for Node.js 6
+- Drop support for npm 3
+- Stop supporting `yarn.lock`
+- Drop support for Postgres 9.5
+- Drop support for PosGIS 2.2
+- Drop support for Redis 3
+
+Announcements:
+- In configuration, set `clipByBox2d` to true by default
+- Update docs: compatible Node.js and npm versions
+- Report fine-grained Garbage Collector stats
+- Adding Authorization to Access-Control-Allow-Headers (https://github.com/CartoDB/CartoDB-SQL-API/issues/534)
+- Update deps:
+  - windshaft@4.13.1: Upgrade tilelive-mapnik to version 0.6.18-cdb18
+  - camshaft@0.63.4: Improve error message for exceeded batch SQL API payload size: add suggestions about what the user can do about it.
+- Update dev deps:
+  - jshint@2.9.7
+  - mocha@5.2.0
+- Be able to customize max waiting workers parameter
+- Handle 'max waitingClients count exceeded' error as "429, You are over platform's limits"
+
+## 6.5.1
+Released 2018-12-26
+
+Bug Fixes:
+- Update carto-package.json
+
+## 6.5.0
+Released 2018-12-26
+
+New features
+- Suport Node.js 10
+- Configure travis to run docker tests against Node.js 6 & 10 versions
+- Aggregation time dimensions
+- Update sample configurations to use PostGIS to generate MVT's by default (as in production)
+- Upgrades Windshaft to [4.12.1](https://github.com/CartoDB/Windshaft/blob/4.12.1/NEWS.md#version-4121)
+  - `pg-mvt`: Use `query-rewriter` to compose the query to render a MVT tile. If not defined, it will use a Default Query Rewriter.
+  - `pg-mvt`: Fix bug while building query and there is no columns defined for the layer.
+  - `pg-mvt`: Accept trailing semicolon in input queries.
+  - `Renderer Cache Entry`: Do not throw errors for integrity checks.
+  - Fix bug when releasing the renderer cache entry in some scenarios.
+  - Upgrade grainstore to [1.10.0](https://github.com/CartoDB/grainstore/releases/tag/1.10.0)
+- Upgrade cartodb-redis to [2.1.0](https://github.com/CartoDB/node-cartodb-redis/releases/tag/2.1.0)
+- Upgrade cartodb-query-tables to [0.4.0](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.4.0)
+- Upgrade cartodb-psql to [0.13.1](https://github.com/CartoDB/node-cartodb-psql/releases/tag/0.13.1)
+- Upgrade turbo-carto to [0.21.0](https://github.com/CartoDB/turbo-carto/releases/tag/0.21.0)
+- Upgrade camshaft to [0.63.1](https://github.com/CartoDB/camshaft/releases/tag/0.63.1)
+- Upgrade redis-mpool to [0.7.0](https://github.com/CartoDB/node-redis-mpool/releases/tag/0.7.0)
+
+Bug Fixes:
+- Prevent from uncaught exception: Range filter Error from camshaft when getting analysis query.
+- Make all modules to use strict mode semantics.
 
 ## 6.4.0
 Released 2018-09-24

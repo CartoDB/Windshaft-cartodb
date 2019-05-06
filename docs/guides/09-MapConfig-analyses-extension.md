@@ -1,16 +1,18 @@
-# 1. Purpose
+## MapConfig Analyses Extension
+
+### 1. Purpose
 
 This specification describes an extension for
 [MapConfig 1.4.0](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-1.4.0.md) version.
 
 
-# 2. Changes over specification
+### 2. Changes over specification
 
 This extension targets layers with `sql` option, including layer types: `cartodb`, `mapnik`, and `torque`.
 
 It extends MapConfig with a new attribute: `analyses`.
 
-## 2.1 Analyses attribute
+#### 2.1 Analyses attribute
 
 The new analyses attribute must be an array of analyses as per [camshaft](https://github.com/CartoDB/camshaft). Each
 analysis must adhere to the [camshaft-reference](https://github.com/CartoDB/camshaft/blob/0.8.0/reference/versions/0.7.0/reference.json) specification.
@@ -37,7 +39,7 @@ Basic analyses example:
 ]
 ```
 
-# 2.2. Integration with layers
+### 2.2. Integration with layers
 
 As pointed before an analysis node id can be referenced from layers to consume its output query.
 
@@ -57,7 +59,7 @@ The layer consuming the output must reference it with the following option:
 }
 ```
 
-## 2.3. Complete example
+#### 2.3. Complete example
 
 ```
 {
@@ -86,8 +88,8 @@ The layer consuming the output must reference it with the following option:
 }
 ```
 
-# History
+### History
 
-## 1.0.0
+#### 1.0.0
 
  - Initial version

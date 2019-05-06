@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -26,8 +28,11 @@ describe('torque', function() {
     });
 
     function checkCORSHeaders(res) {
-      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.equal(
+            res.headers['access-control-allow-headers'],
+            'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
+        );
+        assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
     it("missing required property from torque layer", function(done) {

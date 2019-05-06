@@ -1,3 +1,5 @@
+'use strict';
+
 var assert      = require('../support/assert');
 var _           = require('underscore');
 var redis       = require('redis');
@@ -305,16 +307,17 @@ describe('template_api', function() {
           assert.response(server, post_request, {}, function(res) { next(null, res); });
         },
         function testCORS() {
-          assert.response(server, {
-              url: '/api/v1/map/named/acceptance1',
-              method: 'OPTIONS'
-          },{
-              status: 200,
-              headers: {
-                'Access-Control-Allow-Headers': 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Content-Type',
-                'Access-Control-Allow-Origin': '*'
-              }
-          }, function() { done(); });
+            const allowHeaders = 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, Content-Type';
+            assert.response(server, {
+                url: '/api/v1/map/named/acceptance1',
+                method: 'OPTIONS'
+            },{
+                status: 200,
+                headers: {
+                    'Access-Control-Allow-Headers': allowHeaders,
+                    'Access-Control-Allow-Origin': '*'
+                }
+            }, function() { done(); });
       });
     });
 

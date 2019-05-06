@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('underscore');
 var serverOptions = require('../../../../lib/cartodb/server_options');
 var mapnik = require('windshaft').mapnik;

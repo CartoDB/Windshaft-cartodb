@@ -1,3 +1,5 @@
+'use strict';
+
 var testHelper =require('../../support/test_helper');
 
 var assert = require('../../support/assert');
@@ -16,8 +18,11 @@ describe('raster', function() {
     });
 
     function checkCORSHeaders(res) {
-      assert.equal(res.headers['access-control-allow-headers'], 'X-Requested-With, X-Prototype-Version, X-CSRF-Token');
-      assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.equal(
+            res.headers['access-control-allow-headers'],
+            'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
+        );
+        assert.equal(res.headers['access-control-allow-origin'], '*');
     }
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;

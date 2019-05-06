@@ -1,9 +1,25 @@
+'use strict';
+
 require('../support/test_helper');
 
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
+const serverOptions = require('../../lib/cartodb/server_options');
 
-describe('tilejson', function() {
+const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
+
+describe('tilejson via mapnik renderer', () => tileJsonSuite(false));
+describe('tilejson via postgis renderer', () => tileJsonSuite(true));
+
+function tileJsonSuite(usePostGIS) {
+
+    before(function() {
+        serverOptions.renderer.mvt.usePostGIS = usePostGIS;
+    });
+
+    after(function () {
+        serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
+    });
 
     function tilejsonValidation(tilejson, shouldHaveGrid = false) {
         assert.equal(tilejson.tilejson, '2.2.0');
@@ -215,5 +231,4 @@ describe('tilejson', function() {
         });
 
     });
-
-});
+}

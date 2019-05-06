@@ -646,5 +646,46 @@ CREATE INDEX test_table_100_the_geom_webmercator_idx ON test_table_100 USING gis
 GRANT ALL ON TABLE test_table_100 TO :TESTUSER;
 GRANT SELECT ON TABLE test_table_100 TO :PUBLICUSER;
 
+-- Table with 200K rows
+CREATE TABLE test_table_200k (
+    cartodb_id integer NOT NULL,
+    value int,
+    the_geom geometry,
+    the_geom_webmercator geometry,
+    CONSTRAINT enforce_dims_the_geom CHECK ((st_ndims(the_geom) = 2)),
+    CONSTRAINT enforce_dims_the_geom_webmercator CHECK ((st_ndims(the_geom_webmercator) = 2)),
+    CONSTRAINT enforce_geotype_the_geom CHECK (((geometrytype(the_geom) = 'POINT'::text) OR (the_geom IS NULL))),
+    CONSTRAINT enforce_geotype_the_geom_webmercator CHECK (((geometrytype(the_geom_webmercator) = 'POINT'::text) OR (the_geom_webmercator IS NULL))),
+    CONSTRAINT enforce_srid_the_geom CHECK ((st_srid(the_geom) = 4326)),
+    CONSTRAINT enforce_srid_the_geom_webmercator CHECK ((st_srid(the_geom_webmercator) = 3857))
+);
+
+CREATE SEQUENCE test_table_200k_cartodb_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE test_table_200k_cartodb_id_seq OWNED BY test_table_200k.cartodb_id;
+
+SELECT pg_catalog.setval('test_table_200k_cartodb_id_seq', 60, true);
+
+ALTER TABLE test_table_200k ALTER COLUMN cartodb_id SET DEFAULT nextval('test_table_200k_cartodb_id_seq'::regclass);
+
+INSERT INTO test_table_200k(the_geom, the_geom_webmercator, value)
+  SELECT
+    ST_SetSRID(ST_MakePoint(n*1E-4 + 9E-3, n*1E-4 + 9E-3), 4326) AS the_geom,
+    ST_Transform(ST_SetSRID(ST_MakePoint(n*1E-4 + 9E-3, n*1E-4 + 9E-3), 4326), 3857) AS the_geom_webmercator,
+    n AS value
+    FROM generate_series(1, 200000) n;
+
+ALTER TABLE ONLY test_table_200k ADD CONSTRAINT test_table_200k_pkey PRIMARY KEY (cartodb_id);
+
+CREATE INDEX test_table_200k_the_geom_idx ON test_table_200k USING gist (the_geom);
+CREATE INDEX test_table_200k_the_geom_webmercator_idx ON test_table_200k USING gist (the_geom_webmercator);
+
+GRANT ALL ON TABLE test_table_200k TO :TESTUSER;
+GRANT SELECT ON TABLE test_table_200k TO :PUBLICUSER;
 
 ANALYZE;
