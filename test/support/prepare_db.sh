@@ -12,7 +12,6 @@
 
 PREPARE_REDIS=yes
 PREPARE_PGSQL=yes
-DOWNLOAD_SQL_FILES=yes
 
 while [ -n "$1" ]; do
   OPTION=$(echo "$1" | tr -d '[:space:]')
@@ -21,9 +20,6 @@ while [ -n "$1" ]; do
     shift; continue
   elif [[ "$OPTION" == "--skip-redis" ]]; then
     PREPARE_REDIS=no
-    shift; continue
-  elif [[ "$OPTION" == "--no-sql-download" ]]; then
-    DOWNLOAD_SQL_FILES=no
     shift; continue
   else
     shift; continue;
@@ -77,30 +73,16 @@ if test x"$PREPARE_PGSQL" = xyes; then
   echo "preparing postgres..."
   dropdb "${TEST_DB}"
   createdb -Ttemplate_postgis -EUTF8 "${TEST_DB}" || die "Could not create test database"
+  psql -c "CREATE EXTENSION IF NOT EXISTS cartodb CASCADE;" ${TEST_DB}
 
   LOCAL_SQL_SCRIPTS='analysis_catalog windshaft.test gadm4 countries_null_values ported/populated_places_simple_reduced cdb_analysis_check cdb_invalidate_varnish'
-  REMOTE_SQL_SCRIPTS='CDB_QueryStatements CDB_QueryTables CDB_CartodbfyTable CDB_TableMetadata CDB_ForeignTable CDB_UserTables CDB_ColumnNames CDB_ZoomFromScale CDB_OverviewsSupport CDB_Overviews CDB_QuantileBins CDB_JenksBins CDB_HeadsTailsBins CDB_EqualIntervalBins CDB_Hexagon CDB_XYZ CDB_EstimateRowCount CDB_RectangleGrid'
-
-  if test x"$DOWNLOAD_SQL_FILES" = xyes; then
-    CURL_ARGS=""
-    for i in ${REMOTE_SQL_SCRIPTS}
-    do
-        CURL_ARGS="${CURL_ARGS}\"https://github.com/CartoDB/cartodb-postgresql/raw/master/scripts-available/$i.sql\" -o sql/$i.sql "
-    done
-    echo "Downloading and updating: ${REMOTE_SQL_SCRIPTS}"
-    echo ${CURL_ARGS} | xargs curl -L -s
-  fi
-
-  psql -c "CREATE EXTENSION IF NOT EXISTS plpythonu;" ${TEST_DB}
-  ALL_SQL_SCRIPTS="${REMOTE_SQL_SCRIPTS} ${LOCAL_SQL_SCRIPTS}"
-  for i in ${ALL_SQL_SCRIPTS}
+  for i in ${LOCAL_SQL_SCRIPTS}
   do
     cat sql/${i}.sql |
-      sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
-      sed "s/:PUBLICUSER/${PUBLICUSER}/" |
-      sed "s/:PUBLICPASS/${PUBLICPASS}/" |
-      sed "s/:TESTUSER/${TESTUSER}/" |
-      sed "s/:TESTPASS/${TESTPASS}/" |
+      sed -e "s/:PUBLICUSER/${PUBLICUSER}/g" |
+      sed -e "s/:PUBLICPASS/${PUBLICPASS}/g" |
+      sed -e "s/:TESTUSER/${TESTUSER}/g" |
+      sed -e "s/:TESTPASS/${TESTPASS}/g" |
       PGOPTIONS='--client-min-messages=WARNING' psql -q -v ON_ERROR_STOP=1 ${TEST_DB} > /dev/null || exit 1
   done
 fi
