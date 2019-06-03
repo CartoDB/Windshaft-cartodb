@@ -97,6 +97,7 @@ if test x"$PREPARE_PGSQL" = xyes; then
   do
     cat sql/${i}.sql |
       sed -e 's/cartodb\./public./g' -e "s/''cartodb''/''public''/g" |
+      sed -e 's/@extschema@/public/g' -e 's/@postgisschema@/public/g' |
       sed "s/:PUBLICUSER/${PUBLICUSER}/" |
       sed "s/:PUBLICPASS/${PUBLICPASS}/" |
       sed "s/:TESTUSER/${TESTUSER}/" |
