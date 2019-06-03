@@ -11,17 +11,21 @@ SET standard_conforming_strings = off;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
-SET search_path = public, pg_catalog;
+SET search_path = public, cartodb, pg_catalog;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
 -- public user role
 DROP USER IF EXISTS :PUBLICUSER;
 CREATE USER :PUBLICUSER WITH PASSWORD ':PUBLICPASS';
+GRANT USAGE ON SCHEMA cartodb TO :PUBLICUSER;
+GRANT ALL ON CDB_TableMetadata TO :PUBLICUSER;
 
 -- db owner role
 DROP USER IF EXISTS :TESTUSER;
 CREATE USER :TESTUSER WITH PASSWORD ':TESTPASS';
+GRANT USAGE ON SCHEMA cartodb TO :TESTUSER;
+GRANT ALL ON CDB_TableMetadata TO :TESTUSER;
 
 -- regular user role 1
 DROP USER IF EXISTS test_windshaft_regular1;
@@ -183,12 +187,6 @@ CREATE TABLE test_table_private_1 (
 INSERT INTO test_table_private_1 SELECT * from test_table;
 
 GRANT ALL ON TABLE test_table_private_1 TO :TESTUSER;
-
-CREATE TABLE IF NOT EXISTS
-  CDB_TableMetadata (
-    tabname regclass not null primary key,
-    updated_at timestamp with time zone not null default now()
-  );
 
 INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('test_table'::regclass, '2009-02-13T23:31:30.123Z');
 INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('test_table_private_1'::regclass, '2009-02-13T23:31:30.123Z');
