@@ -49,7 +49,7 @@
     "step-profiler": "0.3.0",
     "turbo-carto": "0.21.0",
     "underscore": "1.6.0",
-    "windshaft": "5.2.1",
+    "windshaft": "github:cartodb/windshaft#abaculus-cartofy",
     "yargs": "11.1.0"
   },
   "devDependencies": {
