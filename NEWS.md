@@ -8,6 +8,7 @@ Announcements:
 - Update deps:
   - windshaft@5.3.0:
     - Update @carto/mapnik to [`3.6.2-carto.15`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.15/CHANGELOG.carto.md#362-carto15).
+    - Update turbo-carto to [`0.21.2`](https://github.com/CartoDB/turbo-carto/releases/tag/0.21.2)
     - Upgrade `@carto/cartonik` to version [0.6.0](https://github.com/CartoDB/cartonik/blob/v0.6.0/CHANGELOG.md#v060-2019-06-17).
 
 ## 7.1.0
