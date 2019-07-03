@@ -96,9 +96,9 @@ describe('aggregation', function () {
     const POLYGONS_SQL_1 = `
     select
         x + 4 as cartodb_id,
-        st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 100000)::geometry as the_geom,
+        st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326), 10) as the_geom,
         st_transform(
-            st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326)::geography, 100000)::geometry,
+            st_buffer(st_setsrid(st_makepoint(x*10, x*10), 4326), 10),
             3857
         ) as the_geom_webmercator,
         x as value
