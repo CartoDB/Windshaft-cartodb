@@ -6,11 +6,14 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
 
+const windshaft = require('windshaft');
+const psql_utils = new windshaft.cartodb_utils();
+
 const suites = [
-    {
-        desc: 'mvt (mapnik)',
-        usePostGIS: false
-    },
+//    {
+//        desc: 'mvt (mapnik)',
+//        usePostGIS: false
+//    },
     {
         desc: 'mvt (postgis)',
         usePostGIS: true
@@ -109,15 +112,15 @@ describe('aggregation', function () {
     WITH hgrid AS (
         SELECT
             CDB_RectangleGrid (
-                ST_Expand(!bbox!, CDB_XYZ_Resolution(1) * 12),
-                CDB_XYZ_Resolution(1) * 12,
-                CDB_XYZ_Resolution(1) * 12
+                ST_Expand(!bbox!, ${psql_utils.cdbXYZResolution(1)} * 12),
+                ${psql_utils.cdbXYZResolution(1)} * 12,
+                ${psql_utils.cdbXYZResolution(1)} * 12
             ) as cell
     )
     SELECT
         hgrid.cell as the_geom_webmercator,
         count(1) as agg_value,
-        count(1) /power( 12 * CDB_XYZ_Resolution(1), 2 ) as agg_value_density,
+        count(1) /power( 12 * ${psql_utils.cdbXYZResolution(1)}, 2 ) as agg_value_density,
         row_number() over () as cartodb_id
     FROM hgrid, (<%= sql %>) i
     WHERE ST_Intersects(i.the_geom_webmercator, hgrid.cell) GROUP BY hgrid.cell
@@ -202,9 +205,9 @@ describe('aggregation', function () {
     //       |   |   |   |   |   |   |
     //    Tile 0, 1 -+---+---+---+- Tile 1,1
     //
-    const POINTS_SQL_GRID = `
+    const POINTS_SQL_GRID = (z, resolution) => `
         WITH params AS (
-            SELECT CDB_XYZ_Resolution($Z)*$resolution AS l -- cell size for Z, resolution
+            SELECT ${psql_utils.cdbXYZResolution(z)}*${resolution} AS l -- cell size for Z, resolution
         )
         SELECT
             row_number() OVER () AS cartodb_id,
@@ -521,7 +524,7 @@ describe('aggregation', function () {
             });
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it('should provide all the requested columns in non-default aggregation ',
+                it('should provide all the requested columns in non-default aggregation: ' + placement,
                 function (done) {
                     const response = {
                         status: 200,
@@ -570,7 +573,7 @@ describe('aggregation', function () {
                     });
                 });
 
-                it('should provide only the requested columns in non-default aggregation ',
+                it('should provide only the requested columns in non-default aggregation: ' + placement,
                 function (done) {
                     this.mapConfig = createVectorMapConfig([
                         {
@@ -2970,7 +2973,7 @@ describe('aggregation', function () {
                 it(`for ${placement} each aggr. cell is in a single tile`, function (done) {
                     const z = 1;
                     const resolution = 1;
-                    const query = POINTS_SQL_GRID.replace('$Z', z).replace('$resolution', resolution);
+                    const query = POINTS_SQL_GRID(z, resolution);
                     this.mapConfig = {
                         version: '1.6.0',
                         buffersize: { 'mvt': 0 },
@@ -3015,32 +3018,17 @@ describe('aggregation', function () {
                                     }
                                     const tile11 = JSON.parse(mvt.toGeoJSONSync(0));
 
-                                    const tile00Expected = [
-                                        { cartodb_id: 4, _cdb_feature_count: 2 },
-                                        { cartodb_id: 7, _cdb_feature_count: 1 }
-                                    ];
-                                    const tile10Expected = [
-                                        { cartodb_id: 5, _cdb_feature_count: 2 },
-                                        { cartodb_id: 6, _cdb_feature_count: 1 },
-                                        { cartodb_id: 8, _cdb_feature_count: 1 },
-                                        { cartodb_id: 9, _cdb_feature_count: 1 }
-                                    ];
-                                    const tile01Expected = [
-                                        { cartodb_id: 1, _cdb_feature_count: 2 }
-                                    ];
-                                    const tile11Expected = [
-                                        { cartodb_id: 2, _cdb_feature_count: 2 },
-                                        { cartodb_id: 3, _cdb_feature_count: 1 }
-                                    ];
-                                    const tile00Actual = tile00.features.map(f => f.properties);
-                                    const tile10Actual = tile10.features.map(f => f.properties);
-                                    const tile01Actual = tile01.features.map(f => f.properties);
-                                    const tile11Actual = tile11.features.map(f => f.properties);
-                                    const orderById = (a, b) => a.cartodb_id - b.cartodb_id;
-                                    assert.deepEqual(tile00Actual.sort(orderById), tile00Expected);
-                                    assert.deepEqual(tile10Actual.sort(orderById), tile10Expected);
-                                    assert.deepEqual(tile01Actual.sort(orderById), tile01Expected);
-                                    assert.deepEqual(tile11Actual.sort(orderById), tile11Expected);
+                                    // There needs to be 13 points
+                                    const count_features = ((tile) =>
+                                        tile.features.map(f => f.properties)
+                                                     .map(f => f._cdb_feature_count)
+                                                     .reduce((a,b) => a + b, 0));
+
+                                    const tile00Count = count_features(tile00);
+                                    const tile10Count = count_features(tile10);
+                                    const tile01Count = count_features(tile01);
+                                    const tile11Count = count_features(tile11);
+                                    assert.equal(13, tile00Count + tile10Count + tile01Count + tile11Count);
 
                                     done();
                                 });
@@ -3056,7 +3044,7 @@ describe('aggregation', function () {
                     const z = 1;
                     const resolution = 2;
                     // space the test points by half the resolution:
-                    const query = POINTS_SQL_GRID.replace('$Z', z).replace('$resolution', resolution/2);
+                    const query = POINTS_SQL_GRID(z, resolution / 2);
 
                     this.mapConfig = {
                         version: '1.6.0',
@@ -3133,20 +3121,11 @@ describe('aggregation', function () {
                 });
 
                 it(`for ${placement} includes complete cells in buffer`, function (done) {
-                    if (!usePostGIS && placement !== 'point-grid') {
-                        // Mapnik seem to filter query results by its (inaccurate) bbox,
-                        // which makes some aggregated clusters get lost here.
-                        // The point-grid placement is resilient to this problem because the result
-                        // coordinates are moved to cluster cell centers, so they're well within
-                        // bbox limits.
-                        this.testClient = new TestClient({});
-                        return done();
-                    }
 
                     // use buffersize coincident with resolution, the buffer should include neighbour cells
                     const z = 2;
                     const resolution = 1;
-                    const query = POINTS_SQL_GRID.replace('$Z', z).replace('$resolution', resolution);
+                    const query = POINTS_SQL_GRID(z, resolution);
 
                     this.mapConfig = {
                         version: '1.6.0',
@@ -3191,6 +3170,18 @@ describe('aggregation', function () {
                                         return done(err);
                                     }
                                     const tile11 = JSON.parse(mvt.toGeoJSONSync(0));
+
+                                    // There needs to be 41 points
+                                    const count_features = ((tile) =>
+                                        tile.features.map(f => f.properties)
+                                                     .map(f => f._cdb_feature_count)
+                                                     .reduce((a,b) => a + b, 0));
+
+                                    const tile00Count = count_features(tile00);
+                                    const tile10Count = count_features(tile10);
+                                    const tile01Count = count_features(tile01);
+                                    const tile11Count = count_features(tile11);
+                                    assert.equal(41, tile00Count + tile10Count + tile01Count + tile11Count);
 
                                     const tile00Expected = [
                                         { _cdb_feature_count: 2, cartodb_id: 1 },
