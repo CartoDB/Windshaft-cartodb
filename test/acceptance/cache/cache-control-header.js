@@ -26,7 +26,7 @@ function createMapConfig (layers = defaultLayers) {
 
 describe('cache-control header', function () {
     describe('max-age directive', function () {
-        it('tile from a table wich is included in cdb_tablemetada', function (done) {
+        it('tile from a table which is included in cdb_tablemetada', function (done) {
             const ttl = ONE_YEAR_IN_SECONDS;
             const mapConfig = createMapConfig([{
                 type: 'cartodb',
@@ -49,7 +49,7 @@ describe('cache-control header', function () {
             });
         });
 
-        it('tile from a table wich is NOT included in cdb_tablemetada', function (done) {
+        it('tile from a table which is NOT included in cdb_tablemetada', function (done) {
             const ttl = global.environment.varnish.fallbackTtl || FIVE_MINUTES_IN_SECONDS;
             const mapConfig = createMapConfig([{
                 type: 'cartodb',
