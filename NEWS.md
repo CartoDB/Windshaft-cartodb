@@ -5,6 +5,7 @@ Released 2019-XX-XX
 
 Announcements:
 
+- Cache control header fine tuning. Set a shorter value for "max-age" directive if there is no way to know when to trigger the invalidation.
 - Update deps:
   - windshaft@5.3.0:
     - Update @carto/mapnik to [`3.6.2-carto.15`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.15/CHANGELOG.carto.md#362-carto15).

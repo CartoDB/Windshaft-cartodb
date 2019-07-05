@@ -326,6 +326,7 @@ var config = {
         purge_enabled: false, // whether the purge/invalidation mechanism is enabled in varnish or not
         secret: 'xxx',
         ttl: 86400,
+        fallbackTtl: 300,
         layergroupTtl: 86400 // the max-age for cache-control header in layergroup responses
     }
     // this [OPTIONAL] configuration enables invalidating by surrogate key in fastly
