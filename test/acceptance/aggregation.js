@@ -2354,7 +2354,7 @@ describe('aggregation', function () {
                                     threshold: 1,
                                     columns: {
                                         value: {
-                                            aggregate_function: 'sum',
+                                            aggregate_function: 'mode',
                                             aggregated_column: 'value'
                                         }
                                     },
@@ -2400,7 +2400,7 @@ describe('aggregation', function () {
                                     threshold: 1,
                                     columns: {
                                         value: {
-                                            aggregate_function: 'sum',
+                                            aggregate_function: 'mode',
                                             aggregated_column: 'value'
                                         }
                                     },
