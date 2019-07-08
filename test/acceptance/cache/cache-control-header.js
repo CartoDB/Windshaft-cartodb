@@ -16,15 +16,23 @@ const defaultLayers = [{
         cartocss_version: '2.3.0'
     }
 }];
+const defaultDatavies = {};
+const defaultAnalyses = [];
 
-function createMapConfig (layers = defaultLayers) {
+function createMapConfig ({
+    layers = defaultLayers,
+    dataviews = defaultDatavies,
+    analyses = defaultAnalyses
+} = {}) {
     return {
         version: '1.8.0',
-        layers: layers
+        layers: layers,
+        dataviews: dataviews || {},
+        analyses: analyses || []
     };
 }
 
-describe('cache-control header', function () {
+describe.only('cache-control header', function () {
     describe('max-age directive', function () {
         it('tile from a table which is included in cdb_tablemetada', function (done) {
             const ttl = ONE_YEAR_IN_SECONDS;
@@ -112,6 +120,47 @@ describe('cache-control header', function () {
             const testClient = new TestClient(mapConfig);
 
             testClient.getTile(0, 0, 0, {}, function (err, res) {
+                if (err) {
+                    return done(err);
+                }
+
+                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                testClient.drain(done);
+            });
+        });
+
+        it('tile from a cached analysis table which is not included in cdb_tablemetada', function (done) {
+            const ttl = ONE_YEAR_IN_SECONDS;
+            const mapConfig = createMapConfig({
+                layers: [{
+                    type: 'cartodb',
+                    options: {
+                        source: {
+                            id: 'HEAD'
+                        },
+                        cartocss: TestClient.CARTOCSS.POINTS,
+                        cartocss_version: '2.3.0'
+                    }
+                }],
+                analyses: [{
+                    id: 'HEAD',
+                    type: 'buffer',
+                    params: {
+                        source: {
+                            id: 'source_1',
+                            type: 'source',
+                            params: {
+                                query: 'select * from populated_places_simple_reduced'
+                            }
+                        },
+                        radius: 60000
+                    }
+                }]
+            });
+
+            const testClient = new TestClient(mapConfig, 1234);
+
+            testClient.getTile(0, 0, 0, {}, function (err, res, layergroup) {
                 if (err) {
                     return done(err);
                 }
