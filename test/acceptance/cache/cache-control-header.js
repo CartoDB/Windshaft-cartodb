@@ -150,7 +150,7 @@ describe.only('cache-control header', function () {
                             id: 'source_1',
                             type: 'source',
                             params: {
-                                query: 'select * from populated_places_simple_reduced'
+                                query: 'select * from test_table'
                             }
                         },
                         radius: 60000
