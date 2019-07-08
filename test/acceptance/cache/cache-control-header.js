@@ -32,7 +32,7 @@ function createMapConfig ({
     };
 }
 
-describe.only('cache-control header', function () {
+describe('cache-control header', function () {
     describe('max-age directive', function () {
         it('tile from a table which is included in cdb_tablemetada', function (done) {
             const ttl = ONE_YEAR_IN_SECONDS;
