@@ -166,7 +166,7 @@ describe('cache-control header', function () {
 
             const testClient = new TestClient(mapConfig, 1234);
 
-            testClient.getTile(0, 0, 0, {}, function (err, res, layergroup) {
+            testClient.getTile(0, 0, 0, {}, function (err, res) {
                 if (err) {
                     return done(err);
                 }
