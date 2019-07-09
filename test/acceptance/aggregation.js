@@ -10,10 +10,10 @@ const windshaftUtils = require('windshaft').utils;
 const wmh = new windshaftUtils.WebMercatorHelper();
 
 const suites = [
-//    {
-//        desc: 'mvt (mapnik)',
-//        usePostGIS: false
-//    },
+    {
+        desc: 'mvt (mapnik)',
+        usePostGIS: false
+    },
     {
         desc: 'mvt (postgis)',
         usePostGIS: true
@@ -3171,60 +3171,41 @@ describe('aggregation', function () {
                                     }
                                     const tile11 = JSON.parse(mvt.toGeoJSONSync(0));
 
-                                    // There needs to be 41 points
-                                    const count_features = ((tile) =>
-                                        tile.features.map(f => f.properties)
-                                                     .map(f => f._cdb_feature_count)
-                                                     .reduce((a,b) => a + b, 0));
+                                    const allValues = [
+                                        { cartodb_id: 1, _cdb_feature_count: 2 },
+                                        { cartodb_id: 2, _cdb_feature_count: 2 },
+                                        { cartodb_id: 3, _cdb_feature_count: 1 },
+                                        { cartodb_id: 4, _cdb_feature_count: 2 },
+                                        { cartodb_id: 5, _cdb_feature_count: 2 },
+                                        { cartodb_id: 6, _cdb_feature_count: 1 },
+                                        { cartodb_id: 7, _cdb_feature_count: 1 },
+                                        { cartodb_id: 8, _cdb_feature_count: 1 },
+                                        { cartodb_id: 9, _cdb_feature_count: 1 }
+                                    ];
 
-                                    const tile00Count = count_features(tile00);
-                                    const tile10Count = count_features(tile10);
-                                    const tile01Count = count_features(tile01);
-                                    const tile11Count = count_features(tile11);
-                                    assert.equal(41, tile00Count + tile10Count + tile01Count + tile11Count);
-
-                                    const tile00Expected = [
-                                        { _cdb_feature_count: 2, cartodb_id: 1 },
-                                        { _cdb_feature_count: 2, cartodb_id: 2 },
-                                        { _cdb_feature_count: 2, cartodb_id: 4 },
-                                        { _cdb_feature_count: 2, cartodb_id: 5 },
-                                        { _cdb_feature_count: 1, cartodb_id: 7 },
-                                        { _cdb_feature_count: 1, cartodb_id: 8 }
-                                    ];
-                                    const tile10Expected = [
-                                        { _cdb_feature_count: 2, cartodb_id: 1 },
-                                        { _cdb_feature_count: 2, cartodb_id: 2 },
-                                        { _cdb_feature_count: 1, cartodb_id: 3 },
-                                        { _cdb_feature_count: 2, cartodb_id: 4 },
-                                        { _cdb_feature_count: 2, cartodb_id: 5 },
-                                        { _cdb_feature_count: 1, cartodb_id: 6 },
-                                        { _cdb_feature_count: 1, cartodb_id: 7 },
-                                        { _cdb_feature_count: 1, cartodb_id: 8 },
-                                        { _cdb_feature_count: 1, cartodb_id: 9 }
-                                    ];
-                                    const tile01Expected = [
-                                        { _cdb_feature_count: 2, cartodb_id: 1 },
-                                        { _cdb_feature_count: 2, cartodb_id: 2 },
-                                        { _cdb_feature_count: 2, cartodb_id: 4 },
-                                        { _cdb_feature_count: 2, cartodb_id: 5 }
-                                    ];
-                                    const tile11Expected = [
-                                        { _cdb_feature_count: 2, cartodb_id: 1 },
-                                        { _cdb_feature_count: 2, cartodb_id: 2 },
-                                        { _cdb_feature_count: 1, cartodb_id: 3 },
-                                        { _cdb_feature_count: 2, cartodb_id: 4 },
-                                        { _cdb_feature_count: 2, cartodb_id: 5 },
-                                        { _cdb_feature_count: 1, cartodb_id: 6 }
-                                    ];
+                                    // We check that the cells either added completely in the tile
+                                    // or not at all
+                                    const f_check_properties = (tile => {
+                                        tile.forEach(property => {
+                                            allValues.forEach(v => {
+                                                if (v.cartodb_id === property.cartodb_id) {
+                                                    assert.equal(v._cdb_feature_count,
+                                                                 property._cdb_feature_count,
+                                                                 "Tile: " + JSON.stringify(tile) +
+                                                                 ". ID: " + property.cartodb_id);
+                                                }
+                                            });
+                                        });
+                                    });
                                     const tile00Actual = tile00.features.map(f => f.properties);
                                     const tile10Actual = tile10.features.map(f => f.properties);
                                     const tile01Actual = tile01.features.map(f => f.properties);
                                     const tile11Actual = tile11.features.map(f => f.properties);
-                                    const orderById = (a, b) => a.cartodb_id - b.cartodb_id;
-                                    assert.deepEqual(tile00Actual.sort(orderById), tile00Expected);
-                                    assert.deepEqual(tile10Actual.sort(orderById), tile10Expected);
-                                    assert.deepEqual(tile01Actual.sort(orderById), tile01Expected);
-                                    assert.deepEqual(tile11Actual.sort(orderById), tile11Expected);
+
+                                    f_check_properties(tile00Actual);
+                                    f_check_properties(tile10Actual);
+                                    f_check_properties(tile01Actual);
+                                    f_check_properties(tile11Actual);
 
                                     done();
                                 });
