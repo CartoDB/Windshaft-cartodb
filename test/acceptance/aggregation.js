@@ -7,7 +7,7 @@ const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
 
 const windshaftUtils = require('windshaft').utils;
-const wmh = new windshaftUtils.WebMercatorHelper();
+const webmercator = new windshaftUtils.WebMercatorHelper();
 
 const suites = [
     {
@@ -112,15 +112,15 @@ describe('aggregation', function () {
     WITH hgrid AS (
         SELECT
             CDB_RectangleGrid (
-                ST_Expand(!bbox!, ${wmh.getResolution({ z : 1 })} * 12),
-                ${wmh.getResolution({ z : 1 })} * 12,
-                ${wmh.getResolution({ z : 1 })} * 12
+                ST_Expand(!bbox!, ${webmercator.getResolution({ z : 1 })} * 12),
+                ${webmercator.getResolution({ z : 1 })} * 12,
+                ${webmercator.getResolution({ z : 1 })} * 12
             ) as cell
     )
     SELECT
         hgrid.cell as the_geom_webmercator,
         count(1) as agg_value,
-        count(1) /power( 12 * ${wmh.getResolution({ z : 1 })}, 2 ) as agg_value_density,
+        count(1) /power( 12 * ${webmercator.getResolution({ z : 1 })}, 2 ) as agg_value_density,
         row_number() over () as cartodb_id
     FROM hgrid, (<%= sql %>) i
     WHERE ST_Intersects(i.the_geom_webmercator, hgrid.cell) GROUP BY hgrid.cell
@@ -207,7 +207,7 @@ describe('aggregation', function () {
     //
     const POINTS_SQL_GRID = (z, resolution) => `
         WITH params AS (
-            SELECT ${wmh.getResolution({ z : z })}*${resolution} AS l -- cell size for Z, resolution
+            SELECT ${webmercator.getResolution({ z : z })}*${resolution} AS l -- cell size for Z, resolution
         )
         SELECT
             row_number() OVER () AS cartodb_id,
