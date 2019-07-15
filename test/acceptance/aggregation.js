@@ -227,8 +227,8 @@ describe('aggregation', function () {
     const POINTS_SQL_CELL = `
       SELECT
         1 AS cartodb_id,
-        ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857) AS the_geom_webmercator,
-        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857), 4326) AS the_geom
+        ST_SetSRID(ST_MakePoint(18181005.82, -18181043.9), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.82, -18181043.9), 3857), 4326) AS the_geom
       UNION ALL SELECT
         2 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181005.9, -18181044.0), 3857) AS the_geom_webmercator,
@@ -239,8 +239,8 @@ describe('aggregation', function () {
         ST_Transform(ST_SetSRID(ST_MakePoint(18181005.87, -18181043.94), 3857), 4326) AS the_geom
       UNION ALL SELECT
         4 AS cartodb_id,
-        ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857) AS the_geom_webmercator,
-        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.8, -18181043.9), 3857), 4326) AS the_geom
+        ST_SetSRID(ST_MakePoint(18181005.82, -18181043.9), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181005.82, -18181043.9), 3857), 4326) AS the_geom
     `;
 
     // Points positioned inside one cell of Z=20, X=1000000, X=1000000 (inner cell not on border)
@@ -252,8 +252,8 @@ describe('aggregation', function () {
         ST_Transform(ST_SetSRID(ST_MakePoint(18181005.95, -18181043.8), 3857), 4326) AS the_geom
       UNION ALL SELECT
         2 AS cartodb_id,
-        ST_SetSRID(ST_MakePoint(18181006.09, -18181043.72), 3857) AS the_geom_webmercator,
-        ST_Transform(ST_SetSRID(ST_MakePoint(18181006.09, -18181043.72), 3857), 4326) AS the_geom
+        ST_SetSRID(ST_MakePoint(18181006.09, -18181043.74), 3857) AS the_geom_webmercator,
+        ST_Transform(ST_SetSRID(ST_MakePoint(18181006.09, -18181043.74), 3857), 4326) AS the_geom
       UNION ALL SELECT
         3 AS cartodb_id,
         ST_SetSRID(ST_MakePoint(18181006.02, -18181043.79), 3857) AS the_geom_webmercator,
@@ -3171,42 +3171,24 @@ describe('aggregation', function () {
                                     }
                                     const tile11 = JSON.parse(mvt.toGeoJSONSync(0));
 
-                                    const allValues = [
-                                        { cartodb_id: 1, _cdb_feature_count: 2 },
-                                        { cartodb_id: 2, _cdb_feature_count: 2 },
-                                        { cartodb_id: 3, _cdb_feature_count: 1 },
-                                        { cartodb_id: 4, _cdb_feature_count: 2 },
-                                        { cartodb_id: 5, _cdb_feature_count: 2 },
-                                        { cartodb_id: 6, _cdb_feature_count: 1 },
-                                        { cartodb_id: 7, _cdb_feature_count: 1 },
-                                        { cartodb_id: 8, _cdb_feature_count: 1 },
-                                        { cartodb_id: 9, _cdb_feature_count: 1 }
-                                    ];
-
-                                    // We check that the cells either added completely in the tile
-                                    // or not at all
-                                    const f_check_properties = (tile => {
-                                        tile.forEach(property => {
-                                            allValues.forEach(v => {
-                                                if (v.cartodb_id === property.cartodb_id) {
-                                                    assert.equal(v._cdb_feature_count,
-                                                                 property._cdb_feature_count,
-                                                                 "Tile: " + JSON.stringify(tile) +
-                                                                 ". ID: " + property.cartodb_id);
-                                                }
-                                            });
-                                        });
-                                    });
+                                    // We check that if an id/cell is present in multiple tiles,
+                                    // it always contains the same amount of features
                                     const tile00Actual = tile00.features.map(f => f.properties);
                                     const tile10Actual = tile10.features.map(f => f.properties);
                                     const tile01Actual = tile01.features.map(f => f.properties);
                                     const tile11Actual = tile11.features.map(f => f.properties);
 
-                                    f_check_properties(tile00Actual);
-                                    f_check_properties(tile10Actual);
-                                    f_check_properties(tile01Actual);
-                                    f_check_properties(tile11Actual);
-
+                                    const allFeatures = [... tile00Actual, ...tile10Actual,
+                                                         ...tile01Actual, ...tile11Actual];
+                                    for (let i = 0; i < allFeatures.length; i++) {
+                                        for (let j = i + 1; j < allFeatures.length; j++) {
+                                            const c1 = allFeatures[i];
+                                            const c2 = allFeatures[j];
+                                            if (c1.cartodb_id === c2.cartodb_id) {
+                                                assert.equal(c1._cdb_feature_count, c2._cdb_feature_count);
+                                            }
+                                        }
+                                    }
                                     done();
                                 });
                             });
