@@ -8,11 +8,11 @@ Announcements:
 - Cache control header fine tuning. Set a shorter value for "max-age" directive if there is no way to know when to trigger the invalidation.
 - Update deps:
   - Update `cartodb-query-tables` to version [`0.5.0`](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.5.0)
-  - windshaft@5.3.0:
-    - Update @carto/mapnik to [`3.6.2-carto.15`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.15/CHANGELOG.carto.md#362-carto15).
+  - Upgrade `windshaft` to [`5.5.0`](https://github.com/CartoDB/Windshaft/blob/5.5.0/NEWS.md#version-550):
+    - Upgrade grainstore to [`2.0.1`](https://github.com/CartoDB/grainstore/releases/tag/2.0.1)
+    - Update @carto/mapnik to [`3.6.2-carto.16`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.16/CHANGELOG.carto.md#362-carto16).
     - Update turbo-carto to [`0.21.2`](https://github.com/CartoDB/turbo-carto/releases/tag/0.21.2)
-    - Upgrade `@carto/cartonik` to version [0.6.0](https://github.com/CartoDB/cartonik/blob/v0.6.0/CHANGELOG.md#v060-2019-06-17).
-    - Upgrade `windshaft` to version [5.4.0](https://github.com/CartoDB/Windshaft/releases/tag/5.4.0)
+    - Upgrade `@carto/cartonik` to version [0.6.1](https://github.com/CartoDB/cartonik/blob/master/CHANGELOG.md#v061-2019-07-10).
 
 ## 7.1.0
 Released 2019-05-06
