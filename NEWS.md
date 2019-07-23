@@ -8,7 +8,7 @@ Announcements:
 - Cache control header fine tuning. Set a shorter value for "max-age" directive if there is no way to know when to trigger the invalidation.
 - Update deps:
   - Update `cartodb-query-tables` to version [`0.5.0`](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.5.0)
-  - Upgrade `windshaft` to [`5.5.0`](https://github.com/CartoDB/Windshaft/blob/5.5.0/NEWS.md#version-550):
+  - Upgrade `windshaft` to [`5.5.1`](https://github.com/CartoDB/Windshaft/blob/5.5.1/NEWS.md#version-551):
     - Upgrade grainstore to [`2.0.1`](https://github.com/CartoDB/grainstore/releases/tag/2.0.1)
     - Update @carto/mapnik to [`3.6.2-carto.16`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.16/CHANGELOG.carto.md#362-carto16).
     - Update turbo-carto to [`0.21.2`](https://github.com/CartoDB/turbo-carto/releases/tag/0.21.2)
