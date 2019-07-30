@@ -50,6 +50,7 @@ module.exports = _.extend({}, serverOptions, {
     renderer: {
         mapnik: {
             poolSize: 4,//require('os').cpus().length,
+            poolMaxWaitingClients: 32,
             metatile: 1,
             bufferSize: 64,
             snapToGrid: false,
