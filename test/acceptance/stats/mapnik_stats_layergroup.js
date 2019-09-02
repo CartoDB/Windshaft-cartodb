@@ -583,6 +583,38 @@ describe(`[${desc}] Create mapnik layergroup`, function() {
         });
     });
 
+    it('should not provide a sample when the source table is empty', function (done) {
+        var testClient = new TestClient({
+            "version": "1.4.0",
+            "layers": [
+                {
+                    "type": "mapnik",
+                    "options": {
+                        "sql": "SELECT * FROM test_table_100 limit 0",
+                        "cartocss_version": "2.3.0",
+                        "cartocss": "#layer { line-width:16; }",
+                        "metadata": {
+                            "sample": {
+                                "num_rows": 30
+                            },
+                            "sql": "select * from test_table_100 limit 0"
+                        }
+                    }
+                }
+            ]
+        });
+
+        testClient.getLayergroup(function(err, layergroup) {
+            assert.ifError(err);
+            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
+            assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
+            const expectedCols = [ 'cartodb_id', 'value', 'the_geom', 'the_geom_webmercator' ].sort();
+            assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
+            testClient.drain(done);
+        });
+    });
+
     it('can specify sample columns', function(done) {
         var testClient = new TestClient({
             version: '1.4.0',
