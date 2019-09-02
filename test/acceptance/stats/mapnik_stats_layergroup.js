@@ -596,8 +596,7 @@ describe(`[${desc}] Create mapnik layergroup`, function() {
                         "metadata": {
                             "sample": {
                                 "num_rows": 30
-                            },
-                            "sql": "select * from test_table_100 limit 0"
+                            }
                         }
                     }
                 }
@@ -606,11 +605,7 @@ describe(`[${desc}] Create mapnik layergroup`, function() {
 
         testClient.getLayergroup(function(err, layergroup) {
             assert.ifError(err);
-            assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-            assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
-            assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
-            const expectedCols = [ 'cartodb_id', 'value', 'the_geom', 'the_geom_webmercator' ].sort();
-            assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
+            assert.deepStrictEqual(layergroup.metadata.layers[0].meta.stats.sample, {});
             testClient.drain(done);
         });
     });
