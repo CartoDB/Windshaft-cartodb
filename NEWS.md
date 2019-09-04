@@ -5,6 +5,7 @@ Released 2019-XX-XX
 
 Announcements:
 
+- Improved efficiency of query samples while instatiating a map (#1120).
 - Cache control header fine tuning. Set a shorter value for "max-age" directive if there is no way to know when to trigger the invalidation.
 - Update deps:
   - Update `cartodb-query-tables` to version [`0.5.0`](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.5.0)
