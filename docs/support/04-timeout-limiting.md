@@ -25,8 +25,8 @@ You are able to avoid common issues that trigger timeout limits following these 
 
 ### Timeout Limits Chart
 
-Below, you can find the values of the timeout limit by user account type. 
+Below, you can find the values of the timeout limit by user account type.
 
-|Enterprise plans  |Professional plans  |Free plans  |
+|Enterprise plans  |Individual plans  |Free plans  |
 | ---  | ---  | ---  |
 | 25 seconds  | 15 seconds  | 5 seconds  |
