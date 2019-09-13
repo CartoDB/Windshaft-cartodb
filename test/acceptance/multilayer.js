@@ -21,7 +21,7 @@ var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 
-var QueryTables = require('cartodb-query-tables');
+var QueryTables = require('cartodb-query-tables').queryTables;
 
 ['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function(layergroup_url) {
 
@@ -282,7 +282,7 @@ describe(suiteName, function() {
           var parsedBody = JSON.parse(res.body);
           expected_token = parsedBody.layergroupid.split(':')[0];
           helper.checkCache(res);
-          helper.checkSurrogateKey(res, new QueryTables.DatabaseTablesEntry([
+          helper.checkSurrogateKey(res, new QueryTables.QueryMetadata([
             {dbname: "test_windshaft_cartodb_user_1_db", table_name: "test_table", schema_name: "public"},
             {dbname: "test_windshaft_cartodb_user_1_db", table_name: "test_table_2", schema_name: "public"},
           ]).key().join(' '));

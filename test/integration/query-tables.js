@@ -9,7 +9,7 @@ var cartodbRedis = require('cartodb-redis');
 
 var PgConnection = require('../../lib/cartodb/backends/pg_connection');
 
-var QueryTables = require('cartodb-query-tables');
+var QueryTables = require('cartodb-query-tables').queryTables;
 
 
 describe('QueryTables', function() {
@@ -34,18 +34,15 @@ describe('QueryTables', function() {
 
     it('should return an object with affected tables array and last updated time', function(done) {
         var query = 'select * from test_table';
-        QueryTables.getAffectedTablesFromQuery(connection, query, function(err, result) {
+        QueryTables.getQueryMetadataModel(connection, query, function(err, result) {
             assert.ok(!err, err);
 
             assert.equal(result.getLastUpdatedAt(), 1234567890123);
 
             assert.equal(result.tables.length, 1);
-            assert.deepEqual(result.tables[0], {
-                dbname: 'test_windshaft_cartodb_user_1_db',
-                schema_name: 'public',
-                table_name: 'test_table',
-                updated_at: new Date(1234567890123)
-            });
+            assert.equal(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
+            assert.equal(result.tables[0].schema_name, 'public');
+            assert.equal(result.tables[0].table_name, 'test_table');
 
             done();
         });
@@ -53,18 +50,15 @@ describe('QueryTables', function() {
 
     it('should work with private tables', function(done) {
         var query = 'select * from test_table_private_1';
-        QueryTables.getAffectedTablesFromQuery(connection, query, function(err, result) {
+        QueryTables.getQueryMetadataModel(connection, query, function(err, result) {
             assert.ok(!err, err);
 
             assert.equal(result.getLastUpdatedAt(), 1234567890123);
 
             assert.equal(result.tables.length, 1);
-            assert.deepEqual(result.tables[0], {
-                dbname: 'test_windshaft_cartodb_user_1_db',
-                schema_name: 'public',
-                table_name: 'test_table_private_1',
-                updated_at: new Date(1234567890123)
-            });
+            assert.equal(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
+            assert.equal(result.tables[0].schema_name, 'public');
+            assert.equal(result.tables[0].table_name, 'test_table_private_1');
 
             done();
         });
