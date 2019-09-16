@@ -49,7 +49,7 @@ describe('named-map-provider-reporter', function () {
             );
 
             assert.strictEqual(
-                global.statsClient['windshaft.named-map-provider-cache.named-map.intantiation.count'],
+                global.statsClient['windshaft.named-map-provider-cache.named-map.instantiation.count'],
                 6
             );
 
