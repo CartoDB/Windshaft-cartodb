@@ -123,7 +123,7 @@ describe('named map cache regressions', function () {
                 const newQuery = 'select * from populated_places_simple_reduced limit 100';
                 templateUpdate.layergroup.analyses[0].params.query = newQuery;
 
-                const upateTemplateRequest = {
+                const updateTemplateRequest = {
                     url: `http://${address}/api/v1/map/named/${templateId}?api_key=${apiKey}`,
                     method: 'PUT',
                     headers: {
@@ -134,7 +134,7 @@ describe('named map cache regressions', function () {
                     json: true
                 };
 
-                request(upateTemplateRequest, (err, res) => {
+                request(updateTemplateRequest, (err, res) => {
                     if (err) {
                         return done(err);
                     }
