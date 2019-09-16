@@ -10,6 +10,8 @@ Announcements:
 - Update deps:
   - Update `cartodb-query-tables` to version [`0.6.0`](https://github.com/CartoDB/node-cartodb-query-tables/blob/0964b6cce5d3d3e149af8d6685e2fe7fa87a3d32/NEWS.md#version-060).
   - Update `cartodb-psql` to [`0.14.0`](https://github.com/CartoDB/node-cartodb-psql/blob/0.14.0/NEWS.md#version-0140-2019-09-10)
+  - Upgrade `windshaft` to [`5.6.2`](https://github.com/CartoDB/Windshaft/blob/5.6.2/NEWS.md#version-562):
+    - Remove uneeded param `the_geom_webmercator` from `ST_AsMVT` call, which improves compatibility with other postgis installations when running through FDW's. See https://github.com/CartoDB/Windshaft/pull/704 for details.
   - Upgrade `windshaft` to [`5.6.1`](https://github.com/CartoDB/Windshaft/blob/5.6.1/NEWS.md#version-561):
     - Upgrade grainstore to [`2.0.1`](https://github.com/CartoDB/grainstore/releases/tag/2.0.1)
     - Update @carto/mapnik to [`3.6.2-carto.16`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.16/CHANGELOG.carto.md#362-carto16).
