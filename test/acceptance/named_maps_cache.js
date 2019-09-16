@@ -1,13 +1,12 @@
 'use strict';
 
 require('../support/test_helper');
-var RedisPool = require('redis-mpool');
 
+const helper = require('../support/test_helper');
 var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
-var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
 
 describe('named maps provider cache', function() {
     var server;
@@ -16,14 +15,8 @@ describe('named maps provider cache', function() {
         server = new CartodbWindshaft(serverOptions);
     });
 
-    // configure redis pool instance to use in tests
-    var redisPool = new RedisPool(global.environment.redis);
-
-    var templateMaps = new TemplateMaps(redisPool, {
-        max_user_templates: global.environment.maxUserTemplates
-    });
-
     var username = 'localhost';
+    const apikey = 1234;
     var templateName = 'template_with_color';
 
     var IMAGE_TOLERANCE = 20;
@@ -31,7 +24,7 @@ describe('named maps provider cache', function() {
     function createTemplate(color) {
         return {
             version: '0.0.1',
-            name: templateName,
+            name: `${templateName}_${color}`,
             auth: {
                 method: 'open'
             },
@@ -56,17 +49,13 @@ describe('named maps provider cache', function() {
         };
     }
 
-    afterEach(function (done) {
-        templateMaps.delTemplate(username, templateName, done);
-    });
-
-    function getNamedTile(options, callback) {
+    function getNamedTile(templateId, options, callback) {
         if (!callback) {
             callback = options;
             options = {};
         }
 
-        var url = '/api/v1/map/named/' + templateName + '/all/' + [0,0,0].join('/') + '.png';
+        var url = '/api/v1/map/named/' + templateId + '/all/' + [0,0,0].join('/') + '.png';
 
         var requestOptions = {
             url: url,
@@ -88,10 +77,58 @@ describe('named maps provider cache', function() {
 
         assert.response(server, requestOptions, expectedResponse, function (res, err) {
             var img;
-            if (statusCode === 200) {
-                img = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+            if (res.statusCode === 200) {
+                img = mapnik.Image.fromBytes(new Buffer.from(res.body, 'binary'));
             }
             return callback(err, res, img);
+        });
+    }
+
+    function addTemplate (template, callback) {
+        const createTemplateRequest = {
+            url: `/api/v1/map/named?api_key=${apikey}`,
+            method: 'POST',
+            headers: {
+                host: username,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(template)
+        };
+
+        const expectedResponse = {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            }
+        };
+
+        assert.response(server, createTemplateRequest, expectedResponse, (res, err) => {
+            let template;
+
+            if (res.statusCode === 200) {
+                template = JSON.parse(res.body);
+            }
+
+            return callback(err, res, template);
+        });
+    }
+
+
+    function deleteTemplate (templateId, callback) {
+        const deleteTemplateRequest = {
+            url: `/api/v1/map/named/${templateId}?api_key=${apikey}`,
+            method: 'DELETE',
+            headers: {
+                host: 'localhost',
+            }
+        };
+
+        const expectedResponse = {
+            status: 204,
+        };
+
+        assert.response(server, deleteTemplateRequest, expectedResponse, (res, err) => {
+            return callback(err, res);
         });
     }
 
@@ -99,49 +136,57 @@ describe('named maps provider cache', function() {
         return './test/fixtures/provider/populated_places_simple_reduced-' + color + '.png';
     }
 
-    var colors = ['red', 'red', 'green', 'blue'];
+    var colors = ['black', 'red', 'green', 'blue'];
     colors.forEach(function(color) {
         it('should return an image estimating its bounds based on dataset', function (done) {
-            templateMaps.addTemplate(username, createTemplate(color), function (err) {
+            addTemplate(createTemplate(color), function (err, res, template) {
                 if (err) {
                     return done(err);
                 }
-                getNamedTile(function(err, res, img) {
+
+                getNamedTile(template.template_id, function(err, res, img) {
                     assert.ok(!err);
-                    assert.imageIsSimilarToFile(img, previewFixture(color), IMAGE_TOLERANCE, done);
-                });
-            });
-        });
-    });
+                    assert.imageIsSimilarToFile(img, previewFixture(color), IMAGE_TOLERANCE, (err) => {
+                        assert.ifError(err);
 
-    it('should fail to use template from named map provider after template deletion', function (done) {
-        var color = 'black';
-        templateMaps.addTemplate(username, createTemplate(color), function (err) {
-            if (err) {
-                return done(err);
-            }
-            getNamedTile(function(err, res, img) {
-                assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture(color), IMAGE_TOLERANCE, function(err) {
-                    assert.ok(!err);
-
-                    templateMaps.delTemplate(username, templateName, function (err) {
-                        assert.ok(!err);
-
-                        getNamedTile({ statusCode: 404 }, function(err, res) {
-                            assert.ok(!err);
-                            assert.deepEqual(
-                                JSON.parse(res.body).errors,
-                                ["Template 'template_with_color' of user 'localhost' not found"]
-                            );
-
-                            // add template again so it's clean in afterEach
-                            templateMaps.addTemplate(username, createTemplate(color), done);
-                        });
+                        const keysToDelete = {};
+                        keysToDelete['map_tpl|localhost'] = 0;
+                        helper.deleteRedisKeys(keysToDelete, done);
                     });
                 });
             });
         });
     });
 
+    it('should fail to use template from named map provider after template deletion', function (done) {
+        const color = 'black';
+        const templateId = `${templateName}_${color}`;
+
+        addTemplate(createTemplate(color), function (err) {
+            assert.ifError(err);
+
+            getNamedTile(templateId, function(err, res, img) {
+                assert.ifError(err);
+
+                assert.imageIsSimilarToFile(img, previewFixture(color), IMAGE_TOLERANCE, function (err) {
+                    assert.ifError(err);
+
+                    deleteTemplate(templateId, function (err) {
+                        assert.ifError(err);
+
+                        getNamedTile(templateId, { statusCode: 404 }, function(err, res) {
+                            assert.ifError(err);
+
+                            assert.deepEqual(
+                                JSON.parse(res.body).errors,
+                                ["Template 'template_with_color_black' of user 'localhost' not found"]
+                            );
+
+                            done();
+                        });
+                    });
+                });
+            });
+        });
+    });
 });

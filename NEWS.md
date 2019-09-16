@@ -5,6 +5,8 @@ Released 2019-XX-XX
 
 Announcements:
 
+- Stop caching map template errors in Named Map Provider Cache
+- Gather metrics from Named Maps Providers Cache
 - Improved efficiency of query samples while instatiating a map (#1120).
 - Cache control header fine tuning. Set a shorter value for "max-age" directive if there is no way to know when to trigger the invalidation.
 - Update deps:
