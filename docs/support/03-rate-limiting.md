@@ -79,7 +79,7 @@ Below, you can find the values of the rate limit by user account type and endpoi
 | GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |25  |1  |25  |
 
 
-#### Professional plans
+#### Individual plans
 
 |Endpoint   |Request   |Time period  |Burst  |
 | :---         |          ---: |          ---: |          ---: |

@@ -6,9 +6,9 @@ Maps API is affected by this kind of limiting.
 
 ### Quota Limits Chart
 
-Below, you can find the values of the different quota limits by user account type. 
+Below, you can find the values of the different quota limits by user account type.
 
-|Limit   |Enterprise plans   |Professional plans  |Free plans  |
+|Limit   |Enterprise plans   |Individual plans  |Free plans  |
 | :---         |          ---: |          ---: |          ---: |
 | Maximum Static Map image size |4000 X 4000 pixels  |4000 X 4000 pixels  |4000 X 4000 pixels  |
 | Maximum number of Named Maps |4096  |4096  |4096 |
