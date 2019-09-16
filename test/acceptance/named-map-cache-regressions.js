@@ -9,6 +9,10 @@ const serverOptions = require('../../lib/cartodb/server_options');
 const { mapnik } = require('windshaft');
 const helper = require('../support/test_helper');
 
+const namedTileUrlTemplate = (ctx) => {
+    return `http://${ctx.address}/api/v1/map/static/named/${ctx.templateId}/256/256.png?api_key=${ctx.apiKey}`;
+};
+
 describe('named map cache regressions', function () {
     const server = new Server(serverOptions);
 
@@ -116,7 +120,8 @@ describe('named map cache regressions', function () {
 
                 const templateUpdate = Object.assign({}, template);
 
-                templateUpdate.layergroup.analyses[0].params.query = 'select * from populated_places_simple_reduced limit 100';
+                const newQuery = 'select * from populated_places_simple_reduced limit 100';
+                templateUpdate.layergroup.analyses[0].params.query = newQuery;
 
                 const upateTemplateRequest = {
                     url: `http://${address}/api/v1/map/named/${templateId}?api_key=${apiKey}`,
@@ -129,7 +134,7 @@ describe('named map cache regressions', function () {
                     json: true
                 };
 
-                request(upateTemplateRequest, (err, res, body) => {
+                request(upateTemplateRequest, (err, res) => {
                     if (err) {
                         return done(err);
                     }
@@ -185,7 +190,7 @@ describe('named map cache regressions', function () {
                                     keysToDelete['map_tpl|localhost'] = 0;
 
                                     const previewRequest = {
-                                        url: `http://${address}/api/v1/map/static/named/${templateId}/256/256.png?api_key=${apiKey}`,
+                                        url: namedTileUrlTemplate({ address, templateId, apiKey }),
                                         encoding: 'binary',
                                         method: 'GET',
                                         headers: {
