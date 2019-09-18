@@ -6,8 +6,8 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/cartodb/server_options');
 
-const windshaftUtils = require('windshaft').utils;
-const webmercator = new windshaftUtils.WebMercatorHelper();
+const WebMercatorHelper = require('cartodb-query-tables').utils.webMercatorHelper;
+const webmercator = new WebMercatorHelper();
 
 const suites = [
     {

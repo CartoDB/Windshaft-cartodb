@@ -9,7 +9,7 @@ var _ = require('underscore');
 var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
 
 var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
-var QueryTables = require('cartodb-query-tables');
+var QueryTables = require('cartodb-query-tables').queryTables;
 var CartodbWindshaft = require('../../lib/cartodb/server');
 var serverOptions = require('../../lib/cartodb/server_options');
 
@@ -367,11 +367,9 @@ describe('tests from old api translated to multilayer', function() {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
-                var affectedFn = QueryTables.getAffectedTablesFromQuery;
-                QueryTables.getAffectedTablesFromQuery = function(sql, username, query, callback) {
-                    affectedFn({query: function(query, callback) {
-                        return callback(new Error('fake error message'), []);
-                    }}, username, query, callback);
+                var affectedFn = QueryTables.getQueryMetadataModel;
+                QueryTables.getQueryMetadataModel = function(pg, sql, callback) {
+                    return callback(new Error('fake error message'));
                 };
 
                 // reset internal cacheChannel cache
@@ -396,8 +394,8 @@ describe('tests from old api translated to multilayer', function() {
                         status: 200
                     },
                     function(res) {
+                        QueryTables.getQueryMetadataModel = affectedFn;
                         assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-                        QueryTables.getAffectedTablesFromQuery = affectedFn;
                         done();
                     }
                 );

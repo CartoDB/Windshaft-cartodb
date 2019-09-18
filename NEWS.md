@@ -10,12 +10,14 @@ Announcements:
 - Improved efficiency of query samples while instatiating a map (#1120).
 - Cache control header fine tuning. Set a shorter value for "max-age" directive if there is no way to know when to trigger the invalidation.
 - Update deps:
-  - Update `cartodb-query-tables` to version [`0.5.0`](https://github.com/CartoDB/node-cartodb-query-tables/releases/tag/0.5.0)
-  - Upgrade `windshaft` to [`5.6.0`](https://github.com/CartoDB/Windshaft/blob/5.6.0/NEWS.md#version-560):
+  - Update `cartodb-query-tables` to version [`0.6.1`](https://github.com/CartoDB/node-cartodb-query-tables/blob/8dda0e1fb7292840c4ac381f9be2eb3976d180a1/NEWS.md#version-061).
+  - Update `cartodb-psql` to [`0.14.0`](https://github.com/CartoDB/node-cartodb-psql/blob/0.14.0/NEWS.md#version-0140-2019-09-10)
+  - Upgrade `windshaft` to [`5.6.3`](https://github.com/CartoDB/Windshaft/blob/master/NEWS.md#version-563):
     - Upgrade grainstore to [`2.0.1`](https://github.com/CartoDB/grainstore/releases/tag/2.0.1)
     - Update @carto/mapnik to [`3.6.2-carto.16`](https://github.com/CartoDB/node-mapnik/blob/v3.6.2-carto.16/CHANGELOG.carto.md#362-carto16).
     - Update turbo-carto to [`0.21.2`](https://github.com/CartoDB/turbo-carto/releases/tag/0.21.2)
     - Upgrade `@carto/cartonik` to version [`0.7.0`](https://github.com/CartoDB/cartonik/blob/v0.7.0/CHANGELOG.md#cartonik-changelog).
+  - Upgrade `camshaft` to [`0.64.2`](https://github.com/CartoDB/camshaft/blob/8b89fcff276da20a71269bed28b7ad6704392898/CHANGELOG.md#0642) to update dependencies.
 
 ## 7.1.0
 Released 2019-05-06
