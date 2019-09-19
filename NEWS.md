@@ -10,7 +10,7 @@ Announcements:
 - Improved efficiency of query samples while instatiating a map (#1120).
 - Cache control header fine tuning. Set a shorter value for "max-age" directive if there is no way to know when to trigger the invalidation.
 - Update deps:
-  - Update `cartodb-query-tables` to version [`0.6.1`](https://github.com/CartoDB/node-cartodb-query-tables/blob/8dda0e1fb7292840c4ac381f9be2eb3976d180a1/NEWS.md#version-061).
+  - Update `cartodb-query-tables` to version [`0.6.3`](https://github.com/CartoDB/node-cartodb-query-tables/blob/0.6.3/NEWS.md#version-063).
   - Update `cartodb-psql` to [`0.14.0`](https://github.com/CartoDB/node-cartodb-psql/blob/0.14.0/NEWS.md#version-0140-2019-09-10)
   - Upgrade `windshaft` to [`5.6.3`](https://github.com/CartoDB/Windshaft/blob/master/NEWS.md#version-563):
     - Upgrade grainstore to [`2.0.1`](https://github.com/CartoDB/grainstore/releases/tag/2.0.1)
