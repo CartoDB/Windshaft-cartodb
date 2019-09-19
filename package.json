@@ -29,7 +29,7 @@
     "body-parser": "1.18.3",
     "camshaft": "^0.64.2",
     "cartodb-psql": "0.14.0",
-    "cartodb-query-tables": "^0.6.2",
+    "cartodb-query-tables": "^0.6.3",
     "cartodb-redis": "2.1.0",
     "debug": "3.1.0",
     "dot": "1.1.2",
