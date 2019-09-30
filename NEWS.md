@@ -1,7 +1,7 @@
 # Changelog
 
 ## 7.2.0
-Released 2019-XX-XX
+Released 2019-09-30
 
 Announcements:
 
