@@ -22,12 +22,22 @@ var config = {
                 '/api/v1',
                 '/user/:user/api/v1',
             ],
+            // Attach middlewares at the begining of the req/res cycle
+            // to perform custom operations.
+            middlewares: [
+                function noop () {
+                    return function noopMiddleware (req, res, next) {
+                        next();
+                    }
+                }
+            ],
             // Base url for the Detached Maps API
             // "/api/v1/map" is the new API,
             map: {
                 paths: [
                     '/map',
-                ]
+                ],
+                middlewares: []
             },
             // Base url for the Templated Maps API
             // "/api/v1/map/named" is the new API,
