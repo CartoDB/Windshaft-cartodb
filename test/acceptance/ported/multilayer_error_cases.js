@@ -27,7 +27,7 @@ describe('multilayer error cases', function() {
 
     it("post layergroup with wrong Content-Type", function(done) {
         assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
+            url: '/api/v1/map',
             method: 'POST',
             headers: {
                 host: 'localhost',
@@ -43,7 +43,7 @@ describe('multilayer error cases', function() {
 
     it("post layergroup with no layers", function(done) {
         assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
+            url: '/api/v1/map',
             method: 'POST',
             headers: {
                 host: 'localhost',
@@ -59,7 +59,7 @@ describe('multilayer error cases', function() {
 
     it("post layergroup jsonp errors are returned with 200 status", function(done) {
         assert.response(server, {
-            url: '/database/windshaft_test/layergroup?callback=test',
+            url: '/api/v1/map?callback=test',
             method: 'POST',
             headers: {
                 host: 'localhost',
@@ -90,7 +90,7 @@ describe('multilayer error cases', function() {
             ]
         };
         assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
+            url: '/api/v1/map',
             method: 'POST',
             headers: {
                 host: 'localhost',
@@ -116,7 +116,7 @@ describe('multilayer error cases', function() {
         }}]
       };
       assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
+          url: '/api/v1/map',
           method: 'POST',
           headers: {
               host: 'localhost',
@@ -199,7 +199,7 @@ describe('multilayer error cases', function() {
         ]
       };
       assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
+          url: '/api/v1/map',
           method: 'POST',
           headers: {
             host: 'localhost',
@@ -238,7 +238,7 @@ describe('multilayer error cases', function() {
         ]
       };
       assert.response(server, {
-          url: '/database/windshaft_test/layergroup',
+          url: '/api/v1/map',
           method: 'POST',
           headers: {
               host: 'localhost',
@@ -283,7 +283,7 @@ describe('multilayer error cases', function() {
         };
 
         assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
+            url: '/api/v1/map',
             method: 'POST',
             headers: {
                 host: 'localhost',
@@ -389,7 +389,7 @@ describe('multilayer error cases', function() {
           assert.ifError(err);
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup/deadbeef/0/0/0/0.grid.json',
+              url: '/api/v1/map/deadbeef/0/0/0/0.grid.json',
               method: 'GET',
               encoding: 'binary',
               headers: {
@@ -425,7 +425,7 @@ describe('multilayer error cases', function() {
         };
         assert.response(server,
             {
-                url: '/database/windshaft_test/layergroup',
+                url: '/api/v1/map',
                 method: 'POST',
                 headers: {'Content-Type': 'application/json; charset=utf-8' },
                 data: '{' + JSON.stringify(layergroup)

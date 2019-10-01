@@ -58,7 +58,7 @@ describe('attributes', function() {
             {
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup',
+                    url: '/api/v1/map',
                     method: 'POST',
                     headers: {
                         host: 'localhost',
@@ -86,7 +86,7 @@ describe('attributes', function() {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup/' + expected_token + '/0/attributes/1',
+                    url: '/api/v1/map/' + expected_token + '/0/attributes/1',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
@@ -109,7 +109,7 @@ describe('attributes', function() {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/1',
+                    url: '/api/v1/map/' + expected_token + '/1/attributes/1',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
@@ -128,7 +128,7 @@ describe('attributes', function() {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/-666',
+                    url: '/api/v1/map/' + expected_token + '/1/attributes/-666',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
@@ -169,7 +169,7 @@ describe('attributes', function() {
             {
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup',
+                    url: '/api/v1/map',
                     method: 'POST',
                     headers: {
                         host: 'localhost',
@@ -202,7 +202,7 @@ describe('attributes', function() {
             {
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup',
+                    url: '/api/v1/map',
                     method: 'POST',
                     headers: {
                         host: 'localhost',
@@ -230,7 +230,7 @@ describe('attributes', function() {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup/' + expected_token +
+                    url: '/api/v1/map/' + expected_token +
                         '/0/attributes/1?callback=test',
                     method: 'GET',
                     headers: {
@@ -257,7 +257,7 @@ describe('attributes', function() {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup/' + expected_token + '/1/attributes/1',
+                    url: '/api/v1/map/' + expected_token + '/1/attributes/1',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
@@ -297,7 +297,7 @@ describe('attributes', function() {
             {
                 var next = this;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup',
+                    url: '/api/v1/map',
                     method: 'POST',
                     headers: {
                         host: 'localhost',

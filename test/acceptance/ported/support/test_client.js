@@ -138,7 +138,7 @@ function layergroupRequest(layergroupConfig, method, callbackName, extraParams) 
     method = method || 'POST';
 
     var request = {
-        url: '/database/windshaft_test/layergroup',
+        url: '/api/v1/map',
         headers: {
             host: 'localhost',
             'Content-Type': 'application/json'
@@ -346,7 +346,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
         function requestLayergroup() {
             var next = this;
             var request = {
-                url: '/database/windshaft_test/layergroup',
+                url: '/api/v1/map',
                 method: 'POST',
                 headers: {
                     host: 'localhost',
@@ -379,7 +379,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
 
             var next = this;
 
-            var finalUrl = '/database/windshaft_test/layergroup/' + _.template(url, {
+            var finalUrl = '/api/v1/map/' + _.template(url, {
                 layergroupid: layergroupid
             });
 
@@ -475,7 +475,7 @@ function withLayergroup(layergroupConfig, options, callback) {
 
                 const urlTpl = function ({layergroupid, cache_buster = null, tile }) {
                     const { signer, token , cacheBuster } = LayergroupToken.parse(layergroupid);
-                    const base = '/database/windshaft_test/layergroup/';
+                    const base = '/api/v1/map/';
                     return `${base}${signerTpl({signer})}${token}${cacheTpl({cache_buster, cacheBuster})}${tile}`;
                 };
 

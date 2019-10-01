@@ -6,6 +6,7 @@ Released 2019-mm-dd
 Announcements:
 
 - Added mechanism to inject custom middlewares through configuration.
+- Stop requiring unused config properties: "base_url", "base_url_mapconfig", and "base_url_templated".
 
 ## 7.2.0
 Released 2019-09-30

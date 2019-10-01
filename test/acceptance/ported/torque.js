@@ -54,7 +54,7 @@ describe('torque', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -77,7 +77,7 @@ describe('torque', function() {
           var css = 'Map { -torque-frame-count: 2; }';
           layergroup.layers[0].options.cartocss = css;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -100,7 +100,7 @@ describe('torque', function() {
           var css = 'Map { -torque-frame-count: 2; -torque-resolution: 3; }';
           layergroup.layers[0].options.cartocss = css;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -142,7 +142,7 @@ describe('torque', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)
@@ -185,7 +185,7 @@ describe('torque', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
@@ -224,7 +224,7 @@ describe('torque', function() {
           assert.ifError(err);
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
+              url: '/api/v1/map/' + expected_token + '/0/0/0.png',
               method: 'GET',
               encoding: 'binary',
               headers: {
@@ -245,7 +245,7 @@ describe('torque', function() {
           assert.ifError(err);
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.grid.json',
+              url: '/api/v1/map/' + expected_token + '/0/0/0/0.grid.json',
               method: 'GET',
               headers: {
                 host: 'localhost'
@@ -265,7 +265,7 @@ describe('torque', function() {
           assert.ifError(err);
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.json.torque',
+              url: '/api/v1/map/' + expected_token + '/0/0/0/0.json.torque',
               method: 'GET',
               headers: {
                 host: 'localhost'
@@ -286,7 +286,7 @@ describe('torque', function() {
           assert.ifError(err);
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0/0.torque.json',
+              url: '/api/v1/map/' + expected_token + '/0/0/0/0.torque.json',
               method: 'GET',
               headers: {
                 host: 'localhost'
@@ -333,7 +333,7 @@ describe('torque', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
@@ -382,7 +382,7 @@ describe('torque', function() {
           var next = this;
           global.environment.postgres.port = 54777;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
@@ -431,7 +431,7 @@ describe('torque', function() {
         function request(){
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(layergroup)

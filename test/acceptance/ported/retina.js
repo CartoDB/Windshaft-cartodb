@@ -40,7 +40,7 @@ describe('retina support', function() {
 
         assert.response(server,
             {
-                url: '/database/windshaft_test/layergroup',
+                url: '/api/v1/map',
                 method: 'POST',
                 headers: {
                     host: 'localhost',
@@ -71,7 +71,7 @@ describe('retina support', function() {
     function testRetinaImage(scaleFactor, responseHead, assertFn) {
         assert.response(server,
             {
-                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/0/0' + scaleFactor + '.png',
+                url: '/api/v1/map/' + layergroupId + '/0/0/0' + scaleFactor + '.png',
                 method: 'GET',
                 encoding: 'binary',
                 headers: {

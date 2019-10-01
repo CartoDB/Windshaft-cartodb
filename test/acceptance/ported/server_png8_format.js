@@ -66,7 +66,7 @@ describe('server_png8_format', function() {
             assert.response(
                 serverPng32,
                 {
-                    url: '/database/windshaft_test/layergroup',
+                    url: '/api/v1/map',
                     method: 'POST',
                     headers: {
                         host: 'localhost',
@@ -87,7 +87,7 @@ describe('server_png8_format', function() {
                     var tilePartialUrl =  _.template('/<%= z %>/<%= x %>/<%= y %>.png', tile);
 
                     var requestPayload = {
-                        url: '/database/windshaft_test/layergroup/' + layergroupId + tilePartialUrl,
+                        url: '/api/v1/map/' + layergroupId + tilePartialUrl,
                         method: 'GET',
                         encoding: 'binary',
                         headers: {

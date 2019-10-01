@@ -48,7 +48,7 @@ describe('raster', function() {
         {
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup',
+              url: '/api/v1/map',
               method: 'POST',
               headers: { host: 'localhost', 'Content-Type': 'application/json' },
               data: JSON.stringify(mapconfig)
@@ -73,7 +73,7 @@ describe('raster', function() {
           assert.ifError(err);
           var next = this;
           assert.response(server, {
-              url: '/database/windshaft_test/layergroup/' + expected_token + '/0/0/0.png',
+              url: '/api/v1/map/' + expected_token + '/0/0/0.png',
               method: 'GET',
               encoding: 'binary',
               headers: { host: 'localhost' }
@@ -131,7 +131,7 @@ describe('raster', function() {
 
         assert.response(server,
             {
-                url: '/database/windshaft_test/layergroup',
+                url: '/api/v1/map',
                 method: 'POST',
                 headers: {
                     host: 'localhost',

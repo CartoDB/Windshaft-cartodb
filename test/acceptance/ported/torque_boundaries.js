@@ -241,7 +241,7 @@ describe('torque boundary points', function() {
         it(desc, function (done) {
 
             assert.response(server, {
-                url: '/database/windshaft_test/layergroup',
+                url: '/api/v1/map',
                 method: 'POST',
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(boundaryPointsMapConfig)
@@ -255,7 +255,7 @@ describe('torque boundary points', function() {
 
                 var partialUrl = tileRequest.z + '/' + tileRequest.x + '/' + tileRequest.y;
                 assert.response(server, {
-                    url: '/database/windshaft_test/layergroup/' + expected_token + '/0/' + partialUrl + '.json.torque',
+                    url: '/api/v1/map/' + expected_token + '/0/' + partialUrl + '.json.torque',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
@@ -358,7 +358,7 @@ describe('torque boundary points', function() {
         };
 
         assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
+            url: '/api/v1/map',
             method: 'POST',
             headers: { host: 'localhost', 'Content-Type': 'application/json' },
             data: JSON.stringify(londonPointMapConfig)
@@ -371,7 +371,7 @@ describe('torque boundary points', function() {
 
 
             assert.response(server, {
-                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/2/1/1.json.torque',
+                url: '/api/v1/map/' + layergroupId + '/0/2/1/1.json.torque',
                 method: 'GET',
                 headers: {
                     host: 'localhost'
@@ -424,7 +424,7 @@ describe('torque boundary points', function() {
         };
 
         assert.response(server, {
-            url: '/database/windshaft_test/layergroup',
+            url: '/api/v1/map',
             method: 'POST',
             headers: { host: 'localhost', 'Content-Type': 'application/json' },
             data: JSON.stringify(londonPointMapConfig)
@@ -437,7 +437,7 @@ describe('torque boundary points', function() {
 
 
             assert.response(server, {
-                url: '/database/windshaft_test/layergroup/' + layergroupId + '/0/13/4255/2765.json.torque',
+                url: '/api/v1/map/' + layergroupId + '/0/13/4255/2765.json.torque',
                 method: 'GET',
                 headers: {
                     host: 'localhost'

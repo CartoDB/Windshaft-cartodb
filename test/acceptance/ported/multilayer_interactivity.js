@@ -30,7 +30,7 @@ describe('multilayer interactivity and layers order', function() {
 
             assert.response(server,
                 {
-                    url: '/database/windshaft_test/layergroup',
+                    url: '/api/v1/map',
                     method: 'POST',
                     headers: {
                         host: 'localhost',
