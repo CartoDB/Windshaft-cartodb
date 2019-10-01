@@ -16,13 +16,16 @@ var config = {
     // Base URLs for the APIs
     //
     // See https://github.com/CartoDB/Windshaft-cartodb/wiki/Unified-Map-API
+    //
+    // Note: each entry corresponds with an express' router.
+    // You must define at least one path. However, middlewares are optional.
     ,routes: {
         api: {
             paths: [
                 '/api/v1',
                 '/user/:user/api/v1',
             ],
-            // Optional: attach middlewares at the begining of the req/res cycle
+            // Optional: attach middlewares at the begining of the router
             // to perform custom operations.
             middlewares: [
                 function noop () {
