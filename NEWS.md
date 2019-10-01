@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.3.0
+Released 2019-mm-dd
+
+Announcements:
+
+- Added mechanism to inject custom middlewares through configuration.
+
 ## 7.2.0
 Released 2019-09-30
 
