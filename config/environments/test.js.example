@@ -17,44 +17,35 @@ var config = {
     //
     // See https://github.com/CartoDB/Windshaft-cartodb/wiki/Unified-Map-API
     ,routes: {
-        v1: {
+        api: {
             paths: [
                 '/api/v1',
                 '/user/:user/api/v1',
+            ],
+            // Optional: attach middlewares at the begining of the req/res cycle
+            // to perform custom operations.
+            middlewares: [
+                function noop () {
+                    return function noopMiddleware (req, res, next) {
+                        next();
+                    }
+                }
             ],
             // Base url for the Detached Maps API
             // "/api/v1/map" is the new API,
             map: {
                 paths: [
                     '/map',
-                ]
+                ],
+                middlewares: [] // Optional
             },
             // Base url for the Templated Maps API
             // "/api/v1/map/named" is the new API,
             template: {
                 paths: [
                     '/map/named'
-                ]
-            }
-        },
-        // For compatibility with versions up to 1.6.x
-        v0: {
-            paths: [
-                '/tiles'
-            ],
-            // Base url for the Detached Maps API
-            // "/tiles/layergroup" is for compatibility with versions up to 1.6.x
-            map: {
-                paths: [
-                    '/layergroup'
-                ]
-            },
-            // Base url for the Templated Maps API
-            // "/tiles/template" is for compatibility with versions up to 1.6.x
-            template: {
-                paths: [
-                    '/template'
-                ]
+                ],
+                middlewares: [] // Optional
             }
         }
     }
