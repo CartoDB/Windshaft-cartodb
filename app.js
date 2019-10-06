@@ -24,11 +24,11 @@ if (!semver.satisfies(nodejsVersion, engines.node)) {
 setICUEnvVariable();
 
 var argv = require('yargs')
-    .usage('Usage: $0 <environment> [options]')
+    .usage('Usage: node $0 <environment> [options]')
     .help('h')
     .example(
-        '$0 production -c /etc/sql-api/config.js',
-        'start server in production environment with /etc/sql-api/config.js as config file'
+        'node $0 production -c /etc/windshaft-cartodb/config.js',
+        'start server in production environment with /etc/windshaft-cartodb/config.js as config file'
     )
     .alias('h', 'help')
     .alias('c', 'config')
