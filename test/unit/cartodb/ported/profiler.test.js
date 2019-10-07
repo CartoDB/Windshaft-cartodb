@@ -3,7 +3,7 @@
 require('../../../support/test_helper');
 
 var assert = require('assert');
-var ProfilerProxy = require('../../../../lib/stats/profiler_proxy');
+var ProfilerProxy = require('../../../../lib/stats/profiler-proxy');
 
 describe('profiler', function() {
 

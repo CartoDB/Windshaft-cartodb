@@ -4,7 +4,7 @@ require('../support/test_helper');
 
 var assert = require('assert');
 var StatsClient = require('../../lib/stats/client');
-var ProfilerProxy = require('../../lib/stats/profiler_proxy');
+var ProfilerProxy = require('../../lib/stats/profiler-proxy');
 
 describe('profiler + statsd', function() {
     var statsInstance;
