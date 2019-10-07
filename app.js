@@ -6,7 +6,7 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('underscore');
 var semver = require('semver');
-const setICUEnvVariable = require('./lib/utils/icu_data_env_setter');
+const setICUEnvVariable = require('./lib/utils/icu-data-env-setter');
 
 // jshint undef:false
 var log = console.log.bind(console);

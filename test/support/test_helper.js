@@ -15,7 +15,7 @@ var lzmaWorker = new LZMA();
 
 var redis = require('redis');
 var log4js = require('log4js');
-const setICUEnvVariable = require('../../lib/utils/icu_data_env_setter');
+const setICUEnvVariable = require('../../lib/utils/icu-data-env-setter');
 
 // set environment specific variables
 global.environment  = require(__dirname + '/../../config/environments/test');
