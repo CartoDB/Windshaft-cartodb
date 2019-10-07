@@ -3,7 +3,7 @@
 require('../../support/test_helper');
 var assert = require('assert');
 
-var CdbRequest = require('../../../lib/models/cdb_request');
+var CdbRequest = require('../../../lib/models/cdb-request');
 
 describe('req2params', function() {
 
