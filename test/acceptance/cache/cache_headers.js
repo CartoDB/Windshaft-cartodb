@@ -6,7 +6,7 @@ var assert = require('../../support/assert');
 var qs = require('querystring');
 
 var CartodbWindshaft = require('../../../lib/server');
-var serverOptions = require('../../../lib/server_options');
+var serverOptions = require('../../../lib/server-options');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 

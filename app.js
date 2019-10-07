@@ -106,7 +106,7 @@ global.logger = global.log4js.getLogger();
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
 var cartodbWindshaft = require('./lib/server');
-var serverOptions = require('./lib/server_options');
+var serverOptions = require('./lib/server-options');
 
 var server = cartodbWindshaft(serverOptions);
 

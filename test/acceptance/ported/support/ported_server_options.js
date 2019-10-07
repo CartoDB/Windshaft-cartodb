@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('underscore');
-var serverOptions = require('../../../../lib/server_options');
+var serverOptions = require('../../../../lib/server-options');
 var mapnik = require('windshaft').mapnik;
 var OverviewsQueryRewriter = require('../../../../lib/utils/overviews-query-rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({

@@ -7,7 +7,7 @@ var querystring = require('querystring');
 var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require(__dirname + '/../../lib/server');
-var serverOptions = require(__dirname + '/../../lib/server_options');
+var serverOptions = require(__dirname + '/../../lib/server-options');
 var TemplateMaps = require('../../lib/backends/template_maps.js');
 var NamedMapsCacheEntry = require('../../lib/cache/model/named-maps-entry');
 

@@ -5,7 +5,7 @@ var step = require('step');
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 var testHelper = require('../../support/test_helper');
 var CartodbWindshaft = require('../../../lib/server');
-var serverOptions = require('../../../lib/server_options');
+var serverOptions = require('../../../lib/server-options');
 var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 10;
 

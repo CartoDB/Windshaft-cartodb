@@ -4,7 +4,7 @@
 const assert = require('assert');
 const TestClient = require('../support/test-client');
 const mapConfigFactory = require('../fixtures/test_mapconfigFactory');
-const serverOptions = require('../../lib/server_options');
+const serverOptions = require('../../lib/server-options');
 
 const usePgMvtRenderer = serverOptions.renderer.mvt.usePostGIS;
 const describe_mvt = !usePgMvtRenderer ? describe : describe.skip;

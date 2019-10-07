@@ -6,7 +6,7 @@ var fs = require('fs');
 
 var assert = require('../support/assert');
 var CartodbWindshaft = require('../../lib/server');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 
 describe('health checks', function () {
 

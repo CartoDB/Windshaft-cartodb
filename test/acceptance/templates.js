@@ -21,7 +21,7 @@ var http = require('http');
 var helper = require(__dirname + '/../support/test_helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/server');
-var serverOptions = require(__dirname + '/../../lib/server_options');
+var serverOptions = require(__dirname + '/../../lib/server-options');
 
 var LayergroupToken = require('../../lib/models/layergroup-token');
 

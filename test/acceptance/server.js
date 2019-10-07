@@ -7,7 +7,7 @@ var querystring = require('querystring');
 var step        = require('step');
 
 var CartodbWindshaft = require('../../lib/server');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 
 
 describe('server', function() {

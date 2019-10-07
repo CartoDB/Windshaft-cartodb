@@ -13,7 +13,7 @@ var assert = require('./assert');
 var helper = require('./test_helper');
 
 var CartodbWindshaft = require('../../lib/server');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 serverOptions.analysis.batch.inlineExecution = true;
 
 const MAPNIK_SUPPORTED_FORMATS = {

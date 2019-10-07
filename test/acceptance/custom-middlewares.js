@@ -3,7 +3,7 @@
 const helper = require('../support/test_helper');
 const assert = require('../support/assert');
 const createServer = require('../../lib/server');
-const serverOptions = require('../../lib/server_options');
+const serverOptions = require('../../lib/server-options');
 
 describe('custom middlewares', function () {
     const RESPONSE_OK = {

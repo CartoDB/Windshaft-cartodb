@@ -5,7 +5,7 @@ require('../support/test_helper');
 const request = require('request');
 const assert = require('assert');
 const Server = require('../../lib/server');
-const serverOptions = require('../../lib/server_options');
+const serverOptions = require('../../lib/server-options');
 const { mapnik } = require('windshaft');
 const helper = require('../support/test_helper');
 

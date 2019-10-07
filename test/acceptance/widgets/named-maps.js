@@ -9,7 +9,7 @@ var queue = require('queue-async');
 var helper = require('../../support/test_helper');
 
 var CartodbWindshaft = require('../../../lib/server');
-var serverOptions = require('../../../lib/server_options');
+var serverOptions = require('../../../lib/server-options');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 

@@ -12,7 +12,7 @@ var nock = require('nock');
 
 describe('templates surrogate keys', function() {
 
-    var serverOptions = require('../../../lib/server_options');
+    var serverOptions = require('../../../lib/server-options');
 
     // Enable Varnish purge for tests
     var varnishHost = serverOptions.varnish_host;

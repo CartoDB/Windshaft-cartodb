@@ -24,7 +24,7 @@ Create the config/environments/<env>.js files (there are .example files
 to start from). You can optionally use the ./configure script for this,
 see ```./configure --help``` to see available options.
 
-Look at lib/cartodb/server_options.js for more on config
+Look at lib/cartodb/server-options.js for more on config
 
 Upgrading
 ---------

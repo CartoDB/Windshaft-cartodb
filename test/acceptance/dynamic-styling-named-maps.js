@@ -5,7 +5,7 @@ var step = require('step');
 var LayergroupToken = require('../../lib/models/layergroup-token');
 var testHelper = require(__dirname + '/../support/test_helper');
 var CartodbWindshaft = require(__dirname + '/../../lib/server');
-var serverOptions = require(__dirname + '/../../lib/server_options');
+var serverOptions = require(__dirname + '/../../lib/server-options');
 
 describe('dynamic styling for named maps', function() {
     var server;

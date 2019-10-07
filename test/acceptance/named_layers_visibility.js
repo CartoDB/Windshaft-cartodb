@@ -5,7 +5,7 @@ var test_helper = require('../support/test_helper');
 
 var assert = require('../support/assert');
 var CartodbWindshaft = require(__dirname + '/../../lib/server');
-var serverOptions = require(__dirname + '/../../lib/server_options');
+var serverOptions = require(__dirname + '/../../lib/server-options');
 
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/backends/template_maps.js');

@@ -42,7 +42,7 @@ describe('prepare-context', function() {
     });
 
 
-    it('can be found in server_options', function(){
+    it('can be found in server-options', function(){
         assert.ok(_.isFunction(authorize));
         assert.ok(_.isFunction(dbConnSetup));
         assert.ok(_.isFunction(cleanUpQueryParams));

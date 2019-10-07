@@ -5,7 +5,7 @@ require('../support/test_helper');
 var fs = require('fs');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 5;
 

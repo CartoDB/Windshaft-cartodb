@@ -6,7 +6,7 @@ const helper = require('../support/test_helper');
 var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require('../../lib/server');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 
 describe('named maps provider cache', function() {
     var server;

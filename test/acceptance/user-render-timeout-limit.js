@@ -4,7 +4,7 @@ require('../support/test_helper');
 
 const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 
 const timeoutErrorTilePath = `${process.cwd()}/assets/render-timeout-fallback.png`;
 

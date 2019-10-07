@@ -4,7 +4,7 @@ require('../../../support/test_helper.js');
 
 var assert = require('assert');
 var cartodbServer = require('../../../../lib/server');
-var serverOptions = require('../../../../lib/server_options');
+var serverOptions = require('../../../../lib/server-options');
 
 
 describe('windshaft', function() {

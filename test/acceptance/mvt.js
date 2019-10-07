@@ -4,7 +4,7 @@ require('../support/test_helper');
 
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 
 function createMapConfig(sql = TestClient.SQL.ONE_POINT) {
     return {

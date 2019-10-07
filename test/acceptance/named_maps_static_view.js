@@ -7,7 +7,7 @@ var RedisPool = require('redis-mpool');
 var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require('../../lib/server');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 var TemplateMaps = require('../../lib/backends/template_maps.js');
 
 describe('named maps static view', function() {

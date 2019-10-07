@@ -5,7 +5,7 @@ var assert = require('../../support/assert');
 var helper = require('../../support/test_helper');
 
 var CartodbWindshaft = require('../../../lib/server');
-var serverOptions = require('../../../lib/server_options');
+var serverOptions = require('../../../lib/server-options');
 var TestClient = require('../../support/test-client');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');

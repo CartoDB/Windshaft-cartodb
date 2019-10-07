@@ -19,7 +19,7 @@ var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
 
 var CartodbWindshaft = require('../../lib/server');
-var serverOptions = require('../../lib/server_options');
+var serverOptions = require('../../lib/server-options');
 
 var QueryTables = require('cartodb-query-tables').queryTables;
 
