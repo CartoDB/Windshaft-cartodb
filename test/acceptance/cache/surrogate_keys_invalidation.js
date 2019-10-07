@@ -6,8 +6,7 @@ var assert      = require('../../support/assert');
 var step        = require('step');
 var FastlyPurge = require('fastly-purge');
 var _ = require('underscore');
-
-var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cache/model/named_maps_entry');
+var NamedMapsCacheEntry = require('../../../lib/cache/model/named-maps-entry');
 var CartodbWindshaft = require(__dirname + '/../../../lib/server');
 var nock = require('nock');
 

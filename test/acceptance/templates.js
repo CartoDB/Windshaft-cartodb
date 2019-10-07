@@ -6,7 +6,7 @@ var redis       = require('redis');
 var step        = require('step');
 var strftime    = require('strftime');
 var QueryTables = require('cartodb-query-tables').queryTables;
-var NamedMapsCacheEntry = require('../../lib/cache/model/named_maps_entry');
+var NamedMapsCacheEntry = require('../../lib/cache/model/named-maps-entry');
 var redis_stats_db = 5;
 
 // Pollute the PG environment to make sure

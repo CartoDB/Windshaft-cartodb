@@ -9,7 +9,7 @@ var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require(__dirname + '/../../lib/server');
 var serverOptions = require(__dirname + '/../../lib/server_options');
 var TemplateMaps = require('../../lib/backends/template_maps.js');
-var NamedMapsCacheEntry = require('../../lib/cache/model/named_maps_entry');
+var NamedMapsCacheEntry = require('../../lib/cache/model/named-maps-entry');
 
 describe('named maps authentication', function() {
     var server;
