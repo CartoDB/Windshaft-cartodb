@@ -9,7 +9,7 @@ var serverOptions = require(__dirname + '/../../lib/server-options');
 var LayergroupToken = require('../../lib/models/layergroup-token');
 
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../lib/backends/template_maps.js');
+var TemplateMaps = require('../../lib/backends/template-maps');
 
 var step = require('step');
 

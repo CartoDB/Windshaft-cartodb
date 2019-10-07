@@ -8,7 +8,7 @@ var CartodbWindshaft = require(__dirname + '/../../lib/server');
 var serverOptions = require(__dirname + '/../../lib/server-options');
 
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../lib/backends/template_maps.js');
+var TemplateMaps = require('../../lib/backends/template-maps');
 var mapnik = require('windshaft').mapnik;
 
 var IMAGE_TOLERANCE = 20;

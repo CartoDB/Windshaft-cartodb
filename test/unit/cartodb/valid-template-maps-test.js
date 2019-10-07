@@ -4,7 +4,7 @@ require('../../support/test-helper');
 
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../../lib/backends/template_maps.js');
+var TemplateMaps = require('../../../lib/backends/template-maps');
 var _ = require('underscore');
 
 describe('template_maps', function() {

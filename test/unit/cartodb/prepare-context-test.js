@@ -7,7 +7,7 @@ var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
 var PgConnection = require('../../../lib/backends/pg-connection');
 var AuthBackend = require('../../../lib/backends/auth');
-var TemplateMaps = require('../../../lib/backends/template_maps');
+var TemplateMaps = require('../../../lib/backends/template-maps');
 
 const cleanUpQueryParamsMiddleware = require('../../../lib/api/middlewares/clean-up-query-params');
 const authorizeMiddleware = require('../../../lib/api/middlewares/authorize');

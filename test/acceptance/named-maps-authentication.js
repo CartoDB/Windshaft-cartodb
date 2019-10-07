@@ -8,7 +8,7 @@ var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require(__dirname + '/../../lib/server');
 var serverOptions = require(__dirname + '/../../lib/server-options');
-var TemplateMaps = require('../../lib/backends/template_maps.js');
+var TemplateMaps = require('../../lib/backends/template-maps');
 var NamedMapsCacheEntry = require('../../lib/cache/model/named-maps-entry');
 
 describe('named maps authentication', function() {

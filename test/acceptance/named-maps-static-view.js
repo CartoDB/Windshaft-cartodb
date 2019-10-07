@@ -8,7 +8,7 @@ var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
-var TemplateMaps = require('../../lib/backends/template_maps.js');
+var TemplateMaps = require('../../lib/backends/template-maps');
 
 describe('named maps static view', function() {
     // configure redis pool instance to use in tests

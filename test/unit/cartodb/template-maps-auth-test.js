@@ -5,7 +5,7 @@ require('../../support/test-helper');
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
 
-var TemplateMaps = require('../../../lib/backends/template_maps');
+var TemplateMaps = require('../../../lib/backends/template-maps');
 
 describe('template_maps_auth', function() {
 
