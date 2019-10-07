@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const coordinates = require('../../../../lib/cartodb/api/middlewares/coordinates');
+const coordinates = require('../../../../lib/api/middlewares/coordinates');
 
 describe('coordinates middleware', function () {
     it('should return error: invalid zoom paramenter (-1)', function (done) {

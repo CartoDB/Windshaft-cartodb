@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var SubstitutionTokens = require('../../../lib/cartodb/utils/substitution-tokens');
+var SubstitutionTokens = require('../../../lib/utils/substitution-tokens');
 
 describe('SubstitutionTokens', function() {
 

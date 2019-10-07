@@ -3,10 +3,10 @@
 var test_helper = require('../support/test_helper');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
+var CartodbWindshaft = require(__dirname + '/../../lib/server');
+var serverOptions = require(__dirname + '/../../lib/server_options');
 
-var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../lib/models/layergroup-token');
 
 var RedisPool = require('redis-mpool');
 

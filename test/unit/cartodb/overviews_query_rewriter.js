@@ -3,7 +3,7 @@
 require('../../support/test_helper');
 
 var assert           = require('assert');
-var OverviewsQueryRewriter = require('../../../lib/cartodb/utils/overviews_query_rewriter');
+var OverviewsQueryRewriter = require('../../../lib/utils/overviews_query_rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
     zoom_level: 'ZoomLevel()'
 });

@@ -6,7 +6,7 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('underscore');
 var semver = require('semver');
-const setICUEnvVariable = require('./lib/cartodb/utils/icu_data_env_setter');
+const setICUEnvVariable = require('./lib/utils/icu_data_env_setter');
 
 // jshint undef:false
 var log = console.log.bind(console);
@@ -105,8 +105,8 @@ global.logger = global.log4js.getLogger();
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-var cartodbWindshaft = require('./lib/cartodb/server');
-var serverOptions = require('./lib/cartodb/server_options');
+var cartodbWindshaft = require('./lib/server');
+var serverOptions = require('./lib/server_options');
 
 var server = cartodbWindshaft(serverOptions);
 

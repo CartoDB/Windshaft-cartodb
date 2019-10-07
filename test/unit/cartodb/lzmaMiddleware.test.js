@@ -3,7 +3,7 @@
 var assert = require('assert');
 var testHelper = require('../../support/test_helper');
 
-var lzmaMiddleware = require('../../../lib/cartodb/api/middlewares/lzma');
+var lzmaMiddleware = require('../../../lib/api/middlewares/lzma');
 
 describe('lzma-middleware', function() {
 

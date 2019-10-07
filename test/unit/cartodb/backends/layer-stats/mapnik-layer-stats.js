@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var MapnikLayerStats = require('../../../../../lib/cartodb/backends/layer-stats/mapnik-layer-stats');
+var MapnikLayerStats = require('../../../../../lib/backends/layer-stats/mapnik-layer-stats');
 var MapConfig = require('windshaft').model.MapConfig;
 
 function getDbConnectionMock () {

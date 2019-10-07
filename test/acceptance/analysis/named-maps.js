@@ -4,11 +4,11 @@ var assert = require('../../support/assert');
 
 var helper = require('../../support/test_helper');
 
-var CartodbWindshaft = require('../../../lib/cartodb/server');
-var serverOptions = require('../../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../../lib/server');
+var serverOptions = require('../../../lib/server_options');
 var TestClient = require('../../support/test-client');
 
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../../lib/models/layergroup-token');
 
 describe('named-maps analysis', function() {
     var server;

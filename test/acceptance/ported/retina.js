@@ -4,10 +4,10 @@ var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var mapnik = require('windshaft').mapnik;
-var cartodbServer = require('../../../lib/cartodb/server');
+var cartodbServer = require('../../../lib/server');
 var ServerOptions = require('./support/ported_server_options');
 
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../../lib/models/layergroup-token');
 
 describe('retina support', function() {
 

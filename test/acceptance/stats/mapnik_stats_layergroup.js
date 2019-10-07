@@ -4,7 +4,7 @@ require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
-const serverOptions = require('../../../lib/cartodb/server_options');
+const serverOptions = require('../../../lib/server_options');
 
 const suites = [
     {

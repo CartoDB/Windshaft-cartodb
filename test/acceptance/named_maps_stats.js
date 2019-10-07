@@ -6,10 +6,10 @@ var querystring = require('querystring');
 
 var assert = require('../support/assert');
 var mapnik = require('windshaft').mapnik;
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
-var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
-var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
+var CartodbWindshaft = require(__dirname + '/../../lib/server');
+var serverOptions = require(__dirname + '/../../lib/server_options');
+var TemplateMaps = require('../../lib/backends/template_maps.js');
+var NamedMapsCacheEntry = require('../../lib/cache/model/named_maps_entry');
 
 describe('named maps preview stats', function() {
     var server;

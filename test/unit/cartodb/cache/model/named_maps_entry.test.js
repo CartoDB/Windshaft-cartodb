@@ -4,7 +4,7 @@ require('../../../../support/test_helper');
 
 var assert = require('assert');
 var _ = require('underscore');
-var NamedMapsCacheEntry = require('../../../../../lib/cartodb/cache/model/named_maps_entry');
+var NamedMapsCacheEntry = require('../../../../../lib/cache/model/named_maps_entry');
 
 describe('cache named_maps_entry', function() {
 

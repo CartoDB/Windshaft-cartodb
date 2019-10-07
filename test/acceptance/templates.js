@@ -6,7 +6,7 @@ var redis       = require('redis');
 var step        = require('step');
 var strftime    = require('strftime');
 var QueryTables = require('cartodb-query-tables').queryTables;
-var NamedMapsCacheEntry = require('../../lib/cartodb/cache/model/named_maps_entry');
+var NamedMapsCacheEntry = require('../../lib/cache/model/named_maps_entry');
 var redis_stats_db = 5;
 
 // Pollute the PG environment to make sure
@@ -20,10 +20,10 @@ var http = require('http');
 
 var helper = require(__dirname + '/../support/test_helper');
 
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
+var CartodbWindshaft = require(__dirname + '/../../lib/server');
+var serverOptions = require(__dirname + '/../../lib/server_options');
 
-var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../lib/models/layergroup-token');
 
 describe('template_api', function() {
     var server;

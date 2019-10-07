@@ -1,8 +1,8 @@
 'use strict';
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
+var CartodbWindshaft = require(__dirname + '/../../lib/server');
+var serverOptions = require(__dirname + '/../../lib/server_options');
 
 describe('error with context', function () {
     var server;

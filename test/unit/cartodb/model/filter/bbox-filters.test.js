@@ -4,7 +4,7 @@ require('../../../../support/test_helper');
 var util = require('util');
 
 var assert = require('../../../../support/assert');
-var BboxFilter = require('../../../../../lib/cartodb/models/filter/bbox');
+var BboxFilter = require('../../../../../lib/models/filter/bbox');
 
 var MAX_EXTENT_MERCATOR_REF = [
     -BboxFilter.LONGITUDE_MAX_VALUE,

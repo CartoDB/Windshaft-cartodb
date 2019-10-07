@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var TorqueLayerStats = require('../../../../../lib/cartodb/backends/layer-stats/torque-layer-stats');
+var TorqueLayerStats = require('../../../../../lib/backends/layer-stats/torque-layer-stats');
 var MapConfig = require('windshaft').model.MapConfig;
 
 describe('torque-layer-stats', function () {

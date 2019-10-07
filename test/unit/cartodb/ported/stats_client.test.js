@@ -4,7 +4,7 @@ require('../../../support/test_helper');
 
 var assert = require('assert');
 
-var StatsClient = require('../../../../lib/cartodb/stats/client');
+var StatsClient = require('../../../../lib/stats/client');
 
 describe('stats client', function() {
     var statsInstance;

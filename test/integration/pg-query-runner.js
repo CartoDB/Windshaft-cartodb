@@ -7,8 +7,8 @@ var assert = require('assert');
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
 
-var PgConnection = require('../../lib/cartodb/backends/pg_connection');
-var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
+var PgConnection = require('../../lib/backends/pg_connection');
+var PgQueryRunner = require('../../lib/backends/pg_query_runner');
 
 
 describe('PgQueryRunner', function() {

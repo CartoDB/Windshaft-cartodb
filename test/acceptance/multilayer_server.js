@@ -6,12 +6,12 @@ var assert = require('../support/assert');
 
 var _ = require('underscore');
 
-var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../lib/models/layergroup-token');
 
-var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
+var PgQueryRunner = require('../../lib/backends/pg_query_runner');
 var QueryTables = require('cartodb-query-tables').queryTables;
-var CartodbWindshaft = require('../../lib/cartodb/server');
-var serverOptions = require('../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../lib/server');
+var serverOptions = require('../../lib/server_options');
 
 describe('tests from old api translated to multilayer', function() {
     var server;

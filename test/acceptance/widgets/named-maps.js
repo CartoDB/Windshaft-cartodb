@@ -8,10 +8,10 @@ var queue = require('queue-async');
 
 var helper = require('../../support/test_helper');
 
-var CartodbWindshaft = require('../../../lib/cartodb/server');
-var serverOptions = require('../../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../../lib/server');
+var serverOptions = require('../../../lib/server_options');
 
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../../lib/models/layergroup-token');
 
 describe('named-maps widgets', function() {
     var server;

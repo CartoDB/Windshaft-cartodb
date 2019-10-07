@@ -3,7 +3,7 @@
 //require('../../../support/test_helper');
 var assert = require('assert');
 
-var DataviewsMapConfigAdapter = require('../../../../lib/cartodb/models/mapconfig/adapter/dataviews-widgets-adapter');
+var DataviewsMapConfigAdapter = require('../../../../lib/models/mapconfig/adapter/dataviews-widgets-adapter');
 
 describe('dataviews-widgets-adapter', function() {
 

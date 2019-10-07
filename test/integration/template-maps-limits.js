@@ -5,7 +5,7 @@ require('../support/test_helper');
 var assert = require('assert');
 var redis = require('redis');
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../lib/cartodb/backends/template_maps');
+var TemplateMaps = require('../../lib/backends/template_maps');
 
 
 describe('TemplateMaps limits', function() {

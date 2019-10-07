@@ -4,9 +4,9 @@ require('../support/test_helper');
 var assert = require('../support/assert');
 const helper = require('../support/test_helper');
 var TestClient = require('../support/test-client');
-const LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
-const CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
-const serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
+const LayergroupToken = require('../../lib/models/layergroup-token');
+const CartodbWindshaft = require(__dirname + '/../../lib/server');
+const serverOptions = require(__dirname + '/../../lib/server_options');
 
 describe('regressions', function() {
 

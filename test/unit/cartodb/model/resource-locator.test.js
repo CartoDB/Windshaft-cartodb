@@ -3,7 +3,7 @@
 require('../../../support/test_helper');
 
 var assert = require('../../../support/assert');
-var ResourceLocator = require('../../../../lib/cartodb/models/resource-locator');
+var ResourceLocator = require('../../../../lib/models/resource-locator');
 
 describe('ResourceLocator', function() {
     var USERNAME = 'username';

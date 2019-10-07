@@ -2,8 +2,8 @@
 
 const helper = require('../support/test_helper');
 const assert = require('../support/assert');
-const createServer = require('../../lib/cartodb/server');
-const serverOptions = require('../../lib/cartodb/server_options');
+const createServer = require('../../lib/server');
+const serverOptions = require('../../lib/server_options');
 
 describe('custom middlewares', function () {
     const RESPONSE_OK = {

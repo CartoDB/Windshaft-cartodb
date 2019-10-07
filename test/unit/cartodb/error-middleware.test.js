@@ -3,7 +3,7 @@
 require('../../support/test_helper.js');
 
 var assert = require('assert');
-var errorMiddleware = require('../../../lib/cartodb/api/middlewares/error-middleware');
+var errorMiddleware = require('../../../lib/api/middlewares/error-middleware');
 
 describe('error-middleware', function() {
 

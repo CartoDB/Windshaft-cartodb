@@ -3,7 +3,7 @@
 //require('../../../support/test_helper');
 var assert = require('assert');
 
-var MapConfigAdapter = require('../../../../lib/cartodb/models/mapconfig/adapter');
+var MapConfigAdapter = require('../../../../lib/models/mapconfig/adapter');
 
 describe('MapConfigAdapter', function() {
     var user = 'wadus';

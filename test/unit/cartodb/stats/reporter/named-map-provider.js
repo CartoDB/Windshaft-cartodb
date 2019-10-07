@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const NamedMapProviderReporter = require('../../../../../lib/cartodb/stats/reporter/named-map-provider');
+const NamedMapProviderReporter = require('../../../../../lib/stats/reporter/named-map-provider');
 
 describe('named-map-provider-reporter', function () {
     it('should report metrics every 100 ms', function (done) {

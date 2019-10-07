@@ -5,11 +5,11 @@ require('../support/test_helper');
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
-var PgConnection = require(__dirname + '/../../lib/cartodb/backends/pg_connection');
-var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
-var OverviewsMetadataBackend = require('../../lib/cartodb/backends/overviews-metadata');
-var FilterStatsBackend = require('../../lib/cartodb/backends/filter-stats');
-var MapConfigOverviewsAdapter = require('../../lib/cartodb/models/mapconfig/adapter/mapconfig-overviews-adapter');
+var PgConnection = require(__dirname + '/../../lib/backends/pg_connection');
+var PgQueryRunner = require('../../lib/backends/pg_query_runner');
+var OverviewsMetadataBackend = require('../../lib/backends/overviews-metadata');
+var FilterStatsBackend = require('../../lib/backends/filter-stats');
+var MapConfigOverviewsAdapter = require('../../lib/models/mapconfig/adapter/mapconfig-overviews-adapter');
 
 var redisPool = new RedisPool(global.environment.redis);
 var metadataBackend = cartodbRedis({pool: redisPool});

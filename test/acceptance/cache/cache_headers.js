@@ -5,10 +5,10 @@ var testHelper = require('../../support/test_helper');
 var assert = require('../../support/assert');
 var qs = require('querystring');
 
-var CartodbWindshaft = require('../../../lib/cartodb/server');
-var serverOptions = require('../../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../../lib/server');
+var serverOptions = require('../../../lib/server_options');
 
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../../lib/models/layergroup-token');
 
 describe('get requests with cache headers', function() {
     var server;

@@ -2,9 +2,9 @@
 
 const assert = require('../../support/assert');
 const testHelper = require('../../support/test_helper');
-const CartodbWindshaft = require('../../../lib/cartodb/server');
-const serverOptions = require('../../../lib/cartodb/server_options');
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
+const CartodbWindshaft = require('../../../lib/server');
+const serverOptions = require('../../../lib/server_options');
+var LayergroupToken = require('../../../lib/models/layergroup-token');
 
 function singleLayergroupConfig(sql, cartocss) {
     return {

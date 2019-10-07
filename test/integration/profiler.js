@@ -3,8 +3,8 @@
 require('../support/test_helper');
 
 var assert = require('assert');
-var StatsClient = require('../../lib/cartodb/stats/client');
-var ProfilerProxy = require('../../lib/cartodb/stats/profiler_proxy');
+var StatsClient = require('../../lib/stats/client');
+var ProfilerProxy = require('../../lib/stats/profiler_proxy');
 
 describe('profiler + statsd', function() {
     var statsInstance;

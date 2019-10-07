@@ -11,15 +11,15 @@ var mapnik = require('windshaft').mapnik;
 var semver = require('semver');
 
 var helper = require(__dirname + '/../support/test_helper');
-var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../lib/models/layergroup-token');
 
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
 
-var CartodbWindshaft = require('../../lib/cartodb/server');
-var serverOptions = require('../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../lib/server');
+var serverOptions = require('../../lib/server_options');
 
 var QueryTables = require('cartodb-query-tables').queryTables;
 

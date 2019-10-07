@@ -1,14 +1,14 @@
 'use strict';
 
 var testHelper = require('../../../support/test_helper');
-var LayergroupToken = require('../../../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../../../lib/models/layergroup-token');
 
 var step = require('step');
 var assert = require('../../../support/assert');
 var _ = require('underscore');
 var querystring = require('querystring');
 var mapnik = require('windshaft').mapnik;
-var CartodbServer = require('../../../../lib/cartodb/server');
+var CartodbServer = require('../../../../lib/server');
 var PortedServerOptions = require('./ported_server_options');
 
 var DEFAULT_POINT_STYLE = [

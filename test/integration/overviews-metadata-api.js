@@ -7,9 +7,9 @@ var assert = require('assert');
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
 
-var PgConnection = require('../../lib/cartodb/backends/pg_connection');
-var PgQueryRunner = require('../../lib/cartodb/backends/pg_query_runner');
-var OverviewsMetadataBackend = require('../../lib/cartodb/backends/overviews-metadata');
+var PgConnection = require('../../lib/backends/pg_connection');
+var PgQueryRunner = require('../../lib/backends/pg_query_runner');
+var OverviewsMetadataBackend = require('../../lib/backends/overviews-metadata');
 
 
 describe('OverviewsMetadataBackend', function() {

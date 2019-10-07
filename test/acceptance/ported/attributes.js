@@ -4,9 +4,9 @@ var testHelper = require('../../support/test_helper');
 
 var assert = require('../../support/assert');
 var step = require('step');
-var cartodbServer = require('../../../lib/cartodb/server');
+var cartodbServer = require('../../../lib/server');
 var PortedServerOptions = require('./support/ported_server_options');
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../../lib/models/layergroup-token');
 
 describe('attributes', function() {
     var server;

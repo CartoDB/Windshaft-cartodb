@@ -5,10 +5,10 @@ var testHelper = require('../../support/test_helper');
 var assert = require('../../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
-var cartodbServer = require('../../../lib/cartodb/server');
+var cartodbServer = require('../../../lib/server');
 var ServerOptions = require('./support/ported_server_options');
 
-var LayergroupToken = require('../../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../../lib/models/layergroup-token');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 85;
 

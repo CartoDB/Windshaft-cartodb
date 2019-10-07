@@ -6,8 +6,8 @@ var assert      = require('../support/assert');
 var querystring = require('querystring');
 var step        = require('step');
 
-var CartodbWindshaft = require('../../lib/cartodb/server');
-var serverOptions = require('../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../lib/server');
+var serverOptions = require('../../lib/server_options');
 
 
 describe('server', function() {

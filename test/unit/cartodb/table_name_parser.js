@@ -3,7 +3,7 @@
 require('../../support/test_helper');
 
 var assert        = require('assert');
-var TableNameParser     = require('../../../lib/cartodb/utils/table_name_parser');
+var TableNameParser     = require('../../../lib/utils/table_name_parser');
 
 describe('TableNameParser', function() {
 

@@ -7,13 +7,13 @@ var step        = require('step');
 var FastlyPurge = require('fastly-purge');
 var _ = require('underscore');
 
-var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cartodb/cache/model/named_maps_entry');
-var CartodbWindshaft = require(__dirname + '/../../../lib/cartodb/server');
+var NamedMapsCacheEntry = require(__dirname + '/../../../lib/cache/model/named_maps_entry');
+var CartodbWindshaft = require(__dirname + '/../../../lib/server');
 var nock = require('nock');
 
 describe('templates surrogate keys', function() {
 
-    var serverOptions = require('../../../lib/cartodb/server_options');
+    var serverOptions = require('../../../lib/server_options');
 
     // Enable Varnish purge for tests
     var varnishHost = serverOptions.varnish_host;

@@ -8,7 +8,7 @@ var redis = require('redis');
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
 
-var AnalysisBackend = require('../../lib/cartodb/backends/analysis');
+var AnalysisBackend = require('../../lib/backends/analysis');
 
 describe('analysis-backend limits', function() {
 

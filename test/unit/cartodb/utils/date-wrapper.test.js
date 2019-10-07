@@ -1,7 +1,7 @@
 'use strict';
 
 var assert = require('assert');
-var dateWrapper = require('../../../../lib/cartodb/utils/date-wrapper');
+var dateWrapper = require('../../../../lib/utils/date-wrapper');
 
 describe('date-wrapper', function() {
 

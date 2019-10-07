@@ -7,7 +7,7 @@ var assert = require('assert');
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
 
-var PgConnection = require('../../lib/cartodb/backends/pg_connection');
+var PgConnection = require('../../lib/backends/pg_connection');
 
 var QueryTables = require('cartodb-query-tables').queryTables;
 

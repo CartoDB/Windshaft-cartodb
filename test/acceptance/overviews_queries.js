@@ -3,7 +3,7 @@
 var testHelper = require('../support/test_helper');
 var assert = require('../support/assert');
 
-var cartodbServer = require('../../lib/cartodb/server');
+var cartodbServer = require('../../lib/server');
 var ServerOptions = require('./ported/support/ported_server_options');
 var testClient = require('./ported/support/test_client');
 

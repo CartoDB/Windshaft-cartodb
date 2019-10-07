@@ -4,11 +4,11 @@ var step = require('step');
 var test_helper = require('../support/test_helper');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/cartodb/server');
-var serverOptions = require(__dirname + '/../../lib/cartodb/server_options');
+var CartodbWindshaft = require(__dirname + '/../../lib/server');
+var serverOptions = require(__dirname + '/../../lib/server_options');
 
 var RedisPool = require('redis-mpool');
-var TemplateMaps = require('../../lib/cartodb/backends/template_maps.js');
+var TemplateMaps = require('../../lib/backends/template_maps.js');
 var mapnik = require('windshaft').mapnik;
 
 var IMAGE_TOLERANCE = 20;
