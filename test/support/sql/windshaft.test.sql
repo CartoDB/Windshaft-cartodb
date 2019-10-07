@@ -226,7 +226,7 @@ INSERT INTO CDB_TableMetadata (tabname, updated_at) VALUES ('long_table_name_wit
 CREATE FUNCTION test_table_inserter(geometry, text) returns int AS $$
  INSERT INTO test_table(name, the_geom, the_geom_webmercator)
   SELECT $2, $1, ST_Transform($1, 3857) RETURNING cartodb_id;
-$$ LANGUAGE 'sql' SECURITY DEFINER;
+$$ LANGUAGE 'sql';
 
 CREATE TABLE test_big_poly (
     updated_at timestamp without time zone DEFAULT now(),
