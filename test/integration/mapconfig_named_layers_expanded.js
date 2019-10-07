@@ -5,7 +5,7 @@ require('../support/test_helper');
 var assert = require('assert');
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/backends/template_maps.js');
-var PgConnection = require(__dirname + '/../../lib/backends/pg_connection');
+var PgConnection = require('../../lib/backends/pg-connection');
 var MapConfigNamedLayersAdapter = require('../../lib/models/mapconfig/adapter/mapconfig-named-layers-adapter');
 
 describe('mapconfig-named-layers-adapter', function() {

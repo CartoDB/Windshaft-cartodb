@@ -5,7 +5,7 @@ var _ = require('underscore');
 
 var RedisPool = require('redis-mpool');
 var cartodbRedis = require('cartodb-redis');
-var PgConnection = require('../../../lib/backends/pg_connection');
+var PgConnection = require('../../../lib/backends/pg-connection');
 var AuthBackend = require('../../../lib/backends/auth');
 var TemplateMaps = require('../../../lib/backends/template_maps');
 
