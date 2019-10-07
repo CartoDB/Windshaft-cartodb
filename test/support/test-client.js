@@ -7,13 +7,13 @@ var PSQL = require('cartodb-psql');
 var _ = require('underscore');
 var mapnik = require('windshaft').mapnik;
 
-var LayergroupToken = require('../../lib/cartodb/models/layergroup-token');
+var LayergroupToken = require('../../lib/models/layergroup-token');
 
 var assert = require('./assert');
-var helper = require('./test_helper');
+var helper = require('./test-helper');
 
-var CartodbWindshaft = require('../../lib/cartodb/server');
-var serverOptions = require('../../lib/cartodb/server_options');
+var CartodbWindshaft = require('../../lib/server');
+var serverOptions = require('../../lib/server-options');
 serverOptions.analysis.batch.inlineExecution = true;
 
 const MAPNIK_SUPPORTED_FORMATS = {
