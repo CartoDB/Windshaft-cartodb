@@ -8,7 +8,7 @@ var _ = require('underscore');
 
 var LayergroupToken = require('../../lib/models/layergroup-token');
 
-var PgQueryRunner = require('../../lib/backends/pg_query_runner');
+var PgQueryRunner = require('../../lib/backends/pg-query-runner');
 var QueryTables = require('cartodb-query-tables').queryTables;
 var CartodbWindshaft = require('../../lib/server');
 var serverOptions = require('../../lib/server_options');
