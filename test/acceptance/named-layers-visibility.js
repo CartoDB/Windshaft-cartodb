@@ -4,8 +4,8 @@ var step = require('step');
 var test_helper = require('../support/test-helper');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/server');
-var serverOptions = require(__dirname + '/../../lib/server-options');
+var CartodbWindshaft = require('../../lib/server');
+var serverOptions = require('../../lib/server-options');
 
 var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/backends/template-maps');

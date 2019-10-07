@@ -3,8 +3,8 @@
 var test_helper = require('../support/test-helper');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require(__dirname + '/../../lib/server');
-var serverOptions = require(__dirname + '/../../lib/server-options');
+var CartodbWindshaft = require('../../lib/server');
+var serverOptions = require('../../lib/server-options');
 
 var LayergroupToken = require('../../lib/models/layergroup-token');
 

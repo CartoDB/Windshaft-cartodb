@@ -18,10 +18,10 @@ process.env.PGHOST = 'fake';
 var fs = require('fs');
 var http = require('http');
 
-var helper = require(__dirname + '/../support/test-helper');
+var helper = require('../support/test-helper');
 
-var CartodbWindshaft = require(__dirname + '/../../lib/server');
-var serverOptions = require(__dirname + '/../../lib/server-options');
+var CartodbWindshaft = require('../../lib/server');
+var serverOptions = require('../../lib/server-options');
 
 var LayergroupToken = require('../../lib/models/layergroup-token');
 

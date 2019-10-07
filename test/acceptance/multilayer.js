@@ -10,7 +10,7 @@ var redis_stats_db = 5;
 var mapnik = require('windshaft').mapnik;
 var semver = require('semver');
 
-var helper = require(__dirname + '/../support/test-helper');
+var helper = require('../support/test-helper');
 var LayergroupToken = require('../../lib/models/layergroup-token');
 
 var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';

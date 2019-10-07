@@ -18,7 +18,7 @@ var log4js = require('log4js');
 const setICUEnvVariable = require('../../lib/utils/icu-data-env-setter');
 
 // set environment specific variables
-global.environment  = require(__dirname + '/../../config/environments/test');
+global.environment  = require('../../config/environments/test');
 global.environment.name = 'test';
 process.env.NODE_ENV = 'test';
 

@@ -7,7 +7,7 @@ var step        = require('step');
 var FastlyPurge = require('fastly-purge');
 var _ = require('underscore');
 var NamedMapsCacheEntry = require('../../../lib/cache/model/named-maps-entry');
-var CartodbWindshaft = require(__dirname + '/../../../lib/server');
+var CartodbWindshaft = require('../../../lib/server');
 var nock = require('nock');
 
 describe('templates surrogate keys', function() {
