@@ -18,7 +18,7 @@ process.env.PGHOST = 'fake';
 var fs = require('fs');
 var http = require('http');
 
-var helper = require(__dirname + '/../support/test_helper');
+var helper = require(__dirname + '/../support/test-helper');
 
 var CartodbWindshaft = require(__dirname + '/../../lib/server');
 var serverOptions = require(__dirname + '/../../lib/server-options');

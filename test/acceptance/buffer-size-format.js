@@ -1,6 +1,6 @@
 'use strict';
 
-require('../support/test_helper');
+require('../support/test-helper');
 
 var fs = require('fs');
 var assert = require('../support/assert');

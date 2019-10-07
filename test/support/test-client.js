@@ -10,7 +10,7 @@ var mapnik = require('windshaft').mapnik;
 var LayergroupToken = require('../../lib/models/layergroup-token');
 
 var assert = require('./assert');
-var helper = require('./test_helper');
+var helper = require('./test-helper');
 
 var CartodbWindshaft = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');

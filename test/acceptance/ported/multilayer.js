@@ -1,6 +1,6 @@
 'use strict';
 
-var testHelper = require('../../support/test_helper');
+var testHelper = require('../../support/test-helper');
 
 var assert = require('../../support/assert');
 var _ = require('underscore');
@@ -8,7 +8,7 @@ var querystring = require('querystring');
 var step = require('step');
 var mapnik = require('windshaft').mapnik;
 var cartodbServer = require('../../../lib/server');
-var ServerOptions = require('./support/ported_server_options');
+var ServerOptions = require('./support/ported-server-options');
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
 describe('multilayer', function() {

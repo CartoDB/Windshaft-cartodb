@@ -1,9 +1,9 @@
 'use strict';
 
-var testHelper = require('../../support/test_helper');
+var testHelper = require('../../support/test-helper');
 
 var assert = require('../../support/assert');
-var testClient = require('./support/test_client');
+var testClient = require('./support/test-client');
 
 describe('regressions', function() {
     after(function() {

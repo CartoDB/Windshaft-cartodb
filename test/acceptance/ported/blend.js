@@ -1,9 +1,9 @@
 'use strict';
 
-require('../../support/test_helper');
+require('../../support/test-helper');
 
 var assert = require('../../support/assert');
-var testClient = require('./support/test_client');
+var testClient = require('./support/test-client');
 
 describe('blend png renderer', function() {
     var IMAGE_TOLERANCE_PER_MIL = 20;

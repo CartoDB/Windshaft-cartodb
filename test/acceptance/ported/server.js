@@ -1,11 +1,11 @@
 'use strict';
 
-var testHelper = require('../../support/test_helper');
+var testHelper = require('../../support/test-helper');
 
 var assert = require('../../support/assert');
 var cartodbServer = require('../../../lib/server');
-var ServerOptions = require('./support/ported_server_options');
-var testClient = require('./support/test_client');
+var ServerOptions = require('./support/ported-server-options');
+var testClient = require('./support/test-client');
 
 describe('server', function() {
     var server;

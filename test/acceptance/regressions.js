@@ -1,8 +1,8 @@
 'use strict';
 
-require('../support/test_helper');
+require('../support/test-helper');
 var assert = require('../support/assert');
-const helper = require('../support/test_helper');
+const helper = require('../support/test-helper');
 var TestClient = require('../support/test-client');
 const LayergroupToken = require('../../lib/models/layergroup-token');
 const CartodbWindshaft = require(__dirname + '/../../lib/server');

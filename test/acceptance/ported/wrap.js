@@ -1,9 +1,9 @@
 'use strict';
 
-require('../../support/test_helper');
+require('../../support/test-helper');
 
 var assert = require('../../support/assert');
-var testClient = require('./support/test_client');
+var testClient = require('./support/test-client');
 
 describe('wrap x coordinate', function() {
     describe('renders correct tile', function() {

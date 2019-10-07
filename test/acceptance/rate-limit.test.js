@@ -1,6 +1,6 @@
 'use strict';
 
-require('../support/test_helper');
+require('../support/test-helper');
 
 const assert = require('../support/assert');
 const redis = require('redis');

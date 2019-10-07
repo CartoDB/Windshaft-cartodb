@@ -1,6 +1,6 @@
 'use strict';
 
-const helper = require('../support/test_helper');
+const helper = require('../support/test-helper');
 const assert = require('../support/assert');
 const createServer = require('../../lib/server');
 const serverOptions = require('../../lib/server-options');

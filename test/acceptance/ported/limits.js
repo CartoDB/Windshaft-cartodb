@@ -1,12 +1,12 @@
 'use strict';
 
-require('../../support/test_helper');
+require('../../support/test-helper');
 
 var fs = require('fs');
 
 var assert = require('../../support/assert');
-var testClient = require('./support/test_client');
-var serverOptions = require('./support/ported_server_options');
+var testClient = require('./support/test-client');
+var serverOptions = require('./support/ported-server-options');
 
 describe.skip('render limits', function() {
 

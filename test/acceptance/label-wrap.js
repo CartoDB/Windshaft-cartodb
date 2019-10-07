@@ -1,6 +1,6 @@
 'use strict';
 
-require('../support/test_helper');
+require('../support/test-helper');
 var TestClient = require('../support/test-client');
 
 var assert = require('../support/assert');

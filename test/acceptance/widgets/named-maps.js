@@ -6,7 +6,7 @@ var step = require('step');
 var url = require('url');
 var queue = require('queue-async');
 
-var helper = require('../../support/test_helper');
+var helper = require('../../support/test-helper');
 
 var CartodbWindshaft = require('../../../lib/server');
 var serverOptions = require('../../../lib/server-options');

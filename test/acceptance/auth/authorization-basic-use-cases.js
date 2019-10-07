@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('../../support/assert');
-const testHelper = require('../../support/test_helper');
+const testHelper = require('../../support/test-helper');
 const CartodbWindshaft = require('../../../lib/server');
 const serverOptions = require('../../../lib/server-options');
 var LayergroupToken = require('../../../lib/models/layergroup-token');

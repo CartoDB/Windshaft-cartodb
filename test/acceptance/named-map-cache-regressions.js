@@ -1,13 +1,13 @@
 'use strict';
 
-require('../support/test_helper');
+require('../support/test-helper');
 
 const request = require('request');
 const assert = require('assert');
 const Server = require('../../lib/server');
 const serverOptions = require('../../lib/server-options');
 const { mapnik } = require('windshaft');
-const helper = require('../support/test_helper');
+const helper = require('../support/test-helper');
 
 const namedTileUrlTemplate = (ctx) => {
     return `http://${ctx.address}/api/v1/map/static/named/${ctx.templateId}/256/256.png?api_key=${ctx.apiKey}`;

@@ -1,6 +1,6 @@
 'use strict';
 
-require('../support/test_helper');
+require('../support/test-helper');
 
 var assert      = require('../support/assert');
 var querystring = require('querystring');
