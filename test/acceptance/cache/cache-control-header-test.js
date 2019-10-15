@@ -80,8 +80,8 @@ describe('cache-control header', function () {
                 }
 
                 const cacheControl = res.headers['cache-control'];
-                const [ type, maxAge ] = cacheControl.split(',');
-                const [ key, value ] = maxAge.split('=');
+                const [ , maxAge ] = cacheControl.split(',');
+                const [ , value ] = maxAge.split('=');
 
                 assert.ok(Number(value) <= ttl);
 
@@ -120,8 +120,8 @@ describe('cache-control header', function () {
                 }
 
                 const cacheControl = res.headers['cache-control'];
-                const [ type, maxAge ] = cacheControl.split(',');
-                const [ key, value ] = maxAge.split('=');
+                const [ , maxAge ] = cacheControl.split(',');
+                const [ , value ] = maxAge.split('=');
 
                 assert.ok(Number(value) <= ttl);
 
