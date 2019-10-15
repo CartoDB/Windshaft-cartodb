@@ -32,27 +32,30 @@ describe('QueryTables', function() {
 
     // Check test/support/sql/windshaft.test.sql to understand where the values come from.
 
-    it('should return an object with affected tables array and last updated time', async function () {
+    it('should return an object with affected tables array and last updated time', function () {
         var query = 'select * from test_table';
-        const result = await QueryTables.getQueryMetadataModel(connection, query);
+        return QueryTables.getQueryMetadataModel(connection, query)
+            .then(result => {
+                assert.equal(result.getLastUpdatedAt(), 1234567890123);
 
-        assert.equal(result.getLastUpdatedAt(), 1234567890123);
+                assert.equal(result.tables.length, 1);
+                assert.equal(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
+                assert.equal(result.tables[0].schema_name, 'public');
+                assert.equal(result.tables[0].table_name, 'test_table');
+            });
 
-        assert.equal(result.tables.length, 1);
-        assert.equal(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
-        assert.equal(result.tables[0].schema_name, 'public');
-        assert.equal(result.tables[0].table_name, 'test_table');
     });
 
-    it('should work with private tables', async function () {
+    it('should work with private tables', function () {
         var query = 'select * from test_table_private_1';
-        const result = await  QueryTables.getQueryMetadataModel(connection, query);
+        return QueryTables.getQueryMetadataModel(connection, query)
+            .then(result => {
+                assert.equal(result.getLastUpdatedAt(), 1234567890123);
 
-        assert.equal(result.getLastUpdatedAt(), 1234567890123);
-
-        assert.equal(result.tables.length, 1);
-        assert.equal(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
-        assert.equal(result.tables[0].schema_name, 'public');
-        assert.equal(result.tables[0].table_name, 'test_table_private_1');
+                assert.equal(result.tables.length, 1);
+                assert.equal(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
+                assert.equal(result.tables[0].schema_name, 'public');
+                assert.equal(result.tables[0].table_name, 'test_table_private_1');
+            });
     });
 });
