@@ -79,7 +79,12 @@ describe('cache-control header', function () {
                     return done(err);
                 }
 
-                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                const cacheControl = res.headers['cache-control'];
+                const [ type, maxAge ] = cacheControl.split(',');
+                const [ key, value ] = maxAge.split('=');
+
+                assert.ok(Number(value) <= ttl);
+
                 testClient.drain(done);
             });
         });
@@ -114,7 +119,12 @@ describe('cache-control header', function () {
                     return done(err);
                 }
 
-                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                const cacheControl = res.headers['cache-control'];
+                const [ type, maxAge ] = cacheControl.split(',');
+                const [ key, value ] = maxAge.split('=');
+
+                assert.ok(Number(value) <= ttl);
+
                 testClient.drain(done);
             });
         });
