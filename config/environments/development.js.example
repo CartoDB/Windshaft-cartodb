@@ -86,7 +86,7 @@ var config = {
     // If log_filename is given logs will be written
     // there, in append mode. Otherwise stdout is used (default).
     // Log file will be re-opened on receiving the HUP signal
-    ,log_filename: 'logs/node-windshaft.log'
+    ,log_filename: undefined
     // Templated database username for authorized user
     // Supported labels: 'user_id' (read from redis)
     ,postgres_auth_user: 'development_cartodb_user_<%= user_id %>'
@@ -265,7 +265,7 @@ var config = {
             // If filename is given logs comming from analysis client  will be written
             // there, in append mode. Otherwise 'log_filename' is used. Otherwise stdout is used (default).
             // Log file will be re-opened on receiving the HUP signal
-            filename: 'logs/node-windshaft-analysis.log'
+            filename: undefined
         },
         // Define max execution time in ms for analyses or tags
         // If analysis or tag are not found in redis this values will be used as default.
