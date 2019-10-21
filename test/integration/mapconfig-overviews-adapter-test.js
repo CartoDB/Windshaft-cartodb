@@ -12,7 +12,7 @@ var FilterStatsBackend = require('../../lib/backends/filter-stats');
 var MapConfigOverviewsAdapter = require('../../lib/models/mapconfig/adapter/mapconfig-overviews-adapter');
 
 var redisPool = new RedisPool(global.environment.redis);
-var metadataBackend = cartodbRedis({pool: redisPool});
+var metadataBackend = cartodbRedis({ pool: redisPool });
 var pgConnection = new PgConnection(metadataBackend);
 var pgQueryRunner = new PgQueryRunner(pgConnection);
 var overviewsMetadataBackend = new OverviewsMetadataBackend(pgQueryRunner);
@@ -20,9 +20,8 @@ var filterStatsBackend = new FilterStatsBackend(pgQueryRunner);
 
 var mapConfigOverviewsAdapter = new MapConfigOverviewsAdapter(overviewsMetadataBackend, filterStatsBackend);
 
-describe('MapConfigOverviewsAdapter', function() {
-
-    it('should not modify layers for which no overviews are available', function(done) {
+describe('MapConfigOverviewsAdapter', function () {
+    it('should not modify layers for which no overviews are available', function (done) {
         var sql = 'SELECT * FROM test_table';
         var cartocss = '#layer { marker-fill: black; }';
         var cartocss_version = '2.3.0';
@@ -42,7 +41,7 @@ describe('MapConfigOverviewsAdapter', function() {
         var params = {};
         var context = {};
 
-        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function(err, mapConfig) {
+        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function (err, mapConfig) {
             assert.ok(!err);
             var layers = mapConfig.layers;
             assert.equal(layers.length, 1);
@@ -56,9 +55,8 @@ describe('MapConfigOverviewsAdapter', function() {
     });
 });
 
-describe('MapConfigOverviewsAdapter', function() {
-
-    it('should add overviews metadata for layers using tables with overviews', function(done) {
+describe('MapConfigOverviewsAdapter', function () {
+    it('should add overviews metadata for layers using tables with overviews', function (done) {
         var sql = 'SELECT * FROM test_table_overviews';
         var cartocss = '#layer { marker-fill: black; }';
         var cartocss_version = '2.3.0';
@@ -78,7 +76,7 @@ describe('MapConfigOverviewsAdapter', function() {
         var params = {};
         var context = {};
 
-        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function(err, mapConfig) {
+        mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function (err, mapConfig) {
             assert.ok(!err);
             var layers = mapConfig.layers;
             assert.equal(layers.length, 1);

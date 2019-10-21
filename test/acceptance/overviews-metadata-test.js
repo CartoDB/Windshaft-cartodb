@@ -14,8 +14,7 @@ var step = require('step');
 
 var windshaft = require('windshaft');
 
-
-describe('overviews metadata', function() {
+describe('overviews metadata', function () {
     var server;
 
     before(function () {
@@ -45,17 +44,16 @@ describe('overviews metadata', function() {
 
     var keysToDelete;
 
-    beforeEach(function() {
+    beforeEach(function () {
         keysToDelete = {};
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         test_helper.deleteRedisKeys(keysToDelete, done);
     });
 
-    it("layers with and without overviews", function(done) {
-
-        var layergroup =  {
+    it('layers with and without overviews', function (done) {
+        var layergroup = {
             version: '1.0.0',
             layers: [overviews_layer, non_overviews_layer]
         };
@@ -64,33 +62,31 @@ describe('overviews metadata', function() {
 
         var expected_token;
         step(
-            function do_post()
-            {
-              var next = this;
-              assert.response(server, {
-                  url: layergroup_url,
-                  method: 'POST',
-                  headers: {host: 'localhost', 'Content-Type': 'application/json' },
-                  data: JSON.stringify(layergroup)
-              }, {}, function(res) {
-                  assert.equal(res.statusCode, 200, res.body);
+            function do_post () {
+                var next = this;
+                assert.response(server, {
+                    url: layergroup_url,
+                    method: 'POST',
+                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                    data: JSON.stringify(layergroup)
+                }, {}, function (res) {
+                    assert.equal(res.statusCode, 200, res.body);
 
-                  var parsedBody = JSON.parse(res.body);
-                  assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
-                  expected_token = parsedBody.layergroupid;
-                  next(null, res);
-              });
+                    var parsedBody = JSON.parse(res.body);
+                    assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+                    expected_token = parsedBody.layergroupid;
+                    next(null, res);
+                });
             },
-            function do_get_mapconfig(err)
-            {
+            function do_get_mapconfig (err) {
                 assert.ifError(err);
                 var next = this;
 
-                var mapStore  = new windshaft.storage.MapStore({
+                var mapStore = new windshaft.storage.MapStore({
                     pool: redisPool,
                     expire_time: 500000
                 });
-                mapStore.load(LayergroupToken.parse(expected_token).token, function(err, mapConfig) {
+                mapStore.load(LayergroupToken.parse(expected_token).token, function (err, mapConfig) {
                     assert.ifError(err);
                     assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
                     assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
@@ -103,13 +99,13 @@ describe('overviews metadata', function() {
                                 2: { table: '_vovw_2_test_table_overviews' }
                             }
                         }
-                      };
+                    };
                     assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
-                  });
+                });
 
-                  next(err);
+                next(err);
             },
-            function finish(err) {
+            function finish (err) {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
                 done(err);
@@ -118,7 +114,7 @@ describe('overviews metadata', function() {
     });
 
     describe('Overviews Flags', function () {
-        it("Overviews used", function (done) {
+        it('Overviews used', function (done) {
             var layergroup = {
                 version: '1.0.0',
                 layers: [overviews_layer, non_overviews_layer]
@@ -128,7 +124,7 @@ describe('overviews metadata', function() {
 
             var expected_token;
             step(
-                function do_post() {
+                function do_post () {
                     var next = this;
                     assert.response(server, {
                         url: layergroup_url,
@@ -148,14 +144,14 @@ describe('overviews metadata', function() {
                         next();
                     });
                 },
-                function finish(err) {
+                function finish (err) {
                     keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
                     done(err);
                 }
             );
         });
-        it("Overviews NOT used", function (done) {
+        it('Overviews NOT used', function (done) {
             var layergroup = {
                 version: '1.0.0',
                 layers: [non_overviews_layer]
@@ -165,7 +161,7 @@ describe('overviews metadata', function() {
 
             var expected_token;
             step(
-                function do_post() {
+                function do_post () {
                     var next = this;
                     assert.response(server, {
                         url: layergroup_url,
@@ -185,7 +181,7 @@ describe('overviews metadata', function() {
                         next();
                     });
                 },
-                function finish(err) {
+                function finish (err) {
                     keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
                     done(err);
@@ -195,7 +191,7 @@ describe('overviews metadata', function() {
     });
 });
 
-describe('overviews metadata with filters', function() {
+describe('overviews metadata with filters', function () {
     var server;
 
     before(function () {
@@ -207,33 +203,32 @@ describe('overviews metadata with filters', function() {
 
     var keysToDelete;
 
-    beforeEach(function() {
+    beforeEach(function () {
         keysToDelete = {};
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         test_helper.deleteRedisKeys(keysToDelete, done);
     });
 
-    it("layers with overviews", function(done) {
-
-        var layergroup =  {
+    it('layers with overviews', function (done) {
+        var layergroup = {
             version: '1.5.0',
             layers: [
-              {
-                  type: 'cartodb',
-                  options: {
-                      sql: 'SELECT * FROM test_table_overviews',
-                      source: { id: 'with_overviews' },
-                      cartocss: '#layer { marker-fill: black; }',
-                      cartocss_version: '2.3.0'
-                  }
-              }
+                {
+                    type: 'cartodb',
+                    options: {
+                        sql: 'SELECT * FROM test_table_overviews',
+                        source: { id: 'with_overviews' },
+                        cartocss: '#layer { marker-fill: black; }',
+                        cartocss_version: '2.3.0'
+                    }
+                }
             ],
-            dataviews:  {
+            dataviews: {
                 test_names: {
                     type: 'aggregation',
-                    source: {id: 'with_overviews'},
+                    source: { id: 'with_overviews' },
                     options: {
                         column: 'name',
                         aggregation: 'count'
@@ -241,10 +236,11 @@ describe('overviews metadata with filters', function() {
                 }
             },
             analyses: [
-                { id: 'with_overviews',
+                {
+                    id: 'with_overviews',
                     type: 'source',
                     params: {
-                      query: 'select * from test_table_overviews'
+                        query: 'select * from test_table_overviews'
                     }
                 }
             ]
@@ -260,32 +256,30 @@ describe('overviews metadata with filters', function() {
 
         var expected_token;
         step(
-            function do_post()
-            {
-              var next = this;
-              assert.response(server, {
-                  url: layergroup_url + '?filters=' + JSON.stringify(filters),
-                  method: 'POST',
-                  headers: {host: 'localhost', 'Content-Type': 'application/json' },
-                  data: JSON.stringify(layergroup)
-              }, {}, function(res) {
-                  assert.equal(res.statusCode, 200, res.body);
-                  var parsedBody = JSON.parse(res.body);
-                  assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
-                  expected_token = parsedBody.layergroupid;
-                  next(null, res);
-              });
+            function do_post () {
+                var next = this;
+                assert.response(server, {
+                    url: layergroup_url + '?filters=' + JSON.stringify(filters),
+                    method: 'POST',
+                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                    data: JSON.stringify(layergroup)
+                }, {}, function (res) {
+                    assert.equal(res.statusCode, 200, res.body);
+                    var parsedBody = JSON.parse(res.body);
+                    assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+                    expected_token = parsedBody.layergroupid;
+                    next(null, res);
+                });
             },
-            function do_get_mapconfig(err)
-            {
+            function do_get_mapconfig (err) {
                 assert.ifError(err);
                 var next = this;
 
-                var mapStore  = new windshaft.storage.MapStore({
+                var mapStore = new windshaft.storage.MapStore({
                     pool: redisPool,
                     expire_time: 500000
                 });
-                mapStore.load(LayergroupToken.parse(expected_token).token, function(err, mapConfig) {
+                mapStore.load(LayergroupToken.parse(expected_token).token, function (err, mapConfig) {
                     assert.ifError(err);
                     assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
@@ -297,17 +291,16 @@ describe('overviews metadata with filters', function() {
                                 2: { table: '_vovw_2_test_table_overviews' }
                             }
                         },
-                        filters: { test_names: { type: 'category', column: 'name', params: { accept: [ 'Hawai' ] } } },
+                        filters: { test_names: { type: 'category', column: 'name', params: { accept: ['Hawai'] } } },
                         unfiltered_query: 'select * from test_table_overviews',
                         filter_stats: { unfiltered_rows: 5, filtered_rows: 1 }
-                      };
+                    };
                     assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
+                });
 
-                  });
-
-                  next(err);
+                next(err);
             },
-            function finish(err) {
+            function finish (err) {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
                 done(err);

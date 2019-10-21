@@ -5,10 +5,9 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('widget filters', function() {
-
-    describe('combine widget filters', function() {
-        var combinedWidgetsMapConfig =  {
+describe('widget filters', function () {
+    describe('combine widget filters', function () {
+        var combinedWidgetsMapConfig = {
             version: '1.5.0',
             layers: [
                 {
@@ -37,7 +36,7 @@ describe('widget filters', function() {
             ]
         };
 
-        it("should expose a filtered aggregation", function(done) {
+        it('should expose a filtered aggregation', function (done) {
             var params = {
                 filters: {
                     layers: [
@@ -48,7 +47,7 @@ describe('widget filters', function() {
                 }
             };
             var testClient = new TestClient(combinedWidgetsMapConfig);
-            testClient.getWidget('country_places_count', params, function(err, res) {
+            testClient.getWidget('country_places_count', params, function (err, res) {
                 if (err) {
                     return done(err);
                 }
@@ -56,10 +55,10 @@ describe('widget filters', function() {
                 var aggregation = JSON.parse(res.body);
 
                 // first one would be CHN if reject filter wasn't applied
-                assert.deepEqual(aggregation.categories[0], { value: 769, category: "USA", agg: false });
+                assert.deepEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
-                assert.equal(aggregation.categories.reduce(function(sum, row) {
+                assert.equal(aggregation.categories.reduce(function (sum, row) {
                     return sum + (row.category === 'CHN' ? 1 : 0);
                 }, 0), 0);
 
@@ -67,7 +66,7 @@ describe('widget filters', function() {
             });
         });
 
-        it("should expose a filtered aggregation", function(done) {
+        it('should expose a filtered aggregation', function (done) {
             var params = {
                 filters: {
                     layers: [
@@ -79,7 +78,7 @@ describe('widget filters', function() {
                 }
             };
             var testClient = new TestClient(combinedWidgetsMapConfig);
-            testClient.getWidget('country_places_count', params, function(err, res) {
+            testClient.getWidget('country_places_count', params, function (err, res) {
                 if (err) {
                     return done(err);
                 }
@@ -90,7 +89,7 @@ describe('widget filters', function() {
                 assert.deepEqual(aggregation.categories[0], { value: 4, category: 'IND', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
-                assert.equal(aggregation.categories.reduce(function(sum, row) {
+                assert.equal(aggregation.categories.reduce(function (sum, row) {
                     return sum + (row.category === 'CHN' ? 1 : 0);
                 }, 0), 0);
 
@@ -98,7 +97,7 @@ describe('widget filters', function() {
             });
         });
 
-        it("should allow to filter by bounding box a filtered aggregation", function(done) {
+        it('should allow to filter by bounding box a filtered aggregation', function (done) {
             var params = {
                 filters: {
                     layers: [
@@ -110,7 +109,7 @@ describe('widget filters', function() {
                 bbox: '-20,0,45,60'
             };
             var testClient = new TestClient(combinedWidgetsMapConfig);
-            testClient.getWidget('country_places_count', params, function(err, res) {
+            testClient.getWidget('country_places_count', params, function (err, res) {
                 if (err) {
                     return done(err);
                 }
@@ -118,10 +117,10 @@ describe('widget filters', function() {
                 var aggregation = JSON.parse(res.body);
 
                 // first one would be CHN if reject filter wasn't applied
-                assert.deepEqual(aggregation.categories[0], { value: 96, category: "RUS", agg: false });
+                assert.deepEqual(aggregation.categories[0], { value: 96, category: 'RUS', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
-                assert.equal(aggregation.categories.reduce(function(sum, row) {
+                assert.equal(aggregation.categories.reduce(function (sum, row) {
                     return sum + (row.category === 'CHN' ? 1 : 0);
                 }, 0), 0);
 
@@ -129,7 +128,7 @@ describe('widget filters', function() {
             });
         });
 
-        it("should allow to filter by bounding box a filtered aggregation, with reject", function(done) {
+        it('should allow to filter by bounding box a filtered aggregation, with reject', function (done) {
             var params = {
                 filters: {
                     layers: [
@@ -142,7 +141,7 @@ describe('widget filters', function() {
                 bbox: '-20,0,45,60'
             };
             var testClient = new TestClient(combinedWidgetsMapConfig);
-            testClient.getWidget('country_places_count', params, function(err, res) {
+            testClient.getWidget('country_places_count', params, function (err, res) {
                 if (err) {
                     return done(err);
                 }
@@ -150,10 +149,10 @@ describe('widget filters', function() {
                 var aggregation = JSON.parse(res.body);
 
                 // first one would be CHN if reject filter wasn't applied
-                assert.deepEqual(aggregation.categories[0], { value: 77, category: "TUR", agg: false });
+                assert.deepEqual(aggregation.categories[0], { value: 77, category: 'TUR', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
-                assert.equal(aggregation.categories.reduce(function(sum, row) {
+                assert.equal(aggregation.categories.reduce(function (sum, row) {
                     return sum + (row.category === 'CHN' ? 1 : 0);
                 }, 0), 0);
 

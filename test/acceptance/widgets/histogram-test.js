@@ -5,10 +5,9 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('histogram widgets', function() {
-
-    it("should expose layer histogram", function(done) {
-        var histogramMapConfig =  {
+describe('histogram widgets', function () {
+    it('should expose layer histogram', function (done) {
+        var histogramMapConfig = {
             version: '1.5.0',
             layers: [
                 {
@@ -32,7 +31,7 @@ describe('histogram widgets', function() {
 
         var testClient = new TestClient(histogramMapConfig);
 
-        testClient.getWidget('pop_max', function(err, res) {
+        testClient.getWidget('pop_max', function (err, res) {
             if (err) {
                 return done(err);
             }
@@ -44,10 +43,9 @@ describe('histogram widgets', function() {
         });
     });
 
-    describe('filters', function() {
-
-        describe('range', function() {
-            var histogramMapConfig =  {
+    describe('filters', function () {
+        describe('range', function () {
+            var histogramMapConfig = {
                 version: '1.5.0',
                 layers: [
                     {
@@ -69,9 +67,9 @@ describe('histogram widgets', function() {
                 ]
             };
 
-            it("should expose an histogram", function(done) {
+            it('should expose an histogram', function (done) {
                 var testClient = new TestClient(histogramMapConfig);
-                testClient.getWidget('country_places_histogram', { own_filter: 0 }, function(err, res) {
+                testClient.getWidget('country_places_histogram', { own_filter: 0 }, function (err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -87,7 +85,7 @@ describe('histogram widgets', function() {
                 });
             });
 
-            it("should expose a filtered histogram", function(done) {
+            it('should expose a filtered histogram', function (done) {
                 var params = {
                     filters: {
                         layers: [
@@ -98,7 +96,7 @@ describe('histogram widgets', function() {
                     }
                 };
                 var testClient = new TestClient(histogramMapConfig);
-                testClient.getWidget('country_places_histogram', params, function(err, res) {
+                testClient.getWidget('country_places_histogram', params, function (err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -117,7 +115,7 @@ describe('histogram widgets', function() {
                 });
             });
 
-            it("should expose a filtered histogram using dataviews for filtering", function(done) {
+            it('should expose a filtered histogram using dataviews for filtering', function (done) {
                 var params = {
                     filters: {
                         dataviews: {
@@ -126,7 +124,7 @@ describe('histogram widgets', function() {
                     }
                 };
                 var testClient = new TestClient(histogramMapConfig);
-                testClient.getWidget('country_places_histogram', params, function(err, res) {
+                testClient.getWidget('country_places_histogram', params, function (err, res) {
                     if (err) {
                         return done(err);
                     }
@@ -146,5 +144,4 @@ describe('histogram widgets', function() {
             });
         });
     });
-
 });

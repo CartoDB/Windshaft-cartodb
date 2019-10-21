@@ -11,16 +11,14 @@ var PgConnection = require('../../lib/backends/pg-connection');
 
 var QueryTables = require('cartodb-query-tables').queryTables;
 
-
-describe('QueryTables', function() {
-
+describe('QueryTables', function () {
     var connection;
 
-    before(function(done) {
+    before(function (done) {
         var redisPool = new RedisPool(global.environment.redis);
-        var metadataBackend = cartodbRedis({pool: redisPool});
+        var metadataBackend = cartodbRedis({ pool: redisPool });
         var pgConnection = new PgConnection(metadataBackend);
-        pgConnection.getConnection('localhost', function(err, pgConnection) {
+        pgConnection.getConnection('localhost', function (err, pgConnection) {
             if (err) {
                 return done(err);
             }
@@ -43,7 +41,6 @@ describe('QueryTables', function() {
                 assert.equal(result.tables[0].schema_name, 'public');
                 assert.equal(result.tables[0].table_name, 'test_table');
             });
-
     });
 
     it('should work with private tables', function () {

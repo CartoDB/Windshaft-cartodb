@@ -5,8 +5,8 @@ var testHelper = require('../../support/test-helper');
 var assert = require('../../support/assert');
 var testClient = require('./support/test-client');
 
-describe('regressions', function() {
-    after(function() {
+describe('regressions', function () {
+    after(function () {
         testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
     });
 
@@ -15,8 +15,7 @@ describe('regressions', function() {
     // See http://github.com/CartoDB/Windshaft/issues/130
     // [x] Needs a fix on the mapnik side: https://github.com/mapnik/mapnik/pull/2143
     //
-    it("#130 database access is read-only", function(done) {
-
+    it('#130 database access is read-only', function (done) {
         var writeSqlMapConfig = testClient.singleLayerMapConfig(
             'select st_point(0,0) as the_geom, * from test_table_inserter(st_setsrid(st_point(0,0),4326),\'write\')'
         );
@@ -28,7 +27,7 @@ describe('regressions', function() {
             }
         };
 
-        testClient.getTile(writeSqlMapConfig, 0, 0, 0, expectedResponse, function(err, res) {
+        testClient.getTile(writeSqlMapConfig, 0, 0, 0, expectedResponse, function (err, res) {
             var parsedBody = JSON.parse(res.body);
             assert.ok(parsedBody.errors);
             assert.equal(parsedBody.errors.length, 1);

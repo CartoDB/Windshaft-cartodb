@@ -107,9 +107,9 @@ describe('user render timeout limit', function () {
                         subtype: 'render',
                         message: renderTimeoutErrorMessage,
                         layer: {
-                            id: "layer0",
+                            id: 'layer0',
                             index: 0,
-                            type: "mapnik"
+                            type: 'mapnik'
                         }
                     }]
                 });
@@ -166,7 +166,7 @@ describe('user render timeout limit', function () {
             });
         });
 
-        describe('with onTileErrorStrategy DISABLED', function() {
+        describe('with onTileErrorStrategy DISABLED', function () {
             var onTileErrorStrategy;
 
             beforeEach(function (done) {
@@ -384,7 +384,7 @@ describe('user render timeout limit', function () {
             });
         });
 
-        describe('with onTileErrorStrategy DISABLED', function() {
+        describe('with onTileErrorStrategy DISABLED', function () {
             var onTileErrorStrategy;
 
             beforeEach(function (done) {

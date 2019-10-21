@@ -6,7 +6,6 @@ const assert = require('../../support/assert');
 const TestClient = require('../../support/test-client');
 
 describe('analysis-filters-params', () => {
-
     const CARTOCSS = `#layer {
         marker-fill-opacity: 1;
         marker-line-color: white;
@@ -23,13 +22,13 @@ describe('analysis-filters-params', () => {
         version: '1.6.0',
         layers: [
             {
-                "type": "cartodb",
-                "options": {
-                    "source": {
-                        "id": "a1"
+                type: 'cartodb',
+                options: {
+                    source: {
+                        id: 'a1'
                     },
-                    "cartocss": CARTOCSS,
-                    "cartocss_version": "2.3.0"
+                    cartocss: CARTOCSS,
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -55,10 +54,10 @@ describe('analysis-filters-params', () => {
         },
         analyses: [
             {
-                "id": "a1",
-                "type": "source",
-                "params": {
-                    "query": "select * from populated_places_simple_reduced"
+                id: 'a1',
+                type: 'source',
+                params: {
+                    query: 'select * from populated_places_simple_reduced'
                 }
             }
         ]
@@ -77,8 +76,7 @@ describe('analysis-filters-params', () => {
         }
     };
 
-
-    it('should get a filtered histogram dataview with all filters', function(done) {
+    it('should get a filtered histogram dataview with all filters', function (done) {
         const testClient = new TestClient(mapConfig, 1234);
         const testParams = Object.assign({}, params, {
             own_filter: 1
@@ -94,7 +92,7 @@ describe('analysis-filters-params', () => {
         });
     });
 
-    it('should get a filtered histogram dataview with all filters except my own filter', function(done) {
+    it('should get a filtered histogram dataview with all filters except my own filter', function (done) {
         const testClient = new TestClient(mapConfig, 1234);
         const testParams = Object.assign({}, params, {
             own_filter: 0
@@ -110,7 +108,7 @@ describe('analysis-filters-params', () => {
         });
     });
 
-    it('should get a filtered histogram dataview without filters', function(done) {
+    it('should get a filtered histogram dataview without filters', function (done) {
         const testClient = new TestClient(mapConfig, 1234);
         const testParams = Object.assign({}, params, {
             no_filters: 1

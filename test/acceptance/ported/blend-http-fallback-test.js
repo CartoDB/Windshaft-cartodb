@@ -7,15 +7,14 @@ var testClient = require('./support/test-client');
 var fs = require('fs');
 var http = require('http');
 
-describe('blend http fallback', function() {
-
+describe('blend http fallback', function () {
     var IMG_TOLERANCE_PER_MIL = 20;
 
     var httpRendererResourcesServer;
 
-    before(function(done) {
+    before(function (done) {
         // Start a server to test external resources
-        httpRendererResourcesServer = http.createServer( function(request, response) {
+        httpRendererResourcesServer = http.createServer(function (request, response) {
             if (request.url.match(/^\/error404\//)) {
                 response.writeHead(404);
                 response.end();
@@ -24,9 +23,9 @@ describe('blend http fallback', function() {
                 if (request.url.match(/^\/dark\//)) {
                     filename = __dirname + '/../../fixtures/http/dark_nolabels-1-0-0.png';
                 }
-                fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+                fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                     response.writeHead(200);
-                    response.write(file, "binary");
+                    response.write(file, 'binary');
                     response.end();
                 });
             }
@@ -34,7 +33,7 @@ describe('blend http fallback', function() {
         httpRendererResourcesServer.listen(8033, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         httpRendererResourcesServer.close(done);
     });
 
@@ -81,7 +80,7 @@ describe('blend http fallback', function() {
     };
 
     var filteredLayersSuite = [
-        //['all'], // layers displayed: 2 + 4, skipping 3 as it fails
+        // ['all'], // layers displayed: 2 + 4, skipping 3 as it fails
         [0, 4],
         [0, 3], // skips layer 3 as it fails
         [1, 2],
@@ -90,11 +89,11 @@ describe('blend http fallback', function() {
         [3, 4]
     ];
 
-    function blendPngFixture(layers) {
+    function blendPngFixture (layers) {
         return './test/fixtures/blend/http_fallback/blend-layers-' + layers.join('.') + '-zxy-1.0.0.png';
     }
 
-    filteredLayersSuite.forEach(function(filteredLayers) {
+    filteredLayersSuite.forEach(function (filteredLayers) {
         var layerFilter = filteredLayers.join(',');
         var tileRequest = {
             z: 1,
@@ -105,9 +104,9 @@ describe('blend http fallback', function() {
         };
 
         it('should fallback on http error while blending layers ' + layerFilter + '/1/0/0.png', function (done) {
-            testClient.getTileLayer(mapConfig, tileRequest, function(err, res) {
+            testClient.getTileLayer(mapConfig, tileRequest, function (err, res) {
                 assert.imageBufferIsSimilarToFile(res.body, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL,
-                    function(err) {
+                    function (err) {
                         assert.ok(!err, err);
                         done();
                     }
@@ -116,7 +115,7 @@ describe('blend http fallback', function() {
         });
     });
 
-    it('should keep failing when http layer is requested individually', function(done) {
+    it('should keep failing when http layer is requested individually', function (done) {
         var tileRequest = {
             z: 1,
             x: 0,
@@ -130,11 +129,11 @@ describe('blend http fallback', function() {
                 'Content-Type': 'application/json; charset=utf-8'
             }
         };
-        testClient.getTileLayer(mapConfig, tileRequest, expectedResponse, function(err, res) {
+        testClient.getTileLayer(mapConfig, tileRequest, expectedResponse, function (err, res) {
             assert.ok(!err);
             var parsedBody = JSON.parse(res.body);
             assert.deepEqual(parsedBody.errors, [
-                "Unable to fetch http tile: http://127.0.0.1:8033/error404/1/0/0.png [404]"
+                'Unable to fetch http tile: http://127.0.0.1:8033/error404/1/0/0.png [404]'
             ]);
             done();
         });

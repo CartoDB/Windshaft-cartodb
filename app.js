@@ -54,7 +54,7 @@ var availableEnvironments = {
 };
 
 // sanity check
-if (!availableEnvironments[ENVIRONMENT]){
+if (!availableEnvironments[ENVIRONMENT]) {
     logError('node app.js [environment]');
     logError('environments: %s', Object.keys(availableEnvironments).join(', '));
     process.exit(1);
@@ -76,27 +76,26 @@ var agentOptions = _.defaults(global.environment.httpAgent || {}, {
 http.globalAgent = new http.Agent(agentOptions);
 https.globalAgent = new https.Agent(agentOptions);
 
-
 global.log4js = require('log4js');
 var log4jsConfig = {
     appenders: [],
     replaceConsole: true
 };
 
-if ( global.environment.log_filename ) {
+if (global.environment.log_filename) {
     var logFilename = path.resolve(global.environment.log_filename);
     var logDirectory = path.dirname(logFilename);
     if (!fs.existsSync(logDirectory)) {
-        logError("Log filename directory does not exist: " + logDirectory);
+        logError('Log filename directory does not exist: ' + logDirectory);
         process.exit(1);
     }
-    log("Logs will be written to " + logFilename);
+    log('Logs will be written to ' + logFilename);
     log4jsConfig.appenders.push(
-        { type: "file", absolute: true, filename: logFilename }
+        { type: 'file', absolute: true, filename: logFilename }
     );
 } else {
     log4jsConfig.appenders.push(
-        { type: "console", layout: { type:'basic' } }
+        { type: 'console', layout: { type: 'basic' } }
     );
 }
 
@@ -118,13 +117,13 @@ var backlog = global.environment.maxConnections || 128;
 
 var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, backlog);
 
-var version = require("./package").version;
+var version = require('./package').version;
 
-listener.on('listening', function() {
-    log("Using Node.js %s", process.version);
+listener.on('listening', function () {
+    log('Using Node.js %s', process.version);
     log('Using configuration file "%s"', configurationFile);
     log(
-        "Windshaft tileserver %s started on %s:%s PID=%d (%s)",
+        'Windshaft tileserver %s started on %s:%s PID=%d (%s)',
         version, serverOptions.bind.host, serverOptions.bind.port, process.pid, ENVIRONMENT
     );
 });
@@ -163,15 +162,15 @@ setInterval(function cpuUsageMetrics () {
     previousCPUUsage = CPUUsage;
 }, 5000);
 
-setInterval(function() {
+setInterval(function () {
     var memoryUsage = process.memoryUsage();
-    Object.keys(memoryUsage).forEach(function(k) {
+    Object.keys(memoryUsage).forEach(function (k) {
         global.statsClient.gauge('windshaft.memory.' + k, memoryUsage[k]);
     });
 }, 5000);
 
-process.on('SIGHUP', function() {
-    global.log4js.clearAndShutdownAppenders(function() {
+process.on('SIGHUP', function () {
+    global.log4js.clearAndShutdownAppenders(function () {
         global.log4js.configure(log4jsConfig);
         global.logger = global.log4js.getLogger();
         log('Log files reloaded');
@@ -179,12 +178,12 @@ process.on('SIGHUP', function() {
 });
 
 if (global.gc) {
-    var gcInterval = Number.isFinite(global.environment.gc_interval) ?
-        global.environment.gc_interval :
-        10000;
+    var gcInterval = Number.isFinite(global.environment.gc_interval)
+        ? global.environment.gc_interval
+        : 10000;
 
     if (gcInterval > 0) {
-        setInterval(function gcForcedCycle() {
+        setInterval(function gcForcedCycle () {
             global.gc();
         }, gcInterval);
     }
@@ -206,24 +205,24 @@ function getGCTypeValue (type) {
     let value;
 
     switch (type) {
-        case 1:
-            value = 'Scavenge';
-            break;
-        case 2:
-            value = 'MarkSweepCompact';
-            break;
-        case 4:
-            value = 'IncrementalMarking';
-            break;
-        case 8:
-            value = 'ProcessWeakCallbacks';
-            break;
-        case 15:
-            value = 'All';
-            break;
-        default:
-            value = 'Unkown';
-            break;
+    case 1:
+        value = 'Scavenge';
+        break;
+    case 2:
+        value = 'MarkSweepCompact';
+        break;
+    case 4:
+        value = 'IncrementalMarking';
+        break;
+    case 8:
+        value = 'ProcessWeakCallbacks';
+        break;
+    case 15:
+        value = 'All';
+        break;
+    default:
+        value = 'Unkown';
+        break;
     }
 
     return value;
@@ -231,7 +230,7 @@ function getGCTypeValue (type) {
 
 addHandlers(listener, global.logger, 45000);
 
-function addHandlers(listener, logger, killTimeout) {
+function addHandlers (listener, logger, killTimeout) {
     process.on('uncaughtException', exitProcess(listener, logger, killTimeout));
     process.on('unhandledRejection', exitProcess(listener, logger, killTimeout));
     process.on('ENOMEM', exitProcess(listener, logger, killTimeout));

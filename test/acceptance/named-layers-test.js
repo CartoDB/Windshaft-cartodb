@@ -13,7 +13,7 @@ var TemplateMaps = require('../../lib/backends/template-maps');
 
 var step = require('step');
 
-describe('named_layers', function() {
+describe('named_layers', function () {
     var server;
 
     before(function () {
@@ -45,10 +45,10 @@ describe('named_layers', function() {
         auth: {
             method: 'open'
         },
-        "placeholders": {
-            "color": {
-                "type": "css_color",
-                "default": "#cc3300"
+        placeholders: {
+            color: {
+                type: 'css_color',
+                default: '#cc3300'
             }
         },
         layergroup: {
@@ -69,8 +69,8 @@ describe('named_layers', function() {
         },
         placeholders: {
             color: {
-                "type": "css_color",
-                "default": "#cc3300"
+                type: 'css_color',
+                default: '#cc3300'
             }
         },
         layergroup: {
@@ -79,7 +79,6 @@ describe('named_layers', function() {
             ]
         }
     };
-
 
     var namedMapLayer = {
         type: 'named',
@@ -106,50 +105,50 @@ describe('named_layers', function() {
 
     var keysToDelete;
 
-    beforeEach(function() {
+    beforeEach(function () {
         keysToDelete = {};
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         test_helper.deleteRedisKeys(keysToDelete, done);
     });
 
-    beforeEach(function(done) {
+    beforeEach(function (done) {
         global.environment.enabledFeatures.cdbQueryTablesFromPostgres = true;
-        templateMaps.addTemplate(username, nestedNamedMapTemplate, function(err) {
+        templateMaps.addTemplate(username, nestedNamedMapTemplate, function (err) {
             if (err) {
                 return done(err);
             }
-            templateMaps.addTemplate(username, tokenAuthTemplate, function(err) {
+            templateMaps.addTemplate(username, tokenAuthTemplate, function (err) {
                 if (err) {
                     return done(err);
                 }
-                templateMaps.addTemplate(username, template, function(err) {
+                templateMaps.addTemplate(username, template, function (err) {
                     return done(err);
                 });
             });
         });
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         global.environment.enabledFeatures.cdbQueryTablesFromPostgres = false;
-        templateMaps.delTemplate(username, nestedNamedMapTemplateName, function(err) {
+        templateMaps.delTemplate(username, nestedNamedMapTemplateName, function (err) {
             if (err) {
                 return done(err);
             }
-            templateMaps.delTemplate(username, tokenAuthTemplateName, function(err) {
+            templateMaps.delTemplate(username, tokenAuthTemplateName, function (err) {
                 if (err) {
                     return done(err);
                 }
-                templateMaps.delTemplate(username, templateName, function(err) {
+                templateMaps.delTemplate(username, templateName, function (err) {
                     return done(err);
                 });
             });
         });
     });
 
-    it('should fail for non-existing template name', function(done) {
-        var layergroup =  {
+    it('should fail for non-existing template name', function (done) {
+        var layergroup = {
             version: '1.3.0',
             layers: [
                 {
@@ -162,7 +161,7 @@ describe('named_layers', function() {
         };
 
         step(
-            function createLayergroup() {
+            function createLayergroup () {
                 var next = this;
                 assert.response(server,
                     {
@@ -177,12 +176,12 @@ describe('named_layers', function() {
                     {
                         status: 400
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
@@ -192,15 +191,14 @@ describe('named_layers', function() {
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
     });
 
-    it('should return 403 if not properly authorized', function(done) {
-
-        var layergroup =  {
+    it('should return 403 if not properly authorized', function (done) {
+        var layergroup = {
             version: '1.3.0',
             layers: [
                 {
@@ -215,7 +213,7 @@ describe('named_layers', function() {
         };
 
         step(
-            function createLayergroup() {
+            function createLayergroup () {
                 var next = this;
                 assert.response(server,
                     {
@@ -230,31 +228,29 @@ describe('named_layers', function() {
                     {
                         status: 403
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
 
                 var parsedBody = JSON.parse(response.body);
-                assert.deepEqual(parsedBody.errors, [ "Unauthorized 'auth_valid_template' template instantiation" ]);
+                assert.deepEqual(parsedBody.errors, ["Unauthorized 'auth_valid_template' template instantiation"]);
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
-
     });
 
-    it('should return 200 and layergroup if properly authorized', function(done) {
-
-        var layergroup =  {
+    it('should return 200 and layergroup if properly authorized', function (done) {
+        var layergroup = {
             version: '1.3.0',
             layers: [
                 {
@@ -269,7 +265,7 @@ describe('named_layers', function() {
         };
 
         step(
-            function createLayergroup() {
+            function createLayergroup () {
                 var next = this;
                 assert.response(server,
                     {
@@ -284,12 +280,12 @@ describe('named_layers', function() {
                     {
                         status: 200
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
@@ -303,16 +299,14 @@ describe('named_layers', function() {
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
-
     });
 
-    it('should return 400 for nested named map layers', function(done) {
-
-        var layergroup =  {
+    it('should return 400 for nested named map layers', function (done) {
+        var layergroup = {
             version: '1.3.0',
             layers: [
                 {
@@ -325,7 +319,7 @@ describe('named_layers', function() {
         };
 
         step(
-            function createLayergroup() {
+            function createLayergroup () {
                 var next = this;
                 assert.response(server,
                     {
@@ -340,30 +334,28 @@ describe('named_layers', function() {
                     {
                         status: 400
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
 
                 var parsedBody = JSON.parse(response.body);
-                assert.deepEqual(parsedBody.errors, ['Nested named layers are not allowed' ]);
+                assert.deepEqual(parsedBody.errors, ['Nested named layers are not allowed']);
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
-
     });
 
-    it('should return 200 and layergroup with private tables', function(done) {
-
+    it('should return 200 and layergroup with private tables', function (done) {
         var privateTableTemplateName = 'private_table_template';
         var privateTableTemplate = {
             version: '0.0.1',
@@ -385,7 +377,7 @@ describe('named_layers', function() {
             }
         };
 
-        var layergroup =  {
+        var layergroup = {
             version: '1.3.0',
             layers: [
                 {
@@ -398,10 +390,10 @@ describe('named_layers', function() {
         };
 
         step(
-            function createTemplate() {
+            function createTemplate () {
                 templateMaps.addTemplate(username, privateTableTemplate, this);
             },
-            function createLayergroup(err) {
+            function createLayergroup (err) {
                 if (err) {
                     throw err;
                 }
@@ -420,12 +412,12 @@ describe('named_layers', function() {
                     {
                         status: 200
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
@@ -439,7 +431,7 @@ describe('named_layers', function() {
 
                 return parsedBody.layergroupid;
             },
-            function requestTile(err, layergroupId) {
+            function requestTile (err, layergroupId) {
                 if (err) {
                     throw err;
                 }
@@ -460,63 +452,61 @@ describe('named_layers', function() {
                             'content-type': 'image/png'
                         }
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function handleTileResponse(err, res) {
+            function handleTileResponse (err, res) {
                 if (err) {
                     throw err;
                 }
                 test_helper.checkCache(res);
                 return true;
             },
-            function deleteTemplate(err) {
+            function deleteTemplate (err) {
                 var next = this;
-                templateMaps.delTemplate(username, privateTableTemplateName, function(/*delErr*/) {
+                templateMaps.delTemplate(username, privateTableTemplateName, function (/* delErr */) {
                     // ignore deletion error
                     next(err);
                 });
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
-
     });
 
-    it('should return 200 and layergroup with private tables and interactivity', function(done) {
-
+    it('should return 200 and layergroup with private tables and interactivity', function (done) {
         var privateTableTemplateNameInteractivity = 'private_table_template_interactivity';
         var privateTableTemplate = {
-            "version": "0.0.1",
-            "auth": {
-                "method": "open"
+            version: '0.0.1',
+            auth: {
+                method: 'open'
             },
-            "name": privateTableTemplateNameInteractivity,
-            "layergroup": {
-                "layers": [
+            name: privateTableTemplateNameInteractivity,
+            layergroup: {
+                layers: [
                     {
-                        "type": "cartodb",
-                        "options": {
-                            "attributes": {
-                                "columns": [
-                                    "name"
+                        type: 'cartodb',
+                        options: {
+                            attributes: {
+                                columns: [
+                                    'name'
                                 ],
-                                "id": "cartodb_id"
+                                id: 'cartodb_id'
                             },
-                            "cartocss": "#layer { marker-fill: #cc3300; }",
-                            "cartocss_version": "2.3.0",
-                            "interactivity": "cartodb_id",
-                            "sql": "select * from test_table_private_1"
+                            cartocss: '#layer { marker-fill: #cc3300; }',
+                            cartocss_version: '2.3.0',
+                            interactivity: 'cartodb_id',
+                            sql: 'select * from test_table_private_1'
                         }
                     }
                 ]
             }
         };
 
-        var layergroup =  {
+        var layergroup = {
             version: '1.3.0',
             layers: [
                 {
@@ -529,10 +519,10 @@ describe('named_layers', function() {
         };
 
         step(
-            function createTemplate() {
+            function createTemplate () {
                 templateMaps.addTemplate(username, privateTableTemplate, this);
             },
-            function createLayergroup(err) {
+            function createLayergroup (err) {
                 if (err) {
                     throw err;
                 }
@@ -551,12 +541,12 @@ describe('named_layers', function() {
                     {
                         status: 200
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
@@ -570,7 +560,7 @@ describe('named_layers', function() {
 
                 return parsedBody.layergroupid;
             },
-            function requestTile(err, layergroupId) {
+            function requestTile (err, layergroupId) {
                 if (err) {
                     throw err;
                 }
@@ -591,35 +581,33 @@ describe('named_layers', function() {
                             'content-type': 'image/png'
                         }
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function handleTileResponse(err, res) {
+            function handleTileResponse (err, res) {
                 if (err) {
                     throw err;
                 }
                 test_helper.checkCache(res);
                 return true;
             },
-            function deleteTemplate(err) {
+            function deleteTemplate (err) {
                 var next = this;
-                templateMaps.delTemplate(username, privateTableTemplateNameInteractivity, function(/*delErr*/) {
+                templateMaps.delTemplate(username, privateTableTemplateNameInteractivity, function (/* delErr */) {
                     // ignore deletion error
                     next(err);
                 });
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
-
     });
 
-    it('should return 403 when private table is accessed from non named layer', function(done) {
-
-        var layergroup =  {
+    it('should return 403 when private table is accessed from non named layer', function (done) {
+        var layergroup = {
             version: '1.3.0',
             layers: [
                 {
@@ -640,7 +628,7 @@ describe('named_layers', function() {
         };
 
         step(
-            function createLayergroup() {
+            function createLayergroup () {
                 var next = this;
                 assert.response(server,
                     {
@@ -655,12 +643,12 @@ describe('named_layers', function() {
                     {
                         status: 403
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
@@ -670,16 +658,14 @@ describe('named_layers', function() {
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
-
     });
 
-    it('should return metadata for named layers', function(done) {
-
-        var layergroup =  {
+    it('should return metadata for named layers', function (done) {
+        var layergroup = {
             version: '1.3.0',
             layers: [
                 {
@@ -705,8 +691,8 @@ describe('named_layers', function() {
                 {
                     type: 'torque',
                     options: {
-                        sql: "select * from test_table LIMIT 0",
-                        cartocss: "Map { -torque-frame-count:1; -torque-resolution:1; " +
+                        sql: 'select * from test_table LIMIT 0',
+                        cartocss: 'Map { -torque-frame-count:1; -torque-resolution:1; ' +
                         "-torque-aggregation-function:'count(*)'; -torque-time-attribute:'updated_at'; }"
                     }
                 }
@@ -714,7 +700,7 @@ describe('named_layers', function() {
         };
 
         step(
-            function createLayergroup() {
+            function createLayergroup () {
                 var next = this;
                 assert.response(server,
                     {
@@ -729,12 +715,12 @@ describe('named_layers', function() {
                     {
                         status: 200
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
@@ -754,15 +740,13 @@ describe('named_layers', function() {
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
-
     });
 
-    it('should work with named tiles', function(done) {
-
+    it('should work with named tiles', function (done) {
         var namedTilesTemplateName = 'named_tiles_template';
         var namedTilesTemplate = {
             version: '0.0.1',
@@ -786,10 +770,10 @@ describe('named_layers', function() {
         };
 
         step(
-            function createTemplate() {
+            function createTemplate () {
                 templateMaps.addTemplate(username, namedTilesTemplate, this);
             },
-            function createLayergroup(err) {
+            function createLayergroup (err) {
                 if (err) {
                     throw err;
                 }
@@ -807,12 +791,12 @@ describe('named_layers', function() {
                     {
                         status: 200
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function checkLayergroup(err, response) {
+            function checkLayergroup (err, response) {
                 if (err) {
                     throw err;
                 }
@@ -829,7 +813,7 @@ describe('named_layers', function() {
 
                 return parsedBody.layergroupid;
             },
-            function requestTile(err, layergroupId) {
+            function requestTile (err, layergroupId) {
                 if (err) {
                     throw err;
                 }
@@ -850,29 +834,28 @@ describe('named_layers', function() {
                             'content-type': 'image/png'
                         }
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function handleTileResponse(err, res) {
+            function handleTileResponse (err, res) {
                 if (err) {
                     throw err;
                 }
                 test_helper.checkCache(res);
                 return true;
             },
-            function deleteTemplate(err) {
+            function deleteTemplate (err) {
                 var next = this;
-                templateMaps.delTemplate(username, namedTilesTemplateName, function(/*delErr*/) {
+                templateMaps.delTemplate(username, namedTilesTemplateName, function (/* delErr */) {
                     // ignore deletion error
                     next(err);
                 });
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
-
     });
 });

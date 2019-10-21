@@ -2,14 +2,12 @@
 
 require('../../../support/test-helper');
 
-var assert        = require('../../../support/assert');
+var assert = require('../../../support/assert');
 var TestClient = require('../../../support/test-client');
 
-describe('widgets', function() {
-
-    describe('histograms', function() {
-
-        afterEach(function(done) {
+describe('widgets', function () {
+    describe('histograms', function () {
+        afterEach(function (done) {
             if (this.testClient) {
                 this.testClient.drain(done);
             } else {
@@ -17,7 +15,7 @@ describe('widgets', function() {
             }
         });
 
-        function histogramsMapConfig(widgets) {
+        function histogramsMapConfig (widgets) {
             return {
                 version: '1.5.0',
                 layers: [
@@ -47,7 +45,7 @@ describe('widgets', function() {
             };
         }
 
-        it('can be fetched from a valid histogram', function(done) {
+        it('can be fetched from a valid histogram', function (done) {
             this.testClient = new TestClient(histogramsMapConfig());
             this.testClient.getWidget('scalerank', function (err, res, histogram) {
                 assert.ok(!err, err);
@@ -63,7 +61,7 @@ describe('widgets', function() {
             });
         });
 
-        it('can be fetched from a valid histogram', function(done) {
+        it('can be fetched from a valid histogram', function (done) {
             this.testClient = new TestClient(histogramsMapConfig());
             this.testClient.getWidget('pop_max', function (err, res, histogram) {
                 assert.ok(!err, err);
@@ -82,7 +80,7 @@ describe('widgets', function() {
             });
         });
 
-        it('can be fetched from a valid filtered histogram', function(done) {
+        it('can be fetched from a valid filtered histogram', function (done) {
             this.testClient = new TestClient(histogramsMapConfig());
             var popMaxFilter = {
                 pop_max: {
@@ -113,7 +111,7 @@ describe('widgets', function() {
             });
         });
 
-        it('returns array with freq=0 entries for empty bins', function(done) {
+        it('returns array with freq=0 entries for empty bins', function (done) {
             var histogram20binsMapConfig = {
                 version: '1.5.0',
                 layers: [
@@ -154,7 +152,7 @@ describe('widgets', function() {
             });
         });
 
-        it('can use a fixed number of bins', function(done) {
+        it('can use a fixed number of bins', function (done) {
             var fixedBinsHistogramMapConfig = histogramsMapConfig({
                 pop_max: {
                     type: 'histogram',
@@ -187,7 +185,7 @@ describe('widgets', function() {
             });
         });
 
-        function validateHistogramBins(histogram) {
+        function validateHistogramBins (histogram) {
             var binWidth = histogram.bin_width;
             var start = histogram.bins_start;
             var end = start + (histogram.bins_count * binWidth);
@@ -208,14 +206,14 @@ describe('widgets', function() {
                 })
             );
 
-            function getBinStartEnd(binIndex) {
+            function getBinStartEnd (binIndex) {
                 return {
                     start: start + (binIndex * binWidth),
                     end: start + ((binIndex + 1) * binWidth)
                 };
             }
 
-            histogram.bins.forEach(function(bin) {
+            histogram.bins.forEach(function (bin) {
                 var binStartEnd = getBinStartEnd(bin.bin);
 
                 assert.ok(binStartEnd.start <= bin.min,
@@ -235,7 +233,7 @@ describe('widgets', function() {
                 );
 
                 assert.ok(bin.avg >= bin.min && bin.avg <= bin.max,
-                        'Bin avg not between min and max values' + JSON.stringify({
+                    'Bin avg not between min and max values' + JSON.stringify({
                         bin: bin.bin,
                         avg: bin.avg,
                         min: bin.min,
@@ -245,8 +243,8 @@ describe('widgets', function() {
             });
         }
 
-        describe('datetime column', function() {
-            afterEach(function(done) {
+        describe('datetime column', function () {
+            afterEach(function (done) {
                 if (this.testClient) {
                     this.testClient.drain(done);
                 } else {
@@ -260,7 +258,7 @@ describe('widgets', function() {
                 }
             };
 
-            it('can use a datetime column', function(done) {
+            it('can use a datetime column', function (done) {
                 this.testClient = new TestClient(histogramsMapConfig({
                     updated_at: {
                         type: 'histogram',
@@ -280,7 +278,7 @@ describe('widgets', function() {
                 });
             });
 
-            it('can use a datetime filtered column', function(done) {
+            it('can use a datetime filtered column', function (done) {
                 this.testClient = new TestClient(histogramsMapConfig({
                     updated_at: {
                         type: 'histogram',
@@ -306,7 +304,7 @@ describe('widgets', function() {
                 });
             });
 
-            it('can use a datetime filtered column with no results', function(done) {
+            it('can use a datetime filtered column with no results', function (done) {
                 this.testClient = new TestClient(histogramsMapConfig({
                     updated_at: {
                         type: 'histogram',
@@ -337,7 +335,7 @@ describe('widgets', function() {
                 });
             });
 
-            it('can getTile with datetime filtered column', function(done) {
+            it('can getTile with datetime filtered column', function (done) {
                 this.testClient = new TestClient(histogramsMapConfig({
                     updated_at: {
                         type: 'histogram',
@@ -360,7 +358,7 @@ describe('widgets', function() {
                 });
             });
 
-            it('can use two columns with different types', function(done) {
+            it('can use two columns with different types', function (done) {
                 this.testClient = new TestClient(histogramsMapConfig({
                     updated_at: {
                         type: 'histogram',
@@ -400,7 +398,5 @@ describe('widgets', function() {
                 });
             });
         });
-
     });
-
 });

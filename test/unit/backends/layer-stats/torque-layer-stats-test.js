@@ -5,7 +5,6 @@ var TorqueLayerStats = require('../../../../lib/backends/layer-stats/torque-laye
 var MapConfig = require('windshaft').model.MapConfig;
 
 describe('torque-layer-stats', function () {
-
     beforeEach(function () {
         this.params = {};
     });
@@ -18,13 +17,13 @@ describe('torque-layer-stats', function () {
                 options: {
                     sql: 'select * from test_table limit 2',
                     cartocss: '#layer { marker-fill:red; marker-width:32; marker-allow-overlap:true; }',
-                    cartocss_version: '2.3.0',
+                    cartocss_version: '2.3.0'
                 }
-            },
+            }
         ]
     };
 
-    it('should return torque stats for one layer', function(done) {
+    it('should return torque stats for one layer', function (done) {
         var mapConfig = MapConfig.create(testMapConfigOneLayer);
         var layerId = 0;
         var layer = mapConfig.getLayer(layerId);

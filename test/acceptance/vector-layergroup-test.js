@@ -6,7 +6,6 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/server-options');
 
-
 const POINTS_SQL_1 = `
 select
     st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
@@ -44,27 +43,27 @@ function createVectorLayergroup () {
 }
 
 const INCOMPATIBLE_LAYERS_ERROR = {
-    "errors": [
-        "The `mapnik` or `cartodb` layers must be consistent:" +
-            " `cartocss` option is either present or voided in all layers. Mixing is not allowed."
+    errors: [
+        'The `mapnik` or `cartodb` layers must be consistent:' +
+            ' `cartocss` option is either present or voided in all layers. Mixing is not allowed.'
     ],
-    "errors_with_context":[
+    errors_with_context: [
         {
-            "type":"mapconfig",
-            "message": "The `mapnik` or `cartodb` layers must be consistent:"  +
-                " `cartocss` option is either present or voided in all layers. Mixing is not allowed."
+            type: 'mapconfig',
+            message: 'The `mapnik` or `cartodb` layers must be consistent:' +
+                ' `cartocss` option is either present or voided in all layers. Mixing is not allowed.'
         }
     ]
 };
 
 const INVALID_FORMAT_ERROR = {
-    "errors": [
+    errors: [
         "Unsupported format: 'cartocss' option is missing for png"
     ],
-    "errors_with_context":[
+    errors_with_context: [
         {
-            "type": "tile",
-            "message": "Unsupported format: 'cartocss' option is missing for png"
+            type: 'tile',
+            message: "Unsupported format: 'cartocss' option is missing for png"
         }
     ]
 };
@@ -90,7 +89,7 @@ suites.forEach((suite) => {
             serverOptions.renderer.mvt.usePostGIS = usePostGIS;
         });
 
-        after(function (){
+        after(function () {
             serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
         });
 
@@ -201,7 +200,7 @@ suites.forEach((suite) => {
                     }
                 };
 
-                const cartocss = `#layer0 { marker-fill: red; marker-width: 10; }`;
+                const cartocss = '#layer0 { marker-fill: red; marker-width: 10; }';
                 const cartocssVersion = '2.3.0';
 
                 this.testClient.mapConfig.layers[0].options.cartocss = cartocss;

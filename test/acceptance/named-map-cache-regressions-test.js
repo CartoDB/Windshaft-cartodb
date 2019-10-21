@@ -165,7 +165,7 @@ describe('named map cache regressions', function () {
                                 url: `http://${address}/api/v1/map/named/${templateId}?api_key=${apiKey}`,
                                 method: 'DELETE',
                                 headers: {
-                                    host: 'localhost',
+                                    host: 'localhost'
                                 }
                             };
 

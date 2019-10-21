@@ -14,7 +14,7 @@ var step = require('step');
 
 var windshaft = require('windshaft');
 
-describe('overviews metadata for named maps', function() {
+describe('overviews metadata for named maps', function () {
     var server;
 
     before(function () {
@@ -44,11 +44,11 @@ describe('overviews metadata for named maps', function() {
 
     var keysToDelete;
 
-    beforeEach(function() {
+    beforeEach(function () {
         keysToDelete = {};
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         test_helper.deleteRedisKeys(keysToDelete, done);
     });
 
@@ -58,28 +58,27 @@ describe('overviews metadata for named maps', function() {
         version: '0.0.1',
         name: templateId,
         auth: { method: 'open' },
-        layergroup:  {
+        layergroup: {
             version: '1.0.0',
             layers: [overviews_layer, non_overviews_layer]
         }
     };
 
-    it("should add overviews data to layers", function(done) {
+    it('should add overviews data to layers', function (done) {
         step(
-            function postTemplate()
-            {
-              var next = this;
+            function postTemplate () {
+                var next = this;
 
-              assert.response(server, {
-                  url: '/api/v1/map/named?api_key=1234',
-                  method: 'POST',
-                  headers: {host: 'localhost', 'Content-Type': 'application/json' },
-                  data: JSON.stringify(template)
-              }, {}, function(res, err) {
-                         next(err, res);
-              });
+                assert.response(server, {
+                    url: '/api/v1/map/named?api_key=1234',
+                    method: 'POST',
+                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                    data: JSON.stringify(template)
+                }, {}, function (res, err) {
+                    next(err, res);
+                });
             },
-            function checkTemplate(err, res) {
+            function checkTemplate (err, res) {
                 assert.ifError(err);
 
                 var next = this;
@@ -89,7 +88,7 @@ describe('overviews metadata for named maps', function() {
                 });
                 next(null);
             },
-            function instantiateTemplate(err) {
+            function instantiateTemplate (err) {
                 assert.ifError(err);
 
                 var next = this;
@@ -101,12 +100,11 @@ describe('overviews metadata for named maps', function() {
                         'Content-Type': 'application/json'
                     }
                 }, {},
-                function(res, err) {
+                function (res, err) {
                     return next(err, res);
                 });
-
             },
-            function checkInstanciation(err, res) {
+            function checkInstanciation (err, res) {
                 assert.ifError(err);
 
                 var next = this;
@@ -124,17 +122,16 @@ describe('overviews metadata for named maps', function() {
                 next(null, parsedBody.layergroupid);
             },
 
-            function checkMapconfig(err, layergroupId)
-            {
+            function checkMapconfig (err, layergroupId) {
                 assert.ifError(err);
 
                 var next = this;
 
-                var mapStore  = new windshaft.storage.MapStore({
+                var mapStore = new windshaft.storage.MapStore({
                     pool: redisPool,
                     expire_time: 500000
                 });
-                mapStore.load(LayergroupToken.parse(layergroupId).token, function(err, mapConfig) {
+                mapStore.load(LayergroupToken.parse(layergroupId).token, function (err, mapConfig) {
                     assert.ifError(err);
                     assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
                     assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
@@ -142,18 +139,18 @@ describe('overviews metadata for named maps', function() {
                     var expected_data = {
                         overviews: {
                             test_table_overviews: {
-                                  schema: 'public',
-                                  1: { table: '_vovw_1_test_table_overviews' },
-                                  2: { table: '_vovw_2_test_table_overviews' }
-                              }
-                          }
-                      };
+                                schema: 'public',
+                                1: { table: '_vovw_1_test_table_overviews' },
+                                2: { table: '_vovw_2_test_table_overviews' }
+                            }
+                        }
+                    };
                     assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
                 });
 
                 next(err);
             },
-            function deleteTemplate(err) {
+            function deleteTemplate (err) {
                 assert.ifError(err);
 
                 var next = this;
@@ -166,23 +163,23 @@ describe('overviews metadata for named maps', function() {
                     next(err, res);
                 });
             },
-            function checkDeleteTemplate(err, res) {
+            function checkDeleteTemplate (err, res) {
                 assert.ifError(err);
                 assert.equal(res.statusCode, 204);
                 assert.ok(!res.body);
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
     });
 
-    describe('Overviews Flags', function() {
-        it("Overviews used", function (done) {
+    describe('Overviews Flags', function () {
+        it('Overviews used', function (done) {
             step(
-                function postTemplate() {
+                function postTemplate () {
                     var next = this;
 
                     assert.response(server, {
@@ -194,7 +191,7 @@ describe('overviews metadata for named maps', function() {
                         next(err, res);
                     });
                 },
-                function instantiateTemplate(err) {
+                function instantiateTemplate (err) {
                     assert.ifError(err);
 
                     var next = this;
@@ -206,12 +203,11 @@ describe('overviews metadata for named maps', function() {
                             'Content-Type': 'application/json'
                         }
                     }, {},
-                        function (res, err) {
-                            return next(err, res);
-                        });
-
+                    function (res, err) {
+                        return next(err, res);
+                    });
                 },
-                function checkFlags(err, res) {
+                function checkFlags (err, res) {
                     assert.ifError(err);
 
                     var next = this;
@@ -229,14 +225,13 @@ describe('overviews metadata for named maps', function() {
                     next();
                 },
 
-                function finish(err) {
+                function finish (err) {
                     done(err);
                 }
             );
         });
 
-        it("Overviews NOT used", function (done) {
-
+        it('Overviews NOT used', function (done) {
             const nonOverviewsTemplateId = 'non-overviews-template';
 
             var nonOverviewsTemplate = {
@@ -250,7 +245,7 @@ describe('overviews metadata for named maps', function() {
             };
 
             step(
-                function postTemplate() {
+                function postTemplate () {
                     var next = this;
 
                     assert.response(server, {
@@ -262,7 +257,7 @@ describe('overviews metadata for named maps', function() {
                         next(err, res);
                     });
                 },
-                function instantiateTemplate(err) {
+                function instantiateTemplate (err) {
                     assert.ifError(err);
 
                     var next = this;
@@ -274,12 +269,11 @@ describe('overviews metadata for named maps', function() {
                             'Content-Type': 'application/json'
                         }
                     }, {},
-                        function (res, err) {
-                            return next(err, res);
-                        });
-
+                    function (res, err) {
+                        return next(err, res);
+                    });
                 },
-                function checkFlags(err, res) {
+                function checkFlags (err, res) {
                     assert.ifError(err);
 
                     var next = this;
@@ -297,7 +291,7 @@ describe('overviews metadata for named maps', function() {
                     next();
                 },
 
-                function finish(err) {
+                function finish (err) {
                     done(err);
                 }
             );

@@ -9,8 +9,7 @@ var ServerOptions = require('./support/ported-server-options');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
-describe('retina support', function() {
-
+describe('retina support', function () {
     var layergroupId = null;
 
     var server;
@@ -21,10 +20,10 @@ describe('retina support', function() {
     });
 
     var keysToDelete;
-    beforeEach(function(done) {
-        keysToDelete = {'user:localhost:mapviews:global': 5};
+    beforeEach(function (done) {
+        keysToDelete = { 'user:localhost:mapviews:global': 5 };
 
-        var retinaSampleMapConfig =  {
+        var retinaSampleMapConfig = {
             version: '1.2.0',
             layers: [
                 {
@@ -61,14 +60,12 @@ describe('retina support', function() {
         );
     });
 
-
-    afterEach(function(done) {
+    afterEach(function (done) {
         keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
-
-    function testRetinaImage(scaleFactor, responseHead, assertFn) {
+    function testRetinaImage (scaleFactor, responseHead, assertFn) {
         assert.response(server,
             {
                 url: '/api/v1/map/' + layergroupId + '/0/0/0' + scaleFactor + '.png',
@@ -83,7 +80,7 @@ describe('retina support', function() {
         );
     }
 
-    function testValidImageDimmensions(scaleFactor, imageSize, done) {
+    function testValidImageDimmensions (scaleFactor, imageSize, done) {
         testRetinaImage(scaleFactor,
             {
                 status: 200,
@@ -91,7 +88,7 @@ describe('retina support', function() {
                     'Content-Type': 'image/png'
                 }
             },
-            function(res, err) {
+            function (res, err) {
                 assert.ok(!err, 'Failed to request 0/0/0' + scaleFactor + '.png tile');
 
                 var image = new mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
@@ -103,20 +100,19 @@ describe('retina support', function() {
         );
     }
 
-    it('image dimensions when scale factor is not defined', function(done) {
+    it('image dimensions when scale factor is not defined', function (done) {
         testValidImageDimmensions('', 256, done);
     });
 
-    it('image dimensions when scale factor = @1x', function(done) {
+    it('image dimensions when scale factor = @1x', function (done) {
         testValidImageDimmensions('@1x', 256, done);
     });
 
-    it('image dimensions when scale factor = @2x', function(done) {
+    it('image dimensions when scale factor = @2x', function (done) {
         testValidImageDimmensions('@2x', 512, done);
     });
 
-    it('error when scale factor is not enabled', function(done) {
-
+    it('error when scale factor is not enabled', function (done) {
         var scaleFactor = '@4x';
 
         testRetinaImage(scaleFactor,
@@ -126,9 +122,9 @@ describe('retina support', function() {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
             },
-            function(res, err) {
+            function (res, err) {
                 assert.ok(!err, 'Failed to request 0/0/0' + scaleFactor + '.png tile');
-                assert.deepEqual(JSON.parse(res.body).errors, ["Tile with specified resolution not found"]);
+                assert.deepEqual(JSON.parse(res.body).errors, ['Tile with specified resolution not found']);
 
                 done();
             }

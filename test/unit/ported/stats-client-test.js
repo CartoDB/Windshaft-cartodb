@@ -6,19 +6,19 @@ var assert = require('assert');
 
 var StatsClient = require('../../../lib/stats/client');
 
-describe('stats client', function() {
+describe('stats client', function () {
     var statsInstance;
 
-    before(function() {
+    before(function () {
         statsInstance = StatsClient.instance;
         StatsClient.instance = null;
     });
 
-    after(function() {
+    after(function () {
         StatsClient.instance = statsInstance;
     });
 
-    it('reports errors when they repeat', function(done) {
+    it('reports errors when they repeat', function (done) {
         var WADUS_ERROR = 'wadus_error';
         var statsClient = StatsClient.getInstance({ host: '127.0.0.1', port: 8033 });
 

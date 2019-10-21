@@ -5,7 +5,7 @@ var serverOptions = require('../../../../lib/server-options');
 var mapnik = require('windshaft').mapnik;
 var OverviewsQueryRewriter = require('../../../../lib/utils/overviews-query-rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
-  zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'
+    zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'
 });
 
 module.exports = _.extend({}, serverOptions, {
@@ -20,7 +20,7 @@ module.exports = _.extend({}, serverOptions, {
     },
     renderer: {
         mapnik: {
-            poolSize: 4,//require('os').cpus().length,
+            poolSize: 4, // require('os').cpus().length,
             poolMaxWaitingClients: 32,
             metatile: 1,
             bufferSize: 64,

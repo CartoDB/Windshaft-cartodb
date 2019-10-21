@@ -7,17 +7,15 @@ var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/backends/template-maps');
 var _ = require('underscore');
 
-describe('template_maps', function() {
-
-    var redisPool = new RedisPool(global.environment.redis),
-        templateMaps = new TemplateMaps(redisPool);
+describe('template_maps', function () {
+    var redisPool = new RedisPool(global.environment.redis);
+    var templateMaps = new TemplateMaps(redisPool);
 
     var owner = 'me';
     var templateName = 'wadus';
 
-
     var defaultTemplate = {
-        version:'0.0.1',
+        version: '0.0.1',
         name: templateName,
         layergroup: {
             layers: [
@@ -32,7 +30,7 @@ describe('template_maps', function() {
         }
     };
 
-    function makeTemplate(auth, placeholders) {
+    function makeTemplate (auth, placeholders) {
         return _.extend({}, defaultTemplate, {
             auth: auth,
             placeholders: placeholders
@@ -90,10 +88,9 @@ describe('template_maps', function() {
         }
     ];
 
-    testScenarios.forEach(function(testScenario) {
-        it('adding template returns a new instance with ' + testScenario.desc, function(done) {
-
-            templateMaps.addTemplate(owner, testScenario.template, function(err, templateId, template) {
+    testScenarios.forEach(function (testScenario) {
+        it('adding template returns a new instance with ' + testScenario.desc, function (done) {
+            templateMaps.addTemplate(owner, testScenario.template, function (err, templateId, template) {
                 assert.ok(!err, 'Unexpected error adding template: ' + (err && err.message));
                 assert.ok(testScenario.template !== template, 'template instances should be different');
                 assert.equal(template.name, templateName);
@@ -102,8 +99,6 @@ describe('template_maps', function() {
 
                 templateMaps.delTemplate(owner, templateName, done);
             });
-
         });
     });
-
 });

@@ -8,7 +8,7 @@ var cartodbServer = require('../../../lib/server');
 var PortedServerOptions = require('./support/ported-server-options');
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
-describe('attributes', function() {
+describe('attributes', function () {
     var server;
 
     before(function () {
@@ -16,24 +16,30 @@ describe('attributes', function() {
         server.setMaxListeners(0);
     });
 
-    var test_mapconfig_1 =  {
+    var test_mapconfig_1 = {
         version: '1.1.0',
         layers: [
-            { type: 'mapnik', options: {
-                sql: "select 1 as id, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
-                cartocss: '#style { }',
-                cartocss_version: '2.0.1'
-            } },
-            { type: 'mapnik', options: {
-                sql: "select 1 as i, 6 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
-                attributes: { id:'i', columns: ['n'] },
-                cartocss: '#style { }',
-                cartocss_version: '2.0.1'
-            } }
+            {
+                type: 'mapnik',
+                options: {
+                    sql: "select 1 as id, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
+                    cartocss: '#style { }',
+                    cartocss_version: '2.0.1'
+                }
+            },
+            {
+                type: 'mapnik',
+                options: {
+                    sql: "select 1 as i, 6 as n, 'SRID=4326;POINT(0 0)'::geometry as the_geom",
+                    attributes: { id: 'i', columns: ['n'] },
+                    cartocss: '#style { }',
+                    cartocss_version: '2.0.1'
+                }
+            }
         ]
     };
 
-    function checkCORSHeaders(res) {
+    function checkCORSHeaders (res) {
         assert.equal(
             res.headers['access-control-allow-headers'],
             'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
@@ -43,19 +49,18 @@ describe('attributes', function() {
 
     var keysToDelete;
 
-    beforeEach(function() {
+    beforeEach(function () {
         keysToDelete = {};
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
-    it("can only be fetched from layer having an attributes spec", function(done) {
+    it('can only be fetched from layer having an attributes spec', function (done) {
         var expected_token;
         step(
-            function do_post()
-            {
+            function do_post () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -65,24 +70,23 @@ describe('attributes', function() {
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify(test_mapconfig_1)
-                }, {}, function(res, err) { next(err, res); });
+                }, {}, function (res, err) { next(err, res); });
             },
-            function checkPost(err, res) {
+            function checkPost (err, res) {
                 assert.ifError(err);
                 assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 // CORS headers should be sent with response
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                if ( expected_token ) {
-                    assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
+                if (expected_token) {
+                    assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
                 } else {
                     expected_token = parsedBody.layergroupid;
                 }
                 return null;
             },
-            function do_get_attr_0(err)
-            {
+            function do_get_attr_0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -90,22 +94,21 @@ describe('attributes', function() {
                     method: 'GET',
                     headers: {
                         host: 'localhost'
-                    },
-                }, {}, function(res, err) { next(err, res); });
+                    }
+                }, {}, function (res, err) { next(err, res); });
             },
-            function check_error_0(err, res) {
+            function check_error_0 (err, res) {
                 assert.ifError(err);
                 assert.equal(
                     res.statusCode,
                     400,
-                    res.statusCode + ( res.statusCode !== 200 ? (': ' + res.body) : '' )
+                    res.statusCode + (res.statusCode !== 200 ? (': ' + res.body) : '')
                 );
                 var parsed = JSON.parse(res.body);
-                assert.equal(parsed.errors[0], "Layer 0 has no exposed attributes");
+                assert.equal(parsed.errors[0], 'Layer 0 has no exposed attributes');
                 return null;
             },
-            function do_get_attr_1(err)
-            {
+            function do_get_attr_1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -114,17 +117,16 @@ describe('attributes', function() {
                     headers: {
                         host: 'localhost'
                     }
-                }, {}, function(res, err) { next(err, res); });
+                }, {}, function (res, err) { next(err, res); });
             },
-            function check_attr_1(err, res) {
+            function check_attr_1 (err, res) {
                 assert.ifError(err);
                 assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed, {"n":6});
+                assert.deepEqual(parsed, { n: 6 });
                 return null;
             },
-            function do_get_attr_1_404(err)
-            {
+            function do_get_attr_1_404 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -133,9 +135,9 @@ describe('attributes', function() {
                     headers: {
                         host: 'localhost'
                     }
-                }, {}, function(res, err) { next(err, res); });
+                }, {}, function (res, err) { next(err, res); });
             },
-            function check_attr_1_404(err, res) {
+            function check_attr_1_404 (err, res) {
                 assert.ifError(err);
                 assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
@@ -144,10 +146,9 @@ describe('attributes', function() {
                 assert.equal(msg, "Multiple features (0) identified by 'i' = -666 in layer 1");
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
-
 
                 done(err);
             }
@@ -155,8 +156,7 @@ describe('attributes', function() {
     });
 
     // See https://github.com/CartoDB/Windshaft/issues/131
-    it("are checked at map creation time", function(done) {
-
+    it('are checked at map creation time', function (done) {
         // clone the mapconfig test
         var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
         // append unexistant attribute name
@@ -165,8 +165,7 @@ describe('attributes', function() {
         mapconfig.layers[1].options.attributes.columns = ['cartodb_id'];
 
         step(
-            function do_post()
-            {
+            function do_post () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -176,11 +175,11 @@ describe('attributes', function() {
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify(mapconfig)
-                }, {}, function(res, err) { next(err, res); });
+                }, {}, function (res, err) { next(err, res); });
             },
-            function checkPost(err, res) {
+            function checkPost (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
+                assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode === 200 ? '...' : res.body));
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors);
                 assert.equal(parsed.errors.length, 1);
@@ -188,18 +187,16 @@ describe('attributes', function() {
                 assert.equal(msg, 'column "unexistant" does not exist');
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
     });
 
-    it("can be used with jsonp", function(done) {
-
+    it('can be used with jsonp', function (done) {
         var expected_token;
         step(
-            function do_post()
-            {
+            function do_post () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -209,24 +206,23 @@ describe('attributes', function() {
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify(test_mapconfig_1)
-                }, {}, function(res, err) { next(err, res); });
+                }, {}, function (res, err) { next(err, res); });
             },
-            function checkPost(err, res) {
+            function checkPost (err, res) {
                 assert.ifError(err);
                 assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 // CORS headers should be sent with response
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                if ( expected_token ) {
-                    assert.deepEqual(parsedBody, {layergroupid: expected_token, layercount: 2});
+                if (expected_token) {
+                    assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
                 } else {
                     expected_token = parsedBody.layergroupid;
                 }
                 return null;
             },
-            function do_get_attr_0(err)
-            {
+            function do_get_attr_0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -236,9 +232,9 @@ describe('attributes', function() {
                     headers: {
                         host: 'localhost'
                     }
-                }, {}, function(res, err) { next(err, res); });
+                }, {}, function (res, err) { next(err, res); });
             },
-            function check_error_0(err, res) {
+            function check_error_0 (err, res) {
                 assert.ifError(err);
                 // jsonp errors should be returned with HTTP status 200
                 assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
@@ -252,8 +248,7 @@ describe('attributes', function() {
                 );
                 return null;
             },
-            function do_get_attr_1(err)
-            {
+            function do_get_attr_1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -262,16 +257,16 @@ describe('attributes', function() {
                     headers: {
                         host: 'localhost'
                     }
-                }, {}, function(res, err) { next(err, res); });
+                }, {}, function (res, err) { next(err, res); });
             },
-            function check_attr_1(err, res) {
+            function check_attr_1 (err, res) {
                 assert.ifError(err);
                 assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed, {"n":6});
+                assert.deepEqual(parsed, { n: 6 });
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
@@ -284,8 +279,7 @@ describe('attributes', function() {
     //
     // Test for http://github.com/CartoDB/Windshaft/issues/130
     //
-    it("database access is read-only", function(done) {
-
+    it('database access is read-only', function (done) {
         // clone the mapconfig test
         var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
         mapconfig.layers[1].options.sql +=
@@ -293,8 +287,7 @@ describe('attributes', function() {
         mapconfig.layers[1].options.attributes.columns.push('w');
 
         step(
-            function do_post()
-            {
+            function do_post () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -304,23 +297,22 @@ describe('attributes', function() {
                         'Content-Type': 'application/json'
                     },
                     data: JSON.stringify(mapconfig)
-                }, {}, function(res, err) { next(err, res); });
+                }, {}, function (res, err) { next(err, res); });
             },
-            function checkPost(err, res) {
+            function checkPost (err, res) {
                 assert.ifError(err);
                 // TODO: should be 403 Forbidden
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode===200?'...':res.body));
+                assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode === 200 ? '...' : res.body));
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors);
                 assert.equal(parsed.errors.length, 1);
                 var msg = parsed.errors[0];
-                assert.equal(msg, "cannot execute INSERT in a read-only transaction");
+                assert.equal(msg, 'cannot execute INSERT in a read-only transaction');
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
     });
-
 });

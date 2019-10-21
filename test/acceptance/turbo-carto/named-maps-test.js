@@ -9,7 +9,7 @@ var serverOptions = require('../../../lib/server-options');
 var mapnik = require('windshaft').mapnik;
 var IMAGE_TOLERANCE_PER_MIL = 10;
 
-describe('turbo-carto for named maps', function() {
+describe('turbo-carto for named maps', function () {
     var server;
 
     before(function () {
@@ -18,25 +18,25 @@ describe('turbo-carto for named maps', function() {
 
     var keysToDelete;
 
-    beforeEach(function() {
+    beforeEach(function () {
         keysToDelete = {};
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     var templateId = 'turbo-carto-template-1';
 
-    function template(table) {
+    function template (table) {
         return {
             version: '0.0.1',
             name: templateId,
             auth: { method: 'open' },
             placeholders: {
                 color: {
-                    type: "css_color",
-                    default: "Reds"
+                    type: 'css_color',
+                    default: 'Reds'
                 }
             },
             layergroup: {
@@ -85,10 +85,10 @@ describe('turbo-carto for named maps', function() {
         }
     ];
 
-    scenarios.forEach(function(scenario) {
+    scenarios.forEach(function (scenario) {
         it('should create a template with turbo-carto parsed properly: ' + scenario.desc, function (done) {
             step(
-                function postTemplate() {
+                function postTemplate () {
                     var next = this;
 
                     assert.response(server, {
@@ -101,7 +101,7 @@ describe('turbo-carto for named maps', function() {
                         next(err, res);
                     });
                 },
-                function checkTemplate(err, res) {
+                function checkTemplate (err, res) {
                     assert.ifError(err);
                     assert.equal(res.statusCode, 200);
                     assert.deepEqual(JSON.parse(res.body), {
@@ -110,7 +110,7 @@ describe('turbo-carto for named maps', function() {
 
                     return null;
                 },
-                function instantiateTemplateWithReds(err) {
+                function instantiateTemplateWithReds (err) {
                     assert.ifError(err);
 
                     var next = this;
@@ -123,11 +123,11 @@ describe('turbo-carto for named maps', function() {
                         },
                         data: JSON.stringify(templateParamsReds)
                     }, {},
-                    function(res, err) {
+                    function (res, err) {
                         return next(err, res);
                     });
                 },
-                function checkInstanciationWithReds(err, res) {
+                function checkInstanciationWithReds (err, res) {
                     assert.ifError(err);
 
                     assert.equal(res.statusCode, 200);
@@ -142,7 +142,7 @@ describe('turbo-carto for named maps', function() {
 
                     return parsedBody.layergroupid;
                 },
-                function requestTileReds(err, layergroupId) {
+                function requestTileReds (err, layergroupId) {
                     assert.ifError(err);
 
                     var next = this;
@@ -153,11 +153,11 @@ describe('turbo-carto for named maps', function() {
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {},
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     });
                 },
-                function checkTileReds(err, res) {
+                function checkTileReds (err, res) {
                     assert.ifError(err);
 
                     var next = this;
@@ -170,7 +170,7 @@ describe('turbo-carto for named maps', function() {
 
                     assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, next);
                 },
-                function instantiateTemplateWithBlues(err) {
+                function instantiateTemplateWithBlues (err) {
                     assert.ifError(err);
 
                     var next = this;
@@ -183,11 +183,11 @@ describe('turbo-carto for named maps', function() {
                         },
                         data: JSON.stringify(templateParamsBlues)
                     }, {},
-                    function(res, err) {
+                    function (res, err) {
                         return next(err, res);
                     });
                 },
-                function checkInstanciationWithBlues(err, res) {
+                function checkInstanciationWithBlues (err, res) {
                     assert.ifError(err);
                     assert.equal(res.statusCode, 200);
 
@@ -201,7 +201,7 @@ describe('turbo-carto for named maps', function() {
 
                     return parsedBody.layergroupid;
                 },
-                function requestTileBlues(err, layergroupId) {
+                function requestTileBlues (err, layergroupId) {
                     assert.ifError(err);
 
                     var next = this;
@@ -212,11 +212,11 @@ describe('turbo-carto for named maps', function() {
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {},
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     });
                 },
-                function checkTileBlues(err, res) {
+                function checkTileBlues (err, res) {
                     assert.ifError(err);
 
                     var next = this;
@@ -229,7 +229,7 @@ describe('turbo-carto for named maps', function() {
 
                     assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, next);
                 },
-                function deleteTemplate(err) {
+                function deleteTemplate (err) {
                     assert.ifError(err);
 
                     var next = this;
@@ -242,14 +242,14 @@ describe('turbo-carto for named maps', function() {
                         next(err, res);
                     });
                 },
-                function checkDeleteTemplate(err, res) {
+                function checkDeleteTemplate (err, res) {
                     assert.ifError(err);
                     assert.equal(res.statusCode, 204);
                     assert.ok(!res.body);
 
                     return null;
                 },
-                function finish(err) {
+                function finish (err) {
                     done(err);
                 }
             );

@@ -5,7 +5,6 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-
 describe('analyses controller', function () {
     const mapConfig = {
         version: '1.5.0',
@@ -61,7 +60,7 @@ describe('analyses controller', function () {
 
             let didRunJsonCallback = false;
             // jshint ignore:start
-            function jsonp_test(body) {
+            function jsonp_test (body) {
                 assert.ok(Array.isArray(body.catalog));
                 didRunJsonCallback = true;
             }
@@ -102,7 +101,7 @@ describe('analyses controller', function () {
                 }
 
                 assert.ok(Array.isArray(result.catalog));
-                assert.ok(result.catalog.length >=  2); // buffer & source at least
+                assert.ok(result.catalog.length >= 2); // buffer & source at least
 
                 result.catalog
                     .filter(analysis => analysis.node_id === '0a215e1f3405381cf0ea6b3b0deb6fdcfdc2fcaa')
@@ -110,7 +109,6 @@ describe('analyses controller', function () {
 
                 this.testClient.drain(done);
             });
-
         });
     });
 });

@@ -5,21 +5,20 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var ResourceLocator = require('../../../lib/models/resource-locator');
 
-describe('ResourceLocator', function() {
+describe('ResourceLocator', function () {
     var USERNAME = 'username';
     var RESOURCE = 'wadus';
     var TILE_RESOURCE = 'wadus/{z}/{x}/{y}.png';
     var HTTP_SUBDOMAINS = ['1', '2', '3', '4'];
     var HTTPS_SUBDOMAINS = ['a', 'b', 'c', 'd'];
 
-    it('should return default urls when no serverMetadata is in environment', function() {
+    it('should return default urls when no serverMetadata is in environment', function () {
         var resourceLocator = new ResourceLocator({});
         var urls = resourceLocator.getUrls(USERNAME, RESOURCE);
         assert.ok(urls);
     });
 
-    describe('basic', function() {
-
+    describe('basic', function () {
         var BASIC_ENVIRONMENT = {
             serverMetadata: {
                 cdn_url: {
@@ -29,8 +28,8 @@ describe('ResourceLocator', function() {
             }
         };
 
-        describe('getUrls', function() {
-            it('should return default urls when basic http and https domains are provided', function() {
+        describe('getUrls', function () {
+            it('should return default urls when basic http and https domains are provided', function () {
                 var resourceLocator = new ResourceLocator(BASIC_ENVIRONMENT);
                 var urls = resourceLocator.getUrls(USERNAME, RESOURCE);
                 assert.ok(urls);
@@ -40,8 +39,8 @@ describe('ResourceLocator', function() {
             });
         });
 
-        describe('getTileUrls', function() {
-            it('should return default urls when basic http and https domains are provided', function() {
+        describe('getTileUrls', function () {
+            it('should return default urls when basic http and https domains are provided', function () {
                 var resourceLocator = new ResourceLocator(BASIC_ENVIRONMENT);
                 var urls = resourceLocator.getTileUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
@@ -57,8 +56,8 @@ describe('ResourceLocator', function() {
             });
         });
 
-        describe('getTemplateUrls', function() {
-            it('should return default urls when basic http and https domains are provided', function() {
+        describe('getTemplateUrls', function () {
+            it('should return default urls when basic http and https domains are provided', function () {
                 var resourceLocator = new ResourceLocator(BASIC_ENVIRONMENT);
                 var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
@@ -73,11 +72,9 @@ describe('ResourceLocator', function() {
                 });
             });
         });
-
     });
 
-    describe('resource templates', function() {
-
+    describe('resource templates', function () {
         var RESOURCE_TEMPLATES_ENVIRONMENT = {
             serverMetadata: {
                 cdn_url: {
@@ -91,8 +88,8 @@ describe('ResourceLocator', function() {
             }
         };
 
-        describe('getUrls', function() {
-            it('resources_url_templates should take precedence over http and https domains', function() {
+        describe('getUrls', function () {
+            it('resources_url_templates should take precedence over http and https domains', function () {
                 var resourceLocator = new ResourceLocator(RESOURCE_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getUrls(USERNAME, RESOURCE);
                 assert.ok(urls);
@@ -108,8 +105,8 @@ describe('ResourceLocator', function() {
             });
         });
 
-        describe('getTileUrls', function() {
-            it('resources_url_templates should take precedence over http and https domains', function() {
+        describe('getTileUrls', function () {
+            it('resources_url_templates should take precedence over http and https domains', function () {
                 var resourceLocator = new ResourceLocator(RESOURCE_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getTileUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
@@ -125,8 +122,8 @@ describe('ResourceLocator', function() {
             });
         });
 
-        describe('getTemplateUrls', function() {
-            it('resources_url_templates should take precedence over http and https domains', function() {
+        describe('getTemplateUrls', function () {
+            it('resources_url_templates should take precedence over http and https domains', function () {
                 var resourceLocator = new ResourceLocator(RESOURCE_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
@@ -141,11 +138,9 @@ describe('ResourceLocator', function() {
                 });
             });
         });
-
     });
 
-    describe('cdn templates', function() {
-
+    describe('cdn templates', function () {
         var CDN_TEMPLATES_ENVIRONMENT = {
             serverMetadata: {
                 cdn_url: {
@@ -153,11 +148,11 @@ describe('ResourceLocator', function() {
                     https: 'cdn.ssl.carto.com',
                     templates: {
                         http: {
-                            url: "http://{s}.cdn.carto.com",
+                            url: 'http://{s}.cdn.carto.com',
                             subdomains: HTTP_SUBDOMAINS
                         },
                         https: {
-                            url: "https://cdn_{s}.ssl.cdn.carto.com",
+                            url: 'https://cdn_{s}.ssl.cdn.carto.com',
                             subdomains: HTTPS_SUBDOMAINS
                         }
                     }
@@ -165,8 +160,8 @@ describe('ResourceLocator', function() {
             }
         };
 
-        describe('getUrls', function() {
-            it('cdn_url templates should take precedence over http and https domains', function() {
+        describe('getUrls', function () {
+            it('cdn_url templates should take precedence over http and https domains', function () {
                 var resourceLocator = new ResourceLocator(CDN_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getUrls(USERNAME, RESOURCE);
                 assert.ok(urls);
@@ -185,8 +180,8 @@ describe('ResourceLocator', function() {
             });
         });
 
-        describe('getTileUrls', function() {
-            it('cdn_url templates should take precedence over http and https domains', function() {
+        describe('getTileUrls', function () {
+            it('cdn_url templates should take precedence over http and https domains', function () {
                 var resourceLocator = new ResourceLocator(CDN_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getTileUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
@@ -204,8 +199,8 @@ describe('ResourceLocator', function() {
             });
         });
 
-        describe('getTemplateUrls', function() {
-            it('cdn_url templates should take precedence over http and https domains', function() {
+        describe('getTemplateUrls', function () {
+            it('cdn_url templates should take precedence over http and https domains', function () {
                 var resourceLocator = new ResourceLocator(CDN_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
@@ -220,11 +215,9 @@ describe('ResourceLocator', function() {
                 });
             });
         });
-
     });
 
-    describe('cdn and resource templates', function() {
-
+    describe('cdn and resource templates', function () {
         var CDN_URL_AND_RESOURCE_TEMPLATES_ENVIRONMENT = {
             serverMetadata: {
                 cdn_url: {
@@ -232,11 +225,11 @@ describe('ResourceLocator', function() {
                     https: 'cdn.ssl.carto.com',
                     templates: {
                         http: {
-                            url: "http://{s}.cdn.carto.com",
+                            url: 'http://{s}.cdn.carto.com',
                             subdomains: HTTP_SUBDOMAINS
                         },
                         https: {
-                            url: "https://cdn_{s}.ssl.cdn.carto.com",
+                            url: 'https://cdn_{s}.ssl.cdn.carto.com',
                             subdomains: HTTPS_SUBDOMAINS
                         }
                     }
@@ -248,8 +241,8 @@ describe('ResourceLocator', function() {
             }
         };
 
-        describe('getUrls', function() {
-            it('should mix cdn_url templates and resources_url_templates', function() {
+        describe('getUrls', function () {
+            it('should mix cdn_url templates and resources_url_templates', function () {
                 var resourceLocator = new ResourceLocator(CDN_URL_AND_RESOURCE_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getUrls(USERNAME, RESOURCE);
                 assert.ok(urls);
@@ -268,8 +261,8 @@ describe('ResourceLocator', function() {
             });
         });
 
-        describe('getTileUrls', function() {
-            it('should mix cdn_url templates and resources_url_templates', function() {
+        describe('getTileUrls', function () {
+            it('should mix cdn_url templates and resources_url_templates', function () {
                 var resourceLocator = new ResourceLocator(CDN_URL_AND_RESOURCE_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getTileUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
@@ -287,8 +280,8 @@ describe('ResourceLocator', function() {
             });
         });
 
-        describe('getTemplateUrls', function() {
-            it('should mix cdn_url templates and resources_url_templates', function() {
+        describe('getTemplateUrls', function () {
+            it('should mix cdn_url templates and resources_url_templates', function () {
                 var resourceLocator = new ResourceLocator(CDN_URL_AND_RESOURCE_TEMPLATES_ENVIRONMENT);
                 var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
@@ -303,7 +296,5 @@ describe('ResourceLocator', function() {
                 });
             });
         });
-
     });
-
 });

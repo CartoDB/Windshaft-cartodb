@@ -4,7 +4,7 @@ require('../../support/test-helper');
 
 const assert = require('../../support/assert');
 const TestClient = require('../../support/test-client');
-const  mapnik = require('windshaft').mapnik;
+const mapnik = require('windshaft').mapnik;
 
 const PERMISSION_DENIED_RESPONSE = {
     status: 403,
@@ -13,8 +13,8 @@ const PERMISSION_DENIED_RESPONSE = {
     }
 };
 
-describe('authorization', function() {
-    it('should create a layergroup with regular apikey token', function(done) {
+describe('authorization', function () {
+    it('should create a layergroup with regular apikey token', function (done) {
         const apikeyToken = 'regular1';
         const mapConfig = {
             version: '1.7.0',
@@ -38,7 +38,6 @@ describe('authorization', function() {
             testClient.drain(done);
         });
     });
-
 
     it('should fail getting a named map tile with default apikey token', function (done) {
         const apikeyTokenCreate = 'regular1';
@@ -68,8 +67,7 @@ describe('authorization', function() {
                 response: PERMISSION_DENIED_RESPONSE
             };
 
-            testClientGet.getTile(0, 0, 0, params, function(err, res, body) {
-
+            testClientGet.getTile(0, 0, 0, params, function (err, res, body) {
                 assert.ifError(err);
 
                 assert.ok(body.hasOwnProperty('errors'));
@@ -172,9 +170,9 @@ describe('authorization', function() {
                 }
             ]
         };
-        const testClient = new TestClient(mapConfig); //no apikey provided, using default
+        const testClient = new TestClient(mapConfig); // no apikey provided, using default
 
-        testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) { //TODO 401
+        testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) { // TODO 401
             assert.ifError(err);
 
             assert.ok(layergroupResult.hasOwnProperty('errors'));
@@ -305,8 +303,8 @@ describe('authorization', function() {
             ],
             analyses: [
                 {
-                    id: "HEAD1",
-                    type: "buffer",
+                    id: 'HEAD1',
+                    type: 'buffer',
                     params: {
                         source: {
                             id: 'HEAD2',
@@ -333,7 +331,6 @@ describe('authorization', function() {
 
     describe('Named maps', function () {
         describe('LIST Named maps', function () {
-
             it('should fail while listing named maps with a regular apikey token', function (done) {
                 const apikeyToken = 'regular1';
 
@@ -418,7 +415,7 @@ describe('authorization', function() {
                         options: {
                             sql: 'select * from test_table_localhost_regular1',
                             cartocss: TestClient.CARTOCSS.POINTS,
-                            cartocss_version: '2.3.0',
+                            cartocss_version: '2.3.0'
                         }
                     }]
                 }
@@ -508,7 +505,7 @@ describe('authorization', function() {
                         options: {
                             sql: 'select * from test_table_localhost_regular1',
                             cartocss: TestClient.CARTOCSS.POINTS,
-                            cartocss_version: '2.3.0',
+                            cartocss_version: '2.3.0'
                         }
                     }]
                 }
@@ -653,7 +650,7 @@ describe('authorization', function() {
                         options: {
                             sql: 'select * from test_table_localhost_regular1',
                             cartocss: TestClient.CARTOCSS.POINTS,
-                            cartocss_version: '2.3.0',
+                            cartocss_version: '2.3.0'
                         }
                     }]
                 }
@@ -798,7 +795,7 @@ describe('authorization', function() {
                         options: {
                             sql: 'select * from test_table_localhost_regular1',
                             cartocss: TestClient.CARTOCSS.POINTS,
-                            cartocss_version: '2.3.0',
+                            cartocss_version: '2.3.0'
                         }
                     }]
                 }
@@ -928,7 +925,6 @@ describe('authorization', function() {
                     );
                 });
             });
-
         });
     });
 });

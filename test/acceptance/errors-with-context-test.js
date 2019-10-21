@@ -11,7 +11,6 @@ describe('error with context', function () {
         server = new CartodbWindshaft(serverOptions);
     });
 
-
     var layerOK = {
         options: {
             sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator ' +

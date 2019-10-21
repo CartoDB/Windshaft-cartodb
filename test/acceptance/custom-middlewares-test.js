@@ -20,7 +20,7 @@ describe('custom middlewares', function () {
                     api: [{
                         paths: [
                             '/api/v1',
-                            '/user/:user/api/v1',
+                            '/user/:user/api/v1'
                         ],
                         middlewares: [
                             function teapot () {
@@ -33,7 +33,7 @@ describe('custom middlewares', function () {
                         // "/api/v1/map" is the new API,
                         map: [{
                             paths: [
-                                '/map',
+                                '/map'
                             ]
                         }],
                         // Base url for the Templated Maps API
@@ -123,13 +123,13 @@ describe('custom middlewares', function () {
                     api: [{
                         paths: [
                             '/api/v1',
-                            '/user/:user/api/v1',
+                            '/user/:user/api/v1'
                         ],
                         // Base url for the Detached Maps API
                         // "/api/v1/map" is the new API,
                         map: [{
                             paths: [
-                                '/map',
+                                '/map'
                             ],
                             middlewares: [
                                 function teapot () {
@@ -189,7 +189,7 @@ describe('custom middlewares', function () {
 
                 assert.deepEqual(body, { template_id: templateid });
 
-                helper.deleteRedisKeys({ ['map_tpl|localhost']: 0 }, done);
+                helper.deleteRedisKeys({ 'map_tpl|localhost': 0 }, done);
             });
         });
 
@@ -231,13 +231,13 @@ describe('custom middlewares', function () {
                     api: [{
                         paths: [
                             '/api/v1',
-                            '/user/:user/api/v1',
+                            '/user/:user/api/v1'
                         ],
                         // Base url for the Detached Maps API
                         // "/api/v1/map" is the new API,
                         map: [{
                             paths: [
-                                '/map',
+                                '/map'
                             ]
                         }],
                         // Base url for the Templated Maps API
@@ -324,7 +324,7 @@ describe('custom middlewares', function () {
 
                 assert.ok(body.layergroupid);
 
-                helper.deleteRedisKeys({ ['user:localhost:mapviews:global']: 5 }, done);
+                helper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, done);
             });
         });
     });

@@ -3,7 +3,7 @@
 require('../support/test-helper');
 var TestClient = require('../support/test-client');
 
-describe('layers filters', function() {
+describe('layers filters', function () {
     const type = 'mapnik';
     const sql = 'select * from populated_places_simple_reduced';
     const cartocss = `#points {
@@ -40,7 +40,7 @@ describe('layers filters', function() {
         ]
     };
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         }
@@ -52,5 +52,4 @@ describe('layers filters', function() {
             this.testClient.getTile(0, 0, 0, { layers: layer }, done);
         });
     });
-
 });

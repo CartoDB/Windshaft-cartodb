@@ -8,8 +8,6 @@ var dot = require('dot');
 var debug = require('debug')('windshaft:cartodb:test');
 
 describe('analysis-layers use cases', function () {
-
-
     var multitypeStyleTemplate = dot.template(
         `#points['mapnik::geometry_type'=1] {
           marker-fill-opacity: {{=it._opacity}};
@@ -36,15 +34,14 @@ describe('analysis-layers use cases', function () {
         }`
     );
 
-
-    function cartocss(color, opacity) {
+    function cartocss (color, opacity) {
         return multitypeStyleTemplate({
             _color: color || '#F11810',
             _opacity: Number.isFinite(opacity) ? opacity : 1
         });
     }
 
-    function mapConfig(layers, dataviews, analysis) {
+    function mapConfig (layers, dataviews, analysis) {
         return {
             version: '1.5.0',
             layers: layers,
@@ -158,10 +155,10 @@ describe('analysis-layers use cases', function () {
                     }
                 }
             ],
-                {},
-                [
-                    bufferDef
-                ]
+            {},
+            [
+                bufferDef
+            ]
             )
         },
 
@@ -187,10 +184,10 @@ describe('analysis-layers use cases', function () {
                     }
                 }
             ],
-                {},
-                [
-                    pointInPolygonDef
-                ]
+            {},
+            [
+                pointInPolygonDef
+            ]
             )
         },
 
@@ -267,11 +264,10 @@ describe('analysis-layers use cases', function () {
     ];
 
     useCases.forEach(function (useCase) {
-        if (!!useCase.skip) {
+        if (useCase.skip) {
             return debug(JSON.stringify(useCase.mapConfig, null, 4));
         }
         it(`should implement use case: '${useCase.desc}'`, function (done) {
-
             var testClient = new TestClient(useCase.mapConfig, 1234);
 
             var tile = useCase.tile || TILE_ANALYSIS_TABLES;
@@ -279,7 +275,7 @@ describe('analysis-layers use cases', function () {
             testClient.getTile(tile.z, tile.x, tile.y, function (err, res, image) {
                 assert.ok(!err, err);
 
-                //image.save('/tmp/tests/' + imageIdx + '---' + useCase.desc.replace(/\s/g, '-') + '.png');
+                // image.save('/tmp/tests/' + imageIdx + '---' + useCase.desc.replace(/\s/g, '-') + '.png');
 
                 assert.equal(image.width(), 256);
 

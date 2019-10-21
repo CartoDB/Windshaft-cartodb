@@ -7,31 +7,30 @@ var testClient = require('./support/test-client');
 var http = require('http');
 var fs = require('fs');
 
-describe('static_maps', function() {
-
+describe('static_maps', function () {
     var validUrlTemplate = 'http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png';
     var invalidUrlTemplate = 'http://127.0.0.1:8033/INVALID/{z}/{x}/{y}.png';
 
     var httpRendererResourcesServer;
 
-    before(function(done) {
+    before(function (done) {
         // Start a server to test external resources
-        httpRendererResourcesServer = http.createServer( function(request, response) {
+        httpRendererResourcesServer = http.createServer(function (request, response) {
             var filename = __dirname + '/../../fixtures/http/basemap.png';
-            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+            fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                 response.writeHead(200);
-                response.write(file, "binary");
+                response.write(file, 'binary');
                 response.end();
             });
         });
         httpRendererResourcesServer.listen(8033, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         httpRendererResourcesServer.close(done);
     });
 
-    function staticMapConfig(urlTemplate, cartocss) {
+    function staticMapConfig (urlTemplate, cartocss) {
         return {
             version: '1.2.0',
             layers: [
@@ -54,15 +53,15 @@ describe('static_maps', function() {
         };
     }
 
-    var zoom = 3,
-        lat = 0,
-        lon = 0,
-        width = 400,
-        height = 300;
+    var zoom = 3;
+    var lat = 0;
+    var lon = 0;
+    var width = 400;
+    var height = 300;
 
     it('center image', function (done) {
         var mapConfig = staticMapConfig(validUrlTemplate);
-        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, function(err, res, image) {
+        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, function (err, res, image) {
             if (err) {
                 return done(err);
             }
@@ -76,7 +75,7 @@ describe('static_maps', function() {
 
     it('center image with invalid basemap', function (done) {
         var mapConfig = staticMapConfig(invalidUrlTemplate);
-        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, function(err, res, image) {
+        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, function (err, res, image) {
             if (err) {
                 return done(err);
             }
@@ -88,16 +87,16 @@ describe('static_maps', function() {
         });
     });
 
-    var west = -90,
-        south = -45,
-        east = 90,
-        north = 45,
-        bbWidth = 640,
-        bbHeight = 480;
+    var west = -90;
+    var south = -45;
+    var east = 90;
+    var north = 45;
+    var bbWidth = 640;
+    var bbHeight = 480;
 
     it('bbox', function (done) {
         var mapConfig = staticMapConfig(validUrlTemplate);
-        testClient.getStaticBbox(mapConfig, west, south, east, north, bbWidth, bbHeight, function(err, res, image) {
+        testClient.getStaticBbox(mapConfig, west, south, east, north, bbWidth, bbHeight, function (err, res, image) {
             if (err) {
                 return done(err);
             }
@@ -109,11 +108,10 @@ describe('static_maps', function() {
         });
     });
 
-
     it('should not fail for coordinates out of range', function (done) {
         var outOfRangeHeight = 3000;
         var mapConfig = staticMapConfig(validUrlTemplate);
-        testClient.getStaticCenter(mapConfig, 1, lat, lon, width, outOfRangeHeight, function(err, res, image) {
+        testClient.getStaticCenter(mapConfig, 1, lat, lon, width, outOfRangeHeight, function (err, res, image) {
             if (err) {
                 return done(err);
             }
@@ -125,9 +123,8 @@ describe('static_maps', function() {
         });
     });
 
-
     it('should keep failing for other errors', function (done) {
-        var invalidStyleForZoom = '#layer { marker-fill:red; } #layer[zoom='+zoom+'] { marker-width: [wadus] * 2; }';
+        var invalidStyleForZoom = '#layer { marker-fill:red; } #layer[zoom=' + zoom + '] { marker-width: [wadus] * 2; }';
         var mapConfig = staticMapConfig(validUrlTemplate, invalidStyleForZoom);
         var expectedResponse = {
             statusCode: 400,
@@ -135,7 +132,7 @@ describe('static_maps', function() {
                 'Content-Type': 'application/json; charset=utf-8'
             }
         };
-        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, expectedResponse, function(err, res) {
+        testClient.getStaticCenter(mapConfig, zoom, lat, lon, width, height, expectedResponse, function (err, res) {
             assert.ok(!err);
             var parsedBody = JSON.parse(res.body);
             assert.ok(parsedBody.errors);
@@ -144,5 +141,4 @@ describe('static_maps', function() {
             done();
         });
     });
-
 });

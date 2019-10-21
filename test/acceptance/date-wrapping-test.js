@@ -15,14 +15,13 @@ describe_mvt('date-wrapping', () => {
     describe('when a map instantiation has one single layer', () => {
         describe('and the layer has the "dates_as_numbers" option enabled', () => {
             beforeEach(() => {
-                const mapConfig = mapConfigFactory.getVectorMapConfig({ layerOptions: [{ dates_as_numbers: true }]});
+                const mapConfig = mapConfigFactory.getVectorMapConfig({ layerOptions: [{ dates_as_numbers: true }] });
                 testClient = new TestClient(mapConfig);
             });
 
             afterEach(done => testClient.drain(done));
 
             it('should return date columns casted as numbers', done => {
-
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
                     const expected = [
                         {
@@ -46,27 +45,23 @@ describe_mvt('date-wrapping', () => {
             });
 
             it('should return metadata with casted columns', done => {
-
-                testClient.getLayergroup(function(err, layergroup) {
+                testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
                     assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
                     done();
                 });
-
             });
-
         });
 
         describe('and the layer has the "dates_as_numbers" option disabled', () => {
             beforeEach(() => {
-                const mapConfig = mapConfigFactory.getVectorMapConfig({ layerOptions: [{ dates_as_numbers: false }]});
+                const mapConfig = mapConfigFactory.getVectorMapConfig({ layerOptions: [{ dates_as_numbers: false }] });
                 testClient = new TestClient(mapConfig);
             });
 
             afterEach(done => testClient.drain(done));
 
             it('should return date columns as dates', done => {
-
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
                     const expected = [
                         {
@@ -107,7 +102,7 @@ describe_mvt('date-wrapping', () => {
             });
 
             it('should return dates as numbers for every layer', done => {
-                testClient.getLayergroup(function(err, layergroup) {
+                testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
                     assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
                     assert.deepEqual(layergroup.metadata.layers[1].meta.dates_as_numbers, ['date']);
@@ -164,8 +159,8 @@ describe_mvt('date-wrapping', () => {
                 testClient = new TestClient(mapConfig);
             });
 
-            it('should return dates as numbers only for the layer with the "dates_as_numbers" flag enabled',  done => {
-                testClient.getLayergroup(function(err, layergroup) {
+            it('should return dates as numbers only for the layer with the "dates_as_numbers" flag enabled', done => {
+                testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
                     assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers || [], []);
                     assert.deepEqual(layergroup.metadata.layers[1].meta.dates_as_numbers, ['date']);
@@ -222,8 +217,8 @@ describe_mvt('date-wrapping', () => {
                 testClient = new TestClient(mapConfig);
             });
 
-            it('should return dates as dates for both layers',  done => {
-                testClient.getLayergroup(function(err, layergroup) {
+            it('should return dates as dates for both layers', done => {
+                testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
                     assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers || [], []);
                     assert.deepEqual(layergroup.metadata.layers[1].meta.dates_as_numbers || [], []);
@@ -285,12 +280,11 @@ describe_mvt('date-wrapping', () => {
         afterEach(done => testClient.drain(done));
 
         it('should work', done => {
-            testClient.getLayergroup(function(err, layergroup) {
+            testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
                 assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
                 done();
             });
-
         });
 
         it('should return correct tiles', done => {
@@ -315,5 +309,4 @@ describe_mvt('date-wrapping', () => {
             });
         });
     });
-
 });

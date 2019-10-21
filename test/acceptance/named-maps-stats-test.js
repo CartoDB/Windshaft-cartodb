@@ -11,7 +11,7 @@ var serverOptions = require('../../lib/server-options');
 var TemplateMaps = require('../../lib/backends/template-maps');
 var NamedMapsCacheEntry = require('../../lib/cache/model/named-maps-entry');
 
-describe('named maps preview stats', function() {
+describe('named maps preview stats', function () {
     var server;
 
     before(function () {
@@ -34,10 +34,10 @@ describe('named maps preview stats', function() {
         auth: {
             method: 'open'
         },
-        "placeholders": {
-            "color": {
-                "type": "css_color",
-                "default": "#cc3300"
+        placeholders: {
+            color: {
+                type: 'css_color',
+                default: '#cc3300'
             }
         },
         layergroup: {
@@ -55,7 +55,6 @@ describe('named maps preview stats', function() {
         }
     };
 
-
     beforeEach(function (done) {
         templateMaps.addTemplate(username, template, done);
     });
@@ -64,8 +63,7 @@ describe('named maps preview stats', function() {
         templateMaps.delTemplate(username, templateName, done);
     });
 
-    function getStaticMap(name, options, callback) {
-
+    function getStaticMap (name, options, callback) {
         var url = '/api/v1/map/static/named/' + name + '/640/480.png';
         if (options.params) {
             url = url + '?' + querystring.stringify(options.params);
@@ -101,8 +99,8 @@ describe('named maps preview stats', function() {
         );
     }
 
-    it('should return 200 if properly authorized', function(done) {
-        getStaticMap(templateName, { params: { auth_token: 'valid1' } }, function(err, res, img) {
+    it('should return 200 if properly authorized', function (done) {
+        getStaticMap(templateName, { params: { auth_token: 'valid1' } }, function (err, res, img) {
             assert.ok(!err);
 
             assert.equal(img.width(), 640);

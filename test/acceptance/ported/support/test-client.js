@@ -58,7 +58,7 @@ var jsonContentType = 'application/json; charset=utf-8';
 var jsContentType = 'text/javascript; charset=utf-8';
 var pngContentType = 'image/png';
 
-function createLayergroup(layergroupConfig, options, callback) {
+function createLayergroup (layergroupConfig, options, callback) {
     if (!callback) {
         callback = options;
         options = {
@@ -75,20 +75,20 @@ function createLayergroup(layergroupConfig, options, callback) {
     };
 
     step(
-        function requestLayergroup() {
+        function requestLayergroup () {
             var next = this;
             var request = layergroupRequest(layergroupConfig, options.method, options.callbackName, options.params);
             assert.response(serverInstance(options), request, expectedResponse, function (res, err) {
                 next(err, res);
             });
         },
-        function validateLayergroup(err, res) {
+        function validateLayergroup (err, res) {
             assert.ifError(err);
 
             var parsedBody;
             var layergroupid;
             if (options.callbackName) {
-                global[options.callbackName] = function(layergroup) {
+                global[options.callbackName] = function (layergroup) {
                     layergroupid = layergroup.layergroupid;
                 };
                 // jshint ignore:start
@@ -109,7 +109,7 @@ function createLayergroup(layergroupConfig, options, callback) {
                 };
                 var redisKey = 'map_cfg|' + layergroupid;
                 keysToDelete[redisKey] = 0;
-                testHelper.deleteRedisKeys(keysToDelete, function() {
+                testHelper.deleteRedisKeys(keysToDelete, function () {
                     return callback(err, res, parsedBody);
                 });
             } else {
@@ -119,7 +119,7 @@ function createLayergroup(layergroupConfig, options, callback) {
     );
 }
 
-function serverInstance(options) {
+function serverInstance (options) {
     if (options.server) {
         return options.server;
     }
@@ -134,7 +134,7 @@ function serverInstance(options) {
     return getServer();
 }
 
-function layergroupRequest(layergroupConfig, method, callbackName, extraParams) {
+function layergroupRequest (layergroupConfig, method, callbackName, extraParams) {
     method = method || 'POST';
 
     var request = {
@@ -165,7 +165,7 @@ function layergroupRequest(layergroupConfig, method, callbackName, extraParams) 
     return request;
 }
 
-function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
+function singleLayerMapConfig (sql, cartocss, cartocssVersion, interactivity) {
     return {
         version: '1.3.0',
         layers: [
@@ -183,15 +183,15 @@ function singleLayerMapConfig(sql, cartocss, cartocssVersion, interactivity) {
     };
 }
 
-function defaultTableMapConfig(tableName, cartocss, cartocssVersion, interactivity) {
+function defaultTableMapConfig (tableName, cartocss, cartocssVersion, interactivity) {
     return singleLayerMapConfig(defaultTableQuery(tableName), cartocss, cartocssVersion, interactivity);
 }
 
-function defaultTableQuery(tableName) {
-    return _.template('SELECT * FROM <%= tableName %>', {tableName: tableName});
+function defaultTableQuery (tableName) {
+    return _.template('SELECT * FROM <%= tableName %>', { tableName: tableName });
 }
 
-function getStaticBbox(layergroupConfig, west, south, east, north, width, height, expectedResponse, callback) {
+function getStaticBbox (layergroupConfig, west, south, east, north, width, height, expectedResponse, callback) {
     if (!callback) {
         callback = expectedResponse;
         expectedResponse = pngContentType;
@@ -208,7 +208,7 @@ function getStaticBbox(layergroupConfig, west, south, east, north, width, height
     return getGeneric(layergroupConfig, url, expectedResponse, callback);
 }
 
-function getStaticCenter(layergroupConfig, zoom, lat, lon, width, height, expectedResponse, callback) {
+function getStaticCenter (layergroupConfig, zoom, lat, lon, width, height, expectedResponse, callback) {
     if (!callback) {
         callback = expectedResponse;
         expectedResponse = pngContentType;
@@ -227,7 +227,7 @@ function getStaticCenter(layergroupConfig, zoom, lat, lon, width, height, expect
     return getGeneric(layergroupConfig, url, expectedResponse, callback);
 }
 
-function getGrid(layergroupConfig, layer, z, x, y, expectedResponse, callback) {
+function getGrid (layergroupConfig, layer, z, x, y, expectedResponse, callback) {
     if (!callback) {
         callback = expectedResponse;
         expectedResponse = jsonContentType;
@@ -243,7 +243,7 @@ function getGrid(layergroupConfig, layer, z, x, y, expectedResponse, callback) {
     return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getGridJsonp(layergroupConfig, layer, z, x, y, jsonpCallbackName, expectedResponse, callback) {
+function getGridJsonp (layergroupConfig, layer, z, x, y, jsonpCallbackName, expectedResponse, callback) {
     if (!callback) {
         callback = expectedResponse;
         expectedResponse = jsContentType;
@@ -260,7 +260,7 @@ function getGridJsonp(layergroupConfig, layer, z, x, y, jsonpCallbackName, expec
     return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getTorque(layergroupConfig, layer, z, x, y, expectedResponse, callback) {
+function getTorque (layergroupConfig, layer, z, x, y, expectedResponse, callback) {
     if (!callback) {
         callback = expectedResponse;
         expectedResponse = jsonContentType;
@@ -276,7 +276,7 @@ function getTorque(layergroupConfig, layer, z, x, y, expectedResponse, callback)
     return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getTile(layergroupConfig, z, x, y, expectedResponse, callback) {
+function getTile (layergroupConfig, z, x, y, expectedResponse, callback) {
     if (!callback) {
         callback = expectedResponse;
         expectedResponse = pngContentType;
@@ -291,7 +291,7 @@ function getTile(layergroupConfig, z, x, y, expectedResponse, callback) {
     return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getTileLayer(layergroupConfig, options, expectedResponse, callback) {
+function getTileLayer (layergroupConfig, options, expectedResponse, callback) {
     if (!callback) {
         callback = expectedResponse;
         expectedResponse = pngContentType;
@@ -300,11 +300,11 @@ function getTileLayer(layergroupConfig, options, expectedResponse, callback) {
     return getLayer(layergroupConfig, options, expectedResponse, callback);
 }
 
-function getLayer(layergroupConfig, options, expectedResponse, callback) {
+function getLayer (layergroupConfig, options, expectedResponse, callback) {
     return getGeneric(layergroupConfig, tileUrlStrategy(options), expectedResponse, callback);
 }
 
-function tileUrlStrategy(options) {
+function tileUrlStrategy (options) {
     var urlLayerPattern = [
         '<%= layer %>',
         '<%= z %>',
@@ -329,7 +329,7 @@ function tileUrlStrategy(options) {
     return '<%= layergroupid %>/' + urlTemplate(_.defaults(options, { z: 0, x: 0, y: 0, layer: 0 }));
 }
 
-function getGeneric(layergroupConfig, url, expectedResponse, callback) {
+function getGeneric (layergroupConfig, url, expectedResponse, callback) {
     if (_.isString(expectedResponse)) {
         expectedResponse = {
             status: 200,
@@ -343,7 +343,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
     var layergroupid = null;
 
     step(
-        function requestLayergroup() {
+        function requestLayergroup () {
             var next = this;
             var request = {
                 url: '/api/v1/map',
@@ -364,7 +364,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
                 next(err, res);
             });
         },
-        function validateLayergroup(err, res) {
+        function validateLayergroup (err, res) {
             assert.ok(!err, 'Failed to create layergroup');
 
             var parsedBody = JSON.parse(res.body);
@@ -374,7 +374,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
 
             return res;
         },
-        function requestTile(err, res) {
+        function requestTile (err, res) {
             assert.ok(!err, 'Invalid layergroup response: ' + res.body);
 
             var next = this;
@@ -399,7 +399,7 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
                 next(err, res);
             });
         },
-        function validateTile(err, res) {
+        function validateTile (err, res) {
             assert.ok(!err, 'Failed to get tile');
 
             var img;
@@ -412,15 +412,15 @@ function getGeneric(layergroupConfig, url, expectedResponse, callback) {
             };
             var redisKey = 'map_cfg|' + LayergroupToken.parse(layergroupid).token;
             keysToDelete[redisKey] = 0;
-            testHelper.deleteRedisKeys(keysToDelete, function() {
+            testHelper.deleteRedisKeys(keysToDelete, function () {
                 return callback(err, res, img);
             });
         }
     );
 }
 
-function withLayergroup(layergroupConfig, options, callback) {
-    var validationLayergroupFn = function() {};
+function withLayergroup (layergroupConfig, options, callback) {
+    var validationLayergroupFn = function () {};
     if (!callback) {
         callback = options;
         options = {};
@@ -439,14 +439,14 @@ function withLayergroup(layergroupConfig, options, callback) {
     };
 
     step(
-        function requestLayergroup() {
+        function requestLayergroup () {
             var next = this;
             var request = layergroupRequest(layergroupConfig, 'POST');
             assert.response(serverInstance(options), request, layergroupExpectedResponse, function (res, err) {
                 next(err, res);
             });
         },
-        function validateLayergroup(err, res) {
+        function validateLayergroup (err, res) {
             assert.ok(!err, 'Failed to request layergroup');
 
             var parsedBody = JSON.parse(res.body);
@@ -456,7 +456,7 @@ function withLayergroup(layergroupConfig, options, callback) {
 
             validationLayergroupFn(res);
 
-            function requestTile(layergroupUrl, options, callback) {
+            function requestTile (layergroupUrl, options, callback) {
                 if (!callback) {
                     callback = options;
                     options = {
@@ -473,10 +473,10 @@ function withLayergroup(layergroupConfig, options, callback) {
                     return `${cache_buster ? `:${cache_buster}` : `:${cacheBuster}`}`;
                 };
 
-                const urlTpl = function ({layergroupid, cache_buster = null, tile }) {
-                    const { signer, token , cacheBuster } = LayergroupToken.parse(layergroupid);
+                const urlTpl = function ({ layergroupid, cache_buster = null, tile }) {
+                    const { signer, token, cacheBuster } = LayergroupToken.parse(layergroupid);
                     const base = '/api/v1/map/';
-                    return `${base}${signerTpl({signer})}${token}${cacheTpl({cache_buster, cacheBuster})}${tile}`;
+                    return `${base}${signerTpl({ signer })}${token}${cacheTpl({ cache_buster, cacheBuster })}${tile}`;
                 };
 
                 const finalUrl = urlTpl({ layergroupid, cache_buster: options.cache_buster, tile: layergroupUrl });
@@ -505,7 +505,7 @@ function withLayergroup(layergroupConfig, options, callback) {
                 });
             }
 
-            function finish(done) {
+            function finish (done) {
                 var keysToDelete = {
                     'user:localhost:mapviews:global': 5
                 };

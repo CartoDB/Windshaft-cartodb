@@ -7,13 +7,12 @@ var RedisPool = require('redis-mpool');
 
 var TemplateMaps = require('../../lib/backends/template-maps');
 
-describe('template_maps_auth', function() {
-
+describe('template_maps_auth', function () {
     // configure redis pool instance to use in tests
-    var redisPool = new RedisPool(global.environment.redis),
-        templateMaps = new TemplateMaps(redisPool, {max_user_templates: 1000});
+    var redisPool = new RedisPool(global.environment.redis);
+    var templateMaps = new TemplateMaps(redisPool, { max_user_templates: 1000 });
 
-    function makeTemplate(method, validTokens) {
+    function makeTemplate (method, validTokens) {
         var template = {
             name: 'wadus_template',
             auth: {
@@ -28,11 +27,11 @@ describe('template_maps_auth', function() {
         return template;
     }
 
-    var methodToken = 'token',
-        methodOpen = 'open';
+    var methodToken = 'token';
+    var methodOpen = 'open';
 
-    var tokenFoo = 'foo',
-        tokenBar = 'bar';
+    var tokenFoo = 'foo';
+    var tokenBar = 'bar';
 
     var authorizationTestScenarios = [
         {
@@ -85,8 +84,8 @@ describe('template_maps_auth', function() {
         }
     ];
 
-    authorizationTestScenarios.forEach(function(testScenario) {
-        it(testScenario.desc, function(done) {
+    authorizationTestScenarios.forEach(function (testScenario) {
+        it(testScenario.desc, function (done) {
             var debugMessage = testScenario.expected ? 'should be authorized' : 'unexpectedly authorized';
             var result = templateMaps.isAuthorized(testScenario.template, testScenario.token);
             assert.equal(result, testScenario.expected, debugMessage);
@@ -94,7 +93,7 @@ describe('template_maps_auth', function() {
         });
     });
 
-    it("auth as 'open' string is authorized", function(done) {
+    it("auth as 'open' string is authorized", function (done) {
         var template = {
             name: 'wadus_template',
             auth: 'open'
@@ -103,5 +102,4 @@ describe('template_maps_auth', function() {
         assert.ok(templateMaps.isAuthorized(template));
         done();
     });
-
 });

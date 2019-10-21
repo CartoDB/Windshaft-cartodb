@@ -5,9 +5,8 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('aggregation widgets', function() {
-
-    var aggregationMapConfig =  {
+describe('aggregation widgets', function () {
+    var aggregationMapConfig = {
         version: '1.5.0',
         layers: [
             {
@@ -30,9 +29,9 @@ describe('aggregation widgets', function() {
         ]
     };
 
-    it("should expose an aggregation", function(done) {
+    it('should expose an aggregation', function (done) {
         var testClient = new TestClient(aggregationMapConfig);
-        testClient.getWidget('country_places_count', { own_filter: 0 }, function(err, res) {
+        testClient.getWidget('country_places_count', { own_filter: 0 }, function (err, res) {
             if (err) {
                 return done(err);
             }
@@ -45,15 +44,13 @@ describe('aggregation widgets', function() {
         });
     });
 
-    describe('filters', function() {
-
+    describe('filters', function () {
         describe('category', function () {
-
-            it("should expose a filtered aggregation", function (done) {
+            it('should expose a filtered aggregation', function (done) {
                 var params = {
                     filters: {
                         layers: [
-                            {country_places_count: {accept: ['CAN']}}
+                            { country_places_count: { accept: ['CAN'] } }
                         ]
                     }
                 };
@@ -71,6 +68,5 @@ describe('aggregation widgets', function() {
                 });
             });
         });
-
     });
 });

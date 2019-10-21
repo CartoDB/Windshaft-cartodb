@@ -5,8 +5,7 @@ var PSQL = require('cartodb-psql');
 var _ = require('underscore');
 var assert = require('assert');
 
-describe('turbo-carto-postgres-datasource', function() {
-
+describe('turbo-carto-postgres-datasource', function () {
     beforeEach(function () {
         const dbname = _.template(global.environment.postgres_auth_user, { user_id: 1 }) + '_db';
         const psql = new PSQL({
@@ -15,7 +14,7 @@ describe('turbo-carto-postgres-datasource', function() {
             host: global.environment.postgres.host,
             port: global.environment.postgres.port
         });
-        const sql =  [
+        const sql = [
             'SELECT',
             '  null::geometry the_geom_webmercator,',
             '  CASE',
@@ -29,18 +28,18 @@ describe('turbo-carto-postgres-datasource', function() {
         this.datasource = new PostgresDatasource(psql, sql);
     });
 
-    it('should ignore NaNs and Infinities when computing ramps', function(done) {
-       var column = 'values';
-       var buckets = 4;
-       var method = 'equal';
-       this.datasource.getRamp(column, buckets, method, function(err, result) {
-           var expected_result = {
-               ramp: [ 252, 501, 750, 999 ],
-               stats: { min_val: 3, max_val: 999, avg_val: 501 },
-               strategy: undefined
+    it('should ignore NaNs and Infinities when computing ramps', function (done) {
+        var column = 'values';
+        var buckets = 4;
+        var method = 'equal';
+        this.datasource.getRamp(column, buckets, method, function (err, result) {
+            var expected_result = {
+                ramp: [252, 501, 750, 999],
+                stats: { min_val: 3, max_val: 999, avg_val: 501 },
+                strategy: undefined
             };
-           assert.deepEqual(result, expected_result);
-           done();
-       });
+            assert.deepEqual(result, expected_result);
+            done();
+        });
     });
 });

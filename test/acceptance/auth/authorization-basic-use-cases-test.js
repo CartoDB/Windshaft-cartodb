@@ -6,7 +6,7 @@ const CartodbWindshaft = require('../../../lib/server');
 const serverOptions = require('../../../lib/server-options');
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
-function singleLayergroupConfig(sql, cartocss) {
+function singleLayergroupConfig (sql, cartocss) {
     return {
         version: '1.7.0',
         layers: [
@@ -22,7 +22,7 @@ function singleLayergroupConfig(sql, cartocss) {
     };
 }
 
-function createRequest(layergroup, userHost, apiKey) {
+function createRequest (layergroup, userHost, apiKey) {
     var url = layergroupUrl;
     if (apiKey) {
         url += '?api_key=' + apiKey;
@@ -39,8 +39,8 @@ function createRequest(layergroup, userHost, apiKey) {
 }
 
 var layergroupUrl = '/api/v1/map';
-var pointSqlMaster = "select * from test_table_private_1";
-var pointSqlPublic = "select * from test_table";
+var pointSqlMaster = 'select * from test_table_private_1';
+var pointSqlPublic = 'select * from test_table';
 var keysToDelete;
 
 describe('Basic authorization use cases', function () {
@@ -58,7 +58,7 @@ describe('Basic authorization use cases', function () {
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
-    it("succeed with master", function (done) {
+    it('succeed with master', function (done) {
         var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
 
         assert.response(server,
@@ -81,8 +81,7 @@ describe('Basic authorization use cases', function () {
         );
     });
 
-
-    it("succeed with default - sending default_public", function (done) {
+    it('succeed with default - sending default_public', function (done) {
         var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
         assert.response(server,
@@ -105,7 +104,7 @@ describe('Basic authorization use cases', function () {
         );
     });
 
-    it("fail with non-existent api key", function (done) {
+    it('fail with non-existent api key', function (done) {
         var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
         assert.response(server,
@@ -124,7 +123,7 @@ describe('Basic authorization use cases', function () {
         );
     });
 
-    it("fail with default", function (done) {
+    it('fail with default', function (done) {
         var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
 
         assert.response(server,
@@ -141,7 +140,7 @@ describe('Basic authorization use cases', function () {
     });
 
     describe('No api key provided - fallback to default_public', function () {
-        it("succeed with default - public dataset", function (done) {
+        it('succeed with default - public dataset', function (done) {
             var layergroup = singleLayergroupConfig(pointSqlPublic, '#layer { marker-fill:red; }');
 
             assert.response(server,
@@ -164,7 +163,7 @@ describe('Basic authorization use cases', function () {
             );
         });
 
-        it("fail with default - private dataset", function (done) {
+        it('fail with default - private dataset', function (done) {
             var layergroup = singleLayergroupConfig(pointSqlMaster, '#layer { marker-fill:red; }');
 
             assert.response(server,

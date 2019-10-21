@@ -11,9 +11,8 @@ const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 describe('tilejson via mapnik renderer', () => tileJsonSuite(false));
 describe('tilejson via postgis renderer', () => tileJsonSuite(true));
 
-function tileJsonSuite(usePostGIS) {
-
-    before(function() {
+function tileJsonSuite (usePostGIS) {
+    before(function () {
         serverOptions.renderer.mvt.usePostGIS = usePostGIS;
     });
 
@@ -21,7 +20,7 @@ function tileJsonSuite(usePostGIS) {
         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
-    function tilejsonValidation(tilejson, shouldHaveGrid = false) {
+    function tilejsonValidation (tilejson, shouldHaveGrid = false) {
         assert.equal(tilejson.tilejson, '2.2.0');
 
         assert.ok(Array.isArray(tilejson.tiles), JSON.stringify(tilejson));
@@ -31,7 +30,6 @@ function tileJsonSuite(usePostGIS) {
             assert.ok(Array.isArray(tilejson.grids));
             assert.ok(tilejson.grids.length > 0);
         }
-
     }
 
     const sql = 'SELECT * FROM populated_places_simple_reduced';
@@ -45,7 +43,9 @@ function tileJsonSuite(usePostGIS) {
     };
     const RASTER_INTERACTIVITY_LAYER = {
         options: {
-            sql, cartocss, cartocss_version,
+            sql,
+            cartocss,
+            cartocss_version,
             interactivity: ['cartodb_id']
         }
     };
@@ -61,18 +61,18 @@ function tileJsonSuite(usePostGIS) {
         }
     };
 
-    function mapConfig(layers) {
+    function mapConfig (layers) {
         return {
             version: '1.7.0',
             layers: Array.isArray(layers) ? layers : [layers]
         };
     }
 
-    describe('per layer', function() {
-        it('should expose raster + vector tilejson for raster layers', function(done) {
+    describe('per layer', function () {
+        it('should expose raster + vector tilejson for raster layers', function (done) {
             var testClient = new TestClient(mapConfig(RASTER_LAYER));
 
-            testClient.getLayergroup(function(err, layergroupResult) {
+            testClient.getLayergroup(function (err, layergroupResult) {
                 assert.ok(!err, err);
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
@@ -90,10 +90,10 @@ function tileJsonSuite(usePostGIS) {
             });
         });
 
-        it('should expose just the vector tilejson vector only layers', function(done) {
+        it('should expose just the vector tilejson vector only layers', function (done) {
             var testClient = new TestClient(mapConfig(VECTOR_LAYER));
 
-            testClient.getLayergroup(function(err, layergroupResult) {
+            testClient.getLayergroup(function (err, layergroupResult) {
                 assert.ok(!err, err);
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
@@ -111,10 +111,10 @@ function tileJsonSuite(usePostGIS) {
             });
         });
 
-        it('should expose just the raster tilejson plain layers', function(done) {
+        it('should expose just the raster tilejson plain layers', function (done) {
             var testClient = new TestClient(mapConfig(PLAIN_LAYER));
 
-            testClient.getLayergroup(function(err, layergroupResult) {
+            testClient.getLayergroup(function (err, layergroupResult) {
                 assert.ok(!err, err);
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
@@ -132,10 +132,10 @@ function tileJsonSuite(usePostGIS) {
             });
         });
 
-        it('should expose grids for the raster layer with interactivity', function(done) {
+        it('should expose grids for the raster layer with interactivity', function (done) {
             var testClient = new TestClient(mapConfig(RASTER_INTERACTIVITY_LAYER));
 
-            testClient.getLayergroup(function(err, layergroupResult) {
+            testClient.getLayergroup(function (err, layergroupResult) {
                 assert.ok(!err, err);
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
@@ -152,10 +152,10 @@ function tileJsonSuite(usePostGIS) {
             });
         });
 
-        it('should work with several layers', function(done) {
+        it('should work with several layers', function (done) {
             var testClient = new TestClient(mapConfig([RASTER_LAYER, RASTER_INTERACTIVITY_LAYER]));
 
-            testClient.getLayergroup(function(err, layergroupResult) {
+            testClient.getLayergroup(function (err, layergroupResult) {
                 assert.ok(!err, err);
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
@@ -175,12 +175,11 @@ function tileJsonSuite(usePostGIS) {
         });
     });
 
-    describe('root tilejson', function() {
-
-        it('should expose just the `vector` tilejson and URL when for vector only mapnik layers', function(done) {
+    describe('root tilejson', function () {
+        it('should expose just the `vector` tilejson and URL when for vector only mapnik layers', function (done) {
             var testClient = new TestClient(mapConfig(VECTOR_LAYER));
 
-            testClient.getLayergroup(function(err, layergroupResult) {
+            testClient.getLayergroup(function (err, layergroupResult) {
                 assert.ok(!err, err);
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
@@ -202,10 +201,10 @@ function tileJsonSuite(usePostGIS) {
             });
         });
 
-        it('should expose just the `vector` and `raster` tilejson and urls for mapnik layers', function(done) {
+        it('should expose just the `vector` and `raster` tilejson and urls for mapnik layers', function (done) {
             var testClient = new TestClient(mapConfig(RASTER_LAYER));
 
-            testClient.getLayergroup(function(err, layergroupResult) {
+            testClient.getLayergroup(function (err, layergroupResult) {
                 assert.ok(!err, err);
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
@@ -229,6 +228,5 @@ function tileJsonSuite(usePostGIS) {
                 testClient.drain(done);
             });
         });
-
     });
 }

@@ -5,22 +5,22 @@ var TestClient = require('../../support/test-client');
 
 var IMAGE_TOLERANCE_PER_MIL = 20;
 
-function imageCompareFn(fixture, done) {
-    return function(err, res, image) {
+function imageCompareFn (fixture, done) {
+    return function (err, res, image) {
         assert.ok(!err, err);
         assert.imageIsSimilarToFile(image, './test/fixtures/' + fixture, IMAGE_TOLERANCE_PER_MIL, done);
     };
 }
 
-function makeMapconfig(cartocss) {
+function makeMapconfig (cartocss) {
     return {
-        "version": "1.4.0",
-        "layers": [
+        version: '1.4.0',
+        layers: [
             {
-                "type": 'mapnik',
-                "options": {
-                    "cartocss_version": '2.3.0',
-                    "sql": [
+                type: 'mapnik',
+                options: {
+                    cartocss_version: '2.3.0',
+                    sql: [
                         'SELECT test_table.*, _prices.price FROM test_table JOIN (' +
                         '  SELECT 1 AS cartodb_id, 10.00 AS price',
                         '  UNION ALL',
@@ -33,14 +33,14 @@ function makeMapconfig(cartocss) {
                         '  SELECT 5, 21.00',
                         ') _prices ON _prices.cartodb_id = test_table.cartodb_id'
                     ].join('\n'),
-                    "cartocss": cartocss
+                    cartocss: cartocss
                 }
             }
         ]
     };
 }
 
-describe('turbo-carto for anonymous maps', function() {
+describe('turbo-carto for anonymous maps', function () {
     describe('parsing ramp function with colorbrewer for greens and mapnik renderer', function () {
         beforeEach(function () {
             var turboCartocss = '#layer { marker-fill: ramp([price], colorbrewer(Greens)); }';
@@ -56,11 +56,11 @@ describe('turbo-carto for anonymous maps', function() {
             this.testClient.getTile(13, 4011, 3088, imageCompareFn(fixturePath, done));
         });
 
-        it('should work for different char case in quantification names', function(done) {
+        it('should work for different char case in quantification names', function (done) {
             this.testClient = new TestClient(
                 makeMapconfig('#layer { marker-fill: ramp([price], colorbrewer(Greens, 3), jeNkS); }')
             );
-            this.testClient.getLayergroup(function(err, layergroup) {
+            this.testClient.getLayergroup(function (err, layergroup) {
                 assert.ok(!err, err);
 
                 assert.ok(layergroup.hasOwnProperty('layergroupid'));
@@ -94,8 +94,8 @@ describe('turbo-carto for anonymous maps', function() {
                 {
                     type: 'torque',
                     options: {
-                        sql: "SELECT * FROM populated_places_simple_reduced where the_geom" +
-                            " && ST_MakeEnvelope(-90, 0, 90, 65)",
+                        sql: 'SELECT * FROM populated_places_simple_reduced where the_geom' +
+                            ' && ST_MakeEnvelope(-90, 0, 90, 65)',
                         cartocss: [
                             'Map {',
                             '    buffer-size:0;',

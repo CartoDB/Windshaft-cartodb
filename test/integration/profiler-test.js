@@ -6,15 +6,15 @@ var assert = require('assert');
 var StatsClient = require('../../lib/stats/client');
 var ProfilerProxy = require('../../lib/stats/profiler-proxy');
 
-describe('profiler + statsd', function() {
+describe('profiler + statsd', function () {
     var statsInstance;
 
-    before(function() {
+    before(function () {
         statsInstance = StatsClient.instance;
         StatsClient.instance = null;
     });
 
-    after(function() {
+    after(function () {
         StatsClient.instance = statsInstance;
     });
 
@@ -27,10 +27,9 @@ describe('profiler + statsd', function() {
     };
 
     // See https://github.com/CartoDB/Windshaft/issues/167
-    it('profiler does not throw uncaught exception on invalid host/port', function(done) {
-
+    it('profiler does not throw uncaught exception on invalid host/port', function (done) {
         var statsClient = StatsClient.getInstance(statsdConfig);
-        var profiler = new ProfilerProxy({profile: true, statsd_client: statsClient});
+        var profiler = new ProfilerProxy({ profile: true, statsd_client: statsClient });
 
         profiler.start('test');
         profiler.done('wadus');
@@ -39,7 +38,7 @@ describe('profiler + statsd', function() {
         profiler.sendStats();
 
         // force a call to validate sendStats does not throw and uncaught exception
-        statsClient.timing('forced', 50, 1, function(err) {
+        statsClient.timing('forced', 50, 1, function (err) {
             assert.ok(err);
             assert.equal(err.code, 'ENOTFOUND');
             done();

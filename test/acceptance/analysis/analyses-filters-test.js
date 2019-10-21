@@ -6,7 +6,6 @@ const assert = require('../../support/assert');
 const TestClient = require('../../support/test-client');
 
 describe('analysis-layers-dataviews', () => {
-
     const CARTOCSS = `#layer {
         marker-fill-opacity: 1;
         marker-line-color: white;
@@ -23,13 +22,13 @@ describe('analysis-layers-dataviews', () => {
         version: '1.6.0',
         layers: [
             {
-                "type": "cartodb",
-                "options": {
-                    "source": {
-                        "id": "a1"
+                type: 'cartodb',
+                options: {
+                    source: {
+                        id: 'a1'
                     },
-                    "cartocss": CARTOCSS,
-                    "cartocss_version": "2.3.0"
+                    cartocss: CARTOCSS,
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -46,22 +45,22 @@ describe('analysis-layers-dataviews', () => {
         },
         analyses: [
             {
-                "id": "a1",
-                "type": "source",
-                "params": {
-                    "query": "select * from populated_places_simple_reduced"
+                id: 'a1',
+                type: 'source',
+                params: {
+                    query: 'select * from populated_places_simple_reduced'
                 }
             }
         ]
     };
 
-    it('should get a filtered histogram dataview', function(done) {
+    it('should get a filtered histogram dataview', function (done) {
         const testClient = new TestClient(mapConfig, 1234);
 
         const params = {
             filters: {
                 analyses: {
-                    'a1': [
+                    a1: [
                         {
                             type: 'range',
                             column: 'pop_max',

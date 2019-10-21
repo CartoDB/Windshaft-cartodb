@@ -3,8 +3,7 @@
 var assert = require('assert');
 var SubstitutionTokens = require('../../lib/utils/substitution-tokens');
 
-describe('SubstitutionTokens', function() {
-
+describe('SubstitutionTokens', function () {
     var sql = [
         'WITH hgrid AS (',
         '  SELECT CDB_HexagonGrid(',
@@ -22,19 +21,19 @@ describe('SubstitutionTokens', function() {
         'GROUP BY hgrid.cell'
     ].join('\n');
 
-    it('should return tokens present in sql', function() {
+    it('should return tokens present in sql', function () {
         assert.deepEqual(SubstitutionTokens.tokens(sql), ['bbox', 'scale_denominator', 'pixel_width', 'pixel_height']);
     });
 
-    it('should return just one token', function() {
+    it('should return just one token', function () {
         assert.deepEqual(SubstitutionTokens.tokens('select !bbox! from wadus'), ['bbox']);
     });
 
-    it('should not return other tokens', function() {
+    it('should not return other tokens', function () {
         assert.deepEqual(SubstitutionTokens.tokens('select !wadus! from wadus'), []);
     });
 
-    it('should report sql has tokens', function() {
+    it('should report sql has tokens', function () {
         assert.equal(SubstitutionTokens.hasTokens(sql), true);
         assert.equal(SubstitutionTokens.hasTokens('select !bbox! from wadus'), true);
         assert.equal(SubstitutionTokens.hasTokens('select !wadus! from wadus'), false);

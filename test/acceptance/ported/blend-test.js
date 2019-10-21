@@ -5,10 +5,10 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var testClient = require('./support/test-client');
 
-describe('blend png renderer', function() {
+describe('blend png renderer', function () {
     var IMAGE_TOLERANCE_PER_MIL = 20;
 
-    function plainTorqueMapConfig(plainColor) {
+    function plainTorqueMapConfig (plainColor) {
         return {
             version: '1.2.0',
             layers: [
@@ -21,8 +21,8 @@ describe('blend png renderer', function() {
                 {
                     type: 'torque',
                     options: {
-                        sql: "SELECT * FROM populated_places_simple_reduced " +
-                            "where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)",
+                        sql: 'SELECT * FROM populated_places_simple_reduced ' +
+                            'where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)',
                         cartocss: [
                             'Map {',
                             '    buffer-size:0;',
@@ -74,17 +74,17 @@ describe('blend png renderer', function() {
         }
     ];
 
-    function blendPngFixture(zxy) {
+    function blendPngFixture (zxy) {
         return './test/fixtures/blend/blend-plain-torque-' + zxy.join('.') + '.png';
     }
 
-    testScenarios.forEach(function(testScenario) {
+    testScenarios.forEach(function (testScenario) {
         var tileRequest = testScenario.tile;
         var zxy = [tileRequest.z, tileRequest.x, tileRequest.y];
         it('tile all/' + zxy.join('/') + '.png', function (done) {
-            testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function(err, res) {
+            testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function (err, res) {
                 assert.imageBufferIsSimilarToFile(res.body, blendPngFixture(zxy), IMAGE_TOLERANCE_PER_MIL,
-                    function(err) {
+                    function (err) {
                         assert.ok(!err);
                         done();
                     }

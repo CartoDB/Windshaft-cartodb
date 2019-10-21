@@ -13,9 +13,8 @@ var MAX_EXTENT_MERCATOR_REF = [
     BboxFilter.LATITUDE_MAX_VALUE
 ];
 
-describe('Bounding box filter', function() {
-
-    describe('wrap longitude', function() {
+describe('Bounding box filter', function () {
+    describe('wrap longitude', function () {
         var longitudesScenarios = [
             [[0, 90], [0, 90]],
             [[-90, 0], [-90, 0]],
@@ -25,8 +24,8 @@ describe('Bounding box filter', function() {
             [[-180, 180], [-180, 180]]
         ];
 
-        longitudesScenarios.forEach(function(scenario) {
-            it(util.format('should adjust from %j to %j', scenario[0], scenario[1]), function() {
+        longitudesScenarios.forEach(function (scenario) {
+            it(util.format('should adjust from %j to %j', scenario[0], scenario[1]), function () {
                 var we = BboxFilter.adjustLongitudeRange(scenario[0]);
 
                 assert.equal(
@@ -45,32 +44,31 @@ describe('Bounding box filter', function() {
         });
     });
 
-    function createFilter(bbox) {
+    function createFilter (bbox) {
         return new BboxFilter({}, { bbox: bbox.join(',') });
     }
 
-    function createRef(bbox) {
+    function createRef (bbox) {
         return bbox;
-//        return mercator.forward([bbox[0], bbox[1]]).concat(mercator.forward([bbox[2], bbox[3]]));
+        //        return mercator.forward([bbox[0], bbox[1]]).concat(mercator.forward([bbox[2], bbox[3]]));
     }
 
-
-    it('happy case', function() {
+    it('happy case', function () {
         var bbox = [-90, -45, 90, 45];
         var bboxFilter = createFilter(bbox);
         assert.equal(bboxFilter.bboxes.length, 1);
         assert.deepEqual(bboxFilter.bboxes[0], createRef(bbox));
     });
 
-    describe('latitude', function() {
-        it('(hardcoded) clipping out of bounds', function() {
+    describe('latitude', function () {
+        it('(hardcoded) clipping out of bounds', function () {
             var bbox = [-180, -90, 180, 90];
             var bboxFilter = createFilter(bbox);
             assert.equal(bboxFilter.bboxes.length, 1);
             assert.deepEqual(bboxFilter.bboxes[0], MAX_EXTENT_MERCATOR_REF);
         });
 
-        it('clipping out of bounds', function() {
+        it('clipping out of bounds', function () {
             var bbox = [-180, -90, 180, 90];
             var bboxFilter = createFilter(bbox);
             assert.equal(bboxFilter.bboxes.length, 1);
@@ -81,8 +79,8 @@ describe('Bounding box filter', function() {
         });
     });
 
-    describe('longitude', function() {
-        it('generating multiple bbox for east out of bounds', function() {
+    describe('longitude', function () {
+        it('generating multiple bbox for east out of bounds', function () {
             var bbox = [90, -45, 360, 45];
             var bboxFilter = createFilter(bbox);
 
@@ -98,7 +96,7 @@ describe('Bounding box filter', function() {
             );
         });
 
-        it('generating multiple bbox for east out of bounds', function() {
+        it('generating multiple bbox for east out of bounds', function () {
             var bbox = [-270, -45, 0, 45];
             var bboxFilter = createFilter(bbox);
 
@@ -114,7 +112,7 @@ describe('Bounding box filter', function() {
             );
         });
 
-        it('generating multiple bbox', function() {
+        it('generating multiple bbox', function () {
             var bbox = [90, -45, 190, 45];
             var bboxFilter = createFilter(bbox);
 
@@ -129,10 +127,9 @@ describe('Bounding box filter', function() {
                 createRef([-180, -45, -170, 45])
             );
         });
-
     });
 
-    describe('out of bounds', function() {
+    describe('out of bounds', function () {
         it('wraps longitude', function () {
             var bbox = [-190, -45, 190, 45];
             var bboxFilter = createFilter(bbox);

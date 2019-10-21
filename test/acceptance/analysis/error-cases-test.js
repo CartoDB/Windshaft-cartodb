@@ -5,8 +5,8 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('analysis-layers error cases', function() {
-    function createMapConfig(layers, dataviews, analysis) {
+describe('analysis-layers error cases', function () {
+    function createMapConfig (layers, dataviews, analysis) {
         return {
             version: '1.5.0',
             layers: layers,
@@ -29,34 +29,34 @@ describe('analysis-layers error cases', function() {
         }
     };
 
-    it('should handle missing analysis nodes for layers', function(done) {
+    it('should handle missing analysis nodes for layers', function (done) {
         var mapConfig = createMapConfig(
             [
                 {
-                    "type": "cartodb",
-                    "options": {
-                        "source": {
-                            "id": "INVALID-SOURCE-ID"
+                    type: 'cartodb',
+                    options: {
+                        source: {
+                            id: 'INVALID-SOURCE-ID'
                         },
-                        "cartocss": '#polygons { polygon-fill: red; }',
-                        "cartocss_version": "2.3.0"
+                        cartocss: '#polygons { polygon-fill: red; }',
+                        cartocss_version: '2.3.0'
                     }
                 }
             ],
             {},
             [
                 {
-                    "id": "HEAD",
-                    "type": "buffer",
-                    "params": {
-                        "source": {
-                            "id": "2570e105-7b37-40d2-bdf4-1af889598745",
-                            "type": "source",
-                            "params": {
-                                "query": "select * from populated_places_simple_reduced"
+                    id: 'HEAD',
+                    type: 'buffer',
+                    params: {
+                        source: {
+                            id: '2570e105-7b37-40d2-bdf4-1af889598745',
+                            type: 'source',
+                            params: {
+                                query: 'select * from populated_places_simple_reduced'
                             }
                         },
-                        "radius": 50000
+                        radius: 50000
                     }
                 }
             ]
@@ -64,7 +64,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -74,24 +74,24 @@ describe('analysis-layers error cases', function() {
         });
     });
 
-    it('should handle missing analyses when layers point to nonexistent one', function(done) {
+    it('should handle missing analyses when layers point to nonexistent one', function (done) {
         var mapConfig = createMapConfig(
             [
                 {
-                    "type": "http",
-                    "options": {
-                        "urlTemplate": "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
-                        "subdomains": "abcd"
+                    type: 'http',
+                    options: {
+                        urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
+                        subdomains: 'abcd'
                     }
                 },
                 {
-                    "type": "cartodb",
-                    "options": {
-                        "source": {
-                            "id": "ID-FOR-NONEXISTENT-ANALYSIS"
+                    type: 'cartodb',
+                    options: {
+                        source: {
+                            id: 'ID-FOR-NONEXISTENT-ANALYSIS'
                         },
-                        "cartocss": '#polygons { polygon-fill: red; }',
-                        "cartocss_version": "2.3.0"
+                        cartocss: '#polygons { polygon-fill: red; }',
+                        cartocss_version: '2.3.0'
                     }
                 }
             ]
@@ -99,7 +99,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -112,22 +112,22 @@ describe('analysis-layers error cases', function() {
         });
     });
 
-    it('should handle missing analyses when dataviews point to nonexistent one', function(done) {
+    it('should handle missing analyses when dataviews point to nonexistent one', function (done) {
         var mapConfig = createMapConfig(
             [
                 {
-                    "type": "http",
-                    "options": {
-                        "urlTemplate": "http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png",
-                        "subdomains": "abcd"
+                    type: 'http',
+                    options: {
+                        urlTemplate: 'http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
+                        subdomains: 'abcd'
                     }
                 },
                 {
-                    "type": "cartodb",
-                    "options": {
-                        "sql": "select * from populated_places_simple_reduced",
-                        "cartocss": '#polygons { polygon-fill: red; }',
-                        "cartocss_version": "2.3.0"
+                    type: 'cartodb',
+                    options: {
+                        sql: 'select * from populated_places_simple_reduced',
+                        cartocss: '#polygons { polygon-fill: red; }',
+                        cartocss_version: '2.3.0'
                     }
                 }
             ],
@@ -146,7 +146,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -157,42 +157,42 @@ describe('analysis-layers error cases', function() {
         });
     });
 
-    it('camshaft: should return error missing analysis nodes for layers with some context', function(done) {
+    it('camshaft: should return error missing analysis nodes for layers with some context', function (done) {
         var mapConfig = createMapConfig(
             [
                 {
-                    "type": "cartodb",
-                    "options": {
-                        "source": {
-                            "id": "HEAD"
+                    type: 'cartodb',
+                    options: {
+                        source: {
+                            id: 'HEAD'
                         },
-                        "cartocss": '#polygons { polygon-fill: red; }',
-                        "cartocss_version": "2.3.0"
+                        cartocss: '#polygons { polygon-fill: red; }',
+                        cartocss_version: '2.3.0'
                     }
                 }
             ],
             {},
             [
                 {
-                    "id": "HEAD",
-                    "type": "buffer",
-                    "params": {
-                        "source": {
-                            "id": "HEAD",
-                            "type": "source",
-                            "params": {
-                                "query": "select * from populated_places_simple_reduced"
+                    id: 'HEAD',
+                    type: 'buffer',
+                    params: {
+                        source: {
+                            id: 'HEAD',
+                            type: 'source',
+                            params: {
+                                query: 'select * from populated_places_simple_reduced'
                             }
                         },
-                        "radius": 50000
+                        radius: 50000
                     }
                 }
             ]
         );
 
-        var testClient = new TestClient(mapConfig); //No apikey provided -> using default public apikey
+        var testClient = new TestClient(mapConfig); // No apikey provided -> using default public apikey
 
-        testClient.getLayergroup({ response: AUTH_ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: AUTH_ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -213,32 +213,31 @@ describe('analysis-layers error cases', function() {
         });
     });
 
-
-    it('camshaft: should return error: Missing required param "radius"; with context', function(done) {
+    it('camshaft: should return error: Missing required param "radius"; with context', function (done) {
         var mapConfig = createMapConfig(
             [
                 {
-                    "type": "cartodb",
-                    "options": {
-                        "source": {
-                            "id": "HEAD"
+                    type: 'cartodb',
+                    options: {
+                        source: {
+                            id: 'HEAD'
                         },
-                        "cartocss": '#polygons { polygon-fill: red; }',
-                        "cartocss_version": "2.3.0"
+                        cartocss: '#polygons { polygon-fill: red; }',
+                        cartocss_version: '2.3.0'
                     }
                 }
             ],
             {},
             [
                 {
-                    "id": "HEAD",
-                    "type": "buffer",
-                    "params": {
-                        "source": {
-                            "id": "HEAD2",
-                            "type": "source",
-                            "params": {
-                                "query": "select * from populated_places_simple_reduced"
+                    id: 'HEAD',
+                    type: 'buffer',
+                    params: {
+                        source: {
+                            id: 'HEAD2',
+                            type: 'source',
+                            params: {
+                                query: 'select * from populated_places_simple_reduced'
                             }
                         }
                     }
@@ -248,7 +247,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -266,32 +265,32 @@ describe('analysis-layers error cases', function() {
         });
     });
 
-    it('should return missing param error of outer node indicating the node_id and context', function(done) {
+    it('should return missing param error of outer node indicating the node_id and context', function (done) {
         var mapConfig = createMapConfig([{
-            "type": "cartodb",
-            "options": {
-                "source": {
-                    "id": "HEAD"
+            type: 'cartodb',
+            options: {
+                source: {
+                    id: 'HEAD'
                 },
-                "cartocss": '#polygons { polygon-fill: red; }',
-                "cartocss_version": "2.3.0"
+                cartocss: '#polygons { polygon-fill: red; }',
+                cartocss_version: '2.3.0'
             }
         }], {}, [{
-            "id": "HEAD",
-            "type": "buffer",
-            "params": {
-                "source": {
-                    "id": "HEAD2",
-                    "type": "buffer",
-                    "params": {
-                        "source": {
-                            "id": "HEAD3",
-                            "type": "source",
-                            "params": {
-                                "query": "select * from populated_places_simple_reduced"
+            id: 'HEAD',
+            type: 'buffer',
+            params: {
+                source: {
+                    id: 'HEAD2',
+                    type: 'buffer',
+                    params: {
+                        source: {
+                            id: 'HEAD3',
+                            type: 'source',
+                            params: {
+                                query: 'select * from populated_places_simple_reduced'
                             }
                         },
-                        "radius": 10
+                        radius: 10
                     }
                 }
             }
@@ -300,7 +299,7 @@ describe('analysis-layers error cases', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -319,41 +318,41 @@ describe('analysis-layers error cases', function() {
         });
     });
 
-    it('should return invalid param type error of inner node indicating the node_id and context', function(done) {
+    it('should return invalid param type error of inner node indicating the node_id and context', function (done) {
         var mapConfig = createMapConfig([{
-            "type": "cartodb",
-            "options": {
-                "source": {
-                    "id": "HEAD"
+            type: 'cartodb',
+            options: {
+                source: {
+                    id: 'HEAD'
                 },
-                "cartocss": '#polygons { polygon-fill: red; }',
-                "cartocss_version": "2.3.0"
+                cartocss: '#polygons { polygon-fill: red; }',
+                cartocss_version: '2.3.0'
             }
         }], {}, [{
-            "id": "HEAD",
-            "type": "buffer",
-            "params": {
-                "source": {
-                    "id": "HEAD2",
-                    "type": "buffer",
-                    "params": {
-                        "source": {
-                            "id": "HEAD3",
-                            "type": "source",
-                            "params": {
-                                "query": "select * from populated_places_simple_reduced"
+            id: 'HEAD',
+            type: 'buffer',
+            params: {
+                source: {
+                    id: 'HEAD2',
+                    type: 'buffer',
+                    params: {
+                        source: {
+                            id: 'HEAD3',
+                            type: 'source',
+                            params: {
+                                query: 'select * from populated_places_simple_reduced'
                             }
                         },
-                        "radius": 'invalid_radius'
+                        radius: 'invalid_radius'
                     }
                 },
-                "radius": 10
+                radius: 10
             }
         }]);
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -375,49 +374,49 @@ describe('analysis-layers error cases', function() {
         });
     });
 
-    it('should return "function does not exist" indicating the node_id and context', function(done) {
+    it('should return "function does not exist" indicating the node_id and context', function (done) {
         var mapConfig = createMapConfig([{
-            "type": "cartodb",
-            "options": {
-                "source": {
-                    "id": "HEAD"
+            type: 'cartodb',
+            options: {
+                source: {
+                    id: 'HEAD'
                 },
-                "cartocss": '#polygons { polygon-fill: red; }',
-                "cartocss_version": "2.3.0"
+                cartocss: '#polygons { polygon-fill: red; }',
+                cartocss_version: '2.3.0'
             }
         }], {}, [{
-            "id": "HEAD",
-            "type": "buffer",
-            "params": {
-                "source": {
-                    "id": "HEAD2",
-                    "type": "buffer",
-                    "params": {
-                        "source": {
-                            "id": "HEAD3",
-                            "type": 'deprecated-sql-function',
-                            "params": {
-                                "id": "HEAD4",
-                                "function_name": 'DEP_EXT_does_not_exist_fn',
-                                "primary_source": {
-                                    "type": 'source',
-                                    "params": {
-                                        "query": "select * from populated_places_simple_reduced"
+            id: 'HEAD',
+            type: 'buffer',
+            params: {
+                source: {
+                    id: 'HEAD2',
+                    type: 'buffer',
+                    params: {
+                        source: {
+                            id: 'HEAD3',
+                            type: 'deprecated-sql-function',
+                            params: {
+                                id: 'HEAD4',
+                                function_name: 'DEP_EXT_does_not_exist_fn',
+                                primary_source: {
+                                    type: 'source',
+                                    params: {
+                                        query: 'select * from populated_places_simple_reduced'
                                     }
                                 },
-                                "function_args": ['wadus']
+                                function_args: ['wadus']
                             }
                         },
-                        "radius": 10
+                        radius: 10
                     }
                 },
-                "radius": 10
+                radius: 10
             }
         }]);
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
             assert.equal(layergroupResult.errors.length, 1);
@@ -438,7 +437,4 @@ describe('analysis-layers error cases', function() {
             testClient.drain(done);
         });
     });
-
-
-
 });

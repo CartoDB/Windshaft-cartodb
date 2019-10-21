@@ -5,9 +5,8 @@ require('../support/test-helper');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 
-describe('special numeric values', function() {
-
-    afterEach(function(done) {
+describe('special numeric values', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -17,7 +16,7 @@ describe('special numeric values', function() {
 
     var ATTRIBUTES_LAYER = 1;
 
-    function createMapConfig(sql, id, columns) {
+    function createMapConfig (sql, id, columns) {
         return {
             version: '1.6.0',
             layers: [
@@ -41,7 +40,7 @@ describe('special numeric values', function() {
                         cartocss_version: '2.0.1'
                     }
                 }
-          ]
+            ]
         };
     }
 

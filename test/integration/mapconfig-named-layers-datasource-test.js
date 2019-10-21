@@ -57,10 +57,10 @@ var template = {
     auth: {
         method: 'open'
     },
-    "placeholders": {
-        "color": {
-            "type": "css_color",
-            "default": "#cc3300"
+    placeholders: {
+        color: {
+            type: 'css_color',
+            default: '#cc3300'
         }
     },
     layergroup: {
@@ -78,14 +78,14 @@ var multipleLayersTemplate = {
         method: 'token',
         valid_tokens: ['valid1', 'valid2']
     },
-    "placeholders": {
-        "polygon_color": {
-            "type": "css_color",
-            "default": "green"
+    placeholders: {
+        polygon_color: {
+            type: 'css_color',
+            default: 'green'
         },
-        "color": {
-            "type": "css_color",
-            "default": "red"
+        color: {
+            type: 'css_color',
+            default: 'red'
         }
     },
     layergroup: {
@@ -96,9 +96,9 @@ var multipleLayersTemplate = {
     }
 };
 
-describe('named_layers datasources', function() {
-    beforeEach(function(done) {
-        templateMaps.addTemplate(username, template, function(err) {
+describe('named_layers datasources', function () {
+    beforeEach(function (done) {
+        templateMaps.addTemplate(username, template, function (err) {
             if (err) {
                 return done(err);
             }
@@ -106,8 +106,8 @@ describe('named_layers datasources', function() {
         });
     });
 
-    afterEach(function(done) {
-        templateMaps.delTemplate(username, templateName, function(err) {
+    afterEach(function (done) {
+        templateMaps.delTemplate(username, templateName, function (err) {
             if (err) {
                 return done(err);
             }
@@ -115,7 +115,7 @@ describe('named_layers datasources', function() {
         });
     });
 
-    function makeNamedMapLayerConfig(layers) {
+    function makeNamedMapLayerConfig (layers) {
         return {
             version: '1.3.0',
             layers: layers
@@ -141,7 +141,7 @@ describe('named_layers datasources', function() {
         {
             desc: 'without datasource for non-named layers',
             config: makeNamedMapLayerConfig([wadusLayer]),
-            test: function(err, layers, datasource, done) {
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
                 assert.equal(layers.length, 1);
 
@@ -156,7 +156,7 @@ describe('named_layers datasources', function() {
         {
             desc: 'with datasource for the named layer but not for the normal',
             config: makeNamedMapLayerConfig([wadusLayer, simpleNamedLayer]),
-            test: function(err, layers, datasource, done) {
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
                 assert.equal(layers.length, 2);
 
@@ -177,7 +177,7 @@ describe('named_layers datasources', function() {
         {
             desc: 'with datasource for the multiple layers in the named but not for the normal',
             config: makeNamedMapLayerConfig([wadusLayer, multipleLayersNamedLayer]),
-            test: function(err, layers, datasource, done) {
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
                 assert.equal(layers.length, 3);
 
@@ -204,7 +204,7 @@ describe('named_layers datasources', function() {
         {
             desc: 'all with datasource because all are named',
             config: makeNamedMapLayerConfig([multipleLayersNamedLayer, simpleNamedLayer]),
-            test: function(err, layers, datasource, done) {
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
                 assert.equal(layers.length, 3);
 
@@ -240,8 +240,7 @@ describe('named_layers datasources', function() {
                 wadusLayer,
                 multipleLayersNamedLayer
             ]),
-            test: function(err, layers, datasource, done) {
-
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
                 assert.equal(layers.length, 8);
 
@@ -294,12 +293,12 @@ describe('named_layers datasources', function() {
         }
     ];
 
-    testScenarios.forEach(function(testScenario) {
-        it('should return a list of layers ' + testScenario.desc, function(done) {
+    testScenarios.forEach(function (testScenario) {
+        it('should return a list of layers ' + testScenario.desc, function (done) {
             var params = {};
             var context = {};
             mapConfigNamedLayersAdapter.getMapConfig(username, testScenario.config, params, context,
-                function(err, mapConfig) {
+                function (err, mapConfig) {
                     assert.ifError(err);
                     testScenario.test(err, mapConfig.layers, context.datasource, done);
                 }

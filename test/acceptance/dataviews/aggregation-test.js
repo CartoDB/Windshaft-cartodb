@@ -4,9 +4,8 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('aggregations happy cases', function() {
-
-    afterEach(function(done) {
+describe('aggregations happy cases', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -14,7 +13,7 @@ describe('aggregations happy cases', function() {
         }
     });
 
-    function aggregationOperationMapConfig(operation, query, column, aggregationColumn) {
+    function aggregationOperationMapConfig (operation, query, column, aggregationColumn) {
         column = column || 'adm0name';
         aggregationColumn = aggregationColumn || 'pop_max';
         query = query || 'select * from populated_places_simple_reduced';
@@ -48,9 +47,8 @@ describe('aggregations happy cases', function() {
 
     var operations = ['count', 'sum', 'avg', 'max', 'min'];
 
-    operations.forEach(function(operation) {
-        it('should be able to use "' + operation + '" as aggregation operation', function(done) {
-
+    operations.forEach(function (operation) {
+        it('should be able to use "' + operation + '" as aggregation operation', function (done) {
             this.testClient = new TestClient(aggregationOperationMapConfig(operation));
             this.testClient.getDataview('adm0name', { own_filter: 0 }, function (err, aggregation) {
                 assert.ok(!err, err);
@@ -100,7 +98,7 @@ describe('aggregations happy cases', function() {
         });
     });
 
-    var operations_and_values = {'count': 9, 'sum': 45, 'avg': 5, 'max': 9, 'min': 1};
+    var operations_and_values = { count: 9, sum: 45, avg: 5, max: 9, min: 1 };
 
     var query_other = [
         'select generate_series(1,3) as val, \'other_a\' as cat, NULL as the_geom_webmercator',
@@ -128,7 +126,7 @@ describe('aggregations happy cases', function() {
                 assert.equal(aggregation.count, 24);
                 assert.equal(aggregation.nulls, 0);
 
-                var aggregated_categories = aggregation.categories.filter( function(category) {
+                var aggregated_categories = aggregation.categories.filter(function (category) {
                     return category.agg === true;
                 });
                 assert.equal(aggregated_categories.length, 1);
@@ -140,11 +138,11 @@ describe('aggregations happy cases', function() {
     });
 
     var widgetSearchExpects = {
-        'count': [ { category: 'other_a', value: 3 } ],
-        'sum': [ { category: 'other_a', value: 6 } ],
-        'avg': [ { category: 'other_a', value: 2 } ],
-        'max': [ { category: 'other_a', value: 3 } ],
-        'min': [ { category: 'other_a', value: 1 } ]
+        count: [{ category: 'other_a', value: 3 }],
+        sum: [{ category: 'other_a', value: 6 }],
+        avg: [{ category: 'other_a', value: 2 }],
+        max: [{ category: 'other_a', value: 3 }],
+        min: [{ category: 'other_a', value: 1 }]
     };
 
     Object.keys(operations_and_values).forEach(function (operation) {
@@ -169,9 +167,8 @@ describe('aggregations happy cases', function() {
     });
 });
 
-describe('aggregation-dataview: special float values', function() {
-
-    afterEach(function(done) {
+describe('aggregation-dataview: special float values', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -179,7 +176,7 @@ describe('aggregation-dataview: special float values', function() {
         }
     });
 
-    function createMapConfig(layers, dataviews, analysis) {
+    function createMapConfig (layers, dataviews, analysis) {
         return {
             version: '1.5.0',
             layers: layers,
@@ -191,13 +188,13 @@ describe('aggregation-dataview: special float values', function() {
     var mapConfig = createMapConfig(
         [
             {
-                "type": "cartodb",
-                "options": {
-                    "source": {
-                        "id": "a0"
+                type: 'cartodb',
+                options: {
+                    source: {
+                        id: 'a0'
                     },
-                    "cartocss": "#points { marker-width: 10; marker-fill: red; }",
-                    "cartocss_version": "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -227,10 +224,10 @@ describe('aggregation-dataview: special float values', function() {
         },
         [
             {
-                "id": "a0",
-                "type": "source",
-                "params": {
-                    "query": [
+                id: 'a0',
+                type: 'source',
+                params: {
+                    query: [
                         'SELECT',
                         '  null::geometry the_geom_webmercator,',
                         '  CASE',
@@ -247,10 +244,10 @@ describe('aggregation-dataview: special float values', function() {
                     ].join('\n')
                 }
             }, {
-                "id": "a1",
-                "type": "source",
-                "params": {
-                    "query": [
+                id: 'a1',
+                type: 'source',
+                params: {
+                    query: [
                         'SELECT',
                         '  null::geometry the_geom_webmercator,',
                         '  CASE',
@@ -288,9 +285,9 @@ describe('aggregation-dataview: special float values', function() {
 
     var filters = [{ own_filter: 0 }, {}];
     filters.forEach(function (filter) {
-        it('should handle special float values using filter: ' + JSON.stringify(filter), function(done) {
+        it('should handle special float values using filter: ' + JSON.stringify(filter), function (done) {
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('val_aggregation', filter, function(err, dataview) {
+            this.testClient.getDataview('val_aggregation', filter, function (err, dataview) {
                 assert.ifError(err);
                 assert.ok(dataview.infinities === (250 + 250));
                 assert.ok(dataview.nans === 250);
@@ -303,9 +300,9 @@ describe('aggregation-dataview: special float values', function() {
             });
         });
 
-        it('should handle special numeric values using filter: ' + JSON.stringify(filter), function(done) {
+        it('should handle special numeric values using filter: ' + JSON.stringify(filter), function (done) {
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('sum_aggregation_numeric', filter, function(err, dataview) {
+            this.testClient.getDataview('sum_aggregation_numeric', filter, function (err, dataview) {
                 assert.ifError(err);
                 assert.ok(dataview.nans === 333);
                 assert.ok(dataview.categories.length === 2);
@@ -323,13 +320,13 @@ describe('aggregation dataview tuned by categories query param', function () {
         version: '1.5.0',
         layers: [
             {
-                type: "cartodb",
+                type: 'cartodb',
                 options: {
                     source: {
-                        "id": "a0"
+                        id: 'a0'
                     },
-                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
-                    cartocss_version: "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -348,8 +345,8 @@ describe('aggregation dataview tuned by categories query param', function () {
         },
         analyses: [
             {
-                id: "a0",
-                type: "source",
+                id: 'a0',
+                type: 'source',
                 params: {
                     query: `
                         SELECT
@@ -419,20 +416,18 @@ describe('aggregation dataview tuned by categories query param', function () {
     });
 });
 
-
-
 describe('Count aggregation', function () {
     const mapConfig = {
         version: '1.5.0',
         layers: [
             {
-                type: "cartodb",
+                type: 'cartodb',
                 options: {
                     source: {
-                        "id": "a0"
+                        id: 'a0'
                     },
-                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
-                    cartocss_version: "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -450,8 +445,8 @@ describe('Count aggregation', function () {
         },
         analyses: [
             {
-                id: "a0",
-                type: "source",
+                id: 'a0',
+                type: 'source',
                 params: {
                     query: `
                         SELECT
@@ -475,7 +470,7 @@ describe('Count aggregation', function () {
         ]
     };
 
-    it(`should handle null values correctly when aggregationColumn isn't provided`, function (done) {
+    it('should handle null values correctly when aggregationColumn isn\'t provided', function (done) {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('categories', { own_filter: 0, categories: 0 }, (err, dataview) => {
             assert.ifError(err);
@@ -484,7 +479,7 @@ describe('Count aggregation', function () {
         });
     });
 
-    it(`should handle null values correctly when aggregationColumn is provided`, function (done) {
+    it('should handle null values correctly when aggregationColumn is provided', function (done) {
         mapConfig.dataviews.categories.options.aggregationColumn = 'val';
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('categories', { own_filter: 0, categories: 0 }, (err, dataview) => {

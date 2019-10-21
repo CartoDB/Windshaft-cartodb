@@ -17,13 +17,13 @@ var serverOptions = require('../../lib/server-options');
 serverOptions.analysis.batch.inlineExecution = true;
 
 const MAPNIK_SUPPORTED_FORMATS = {
-    'png': true,
-    'png32': true,
+    png: true,
+    png32: true,
     'grid.json': true,
-    'mvt': true
+    mvt: true
 };
 
-function TestClient(config, apiKey) {
+function TestClient (config, apiKey) {
     this.mapConfig = isMapConfig(config) ? config : null;
     this.template = isTemplate(config) ? config : null;
     this.apiKey = apiKey;
@@ -33,11 +33,11 @@ function TestClient(config, apiKey) {
 
 module.exports = TestClient;
 
-function isMapConfig(config) {
+function isMapConfig (config) {
     return config && config.layers;
 }
 
-function isTemplate(config) {
+function isTemplate (config) {
     return config && config.layergroup;
 }
 
@@ -116,7 +116,7 @@ module.exports.SQL = {
     ONE_POINT: 'select 1 as cartodb_id, \'SRID=3857;POINT(0 0)\'::geometry the_geom_webmercator'
 };
 
-function resErr2errRes(callback) {
+function resErr2errRes (callback) {
     return (res, err) => {
         if (err) {
             return callback(err);
@@ -130,10 +130,10 @@ function layergroupidTemplate (layergroupId, params) {
 
     // {user}@{token}:{cache_buster}
     // {token}:{cache_buster}
-    return `${signer ? signer + '@' : ''}${token}:${params.cacheBuster ? Date.now() : cacheBuster }`;
+    return `${signer ? signer + '@' : ''}${token}:${params.cacheBuster ? Date.now() : cacheBuster}`;
 }
 
-TestClient.prototype.getWidget = function(widgetName, params, callback) {
+TestClient.prototype.getWidget = function (widgetName, params, callback) {
     var self = this;
 
     if (!callback) {
@@ -147,7 +147,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
     }
 
     step(
-        function createLayergroup() {
+        function createLayergroup () {
             var next = this;
             assert.response(self.server,
                 {
@@ -165,14 +165,14 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
                     var parsedBody = JSON.parse(res.body);
 
                     var expectedWidgetURLS = {
-                        http: "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
+                        http: '/api/v1/map/' + parsedBody.layergroupid + '/0/widget/' + widgetName
                     };
                     assert.ok(parsedBody.metadata.layers[0].widgets[widgetName]);
                     assert.ok(
@@ -180,7 +180,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                     );
 
                     var expectedDataviewsURLS = {
-                        http: "/api/v1/map/" + parsedBody.layergroupid + "/dataview/" + widgetName
+                        http: '/api/v1/map/' + parsedBody.layergroupid + '/dataview/' + widgetName
                     };
                     assert.ok(parsedBody.metadata.dataviews[widgetName]);
                     assert.ok(
@@ -191,7 +191,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                 }
             );
         },
-        function getWidgetResult(err, layergroupId) {
+        function getWidgetResult (err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
@@ -201,7 +201,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
             var urlParams = {
                 own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
             };
-            ['bbox', 'bins', 'start', 'end'].forEach(function(extraParam) {
+            ['bbox', 'bins', 'start', 'end'].forEach(function (extraParam) {
                 if (params.hasOwnProperty(extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }
@@ -223,7 +223,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -232,7 +232,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
                 }
             );
         },
-        function finish(err, res) {
+        function finish (err, res) {
             var widget;
             if (!err && res.body) {
                 widget = JSON.parse(res.body);
@@ -242,7 +242,7 @@ TestClient.prototype.getWidget = function(widgetName, params, callback) {
     );
 };
 
-TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, callback) {
+TestClient.prototype.widgetSearch = function (widgetName, userQuery, params, callback) {
     var self = this;
 
     if (!callback) {
@@ -256,7 +256,7 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
     }
 
     step(
-        function createLayergroup() {
+        function createLayergroup () {
             var next = this;
             assert.response(self.server,
                 {
@@ -274,14 +274,14 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
                     var parsedBody = JSON.parse(res.body);
 
                     var expectedWidgetURLS = {
-                        http: "/api/v1/map/" + parsedBody.layergroupid + "/0/widget/" + widgetName
+                        http: '/api/v1/map/' + parsedBody.layergroupid + '/0/widget/' + widgetName
                     };
                     assert.ok(parsedBody.metadata.layers[0].widgets[widgetName]);
                     assert.ok(
@@ -289,7 +289,7 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
                     );
 
                     var expectedDataviewsURLS = {
-                        http: "/api/v1/map/" + parsedBody.layergroupid + "/dataview/" + widgetName
+                        http: '/api/v1/map/' + parsedBody.layergroupid + '/dataview/' + widgetName
                     };
                     assert.ok(parsedBody.metadata.dataviews[widgetName]);
                     assert.ok(
@@ -300,7 +300,7 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
                 }
             );
         },
-        function getWidgetSearchResult(err, layergroupId) {
+        function getWidgetSearchResult (err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
@@ -330,7 +330,7 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -339,7 +339,7 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
                 }
             );
         },
-        function finish(err, res) {
+        function finish (err, res) {
             var searchResult;
             if (!err && res.body) {
                 searchResult = JSON.parse(res.body);
@@ -349,7 +349,7 @@ TestClient.prototype.widgetSearch = function(widgetName, userQuery, params, call
     );
 };
 
-TestClient.prototype.getDataview = function(dataviewName, params, callback) {
+TestClient.prototype.getDataview = function (dataviewName, params, callback) {
     var self = this;
 
     if (!callback) {
@@ -417,7 +417,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 }
             );
         },
-        function createLayergroup(err, templateId) {
+        function createLayergroup (err, templateId) {
             assert.ifError(err);
 
             var next = this;
@@ -434,9 +434,9 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 queryParams.filters = JSON.stringify(params.filters);
             }
 
-            var path  = templateId ?
-                urlNamed + '/' + templateId  + '?' + qs.stringify(queryParams) :
-                url;
+            var path = templateId
+                ? urlNamed + '/' + templateId + '?' + qs.stringify(queryParams)
+                : url;
 
             assert.response(self.server,
                 {
@@ -454,13 +454,13 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
                     var parsedBody = JSON.parse(res.body);
                     var expectedDataviewsURLS = {
-                        http: "/api/v1/map/" + parsedBody.layergroupid + "/dataview/" + dataviewName
+                        http: '/api/v1/map/' + parsedBody.layergroupid + '/dataview/' + dataviewName
                     };
                     assert.ok(parsedBody.metadata.dataviews[dataviewName]);
                     assert.ok(
@@ -470,7 +470,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 }
             );
         },
-        function getDataviewResult(err, layergroupId) {
+        function getDataviewResult (err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
@@ -485,7 +485,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 urlParams.own_filter = params.own_filter;
             }
 
-            ['bbox', 'bins', 'start', 'end', 'aggregation', 'offset', 'categories'].forEach(function(extraParam) {
+            ['bbox', 'bins', 'start', 'end', 'aggregation', 'offset', 'categories'].forEach(function (extraParam) {
                 if (params.hasOwnProperty(extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }
@@ -505,7 +505,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                     }
                 },
                 expectedResponse,
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -513,7 +513,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
                 }
             );
         },
-        function finish(err, dataview, headers = null) {
+        function finish (err, dataview, headers = null) {
             if (err) {
                 return callback(err);
             }
@@ -522,7 +522,7 @@ TestClient.prototype.getDataview = function(dataviewName, params, callback) {
     );
 };
 
-TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params, callback) {
+TestClient.prototype.getFeatureAttributes = function (featureId, layerId, params, callback) {
     var self = this;
 
     if (!callback) {
@@ -551,7 +551,7 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
     };
 
     step(
-        function createLayergroup() {
+        function createLayergroup () {
             var next = this;
             assert.response(self.server,
                 {
@@ -569,7 +569,7 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -585,7 +585,7 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
                 }
             );
         },
-        function getFeatureAttributes(err, layergroupId) {
+        function getFeatureAttributes (err, layergroupId) {
             assert.ifError(err);
 
             var next = this;
@@ -601,7 +601,7 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
                     }
                 },
                 expectedResponse,
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -610,7 +610,7 @@ TestClient.prototype.getFeatureAttributes = function(featureId, layerId, params,
                 }
             );
         },
-        function finish(err, attributes) {
+        function finish (err, attributes) {
             if (err) {
                 return callback(err);
             }
@@ -651,7 +651,7 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
     };
 
     step(
-        function createLayergroup() {
+        function createLayergroup () {
             var next = this;
             assert.response(self.server,
                 {
@@ -669,7 +669,7 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -706,7 +706,7 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
                     }
                 },
                 expectedResponse,
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -715,7 +715,7 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
                 }
             );
         },
-        function finish(err, attributes) {
+        function finish (err, attributes) {
             if (err) {
                 return callback(err);
             }
@@ -725,7 +725,7 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
     );
 };
 
-TestClient.prototype.getTile = function(z, x, y, params, callback) {
+TestClient.prototype.getTile = function (z, x, y, params, callback) {
     var self = this;
 
     if (!callback) {
@@ -737,7 +737,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
     var urlNamed = url + '/named';
 
     if (this.apiKey) {
-        url += '?' + qs.stringify({api_key: this.apiKey});
+        url += '?' + qs.stringify({ api_key: this.apiKey });
     }
 
     var layergroupId;
@@ -784,7 +784,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             );
         },
-        function createLayergroup(err, templateId) {
+        function createLayergroup (err, templateId) {
             var next = this;
 
             if (layergroupId) {
@@ -803,9 +803,9 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 queryParams.aggregation = params.aggregation;
             }
 
-            var path  = templateId ?
-                urlNamed + '/' + templateId  + '?' + qs.stringify(queryParams) :
-                url;
+            var path = templateId
+                ? urlNamed + '/' + templateId + '?' + qs.stringify(queryParams)
+                : url;
 
             assert.response(self.server,
                 {
@@ -823,7 +823,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -831,7 +831,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             );
         },
-        function getTileResult(err, layergroupId) {
+        function getTileResult (err, layergroupId) {
             // jshint maxcomplexity:13
             assert.ifError(err);
 
@@ -853,7 +853,7 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 throw new Error(`Missing layer filter while fetching ${format} tile, review params argument`);
             }
 
-            url += [z,x,y].join('/');
+            url += [z, x, y].join('/');
             url += '.' + format;
 
             const queryParams = {};
@@ -896,7 +896,6 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
                 }
             }
 
-
             var isGeojson = format.match(/geojson$/);
 
             if (isGeojson) {
@@ -917,26 +916,26 @@ TestClient.prototype.getTile = function(z, x, y, params, callback) {
 
             assert.response(self.server, request, expectedResponse, resErr2errRes(this));
         },
-        function finish(err, res) {
+        function finish (err, res) {
             if (err) {
                 return callback(err);
             }
 
             var body;
             switch (res.headers['content-type']) {
-                case 'image/png':
-                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                    break;
-                case 'application/x-protobuf':
-                    body = new mapnik.VectorTile(z, x, y);
-                    body.setDataSync(new Buffer(res.body, 'binary'));
-                    break;
-                case 'application/json; charset=utf-8':
-                    body = JSON.parse(res.body);
-                    break;
-                default:
-                    body = res.body;
-                    break;
+            case 'image/png':
+                body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                break;
+            case 'application/x-protobuf':
+                body = new mapnik.VectorTile(z, x, y);
+                body.setDataSync(new Buffer(res.body, 'binary'));
+                break;
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
             }
 
             return callback(err, res, body);
@@ -993,7 +992,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
             data: JSON.stringify(self.mapConfig)
         },
         params.response,
-        function(res, err) {
+        function (res, err) {
             var parsedBody;
             // If there is a response, we are still interested in catching the created keys
             // to be able to delete them on the .drain() method.
@@ -1016,16 +1015,16 @@ TestClient.prototype.getLayergroup = function (params, callback) {
 TestClient.prototype.getStaticCenter = function (params, callback) {
     var self = this;
 
-    let { layergroupid, zoom, lat, lng, width, height, format } = params;
+    const { layergroupid, zoom, lat, lng, width, height, format } = params;
 
-    var url = `/api/v1/map/`;
+    var url = '/api/v1/map/';
 
     if (this.apiKey) {
-        url += '?' + qs.stringify({api_key: this.apiKey});
+        url += '?' + qs.stringify({ api_key: this.apiKey });
     }
 
     step(
-        function createLayergroup() {
+        function createLayergroup () {
             var next = this;
 
             if (layergroupid) {
@@ -1033,7 +1032,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
             }
 
             var data = self.mapConfig;
-            var path  = url;
+            var path = url;
 
             assert.response(self.server,
                 {
@@ -1051,7 +1050,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -1059,7 +1058,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 }
             );
         },
-        function getStaticResult(err, layergroupId) {
+        function getStaticResult (err, layergroupId) {
             assert.ifError(err);
 
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
@@ -1070,7 +1069,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
             url = `/api/v1/map/static/center/${layergroupid}/${zoom}/${lat}/${lng}/${width}/${height}.${format}`;
 
             if (self.apiKey) {
-                url += '?' + qs.stringify({api_key: self.apiKey});
+                url += '?' + qs.stringify({ api_key: self.apiKey });
             }
 
             var request = {
@@ -1091,22 +1090,22 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
 
             assert.response(self.server, request, expectedResponse, resErr2errRes(this));
         },
-        function(err, res) {
+        function (err, res) {
             if (err) {
                 return callback(err);
             }
 
             var body;
             switch (res.headers['content-type']) {
-                case 'image/png':
-                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                    break;
-                case 'application/json; charset=utf-8':
-                    body = JSON.parse(res.body);
-                    break;
-                default:
-                    body = res.body;
-                    break;
+            case 'image/png':
+                body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                break;
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
             }
 
             return callback(err, res, body);
@@ -1114,18 +1113,18 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
     );
 };
 
-TestClient.prototype.getNodeStatus = function(nodeName, callback) {
+TestClient.prototype.getNodeStatus = function (nodeName, callback) {
     var self = this;
 
     var url = '/api/v1/map';
 
     if (this.apiKey) {
-        url += '?' + qs.stringify({api_key: this.apiKey});
+        url += '?' + qs.stringify({ api_key: this.apiKey });
     }
 
     var nodes = {};
     step(
-        function createLayergroup() {
+        function createLayergroup () {
             var next = this;
             assert.response(self.server,
                 {
@@ -1143,14 +1142,14 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
                     var parsedBody = JSON.parse(res.body);
 
-                    nodes = parsedBody.metadata.analyses.reduce(function(nodes, analysis) {
-                        return Object.keys(analysis.nodes).reduce(function(nodes, nodeName) {
+                    nodes = parsedBody.metadata.analyses.reduce(function (nodes, analysis) {
+                        return Object.keys(analysis.nodes).reduce(function (nodes, nodeName) {
                             var node = analysis.nodes[nodeName];
                             nodes[nodeName] = node.url.http;
                             return nodes;
@@ -1161,7 +1160,7 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
                 }
             );
         },
-        function getNodeStatusResult(err, layergroupId) {
+        function getNodeStatusResult (err, layergroupId) {
             assert.ifError(err);
 
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
@@ -1170,7 +1169,7 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
             url = urlParser.parse(nodes[nodeName]).path;
 
             if (self.apiKey) {
-                url += '?' + qs.stringify({api_key: self.apiKey});
+                url += '?' + qs.stringify({ api_key: self.apiKey });
             }
 
             var request = {
@@ -1190,7 +1189,7 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
 
             assert.response(self.server, request, expectedResponse, resErr2errRes(this));
         },
-        function finish(err, res) {
+        function finish (err, res) {
             if (err) {
                 return callback(err);
             }
@@ -1199,7 +1198,7 @@ TestClient.prototype.getNodeStatus = function(nodeName, callback) {
     );
 };
 
-TestClient.prototype.getAttributes  = function(params, callback) {
+TestClient.prototype.getAttributes = function (params, callback) {
     var self = this;
 
     if (!Number.isFinite(params.featureId)) {
@@ -1223,7 +1222,7 @@ TestClient.prototype.getAttributes  = function(params, callback) {
     }
 
     step(
-        function createLayergroup() {
+        function createLayergroup () {
             var next = this;
 
             if (layergroupid) {
@@ -1246,7 +1245,7 @@ TestClient.prototype.getAttributes  = function(params, callback) {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return next(err);
                     }
@@ -1256,7 +1255,7 @@ TestClient.prototype.getAttributes  = function(params, callback) {
                 }
             );
         },
-        function getAttributes(err, layergroupId) {
+        function getAttributes (err, layergroupId) {
             assert.ifError(err);
 
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
@@ -1265,7 +1264,7 @@ TestClient.prototype.getAttributes  = function(params, callback) {
             url = `/api/v1/map/${layergroupId}/${params.layer}/attributes/${params.featureId}`;
 
             if (self.apiKey) {
-                url += '?' + qs.stringify({api_key: self.apiKey});
+                url += '?' + qs.stringify({ api_key: self.apiKey });
             }
 
             var request = {
@@ -1285,7 +1284,7 @@ TestClient.prototype.getAttributes  = function(params, callback) {
 
             assert.response(self.server, request, expectedResponse, resErr2errRes(this));
         },
-        function finish(err, res) {
+        function finish (err, res) {
             if (err) {
                 return callback(err);
             }
@@ -1295,11 +1294,11 @@ TestClient.prototype.getAttributes  = function(params, callback) {
     );
 };
 
-TestClient.prototype.drain = function(callback) {
+TestClient.prototype.drain = function (callback) {
     helper.deleteRedisKeys(this.keysToDelete, callback);
 };
 
-module.exports.getStaticMap = function getStaticMap(templateName, params, callback) {
+module.exports.getStaticMap = function getStaticMap (templateName, params, callback) {
     var self = this;
 
     self.server = new CartodbWindshaft(serverOptions);
@@ -1335,7 +1334,7 @@ module.exports.getStaticMap = function getStaticMap(templateName, params, callba
     var server = new CartodbWindshaft(serverOptions);
 
     assert.response(server, requestOptions, expectedResponse, function (res, err) {
-        helper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, function() {
+        helper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, function () {
             return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
         });
     });
@@ -1407,11 +1406,11 @@ TestClient.prototype.getAnalysesCatalog = function (params, callback) {
     var url = '/api/v1/map/analyses/catalog';
 
     if (this.apiKey) {
-        url += '?' + qs.stringify({api_key: this.apiKey});
+        url += '?' + qs.stringify({ api_key: this.apiKey });
     }
 
     if (params.jsonp) {
-        url += '&' + qs.stringify({callback: params.jsonp});
+        url += '&' + qs.stringify({ callback: params.jsonp });
     }
 
     assert.response(this.server,
@@ -1426,12 +1425,12 @@ TestClient.prototype.getAnalysesCatalog = function (params, callback) {
         {
             status: params.status || 200,
             headers: {
-                'Content-Type': params.jsonp ?
-                    'text/javascript; charset=utf-8' :
-                    'application/json; charset=utf-8'
+                'Content-Type': params.jsonp
+                    ? 'text/javascript; charset=utf-8'
+                    : 'application/json; charset=utf-8'
             }
         },
-        function(res, err) {
+        function (res, err) {
             if (err) {
                 return callback(err);
             }
@@ -1443,7 +1442,7 @@ TestClient.prototype.getAnalysesCatalog = function (params, callback) {
     );
 };
 
-TestClient.prototype.getNamedMapList = function(params, callback) {
+TestClient.prototype.getNamedMapList = function (params, callback) {
     const request = {
         url: `/api/v1/map/named?${qs.stringify({ api_key: this.apiKey })}`,
         method: 'GET',
@@ -1473,8 +1472,8 @@ TestClient.prototype.getNamedMapList = function(params, callback) {
     });
 };
 
-TestClient.prototype.getNamedTile =  function (name, z, x, y, format, options, callback) {
-    const { params }  = options;
+TestClient.prototype.getNamedTile = function (name, z, x, y, format, options, callback) {
+    const { params } = options;
 
     if (!this.apiKey) {
         return callback(new Error('apiKey param is mandatory to create a new template'));
@@ -1504,7 +1503,7 @@ TestClient.prototype.getNamedTile =  function (name, z, x, y, format, options, c
 
         const templateId = JSON.parse(res.body).template_id;
         const queryParams = params ? `?${qs.stringify(params)}` : '';
-        const url = `/api/v1/map/named/${templateId}/all/${[z,x,y].join('/')}.${format}${queryParams}`;
+        const url = `/api/v1/map/named/${templateId}/all/${[z, x, y].join('/')}.${format}${queryParams}`;
         const namedTileRequest = {
             url,
             method: 'GET',
@@ -1516,15 +1515,15 @@ TestClient.prototype.getNamedTile =  function (name, z, x, y, format, options, c
 
         let contentType;
         switch (format) {
-            case 'png':
-                contentType = 'image/png';
-                break;
-            case 'mvt':
-                contentType = 'application/x-protobuf';
-                break;
-            default:
-                contentType = 'application/json';
-                break;
+        case 'png':
+            contentType = 'image/png';
+            break;
+        case 'mvt':
+            contentType = 'application/x-protobuf';
+            break;
+        default:
+            contentType = 'application/json';
+            break;
         }
 
         const namedTileResponse = Object.assign({
@@ -1537,19 +1536,19 @@ TestClient.prototype.getNamedTile =  function (name, z, x, y, format, options, c
         assert.response(this.server, namedTileRequest, namedTileResponse, (res, err) => {
             let body;
             switch (res.headers['content-type']) {
-                case 'image/png':
-                    body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
-                    break;
-                case 'application/x-protobuf':
-                    body = new mapnik.VectorTile(z, x, y);
-                    body.setDataSync(new Buffer(res.body, 'binary'));
-                    break;
-                case 'application/json; charset=utf-8':
-                    body = JSON.parse(res.body);
-                    break;
-                default:
-                    body = res.body;
-                    break;
+            case 'image/png':
+                body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                break;
+            case 'application/x-protobuf':
+                body = new mapnik.VectorTile(z, x, y);
+                body.setDataSync(new Buffer(res.body, 'binary'));
+                break;
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
             }
 
             return callback(err, res, body);
@@ -1586,12 +1585,12 @@ TestClient.prototype.createTemplate = function (params, callback) {
     assert.response(this.server, createTemplateRequest, createTemplateResponse, (res, err) => {
         let body;
         switch (res.headers['content-type']) {
-            case 'application/json; charset=utf-8':
-                body = JSON.parse(res.body);
-                break;
-            default:
-                body = res.body;
-                break;
+        case 'application/json; charset=utf-8':
+            body = JSON.parse(res.body);
+            break;
+        default:
+            body = res.body;
+            break;
         }
 
         return callback(err, res, body);
@@ -1607,7 +1606,7 @@ TestClient.prototype.deleteTemplate = function (params, callback) {
         url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
         method: 'DELETE',
         headers: {
-            host: 'localhost',
+            host: 'localhost'
         }
     };
 
@@ -1623,12 +1622,12 @@ TestClient.prototype.deleteTemplate = function (params, callback) {
     assert.response(this.server, deleteTemplateRequest, deleteTemplateResponse, (res, err) => {
         let body;
         switch (res.headers['content-type']) {
-            case 'application/json; charset=utf-8':
-                body = JSON.parse(res.body);
-                break;
-            default:
-                body = res.body;
-                break;
+        case 'application/json; charset=utf-8':
+            body = JSON.parse(res.body);
+            break;
+        default:
+            body = res.body;
+            break;
         }
 
         return callback(err, res, body);
@@ -1664,18 +1663,17 @@ TestClient.prototype.updateTemplate = function (params, callback) {
     assert.response(this.server, updateTemplateRequest, updateTemplateResponse, (res, err) => {
         let body;
         switch (res.headers['content-type']) {
-            case 'application/json; charset=utf-8':
-                body = JSON.parse(res.body);
-                break;
-            default:
-                body = res.body;
-                break;
+        case 'application/json; charset=utf-8':
+            body = JSON.parse(res.body);
+            break;
+        default:
+            body = res.body;
+            break;
         }
 
         return callback(err, res, body);
     });
 };
-
 
 TestClient.prototype.getTemplate = function (params, callback) {
     if (!this.apiKey) {
@@ -1704,12 +1702,12 @@ TestClient.prototype.getTemplate = function (params, callback) {
     assert.response(this.server, getTemplateRequest, getTemplateResponse, (res, err) => {
         let body;
         switch (res.headers['content-type']) {
-            case 'application/json; charset=utf-8':
-                body = JSON.parse(res.body);
-                break;
-            default:
-                body = res.body;
-                break;
+        case 'application/json; charset=utf-8':
+            body = JSON.parse(res.body);
+            break;
+        default:
+            body = res.body;
+            break;
         }
 
         return callback(err, res, body);

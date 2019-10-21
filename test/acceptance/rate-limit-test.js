@@ -16,7 +16,7 @@ let userLimitsApi;
 let rateLimit;
 let redisClient;
 let testClient;
-let keysToDelete = ['user:localhost:mapviews:global'];
+const keysToDelete = ['user:localhost:mapviews:global'];
 const user = 'localhost';
 let layergroupid;
 
@@ -71,8 +71,7 @@ const createMapConfig = ({
     }
 });
 
-
-function setLimit(count, period, burst, endpoint = RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS) {
+function setLimit (count, period, burst, endpoint = RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS) {
     redisClient.SELECT(8, err => {
         if (err) {
             return;
@@ -86,13 +85,13 @@ function setLimit(count, period, burst, endpoint = RATE_LIMIT_ENDPOINTS_GROUPS.A
     });
 }
 
-function getReqAndRes() {
+function getReqAndRes () {
     return {
         req: {},
         res: {
             headers: {},
-            set(headers, value) {
-                if(typeof headers === 'object') {
+            set (headers, value) {
+                if (typeof headers === 'object') {
                     this.headers = headers;
                 } else {
                     this.headers[headers] = value;
@@ -106,7 +105,7 @@ function getReqAndRes() {
 }
 
 function assertGetLayergroupRequest (status, limit, remaining, reset, retry, done) {
-    let response = {
+    const response = {
         status,
         headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -116,7 +115,7 @@ function assertGetLayergroupRequest (status, limit, remaining, reset, retry, don
         }
     };
 
-    if(retry) {
+    if (retry) {
         response.headers['Retry-After'] = retry;
     }
 
@@ -131,19 +130,19 @@ function assertGetLayergroupRequest (status, limit, remaining, reset, retry, don
 function assertRateLimitRequest (status, limit, remaining, reset, retry, done) {
     const { req, res } = getReqAndRes();
     rateLimit(req, res, function (err) {
-        let expectedHeaders = {
-            "Carto-Rate-Limit-Limit": limit,
-            "Carto-Rate-Limit-Remaining": remaining,
-            "Carto-Rate-Limit-Reset": reset
+        const expectedHeaders = {
+            'Carto-Rate-Limit-Limit': limit,
+            'Carto-Rate-Limit-Remaining': remaining,
+            'Carto-Rate-Limit-Reset': reset
         };
 
-        if(retry) {
+        if (retry) {
             expectedHeaders['Retry-After'] = retry;
         }
 
         assert.deepEqual(res.headers, expectedHeaders);
 
-        if(status === 200) {
+        if (status === 200) {
             assert.ifError(err);
         } else {
             assert.ok(err);
@@ -160,8 +159,8 @@ function assertRateLimitRequest (status, limit, remaining, reset, retry, done) {
     });
 }
 
-describe('rate limit', function() {
-    before(function() {
+describe('rate limit', function () {
+    before(function () {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.anonymous = true;
 
@@ -169,13 +168,13 @@ describe('rate limit', function() {
         testClient = new TestClient(createMapConfig(), 1234);
     });
 
-    after(function() {
+    after(function () {
         global.environment.enabledFeatures.rateLimitsEnabled = false;
         global.environment.enabledFeatures.rateLimitsByEndpoint.anonymous = false;
     });
 
-    afterEach(function(done) {
-        keysToDelete.forEach( key => {
+    afterEach(function (done) {
+        keysToDelete.forEach(key => {
             redisClient.del(key);
         });
 
@@ -198,22 +197,20 @@ describe('rate limit', function() {
         assertGetLayergroupRequest(200, '2', '1', '1', null, done);
     });
 
-    it("1 req/sec: 2 req/seg should be limited", function(done) {
+    it('1 req/sec: 2 req/seg should be limited', function (done) {
         const count = 1;
         const period = 1;
         const burst = 1;
         setLimit(count, period, burst);
 
         assertGetLayergroupRequest(200, '2', '1', '1');
-        setTimeout( () => assertGetLayergroupRequest(200, '2', '0', '1'), 250);
-        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '1'),  500);
-        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '1'),  750);
-        setTimeout( () => assertGetLayergroupRequest(429, '2', '0', '1', '1'),  950);
-        setTimeout( () => assertGetLayergroupRequest(200, '2', '0', '1', null, done), 1050);
+        setTimeout(() => assertGetLayergroupRequest(200, '2', '0', '1'), 250);
+        setTimeout(() => assertGetLayergroupRequest(429, '2', '0', '1', '1'), 500);
+        setTimeout(() => assertGetLayergroupRequest(429, '2', '0', '1', '1'), 750);
+        setTimeout(() => assertGetLayergroupRequest(429, '2', '0', '1', '1'), 950);
+        setTimeout(() => assertGetLayergroupRequest(200, '2', '0', '1', null, done), 1050);
     });
-
 });
-
 
 describe('rate limit middleware', function () {
     before(function (done) {
@@ -232,7 +229,6 @@ describe('rate limit middleware', function () {
         redisClient = redis.createClient(global.environment.redis.port);
         testClient = new TestClient(createMapConfig(), 1234);
 
-
         const count = 1;
         const period = 1;
         const burst = 0;
@@ -250,41 +246,39 @@ describe('rate limit middleware', function () {
         });
     });
 
-    it("1 req/sec: 2 req/seg should be limited", function (done) {
+    it('1 req/sec: 2 req/seg should be limited', function (done) {
         assertRateLimitRequest(200, 1, 0, 1);
-        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 250);
-        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
-        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 750);
-        setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 950);
-        setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, null, done), 1050);
+        setTimeout(() => assertRateLimitRequest(429, 1, 0, 0, 1), 250);
+        setTimeout(() => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
+        setTimeout(() => assertRateLimitRequest(429, 1, 0, 0, 1), 750);
+        setTimeout(() => assertRateLimitRequest(429, 1, 0, 0, 1), 950);
+        setTimeout(() => assertRateLimitRequest(200, 1, 0, 1, null, done), 1050);
     });
 
-    it("1 req/sec: 2 req/seg should be limited, removing SHA script from Redis", function (done) {
+    it('1 req/sec: 2 req/seg should be limited, removing SHA script from Redis', function (done) {
         userLimitsApi.metadataBackend.redisCmd(
             8,
             'SCRIPT',
             ['FLUSH'],
             function () {
                 assertRateLimitRequest(200, 1, 0, 1);
-                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
-                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
-                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 750);
-                setTimeout( () => assertRateLimitRequest(429, 1, 0, 0, 1), 950);
-                setTimeout( () => assertRateLimitRequest(200, 1, 0, 1, null, done), 1050);
+                setTimeout(() => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
+                setTimeout(() => assertRateLimitRequest(429, 1, 0, 0, 1), 500);
+                setTimeout(() => assertRateLimitRequest(429, 1, 0, 0, 1), 750);
+                setTimeout(() => assertRateLimitRequest(429, 1, 0, 0, 1), 950);
+                setTimeout(() => assertRateLimitRequest(200, 1, 0, 1, null, done), 1050);
             }
         );
     });
 });
-
 
 const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
 describe('rate limit and vector tiles (mapnik)', () => rateLimitAndVectorTilesTest(false));
 describe('rate limit and vector tiles (postgis)', () => rateLimitAndVectorTilesTest(true));
 
-function rateLimitAndVectorTilesTest(usePostGIS) {
-
-    before(function() {
+function rateLimitAndVectorTilesTest (usePostGIS) {
+    before(function () {
         serverOptions.renderer.mvt.usePostGIS = usePostGIS;
     });
 
@@ -292,7 +286,7 @@ function rateLimitAndVectorTilesTest(usePostGIS) {
         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
-    before(function(done) {
+    before(function (done) {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.tile = true;
 
@@ -303,7 +297,7 @@ function rateLimitAndVectorTilesTest(usePostGIS) {
         setLimit(count, period, burst, RATE_LIMIT_ENDPOINTS_GROUPS.TILE);
 
         testClient = new TestClient(createMapConfig(), 1234);
-        testClient.getLayergroup({status: 200}, (err, res) => {
+        testClient.getLayergroup({ status: 200 }, (err, res) => {
             assert.ifError(err);
 
             layergroupid = res.layergroupid;
@@ -312,13 +306,13 @@ function rateLimitAndVectorTilesTest(usePostGIS) {
         });
     });
 
-    after(function() {
+    after(function () {
         global.environment.enabledFeatures.rateLimitsEnabled = false;
         global.environment.enabledFeatures.rateLimitsByEndpoint.tile = false;
     });
 
-    afterEach(function(done) {
-        keysToDelete.forEach( key => {
+    afterEach(function (done) {
+        keysToDelete.forEach(key => {
             redisClient.del(key);
         });
 
@@ -334,11 +328,11 @@ function rateLimitAndVectorTilesTest(usePostGIS) {
 
     it('mvt rate limited', function (done) {
         const tileParams = (status, limit, remaining, reset, retry, contentType) => {
-            let headers = {
-                "Content-Type": contentType,
-                "Carto-Rate-Limit-Limit": limit,
-                "Carto-Rate-Limit-Remaining": remaining,
-                "Carto-Rate-Limit-Reset": reset
+            const headers = {
+                'Content-Type': contentType,
+                'Carto-Rate-Limit-Limit': limit,
+                'Carto-Rate-Limit-Remaining': remaining,
+                'Carto-Rate-Limit-Reset': reset
             };
 
             if (retry) {
@@ -348,7 +342,7 @@ function rateLimitAndVectorTilesTest(usePostGIS) {
             return {
                 layergroupid: layergroupid,
                 format: 'mvt',
-                response: {status, headers}
+                response: { status, headers }
             };
         };
 
@@ -373,6 +367,5 @@ function rateLimitAndVectorTilesTest(usePostGIS) {
                 }
             );
         });
-
     });
 }

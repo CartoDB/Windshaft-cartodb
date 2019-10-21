@@ -158,7 +158,7 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [db_limit_error_message ],
+                        errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
@@ -221,7 +221,7 @@ describe('user database timeout limit', function () {
                         const params = {
                             layergroupid: this.layergroupid,
                             format: 'png',
-                            layers: [ 0 ]
+                            layers: [0]
                         };
 
                         this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
@@ -305,7 +305,7 @@ describe('user database timeout limit', function () {
                         const params = {
                             layergroupid: this.layergroupid,
                             format: 'png',
-                            layers: [ 0 ],
+                            layers: [0],
                             response: {
                                 status: 429,
                                 headers: {
@@ -380,7 +380,7 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ db_limit_error_message ],
+                        errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
@@ -397,7 +397,7 @@ describe('user database timeout limit', function () {
         describe('fetching vector tiles via mapnik renderer', () => testFetchingVectorTiles(false));
         describe('fetching vector tiles via postgis renderer', () => testFetchingVectorTiles(true));
 
-        function testFetchingVectorTiles(usePostGIS) {
+        function testFetchingVectorTiles (usePostGIS) {
             const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
             before(function () {
@@ -407,7 +407,6 @@ describe('user database timeout limit', function () {
             after(function () {
                 serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
             });
-
 
             beforeEach(function (done) {
                 const mapconfig = createMapConfig();
@@ -447,7 +446,7 @@ describe('user database timeout limit', function () {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'mvt',
-                        layers: [ 0 ],
+                        layers: [0],
                         response: {
                             status: 429,
                             headers: {
@@ -467,12 +466,10 @@ describe('user database timeout limit', function () {
 
                         done();
                     });
-
                 });
             });
         }
     });
-
 
     describe('interactivity', function () {
         describe('while validating in layergroup creation', function () {
@@ -501,7 +498,7 @@ describe('user database timeout limit', function () {
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.deepEqual(timeoutError, {
-                        errors: [ db_limit_error_message ],
+                        errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
@@ -661,7 +658,7 @@ describe('user database timeout limit', function () {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'torque.json',
-                        layers: [ 0 ],
+                        layers: [0],
                         response: {
                             status: 429,
                             headers: {
@@ -683,7 +680,7 @@ describe('user database timeout limit', function () {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'torque.png',
-                        layers: [ 0 ],
+                        layers: [0],
                         response: {
                             status: 429,
                             headers: {
@@ -710,7 +707,7 @@ describe('user database timeout limit', function () {
                 const mapconfig = createMapConfig({
                     attributes: {
                         id: 'cartodb_id',
-                        columns: [ 'val' ]
+                        columns: ['val']
                     }
                 });
                 this.testClient = new TestClient(mapconfig, 1234);
@@ -759,7 +756,7 @@ describe('user database timeout limit', function () {
                 const mapconfig = createMapConfig({
                     attributes: {
                         id: 'cartodb_id',
-                        columns: [ 'val' ]
+                        columns: ['val']
                     }
                 });
 

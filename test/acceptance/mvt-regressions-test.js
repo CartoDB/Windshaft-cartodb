@@ -18,7 +18,6 @@ const suites = [
 ];
 
 describe('mvt regressions', function () {
-
     suites.forEach((suite) => {
         const { desc, usePostGIS } = suite;
 
@@ -29,7 +28,7 @@ describe('mvt regressions', function () {
                 serverOptions.renderer.mvt.usePostGIS = usePostGIS;
             });
 
-            after(function (){
+            after(function () {
                 serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
             });
 
@@ -85,7 +84,7 @@ describe('MVT Mapnik', function () {
         serverOptions.renderer.mvt.usePostGIS = false;
     });
 
-    after(function (){
+    after(function () {
         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
@@ -123,7 +122,7 @@ describe('MVT Mapnik', function () {
                         return _.properties.country === 'Sudan';
                     })[0];
                     if (!sudanFeature) {
-                        return reject(new Error(`Missing country='Sudan'`));
+                        return reject(new Error('Missing country=\'Sudan\''));
                     }
 
                     resolve(sudanFeature);
@@ -176,5 +175,4 @@ describe('MVT Mapnik', function () {
             done();
         });
     });
-
 });

@@ -16,10 +16,10 @@ describe('error middleware', function () {
         const errorHeader = {
             mainError: {
                 statusCode: 400,
-                message: "Missing cartocss for layer 0 options",
-                name: "Error",
-                label: "ANONYMOUS LAYERGROUP",
-                type: "layer",
+                message: 'Missing cartocss for layer 0 options',
+                name: 'Error',
+                label: 'ANONYMOUS LAYERGROUP',
+                type: 'layer'
             },
             moreErrors: []
         };

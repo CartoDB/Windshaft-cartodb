@@ -2,14 +2,12 @@
 
 require('../../../support/test-helper');
 
-var assert        = require('../../../support/assert');
+var assert = require('../../../support/assert');
 var TestClient = require('../../../support/test-client');
 
-describe('widgets', function() {
-
-    describe('formula', function() {
-
-        afterEach(function(done) {
+describe('widgets', function () {
+    describe('formula', function () {
+        afterEach(function (done) {
             if (this.testClient) {
                 this.testClient.drain(done);
             } else {
@@ -17,7 +15,7 @@ describe('widgets', function() {
             }
         });
 
-        function widgetsMapConfig(widgets) {
+        function widgetsMapConfig (widgets) {
             return {
                 version: '1.5.0',
                 layers: [
@@ -42,8 +40,8 @@ describe('widgets', function() {
             sum: [653496264, 0]
         };
 
-        Object.keys(operations).forEach(function(operation) {
-            it('should do ' + operation + ' over column', function(done) {
+        Object.keys(operations).forEach(function (operation) {
+            it('should do ' + operation + ' over column', function (done) {
                 var widgets = {
                     pop_max_f: {
                         type: 'formula',
@@ -65,8 +63,8 @@ describe('widgets', function() {
             });
         });
 
-        it('does not require column for count formula', function(done) {
-           var operation = 'count';
+        it('does not require column for count formula', function (done) {
+            var operation = 'count';
             var widgets = {
                 pop_max_count_f: {
                     type: 'formula',
@@ -85,7 +83,5 @@ describe('widgets', function() {
                 done();
             });
         });
-
     });
-
 });

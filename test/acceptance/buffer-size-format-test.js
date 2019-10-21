@@ -39,13 +39,13 @@ function createMapConfig (bufferSize, cartocss) {
         version: '1.6.0',
         buffersize: bufferSize,
         layers: [{
-            type: "cartodb",
+            type: 'cartodb',
             options: {
                 sql: [
                     'select',
                     '   *',
                     'from',
-                    '   populated_places_simple_reduced',
+                    '   populated_places_simple_reduced'
                 ].join('\n'),
                 cartocss: cartocss,
                 cartocss_version: '2.3.0',
@@ -113,7 +113,7 @@ describe('buffer size per format', function () {
             fixturePath: './test/fixtures/buffer-size/tile-grid.json.7.64.48-buffer-size-0.grid.json',
             mapConfig: createMapConfig({ 'grid.json': 0 }),
             assert: function (tile, callback) {
-                assert.utfgridEqualsFile(tile, this.fixturePath, 2,callback);
+                assert.utfgridEqualsFile(tile, this.fixturePath, 2, callback);
             }
         },
         {
@@ -129,7 +129,7 @@ describe('buffer size per format', function () {
         }
     ];
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         if (testClient) {
             return testClient.drain(done);
         }
@@ -162,7 +162,7 @@ describe('buffer size per format', function () {
         testFn(test);
     });
 
-    describe('using mapnik mvt renderer', function() {
+    describe('using mapnik mvt renderer', function () {
         before(function () {
             serverOptions.renderer.mvt.usePostGIS = false;
         });
@@ -171,7 +171,7 @@ describe('buffer size per format', function () {
         });
     });
 
-    describe('using postgis mvt renderer', function() {
+    describe('using postgis mvt renderer', function () {
         before(function () {
             serverOptions.renderer.mvt.usePostGIS = true;
         });
@@ -185,15 +185,15 @@ function createBufferSizeTemplate (name, buffersize, placeholders, cartocss) {
     cartocss = cartocss || CARTOCSS_LABELS;
 
     return {
-        "version": "0.0.1",
-        "name": name,
-        "placeholders": placeholders || {
-            "buffersize": {
-                "type": "number",
-                "default": 0
+        version: '0.0.1',
+        name: name,
+        placeholders: placeholders || {
+            buffersize: {
+                type: 'number',
+                default: 0
             }
         },
-        "layergroup": createMapConfig(buffersize)
+        layergroup: createMapConfig(buffersize)
     };
 }
 
@@ -204,7 +204,7 @@ describe('buffer size per format for named maps', function () {
             coords: { z: 7, x: 64, y: 48 },
             format: 'png',
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-0.png',
-            template: createBufferSizeTemplate('named-default-buffer-size', {png: '<%= buffersize %>'}),
+            template: createBufferSizeTemplate('named-default-buffer-size', { png: '<%= buffersize %>' }),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
@@ -215,7 +215,7 @@ describe('buffer size per format for named maps', function () {
             format: 'png',
             placeholders: { buffersize: 128 },
             fixturePath: './test/fixtures/buffer-size/tile-7.64.48-buffer-size-128.png',
-            template: createBufferSizeTemplate('named-custom-buffer-size', { png: '<%= buffersize %>'}),
+            template: createBufferSizeTemplate('named-custom-buffer-size', { png: '<%= buffersize %>' }),
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
@@ -229,9 +229,9 @@ describe('buffer size per format for named maps', function () {
             template: createBufferSizeTemplate('named-default-buffer-size-by-format', {
                 png: '<%= buffersize_png %>'
             }, {
-                "buffersize_png": {
-                    "type": "number",
-                    "default": "0"
+                buffersize_png: {
+                    type: 'number',
+                    default: '0'
                 }
             }),
             assert: function (tile, callback) {
@@ -247,9 +247,9 @@ describe('buffer size per format for named maps', function () {
             template: createBufferSizeTemplate('named-custom-buffer-size-by-format', {
                 png: '<%= buffersize_png %>'
             }, {
-                "buffersize_png": {
-                    "type": "number",
-                    "default": "0"
+                buffersize_png: {
+                    type: 'number',
+                    default: '0'
                 }
             }),
             assert: function (tile, callback) {
@@ -266,13 +266,13 @@ describe('buffer size per format for named maps', function () {
             template: createBufferSizeTemplate('named-default-buffer-size-by-format-gridjson', {
                 'grid.json': '<%= buffersize_gridjson %>'
             }, {
-                "buffersize_gridjson": {
-                    "type": "number",
-                    "default": "0"
+                buffersize_gridjson: {
+                    type: 'number',
+                    default: '0'
                 }
             }),
             assert: function (tile, callback) {
-                assert.utfgridEqualsFile(tile, this.fixturePath, 2,callback);
+                assert.utfgridEqualsFile(tile, this.fixturePath, 2, callback);
             }
         },
         {
@@ -285,9 +285,9 @@ describe('buffer size per format for named maps', function () {
             template: createBufferSizeTemplate('named-custom-buffer-size-by-format-gridjson', {
                 'grid.json': '<%= buffersize_gridjson %>'
             }, {
-                "buffersize_gridjson": {
-                    "type": "number",
-                    "default": "0"
+                buffersize_gridjson: {
+                    type: 'number',
+                    default: '0'
                 }
             }),
             assert: function (tile, callback) {
@@ -296,7 +296,7 @@ describe('buffer size per format for named maps', function () {
         }
     ];
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         if (this.testClient) {
             return this.testClient.drain(done);
         }
@@ -315,13 +315,12 @@ describe('buffer size per format for named maps', function () {
             this.testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
-                //tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-0-test.png');
+                // tile.save('./test/fixtures/buffer-size/tile-7.64.48-buffer-size-0-test.png');
                 test.assert(tile, done);
             });
         });
     });
 });
-
 
 describe('buffer size per format for named maps w/o placeholders', function () {
     let testClient;
@@ -420,7 +419,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
             fixturePath: './test/fixtures/buffer-size/tile-grid.json.7.64.48-buffer-size-0.grid.json',
             template: createBufferSizeTemplate('named-no-buffer-size-grid-json-0', {}, {}),
             assert: function (tile, callback) {
-                assert.utfgridEqualsFile(tile, this.fixturePath, 2,callback);
+                assert.utfgridEqualsFile(tile, this.fixturePath, 2, callback);
             }
         },
         {
@@ -454,11 +453,11 @@ describe('buffer size per format for named maps w/o placeholders', function () {
             assert: function (tile, callback) {
                 assert.imageIsSimilarToFile(tile, this.fixturePath, IMAGE_TOLERANCE_PER_MIL, callback);
             }
-        },
+        }
 
     ];
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         if (testClient) {
             return testClient.drain(done);
         }
@@ -483,7 +482,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
             testClient.getTile(coords.z, coords.x, coords.y, options, function (err, res, tile) {
                 assert.ifError(err);
                 // To generate images use:
-                //tile.save(test.fixturePath);
+                // tile.save(test.fixturePath);
                 // require('fs').writeFileSync(test.fixturePath, JSON.stringify(tile));
                 // require('fs').writeFileSync(test.fixturePath, tile.getDataSync());
                 test.assert(tile, done);
@@ -495,7 +494,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
         testFn(test);
     });
 
-    describe('using mapnik mvt renderer', function() {
+    describe('using mapnik mvt renderer', function () {
         before(function () {
             serverOptions.renderer.mvt.usePostGIS = false;
         });
@@ -504,7 +503,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
         });
     });
 
-    describe('using postgis mvt renderer', function() {
+    describe('using postgis mvt renderer', function () {
         before(function () {
             serverOptions.renderer.mvt.usePostGIS = true;
         });

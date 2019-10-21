@@ -5,11 +5,9 @@ require('../../../support/test-helper');
 var assert = require('../../../support/assert');
 var TestClient = require('../../../support/test-client');
 
-describe('widgets', function() {
-
-    describe('aggregations', function() {
-
-        afterEach(function(done) {
+describe('widgets', function () {
+    describe('aggregations', function () {
+        afterEach(function (done) {
             if (this.testClient) {
                 this.testClient.drain(done);
             } else {
@@ -40,7 +38,7 @@ describe('widgets', function() {
             ]
         };
 
-        it('can be fetched from a valid aggregation', function(done) {
+        it('can be fetched from a valid aggregation', function (done) {
             this.testClient = new TestClient(aggregationMapConfig);
             this.testClient.getWidget('adm0name', { own_filter: 0 }, function (err, res, aggregation) {
                 assert.ok(!err, err);
@@ -74,8 +72,8 @@ describe('widgets', function() {
             }
         ];
 
-        filteredCategoriesScenarios.forEach(function(scenario) {
-            it('can filter some categories: ' + scenario.accept.join(', '), function(done) {
+        filteredCategoriesScenarios.forEach(function (scenario) {
+            it('can filter some categories: ' + scenario.accept.join(', '), function (done) {
                 this.testClient = new TestClient(aggregationMapConfig);
                 var adm0nameFilter = {
                     adm0name: {
@@ -97,17 +95,17 @@ describe('widgets', function() {
 
                     assert.equal(aggregation.categories.length, scenario.accept.length);
 
-                    var categoriesByCategory = aggregation.categories.reduce(function(byCategory, row) {
+                    var categoriesByCategory = aggregation.categories.reduce(function (byCategory, row) {
                         byCategory[row.category] = row;
                         return byCategory;
                     }, {});
 
-                    var scenarioByCategory = scenario.accept.reduce(function(byCategory, category, index) {
+                    var scenarioByCategory = scenario.accept.reduce(function (byCategory, category, index) {
                         byCategory[category] = { category: category, value: scenario.values[index], agg: false };
                         return byCategory;
                     }, {});
 
-                    Object.keys(categoriesByCategory).forEach(function(category) {
+                    Object.keys(categoriesByCategory).forEach(function (category) {
                         assert.deepEqual(categoriesByCategory[category], scenarioByCategory[category]);
                     });
 
@@ -140,8 +138,7 @@ describe('widgets', function() {
             ]
         };
 
-        it('can sum other column for aggregation value', function(done) {
-
+        it('can sum other column for aggregation value', function (done) {
             this.testClient = new TestClient(aggregationSumMapConfig);
             this.testClient.getWidget('adm0name', { own_filter: 0 }, function (err, res, aggregation) {
                 assert.ok(!err, err);
@@ -174,8 +171,8 @@ describe('widgets', function() {
             }
         ];
 
-        filteredCategoriesSumScenarios.forEach(function(scenario) {
-            it('can filter some categories with sum aggregation: ' + scenario.accept.join(', '), function(done) {
+        filteredCategoriesSumScenarios.forEach(function (scenario) {
+            it('can filter some categories with sum aggregation: ' + scenario.accept.join(', '), function (done) {
                 this.testClient = new TestClient(aggregationSumMapConfig);
                 var adm0nameFilter = {
                     adm0name: {
@@ -197,17 +194,17 @@ describe('widgets', function() {
 
                     assert.equal(aggregation.categories.length, scenario.accept.length);
 
-                    var categoriesByCategory = aggregation.categories.reduce(function(byCategory, row) {
+                    var categoriesByCategory = aggregation.categories.reduce(function (byCategory, row) {
                         byCategory[row.category] = row;
                         return byCategory;
                     }, {});
 
-                    var scenarioByCategory = scenario.accept.reduce(function(byCategory, category, index) {
+                    var scenarioByCategory = scenario.accept.reduce(function (byCategory, category, index) {
                         byCategory[category] = { category: category, value: scenario.values[index], agg: false };
                         return byCategory;
                     }, {});
 
-                    Object.keys(categoriesByCategory).forEach(function(category) {
+                    Object.keys(categoriesByCategory).forEach(function (category) {
                         assert.deepEqual(categoriesByCategory[category], scenarioByCategory[category]);
                     });
 
@@ -239,8 +236,8 @@ describe('widgets', function() {
             ]
         };
 
-        ['1', 1].forEach(function(filterValue) {
-            it('can filter numeric categories: ' + (typeof filterValue), function(done) {
+        ['1', 1].forEach(function (filterValue) {
+            it('can filter numeric categories: ' + (typeof filterValue), function (done) {
                 this.testClient = new TestClient(numericAggregationMapConfig);
                 var scalerankFilter = {
                     scalerank: {
@@ -266,8 +263,8 @@ describe('widgets', function() {
             });
         });
 
-        describe('search', function() {
-            afterEach(function(done) {
+        describe('search', function () {
+            afterEach(function (done) {
                 if (this.testClient) {
                     this.testClient.drain(done);
                 } else {
@@ -275,8 +272,8 @@ describe('widgets', function() {
                 }
             });
 
-            ['1', 1].forEach(function(userQuery) {
-                it('can search numeric categories: ' + (typeof userQuery), function(done) {
+            ['1', 1].forEach(function (userQuery) {
+                it('can search numeric categories: ' + (typeof userQuery), function (done) {
                     this.testClient = new TestClient(numericAggregationMapConfig);
                     var scalerankFilter = {
                         scalerank: {
@@ -306,8 +303,8 @@ describe('widgets', function() {
             });
 
             var adm0name = 'Argentina';
-            [adm0name, adm0name.toLowerCase(), adm0name.toUpperCase()].forEach(function(userQuery) {
-                it('should search with case insensitive: ' + userQuery, function(done) {
+            [adm0name, adm0name.toLowerCase(), adm0name.toUpperCase()].forEach(function (userQuery) {
+                it('should search with case insensitive: ' + userQuery, function (done) {
                     this.testClient = new TestClient(aggregationMapConfig);
                     this.testClient.widgetSearch('adm0name', userQuery, function (err, res, searchResult) {
                         assert.ok(!err, err);
@@ -317,7 +314,7 @@ describe('widgets', function() {
                         assert.equal(searchResult.categories.length, 1);
                         assert.deepEqual(
                             searchResult.categories,
-                            [{ category:"Argentina", value:159 }]
+                            [{ category: 'Argentina', value: 159 }]
                         );
 
                         done();
@@ -325,8 +322,8 @@ describe('widgets', function() {
                 });
             });
 
-            [adm0name].forEach(function(userQuery) {
-                it('should search with sum aggregation: ' + userQuery, function(done) {
+            [adm0name].forEach(function (userQuery) {
+                it('should search with sum aggregation: ' + userQuery, function (done) {
                     this.testClient = new TestClient(aggregationSumMapConfig);
                     this.testClient.widgetSearch('adm0name', userQuery, function (err, res, searchResult) {
                         assert.ok(!err, err);
@@ -336,7 +333,7 @@ describe('widgets', function() {
                         assert.equal(searchResult.categories.length, 1);
                         assert.deepEqual(
                             searchResult.categories,
-                            [{ category:"Argentina", value:28015640 }]
+                            [{ category: 'Argentina', value: 28015640 }]
                         );
 
                         done();
@@ -344,7 +341,5 @@ describe('widgets', function() {
                 });
             });
         });
-
     });
-
 });

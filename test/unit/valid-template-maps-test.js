@@ -7,21 +7,19 @@ var RedisPool = require('redis-mpool');
 var TemplateMaps = require('../../lib/backends/template-maps');
 var _ = require('underscore');
 
-describe('template_maps', function() {
-
-    var redisPool = new RedisPool(global.environment.redis),
-        templateMaps = new TemplateMaps(redisPool);
+describe('template_maps', function () {
+    var redisPool = new RedisPool(global.environment.redis);
+    var templateMaps = new TemplateMaps(redisPool);
 
     var owner = 'me';
     var templateName = 'wadus';
 
-
     var defaultTemplate = {
-        version:'0.0.1',
+        version: '0.0.1',
         name: templateName
     };
 
-    function makeTemplate(layers) {
+    function makeTemplate (layers) {
         var layergroup = {
             layers: layers
         };
@@ -30,14 +28,14 @@ describe('template_maps', function() {
         });
     }
 
-    var layerWithMissingOptions = {},
-        minimumValidLayer = {
-            options: {
-                sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
-                cartocss: '#layer { marker-fill:blue; }',
-                cartocss_version: '2.3.0'
-            }
-        };
+    var layerWithMissingOptions = {};
+    var minimumValidLayer = {
+        options: {
+            sql: 'select 1 cartodb_id, null::geometry the_geom_webmercator',
+            cartocss: '#layer { marker-fill:blue; }',
+            cartocss_version: '2.3.0'
+        }
+    };
 
     var testScenarios = [
         {
@@ -89,27 +87,18 @@ describe('template_maps', function() {
         }
     ];
 
-    testScenarios.forEach(function(testScenario) {
-        it(testScenario.desc, function(done) {
-
-            templateMaps.addTemplate(owner, testScenario.template, function(err) {
-
+    testScenarios.forEach(function (testScenario) {
+        it(testScenario.desc, function (done) {
+            templateMaps.addTemplate(owner, testScenario.template, function (err) {
                 if (testScenario.expected.isValid) {
-
                     assert.ok(!err);
                     templateMaps.delTemplate(owner, templateName, done);
-
                 } else {
-
                     assert.ok(err);
                     assert.equal(err.message, testScenario.expected.message);
                     done();
-
                 }
-
             });
-
         });
     });
-
 });

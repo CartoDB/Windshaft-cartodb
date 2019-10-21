@@ -6,11 +6,11 @@ var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 var serverOptions = require('../../lib/server-options');
 
-function createMapConfig(sql = TestClient.SQL.ONE_POINT) {
+function createMapConfig (sql = TestClient.SQL.ONE_POINT) {
     return {
         version: '1.6.0',
         layers: [{
-            type: "cartodb",
+            type: 'cartodb',
             options: {
                 sql: sql,
                 cartocss: TestClient.CARTOCSS.POINTS,
@@ -24,13 +24,13 @@ function createMapConfig(sql = TestClient.SQL.ONE_POINT) {
 describe('mvt (mapnik)', mvt(false));
 describe('mvt (postgis)', mvt(true));
 
-function mvt(usePostGIS) {
+function mvt (usePostGIS) {
     return function () {
         const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
         before(function () {
             serverOptions.renderer.mvt.usePostGIS = usePostGIS;
         });
-        after(function (){
+        after(function () {
             serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
         });
 
@@ -54,7 +54,7 @@ function mvt(usePostGIS) {
                             options: {
                                 sql: 'select * from populated_places_simple_reduced limit 10',
                                 cartocss: TestClient.CARTOCSS.POINTS,
-                                cartocss_version: '2.3.0',
+                                cartocss_version: '2.3.0'
                             }
                         }]
                     }
@@ -78,8 +78,7 @@ function mvt(usePostGIS) {
         });
 
         describe('analysis-layers-dataviews-mvt', function () {
-
-            function createMapConfig(layers, dataviews, analysis) {
+            function createMapConfig (layers, dataviews, analysis) {
                 return {
                     version: '1.5.0',
                     layers: layers,
@@ -89,29 +88,29 @@ function mvt(usePostGIS) {
             }
 
             var CARTOCSS = [
-                "#points {",
-                "  marker-fill-opacity: 1.0;",
-                "  marker-line-color: #FFF;",
-                "  marker-line-width: 0.5;",
-                "  marker-line-opacity: 1.0;",
-                "  marker-placement: point;",
-                "  marker-type: ellipse;",
-                "  marker-width: 8;",
-                "  marker-fill: red;",
-                "  marker-allow-overlap: true;",
-                "}"
+                '#points {',
+                '  marker-fill-opacity: 1.0;',
+                '  marker-line-color: #FFF;',
+                '  marker-line-width: 0.5;',
+                '  marker-line-opacity: 1.0;',
+                '  marker-placement: point;',
+                '  marker-type: ellipse;',
+                '  marker-width: 8;',
+                '  marker-fill: red;',
+                '  marker-allow-overlap: true;',
+                '}'
             ].join('\n');
 
             var mapConfig = createMapConfig(
                 [
                     {
-                        "type": "cartodb",
-                        "options": {
-                            "source": {
-                                "id": "2570e105-7b37-40d2-bdf4-1af889598745"
+                        type: 'cartodb',
+                        options: {
+                            source: {
+                                id: '2570e105-7b37-40d2-bdf4-1af889598745'
                             },
-                            "cartocss": CARTOCSS,
-                            "cartocss_version": "2.3.0"
+                            cartocss: CARTOCSS,
+                            cartocss_version: '2.3.0'
                         }
                     }
                 ],
@@ -128,10 +127,10 @@ function mvt(usePostGIS) {
                 },
                 [
                     {
-                        "id": "2570e105-7b37-40d2-bdf4-1af889598745",
-                        "type": "source",
-                        "params": {
-                            "query": "select * from populated_places_simple_reduced"
+                        id: '2570e105-7b37-40d2-bdf4-1af889598745',
+                        type: 'source',
+                        params: {
+                            query: 'select * from populated_places_simple_reduced'
                         }
                     }
                 ]
@@ -152,9 +151,7 @@ function mvt(usePostGIS) {
                     testClient.drain(done);
                 });
             });
-
         });
-
 
         const testCases = [
             {
@@ -197,7 +194,7 @@ function mvt(usePostGIS) {
         });
 
         describe('overviews', function () {
-            function createMapConfig(layers, dataviews, analysis) {
+            function createMapConfig (layers, dataviews, analysis) {
                 return {
                     version: '1.8.0',
                     layers: layers,
@@ -210,18 +207,18 @@ function mvt(usePostGIS) {
                 const mapConfig = createMapConfig(
                     [
                         {
-                            "type": "cartodb",
-                            "options": {
-                                "sql": 'SELECT * FROM test_table_overviews',
-                                "cartocss": TestClient.CARTOCSS.POINTS,
-                                "cartocss_version": "2.3.0"
+                            type: 'cartodb',
+                            options: {
+                                sql: 'SELECT * FROM test_table_overviews',
+                                cartocss: TestClient.CARTOCSS.POINTS,
+                                cartocss_version: '2.3.0'
                             }
                         }
                     ]
                 );
 
                 const testClient = new TestClient(mapConfig);
-                const [ z, x, y ] = [ 0, 0, 0 ];
+                const [z, x, y] = [0, 0, 0];
                 const options = { format: 'mvt' };
 
                 testClient.getTile(z, x, y, options, function (err, res, mvt) {
@@ -248,26 +245,26 @@ function mvt(usePostGIS) {
                 const mapConfig = createMapConfig(
                     [
                         {
-                            "type": "cartodb",
-                            "options": {
-                                "sql": 'SELECT * FROM test_table_overviews',
-                                "cartocss": TestClient.CARTOCSS.POINTS,
-                                "cartocss_version": "2.3.0"
+                            type: 'cartodb',
+                            options: {
+                                sql: 'SELECT * FROM test_table_overviews',
+                                cartocss: TestClient.CARTOCSS.POINTS,
+                                cartocss_version: '2.3.0'
                             }
                         },
                         {
-                            "type": "cartodb",
-                            "options": {
-                                "sql": 'SELECT * FROM test_table',
-                                "cartocss": TestClient.CARTOCSS.POINTS,
-                                "cartocss_version": "2.3.0"
+                            type: 'cartodb',
+                            options: {
+                                sql: 'SELECT * FROM test_table',
+                                cartocss: TestClient.CARTOCSS.POINTS,
+                                cartocss_version: '2.3.0'
                             }
                         }
                     ]
                 );
 
                 const testClient = new TestClient(mapConfig);
-                const [ z, x, y ] = [ 0, 0, 0 ];
+                const [z, x, y] = [0, 0, 0];
                 const options = { format: 'mvt' };
 
                 testClient.getTile(z, x, y, options, function (err, res, mvt) {

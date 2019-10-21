@@ -8,7 +8,7 @@ var ServerOptions = require('./support/ported-server-options');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
-describe('torque boundary points', function() {
+describe('torque boundary points', function () {
     var server;
 
     before(function () {
@@ -18,11 +18,11 @@ describe('torque boundary points', function() {
 
     var layergroupIdToDelete = null;
 
-    beforeEach(function() {
+    beforeEach(function () {
         layergroupIdToDelete = null;
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         var keysToDelete = {
             'user:localhost:mapviews:global': 5
         };
@@ -31,51 +31,54 @@ describe('torque boundary points', function() {
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
-    var boundaryPointsMapConfig =  {
+    var boundaryPointsMapConfig = {
         version: '1.1.0',
         layers: [
-            { type: 'torque', options: {
-                sql: "WITH p AS ( " +
+            {
+                type: 'torque',
+                options: {
+                    sql: 'WITH p AS ( ' +
                     " SELECT '1970-01-02'::date as d, " +
                     // r1 is pixel resolution at zoom level 1
                     // s1 is tile size at zoom level 1
-                    " 1e-40 as o, 78271.517578125 as r1, 20037508.5 as s1 )" +
-                    " SELECT 1 as i, d, ST_MakePoint(0,0) as ug FROM p" +
-                    " UNION ALL " +
-                    "SELECT 2, d, ST_MakePoint(-o,-o) FROM p" +
-                    " UNION ALL " +
-                    "SELECT 3, d, ST_MakePoint(-o,o) FROM p" +
-                    " UNION ALL " +
-                    "SELECT 4, d, ST_MakePoint(o,-o) FROM p" +
-                    " UNION ALL " +
-                    "SELECT 5, d, ST_MakePoint(o,o) FROM p" +
-                    " UNION ALL " +
-                    "SELECT 6, d, ST_MakePoint(-r1,r1) FROM p" +
-                    " UNION ALL " +
-                    "SELECT 7, d, ST_MakePoint(-r1/2,r1) FROM p" +
-                    " UNION ALL " +
-                    "SELECT 8, d, ST_MakePoint(-r1,-r1) FROM p" +
-                    " UNION ALL " +
+                    ' 1e-40 as o, 78271.517578125 as r1, 20037508.5 as s1 )' +
+                    ' SELECT 1 as i, d, ST_MakePoint(0,0) as ug FROM p' +
+                    ' UNION ALL ' +
+                    'SELECT 2, d, ST_MakePoint(-o,-o) FROM p' +
+                    ' UNION ALL ' +
+                    'SELECT 3, d, ST_MakePoint(-o,o) FROM p' +
+                    ' UNION ALL ' +
+                    'SELECT 4, d, ST_MakePoint(o,-o) FROM p' +
+                    ' UNION ALL ' +
+                    'SELECT 5, d, ST_MakePoint(o,o) FROM p' +
+                    ' UNION ALL ' +
+                    'SELECT 6, d, ST_MakePoint(-r1,r1) FROM p' +
+                    ' UNION ALL ' +
+                    'SELECT 7, d, ST_MakePoint(-r1/2,r1) FROM p' +
+                    ' UNION ALL ' +
+                    'SELECT 8, d, ST_MakePoint(-r1,-r1) FROM p' +
+                    ' UNION ALL ' +
                     // this is discarded, being on the right boundary
-                    "SELECT 9, d, ST_MakePoint(s1,0) FROM p" +
-                    " UNION ALL " +
+                    'SELECT 9, d, ST_MakePoint(s1,0) FROM p' +
+                    ' UNION ALL ' +
                     // this is discarded, being on the top boundary
-                    "SELECT 10, d, ST_MakePoint(0,s1) FROM p" +
-                    " UNION ALL " +
+                    'SELECT 10, d, ST_MakePoint(0,s1) FROM p' +
+                    ' UNION ALL ' +
                     // this is discarded, rounding to the right boundary
-                    "SELECT 11, d, ST_MakePoint(s1-r1/2,0) FROM p" +
-                    " UNION ALL " +
+                    'SELECT 11, d, ST_MakePoint(s1-r1/2,0) FROM p' +
+                    ' UNION ALL ' +
                     // this is discarded, rounding to the top boundary
-                    "SELECT 12, d, ST_MakePoint(0,s1-r1/2) FROM p",
-                geom_column: 'ug',
-                cartocss: 'Map { ' +
+                    'SELECT 12, d, ST_MakePoint(0,s1-r1/2) FROM p',
+                    geom_column: 'ug',
+                    cartocss: 'Map { ' +
                     '-torque-frame-count:2; ' +
                     '-torque-resolution:1; ' +
                     '-torque-time-attribute:"d"; ' +
                     '-torque-data-aggregation:linear; ' +
                     '-torque-aggregation-function:"count(i)"; }',
-                cartocss_version: '1.0.1'
-            } }
+                    cartocss_version: '1.0.1'
+                }
+            }
         ]
     };
 
@@ -135,19 +138,19 @@ describe('torque boundary points', function() {
                 {
                     x__uint8: 255,
                     y__uint8: 0,
-                    vals__uint8: [{v: 2, d: 'i=6 (-r1,r1) and i=7(-r1/2,r1)'}],
+                    vals__uint8: [{ v: 2, d: 'i=6 (-r1,r1) and i=7(-r1/2,r1)' }],
                     dates__uint16: [0]
                 },
                 {
                     x__uint8: 255,
                     y__uint8: 1,
-                    vals__uint8: [{v: 2, d: 'i=1 and i=3'}],
+                    vals__uint8: [{ v: 2, d: 'i=1 and i=3' }],
                     dates__uint16: [0]
                 },
                 {
                     x__uint8: 255,
                     y__uint8: 255,
-                    vals__uint8: [{v: 2, d: 'i=10 and i=12'}],
+                    vals__uint8: [{ v: 2, d: 'i=10 and i=12' }],
                     dates__uint16: [0]
                 }
             ]
@@ -166,19 +169,19 @@ describe('torque boundary points', function() {
                 {
                     x__uint8: 255,
                     y__uint8: 0,
-                    vals__uint8: [{v: 2, d: 'i=9 and i=11'}],
+                    vals__uint8: [{ v: 2, d: 'i=9 and i=11' }],
                     dates__uint16: [0]
                 },
                 {
                     x__uint8: 0,
                     y__uint8: 0,
-                    vals__uint8: [{v: 2, d: 'i=1 and i=5'}],
+                    vals__uint8: [{ v: 2, d: 'i=1 and i=5' }],
                     dates__uint16: [0]
                 },
                 {
                     x__uint8: 0,
                     y__uint8: 255,
-                    vals__uint8: [{v: 2, d: 'i=10 and i=12'}],
+                    vals__uint8: [{ v: 2, d: 'i=10 and i=12' }],
                     dates__uint16: [0]
                 }
             ]
@@ -197,7 +200,7 @@ describe('torque boundary points', function() {
                 {
                     x__uint8: 255,
                     y__uint8: 255,
-                    vals__uint8: [{v: 3, d: 'i=1, i=2 and i=8'}],
+                    vals__uint8: [{ v: 3, d: 'i=1, i=2 and i=8' }],
                     dates__uint16: [0]
                 }
             ]
@@ -235,18 +238,16 @@ describe('torque boundary points', function() {
         }
     ];
 
-    tileRequests.forEach(function(tileRequest) {
+    tileRequests.forEach(function (tileRequest) {
         // See https://github.com/CartoDB/Windshaft/issues/186
         var desc = 'handles ' + tileRequest.desc + '.json.torque\n\n\t' + tileRequest.repr.join('\n\t') + '\n\n';
         it(desc, function (done) {
-
             assert.response(server, {
                 url: '/api/v1/map',
                 method: 'POST',
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(boundaryPointsMapConfig)
             }, {}, function (res, err) {
-
                 assert.ok(!err, 'Failed to create layergroup');
 
                 var parsedBody = JSON.parse(res.body);
@@ -264,11 +265,11 @@ describe('torque boundary points', function() {
                     assert.ok(!err, 'Failed to get json');
 
                     assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], "application/json; charset=utf-8");
+                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
                     var parsed = JSON.parse(res.body);
                     /* Order the JSON first by descending x__uint8 and ascending
                      * y__uint8 */
-                    parsed.sort(function(a,b) {
+                    parsed.sort(function (a, b) {
                         if (a.x__uint8 === b.x__uint8) {
                             return (a.y__uint8 > b.y__uint8);
                         }
@@ -276,7 +277,7 @@ describe('torque boundary points', function() {
                     });
 
                     var i = 0;
-                    tileRequest.expects.forEach(function(expected) {
+                    tileRequest.expects.forEach(function (expected) {
                         assert.equal(
                             parsed[i].x__uint8,
                             expected.x__uint8,
@@ -297,7 +298,7 @@ describe('torque boundary points', function() {
                         );
 
                         var j = 0;
-                        expected.vals__uint8.forEach(function(val) {
+                        expected.vals__uint8.forEach(function (val) {
                             assert.equal(
                                 parsed[i].vals__uint8[j],
                                 val.v,
@@ -336,24 +337,27 @@ describe('torque boundary points', function() {
         });
     });
 
-    it('regression london point', function(done) {
-        var londonPointMapConfig =  {
+    it('regression london point', function (done) {
+        var londonPointMapConfig = {
             version: '1.1.0',
             layers: [
-                { type: 'torque', options: {
-                    sql: "SELECT " +
-                            "1 as i, " +
+                {
+                    type: 'torque',
+                    options: {
+                        sql: 'SELECT ' +
+                            '1 as i, ' +
                             "'1970-01-02'::date as d, " +
-                            "ST_MakePoint(-11309.9155492599,6715342.44989312) g",
-                    geom_column: 'g',
-                    cartocss: 'Map { ' +
+                            'ST_MakePoint(-11309.9155492599,6715342.44989312) g',
+                        geom_column: 'g',
+                        cartocss: 'Map { ' +
                         '-torque-frame-count:2; ' +
                         '-torque-resolution:1; ' +
                         '-torque-time-attribute:"d"; ' +
                         '-torque-data-aggregation:linear; ' +
                         '-torque-aggregation-function:"count(i)"; }',
-                    cartocss_version: '1.0.1'
-                } }
+                        cartocss_version: '1.0.1'
+                    }
+                }
             ]
         };
 
@@ -368,7 +372,6 @@ describe('torque boundary points', function() {
             var parsedBody = JSON.parse(res.body);
             var layergroupId = parsedBody.layergroupid;
             layergroupIdToDelete = layergroupId;
-
 
             assert.response(server, {
                 url: '/api/v1/map/' + layergroupId + '/0/2/1/1.json.torque',
@@ -393,33 +396,36 @@ describe('torque boundary points', function() {
         });
     });
 
-    it('should consider resolution for least value in query', function(done) {
-        var londonPointMapConfig =  {
+    it('should consider resolution for least value in query', function (done) {
+        var londonPointMapConfig = {
             version: '1.1.0',
             layers: [
-                { type: 'torque', options: {
-                    sql: "" +
-                    "SELECT " +
-                        "0 as i, " +
+                {
+                    type: 'torque',
+                    options: {
+                        sql: '' +
+                    'SELECT ' +
+                        '0 as i, ' +
                         "st_transform('0101000020E6100000FABD3AB4B5031C400581A80ECC2F4940'::geometry, 3857) as g " +
-                    "UNION ALL " +
-                    "SELECT " +
-                        "2 as i, " +
+                    'UNION ALL ' +
+                    'SELECT ' +
+                        '2 as i, ' +
                         "st_transform('0101000020E61000006739E30EAE031C406625C0C3C72F4940'::geometry, 3857) as g " +
-                    "UNION ALL " +
-                    "SELECT " +
-                        "3 as i, " +
+                    'UNION ALL ' +
+                    'SELECT ' +
+                        '3 as i, ' +
                         "st_transform('0101000020E6100000E26DB8A2A7031C40C8BAA5C2C52F4940'::geometry, 3857) as g",
-                    geom_column: 'g',
-                    cartocss: 'Map { ' +
+                        geom_column: 'g',
+                        cartocss: 'Map { ' +
                         '-torque-frame-count:1; ' +
                         '-torque-animation-duration:30;' +
                         '-torque-time-attribute:"i"; ' +
                         '-torque-aggregation-function:"count(i)"; ' +
                         '-torque-resolution:2; ' +
                         '-torque-data-aggregation: cumulative; }',
-                    cartocss_version: '1.0.1'
-                } }
+                        cartocss_version: '1.0.1'
+                    }
+                }
             ]
         };
 
@@ -435,7 +441,6 @@ describe('torque boundary points', function() {
             var layergroupId = parsedBody.layergroupid;
             layergroupIdToDelete = layergroupId;
 
-
             assert.response(server, {
                 url: '/api/v1/map/' + layergroupId + '/0/13/4255/2765.json.torque',
                 method: 'GET',
@@ -447,7 +452,7 @@ describe('torque boundary points', function() {
 
                 var parsed = JSON.parse(res.body);
 
-                assert.deepEqual(parsed.sort(function(a,b){return a.x__uint8 > b.x__uint8;}), [
+                assert.deepEqual(parsed.sort(function (a, b) { return a.x__uint8 > b.x__uint8; }), [
                     {
                         x__uint8: 47,
                         y__uint8: 127,
@@ -465,5 +470,4 @@ describe('torque boundary points', function() {
             });
         });
     });
-
 });

@@ -25,7 +25,7 @@ describe('layergroup metadata', function () {
                     {
                         type: 'cartodb',
                         options: {
-                            sql: 'select * from populated_places_simple_reduced',
+                            sql: 'select * from populated_places_simple_reduced'
                         }
                     }
                 ]
