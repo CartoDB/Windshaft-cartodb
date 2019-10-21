@@ -368,8 +368,8 @@ describe('tests from old api translated to multilayer', function() {
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 var affectedFn = QueryTables.getQueryMetadataModel;
-                QueryTables.getQueryMetadataModel = function(pg, sql, callback) {
-                    return callback(new Error('fake error message'));
+                QueryTables.getQueryMetadataModel = function () {
+                    return Promise.reject(new Error('fake error message'));
                 };
 
                 // reset internal cacheChannel cache

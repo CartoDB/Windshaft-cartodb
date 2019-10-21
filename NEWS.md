@@ -10,6 +10,9 @@ Announcements:
 
 - Added mechanism to inject custom middlewares through configuration.
 - Stop requiring unused config properties: "base_url", "base_url_mapconfig", and "base_url_templated".
+- Upgraded cartodb-query-tables to version [0.7.0](https://github.com/CartoDB/node-cartodb-query-tables/blob/0.7.0/NEWS.md#version-0.7.0).
+- Be able to set a coherent TTL in Cache-Control header to expire all resources belonging to a map simultaneously.
+- When `cache buster` in request path is `0` set header `Last-Modified` to now, it avoids stalled content in 3rd party cache providers when they add `If-Modified-Since` header into the request.
 
 ## 7.2.0
 Released 2019-09-30
