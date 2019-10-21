@@ -115,7 +115,7 @@ describe('Basic authorization use cases', function () {
             function (res, err) {
                 assert.ifError(err);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'));
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'));
                 assert.strictEqual(parsed.errors.length, 1);
                 assert.ok(parsed.errors[0].match(/Unauthorized/));
                 done();

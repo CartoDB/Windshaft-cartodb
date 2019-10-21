@@ -63,8 +63,8 @@ describe('turbo-carto for anonymous maps', function () {
             this.testClient.getLayergroup(function (err, layergroup) {
                 assert.ok(!err, err);
 
-                assert.ok(layergroup.hasOwnProperty('layergroupid'));
-                assert.ok(!layergroup.hasOwnProperty('errors'));
+                assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'));
+                assert.ok(!Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
 
                 done();
             });

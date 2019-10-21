@@ -298,7 +298,7 @@ suites.forEach(({ desc, usePostGIS }) => {
                 assert.ifError(err);
                 assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
                 // we don't care about stats here as is an aliased column
-                assert.ok(layergroup.metadata.layers[0].meta.stats.hasOwnProperty('estimatedFeatureCount'));
+                assert.ok(Object.prototype.hasOwnProperty.call(layergroup.metadata.layers[0].meta.stats, 'estimatedFeatureCount'));
                 testClient.drain(done);
             });
         });
@@ -320,7 +320,7 @@ suites.forEach(({ desc, usePostGIS }) => {
                 assert.strictEqual(layergroup.metadata.layers[0].type, 'http');
                 assert.strictEqual(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
                 assert.strictEqual(layergroup.metadata.layers[1].type, 'mapnik');
-                assert.ok(!layergroup.metadata.layers[1].meta.hasOwnProperty('stats'));
+                assert.ok(!Object.prototype.hasOwnProperty.call(layergroup.metadata.layers[1].meta, 'stats'));
                 assert.strictEqual(layergroup.metadata.layers[2].id, typeLayerId('http', 1));
                 assert.strictEqual(layergroup.metadata.layers[2].type, 'http');
                 global.environment.enabledFeatures.layerStats = true;
@@ -377,7 +377,7 @@ suites.forEach(({ desc, usePostGIS }) => {
             const sorted = {};
             Object.keys(columns).forEach(name => {
                 let data = columns[name];
-                if (data.hasOwnProperty('categories')) {
+                if (Object.prototype.hasOwnProperty.call(data, 'categories')) {
                     data = Object.assign(data, { categories: data.categories.sort(catOrder) });
                 }
                 sorted[name] = data;

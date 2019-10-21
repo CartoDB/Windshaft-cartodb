@@ -122,7 +122,7 @@ describe('named-maps widgets', function () {
                 assert.ifError(err);
 
                 layergroup = JSON.parse(res.body);
-                assert.ok(layergroup.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from: " + res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'), "Missing 'layergroupid' from: " + res.body);
                 layergroupid = layergroup.layergroupid;
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(layergroup.layergroupid).token] = 0;

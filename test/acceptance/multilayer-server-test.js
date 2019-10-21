@@ -267,7 +267,7 @@ describe('tests from old api translated to multilayer', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
 
-                assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
+                assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'x-cache-channel'));
                 assert.strictEqual(res.headers['x-cache-channel'], expectedCacheChannel);
 
                 assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
@@ -305,7 +305,7 @@ describe('tests from old api translated to multilayer', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
 
-                assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
+                assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'x-cache-channel'));
                 assert.strictEqual(res.headers['x-cache-channel'], expectedCacheChannel);
 
                 assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
@@ -337,7 +337,7 @@ describe('tests from old api translated to multilayer', function () {
             function (res) {
                 PgQueryRunner.prototype.run = runQueryFn;
 
-                assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+                assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'x-cache-channel'));
 
                 var parsed = JSON.parse(res.body);
                 assert.deepStrictEqual(parsed.errors, ['fake error message']);
@@ -392,7 +392,7 @@ describe('tests from old api translated to multilayer', function () {
                     },
                     function (res) {
                         QueryTables.getQueryMetadataModel = affectedFn;
-                        assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
+                        assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'x-cache-channel'));
                         done();
                     }
                 );

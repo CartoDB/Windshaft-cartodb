@@ -60,8 +60,8 @@ describe('turbo-carto regressions', function () {
         this.testClient.getLayergroup(function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('layergroupid'));
-            assert.ok(!layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'));
+            assert.ok(!Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
 
             done();
         });
@@ -83,8 +83,8 @@ describe('turbo-carto regressions', function () {
         this.testClient.getLayergroup({ response: TestClient.RESPONSE.ERROR }, function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(!layergroup.hasOwnProperty('layergroupid'));
-            assert.ok(layergroup.hasOwnProperty('errors'));
+            assert.ok(!Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
 
             var turboCartoError = layergroup.errors_with_context[0];
             assert.ok(turboCartoError);
@@ -111,8 +111,8 @@ describe('turbo-carto regressions', function () {
         this.testClient.getLayergroup(function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('layergroupid'));
-            assert.ok(!layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'));
+            assert.ok(!Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
 
             done();
         });
@@ -150,8 +150,8 @@ describe('turbo-carto regressions', function () {
         this.testClient.getLayergroup(function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('layergroupid'));
-            assert.ok(!layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'));
+            assert.ok(!Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
 
             done();
         });
@@ -215,8 +215,8 @@ describe('turbo-carto regressions', function () {
         this.testClient.getLayergroup(function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('layergroupid'));
-            assert.ok(!layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'));
+            assert.ok(!Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
 
             done();
         });
@@ -278,8 +278,8 @@ describe('turbo-carto regressions', function () {
                 this.testClient.getLayergroup(function (err, layergroup) {
                     assert.ok(!err, err);
 
-                    assert.ok(layergroup.hasOwnProperty('layergroupid'));
-                    assert.ok(!layergroup.hasOwnProperty('errors'));
+                    assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'));
+                    assert.ok(!Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
 
                     done();
                 });
@@ -372,7 +372,7 @@ describe('turbo-carto regressions', function () {
             this.testClient.getLayergroup(function (err, layergroup) {
                 assert.ok(!err, err);
 
-                assert.ok(layergroup.hasOwnProperty('layergroupid'));
+                assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'));
                 assert.deepStrictEqual(layergroup.metadata.layers[0].meta.cartocss, scenario.expected);
 
                 done();

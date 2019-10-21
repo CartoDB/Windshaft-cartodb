@@ -72,9 +72,9 @@ describe('prepare-context', function () {
         cleanUpQueryParams(prepareRequest(req), prepareResponse(res), function (err) {
             if (err) { done(err); return; }
             assert.ok(_.isObject(req.query), 'request has query');
-            assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-            assert.ok(res.hasOwnProperty('locals'), 'response has locals');
-            assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
+            assert.ok(!Object.prototype.hasOwnProperty.call(req.query, 'dbuser'), 'dbuser was removed from query');
+            assert.ok(Object.prototype.hasOwnProperty.call(res, 'locals'), 'response has locals');
+            assert.ok(!Object.prototype.hasOwnProperty.call(res.locals, 'interactivity'), 'response locals do not have interactivity');
             done();
         });
     });
@@ -86,9 +86,9 @@ describe('prepare-context', function () {
         dbConnSetup(prepareRequest(req), prepareResponse(res), function (err) {
             if (err) { done(err); return; }
             assert.ok(_.isObject(req.query), 'request has query');
-            assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-            assert.ok(res.hasOwnProperty('locals'), 'response has locals');
-            assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
+            assert.ok(!Object.prototype.hasOwnProperty.call(req.query, 'dbuser'), 'dbuser was removed from query');
+            assert.ok(Object.prototype.hasOwnProperty.call(res, 'locals'), 'response has locals');
+            assert.ok(!Object.prototype.hasOwnProperty.call(res.locals, 'interactivity'), 'response locals do not have interactivity');
             assert.strictEqual(res.locals.dbname, test_database);
             assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser (' + res.locals.dbuser + ')');
             done();
@@ -117,9 +117,9 @@ describe('prepare-context', function () {
             dbConnSetup(req, res, function (err) {
                 if (err) { done(err); return; }
                 assert.ok(_.isObject(req.query), 'request has query');
-                assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
-                assert.ok(res.hasOwnProperty('locals'), 'response has locals');
-                assert.ok(!res.locals.hasOwnProperty('interactivity'), 'request params do not have interactivity');
+                assert.ok(!Object.prototype.hasOwnProperty.call(req.query, 'dbuser'), 'dbuser was removed from query');
+                assert.ok(Object.prototype.hasOwnProperty.call(res, 'locals'), 'response has locals');
+                assert.ok(!Object.prototype.hasOwnProperty.call(res.locals, 'interactivity'), 'request params do not have interactivity');
                 assert.strictEqual(res.locals.dbname, test_database);
                 assert.strictEqual(res.locals.dbuser, test_user);
 

@@ -136,7 +136,7 @@ describe('named-maps analysis', function () {
                     assert.ifError(err);
 
                     layergroup = JSON.parse(res.body);
-                    assert.ok(layergroup.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from: " + res.body);
+                    assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'), "Missing 'layergroupid' from: " + res.body);
                     layergroupid = layergroup.layergroupid;
 
                     assert.ok(
@@ -150,9 +150,9 @@ describe('named-maps analysis', function () {
                     assert.deepStrictEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
                     nodesIds.forEach(function (nodeId) {
                         var node = nodes[nodeId];
-                        assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
-                        assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
-                        assert.ok(!node.hasOwnProperty('query'), 'Unexpected "query" attribute in node');
+                        assert.ok(Object.prototype.hasOwnProperty.call(node, 'url'), 'Missing "url" attribute in node');
+                        assert.ok(Object.prototype.hasOwnProperty.call(node, 'status'), 'Missing "status" attribute in node');
+                        assert.ok(!Object.prototype.hasOwnProperty.call(node, 'query'), 'Unexpected "query" attribute in node');
                     });
 
                     keysToDelete['map_cfg|' + LayergroupToken.parse(layergroup.layergroupid).token] = 0;

@@ -45,10 +45,10 @@ function lzma_compress_to_base64 (payload, mode, callback) {
 // Check that the response headers do not request caching
 // Throws on failure
 function checkNoCache (res) {
-    assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-    assert.ok(!res.headers.hasOwnProperty('surrogate-key'));
-    assert.ok(!res.headers.hasOwnProperty('cache-control')); // is this correct ?
-    assert.ok(!res.headers.hasOwnProperty('last-modified')); // is this correct ?
+    assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'x-cache-channel'));
+    assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'surrogate-key'));
+    assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'cache-control')); // is this correct ?
+    assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'last-modified')); // is this correct ?
 }
 
 /**
@@ -57,13 +57,13 @@ function checkNoCache (res) {
  * @param res
  */
 function checkCache (res) {
-    assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
-    assert.ok(res.headers.hasOwnProperty('cache-control'));
-    assert.ok(res.headers.hasOwnProperty('last-modified'));
+    assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'x-cache-channel'));
+    assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'cache-control'));
+    assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'last-modified'));
 }
 
 function checkSurrogateKey (res, expectedKey) {
-    assert.ok(res.headers.hasOwnProperty('surrogate-key'));
+    assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'surrogate-key'));
 
     function createSet (keys, key) {
         keys[key] = true;

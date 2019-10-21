@@ -1865,7 +1865,7 @@ describe('aggregation', function () {
 
                     const feature = geojsonTile.features[0];
 
-                    assert.ok(feature.properties.hasOwnProperty('value'), 'Missing value property');
+                    assert.ok(Object.prototype.hasOwnProperty.call(feature.properties, 'value'), 'Missing value property');
 
                     done();
                 });

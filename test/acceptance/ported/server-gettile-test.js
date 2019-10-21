@@ -98,7 +98,7 @@ describe('server_gettile', function () {
 
         function validateLayergroup (res) {
             // cache is hit because we create a renderer to validate the map config
-            assert.ok(!res.headers.hasOwnProperty('x-windshaft-cache'), 'Did hit renderer cache on first time');
+            assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'x-windshaft-cache'), 'Did hit renderer cache on first time');
         }
 
         testClient.withLayergroup(mapConfig, validateLayergroup, function (err, requestTile, finish) {
@@ -108,7 +108,7 @@ describe('server_gettile', function () {
 
                 requestTile(tileUrl, function (err, res) {
                     assert.ok(
-                        res.headers.hasOwnProperty('x-windshaft-cache'),
+                        Object.prototype.hasOwnProperty.call(res.headers, 'x-windshaft-cache'),
                         'Did not hit renderer cache on second time'
                     );
                     assert.ok(parseInt(res.headers['x-windshaft-cache'], 10) >= 0);

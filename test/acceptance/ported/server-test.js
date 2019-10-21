@@ -49,10 +49,10 @@ describe('server', function () {
             status: 200
         }, function (res) {
             var parsed = JSON.parse(res.body);
-            assert.ok(parsed.hasOwnProperty('windshaft'), "No 'windshaft' version in " + parsed);
-            assert.ok(parsed.hasOwnProperty('grainstore'), "No 'grainstore' version in " + parsed);
-            assert.ok(parsed.hasOwnProperty('node_mapnik'), "No 'node_mapnik' version in " + parsed);
-            assert.ok(parsed.hasOwnProperty('mapnik'), "No 'mapnik' version in " + parsed);
+            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'windshaft'), "No 'windshaft' version in " + parsed);
+            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'grainstore'), "No 'grainstore' version in " + parsed);
+            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'node_mapnik'), "No 'node_mapnik' version in " + parsed);
+            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'mapnik'), "No 'mapnik' version in " + parsed);
             // TODO: check actual versions ?
             done();
         });

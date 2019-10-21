@@ -1105,12 +1105,12 @@ describe('multilayer', function () {
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var grid = JSON.parse(res.body);
                 assert.ok(grid);
-                assert.ok(grid.hasOwnProperty('data'));
-                assert.ok(grid.data.hasOwnProperty('1'));
+                assert.ok(Object.prototype.hasOwnProperty.call(grid, 'data'));
+                assert.ok(Object.prototype.hasOwnProperty.call(grid.data, '1'));
                 var data = grid.data[1];
-                assert.ok(data.hasOwnProperty('n'), "Missing 'n' from grid data keys: " + _.keys(data));
-                assert.ok(data.hasOwnProperty('i'), "Missing 'i' from grid data keys: " + _.keys(data));
-                assert.ok(data.hasOwnProperty('t'), "Missing 't' from grid data keys: " + _.keys(data));
+                assert.ok(Object.prototype.hasOwnProperty.call(data, 'n'), "Missing 'n' from grid data keys: " + _.keys(data));
+                assert.ok(Object.prototype.hasOwnProperty.call(data, 'i'), "Missing 'i' from grid data keys: " + _.keys(data));
+                assert.ok(Object.prototype.hasOwnProperty.call(data, 't'), "Missing 't' from grid data keys: " + _.keys(data));
                 next();
             },
             function finish (err) {

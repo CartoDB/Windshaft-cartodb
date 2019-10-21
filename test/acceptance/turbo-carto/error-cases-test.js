@@ -56,7 +56,7 @@ describe('turbo-carto error cases', function () {
         this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
             assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/), layergroup.errors[0]);
             assert.ok(layergroup.errors[0].match(/invalid\sramp\slength/i), layergroup.errors[0]);
@@ -70,7 +70,7 @@ describe('turbo-carto error cases', function () {
         this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
             assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors[0].match(/unable\sto\scompute\sramp/i));
@@ -85,7 +85,7 @@ describe('turbo-carto error cases', function () {
         this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
             assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors[0].match(/unable\sto\scompute\sramp/i));
@@ -100,7 +100,7 @@ describe('turbo-carto error cases', function () {
         this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
             assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(!layergroup.errors[0].match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors[0].match(/invalid\scode/i));
@@ -114,7 +114,7 @@ describe('turbo-carto error cases', function () {
         this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
             assert.strictEqual(layergroup.errors_with_context.length, 1);
             assert.strictEqual(layergroup.errors_with_context[0].type, 'layer');
             assert.strictEqual(layergroup.errors_with_context[0].subtype, 'turbo-carto');
@@ -168,7 +168,7 @@ describe('turbo-carto error cases', function () {
         this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroup) {
             assert.ok(!err, err);
 
-            assert.ok(layergroup.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'errors'));
             assert.strictEqual(layergroup.errors_with_context.length, 2);
 
             assert.strictEqual(layergroup.errors_with_context[0].type, 'layer');

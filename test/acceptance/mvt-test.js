@@ -146,7 +146,7 @@ function mvt (usePostGIS) {
                     assert.ok(Array.isArray(geojsonTile.features));
                     assert.ok(geojsonTile.features.length > 0);
                     var feature = geojsonTile.features[0];
-                    assert.ok(feature.properties.hasOwnProperty('pop_max'), 'Missing pop_max property');
+                    assert.ok(Object.prototype.hasOwnProperty.call(feature.properties, 'pop_max'), 'Missing pop_max property');
 
                     testClient.drain(done);
                 });
@@ -231,7 +231,7 @@ function mvt (usePostGIS) {
 
                     const feature = geojsonTile.features[0];
 
-                    assert.ok(feature.properties.hasOwnProperty('_feature_count'), 'Missing _feature_count property');
+                    assert.ok(Object.prototype.hasOwnProperty.call(feature.properties, '_feature_count'), 'Missing _feature_count property');
                     assert.strictEqual(feature.properties.cartodb_id, 1);
                     assert.strictEqual(feature.properties.name, 'Hawai');
                     assert.strictEqual(feature.properties._feature_count, 5); // original table has _feature_count = 1

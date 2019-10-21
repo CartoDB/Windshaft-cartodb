@@ -104,7 +104,7 @@ describe('analysis-layers regressions', function () {
             var expectedIds = ['customer_home_locations', 'b0', 'b1', 'a2', 'a3', 'a4'];
             expectedIds.forEach(function (expectedId) {
                 assert.ok(
-                    analyses[0].nodes.hasOwnProperty(expectedId),
+                    Object.prototype.hasOwnProperty.call(analyses[0].nodes, expectedId),
                     'Missing "' + expectedId + '" from node list.'
                 );
             });

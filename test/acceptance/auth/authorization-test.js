@@ -70,7 +70,7 @@ describe('authorization', function () {
             testClientGet.getTile(0, 0, 0, params, function (err, res, body) {
                 assert.ifError(err);
 
-                assert.ok(body.hasOwnProperty('errors'));
+                assert.ok(Object.prototype.hasOwnProperty.call(body, 'errors'));
                 assert.strictEqual(body.errors.length, 1);
                 assert.ok(body.errors[0].match(/permission denied/), body.errors[0]);
 
@@ -98,7 +98,7 @@ describe('authorization', function () {
         testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) {
             assert.ifError(err);
 
-            assert.ok(layergroupResult.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroupResult, 'errors'));
             assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
 
@@ -175,7 +175,7 @@ describe('authorization', function () {
         testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) { // TODO 401
             assert.ifError(err);
 
-            assert.ok(layergroupResult.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroupResult, 'errors'));
             assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
 
@@ -202,7 +202,7 @@ describe('authorization', function () {
         testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) {
             assert.ifError(err);
 
-            assert.ok(layergroupResult.hasOwnProperty('errors'));
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroupResult, 'errors'));
             assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/Forbidden/), layergroupResult.errors[0]);
 

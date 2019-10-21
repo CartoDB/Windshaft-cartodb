@@ -204,9 +204,9 @@ describe('analysis-layers', function () {
             assert.deepStrictEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
             nodesIds.forEach(function (nodeId) {
                 var node = nodes[nodeId];
-                assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
-                assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
-                assert.ok(node.hasOwnProperty('query'), 'Missing "status" attribute in node');
+                assert.ok(Object.prototype.hasOwnProperty.call(node, 'url'), 'Missing "url" attribute in node');
+                assert.ok(Object.prototype.hasOwnProperty.call(node, 'status'), 'Missing "status" attribute in node');
+                assert.ok(Object.prototype.hasOwnProperty.call(node, 'query'), 'Missing "status" attribute in node');
             });
 
             testClient.drain(done);
@@ -295,9 +295,9 @@ describe('analysis-layers', function () {
             assert.deepStrictEqual(nodesIds, ['2570e105-7b37-40d2-bdf4-1af889598745']);
             nodesIds.forEach(function (nodeId) {
                 var node = nodes[nodeId];
-                assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
-                assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
-                assert.ok(node.hasOwnProperty('query'), 'Missing "status" attribute in node');
+                assert.ok(Object.prototype.hasOwnProperty.call(node, 'url'), 'Missing "url" attribute in node');
+                assert.ok(Object.prototype.hasOwnProperty.call(node, 'status'), 'Missing "status" attribute in node');
+                assert.ok(Object.prototype.hasOwnProperty.call(node, 'query'), 'Missing "status" attribute in node');
             });
 
             testClient.drain(done);

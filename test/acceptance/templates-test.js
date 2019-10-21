@@ -126,7 +126,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 403);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'), res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'), res.body);
                 err = parsed.errors[0];
                 assert.ok(err.match(/only.*authenticated.*user/i),
                     'Unexpected error response: ' + err);
@@ -152,7 +152,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.body);
                 var parsedBody = JSON.parse(res.body);
-                assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/already exists/i),
                     'Unexpected error for pre-existing template name: ' + parsedBody.errors);
 
@@ -186,7 +186,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.body);
                 var parsedBody = JSON.parse(res.body);
-                assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 var re = /invalid.*authentication.*missing/i;
                 assert.ok(parsedBody.errors[0].match(re),
                     'Error for invalid authentication does not match ' + re + ': ' + parsedBody.errors);
@@ -214,7 +214,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.body);
                 var parsedBody = JSON.parse(res.body);
-                assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 var re = new RegExp(/invalid.*authentication.*missing/i);
                 assert.ok(parsedBody.errors[0].match(re),
                     'Error for invalid authentication does not match ' + re + ': ' + parsedBody.errors);
@@ -239,7 +239,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 // clone the valid one and rename it
@@ -262,7 +262,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 var re = /invalid.*authentication.*missing/i;
                 assert.ok(parsed.errors[0].match(re),
@@ -389,7 +389,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tplid1 = parsed.template_id;
 
@@ -410,7 +410,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tplid2 = parsed.template_id;
                 var next = this;
@@ -426,7 +426,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 403, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     'Missing error from response: ' + res.body);
                 err = parsed.errors[0];
                 assert.ok(err.match(/authenticated user/), err);
@@ -443,7 +443,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_ids'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_ids'),
                     "Missing 'template_ids' from response body: " + res.body);
                 var ids = parsed.template_ids;
                 assert.strictEqual(ids.length, 2);
@@ -477,7 +477,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var backup_name = template_acceptance1.name;
@@ -497,7 +497,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
-                assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/cannot update name/i),
                     'Unexpected error for invalid update: ' + parsedBody.errors);
                 var put_request = {
@@ -514,7 +514,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
-                assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/cannot update name/i),
                     'Unexpected error for invalid update: ' + parsedBody.errors);
                 var put_request = {
@@ -531,7 +531,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 assert.strictEqual(tpl_id, parsed.template_id);
 
@@ -560,7 +560,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var get_request = {
@@ -576,7 +576,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 403, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
-                assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/only.*authenticated.*user/i),
                     'Unexpected error for unauthenticated template get: ' + parsedBody.errors);
                 var get_request = {
@@ -592,7 +592,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template'),
                     "Missing 'template' from response body: " + res.body);
                 assert.deepStrictEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
 
@@ -621,7 +621,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var get_request = {
@@ -637,7 +637,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template'),
                     "Missing 'template' from response body: " + res.body);
                 assert.deepStrictEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
                 var del_request = {
@@ -653,7 +653,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 403, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/only.*authenticated.*user/i),
                     'Unexpected error for unauthenticated template get: ' + parsed.errors);
@@ -683,7 +683,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 404, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/cannot find/i),
                     'Unexpected error for missing template: ' + parsed.errors);
@@ -734,7 +734,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var post_request = {
@@ -753,7 +753,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 403,
                     'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/unauthorized/i),
                     'Unexpected error for unauthorized instance : ' + parsed.errors);
@@ -771,7 +771,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 404, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'), "Missing 'errors' from response body: " + res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'), "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/not found/i), 'Unexpected error for forbidden instance : ' + parsed.errors);
                 var post_request = {
                     url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
@@ -788,12 +788,12 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('layergroupid'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
                 assert.ok(layergroupid.match(/^localhost@/),
                     'Returned layergroupid does not start with signer name: ' + layergroupid);
-                assert.ok(parsed.hasOwnProperty('last_updated'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'last_updated'),
                     "Missing 'last_updated' from response body: " + res.body);
 
                 keysToDelete['user:localhost:mapviews:global'] = 5;
@@ -815,7 +815,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 403,
                     'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/permission denied/i),
                     'Unexpected error for unauthorized instance (expected /permission denied/): ' + parsed.errors);
@@ -855,7 +855,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 403,
                     'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/cannot use/i),
                     'Unexpected error for unauthorized instance (expected /cannot use/): ' + parsed.errors);
@@ -937,7 +937,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var post_request = {
@@ -955,7 +955,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 403,
                     'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/unauthorized/i),
                     'Unexpected error for unauthorized instance : ' + parsed.errors);
@@ -974,12 +974,12 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('layergroupid'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
                 assert.ok(layergroupid.match(/^localhost@/),
                     'Returned layergroupid does not start with signer name: ' + layergroupid);
-                assert.ok(parsed.hasOwnProperty('last_updated'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'last_updated'),
                     "Missing 'last_updated' from response body: " + res.body);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
@@ -1001,7 +1001,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 403,
                     'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/permission denied/i),
                     'Unexpected error for unauthorized instance (expected /permission denied): ' + parsed.errors);
@@ -1124,7 +1124,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var post_request = {
@@ -1142,7 +1142,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 403,
                     'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/unauthorized/i),
                     'Unexpected error for unauthorized instance : ' + parsed.errors);
@@ -1161,13 +1161,13 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('layergroupid'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
                 assert.ok(layergroupid.match(/^localhost@/),
                     'Returned layergroupid does not start with signer name: ' + layergroupid);
                 assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
-                assert.ok(parsed.hasOwnProperty('last_updated'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'last_updated'),
                     "Missing 'last_updated' from response body: " + res.body);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
@@ -1189,7 +1189,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 403,
                     'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('errors'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'),
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/permission denied/i),
                     'Unexpected error for unauthorized getAttributes (expected /permission denied/): ' + parsed.errors);
@@ -1285,7 +1285,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var post_request = {
@@ -1351,7 +1351,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var post_request = {
@@ -1436,7 +1436,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var post_request = {
@@ -1545,7 +1545,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('layergroupid'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                 redis_stats_client.ZSCORE(statskey + ':global', now, this);
@@ -1630,7 +1630,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 tpl_id = parsed.template_id;
                 var post_request = {
@@ -1648,7 +1648,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('layergroupid'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
                 helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
@@ -1675,7 +1675,7 @@ describe('template_api', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('template_id'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
                 assert.strictEqual(tpl_id, parsed.template_id);
                 var post_request = {
@@ -1693,7 +1693,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.ok(parsed.hasOwnProperty('layergroupid'),
+                assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 assert.ok(layergroupid !== parsed.layergroupid);
                 helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
@@ -1799,7 +1799,7 @@ describe('template_api', function () {
 
                 var parsed = JSON.parse(res.body);
                 assert.ok(
-                    parsed.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from response body: " + res.body);
+                    Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'), "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
@@ -1984,7 +1984,7 @@ describe('template_api', function () {
                 function instantiateTemplate (err, res) {
                     assert.ifError(err);
                     var parsed = JSON.parse(res.body);
-                    assert.ok(parsed.hasOwnProperty('template_id'), "Missing 'template_id' from response: " + res.body);
+                    assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'), "Missing 'template_id' from response: " + res.body);
                     var templateId = parsed.template_id;
                     var instantiatePostRequest = {
                         url: '/api/v1/map/named/' + templateId,

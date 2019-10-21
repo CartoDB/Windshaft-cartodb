@@ -199,10 +199,10 @@ TestClient.prototype.getWidget = function (widgetName, params, callback) {
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             var urlParams = {
-                own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
+                own_filter: Object.prototype.hasOwnProperty.call(params, 'own_filter') ? params.own_filter : 1
             };
             ['bbox', 'bins', 'start', 'end'].forEach(function (extraParam) {
-                if (params.hasOwnProperty(extraParam)) {
+                if (Object.prototype.hasOwnProperty.call(params, extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }
             });
@@ -309,7 +309,7 @@ TestClient.prototype.widgetSearch = function (widgetName, userQuery, params, cal
 
             var urlParams = {
                 q: userQuery,
-                own_filter: params.hasOwnProperty('own_filter') ? params.own_filter : 1
+                own_filter: Object.prototype.hasOwnProperty.call(params, 'own_filter') ? params.own_filter : 1
             };
             if (params && params.bbox) {
                 urlParams.bbox = params.bbox;
@@ -478,15 +478,15 @@ TestClient.prototype.getDataview = function (dataviewName, params, callback) {
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             var urlParams = {};
-            if (params.hasOwnProperty('no_filters')) {
+            if (Object.prototype.hasOwnProperty.call(params, 'no_filters')) {
                 urlParams.no_filters = params.no_filters;
             }
-            if (params.hasOwnProperty('own_filter')) {
+            if (Object.prototype.hasOwnProperty.call(params, 'own_filter')) {
                 urlParams.own_filter = params.own_filter;
             }
 
             ['bbox', 'bins', 'start', 'end', 'aggregation', 'offset', 'categories'].forEach(function (extraParam) {
-                if (params.hasOwnProperty(extraParam)) {
+                if (Object.prototype.hasOwnProperty.call(params, extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }
             });
