@@ -924,11 +924,11 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
             var body;
             switch (res.headers['content-type']) {
             case 'image/png':
-                body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                body = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                 break;
             case 'application/x-protobuf':
                 body = new mapnik.VectorTile(z, x, y);
-                body.setDataSync(new Buffer(res.body, 'binary'));
+                body.setDataSync(Buffer.from(res.body, 'binary'));
                 break;
             case 'application/json; charset=utf-8':
                 body = JSON.parse(res.body);
@@ -1098,7 +1098,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
             var body;
             switch (res.headers['content-type']) {
             case 'image/png':
-                body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                body = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                 break;
             case 'application/json; charset=utf-8':
                 body = JSON.parse(res.body);
@@ -1335,7 +1335,7 @@ module.exports.getStaticMap = function getStaticMap (templateName, params, callb
 
     assert.response(server, requestOptions, expectedResponse, function (res, err) {
         helper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, function () {
-            return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
+            return callback(err, mapnik.Image.fromBytes(Buffer.from(res.body, 'binary')));
         });
     });
 };
@@ -1537,11 +1537,11 @@ TestClient.prototype.getNamedTile = function (name, z, x, y, format, options, ca
             let body;
             switch (res.headers['content-type']) {
             case 'image/png':
-                body = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                body = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                 break;
             case 'application/x-protobuf':
                 body = new mapnik.VectorTile(z, x, y);
-                body.setDataSync(new Buffer(res.body, 'binary'));
+                body.setDataSync(Buffer.from(res.body, 'binary'));
                 break;
             case 'application/json; charset=utf-8':
                 body = JSON.parse(res.body);

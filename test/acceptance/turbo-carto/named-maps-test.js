@@ -166,7 +166,7 @@ describe('turbo-carto for named maps', function () {
                     assert.strictEqual(res.headers['content-type'], 'image/png');
 
                     var fixturePath = './test/fixtures/turbo-carto-named-maps-reds.png';
-                    var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    var image = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
 
                     assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, next);
                 },
@@ -225,7 +225,7 @@ describe('turbo-carto for named maps', function () {
                     assert.strictEqual(res.headers['content-type'], 'image/png');
 
                     var fixturePath = './test/fixtures/turbo-carto-named-maps-blues.png';
-                    var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    var image = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
 
                     assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, next);
                 },

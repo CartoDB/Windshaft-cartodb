@@ -404,7 +404,7 @@ function getGeneric (layergroupConfig, url, expectedResponse, callback) {
 
             var img;
             if (contentType === pngContentType) {
-                img = new mapnik.Image.fromBytesSync(new Buffer(res.body, 'binary'));
+                img = new mapnik.Image.fromBytesSync(Buffer.from(res.body, 'binary'));
             }
 
             var keysToDelete = {

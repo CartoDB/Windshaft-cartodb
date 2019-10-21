@@ -13,6 +13,6 @@ describe('profiler', function () {
 
     it('Profiler is NOT null in ProfilerProxy when profiling is enabled', function () {
         var profilerProxy = new ProfilerProxy({ profile: true });
-        assert.notEqual(profilerProxy.profiler, null);
+        assert.notStrictEqual(profilerProxy.profiler, null);
     });
 });

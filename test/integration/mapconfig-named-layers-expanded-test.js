@@ -235,7 +235,7 @@ describe('mapconfig-named-layers-adapter', function () {
                 var layers = mapConfig.layers;
                 assert.ok(layers.length, 1);
                 assert.ok(layers[0].type, 'cartodb');
-                assert.notEqual(context.datasource.getLayerDatasource(0), undefined);
+                assert.notStrictEqual(context.datasource.getLayerDatasource(0), undefined);
 
                 done();
             }
@@ -257,7 +257,7 @@ describe('mapconfig-named-layers-adapter', function () {
                     assert.ok(!err);
                     var layers = mapConfig.layers;
                     assert.strictEqual(layers.length, 1);
-                    assert.notEqual(context.datasource.getLayerDatasource(0), undefined);
+                    assert.notStrictEqual(context.datasource.getLayerDatasource(0), undefined);
 
                     templateMaps.delTemplate(username, tokenAuthTemplateName, done);
                 }
@@ -283,11 +283,11 @@ describe('mapconfig-named-layers-adapter', function () {
 
                     assert.strictEqual(layers[0].type, 'mapnik');
                     assert.strictEqual(layers[0].options.cartocss, '#layer { polygon-fill: green; }');
-                    assert.notEqual(context.datasource.getLayerDatasource(0), undefined);
+                    assert.notStrictEqual(context.datasource.getLayerDatasource(0), undefined);
 
                     assert.strictEqual(layers[1].type, 'cartodb');
                     assert.strictEqual(layers[1].options.cartocss, '#layer { marker-fill: red; }');
-                    assert.notEqual(context.datasource.getLayerDatasource(1), undefined);
+                    assert.notStrictEqual(context.datasource.getLayerDatasource(1), undefined);
 
                     templateMaps.delTemplate(username, multipleLayersTemplateName, done);
                 }
@@ -320,11 +320,11 @@ describe('mapconfig-named-layers-adapter', function () {
 
                     assert.strictEqual(layers[0].type, 'mapnik');
                     assert.strictEqual(layers[0].options.cartocss, '#layer { polygon-fill: ' + polygonColor + '; }');
-                    assert.notEqual(context.datasource.getLayerDatasource(0), undefined);
+                    assert.notStrictEqual(context.datasource.getLayerDatasource(0), undefined);
 
                     assert.strictEqual(layers[1].type, 'cartodb');
                     assert.strictEqual(layers[1].options.cartocss, '#layer { marker-fill: ' + color + '; }');
-                    assert.notEqual(context.datasource.getLayerDatasource(1), undefined);
+                    assert.notStrictEqual(context.datasource.getLayerDatasource(1), undefined);
 
                     templateMaps.delTemplate(username, multipleLayersTemplateName, done);
                 }

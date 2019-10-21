@@ -195,7 +195,7 @@ describe('layers visibility for previews', function () {
                     assert.ifError(err);
 
                     var next = this;
-                    var img = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    var img = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                     var previewFixturePath = previewFixture(scenario.name);
 
                     assert.imageIsSimilarToFile(img, previewFixturePath, IMAGE_TOLERANCE, next);

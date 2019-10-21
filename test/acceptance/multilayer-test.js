@@ -310,7 +310,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 method: 'GET',
                 headers: { host: 'localhost' }
             }, {}, function (res) {
-                assert.notEqual(res.statusCode, 200);
+                assert.notStrictEqual(res.statusCode, 200);
                 helper.checkNoCache(res);
                 done();
             });
@@ -335,7 +335,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 method: 'GET',
                 headers: { host: 'localhost' }
             }, {}, function (res) {
-                assert.notEqual(res.statusCode, 200);
+                assert.notStrictEqual(res.statusCode, 200);
                 helper.checkNoCache(res);
                 done();
             });

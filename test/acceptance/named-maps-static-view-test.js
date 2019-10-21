@@ -90,7 +90,7 @@ describe('named maps static view', function () {
 
         assert.response(server, requestOptions, expectedResponse, function (res, err) {
             testHelper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, function () {
-                return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
+                return callback(err, mapnik.Image.fromBytes(Buffer.from(res.body, 'binary')));
             });
         });
     }

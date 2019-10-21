@@ -167,7 +167,7 @@ describe('named_layers datasources', function () {
                 assert.strictEqual(layers[1].type, 'cartodb');
                 assert.strictEqual(layers[1].options.sql, wadusTemplateSql);
                 var layerDatasource = datasource.getLayerDatasource(1);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 done();
@@ -188,13 +188,13 @@ describe('named_layers datasources', function () {
                 assert.strictEqual(layers[1].type, 'mapnik');
                 assert.strictEqual(layers[1].options.sql, wadusMapnikSql);
                 var layerDatasource = datasource.getLayerDatasource(1);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 assert.strictEqual(layers[2].type, 'cartodb');
                 assert.strictEqual(layers[2].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(2);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 done();
@@ -211,19 +211,19 @@ describe('named_layers datasources', function () {
                 assert.strictEqual(layers[0].type, 'mapnik');
                 assert.strictEqual(layers[0].options.sql, wadusMapnikSql);
                 var layerDatasource = datasource.getLayerDatasource(0);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 assert.strictEqual(layers[1].type, 'cartodb');
                 assert.strictEqual(layers[1].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(1);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 assert.strictEqual(layers[2].type, 'cartodb');
                 assert.strictEqual(layers[2].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(2);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 done();
@@ -247,19 +247,19 @@ describe('named_layers datasources', function () {
                 assert.strictEqual(layers[0].type, 'cartodb');
                 assert.strictEqual(layers[0].options.sql, wadusTemplateSql);
                 var layerDatasource = datasource.getLayerDatasource(0);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 assert.strictEqual(layers[1].type, 'mapnik');
                 assert.strictEqual(layers[1].options.sql, wadusMapnikSql);
                 layerDatasource = datasource.getLayerDatasource(1);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 assert.strictEqual(layers[2].type, 'cartodb');
                 assert.strictEqual(layers[2].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(2);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 assert.strictEqual(layers[3].type, 'cartodb');
@@ -269,7 +269,7 @@ describe('named_layers datasources', function () {
                 assert.strictEqual(layers[4].type, 'cartodb');
                 assert.strictEqual(layers[4].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(4);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 assert.strictEqual(layers[5].type, 'cartodb');
@@ -279,13 +279,13 @@ describe('named_layers datasources', function () {
                 assert.strictEqual(layers[6].type, 'mapnik');
                 assert.strictEqual(layers[6].options.sql, wadusMapnikSql);
                 layerDatasource = datasource.getLayerDatasource(6);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 assert.strictEqual(layers[7].type, 'cartodb');
                 assert.strictEqual(layers[7].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(7);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 done();

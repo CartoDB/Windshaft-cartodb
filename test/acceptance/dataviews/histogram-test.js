@@ -1124,7 +1124,7 @@ describe('histogram-dataview for date column type', function() {
             self.testClient.getDataview('minute_histogram', params, function (err, dataviewWithOffset) {
                 assert.ifError(err);
 
-                assert.notEqual(dataview.offset, dataviewWithOffset.offset);
+                assert.notStrictEqual(dataview.offset, dataviewWithOffset.offset);
                 dataview.offset = dataviewWithOffset.offset;
                 assert.deepStrictEqual(dataview, dataviewWithOffset);
                 done();
@@ -1158,7 +1158,7 @@ describe('histogram-dataview for date column type', function() {
                 function (err, filteredWithOffsetDataview) {
                     assert.ifError(err);
 
-                    assert.notEqual(filteredWithOffsetDataview.offset, filteredDataview.offset);
+                    assert.notStrictEqual(filteredWithOffsetDataview.offset, filteredDataview.offset);
                     filteredWithOffsetDataview.offset = filteredDataview.offset;
                     assert.deepStrictEqual(filteredWithOffsetDataview, filteredDataview);
                     done();

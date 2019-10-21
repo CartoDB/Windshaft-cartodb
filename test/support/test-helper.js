@@ -33,7 +33,7 @@ function lzma_compress_to_base64 (payload, mode, callback) {
     lzmaWorker.compress(payload, mode,
         function (ints) {
             ints = ints.map(function (c) { return String.fromCharCode(c + 128); }).join('');
-            var base64 = new Buffer(ints, 'binary').toString('base64');
+            var base64 = Buffer.from(ints, 'binary').toString('base64');
             callback(null, base64);
         },
         function (/* percent */) {

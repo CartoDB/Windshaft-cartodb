@@ -33,8 +33,8 @@ assert.imageBufferIsSimilarToFile = function (buffer, referenceImageRelativeFile
 };
 
 assert.imageBuffersAreSimilar = function (bufferA, bufferB, tolerance, callback) {
-    var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferA) ? bufferA : new Buffer(bufferA, 'binary'));
-    var referenceImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferB) ? bufferB : new Buffer(bufferB, 'binary'));
+    var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferA) ? bufferA : Buffer.from(bufferA, 'binary'));
+    var referenceImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferB) ? bufferB : Buffer.from(bufferB, 'binary'));
 
     imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };

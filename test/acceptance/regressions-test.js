@@ -128,7 +128,7 @@ describe('regressions', function () {
                         const timestampA = parseInt(cacheBusterA, 10);
                         const timestampB = parseInt(cacheBusterB, 10);
 
-                        assert.notEqual(timestampA, timestampB);
+                        assert.notStrictEqual(timestampA, timestampB);
                         assert.ok(timestampA < timestampB, `timestampA: ${timestampA} > timestampB:${timestampB}`);
 
                         testClient.drain(done);

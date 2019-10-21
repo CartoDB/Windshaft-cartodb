@@ -92,7 +92,7 @@ describe('named maps preview stats', function () {
             function (res, err) {
                 var img;
                 if (!err && res.headers['content-type'] === 'image/png') {
-                    img = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    img = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                 }
                 return callback(err, res, img);
             }
