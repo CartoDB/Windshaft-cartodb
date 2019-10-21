@@ -111,8 +111,8 @@ describe('wrap x coordinate', function () {
             testClient.getTile(testClient.defaultTableMapConfig('test_table'), 2, -2, 1, function (err, res, img) {
                 assert.ok(!err);
                 assert.ok(img);
-                assert.equal(img.width(), 256);
-                assert.equal(img.height(), 256);
+                assert.strictEqual(img.width(), 256);
+                assert.strictEqual(img.height(), 256);
                 done();
             });
         });

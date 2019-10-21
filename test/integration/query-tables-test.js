@@ -34,12 +34,12 @@ describe('QueryTables', function () {
         var query = 'select * from test_table';
         return QueryTables.getQueryMetadataModel(connection, query)
             .then(result => {
-                assert.equal(result.getLastUpdatedAt(), 1234567890123);
+                assert.strictEqual(result.getLastUpdatedAt(), 1234567890123);
 
-                assert.equal(result.tables.length, 1);
-                assert.equal(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
-                assert.equal(result.tables[0].schema_name, 'public');
-                assert.equal(result.tables[0].table_name, 'test_table');
+                assert.strictEqual(result.tables.length, 1);
+                assert.strictEqual(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
+                assert.strictEqual(result.tables[0].schema_name, 'public');
+                assert.strictEqual(result.tables[0].table_name, 'test_table');
             });
     });
 
@@ -47,12 +47,12 @@ describe('QueryTables', function () {
         var query = 'select * from test_table_private_1';
         return QueryTables.getQueryMetadataModel(connection, query)
             .then(result => {
-                assert.equal(result.getLastUpdatedAt(), 1234567890123);
+                assert.strictEqual(result.getLastUpdatedAt(), 1234567890123);
 
-                assert.equal(result.tables.length, 1);
-                assert.equal(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
-                assert.equal(result.tables[0].schema_name, 'public');
-                assert.equal(result.tables[0].table_name, 'test_table_private_1');
+                assert.strictEqual(result.tables.length, 1);
+                assert.strictEqual(result.tables[0].dbname, 'test_windshaft_cartodb_user_1_db');
+                assert.strictEqual(result.tables[0].schema_name, 'public');
+                assert.strictEqual(result.tables[0].table_name, 'test_table_private_1');
             });
     });
 });

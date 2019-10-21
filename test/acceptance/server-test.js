@@ -75,7 +75,7 @@ describe('server old_api', function () {
             method: 'GET',
             encoding: 'binary'
         }, {}, function (res) {
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
             done();
         });
     });

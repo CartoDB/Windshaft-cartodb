@@ -82,7 +82,7 @@ describe('overviews metadata for named maps', function () {
                 assert.ifError(err);
 
                 var next = this;
-                assert.equal(res.statusCode, 200);
+                assert.strictEqual(res.statusCode, 200);
                 assert.deepEqual(JSON.parse(res.body), {
                     template_id: templateId
                 });
@@ -109,7 +109,7 @@ describe('overviews metadata for named maps', function () {
 
                 var next = this;
 
-                assert.equal(res.statusCode, 200);
+                assert.strictEqual(res.statusCode, 200);
 
                 var parsedBody = JSON.parse(res.body);
 
@@ -134,7 +134,7 @@ describe('overviews metadata for named maps', function () {
                 mapStore.load(LayergroupToken.parse(layergroupId).token, function (err, mapConfig) {
                     assert.ifError(err);
                     assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
-                    assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
+                    assert.strictEqual(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
                     var expected_data = {
                         overviews: {
@@ -165,7 +165,7 @@ describe('overviews metadata for named maps', function () {
             },
             function checkDeleteTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204);
+                assert.strictEqual(res.statusCode, 204);
                 assert.ok(!res.body);
 
                 return null;
@@ -220,7 +220,7 @@ describe('overviews metadata for named maps', function () {
                     const headers = JSON.parse(res.headers['x-tiler-profiler']);
 
                     assert.ok(headers.overviewsAddedToMapconfig);
-                    assert.equal(headers.mapType, 'named');
+                    assert.strictEqual(headers.mapType, 'named');
 
                     next();
                 },
@@ -285,8 +285,8 @@ describe('overviews metadata for named maps', function () {
 
                     const headers = JSON.parse(res.headers['x-tiler-profiler']);
 
-                    assert.equal(headers.overviewsAddedToMapconfig, false);
-                    assert.equal(headers.mapType, 'named');
+                    assert.strictEqual(headers.overviewsAddedToMapconfig, false);
+                    assert.strictEqual(headers.mapType, 'named');
 
                     next();
                 },

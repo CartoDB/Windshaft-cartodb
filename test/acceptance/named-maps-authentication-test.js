@@ -191,8 +191,8 @@ describe('named maps authentication', function () {
 
         it('should return 200 if properly authorized', function (done) {
             getNamedTile(tokenAuthTemplateName, 0, 0, 0, { params: { auth_token: 'valid1' } }, function (err, res, img) {
-                assert.equal(img.width(), 256);
-                assert.equal(img.height(), 256);
+                assert.strictEqual(img.width(), 256);
+                assert.strictEqual(img.height(), 256);
 
                 assert.ok(!err);
                 test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
@@ -261,8 +261,8 @@ describe('named maps authentication', function () {
             getStaticMap(tokenAuthTemplateName, { params: { auth_token: 'valid1' } }, function (err, res, img) {
                 assert.ok(!err);
 
-                assert.equal(img.width(), 640);
-                assert.equal(img.height(), 480);
+                assert.strictEqual(img.width(), 640);
+                assert.strictEqual(img.height(), 480);
 
                 test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
                 test_helper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, done);

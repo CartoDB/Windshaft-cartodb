@@ -43,9 +43,9 @@ describe('widgets', function () {
             this.testClient.getWidget('adm0name', { own_filter: 0 }, function (err, res, aggregation) {
                 assert.ok(!err, err);
                 assert.ok(aggregation);
-                assert.equal(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.type, 'aggregation');
 
-                assert.equal(aggregation.categories.length, 6);
+                assert.strictEqual(aggregation.categories.length, 6);
 
                 assert.deepEqual(
                     aggregation.categories[0],
@@ -91,9 +91,9 @@ describe('widgets', function () {
                 this.testClient.getWidget('adm0name', params, function (err, res, aggregation) {
                     assert.ok(!err, err);
                     assert.ok(aggregation);
-                    assert.equal(aggregation.type, 'aggregation');
+                    assert.strictEqual(aggregation.type, 'aggregation');
 
-                    assert.equal(aggregation.categories.length, scenario.accept.length);
+                    assert.strictEqual(aggregation.categories.length, scenario.accept.length);
 
                     var categoriesByCategory = aggregation.categories.reduce(function (byCategory, row) {
                         byCategory[row.category] = row;
@@ -143,9 +143,9 @@ describe('widgets', function () {
             this.testClient.getWidget('adm0name', { own_filter: 0 }, function (err, res, aggregation) {
                 assert.ok(!err, err);
                 assert.ok(aggregation);
-                assert.equal(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.type, 'aggregation');
 
-                assert.equal(aggregation.categories.length, 6);
+                assert.strictEqual(aggregation.categories.length, 6);
 
                 assert.deepEqual(
                     aggregation.categories[0],
@@ -190,9 +190,9 @@ describe('widgets', function () {
                 this.testClient.getWidget('adm0name', params, function (err, res, aggregation) {
                     assert.ok(!err, err);
                     assert.ok(aggregation);
-                    assert.equal(aggregation.type, 'aggregation');
+                    assert.strictEqual(aggregation.type, 'aggregation');
 
-                    assert.equal(aggregation.categories.length, scenario.accept.length);
+                    assert.strictEqual(aggregation.categories.length, scenario.accept.length);
 
                     var categoriesByCategory = aggregation.categories.reduce(function (byCategory, row) {
                         byCategory[row.category] = row;
@@ -253,9 +253,9 @@ describe('widgets', function () {
                 this.testClient.getWidget('scalerank', params, function (err, res, aggregation) {
                     assert.ok(!err, err);
                     assert.ok(aggregation);
-                    assert.equal(aggregation.type, 'aggregation');
+                    assert.strictEqual(aggregation.type, 'aggregation');
 
-                    assert.equal(aggregation.categories.length, 1);
+                    assert.strictEqual(aggregation.categories.length, 1);
                     assert.deepEqual(aggregation.categories[0], { category: '1', value: 179, agg: false });
 
                     done();
@@ -289,9 +289,9 @@ describe('widgets', function () {
                     this.testClient.widgetSearch('scalerank', userQuery, params, function (err, res, searchResult) {
                         assert.ok(!err, err);
                         assert.ok(searchResult);
-                        assert.equal(searchResult.type, 'aggregation');
+                        assert.strictEqual(searchResult.type, 'aggregation');
 
-                        assert.equal(searchResult.categories.length, 2);
+                        assert.strictEqual(searchResult.categories.length, 2);
                         assert.deepEqual(
                             searchResult.categories,
                             [{ category: 10, value: 515 }, { category: 1, value: 179 }]
@@ -309,9 +309,9 @@ describe('widgets', function () {
                     this.testClient.widgetSearch('adm0name', userQuery, function (err, res, searchResult) {
                         assert.ok(!err, err);
                         assert.ok(searchResult);
-                        assert.equal(searchResult.type, 'aggregation');
+                        assert.strictEqual(searchResult.type, 'aggregation');
 
-                        assert.equal(searchResult.categories.length, 1);
+                        assert.strictEqual(searchResult.categories.length, 1);
                         assert.deepEqual(
                             searchResult.categories,
                             [{ category: 'Argentina', value: 159 }]
@@ -328,9 +328,9 @@ describe('widgets', function () {
                     this.testClient.widgetSearch('adm0name', userQuery, function (err, res, searchResult) {
                         assert.ok(!err, err);
                         assert.ok(searchResult);
-                        assert.equal(searchResult.type, 'aggregation');
+                        assert.strictEqual(searchResult.type, 'aggregation');
 
-                        assert.equal(searchResult.categories.length, 1);
+                        assert.strictEqual(searchResult.categories.length, 1);
                         assert.deepEqual(
                             searchResult.categories,
                             [{ category: 'Argentina', value: 28015640 }]

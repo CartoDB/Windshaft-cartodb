@@ -102,7 +102,7 @@ describe('mapnik-layer-stats', function () {
         var testSubject = new MapnikLayerStats();
         testSubject.getStats(layer, this.dbConnectionMock, function (err, result) {
             assert.ifError(err);
-            assert.equal(result.estimatedFeatureCount, 1);
+            assert.strictEqual(result.estimatedFeatureCount, 1);
             done();
         });
     });
@@ -115,10 +115,10 @@ describe('mapnik-layer-stats', function () {
         var testSubject = new MapnikLayerStats();
         testSubject.getStats(layer0, self.dbConnectionMock, function (err, result) {
             assert.ifError(err);
-            assert.equal(result.estimatedFeatureCount, 1);
+            assert.strictEqual(result.estimatedFeatureCount, 1);
             testSubject.getStats(layer1, self.dbConnectionMock, function (err, result) {
                 assert.ifError(err);
-                assert.equal(result.estimatedFeatureCount, 1);
+                assert.strictEqual(result.estimatedFeatureCount, 1);
                 done();
             });
         });
@@ -130,7 +130,7 @@ describe('mapnik-layer-stats', function () {
         var testSubject = new MapnikLayerStats();
         testSubject.getStats(layer, this.dbConnectionMock, function (err, result) {
             assert.ifError(err);
-            assert.equal(result.estimatedFeatureCount, 1);
+            assert.strictEqual(result.estimatedFeatureCount, 1);
             done();
         });
     });
@@ -143,10 +143,10 @@ describe('mapnik-layer-stats', function () {
         var testSubject = new MapnikLayerStats();
         testSubject.getStats(layer0, self.dbConnectionMock, function (err, result) {
             assert.ifError(err);
-            assert.equal(result.estimatedFeatureCount, 1);
+            assert.strictEqual(result.estimatedFeatureCount, 1);
             testSubject.getStats(layer1, self.dbConnectionMock, function (err, result) {
                 assert.ifError(err);
-                assert.equal(result.estimatedFeatureCount, 1);
+                assert.strictEqual(result.estimatedFeatureCount, 1);
                 done();
             });
         });

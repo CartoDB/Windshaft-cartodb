@@ -52,9 +52,9 @@ describe('widgets-regressions', function () {
             this.testClient.getWidget('adm0name', { own_filter: 0 }, function (err, res, aggregation) {
                 assert.ok(!err, err);
                 assert.ok(aggregation);
-                assert.equal(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.type, 'aggregation');
 
-                assert.equal(aggregation.categories.length, 6);
+                assert.strictEqual(aggregation.categories.length, 6);
 
                 assert.deepEqual(
                     aggregation.categories[0],
@@ -151,9 +151,9 @@ describe('widgets-regressions', function () {
                 assert.ok(!err, err);
                 assert.ok(layergroup.metadata);
                 var metadata = layergroup.metadata;
-                assert.equal(metadata.layers.length, 3);
-                assert.equal(metadata.analyses.length, 2);
-                assert.equal(Object.keys(metadata.dataviews).length, 4);
+                assert.strictEqual(metadata.layers.length, 3);
+                assert.strictEqual(metadata.analyses.length, 2);
+                assert.strictEqual(Object.keys(metadata.dataviews).length, 4);
                 assert.deepEqual(
                     Object.keys(metadata.dataviews),
                     ['wadus', 'adm0name_categories', 'adm1name_categories', 'pop_max_histogram']
@@ -199,9 +199,9 @@ describe('widgets-regressions', function () {
             this.testClient.getWidget('adm0name', { own_filter: 0 }, function (err, res, aggregation) {
                 assert.ok(!err, err);
                 assert.ok(aggregation);
-                assert.equal(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.type, 'aggregation');
 
-                assert.equal(aggregation.categories.length, 6);
+                assert.strictEqual(aggregation.categories.length, 6);
 
                 assert.deepEqual(
                     aggregation.categories[0],
@@ -317,8 +317,8 @@ describe('widgets-regressions', function () {
             };
             this.testClient.getDataview('val_formula', params, function (err, dataview) {
                 assert.ifError(err);
-                assert.equal(dataview.categories.length, 1);
-                assert.equal(dataview.categories[0].category, 'intersectingTriangle');
+                assert.strictEqual(dataview.categories.length, 1);
+                assert.strictEqual(dataview.categories[0].category, 'intersectingTriangle');
                 done();
             });
         });

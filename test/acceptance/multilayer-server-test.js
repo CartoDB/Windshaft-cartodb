@@ -93,7 +93,7 @@ describe('tests from old api translated to multilayer', function () {
             },
             function (res) {
                 var parsed = JSON.parse(res.body);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 assert.ok(parsed.errors[0].match(/^style0/));
                 assert.ok(parsed.errors[0].match(/Unrecognized rule: backgxxxxxround-color/));
                 assert.ok(parsed.errors[0].match(/Unrecognized rule: foo/));
@@ -114,7 +114,7 @@ describe('tests from old api translated to multilayer', function () {
             function (res) {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
@@ -139,7 +139,7 @@ describe('tests from old api translated to multilayer', function () {
             function (res) {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                 keysToDelete['user:cartodb250user:mapviews:global'] = 5;
@@ -165,7 +165,7 @@ describe('tests from old api translated to multilayer', function () {
             function (res) {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                 keysToDelete['user:cartodb250user:mapviews:global'] = 5;
@@ -234,7 +234,7 @@ describe('tests from old api translated to multilayer', function () {
                 function (res) {
                     var parsed = JSON.parse(res.body);
                     assert.ok(parsed.errors);
-                    assert.equal(parsed.errors.length, 1);
+                    assert.strictEqual(parsed.errors.length, 1);
                     assert.ok(parsed.errors[0].match(/Unexpected token W/));
 
                     done();
@@ -268,9 +268,9 @@ describe('tests from old api translated to multilayer', function () {
                 assert.ok(parsed.layergroupid);
 
                 assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
-                assert.equal(res.headers['x-cache-channel'], expectedCacheChannel);
+                assert.strictEqual(res.headers['x-cache-channel'], expectedCacheChannel);
 
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
@@ -306,9 +306,9 @@ describe('tests from old api translated to multilayer', function () {
                 assert.ok(parsed.layergroupid);
 
                 assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
-                assert.equal(res.headers['x-cache-channel'], expectedCacheChannel);
+                assert.strictEqual(res.headers['x-cache-channel'], expectedCacheChannel);
 
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 done();
             }

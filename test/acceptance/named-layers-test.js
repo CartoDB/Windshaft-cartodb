@@ -728,12 +728,12 @@ describe('named_layers', function () {
                 var parsedBody = JSON.parse(response.body);
                 assert.ok(parsedBody.metadata);
                 assert.ok(parsedBody.metadata.layers);
-                assert.equal(parsedBody.metadata.layers.length, 5);
-                assert.equal(parsedBody.metadata.layers[0].type, 'plain');
-                assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[2].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[3].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[4].type, 'torque');
+                assert.strictEqual(parsedBody.metadata.layers.length, 5);
+                assert.strictEqual(parsedBody.metadata.layers[0].type, 'plain');
+                assert.strictEqual(parsedBody.metadata.layers[1].type, 'mapnik');
+                assert.strictEqual(parsedBody.metadata.layers[2].type, 'mapnik');
+                assert.strictEqual(parsedBody.metadata.layers[3].type, 'mapnik');
+                assert.strictEqual(parsedBody.metadata.layers[4].type, 'torque');
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
@@ -805,8 +805,8 @@ describe('named_layers', function () {
                 assert.ok(parsedBody.layergroupid);
                 assert.ok(parsedBody.last_updated);
 
-                assert.equal(parsedBody.metadata.layers[0].type, 'mapnik');
-                assert.equal(parsedBody.metadata.layers[1].type, 'mapnik');
+                assert.strictEqual(parsedBody.metadata.layers[0].type, 'mapnik');
+                assert.strictEqual(parsedBody.metadata.layers[1].type, 'mapnik');
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;

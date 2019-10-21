@@ -141,8 +141,8 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
                 testClient.drain(done);
             });
         });
@@ -158,10 +158,10 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
-                assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
-                assert.equal(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 2);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
+                assert.strictEqual(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
+                assert.strictEqual(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 2);
                 testClient.drain(done);
             });
         });
@@ -178,12 +178,12 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
-                assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
-                assert.equal(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 2);
-                assert.equal(layergroup.metadata.layers[2].id, mapnikBasicLayerId(2));
-                assert.equal(layergroup.metadata.layers[2].meta.stats.estimatedFeatureCount, 3);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
+                assert.strictEqual(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
+                assert.strictEqual(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 2);
+                assert.strictEqual(layergroup.metadata.layers[2].id, mapnikBasicLayerId(2));
+                assert.strictEqual(layergroup.metadata.layers[2].meta.stats.estimatedFeatureCount, 3);
                 testClient.drain(done);
             });
         });
@@ -198,8 +198,8 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
                 testClient.drain(done);
             });
         });
@@ -215,10 +215,10 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
-                assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
-                assert.equal(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
+                assert.strictEqual(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 5);
                 testClient.drain(done);
             });
         });
@@ -234,11 +234,11 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 3);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 3);
                 assert.ok(!layergroup.metadata.layers[0].meta.stats[1]);
-                assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
-                assert.equal(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[1].id, mapnikBasicLayerId(1));
+                assert.strictEqual(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 5);
                 assert.ok(!layergroup.metadata.layers[2]);
                 testClient.drain(done);
             });
@@ -255,11 +255,11 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].type, 'mapnik');
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
-                assert.equal(layergroup.metadata.layers[1].id, typeLayerId('http', 0));
-                assert.equal(layergroup.metadata.layers[1].type, 'http');
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].type, 'mapnik');
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 1);
+                assert.strictEqual(layergroup.metadata.layers[1].id, typeLayerId('http', 0));
+                assert.strictEqual(layergroup.metadata.layers[1].type, 'http');
                 testClient.drain(done);
             });
         });
@@ -275,13 +275,13 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
-                assert.equal(layergroup.metadata.layers[0].type, 'http');
+                assert.strictEqual(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
+                assert.strictEqual(layergroup.metadata.layers[0].type, 'http');
                 assert.ok(!layergroup.metadata.layers[0].meta.cartocss);
-                assert.equal(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 1);
-                assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[1].type, 'mapnik');
-                assert.equal(layergroup.metadata.layers[1].meta.cartocss, cartocss);
+                assert.strictEqual(layergroup.metadata.layers[1].meta.stats.estimatedFeatureCount, 1);
+                assert.strictEqual(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[1].type, 'mapnik');
+                assert.strictEqual(layergroup.metadata.layers[1].meta.cartocss, cartocss);
                 testClient.drain(done);
             });
         });
@@ -296,7 +296,7 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
                 // we don't care about stats here as is an aliased column
                 assert.ok(layergroup.metadata.layers[0].meta.stats.hasOwnProperty('estimatedFeatureCount'));
                 testClient.drain(done);
@@ -316,13 +316,13 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
-                assert.equal(layergroup.metadata.layers[0].type, 'http');
-                assert.equal(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[1].type, 'mapnik');
+                assert.strictEqual(layergroup.metadata.layers[0].id, typeLayerId('http', 0));
+                assert.strictEqual(layergroup.metadata.layers[0].type, 'http');
+                assert.strictEqual(layergroup.metadata.layers[1].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[1].type, 'mapnik');
                 assert.ok(!layergroup.metadata.layers[1].meta.hasOwnProperty('stats'));
-                assert.equal(layergroup.metadata.layers[2].id, typeLayerId('http', 1));
-                assert.equal(layergroup.metadata.layers[2].type, 'http');
+                assert.strictEqual(layergroup.metadata.layers[2].id, typeLayerId('http', 1));
+                assert.strictEqual(layergroup.metadata.layers[2].type, 'http');
                 global.environment.enabledFeatures.layerStats = true;
                 testClient.drain(done);
             });
@@ -346,8 +346,8 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
                 const expectedColumns = {
                     cartodb_id: { type: 'number' },
                     the_geom: { type: 'geometry' },
@@ -397,8 +397,8 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
                 const expectedColumns = {
                     cartodb_id: {
                         type: 'number',
@@ -455,9 +455,9 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
                 const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
-                assert.equal(columnsMetadata.address.categories.length, 2);
+                assert.strictEqual(columnsMetadata.address.categories.length, 2);
                 testClient.drain(done);
             });
         });
@@ -474,9 +474,9 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
                 const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
-                assert.equal(columnsMetadata.cat.categories.length, 3);
+                assert.strictEqual(columnsMetadata.cat.categories.length, 3);
                 testClient.drain(done);
             });
         });
@@ -493,9 +493,9 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
                 const columnsMetadata = layergroup.metadata.layers[0].meta.stats.columns;
-                assert.equal(columnsMetadata.cat.categories.length, 2);
+                assert.strictEqual(columnsMetadata.cat.categories.length, 2);
                 testClient.drain(done);
             });
         });
@@ -512,9 +512,9 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
-                assert.equal(layergroup.metadata.layers[0].meta.stats.featureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.featureCount, 5);
                 testClient.drain(done);
             });
         });
@@ -531,9 +531,9 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
-                assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, 'ST_Point');
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.geometryType, 'ST_Point');
                 testClient.drain(done);
             });
         });
@@ -556,8 +556,8 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, undefined);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.geometryType, undefined);
                 testClient.drain(done);
             });
         });
@@ -574,8 +574,8 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
                 assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
                 const expectedCols = ['cartodb_id', 'value', 'the_geom', 'the_geom_webmercator'].sort();
                 assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
@@ -625,8 +625,8 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
                 assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
                 const expectedCols = ['cartodb_id', 'the_geom'].sort();
                 assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
@@ -647,12 +647,12 @@ suites.forEach(({ desc, usePostGIS }) => {
 
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.equal(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
-                assert.equal(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
-                assert.equal(layergroup.metadata.layers[0].meta.stats.geometryType, 'ST_Point');
-                assert.equal(layergroup.metadata.layers[0].meta.stats.featureCount, 5);
-                assert.equal(layergroup.metadata.layers[0].meta.stats.sample, undefined);
-                assert.equal(layergroup.metadata.layers[0].meta.stats.columns, undefined);
+                assert.strictEqual(layergroup.metadata.layers[0].id, mapnikBasicLayerId(0));
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.geometryType, 'ST_Point');
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.featureCount, 5);
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.sample, undefined);
+                assert.strictEqual(layergroup.metadata.layers[0].meta.stats.columns, undefined);
                 testClient.drain(done);
             });
         });

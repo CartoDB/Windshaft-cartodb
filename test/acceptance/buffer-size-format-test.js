@@ -88,7 +88,7 @@ describe('buffer size per format', function () {
             assert: function (tile, callback) {
                 var tileJSON = tile.toJSON();
                 var features = tileJSON[0].features;
-                assert.equal(features.length, 1);
+                assert.strictEqual(features.length, 1);
                 callback();
             }
         },
@@ -101,7 +101,7 @@ describe('buffer size per format', function () {
             assert: function (tile, callback) {
                 var tileJSON = tile.toJSON();
                 var features = tileJSON[0].features;
-                assert.equal(features.length, 9);
+                assert.strictEqual(features.length, 9);
                 callback();
             }
         },
@@ -377,7 +377,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
                 var vtileJSON = vtile.toJSON();
                 var vtileFeatures = vtileJSON[0].features;
 
-                assert.equal(features.length, vtileFeatures.length);
+                assert.strictEqual(features.length, vtileFeatures.length);
                 callback();
             }
         },
@@ -402,7 +402,7 @@ describe('buffer size per format for named maps w/o placeholders', function () {
                 var vtileJSON = vtile.toJSON();
                 var vtileFeatures = vtileJSON[0].features;
 
-                assert.equal(features.length, vtileFeatures.length);
+                assert.strictEqual(features.length, vtileFeatures.length);
                 callback();
             }
         },

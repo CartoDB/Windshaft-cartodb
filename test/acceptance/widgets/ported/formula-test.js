@@ -54,9 +54,9 @@ describe('widgets', function () {
                 this.testClient = new TestClient(widgetsMapConfig(widgets));
                 this.testClient.getWidget('pop_max_f', function (err, res, result) {
                     assert.ok(!err, err);
-                    assert.equal(result.operation, operation);
-                    assert.equal(result.result, operations[operation][0]);
-                    assert.equal(result.nulls, operations[operation][1]);
+                    assert.strictEqual(result.operation, operation);
+                    assert.strictEqual(result.result, operations[operation][0]);
+                    assert.strictEqual(result.nulls, operations[operation][1]);
 
                     done();
                 });
@@ -76,9 +76,9 @@ describe('widgets', function () {
             this.testClient = new TestClient(widgetsMapConfig(widgets));
             this.testClient.getWidget('pop_max_count_f', function (err, res, result) {
                 assert.ok(!err, err);
-                assert.equal(result.operation, operation);
-                assert.equal(result.result, operations[operation][0]);
-                assert.equal(result.nulls, operations[operation][1]);
+                assert.strictEqual(result.operation, operation);
+                assert.strictEqual(result.result, operations[operation][0]);
+                assert.strictEqual(result.nulls, operations[operation][1]);
 
                 done();
             });

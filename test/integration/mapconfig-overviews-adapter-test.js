@@ -44,12 +44,12 @@ describe('MapConfigOverviewsAdapter', function () {
         mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function (err, mapConfig) {
             assert.ok(!err);
             var layers = mapConfig.layers;
-            assert.equal(layers.length, 1);
-            assert.equal(layers[0].type, 'cartodb');
-            assert.equal(layers[0].options.sql, sql);
-            assert.equal(layers[0].options.cartocss, cartocss);
-            assert.equal(layers[0].options.cartocss_version, cartocss_version);
-            assert.equal(layers[0].options.overviews, undefined);
+            assert.strictEqual(layers.length, 1);
+            assert.strictEqual(layers[0].type, 'cartodb');
+            assert.strictEqual(layers[0].options.sql, sql);
+            assert.strictEqual(layers[0].options.cartocss, cartocss);
+            assert.strictEqual(layers[0].options.cartocss_version, cartocss_version);
+            assert.strictEqual(layers[0].options.overviews, undefined);
             done();
         });
     });
@@ -79,11 +79,11 @@ describe('MapConfigOverviewsAdapter', function () {
         mapConfigOverviewsAdapter.getMapConfig('localhost', _mapConfig, params, context, function (err, mapConfig) {
             assert.ok(!err);
             var layers = mapConfig.layers;
-            assert.equal(layers.length, 1);
-            assert.equal(layers[0].type, 'cartodb');
-            assert.equal(layers[0].options.sql, sql);
-            assert.equal(layers[0].options.cartocss, cartocss);
-            assert.equal(layers[0].options.cartocss_version, cartocss_version);
+            assert.strictEqual(layers.length, 1);
+            assert.strictEqual(layers[0].type, 'cartodb');
+            assert.strictEqual(layers[0].options.sql, sql);
+            assert.strictEqual(layers[0].options.cartocss, cartocss);
+            assert.strictEqual(layers[0].options.cartocss_version, cartocss_version);
             assert.ok(layers[0].options.query_rewrite_data);
             var expected_data = {
                 overviews: {

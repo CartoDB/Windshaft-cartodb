@@ -67,8 +67,8 @@ describe('analysis-layers error cases', function () {
         testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(layergroupResult.errors[0], 'Missing analysis node.id="INVALID-SOURCE-ID" for layer=0');
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(layergroupResult.errors[0], 'Missing analysis node.id="INVALID-SOURCE-ID" for layer=0');
 
             testClient.drain(done);
         });
@@ -102,8 +102,8 @@ describe('analysis-layers error cases', function () {
         testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(
                 layergroupResult.errors[0],
                 'Missing analysis node.id="ID-FOR-NONEXISTENT-ANALYSIS" for layer=1'
             );
@@ -149,8 +149,8 @@ describe('analysis-layers error cases', function () {
         testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(layergroupResult.errors[0], 'Node with `source.id="ID-FOR-NONEXISTENT-ANALYSIS"`' +
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(layergroupResult.errors[0], 'Node with `source.id="ID-FOR-NONEXISTENT-ANALYSIS"`' +
                 ' not found in analyses for dataview "pop_max_histogram"');
 
             testClient.drain(done);
@@ -195,19 +195,19 @@ describe('analysis-layers error cases', function () {
         testClient.getLayergroup({ response: AUTH_ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(
                 layergroupResult.errors[0],
                 'Analysis requires authentication with API key: permission denied.'
             );
 
-            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors_with_context[0].type, 'analysis');
+            assert.strictEqual(
                 layergroupResult.errors_with_context[0].message,
                 'Analysis requires authentication with API key: permission denied.'
             );
-            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
 
             testClient.drain(done);
         });
@@ -250,16 +250,16 @@ describe('analysis-layers error cases', function () {
         testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(
                 layergroupResult.errors[0],
                 'Missing required param "radius"'
             );
 
-            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
-            assert.equal(layergroupResult.errors_with_context[0].message, 'Missing required param "radius"');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.strictEqual(layergroupResult.errors_with_context[0].type, 'analysis');
+            assert.strictEqual(layergroupResult.errors_with_context[0].message, 'Missing required param "radius"');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
 
             testClient.drain(done);
         });
@@ -302,17 +302,17 @@ describe('analysis-layers error cases', function () {
         testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(
                 layergroupResult.errors[0],
                 'Missing required param "radius"'
             );
 
-            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
-            assert.equal(layergroupResult.errors_with_context[0].message, 'Missing required param "radius"');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD');
+            assert.strictEqual(layergroupResult.errors_with_context[0].type, 'analysis');
+            assert.strictEqual(layergroupResult.errors_with_context[0].message, 'Missing required param "radius"');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD');
 
             testClient.drain(done);
         });
@@ -355,20 +355,20 @@ describe('analysis-layers error cases', function () {
         testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(
                 layergroupResult.errors[0],
                 'Invalid type for param "radius", expects "number" type, got `"invalid_radius"`'
             );
 
-            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors_with_context[0].type, 'analysis');
+            assert.strictEqual(
                 layergroupResult.errors_with_context[0].message,
                 'Invalid type for param "radius", expects "number" type, got `"invalid_radius"`'
             );
-            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD2');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD2');
 
             testClient.drain(done);
         });
@@ -419,20 +419,20 @@ describe('analysis-layers error cases', function () {
         testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(
                 layergroupResult.errors[0],
                 'function dep_ext_does_not_exist_fn(unknown, unknown, unknown, text[], unknown) does not exist'
             );
 
-            assert.equal(layergroupResult.errors_with_context[0].type, 'analysis');
-            assert.equal(
+            assert.strictEqual(layergroupResult.errors_with_context[0].type, 'analysis');
+            assert.strictEqual(
                 layergroupResult.errors_with_context[0].message,
                 'function dep_ext_does_not_exist_fn(unknown, unknown, unknown, text[], unknown) does not exist'
             );
-            assert.equal(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
-            assert.equal(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD3');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.id, 'HEAD');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.type, 'buffer');
+            assert.strictEqual(layergroupResult.errors_with_context[0].analysis.node_id, 'HEAD3');
 
             testClient.drain(done);
         });

@@ -89,7 +89,7 @@ describe('prepare-context', function () {
             assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
             assert.ok(res.hasOwnProperty('locals'), 'response has locals');
             assert.ok(!res.locals.hasOwnProperty('interactivity'), 'response locals do not have interactivity');
-            assert.equal(res.locals.dbname, test_database);
+            assert.strictEqual(res.locals.dbname, test_database);
             assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser (' + res.locals.dbuser + ')');
             done();
         });
@@ -120,8 +120,8 @@ describe('prepare-context', function () {
                 assert.ok(!req.query.hasOwnProperty('dbuser'), 'dbuser was removed from query');
                 assert.ok(res.hasOwnProperty('locals'), 'response has locals');
                 assert.ok(!res.locals.hasOwnProperty('interactivity'), 'request params do not have interactivity');
-                assert.equal(res.locals.dbname, test_database);
-                assert.equal(res.locals.dbuser, test_user);
+                assert.strictEqual(res.locals.dbname, test_database);
+                assert.strictEqual(res.locals.dbuser, test_user);
 
                 req = {
                     headers: {
@@ -166,8 +166,8 @@ describe('prepare-context', function () {
             }
 
             assert.deepEqual(config, req.query.config);
-            assert.equal('test', req.query.api_key);
-            assert.equal(undefined, req.query.non_included);
+            assert.strictEqual('test', req.query.api_key);
+            assert.strictEqual(undefined, req.query.non_included);
             done();
         });
     });
@@ -189,7 +189,7 @@ describe('prepare-context', function () {
                 }
                 var query = res.locals;
 
-                assert.equal('1234', query.api_key);
+                assert.strictEqual('1234', query.api_key);
                 done();
             });
         });
@@ -210,7 +210,7 @@ describe('prepare-context', function () {
                 }
                 var query = res.locals;
 
-                assert.equal('1234', query.api_key);
+                assert.strictEqual('1234', query.api_key);
                 done();
             });
         });
@@ -229,7 +229,7 @@ describe('prepare-context', function () {
                 }
                 var query = res.locals;
 
-                assert.equal('1234', query.api_key);
+                assert.strictEqual('1234', query.api_key);
                 done();
             });
         });

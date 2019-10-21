@@ -58,7 +58,7 @@ describe('widget filters', function () {
                 assert.deepEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
-                assert.equal(aggregation.categories.reduce(function (sum, row) {
+                assert.strictEqual(aggregation.categories.reduce(function (sum, row) {
                     return sum + (row.category === 'CHN' ? 1 : 0);
                 }, 0), 0);
 
@@ -89,7 +89,7 @@ describe('widget filters', function () {
                 assert.deepEqual(aggregation.categories[0], { value: 4, category: 'IND', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
-                assert.equal(aggregation.categories.reduce(function (sum, row) {
+                assert.strictEqual(aggregation.categories.reduce(function (sum, row) {
                     return sum + (row.category === 'CHN' ? 1 : 0);
                 }, 0), 0);
 
@@ -120,7 +120,7 @@ describe('widget filters', function () {
                 assert.deepEqual(aggregation.categories[0], { value: 96, category: 'RUS', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
-                assert.equal(aggregation.categories.reduce(function (sum, row) {
+                assert.strictEqual(aggregation.categories.reduce(function (sum, row) {
                     return sum + (row.category === 'CHN' ? 1 : 0);
                 }, 0), 0);
 
@@ -152,7 +152,7 @@ describe('widget filters', function () {
                 assert.deepEqual(aggregation.categories[0], { value: 77, category: 'TUR', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
-                assert.equal(aggregation.categories.reduce(function (sum, row) {
+                assert.strictEqual(aggregation.categories.reduce(function (sum, row) {
                     return sum + (row.category === 'CHN' ? 1 : 0);
                 }, 0), 0);
 

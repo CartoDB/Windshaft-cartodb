@@ -104,7 +104,7 @@ describe('dynamic styling for named maps', function () {
             },
             function checkTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200);
+                assert.strictEqual(res.statusCode, 200);
                 assert.deepEqual(JSON.parse(res.body), {
                     template_id: templateId
                 });
@@ -131,19 +131,19 @@ describe('dynamic styling for named maps', function () {
             function checkInstanciation (err, res) {
                 assert.ifError(err);
 
-                assert.equal(res.statusCode, 200);
+                assert.strictEqual(res.statusCode, 200);
 
                 var parsedBody = JSON.parse(res.body);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
-                assert.equal(parsedBody.metadata.layers[0].meta.cartocss, templateParams.styles['0']);
-                assert.equal(
+                assert.strictEqual(parsedBody.metadata.layers[0].meta.cartocss, templateParams.styles['0']);
+                assert.strictEqual(
                     parsedBody.metadata.layers[1].meta.cartocss,
                     template.layergroup.layers[1].options.cartocss
                 );
-                assert.equal(parsedBody.metadata.layers[2].meta.cartocss, templateParams.styles['2']);
+                assert.strictEqual(parsedBody.metadata.layers[2].meta.cartocss, templateParams.styles['2']);
 
                 return parsedBody.layergroupid;
             },
@@ -162,7 +162,7 @@ describe('dynamic styling for named maps', function () {
             },
             function checkDeleteTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204);
+                assert.strictEqual(res.statusCode, 204);
                 assert.ok(!res.body);
 
                 return null;

@@ -70,10 +70,10 @@ describe('overviews metadata', function () {
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(layergroup)
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
 
                     var parsedBody = JSON.parse(res.body);
-                    assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+                    assert.strictEqual(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                     expected_token = parsedBody.layergroupid;
                     next(null, res);
                 });
@@ -89,7 +89,7 @@ describe('overviews metadata', function () {
                 mapStore.load(LayergroupToken.parse(expected_token).token, function (err, mapConfig) {
                     assert.ifError(err);
                     assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
-                    assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
+                    assert.strictEqual(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
                     var expected_data = {
                         overviews: {
@@ -132,12 +132,12 @@ describe('overviews metadata', function () {
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
 
                         const headers = JSON.parse(res.headers['x-tiler-profiler']);
 
                         assert.ok(headers.overviewsAddedToMapconfig);
-                        assert.equal(headers.mapType, 'anonymous');
+                        assert.strictEqual(headers.mapType, 'anonymous');
 
                         const parsedBody = JSON.parse(res.body);
                         expected_token = parsedBody.layergroupid;
@@ -169,12 +169,12 @@ describe('overviews metadata', function () {
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
 
                         const headers = JSON.parse(res.headers['x-tiler-profiler']);
 
-                        assert.equal(headers.overviewsAddedToMapconfig, false);
-                        assert.equal(headers.mapType, 'anonymous');
+                        assert.strictEqual(headers.overviewsAddedToMapconfig, false);
+                        assert.strictEqual(headers.mapType, 'anonymous');
 
                         const parsedBody = JSON.parse(res.body);
                         expected_token = parsedBody.layergroupid;
@@ -264,9 +264,9 @@ describe('overviews metadata with filters', function () {
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(layergroup)
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
-                    assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+                    assert.strictEqual(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                     expected_token = parsedBody.layergroupid;
                     next(null, res);
                 });
@@ -281,7 +281,7 @@ describe('overviews metadata with filters', function () {
                 });
                 mapStore.load(LayergroupToken.parse(expected_token).token, function (err, mapConfig) {
                     assert.ifError(err);
-                    assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
+                    assert.strictEqual(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
                     var expected_data = {
                         overviews: {

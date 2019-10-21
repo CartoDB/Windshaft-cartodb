@@ -70,7 +70,7 @@ function mvt (usePostGIS) {
 
                     const tileJSON = tile.toJSON();
 
-                    assert.equal(tileJSON[0].features.length, 10);
+                    assert.strictEqual(tileJSON[0].features.length, 10);
 
                     testClient.drain(done);
                 });
@@ -232,10 +232,10 @@ function mvt (usePostGIS) {
                     const feature = geojsonTile.features[0];
 
                     assert.ok(feature.properties.hasOwnProperty('_feature_count'), 'Missing _feature_count property');
-                    assert.equal(feature.properties.cartodb_id, 1);
-                    assert.equal(feature.properties.name, 'Hawai');
-                    assert.equal(feature.properties._feature_count, 5); // original table has _feature_count = 1
-                    assert.equal(feature.properties.value, 3); // original table has value = 1.0
+                    assert.strictEqual(feature.properties.cartodb_id, 1);
+                    assert.strictEqual(feature.properties.name, 'Hawai');
+                    assert.strictEqual(feature.properties._feature_count, 5); // original table has _feature_count = 1
+                    assert.strictEqual(feature.properties.value, 3); // original table has value = 1.0
 
                     testClient.drain(done);
                 });
@@ -274,12 +274,12 @@ function mvt (usePostGIS) {
                     const tileWithoutOverviews = JSON.parse(mvt.toGeoJSONSync(1));
 
                     assert.ok(Array.isArray(tileWithOverviews.features));
-                    assert.equal(tileWithOverviews.features.length, 1);
-                    assert.equal(tileWithOverviews.features[0].properties._feature_count, 5);
+                    assert.strictEqual(tileWithOverviews.features.length, 1);
+                    assert.strictEqual(tileWithOverviews.features[0].properties._feature_count, 5);
 
                     assert.ok(Array.isArray(tileWithoutOverviews.features));
-                    assert.equal(tileWithoutOverviews.features.length, 5);
-                    assert.equal(tileWithoutOverviews.features[0].properties._feature_count, undefined);
+                    assert.strictEqual(tileWithoutOverviews.features.length, 5);
+                    assert.strictEqual(tileWithoutOverviews.features[0].properties._feature_count, undefined);
 
                     testClient.drain(done);
                 });

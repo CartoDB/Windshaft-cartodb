@@ -67,7 +67,7 @@ describe('server', function () {
     it('grid jsonp', function (done) {
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'jsonp_test', function (err, res) {
-            assert.equal(res.statusCode, 200, res.body);
+            assert.strictEqual(res.statusCode, 200, res.body);
             assert.deepEqual(res.headers['content-type'], 'text/javascript; charset=utf-8');
             var didRunJsonCallback = false;
             var response = {};

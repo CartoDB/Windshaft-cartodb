@@ -26,7 +26,7 @@ describe('PgQueryRunner', function () {
             assert.ok(!err, err);
 
             assert.ok(Array.isArray(result));
-            assert.equal(result.length, 3);
+            assert.strictEqual(result.length, 3);
 
             done();
         });
@@ -38,7 +38,7 @@ describe('PgQueryRunner', function () {
             assert.ok(err);
 
             assert.ok(Array.isArray(result));
-            assert.equal(result.length, 0);
+            assert.strictEqual(result.length, 0);
 
             done();
         });

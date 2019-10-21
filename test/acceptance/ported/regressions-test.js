@@ -30,7 +30,7 @@ describe('regressions', function () {
         testClient.getTile(writeSqlMapConfig, 0, 0, 0, expectedResponse, function (err, res) {
             var parsedBody = JSON.parse(res.body);
             assert.ok(parsedBody.errors);
-            assert.equal(parsedBody.errors.length, 1);
+            assert.strictEqual(parsedBody.errors.length, 1);
             assert.ok(parsedBody.errors[0].match(/read-only transaction/), 'read-only error message expected');
             done();
         });

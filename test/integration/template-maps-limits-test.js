@@ -70,7 +70,7 @@ describe('TemplateMaps limits', function () {
             assert.ok(template);
             templateMaps.addTemplate(OWNER, createTemplate(), function (err) {
                 assert.ok(err);
-                assert.equal(err.http_status, 409);
+                assert.strictEqual(err.http_status, 409);
                 done();
             });
         });

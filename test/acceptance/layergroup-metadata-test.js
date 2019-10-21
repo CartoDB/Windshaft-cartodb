@@ -48,9 +48,9 @@ describe('layergroup metadata', function () {
                 }
 
                 assert.ok(body.layergroupid);
-                assert.equal(body.metadata.layers[0].tilejson.vector.tiles[0], urlLayer);
-                assert.equal(body.metadata.tilejson.vector.tiles[0], urlNoLayer);
-                assert.equal(body.metadata.url.vector.urlTemplate, urlNoLayer);
+                assert.strictEqual(body.metadata.layers[0].tilejson.vector.tiles[0], urlLayer);
+                assert.strictEqual(body.metadata.tilejson.vector.tiles[0], urlNoLayer);
+                assert.strictEqual(body.metadata.url.vector.urlTemplate, urlNoLayer);
 
                 testClient.drain(done);
             });

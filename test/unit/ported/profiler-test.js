@@ -8,7 +8,7 @@ var ProfilerProxy = require('../../../lib/stats/profiler-proxy');
 describe('profiler', function () {
     it('Profiler is null in ProfilerProxy when profiling is not enabled', function () {
         var profilerProxy = new ProfilerProxy({ profile: false });
-        assert.equal(profilerProxy.profiler, null);
+        assert.strictEqual(profilerProxy.profiler, null);
     });
 
     it('Profiler is NOT null in ProfilerProxy when profiling is enabled', function () {

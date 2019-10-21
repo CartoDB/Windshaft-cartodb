@@ -28,11 +28,11 @@ describe('torque', function () {
     });
 
     function checkCORSHeaders (res) {
-        assert.equal(
+        assert.strictEqual(
             res.headers['access-control-allow-headers'],
             'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
         );
-        assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.strictEqual(res.headers['access-control-allow-origin'], '*');
     }
 
     it('missing required property from torque layer', function (done) {
@@ -63,11 +63,11 @@ describe('torque', function () {
             },
             function checkResponse (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
-                assert.equal(error,
+                assert.strictEqual(error,
                     "Missing required property '-torque-frame-count' in torque layer CartoCSS");
                 return null;
             },
@@ -85,11 +85,11 @@ describe('torque', function () {
             },
             function checkResponse2 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
-                assert.equal(error,
+                assert.strictEqual(error,
                     "Missing required property '-torque-resolution' in torque layer CartoCSS");
                 return null;
             },
@@ -107,11 +107,11 @@ describe('torque', function () {
             },
             function checkResponse3 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
-                assert.equal(error,
+                assert.strictEqual(error,
                     "Missing required property '-torque-aggregation-function' in torque layer CartoCSS");
                 return null;
             },
@@ -150,11 +150,11 @@ describe('torque', function () {
             },
             function checkResponse (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
-                assert.equal(error, 'Something meaningful here');
+                assert.strictEqual(error, 'Something meaningful here');
                 return null;
             },
             function finish (err) {
@@ -194,7 +194,7 @@ describe('torque', function () {
             },
             function checkPost (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 // CORS headers should be sent with response
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
@@ -215,8 +215,8 @@ describe('torque', function () {
                     'No layer 0 in "torque" in metadata:' + JSON.stringify(tm));
                 var expectedTorqueMetadata = { start: 0, end: 86400000, data_steps: 2, column_type: 'date' };
                 Object.keys(expectedTorqueMetadata).forEach(function (k) {
-                    assert.equal(tm0[k], expectedTorqueMetadata[k]);
-                    assert.equal(meta.layers[0].meta[k], expectedTorqueMetadata[k]);
+                    assert.strictEqual(tm0[k], expectedTorqueMetadata[k]);
+                    assert.strictEqual(meta.layers[0].meta[k], expectedTorqueMetadata[k]);
                 });
                 return null;
             },
@@ -234,10 +234,10 @@ describe('torque', function () {
             },
             function check_mapnik_error_1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + (res.statusCode !== 200 ? (': ' + res.body) : ''));
+                assert.strictEqual(res.statusCode, 400, res.statusCode + (res.statusCode !== 200 ? (': ' + res.body) : ''));
                 var parsed = JSON.parse(res.body);
-                assert.equal(parsed.errors.length, 1);
-                assert.equal(parsed.errors[0], "No 'mapnik' layers in MapConfig");
+                assert.strictEqual(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors[0], "No 'mapnik' layers in MapConfig");
                 return null;
             },
             function do_get_grid0 (err) {
@@ -253,10 +253,10 @@ describe('torque', function () {
             },
             function check_mapnik_error_2 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + (res.statusCode !== 200 ? (': ' + res.body) : ''));
+                assert.strictEqual(res.statusCode, 400, res.statusCode + (res.statusCode !== 200 ? (': ' + res.body) : ''));
                 var parsed = JSON.parse(res.body);
-                assert.equal(parsed.errors.length, 1);
-                assert.equal(parsed.errors[0], 'Unsupported format grid.json');
+                assert.strictEqual(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors[0], 'Unsupported format grid.json');
                 return null;
             },
             function do_get_torque0 (err) {
@@ -272,8 +272,8 @@ describe('torque', function () {
             },
             function check_torque0_response (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.statusCode, 200, res.body);
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var tile_content = [{ x__uint8: 43, y__uint8: 43, vals__uint8: [1, 1], dates__uint16: [0, 1] }];
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(tile_content, parsed);
@@ -292,8 +292,8 @@ describe('torque', function () {
             },
             function check_torque0_response_1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.statusCode, 200, res.body);
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var tile_content = [{ x__uint8: 43, y__uint8: 43, vals__uint8: [1, 1], dates__uint16: [0, 1] }];
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(tile_content, parsed);
@@ -341,12 +341,12 @@ describe('torque', function () {
             function checkPost (err, res) {
                 assert.ifError(err);
                 // TODO: should be 403 Forbidden
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode === 200 ? '...' : res.body));
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode === 200 ? '...' : res.body));
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 var msg = parsed.errors[0];
-                assert.equal(msg, 'TorqueRenderer: cannot execute INSERT in a read-only transaction');
+                assert.strictEqual(msg, 'TorqueRenderer: cannot execute INSERT in a read-only transaction');
                 return null;
             },
             function finish (err) {
@@ -392,11 +392,11 @@ describe('torque', function () {
 
                 global.environment.postgres.port = defautlPort;
 
-                assert.equal(res.statusCode, 500, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 500, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
-                assert.equal(error, 'TorqueRenderer: cannot connect to the database');
+                assert.strictEqual(error, 'TorqueRenderer: cannot connect to the database');
                 return null;
             },
             function finish (err) {
@@ -441,11 +441,11 @@ describe('torque', function () {
             },
             function checkResponse (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
-                assert.equal(error,
+                assert.strictEqual(error,
                     "Unexpected type for property '-torque-aggregation-function', expected string");
                 done();
                 return null;

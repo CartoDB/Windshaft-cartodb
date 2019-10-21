@@ -105,7 +105,7 @@ describe('analyses controller', function () {
 
                 result.catalog
                     .filter(analysis => analysis.node_id === '0a215e1f3405381cf0ea6b3b0deb6fdcfdc2fcaa')
-                    .forEach(analysis => assert.equal(analysis.type, 'buffer'));
+                    .forEach(analysis => assert.strictEqual(analysis.type, 'buffer'));
 
                 this.testClient.drain(done);
             });

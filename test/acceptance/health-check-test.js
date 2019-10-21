@@ -71,7 +71,7 @@ describe('health checks', function () {
             var parsed = JSON.parse(res.body);
             assert.ok(parsed.enabled);
             assert.ok(!parsed.ok);
-            assert.equal(parsed.err, errorMessage);
+            assert.strictEqual(parsed.err, errorMessage);
 
             done();
         });
@@ -91,7 +91,7 @@ describe('health checks', function () {
             var parsed = JSON.parse(res.body);
             assert.ok(parsed.enabled);
             assert.ok(!parsed.ok);
-            assert.equal(parsed.err, 'Unknown error');
+            assert.strictEqual(parsed.err, 'Unknown error');
 
             done();
         });
@@ -107,8 +107,8 @@ describe('health checks', function () {
 
             var parsed = JSON.parse(res.body);
 
-            assert.equal(parsed.enabled, true);
-            assert.equal(parsed.ok, true);
+            assert.strictEqual(parsed.enabled, true);
+            assert.strictEqual(parsed.ok, true);
 
             done();
         });

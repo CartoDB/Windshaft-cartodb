@@ -144,7 +144,7 @@ describe('named-maps analysis', function () {
                         'Missing "analyses" array metadata from: ' + res.body
                     );
                     var analyses = layergroup.metadata.analyses;
-                    assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+                    assert.strictEqual(analyses.length, 1, 'Invalid number of analyses in metadata');
                     var nodes = analyses[0].nodes;
                     var nodesIds = Object.keys(nodes);
                     assert.deepEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
@@ -220,8 +220,8 @@ describe('named-maps analysis', function () {
                     }
 
                     var dataview = JSON.parse(res.body);
-                    assert.equal(dataview.type, 'histogram');
-                    assert.equal(dataview.bins_start, 0);
+                    assert.strictEqual(dataview.type, 'histogram');
+                    assert.strictEqual(dataview.bins_start, 0);
 
                     done();
                 }

@@ -55,10 +55,10 @@ describe('analysis-backend limits', function () {
             assert.ok(!err, err);
 
             assert.ok(result.analyses.moran);
-            assert.equal(result.analyses.moran.timeout, 5000);
+            assert.strictEqual(result.analyses.moran.timeout, 5000);
 
             assert.ok(result.analyses.kmeans);
-            assert.equal(result.analyses.kmeans.timeout, 5000);
+            assert.strictEqual(result.analyses.kmeans.timeout, 5000);
 
             done();
         });
@@ -78,7 +78,7 @@ describe('analysis-backend limits', function () {
                 assert.ok(!err, err);
 
                 assert.ok(result.analyses.moran);
-                assert.equal(result.analyses.moran.timeout, 5000);
+                assert.strictEqual(result.analyses.moran.timeout, 5000);
 
                 done();
             });
@@ -103,7 +103,7 @@ describe('analysis-backend limits', function () {
                 assert.ok(!err, err);
 
                 assert.ok(result.analyses.moran);
-                assert.equal(result.analyses.moran.timeout, 5000);
+                assert.strictEqual(result.analyses.moran.timeout, 5000);
 
                 done();
             });
@@ -129,10 +129,10 @@ describe('analysis-backend limits', function () {
                 assert.ok(!err, err);
 
                 assert.ok(result.analyses.moran);
-                assert.equal(result.analyses.moran.timeout, 5000);
+                assert.strictEqual(result.analyses.moran.timeout, 5000);
 
                 assert.ok(result.analyses.kmeans);
-                assert.equal(result.analyses.kmeans.timeout, 1000);
+                assert.strictEqual(result.analyses.kmeans.timeout, 1000);
 
                 done();
             });
@@ -157,8 +157,8 @@ describe('analysis-backend limits', function () {
                 assert.ok(!err, err);
 
                 assert.ok(result.analyses['aggregate-intersection']);
-                assert.equal(result.analyses['aggregate-intersection'].timeout, 5000);
-                assert.equal(result.analyses['aggregate-intersection'].maxNumberOfRows, 1e5);
+                assert.strictEqual(result.analyses['aggregate-intersection'].timeout, 5000);
+                assert.strictEqual(result.analyses['aggregate-intersection'].maxNumberOfRows, 1e5);
 
                 done();
             });

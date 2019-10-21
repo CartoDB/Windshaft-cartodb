@@ -33,7 +33,7 @@ describe('lzma-middleware', function () {
                 }
                 var query = req.query;
                 assert.deepEqual(qo.config, query.config);
-                assert.equal('test', query.api_key);
+                assert.strictEqual('test', query.api_key);
                 done();
             });
         });

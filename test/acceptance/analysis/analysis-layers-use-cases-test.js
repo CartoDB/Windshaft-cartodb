@@ -277,7 +277,7 @@ describe('analysis-layers use cases', function () {
 
                 // image.save('/tmp/tests/' + imageIdx + '---' + useCase.desc.replace(/\s/g, '-') + '.png');
 
-                assert.equal(image.width(), 256);
+                assert.strictEqual(image.width(), 256);
 
                 testClient.drain(done);
             });

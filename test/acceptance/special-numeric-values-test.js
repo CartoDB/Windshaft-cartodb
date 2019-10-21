@@ -62,9 +62,9 @@ describe('special numeric values', function () {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getFeatureAttributes(featureId, ATTRIBUTES_LAYER, {}, function (err, attributes) {
             assert.ifError(err);
-            assert.equal(attributes.infinity, 'Infinity');
-            assert.equal(attributes._infinity, '-Infinity');
-            assert.equal(attributes.nan, 'NaN');
+            assert.strictEqual(attributes.infinity, 'Infinity');
+            assert.strictEqual(attributes._infinity, '-Infinity');
+            assert.strictEqual(attributes.nan, 'NaN');
             done();
         });
     });

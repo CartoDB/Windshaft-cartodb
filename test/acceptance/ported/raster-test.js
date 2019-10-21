@@ -17,11 +17,11 @@ describe('raster', function () {
     });
 
     function checkCORSHeaders (res) {
-        assert.equal(
+        assert.strictEqual(
             res.headers['access-control-allow-headers'],
             'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
         );
-        assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.strictEqual(res.headers['access-control-allow-origin'], '*');
     }
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 2;
@@ -57,7 +57,7 @@ describe('raster', function () {
             },
             function checkPost (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 // CORS headers should be sent with response
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
@@ -81,7 +81,7 @@ describe('raster', function () {
             },
             function check_response (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 assert.deepEqual(res.headers['content-type'], 'image/png');
                 var next = this;
                 assert.imageBufferIsSimilarToFile(res.body,

@@ -72,7 +72,7 @@ describe.skip('blend http client timeout', function () {
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.errors);
                 assert.ok(parsedBody.errors.length);
-                assert.equal(parsedBody.errors[0], 'Unable to fetch http tile: http://127.0.0.1:8033/light/0/0/0.png');
+                assert.strictEqual(parsedBody.errors[0], 'Unable to fetch http tile: http://127.0.0.1:8033/light/0/0/0.png');
                 finish(function (finishErr) {
                     done(err || finishErr);
                 });

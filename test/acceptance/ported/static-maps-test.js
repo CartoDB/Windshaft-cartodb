@@ -66,8 +66,8 @@ describe('static_maps', function () {
                 return done(err);
             }
 
-            assert.equal(image.width(), width);
-            assert.equal(image.height(), height);
+            assert.strictEqual(image.width(), width);
+            assert.strictEqual(image.height(), height);
 
             done();
         });
@@ -80,8 +80,8 @@ describe('static_maps', function () {
                 return done(err);
             }
 
-            assert.equal(image.width(), width);
-            assert.equal(image.height(), height);
+            assert.strictEqual(image.width(), width);
+            assert.strictEqual(image.height(), height);
 
             done();
         });
@@ -101,8 +101,8 @@ describe('static_maps', function () {
                 return done(err);
             }
 
-            assert.equal(image.width(), bbWidth);
-            assert.equal(image.height(), bbHeight);
+            assert.strictEqual(image.width(), bbWidth);
+            assert.strictEqual(image.height(), bbHeight);
 
             done();
         });
@@ -116,8 +116,8 @@ describe('static_maps', function () {
                 return done(err);
             }
 
-            assert.equal(image.width(), width);
-            assert.equal(image.height(), outOfRangeHeight);
+            assert.strictEqual(image.width(), width);
+            assert.strictEqual(image.height(), outOfRangeHeight);
 
             done();
         });

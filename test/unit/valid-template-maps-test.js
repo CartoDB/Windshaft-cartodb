@@ -95,7 +95,7 @@ describe('template_maps', function () {
                     templateMaps.delTemplate(owner, templateName, done);
                 } else {
                     assert.ok(err);
-                    assert.equal(err.message, testScenario.expected.message);
+                    assert.strictEqual(err.message, testScenario.expected.message);
                     done();
                 }
             });

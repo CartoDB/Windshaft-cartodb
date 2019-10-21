@@ -50,7 +50,7 @@ describe('widgets', function () {
             this.testClient.getWidget('scalerank', function (err, res, histogram) {
                 assert.ok(!err, err);
                 assert.ok(histogram);
-                assert.equal(histogram.type, 'histogram');
+                assert.strictEqual(histogram.type, 'histogram');
                 validateHistogramBins(histogram);
 
                 assert.ok(histogram.bins.length);
@@ -66,7 +66,7 @@ describe('widgets', function () {
             this.testClient.getWidget('pop_max', function (err, res, histogram) {
                 assert.ok(!err, err);
                 assert.ok(histogram);
-                assert.equal(histogram.type, 'histogram');
+                assert.strictEqual(histogram.type, 'histogram');
                 validateHistogramBins(histogram);
 
                 assert.ok(histogram.bins.length);
@@ -97,7 +97,7 @@ describe('widgets', function () {
             this.testClient.getWidget('pop_max', params, function (err, res, histogram) {
                 assert.ok(!err, err);
                 assert.ok(histogram);
-                assert.equal(histogram.type, 'histogram');
+                assert.strictEqual(histogram.type, 'histogram');
                 validateHistogramBins(histogram);
 
                 assert.ok(histogram.bins.length);
@@ -137,7 +137,7 @@ describe('widgets', function () {
             this.testClient = new TestClient(histogram20binsMapConfig);
             this.testClient.getWidget('pop_max', { start: 0, end: 35676000, bins: 20 }, function (err, res, histogram) {
                 assert.ok(!err, err);
-                assert.equal(histogram.type, 'histogram');
+                assert.strictEqual(histogram.type, 'histogram');
                 validateHistogramBins(histogram);
                 assert.ok(histogram.bins.length);
                 assert.deepEqual(
@@ -165,9 +165,9 @@ describe('widgets', function () {
             this.testClient = new TestClient(fixedBinsHistogramMapConfig);
             this.testClient.getWidget('pop_max', { bins: 5 }, function (err, res, histogram) {
                 assert.ok(!err, err);
-                assert.equal(histogram.type, 'histogram');
+                assert.strictEqual(histogram.type, 'histogram');
 
-                assert.equal(histogram.bins_count, 5);
+                assert.strictEqual(histogram.bins_count, 5);
 
                 validateHistogramBins(histogram);
 
@@ -191,7 +191,7 @@ describe('widgets', function () {
             var end = start + (histogram.bins_count * binWidth);
 
             var firstBin = histogram.bins[0];
-            assert.equal(firstBin.min, start,
+            assert.strictEqual(firstBin.min, start,
                 'First bin does not match min and start ' + JSON.stringify({
                     min: firstBin.min,
                     start: start
@@ -199,7 +199,7 @@ describe('widgets', function () {
             );
 
             var lastBin = histogram.bins[histogram.bins.length - 1];
-            assert.equal(lastBin.max, end,
+            assert.strictEqual(lastBin.max, end,
                 'Last bin does not match max and end ' + JSON.stringify({
                     max: lastBin.max,
                     end: end
@@ -270,7 +270,7 @@ describe('widgets', function () {
                 this.testClient.getWidget('updated_at', function (err, res, histogram) {
                     assert.ok(!err, err);
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
 
                     assert.ok(histogram.bins.length);
 
@@ -296,7 +296,7 @@ describe('widgets', function () {
                 this.testClient.getWidget('updated_at', params, function (err, res, histogram) {
                     assert.ok(!err, err);
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
 
                     assert.ok(histogram.bins.length);
 
@@ -327,9 +327,9 @@ describe('widgets', function () {
                 this.testClient.getWidget('updated_at', params, function (err, res, histogram) {
                     assert.ok(!err, err);
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
 
-                    assert.equal(histogram.bins.length, 0);
+                    assert.strictEqual(histogram.bins.length, 0);
 
                     done();
                 });
@@ -390,7 +390,7 @@ describe('widgets', function () {
                 this.testClient.getWidget('updated_at', params, function (err, res, histogram) {
                     assert.ok(!err, err);
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
 
                     assert.ok(histogram.bins.length);
 

@@ -54,7 +54,7 @@ describe('cache-control header', function () {
                     return done(err);
                 }
 
-                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                assert.strictEqual(res.headers['cache-control'], `public,max-age=${ttl}`);
                 testClient.drain(done);
             });
         });
@@ -140,7 +140,7 @@ describe('cache-control header', function () {
                     return done(err);
                 }
 
-                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                assert.strictEqual(res.headers['cache-control'], `public,max-age=${ttl}`);
                 testClient.drain(done);
             });
         });
@@ -181,7 +181,7 @@ describe('cache-control header', function () {
                     return done(err);
                 }
 
-                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                assert.strictEqual(res.headers['cache-control'], `public,max-age=${ttl}`);
                 testClient.drain(done);
             });
         });

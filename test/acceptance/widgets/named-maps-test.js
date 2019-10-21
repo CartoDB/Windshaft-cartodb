@@ -223,7 +223,7 @@ describe('named-maps widgets', function () {
         });
 
         widgetsQueue.awaitAll(function (err, results) {
-            assert.equal(results.length, 3);
+            assert.strictEqual(results.length, 3);
             done(err);
         });
     });
@@ -232,8 +232,8 @@ describe('named-maps widgets', function () {
         getWidget('country_places_count', function (err, response, aggregation) {
             assert.ok(!err, err);
 
-            assert.equal(aggregation.type, 'aggregation');
-            assert.equal(aggregation.max, 769);
+            assert.strictEqual(aggregation.type, 'aggregation');
+            assert.strictEqual(aggregation.max, 769);
 
             return done();
         });
@@ -243,8 +243,8 @@ describe('named-maps widgets', function () {
         getWidget('pop_max', function (err, response, histogram) {
             assert.ok(!err, err);
 
-            assert.equal(histogram.type, 'histogram');
-            assert.equal(histogram.bin_width, 743250);
+            assert.strictEqual(histogram.type, 'histogram');
+            assert.strictEqual(histogram.bin_width, 743250);
 
             return done();
         });

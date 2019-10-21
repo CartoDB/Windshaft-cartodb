@@ -54,8 +54,8 @@ describe('aggregations happy cases', function () {
                 assert.ok(!err, err);
                 assert.ok(aggregation);
 
-                assert.equal(aggregation.type, 'aggregation');
-                assert.equal(aggregation.aggregation, operation);
+                assert.strictEqual(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.aggregation, operation);
 
                 done();
             });
@@ -79,11 +79,11 @@ describe('aggregations happy cases', function () {
                 assert.ifError(err);
 
                 assert.ok(aggregation);
-                assert.equal(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.type, 'aggregation');
                 assert.ok(aggregation.categories);
-                assert.equal(aggregation.categoriesCount, 3);
-                assert.equal(aggregation.count, 4);
-                assert.equal(aggregation.nulls, 1);
+                assert.strictEqual(aggregation.categoriesCount, 3);
+                assert.strictEqual(aggregation.count, 4);
+                assert.strictEqual(aggregation.nulls, 1);
 
                 var hasNullCategory = false;
                 aggregation.categories.forEach(function (category) {
@@ -120,17 +120,17 @@ describe('aggregations happy cases', function () {
                 assert.ifError(err);
 
                 assert.ok(aggregation);
-                assert.equal(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.type, 'aggregation');
                 assert.ok(aggregation.categories);
-                assert.equal(aggregation.categoriesCount, 8);
-                assert.equal(aggregation.count, 24);
-                assert.equal(aggregation.nulls, 0);
+                assert.strictEqual(aggregation.categoriesCount, 8);
+                assert.strictEqual(aggregation.count, 24);
+                assert.strictEqual(aggregation.nulls, 0);
 
                 var aggregated_categories = aggregation.categories.filter(function (category) {
                     return category.agg === true;
                 });
-                assert.equal(aggregated_categories.length, 1);
-                assert.equal(aggregated_categories[0].value, operations_and_values[operation]);
+                assert.strictEqual(aggregated_categories.length, 1);
+                assert.strictEqual(aggregated_categories[0].value, operations_and_values[operation]);
 
                 done();
             });
@@ -154,9 +154,9 @@ describe('aggregations happy cases', function () {
                 assert.ifError(err);
 
                 assert.ok(searchResult);
-                assert.equal(searchResult.type, 'aggregation');
+                assert.strictEqual(searchResult.type, 'aggregation');
 
-                assert.equal(searchResult.categories.length, 1);
+                assert.strictEqual(searchResult.categories.length, 1);
                 assert.deepEqual(
                     searchResult.categories,
                     widgetSearchExpects[operation]
@@ -409,7 +409,7 @@ describe('aggregation dataview tuned by categories query param', function () {
         it(`should handle cartegories to customize aggregations: ${JSON.stringify(scenario.params)}`, function (done) {
             this.testClient.getDataview('categories', scenario.params, (err, dataview) => {
                 assert.ifError(err);
-                assert.equal(dataview.categories.length, scenario.categoriesExpected);
+                assert.strictEqual(dataview.categories.length, scenario.categoriesExpected);
                 done();
             });
         });
@@ -474,7 +474,7 @@ describe('Count aggregation', function () {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('categories', { own_filter: 0, categories: 0 }, (err, dataview) => {
             assert.ifError(err);
-            assert.equal(dataview.categories.length, 3);
+            assert.strictEqual(dataview.categories.length, 3);
             this.testClient.drain(done);
         });
     });
@@ -484,7 +484,7 @@ describe('Count aggregation', function () {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('categories', { own_filter: 0, categories: 0 }, (err, dataview) => {
             assert.ifError(err);
-            assert.equal(dataview.categories.length, 3);
+            assert.strictEqual(dataview.categories.length, 3);
             this.testClient.drain(done);
         });
     });

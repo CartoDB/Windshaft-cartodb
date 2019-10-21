@@ -31,9 +31,9 @@ describe('MapConfigAdapter', function () {
     var Mul2ValMapConfigAdapter = createAdapter(function (val) { return val * 2; });
 
     function validateMapConfig (adapter, expectedNumAdapters, expectedVal, callback) {
-        assert.equal(adapter.adapters.length, expectedNumAdapters);
+        assert.strictEqual(adapter.adapters.length, expectedNumAdapters);
         adapter.getMapConfig(user, requestMapConfig(), params(), context(), function (err, mapConfig) {
-            assert.equal(mapConfig.val, expectedVal);
+            assert.strictEqual(mapConfig.val, expectedVal);
             return callback(err);
         });
     }

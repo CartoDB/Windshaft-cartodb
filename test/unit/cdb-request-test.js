@@ -25,7 +25,7 @@ describe('req2params', function () {
         var cdbRequest = new CdbRequest();
         var user = cdbRequest.userByReq(createRequest('localhost'));
 
-        assert.equal(user, 'localhost');
+        assert.strictEqual(user, 'localhost');
     });
 
     it('extracts name from subdomain host header in case of no config', function () {
@@ -37,14 +37,14 @@ describe('req2params', function () {
 
         global.environment.user_from_host = userFromHostConfig;
 
-        assert.equal(user, 'development');
+        assert.strictEqual(user, 'development');
     });
 
     it('considers user param before headers', function () {
         var cdbRequest = new CdbRequest();
         var user = cdbRequest.userByReq(createRequest('localhost', 'development'));
 
-        assert.equal(user, 'development');
+        assert.strictEqual(user, 'development');
     });
 
     it('returns undefined when it cannot extract username', function () {
@@ -56,7 +56,7 @@ describe('req2params', function () {
 
         global.environment.user_from_host = userFromHostConfig;
 
-        assert.equal(user, undefined);
+        assert.strictEqual(user, undefined);
     });
 
     it('should not fail for undefined host header', function () {
@@ -68,7 +68,7 @@ describe('req2params', function () {
 
         global.environment.user_from_host = userFromHostConfig;
 
-        assert.equal(user, undefined);
+        assert.strictEqual(user, undefined);
     });
 
     it('should not fail for null host header', function () {
@@ -80,6 +80,6 @@ describe('req2params', function () {
 
         global.environment.user_from_host = userFromHostConfig;
 
-        assert.equal(user, undefined);
+        assert.strictEqual(user, undefined);
     });
 });

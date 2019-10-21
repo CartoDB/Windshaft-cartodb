@@ -103,8 +103,8 @@ describe('named maps preview stats', function () {
         getStaticMap(templateName, { params: { auth_token: 'valid1' } }, function (err, res, img) {
             assert.ok(!err);
 
-            assert.equal(img.width(), 640);
-            assert.equal(img.height(), 480);
+            assert.strictEqual(img.width(), 640);
+            assert.strictEqual(img.height(), 480);
 
             test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, templateName).key());
             var redisKeysToDelete = { 'user:localhost:mapviews:global': 5 };

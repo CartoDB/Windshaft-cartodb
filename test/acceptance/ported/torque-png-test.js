@@ -133,8 +133,8 @@ describe('torque png renderer', function () {
                 return done(err);
             }
 
-            assert.equal(img.width(), w);
-            assert.equal(img.height(), h);
+            assert.strictEqual(img.width(), w);
+            assert.strictEqual(img.height(), h);
 
             done();
         });

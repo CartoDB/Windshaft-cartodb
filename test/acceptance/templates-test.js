@@ -124,7 +124,7 @@ describe('template_api', function () {
             },
             function postTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403);
+                assert.strictEqual(res.statusCode, 403);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'), res.body);
                 err = parsed.errors[0];
@@ -137,7 +137,7 @@ describe('template_api', function () {
             },
             function rePostTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsedBody = JSON.parse(res.body);
                 var expectedBody = { template_id: expected_tpl_id };
                 assert.deepEqual(parsedBody, expectedBody);
@@ -150,7 +150,7 @@ describe('template_api', function () {
             },
             function checkFailure (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.body);
+                assert.strictEqual(res.statusCode, 400, res.body);
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/already exists/i),
@@ -184,7 +184,7 @@ describe('template_api', function () {
             },
             function checkFailure1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.body);
+                assert.strictEqual(res.statusCode, 400, res.body);
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
                 var re = /invalid.*authentication.*missing/i;
@@ -212,7 +212,7 @@ describe('template_api', function () {
             },
             function checkFailure2 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.body);
+                assert.strictEqual(res.statusCode, 400, res.body);
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
                 var re = new RegExp(/invalid.*authentication.*missing/i);
@@ -237,7 +237,7 @@ describe('template_api', function () {
             },
             function putTemplateInvalid (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -260,7 +260,7 @@ describe('template_api', function () {
             },
             function deleteTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
                     "Missing 'errors' from response body: " + res.body);
@@ -279,7 +279,7 @@ describe('template_api', function () {
             },
             function checkDelete (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 204, res.statusCode + ': ' + res.body);
                 assert.ok(!res.body, 'Unexpected body in DELETE /template response');
 
                 done();
@@ -387,7 +387,7 @@ describe('template_api', function () {
             },
             function postTemplate2 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -408,7 +408,7 @@ describe('template_api', function () {
             },
             function litsTemplatesUnauthenticated (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -424,7 +424,7 @@ describe('template_api', function () {
             },
             function litsTemplates (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 403, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
                     'Missing error from response: ' + res.body);
@@ -441,12 +441,12 @@ describe('template_api', function () {
             },
             function checkList (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_ids'),
                     "Missing 'template_ids' from response body: " + res.body);
                 var ids = parsed.template_ids;
-                assert.equal(ids.length, 2);
+                assert.strictEqual(ids.length, 2);
                 assert.ok(ids.indexOf(tplid1) !== -1,
                     'Missing "' + tplid1 + "' from list response: " + ids.join(','));
                 assert.ok(ids.indexOf(tplid2) !== -1,
@@ -475,7 +475,7 @@ describe('template_api', function () {
             },
             function putMisnamedTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -495,7 +495,7 @@ describe('template_api', function () {
             },
             function putUnexistentTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/cannot update name/i),
@@ -512,7 +512,7 @@ describe('template_api', function () {
             },
             function putValidTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/cannot update name/i),
@@ -529,11 +529,11 @@ describe('template_api', function () {
             },
             function checkValidUpate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                assert.equal(tpl_id, parsed.template_id);
+                assert.strictEqual(tpl_id, parsed.template_id);
 
                 keysToDelete['map_tpl|localhost'] = 0;
 
@@ -558,7 +558,7 @@ describe('template_api', function () {
             },
             function getTemplateUnauthorized (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -574,7 +574,7 @@ describe('template_api', function () {
             },
             function getTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 403, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.hasOwnProperty('errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/only.*authenticated.*user/i),
@@ -590,7 +590,7 @@ describe('template_api', function () {
             },
             function checkReturnTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template'),
                     "Missing 'template' from response body: " + res.body);
@@ -619,7 +619,7 @@ describe('template_api', function () {
             },
             function getTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -635,7 +635,7 @@ describe('template_api', function () {
             },
             function deleteTemplateUnauthorized (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template'),
                     "Missing 'template' from response body: " + res.body);
@@ -651,7 +651,7 @@ describe('template_api', function () {
             },
             function deleteTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 403, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
                     "Missing 'errors' from response body: " + res.body);
@@ -668,7 +668,7 @@ describe('template_api', function () {
             },
             function getMissingTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 204, res.statusCode + ': ' + res.body);
                 assert.ok(!res.body, 'Unexpected body in DELETE /template response');
                 var get_request = {
                     url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
@@ -681,7 +681,7 @@ describe('template_api', function () {
             },
             function checkGetFailure (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 404, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
                     "Missing 'errors' from response body: " + res.body);
@@ -732,7 +732,7 @@ describe('template_api', function () {
             },
             function instanciateNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -750,7 +750,7 @@ describe('template_api', function () {
             // See https://github.com/CartoDB/Windshaft-cartodb/issues/173
             function instanciateForeignDB (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403,
+                assert.strictEqual(res.statusCode, 403,
                     'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
@@ -769,7 +769,7 @@ describe('template_api', function () {
             },
             function instanciateAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 404, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'), "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/not found/i), 'Unexpected error for forbidden instance : ' + parsed.errors);
@@ -785,7 +785,7 @@ describe('template_api', function () {
             },
             function fetchTileNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('layergroupid'),
@@ -812,7 +812,7 @@ describe('template_api', function () {
             },
             function fetchTileAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403,
+                assert.strictEqual(res.statusCode, 403,
                     'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
@@ -831,9 +831,9 @@ describe('template_api', function () {
             },
             function checkTile (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
-                assert.equal(res.headers['content-type'], 'image/png');
+                assert.strictEqual(res.headers['content-type'], 'image/png');
                 return null;
             },
             // See https://github.com/CartoDB/Windshaft-cartodb/issues/172
@@ -852,7 +852,7 @@ describe('template_api', function () {
             },
             function checkForeignSignerError (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403,
+                assert.strictEqual(res.statusCode, 403,
                     'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
@@ -874,7 +874,7 @@ describe('template_api', function () {
             },
             function fetchTileDeleted (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204,
+                assert.strictEqual(res.statusCode, 204,
                     'Deleting template: ' + res.statusCode + ':' + res.body);
                 var get_request = {
                     url: '/api/v1/map/' + layergroupid + '/0/0/0.png?auth_token=valid1',
@@ -888,8 +888,8 @@ describe('template_api', function () {
             },
             function checkTileAvailable (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, 'Tile should be accessible');
-                assert.equal(res.headers['content-type'], 'image/png');
+                assert.strictEqual(res.statusCode, 200, 'Tile should be accessible');
+                assert.strictEqual(res.headers['content-type'], 'image/png');
 
                 done();
             }
@@ -935,7 +935,7 @@ describe('template_api', function () {
             },
             function instanciateNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -952,7 +952,7 @@ describe('template_api', function () {
             },
             function instanciateAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403,
+                assert.strictEqual(res.statusCode, 403,
                     'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
@@ -971,7 +971,7 @@ describe('template_api', function () {
             },
             function fetchTileNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('layergroupid'),
@@ -998,7 +998,7 @@ describe('template_api', function () {
             },
             function fetchTileAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403,
+                assert.strictEqual(res.statusCode, 403,
                     'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
@@ -1017,13 +1017,13 @@ describe('template_api', function () {
             },
             function checkTile_fetchOnRestart (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var cc = res.headers['x-cache-channel'];
                 var expectedCC = 'test_windshaft_cartodb_user_1_db:public.test_table_private_1';
                 assert.ok(cc);
-                assert.equal(cc, expectedCC);
+                assert.strictEqual(cc, expectedCC);
                 // hack simulating restart...
                 // FIXME: we need a better way to reset cache while running tests
                 server.layergroupAffectedTablesCache.cache.reset(); // need to clean channel cache
@@ -1039,13 +1039,13 @@ describe('template_api', function () {
             },
             function checkCacheChannel (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var cc = res.headers['x-cache-channel'];
                 var expectedCC = 'test_windshaft_cartodb_user_1_db:public.test_table_private_1';
                 assert.ok(cc, 'Missing X-Cache-Channel on fetch-after-restart');
-                assert.equal(cc, expectedCC);
+                assert.strictEqual(cc, expectedCC);
                 return null;
             },
             function deleteTemplate (err) {
@@ -1061,7 +1061,7 @@ describe('template_api', function () {
             },
             function fetchTileDeleted (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204,
+                assert.strictEqual(res.statusCode, 204,
                     'Deleting template: ' + res.statusCode + ':' + res.body);
                 var get_request = {
                     url: '/api/v1/map/' + layergroupid + ':cb2/0/0/0/0.json.torque?auth_token=valid1',
@@ -1075,8 +1075,8 @@ describe('template_api', function () {
             },
             function checkTorqueTileAvailable (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, 'Torque tile should be accessible');
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.statusCode, 200, 'Torque tile should be accessible');
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
 
                 done();
             }
@@ -1122,7 +1122,7 @@ describe('template_api', function () {
             },
             function instanciateNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -1139,7 +1139,7 @@ describe('template_api', function () {
             },
             function instanciateAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403,
+                assert.strictEqual(res.statusCode, 403,
                     'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
@@ -1158,7 +1158,7 @@ describe('template_api', function () {
             },
             function fetchAttributeNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('layergroupid'),
@@ -1166,7 +1166,7 @@ describe('template_api', function () {
                 layergroupid = parsed.layergroupid;
                 assert.ok(layergroupid.match(/^localhost@/),
                     'Returned layergroupid does not start with signer name: ' + layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
                 assert.ok(parsed.hasOwnProperty('last_updated'),
                     "Missing 'last_updated' from response body: " + res.body);
 
@@ -1186,7 +1186,7 @@ describe('template_api', function () {
             },
             function fetchAttributeAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 403,
+                assert.strictEqual(res.statusCode, 403,
                     'Fetching tile with no auth: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'),
@@ -1205,9 +1205,9 @@ describe('template_api', function () {
             },
             function checkAttribute (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Unexpected error for authorized getAttributes: ' + res.statusCode + ' -- ' + res.body);
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 return null;
             },
             function deleteTemplate (err) {
@@ -1223,7 +1223,7 @@ describe('template_api', function () {
             },
             function fetchAttrDeleted (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204,
+                assert.strictEqual(res.statusCode, 204,
                     'Deleting template: ' + res.statusCode + ':' + res.body);
                 var get_request = {
                     url: '/api/v1/map/' + layergroupid + ':cb2/0/attributes/5?auth_token=valid2',
@@ -1237,8 +1237,8 @@ describe('template_api', function () {
             },
             function checkLayerAttributesAvailable (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, 'Layer attributes should be accessible');
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.statusCode, 200, 'Layer attributes should be accessible');
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
 
                 done();
             }
@@ -1283,7 +1283,7 @@ describe('template_api', function () {
             },
             function instanciateNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -1301,7 +1301,7 @@ describe('template_api', function () {
             },
             function instanciateAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Unexpected success instanciating template with no auth: ' + res.statusCode + ': ' + res.body);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
@@ -1349,7 +1349,7 @@ describe('template_api', function () {
             },
             function instanciateNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -1365,7 +1365,7 @@ describe('template_api', function () {
             },
             function checkInstanciation (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
                 helper.checkCache(res);
                 var expectedSurrogateKey = [
@@ -1434,7 +1434,7 @@ describe('template_api', function () {
             },
             function instanciateNoAuth (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -1450,7 +1450,7 @@ describe('template_api', function () {
             },
             function checkInstanciation (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 // See https://github.com/CartoDB/Windshaft-cartodb/issues/176
                 helper.checkCache(res);
                 var expectedSurrogateKey = [
@@ -1528,7 +1528,7 @@ describe('template_api', function () {
             },
             function instantiateTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 template_id = JSON.parse(res.body).template_id;
                 var post_request = {
                     url: '/api/v1/map/named/' + template_id,
@@ -1542,7 +1542,7 @@ describe('template_api', function () {
             },
             function check_global_stats (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('layergroupid'),
@@ -1552,12 +1552,12 @@ describe('template_api', function () {
             },
             function check_tag_stats (err, val) {
                 assert.ifError(err);
-                assert.equal(val, 1, 'Expected score of ' + now + ' in ' + statskey + ':global to be 1, got ' + val);
+                assert.strictEqual(val, '1', 'Expected score of ' + now + ' in ' + statskey + ':global to be 1, got ' + val);
                 redis_stats_client.ZSCORE(statskey + ':stat_tag:random_tag', now, this);
             },
             function check_tag_stats_value (err, val) {
                 assert.ifError(err);
-                assert.equal(val, 1, 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
+                assert.equal(val, '1', 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
               ' to be 1, got ' + val);
                 return null;
             },
@@ -1576,7 +1576,7 @@ describe('template_api', function () {
                 if (err) {
                     return done(err);
                 }
-                assert.equal(res.statusCode, 204, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 204, res.statusCode + ': ' + res.body);
                 if (err) {
                     errors.push('' + err);
                 }
@@ -1628,7 +1628,7 @@ describe('template_api', function () {
             },
             function instance1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
@@ -1645,7 +1645,7 @@ describe('template_api', function () {
             },
             function checkInstance1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('layergroupid'),
@@ -1673,11 +1673,11 @@ describe('template_api', function () {
             },
             function instance2 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                assert.equal(tpl_id, parsed.template_id);
+                assert.strictEqual(tpl_id, parsed.template_id);
                 var post_request = {
                     url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
                     method: 'POST',
@@ -1690,7 +1690,7 @@ describe('template_api', function () {
             },
             function checkInstance2 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200,
+                assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('layergroupid'),
@@ -1828,7 +1828,7 @@ describe('template_api', function () {
                 if (err) {
                     throw err;
                 }
-                assert.equal(res.headers['content-type'], 'image/png');
+                assert.strictEqual(res.headers['content-type'], 'image/png');
                 return null;
             },
             function deleteTemplate (err) {

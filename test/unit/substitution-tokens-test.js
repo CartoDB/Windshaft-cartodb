@@ -34,8 +34,8 @@ describe('SubstitutionTokens', function () {
     });
 
     it('should report sql has tokens', function () {
-        assert.equal(SubstitutionTokens.hasTokens(sql), true);
-        assert.equal(SubstitutionTokens.hasTokens('select !bbox! from wadus'), true);
-        assert.equal(SubstitutionTokens.hasTokens('select !wadus! from wadus'), false);
+        assert.strictEqual(SubstitutionTokens.hasTokens(sql), true);
+        assert.strictEqual(SubstitutionTokens.hasTokens('select !bbox! from wadus'), true);
+        assert.strictEqual(SubstitutionTokens.hasTokens('select !wadus! from wadus'), false);
     });
 });

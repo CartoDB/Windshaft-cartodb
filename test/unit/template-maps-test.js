@@ -237,7 +237,7 @@ describe('template_maps', function () {
             function addOmonimousTemplate (err, id) {
                 assert.ifError(err);
                 tpl_id = id;
-                assert.equal(tpl_id, 'first');
+                assert.strictEqual(tpl_id, 'first');
                 expected_failure = true;
                 // should fail, as it already exists
                 tmap.addTemplate('me', tpl, this);
@@ -284,7 +284,7 @@ describe('template_maps', function () {
             },
             function checkTemplates (err, ids) {
                 assert.ifError(err);
-                assert.equal(ids.length, 2);
+                assert.strictEqual(ids.length, 2);
                 assert.ok(ids.indexOf(tpl1_id) !== -1, ids.join(','));
                 assert.ok(ids.indexOf(tpl2_id) !== -1, ids.join(','));
                 return null;
@@ -436,22 +436,22 @@ describe('template_maps', function () {
         var inst = tmap.instance(tpl1, {});
 
         var lyr = inst.layers[0].options;
-        assert.equal(lyr.sql, "select 'test' || id, g from t");
-        assert.equal(lyr.cartocss, '#layer { marker-fill:red; marker-width: 23; }');
+        assert.strictEqual(lyr.sql, "select 'test' || id, g from t");
+        assert.strictEqual(lyr.cartocss, '#layer { marker-fill:red; marker-width: 23; }');
 
         lyr = inst.layers[1].options;
-        assert.equal(lyr.sql, "select fun('test') g from x");
-        assert.equal(lyr.cartocss, '#layer { line-color:#a0fF9A; marker-fill:#a0fF9A; }');
+        assert.strictEqual(lyr.sql, "select fun('test') g from x");
+        assert.strictEqual(lyr.cartocss, '#layer { line-color:#a0fF9A; marker-fill:#a0fF9A; }');
 
         inst = tmap.instance(tpl1, { color: 'yellow', name: "it's dangerous" });
 
         lyr = inst.layers[0].options;
-        assert.equal(lyr.sql, "select 'it''s dangerous' || id, g from t");
-        assert.equal(lyr.cartocss, '#layer { marker-fill:red; marker-width: 23; }');
+        assert.strictEqual(lyr.sql, "select 'it''s dangerous' || id, g from t");
+        assert.strictEqual(lyr.cartocss, '#layer { marker-fill:red; marker-width: 23; }');
 
         lyr = inst.layers[1].options;
-        assert.equal(lyr.sql, "select fun('it''s dangerous') g from x");
-        assert.equal(lyr.cartocss, '#layer { line-color:yellow; marker-fill:yellow; }');
+        assert.strictEqual(lyr.sql, "select fun('it''s dangerous') g from x");
+        assert.strictEqual(lyr.cartocss, '#layer { line-color:yellow; marker-fill:yellow; }');
 
         // Invalid css_color
         var err = null;
@@ -601,8 +601,8 @@ describe('template_maps', function () {
 
         it('should emit on template update', function (done) {
             templateMaps.on('update', function (_owner, _templateName, _template) {
-                assert.equal(_owner, owner);
-                assert.equal(_templateName, templateName);
+                assert.strictEqual(_owner, owner);
+                assert.strictEqual(_templateName, templateName);
                 assert.deepEqual(_template, templateUpdated);
 
                 templateMaps.delTemplate(owner, templateName, done);
@@ -618,8 +618,8 @@ describe('template_maps', function () {
 
         it('should emit on template deletion', function (done) {
             templateMaps.on('delete', function (_owner, _templateName) {
-                assert.equal(_owner, owner);
-                assert.equal(_templateName, templateName);
+                assert.strictEqual(_owner, owner);
+                assert.strictEqual(_templateName, templateName);
 
                 done();
             });
@@ -634,8 +634,8 @@ describe('template_maps', function () {
 
         it('should NOT emit on template update when template is the same', function (done) {
             templateMaps.on('update', function (_owner, _templateName, _template) {
-                assert.equal(_owner, owner);
-                assert.equal(_templateName, templateName);
+                assert.strictEqual(_owner, owner);
+                assert.strictEqual(_templateName, templateName);
                 assert.deepEqual(_template, templateUpdated);
 
                 templateMaps.delTemplate(owner, templateName, done);

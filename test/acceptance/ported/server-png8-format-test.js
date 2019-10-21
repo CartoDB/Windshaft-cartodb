@@ -102,10 +102,10 @@ describe('server_png8_format', function () {
                     };
 
                     assert.response(serverPng32, requestPayload, requestHeaders, function (responsePng32) {
-                        assert.equal(responsePng32.headers['content-type'], 'image/png');
+                        assert.strictEqual(responsePng32.headers['content-type'], 'image/png');
                         bufferPng32 = responsePng32.body;
                         assert.response(serverPng8, requestPayload, requestHeaders, function (responsePng8) {
-                            assert.equal(responsePng8.headers['content-type'], 'image/png');
+                            assert.strictEqual(responsePng8.headers['content-type'], 'image/png');
                             bufferPng8 = responsePng8.body;
                             assert.ok(bufferPng8.length < bufferPng32.length);
                             assert.imageBuffersAreSimilar(bufferPng32, bufferPng8, IMAGE_EQUALS_TOLERANCE_PER_MIL,

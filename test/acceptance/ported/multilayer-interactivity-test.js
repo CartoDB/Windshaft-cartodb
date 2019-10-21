@@ -45,7 +45,7 @@ describe('multilayer interactivity and layers order', function () {
                     }
                 },
                 function (response) {
-                    assert.equal(
+                    assert.strictEqual(
                         response.statusCode,
                         200,
                         'Expected status code 200, got ' + response.statusCode +
@@ -58,13 +58,13 @@ describe('multilayer interactivity and layers order', function () {
 
                     var layergroupId = layergroupResponse.layergroupid;
                     assert.ok(layergroupId);
-                    assert.equal(layergroupResponse.metadata.layers.length, layergroup.layers.length);
+                    assert.strictEqual(layergroupResponse.metadata.layers.length, layergroup.layers.length);
 
                     // check layers metadata at least match in number
                     var layersMetadata = layergroupResponse.metadata.layers;
-                    assert.equal(layersMetadata.length, layergroup.layers.length);
+                    assert.strictEqual(layersMetadata.length, layergroup.layers.length);
                     for (var i = 0, len = layersMetadata.length; i < len; i++) {
-                        assert.equal(
+                        assert.strictEqual(
                             getLayerTypeFn(layersMetadata[i].type),
                             getLayerTypeFn(layergroup.layers[i].type)
                         );
@@ -72,7 +72,7 @@ describe('multilayer interactivity and layers order', function () {
                     // check torque metadata at least match in number
                     var torqueLayers = layergroup.layers.filter(function (layer) { return layer.type === 'torque'; });
                     if (torqueLayers.length) {
-                        assert.equal(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
+                        assert.strictEqual(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
                     }
 
                     var keysToDelete = {

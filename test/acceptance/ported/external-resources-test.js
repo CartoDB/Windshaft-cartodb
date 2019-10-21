@@ -95,7 +95,7 @@ describe('external resources', function () {
             var externalResourceRequestsCount = res_serv_status.numrequests;
 
             testClient.createLayergroup(externalResourceMapConfig, options, function () {
-                assert.equal(res_serv_status.numrequests, externalResourceRequestsCount);
+                assert.strictEqual(res_serv_status.numrequests, externalResourceRequestsCount);
 
                 // reset resources cache
                 testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
@@ -103,7 +103,7 @@ describe('external resources', function () {
                 externalResourceMapConfig = testClient.defaultTableMapConfig('test_table_3 ', externalResourceStyle);
 
                 testClient.createLayergroup(externalResourceMapConfig, options, function () {
-                    assert.equal(res_serv_status.numrequests, externalResourceRequestsCount + 1);
+                    assert.strictEqual(res_serv_status.numrequests, externalResourceRequestsCount + 1);
 
                     done();
                 });

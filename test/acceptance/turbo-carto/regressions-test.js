@@ -88,7 +88,7 @@ describe('turbo-carto regressions', function () {
 
             var turboCartoError = layergroup.errors_with_context[0];
             assert.ok(turboCartoError);
-            assert.equal(turboCartoError.type, 'layer');
+            assert.strictEqual(turboCartoError.type, 'layer');
             assert.ok(turboCartoError.message.match(/permission\sdenied\sfor\s.+?test_table_private_1/));
 
             done();
@@ -464,7 +464,7 @@ describe('turbo-carto regressions', function () {
                     const rule = layergroup.metadata.layers[0].meta.cartocss_meta.rules[0];
 
                     assert.ok(!err, err);
-                    assert.equal(rule.buckets.length, scenario.numBuckets);
+                    assert.strictEqual(rule.buckets.length, scenario.numBuckets);
                     assert.deepEqual(rule.buckets, scenario.bucketResponse);
 
                     done();

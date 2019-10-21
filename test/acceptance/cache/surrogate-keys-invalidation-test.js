@@ -182,8 +182,8 @@ describe('templates surrogate keys', function () {
                 var parsedBody = JSON.parse(res.body);
                 assert.deepEqual(parsedBody, expectedBody);
 
-                assert.equal(scope.pendingMocks().length, 0);
-                assert.equal(fastlyScope.pendingMocks().length, 0);
+                assert.strictEqual(scope.pendingMocks().length, 0);
+                assert.strictEqual(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },
@@ -244,8 +244,8 @@ describe('templates surrogate keys', function () {
                     throw err;
                 }
 
-                assert.equal(scope.pendingMocks().length, 0);
-                assert.equal(fastlyScope.pendingMocks().length, 0);
+                assert.strictEqual(scope.pendingMocks().length, 0);
+                assert.strictEqual(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },
@@ -306,8 +306,8 @@ describe('templates surrogate keys', function () {
                 var parsedBody = JSON.parse(res.body);
                 assert.deepEqual(parsedBody, expectedBody);
 
-                assert.equal(scope.pendingMocks().length, 0);
-                assert.equal(fastlyScope.pendingMocks().length, 0);
+                assert.strictEqual(scope.pendingMocks().length, 0);
+                assert.strictEqual(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },

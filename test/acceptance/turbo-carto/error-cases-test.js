@@ -57,7 +57,7 @@ describe('turbo-carto error cases', function () {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
-            assert.equal(layergroup.errors.length, 1);
+            assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/), layergroup.errors[0]);
             assert.ok(layergroup.errors[0].match(/invalid\sramp\slength/i), layergroup.errors[0]);
 
@@ -71,7 +71,7 @@ describe('turbo-carto error cases', function () {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
-            assert.equal(layergroup.errors.length, 1);
+            assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors[0].match(/unable\sto\scompute\sramp/i));
             assert.ok(layergroup.errors[0].match(/wadus_column/));
@@ -86,7 +86,7 @@ describe('turbo-carto error cases', function () {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
-            assert.equal(layergroup.errors.length, 1);
+            assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors[0].match(/unable\sto\scompute\sramp/i));
             assert.ok(layergroup.errors[0].match(/invalid\smethod\s\"wadusmethod\"/i));
@@ -101,7 +101,7 @@ describe('turbo-carto error cases', function () {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
-            assert.equal(layergroup.errors.length, 1);
+            assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(!layergroup.errors[0].match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors[0].match(/invalid\scode/i));
 
@@ -115,18 +115,18 @@ describe('turbo-carto error cases', function () {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
-            assert.equal(layergroup.errors_with_context.length, 1);
-            assert.equal(layergroup.errors_with_context[0].type, 'layer');
-            assert.equal(layergroup.errors_with_context[0].subtype, 'turbo-carto');
+            assert.strictEqual(layergroup.errors_with_context.length, 1);
+            assert.strictEqual(layergroup.errors_with_context[0].type, 'layer');
+            assert.strictEqual(layergroup.errors_with_context[0].subtype, 'turbo-carto');
             assert.ok(layergroup.errors_with_context[0].message.match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors_with_context[0].message.match(/unable\sto\scompute\sramp/i));
             assert.ok(layergroup.errors_with_context[0].message.match(/wadus_column/));
 
-            assert.equal(layergroup.errors_with_context[0].layer.id, 'layer0');
-            assert.equal(layergroup.errors_with_context[0].layer.index, 0);
-            assert.equal(layergroup.errors_with_context[0].layer.type, 'mapnik');
+            assert.strictEqual(layergroup.errors_with_context[0].layer.id, 'layer0');
+            assert.strictEqual(layergroup.errors_with_context[0].layer.index, 0);
+            assert.strictEqual(layergroup.errors_with_context[0].layer.type, 'mapnik');
 
-            assert.equal(layergroup.errors_with_context[0].layer.context.selector, '#populated_places_simple_reduced');
+            assert.strictEqual(layergroup.errors_with_context[0].layer.context.selector, '#populated_places_simple_reduced');
             assert.deepEqual(layergroup.errors_with_context[0].layer.context.source, {
                 start: {
                     line: 10,
@@ -169,21 +169,21 @@ describe('turbo-carto error cases', function () {
             assert.ok(!err, err);
 
             assert.ok(layergroup.hasOwnProperty('errors'));
-            assert.equal(layergroup.errors_with_context.length, 2);
+            assert.strictEqual(layergroup.errors_with_context.length, 2);
 
-            assert.equal(layergroup.errors_with_context[0].type, 'layer');
-            assert.equal(layergroup.errors_with_context[0].subtype, 'turbo-carto');
+            assert.strictEqual(layergroup.errors_with_context[0].type, 'layer');
+            assert.strictEqual(layergroup.errors_with_context[0].subtype, 'turbo-carto');
             assert.ok(layergroup.errors_with_context[0].message.match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors_with_context[0].message.match(/unable\sto\scompute\sramp/i));
             assert.ok(layergroup.errors_with_context[0].message.match(/wadus_column/));
-            assert.equal(layergroup.errors_with_context[0].layer.id, 'layer0');
+            assert.strictEqual(layergroup.errors_with_context[0].layer.id, 'layer0');
 
-            assert.equal(layergroup.errors_with_context[1].type, 'layer');
-            assert.equal(layergroup.errors_with_context[1].subtype, 'turbo-carto');
+            assert.strictEqual(layergroup.errors_with_context[1].type, 'layer');
+            assert.strictEqual(layergroup.errors_with_context[1].subtype, 'turbo-carto');
             assert.ok(layergroup.errors_with_context[1].message.match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors_with_context[1].message.match(/unable\sto\scompute\sramp/i));
             assert.ok(layergroup.errors_with_context[1].message.match(/invalid_column/));
-            assert.equal(layergroup.errors_with_context[1].layer.id, 'layer1');
+            assert.strictEqual(layergroup.errors_with_context[1].layer.id, 'layer1');
 
             done();
         });

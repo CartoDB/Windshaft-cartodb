@@ -40,7 +40,7 @@ describe('profiler + statsd', function () {
         // force a call to validate sendStats does not throw and uncaught exception
         statsClient.timing('forced', 50, 1, function (err) {
             assert.ok(err);
-            assert.equal(err.code, 'ENOTFOUND');
+            assert.strictEqual(err.code, 'ENOTFOUND');
             done();
         });
     });

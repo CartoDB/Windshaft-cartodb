@@ -36,24 +36,24 @@ describe('TableNameParser', function () {
     });
 
     it('quotes identifiers that need quoting', function (done) {
-        assert.equal(TableNameParser.quote('x yz'), '"x yz"');
-        assert.equal(TableNameParser.quote('x-yz'), '"x-yz"');
-        assert.equal(TableNameParser.quote('x.yz'), '"x.yz"');
+        assert.strictEqual(TableNameParser.quote('x yz'), '"x yz"');
+        assert.strictEqual(TableNameParser.quote('x-yz'), '"x-yz"');
+        assert.strictEqual(TableNameParser.quote('x.yz'), '"x.yz"');
         done();
     });
 
     it('doubles quotes', function (done) {
-        assert.equal(TableNameParser.quote('x"yz'), '"x""yz"');
-        assert.equal(TableNameParser.quote('x"y"z'), '"x""y""z"');
-        assert.equal(TableNameParser.quote('x""y"z'), '"x""""y""z"');
-        assert.equal(TableNameParser.quote('x "yz'), '"x ""yz"');
-        assert.equal(TableNameParser.quote('x"y-y"z'), '"x""y-y""z"');
+        assert.strictEqual(TableNameParser.quote('x"yz'), '"x""yz"');
+        assert.strictEqual(TableNameParser.quote('x"y"z'), '"x""y""z"');
+        assert.strictEqual(TableNameParser.quote('x""y"z'), '"x""""y""z"');
+        assert.strictEqual(TableNameParser.quote('x "yz'), '"x ""yz"');
+        assert.strictEqual(TableNameParser.quote('x"y-y"z'), '"x""y-y""z"');
         done();
     });
 
     it('does not quote identifiers that don\'t need to be quoted', function (done) {
-        assert.equal(TableNameParser.quote('xyz'), 'xyz');
-        assert.equal(TableNameParser.quote('x_z123'), 'x_z123');
+        assert.strictEqual(TableNameParser.quote('xyz'), 'xyz');
+        assert.strictEqual(TableNameParser.quote('x_z123'), 'x_z123');
         done();
     });
 });

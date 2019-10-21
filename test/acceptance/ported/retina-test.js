@@ -93,8 +93,8 @@ describe('retina support', function () {
 
                 var image = new mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
 
-                assert.equal(image.width(), imageSize);
-                assert.equal(image.height(), imageSize);
+                assert.strictEqual(image.width(), imageSize);
+                assert.strictEqual(image.height(), imageSize);
                 done();
             }
         );

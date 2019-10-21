@@ -333,7 +333,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -361,10 +361,10 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.equal(layer.meta.aggregation, undefined));
+                    body.metadata.layers.forEach(layer => assert.strictEqual(layer.meta.aggregation, undefined));
 
                     done();
                 });
@@ -397,7 +397,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -512,7 +512,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -561,7 +561,7 @@ describe('aggregation', function () {
                                 return done(err);
                             }
 
-                            assert.equal(typeof body.metadata, 'object');
+                            assert.strictEqual(typeof body.metadata, 'object');
                             assert.ok(Array.isArray(body.metadata.layers));
 
                             body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -644,10 +644,10 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.equal(layer.meta.aggregation, undefined));
+                    body.metadata.layers.forEach(layer => assert.strictEqual(layer.meta.aggregation, undefined));
 
                     done();
                 });
@@ -683,11 +683,11 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, true);
-                    assert.equal(body.metadata.layers[1].meta.aggregation.mvt, false);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.mvt, true);
+                    assert.strictEqual(body.metadata.layers[1].meta.aggregation.mvt, false);
 
                     done();
                 });
@@ -713,11 +713,11 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, true);
-                    assert.equal(body.metadata.layers[0].meta.aggregation.png, true);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.mvt, true);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.png, true);
 
                     done();
                 });
@@ -743,11 +743,11 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, false);
-                    assert.equal(body.metadata.layers[0].meta.aggregation.png, false);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.mvt, false);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.png, false);
 
                     done();
                 });
@@ -822,7 +822,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => {
@@ -903,7 +903,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -967,7 +967,7 @@ describe('aggregation', function () {
 
                         const tileJSON = tile.toJSON();
 
-                        tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.value, 'number'));
+                        tileJSON[0].features.forEach(feature => assert.strictEqual(typeof feature.properties.value, 'number'));
 
                         done();
                     });
@@ -1006,7 +1006,7 @@ describe('aggregation', function () {
 
                     const tileJSON = tile.toJSON();
 
-                    tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.dow, 'number'));
+                    tileJSON[0].features.forEach(feature => assert.strictEqual(typeof feature.properties.dow, 'number'));
 
                     done();
                 });
@@ -1120,7 +1120,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
                     const tileJSON = tile.toJSON();
-                    assert.equal(tileJSON[0].features.length, 3);
+                    assert.strictEqual(tileJSON[0].features.length, 3);
                     const resultQuimesters = tileJSON[0].features.map(f => f.properties.month).sort((a, b) => a - b);
                     assert.deepEqual(resultQuimesters, [1, 2, 3]);
 
@@ -1202,7 +1202,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     // In UTC all times are in the same month 2018-01
-                    assert.equal(tileJSON[0].features.length, 1);
+                    assert.strictEqual(tileJSON[0].features.length, 1);
 
                     done();
                 });
@@ -1242,7 +1242,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     // In UTC+2 some times are in a different month
-                    assert.equal(tileJSON[0].features.length, 2);
+                    assert.strictEqual(tileJSON[0].features.length, 2);
                     done();
                 });
             });
@@ -1473,7 +1473,7 @@ describe('aggregation', function () {
                         '2018-01-01T22',
                         '2018-01-01T23'
                     ]);
-                    tileJSON[0].features.forEach(f => assert.equal(f.properties._cdb_feature_count, 4));
+                    tileJSON[0].features.forEach(f => assert.strictEqual(f.properties._cdb_feature_count, 4));
                     done();
                 });
             });
@@ -1508,7 +1508,7 @@ describe('aggregation', function () {
                         const tileJSON = tile.toJSON();
 
                         tileJSON[0].features.forEach(
-                            feature => assert.equal(typeof feature.properties.value, 'number')
+                            feature => assert.strictEqual(typeof feature.properties.value, 'number')
                         );
 
                         done();
@@ -1546,7 +1546,7 @@ describe('aggregation', function () {
                         const tileJSON = tile.toJSON();
 
                         tileJSON[0].features.forEach(
-                            feature => assert.equal(typeof feature.properties.value2, 'number')
+                            feature => assert.strictEqual(typeof feature.properties.value2, 'number')
                         );
 
                         done();
@@ -1582,10 +1582,10 @@ describe('aggregation', function () {
                     const tileJSON = tile.toJSON();
 
                     tileJSON[0].features.forEach(
-                        feature => assert.equal(typeof feature.properties.value, 'number')
+                        feature => assert.strictEqual(typeof feature.properties.value, 'number')
                     );
                     tileJSON[0].features.forEach(
-                        feature => assert.equal(typeof feature.properties.sqrt_value, 'undefined')
+                        feature => assert.strictEqual(typeof feature.properties.sqrt_value, 'undefined')
                     );
 
                     done();
@@ -1623,10 +1623,10 @@ describe('aggregation', function () {
                     const tileJSON = tile.toJSON();
 
                     tileJSON[0].features.forEach(
-                        feature => assert.equal(typeof feature.properties.value, 'number')
+                        feature => assert.strictEqual(typeof feature.properties.value, 'number')
                     );
                     tileJSON[0].features.forEach(
-                        feature => assert.equal(typeof feature.properties.sqrt_value, 'undefined')
+                        feature => assert.strictEqual(typeof feature.properties.sqrt_value, 'undefined')
                     );
 
                     done();
@@ -1666,7 +1666,7 @@ describe('aggregation', function () {
                         const tileJSON = tile.toJSON();
 
                         tileJSON[0].features.forEach(
-                            feature => assert.equal(typeof feature.properties.value, 'number')
+                            feature => assert.strictEqual(typeof feature.properties.value, 'number')
                         );
 
                         done();
@@ -1702,7 +1702,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -1744,7 +1744,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -1786,7 +1786,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -1828,7 +1828,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -2163,7 +2163,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.mvt));
@@ -2180,7 +2180,7 @@ describe('aggregation', function () {
 
                             const tileJSON = tile.toJSON();
 
-                            assert.equal(tileJSON[0].features.length, 7);
+                            assert.strictEqual(tileJSON[0].features.length, 7);
 
                             done();
                         });
@@ -2214,11 +2214,11 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
-                        assert.equal(body.metadata.layers[0].meta.aggregation.mvt, false);
-                        assert.equal(body.metadata.layers[1].meta.aggregation.mvt, true);
+                        assert.strictEqual(body.metadata.layers[0].meta.aggregation.mvt, false);
+                        assert.strictEqual(body.metadata.layers[1].meta.aggregation.mvt, true);
 
                         const options = {
                             format: 'mvt'
@@ -2231,7 +2231,7 @@ describe('aggregation', function () {
 
                             const tileJSON = tile.toJSON();
 
-                            assert.equal(tileJSON[0].features.length, 7);
+                            assert.strictEqual(tileJSON[0].features.length, 7);
 
                             done();
                         });
@@ -2262,7 +2262,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -2292,7 +2292,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -2329,7 +2329,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -2889,7 +2889,7 @@ describe('aggregation', function () {
                             const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
                             const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
 
-                            assert.equal(repeatedIds.length, 0);
+                            assert.strictEqual(repeatedIds.length, 0);
 
                             done();
                         });
@@ -2948,8 +2948,8 @@ describe('aggregation', function () {
                                     const tile1Features = tile1.features.filter(f => f.properties.cartodb_id === id);
                                     const tile2Features = tile2.features.filter(f => f.properties.cartodb_id === id);
                                     // repetitions cannot occur inside a tile
-                                    assert.equal(tile1Features.length, 1);
-                                    assert.equal(tile2Features.length, 1);
+                                    assert.strictEqual(tile1Features.length, 1);
+                                    assert.strictEqual(tile2Features.length, 1);
                                     const feature1 = tile1Features[0];
                                     const feature2 = tile2Features[0];
                                     // features should be identical (geometry and properties)
@@ -2957,8 +2957,8 @@ describe('aggregation', function () {
                                     assert.deepEqual(feature1.geometry, feature2.geometry);
                                     // and geometry should be on the border;
                                     // for the dataset and zoom 1, only point with cartodb_id=4 (0,0)
-                                    assert.equal(feature1.properties.cartodb_id, 4);
-                                    assert.equal(feature2.properties.cartodb_id, 4);
+                                    assert.strictEqual(feature1.properties.cartodb_id, 4);
+                                    assert.strictEqual(feature2.properties.cartodb_id, 4);
                                 });
                             }
                             done();
@@ -3024,7 +3024,7 @@ describe('aggregation', function () {
                                     const tile10Count = count_features(tile10);
                                     const tile01Count = count_features(tile01);
                                     const tile11Count = count_features(tile11);
-                                    assert.equal(13, tile00Count + tile10Count + tile01Count + tile11Count);
+                                    assert.strictEqual(13, tile00Count + tile10Count + tile01Count + tile11Count);
 
                                     done();
                                 });
@@ -3178,7 +3178,7 @@ describe('aggregation', function () {
                                             const c1 = allFeatures[i];
                                             const c2 = allFeatures[j];
                                             if (c1.cartodb_id === c2.cartodb_id) {
-                                                assert.equal(c1._cdb_feature_count, c2._cdb_feature_count);
+                                                assert.strictEqual(c1._cdb_feature_count, c2._cdb_feature_count);
                                             }
                                         }
                                     }
@@ -3217,8 +3217,8 @@ describe('aggregation', function () {
                             return done(err);
                         }
                         const tile = JSON.parse(mvt.toGeoJSONSync(0));
-                        assert.equal(tile.features.length, 1);
-                        assert.equal(tile.features[0].properties._cdb_feature_count, 4);
+                        assert.strictEqual(tile.features.length, 1);
+                        assert.strictEqual(tile.features[0].properties._cdb_feature_count, 4);
                         if (placement === 'point-grid') {
                             // check geometry x = 18181005.874444414, y = -18181043.94366749
                             const expectedPoint = [163.322754576802, -83.3823797469878];
@@ -3255,8 +3255,8 @@ describe('aggregation', function () {
                             return done(err);
                         }
                         const tile = JSON.parse(mvt.toGeoJSONSync(0));
-                        assert.equal(tile.features.length, 1);
-                        assert.equal(tile.features[0].properties._cdb_feature_count, 4);
+                        assert.strictEqual(tile.features.length, 1);
+                        assert.strictEqual(tile.features[0].properties._cdb_feature_count, 4);
                         if (placement === 'point-grid') {
                             // check geometry x = 18181006.023735486, y = -18181043.794376418
                             const expectedPoint = [163.322755917907, -83.3823795924354];
@@ -3295,7 +3295,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
                         assert.ok(body.metadata.layers[0].meta.stats.estimatedFeatureCount > 0);
@@ -3334,10 +3334,10 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.aggrFeatureCount, 13);
+                        assert.strictEqual(body.metadata.layers[0].meta.stats.aggrFeatureCount, 13);
 
                         done();
                     });
@@ -3373,10 +3373,10 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.aggrFeatureCount, 7);
+                        assert.strictEqual(body.metadata.layers[0].meta.stats.aggrFeatureCount, 7);
 
                         done();
                     });
@@ -3412,10 +3412,10 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.featureCount, 14);
+                        assert.strictEqual(body.metadata.layers[0].meta.stats.featureCount, 14);
 
                         done();
                     });

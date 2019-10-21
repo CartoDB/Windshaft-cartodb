@@ -25,11 +25,11 @@ describe('multilayer', function () {
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
     function checkCORSHeaders (res) {
-        assert.equal(
+        assert.strictEqual(
             res.headers['access-control-allow-headers'],
             'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
         );
-        assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.strictEqual(res.headers['access-control-allow-origin'], '*');
     }
 
     // See https://github.com/Vizzuality/Windshaft/issues/70
@@ -57,7 +57,7 @@ describe('multilayer', function () {
                     headers: { host: 'localhost', 'Content-Type': 'application/json; charset=utf-8' },
                     data: JSON.stringify(layergroup)
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
                     expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
                     next();
@@ -99,7 +99,7 @@ describe('multilayer', function () {
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(layergroup)
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
                     expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
                     next();
@@ -114,8 +114,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     checkCORSHeaders(res);
                     var referenceImagePath = './test/fixtures/test_bigpoint_red.png';
                     assert.imageBufferIsSimilarToFile(res.body, referenceImagePath, IMAGE_EQUALS_TOLERANCE_PER_MIL,
@@ -170,7 +170,7 @@ describe('multilayer', function () {
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(layergroup)
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                    assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                     // CORS headers should be sent with response
                     // from layergroup creation via POST
                     checkCORSHeaders(res);
@@ -192,8 +192,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png';
                     assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err) {
@@ -209,8 +209,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                         function (err/*, similarity */) {
@@ -227,8 +227,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                         function (err/*, similarity */) {
@@ -283,7 +283,7 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     // CORS headers should be sent with response
                     // from layergroup creation via GET
                     // see https://github.com/CartoDB/Windshaft/issues/92
@@ -306,8 +306,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png';
                     assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err) {
@@ -324,8 +324,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                         function (err/*, similarity */) {
@@ -342,8 +342,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                         function (err/*, similarity */) {
@@ -402,7 +402,7 @@ describe('multilayer', function () {
             },
             function do_check_token (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
 
                 var didRunJsonCallback = false;
                 // jshint ignore:start
@@ -432,8 +432,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png';
                     assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err) {
@@ -450,8 +450,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                         function (err/*, similarity */) {
@@ -468,8 +468,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                         function (err/*, similarity */) {
@@ -540,7 +540,7 @@ describe('multilayer', function () {
             },
             function check_create (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
+                assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
                 expected_token = LayergroupToken.parse(parsed.layergroupid).token;
                 return null;
@@ -554,8 +554,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.png';
                     assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err) {
@@ -572,8 +572,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                         function (err/*, similarity */) {
@@ -590,8 +590,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                         function (err/*, similarity */) {
@@ -612,8 +612,8 @@ describe('multilayer', function () {
             },
             function do_check_attr1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.statusCode, 200, res.body);
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed, { n: 40 });
                 return null;
@@ -629,13 +629,13 @@ describe('multilayer', function () {
             },
             function do_check_torque2 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.body);
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.statusCode, 200, res.body);
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed[0].vals__uint8, [1]);
                 assert.deepEqual(parsed[0].dates__uint16, [0]);
-                assert.equal(parsed[0].x__uint8, 128);
-                assert.equal(parsed[0].y__uint8, 128);
+                assert.strictEqual(parsed[0].x__uint8, 128);
+                assert.strictEqual(parsed[0].y__uint8, 128);
                 return null;
             },
             function do_get_torque1 (err) {
@@ -651,10 +651,10 @@ describe('multilayer', function () {
             },
             function do_check_torque1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors, res.body);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 var msg = parsed.errors[0];
                 assert.ok(msg.match(/Unsupported format json.torque/i), msg);
                 return null;
@@ -711,7 +711,7 @@ describe('multilayer', function () {
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(layergroup1)
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
                     token1 = LayergroupToken.parse(parsedBody.layergroupid).token;
                     assert.ok(token1, res.body);
@@ -726,7 +726,7 @@ describe('multilayer', function () {
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(layergroup2)
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
                     token2 = LayergroupToken.parse(parsedBody.layergroupid).token;
                     assert.ok(token2);
@@ -742,8 +742,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer2.png';
                     assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err) {
@@ -759,8 +759,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                         function (err/*, similarity */) {
@@ -777,8 +777,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer3.png';
                     assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err) {
@@ -794,8 +794,8 @@ describe('multilayer', function () {
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     assert.utfgridEqualsFile(
                         res.body, './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                         function (err/*, similarity */) {
@@ -857,7 +857,7 @@ describe('multilayer', function () {
                     data: JSON.stringify(layergroup)
                 }, {}, function (res) {
                     try {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
                         if (expected_token) {
                             assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 3 });
@@ -877,8 +877,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     var referenceImagePath = './test/acceptance/ported/fixtures/test_table_0_0_0_multilayer4.png';
                     assert.imageBufferIsSimilarToFile(res.body, referenceImagePath,
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err) {
@@ -926,7 +926,7 @@ describe('multilayer', function () {
             headers: { host: 'localhost', 'Content-Type': 'application/json' },
             data: JSON.stringify(layergroup)
         }, {}, function (res) {
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var parsed = JSON.parse(res.body);
             var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
             var keysToDelete = { 'user:localhost:mapviews:global': 5 };
@@ -956,7 +956,7 @@ describe('multilayer', function () {
             headers: { host: 'localhost', 'Content-Type': 'application/json' },
             data: JSON.stringify(layergroup)
         }, {}, function (res) {
-            assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+            assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var parsed = JSON.parse(res.body);
             var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
             var keysToDelete = { 'user:localhost:mapviews:global': 5 };
@@ -995,9 +995,9 @@ describe('multilayer', function () {
             },
             function checkBadFont (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
-                assert.equal(parsedBody.errors.length, 1);
+                assert.strictEqual(parsedBody.errors.length, 1);
                 var errmsg = parsedBody.errors[0];
                 assert.ok(errmsg.match(/text-face-name.*bogus/), parsedBody.errors.toString());
                 //, {"errors":["style0: Failed to find font face 'bogus'"]});
@@ -1015,7 +1015,7 @@ describe('multilayer', function () {
             },
             function checkGoodFont (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
@@ -1076,7 +1076,7 @@ describe('multilayer', function () {
                     data: JSON.stringify(layergroup)
                 }, {}, function (res) {
                     try {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
                         if (expected_token) {
                             assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 3 });
@@ -1101,8 +1101,8 @@ describe('multilayer', function () {
             function do_check_grid (err, res) {
                 assert.ifError(err);
                 var next = this;
-                assert.equal(res.statusCode, 200, res.body);
-                assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                assert.strictEqual(res.statusCode, 200, res.body);
+                assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var grid = JSON.parse(res.body);
                 assert.ok(grid);
                 assert.ok(grid.hasOwnProperty('data'));
@@ -1153,7 +1153,7 @@ describe('multilayer', function () {
             },
             function check_post_1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
                 token1 = LayergroupToken.parse(parsedBody.layergroupid).token;
                 return null;
@@ -1169,7 +1169,7 @@ describe('multilayer', function () {
             },
             function check_post_2 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
                 token2 = LayergroupToken.parse(parsedBody.layergroupid).token;
                 assert.ok(token1 !== token2);
@@ -1216,7 +1216,7 @@ describe('multilayer', function () {
             },
             function check_post_1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
                 token1 = LayergroupToken.parse(parsedBody.layergroupid).token;
                 return null;
@@ -1230,8 +1230,8 @@ describe('multilayer', function () {
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
                     checkCORSHeaders(res);
                     assert.imageBufferIsSimilarToFile(res.body, './test/fixtures/test_bigpoint_red.png',
                         IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err) {

@@ -40,11 +40,11 @@ describe('attributes', function () {
     };
 
     function checkCORSHeaders (res) {
-        assert.equal(
+        assert.strictEqual(
             res.headers['access-control-allow-headers'],
             'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
         );
-        assert.equal(res.headers['access-control-allow-origin'], '*');
+        assert.strictEqual(res.headers['access-control-allow-origin'], '*');
     }
 
     var keysToDelete;
@@ -74,7 +74,7 @@ describe('attributes', function () {
             },
             function checkPost (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 // CORS headers should be sent with response
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
@@ -99,13 +99,13 @@ describe('attributes', function () {
             },
             function check_error_0 (err, res) {
                 assert.ifError(err);
-                assert.equal(
+                assert.strictEqual(
                     res.statusCode,
                     400,
                     res.statusCode + (res.statusCode !== 200 ? (': ' + res.body) : '')
                 );
                 var parsed = JSON.parse(res.body);
-                assert.equal(parsed.errors[0], 'Layer 0 has no exposed attributes');
+                assert.strictEqual(parsed.errors[0], 'Layer 0 has no exposed attributes');
                 return null;
             },
             function do_get_attr_1 (err) {
@@ -121,7 +121,7 @@ describe('attributes', function () {
             },
             function check_attr_1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed, { n: 6 });
                 return null;
@@ -139,11 +139,11 @@ describe('attributes', function () {
             },
             function check_attr_1_404 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 404, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 404, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors);
                 var msg = parsed.errors[0];
-                assert.equal(msg, "Multiple features (0) identified by 'i' = -666 in layer 1");
+                assert.strictEqual(msg, "Multiple features (0) identified by 'i' = -666 in layer 1");
                 return null;
             },
             function finish (err) {
@@ -179,12 +179,12 @@ describe('attributes', function () {
             },
             function checkPost (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode === 200 ? '...' : res.body));
+                assert.strictEqual(res.statusCode, 404, res.statusCode + ': ' + (res.statusCode === 200 ? '...' : res.body));
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 var msg = parsed.errors[0];
-                assert.equal(msg, 'column "unexistant" does not exist');
+                assert.strictEqual(msg, 'column "unexistant" does not exist');
                 return null;
             },
             function finish (err) {
@@ -210,7 +210,7 @@ describe('attributes', function () {
             },
             function checkPost (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 // CORS headers should be sent with response
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
@@ -237,8 +237,8 @@ describe('attributes', function () {
             function check_error_0 (err, res) {
                 assert.ifError(err);
                 // jsonp errors should be returned with HTTP status 200
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
-                assert.equal(
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(
                     res.body,
                     '/**/ typeof test === \'function\' && ' +
                     'test({"errors":["Layer 0 has no exposed attributes"],' +
@@ -261,7 +261,7 @@ describe('attributes', function () {
             },
             function check_attr_1 (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed, { n: 6 });
                 return null;
@@ -302,12 +302,12 @@ describe('attributes', function () {
             function checkPost (err, res) {
                 assert.ifError(err);
                 // TODO: should be 403 Forbidden
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode === 200 ? '...' : res.body));
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + (res.statusCode === 200 ? '...' : res.body));
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 var msg = parsed.errors[0];
-                assert.equal(msg, 'cannot execute INSERT in a read-only transaction');
+                assert.strictEqual(msg, 'cannot execute INSERT in a read-only transaction');
                 return null;
             },
             function finish (err) {

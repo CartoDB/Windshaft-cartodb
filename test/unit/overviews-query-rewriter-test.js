@@ -14,18 +14,18 @@ function normalize_whitespace (txt) {
 
 // compare SQL statements ignoring whitespace
 function assertSameSql (sql1, sql2) {
-    assert.equal(normalize_whitespace(sql1), normalize_whitespace(sql2));
+    assert.strictEqual(normalize_whitespace(sql1), normalize_whitespace(sql2));
 }
 
 describe('Overviews query rewriter', function () {
     it('does not alter queries if no overviews data is present', function () {
         var sql = 'SELECT * FROM table1';
         var overviews_sql = overviewsQueryRewriter.query(sql);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
         overviews_sql = overviewsQueryRewriter.query(sql, {});
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
         overviews_sql = overviewsQueryRewriter.query(sql, { overviews: {} });
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
     });
 
     it('does not alter queries which don\'t use overviews', function () {
@@ -40,7 +40,7 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
     });
 
     // jshint multistr:true
@@ -407,31 +407,31 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
 
         sql = 'SELECT * FROM table1 JOIN table2 ON (table1.col1=table2.col1)';
         overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
 
         sql = 'SELECT a+b AS c FROM table1';
         overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
 
         sql = 'SELECT f(a) AS b FROM table1';
         overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
 
         sql = 'SELECT * FROM table1 AS x';
         overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
 
         sql = 'WITH a AS (1) SELECT * FROM table1';
         overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
 
         sql = 'SELECT * FROM table1 WHERE a=1';
         overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
 
         sql = "\
             SELECT table1.* FROM table1 \
@@ -439,11 +439,11 @@ describe('Overviews query rewriter', function () {
                    WHERE areas.name='A' \
               ";
         overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
 
         sql = 'SELECT table1.*, column1, column2, column3 FROM table1';
         overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
     });
 
     it('generates overviews for wrapped query', function () {
@@ -604,6 +604,6 @@ describe('Overviews query rewriter', function () {
             filter_stats: { unfiltered_rows: 1000, filtered_rows: 10 }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        assert.equal(overviews_sql, sql);
+        assert.strictEqual(overviews_sql, sql);
     });
 });

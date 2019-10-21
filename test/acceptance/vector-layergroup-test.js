@@ -109,22 +109,22 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.equal(tile.tileSize, 4096);
-                    assert.equal(tile.z, 0);
-                    assert.equal(tile.x, 0);
-                    assert.equal(tile.y, 0);
+                    assert.strictEqual(tile.tileSize, 4096);
+                    assert.strictEqual(tile.z, 0);
+                    assert.strictEqual(tile.x, 0);
+                    assert.strictEqual(tile.y, 0);
 
                     const layer0 = JSON.parse(tile.toGeoJSONSync(0));
 
-                    assert.equal(layer0.name, 'layer0');
-                    assert.equal(layer0.features[0].type, 'Feature');
-                    assert.equal(layer0.features[0].geometry.type, 'Point');
+                    assert.strictEqual(layer0.name, 'layer0');
+                    assert.strictEqual(layer0.features[0].type, 'Feature');
+                    assert.strictEqual(layer0.features[0].geometry.type, 'Point');
 
                     const layer1 = JSON.parse(tile.toGeoJSONSync(1));
 
-                    assert.equal(layer1.name, 'layer1');
-                    assert.equal(layer1.features[0].type, 'Feature');
-                    assert.equal(layer1.features[0].geometry.type, 'Point');
+                    assert.strictEqual(layer1.name, 'layer1');
+                    assert.strictEqual(layer1.features[0].type, 'Feature');
+                    assert.strictEqual(layer1.features[0].geometry.type, 'Point');
                     done();
                 });
             });
@@ -135,16 +135,16 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.equal(tile.tileSize, 4096);
-                    assert.equal(tile.z, 0);
-                    assert.equal(tile.x, 0);
-                    assert.equal(tile.y, 0);
+                    assert.strictEqual(tile.tileSize, 4096);
+                    assert.strictEqual(tile.z, 0);
+                    assert.strictEqual(tile.x, 0);
+                    assert.strictEqual(tile.y, 0);
 
                     const layer = JSON.parse(tile.toGeoJSONSync(0));
 
-                    assert.equal(layer.name, 'layer0');
-                    assert.equal(layer.features[0].type, 'Feature');
-                    assert.equal(layer.features[0].geometry.type, 'Point');
+                    assert.strictEqual(layer.name, 'layer0');
+                    assert.strictEqual(layer.features[0].type, 'Feature');
+                    assert.strictEqual(layer.features[0].geometry.type, 'Point');
 
                     done();
                 });
@@ -156,16 +156,16 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.equal(tile.tileSize, 4096);
-                    assert.equal(tile.z, 0);
-                    assert.equal(tile.x, 0);
-                    assert.equal(tile.y, 0);
+                    assert.strictEqual(tile.tileSize, 4096);
+                    assert.strictEqual(tile.z, 0);
+                    assert.strictEqual(tile.x, 0);
+                    assert.strictEqual(tile.y, 0);
 
                     const layer = JSON.parse(tile.toGeoJSONSync(0));
 
-                    assert.equal(layer.name, 'layer1');
-                    assert.equal(layer.features[0].type, 'Feature');
-                    assert.equal(layer.features[0].geometry.type, 'Point');
+                    assert.strictEqual(layer.name, 'layer1');
+                    assert.strictEqual(layer.features[0].type, 'Feature');
+                    assert.strictEqual(layer.features[0].geometry.type, 'Point');
 
                     done();
                 });

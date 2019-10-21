@@ -264,8 +264,8 @@ describe('torque boundary points', function () {
                 }, {}, function (res, err) {
                     assert.ok(!err, 'Failed to get json');
 
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                     var parsed = JSON.parse(res.body);
                     /* Order the JSON first by descending x__uint8 and ascending
                      * y__uint8 */
@@ -278,7 +278,7 @@ describe('torque boundary points', function () {
 
                     var i = 0;
                     tileRequest.expects.forEach(function (expected) {
-                        assert.equal(
+                        assert.strictEqual(
                             parsed[i].x__uint8,
                             expected.x__uint8,
                             parsed[i].x__uint8 + ' == ' + expected.x__uint8 +
@@ -287,7 +287,7 @@ describe('torque boundary points', function () {
                                 '\nEXPECTED\n--------' +
                                 '\n' + JSON.stringify(tileRequest.expects, null, 4)
                         );
-                        assert.equal(
+                        assert.strictEqual(
                             parsed[i].y__uint8,
                             expected.y__uint8,
                             parsed[i].y__uint8 + ' == ' + expected.y__uint8 +
@@ -299,7 +299,7 @@ describe('torque boundary points', function () {
 
                         var j = 0;
                         expected.vals__uint8.forEach(function (val) {
-                            assert.equal(
+                            assert.strictEqual(
                                 parsed[i].vals__uint8[j],
                                 val.v,
                                 'desc: ' + val.d +
@@ -320,7 +320,7 @@ describe('torque boundary points', function () {
                         i++;
                     });
 
-                    assert.equal(
+                    assert.strictEqual(
                         parsed.length,
                         tileRequest.expects.length,
                         'Number of points did not match ' +

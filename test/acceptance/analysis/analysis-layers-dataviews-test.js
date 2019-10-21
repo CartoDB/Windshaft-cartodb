@@ -92,8 +92,8 @@ describe('analysis-layers-dataviews', function () {
         testClient.getDataview('pop_max_histogram', function (err, dataview) {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.bins_start, 0);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.bins_start, 0);
 
             testClient.drain(done);
         });
@@ -116,8 +116,8 @@ describe('analysis-layers-dataviews', function () {
         testClient.getDataview('pop_max_histogram', params, function (err, dataview) {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.bins_start, 2008000);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.bins_start, 2008000);
 
             testClient.drain(done);
         });
@@ -140,8 +140,8 @@ describe('analysis-layers-dataviews', function () {
         testClient.getDataview('pop_max_histogram', params, function (err, dataview) {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.bins_start, 0);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.bins_start, 0);
 
             testClient.drain(done);
         });

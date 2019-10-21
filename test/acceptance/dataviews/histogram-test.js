@@ -121,7 +121,7 @@ describe('histogram-dataview', function() {
         this.testClient.getDataview('pop_max_histogram', params, function(err, dataview) {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
+            assert.strictEqual(dataview.type, 'histogram');
             assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
             dataview.bins.forEach(function(bin) {
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
@@ -143,7 +143,7 @@ describe('histogram-dataview', function() {
         this.testClient.getDataview('pop_max_histogram', params, function(err, res) {
             assert.ok(!err, err);
             assert.ok(res.errors);
-            assert.equal(res.errors.length, 1);
+            assert.strictEqual(res.errors.length, 1);
             assert.ok(res.errors[0].match(/Invalid number format for parameter 'bins'/));
 
             done();
@@ -538,16 +538,16 @@ describe('histogram-dataview for date column type', function() {
 
             this.testClient.getDataview(test.dataviewId, {}, function(err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 15);
+                assert.strictEqual(dataview.bins.length, 15);
 
                 var initialTimestamp = '2007-02-01T00:00:00-04:00'; // EDT midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_EDT_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function(bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -559,7 +559,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_EDT_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -576,9 +576,9 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 61);
+                assert.strictEqual(dataview.bins.length, 61);
                 dataview.bins.forEach(function (bin) {
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -596,9 +596,9 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins_count, 6);
+                assert.strictEqual(dataview.bins_count, 6);
                 dataview.bins.forEach(function (bin) {
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -616,7 +616,7 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
 
                 done();
@@ -633,16 +633,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 15);
+                assert.strictEqual(dataview.bins.length, 15);
 
                 var initialTimestamp = '2007-02-01T00:00:00+02:00'; // CEST midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_CEST_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -654,7 +654,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_CEST_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -673,16 +673,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 15);
+                assert.strictEqual(dataview.bins.length, 15);
 
                 var initialTimestamp = '2007-02-01T00:00:00Z'; // UTC midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -694,7 +694,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -714,16 +714,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('datetime_histogram_automatic_second', params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 57);
+                assert.strictEqual(dataview.bins.length, 57);
 
                 var initialTimestamp = '2007-02-15T01:00:00Z';
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -735,7 +735,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -755,16 +755,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 6);
+                assert.strictEqual(dataview.bins.length, 6);
 
                 var initialTimestamp = '2007-01-01T00:00:00Z'; // UTC midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -776,7 +776,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -796,16 +796,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('datetime_histogram_automatic_decade', params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 17);
+                assert.strictEqual(dataview.bins.length, 17);
 
                 var initialTimestamp = '1850-01-01T00:00:00Z';
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -817,7 +817,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -837,16 +837,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('datetime_histogram_automatic_century', params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 14);
+                assert.strictEqual(dataview.bins.length, 14);
 
                 var initialTimestamp = '0601-01-01T00:00:00Z';
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -858,7 +858,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -878,16 +878,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('datetime_histogram_automatic_millennium', params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 12);
+                assert.strictEqual(dataview.bins.length, 12);
 
                 var initialTimestamp = '0001-01-01T00:00:00Z';
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -899,7 +899,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -924,10 +924,10 @@ describe('histogram-dataview for date column type', function() {
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ifError(err);
 
-                assert.equal(dataview.type, 'histogram');
-                assert.equal(dataview.bins.length, 6);
-                assert.equal(dataview.bins_count, 6);
-                assert.equal(dataview.bins_count, dataview.bins.length);
+                assert.strictEqual(dataview.type, 'histogram');
+                assert.strictEqual(dataview.bins.length, 6);
+                assert.strictEqual(dataview.bins_count, 6);
+                assert.strictEqual(dataview.bins_count, dataview.bins.length);
                 done();
             });
         });
@@ -945,9 +945,9 @@ describe('histogram-dataview for date column type', function() {
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ifError(err);
 
-                assert.equal(dataview.type, 'histogram');
-                assert.equal(dataview.bins.length, 6);
-                assert.equal(dataview.bins_count, 7);
+                assert.strictEqual(dataview.type, 'histogram');
+                assert.strictEqual(dataview.bins.length, 6);
+                assert.strictEqual(dataview.bins_count, 7);
                 assert.ok(dataview.bins_count > dataview.bins.length);
                 done();
             });
@@ -979,8 +979,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_second', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'second');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'second');
             done();
         });
     });
@@ -990,8 +990,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_minute', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'minute');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'minute');
             done();
         });
     });
@@ -1001,8 +1001,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_hour', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'hour');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'hour');
             done();
         });
     });
@@ -1012,8 +1012,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_day', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'day');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'day');
             done();
         });
     });
@@ -1023,8 +1023,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_week', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'week');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'week');
             done();
         });
     });
@@ -1034,8 +1034,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_month', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'month');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'month');
             done();
         });
     });
@@ -1045,8 +1045,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_quarter', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'quarter');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'quarter');
             done();
         });
     });
@@ -1056,8 +1056,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_year', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'year');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'year');
             done();
         });
     });
@@ -1067,8 +1067,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_decade', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'decade');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'decade');
             done();
         });
     });
@@ -1078,8 +1078,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_century', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'century');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'century');
             done();
         });
     });
@@ -1089,8 +1089,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_millennium', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'millennium');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'millennium');
             done();
         });
     });
@@ -1102,10 +1102,10 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('date_histogram', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'year');
-            assert.equal(dataview.bins.length, 2);
-            assert.equal(dataview.bins_count, 2);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'year');
+            assert.strictEqual(dataview.bins.length, 2);
+            assert.strictEqual(dataview.bins_count, 2);
             done();
         });
     });
@@ -1507,8 +1507,8 @@ describe('histogram-dates: timestamp starts at epoch', function() {
 
             const { aggregation, timestamp_start } = dataview;
 
-            assert.equal(timestamp_start, 0);
-            assert.equal(aggregation, 'quarter');
+            assert.strictEqual(timestamp_start, 0);
+            assert.strictEqual(aggregation, 'quarter');
 
             done();
         });
@@ -1618,7 +1618,7 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -1630,7 +1630,7 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                         .utcOffset(OFFSET_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -1711,7 +1711,7 @@ describe('histogram: be able to override with aggregation for histograms instant
             var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                 .utcOffset(OFFSET_IN_MINUTES)
                 .format();
-            assert.equal(binsStartFormatted, initialTimestamp);
+            assert.strictEqual(binsStartFormatted, initialTimestamp);
 
             dataview.bins.forEach(function (bin, index) {
                 var binTimestampExpected = moment.utc(initialTimestamp)
@@ -1723,7 +1723,7 @@ describe('histogram: be able to override with aggregation for histograms instant
                     .utcOffset(OFFSET_IN_MINUTES)
                     .format();
 
-                assert.equal(binTimestampFormatted, binTimestampExpected);
+                assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                 assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });

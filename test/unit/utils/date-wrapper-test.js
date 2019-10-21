@@ -14,6 +14,6 @@ describe('date-wrapper', function () {
             "a","b c"
         FROM
             (select * from table) _cdb_epoch_transformation `;
-        assert.equal(actual, expected);
+        assert.strictEqual(actual, expected);
     });
 });

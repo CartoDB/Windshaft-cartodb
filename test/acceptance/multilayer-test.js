@@ -86,10 +86,10 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
-                        assert.equal(parsedBody.last_updated, expected_last_updated);
-                        assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+                        assert.strictEqual(parsedBody.last_updated, expected_last_updated);
+                        assert.strictEqual(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                         expected_token = parsedBody.layergroupid;
                         next(null, res);
                     });
@@ -103,18 +103,18 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'image/png');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'image/png');
 
                         // Check Cache-Control
                         var cc = res.headers['cache-control'];
-                        assert.equal(cc, 'public,max-age=31536000'); // 1 year
+                        assert.strictEqual(cc, 'public,max-age=31536000'); // 1 year
 
                         // Check X-Cache-Channel
                         cc = res.headers['x-cache-channel'];
                         assert.ok(cc);
                         var dbname = test_database;
-                        assert.equal(cc.substring(0, dbname.length), dbname);
+                        assert.strictEqual(cc.substring(0, dbname.length), dbname);
                         if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
                             var jsonquery = cc.substring(dbname.length + 1);
                             var sentquery = JSON.parse(jsonquery);
@@ -122,7 +122,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                                 layergroup.layers[0].options.sql, ';',
                                 layergroup.layers[1].options.sql
                             ].join('');
-                            assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$' +
+                            assert.strictEqual(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$' +
                       expectedQuery +
                       '$windshaft$) as tablenames )' +
                       ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max' +
@@ -147,7 +147,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 403, res.statusCode + ':' + res.body);
+                        assert.strictEqual(res.statusCode, 403, res.statusCode + ':' + res.body);
                         var parsed = JSON.parse(res.body);
                         var msg = parsed.errors[0];
                         assert.ok(msg.match(/permission denied/i), msg);
@@ -162,8 +162,8 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                         assert.utfgridEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.layer0.grid.json', 2,
                             function (err/*, similarity */) {
                                 next(err);
@@ -178,8 +178,8 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                         assert.utfgridEqualsFile(res.body, 'test/fixtures/test_table_0_0_0_multilayer1.layer1.grid.json', 2,
                             function (err/*, similarity */) {
                                 next(err);
@@ -275,7 +275,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 },
                 function do_check_create (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
                     expected_token = parsedBody.layergroupid.split(':')[0];
                     helper.checkCache(res);
@@ -367,11 +367,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
-                        assert.equal(parsedBody.last_updated, expected_last_updated);
+                        assert.strictEqual(parsedBody.last_updated, expected_last_updated);
                         if (expected_token) {
-                            assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                            assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
                         } else {
                             expected_token = parsedBody.layergroupid.split(':')[0];
                         }
@@ -387,14 +387,14 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'image/png');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'image/png');
 
                         // Check X-Cache-Channel
                         var cc = res.headers['x-cache-channel'];
                         assert.ok(cc);
                         var dbname = test_database;
-                        assert.equal(cc.substring(0, dbname.length), dbname);
+                        assert.strictEqual(cc.substring(0, dbname.length), dbname);
                         if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
                             var jsonquery = cc.substring(dbname.length + 1);
                             var sentquery = JSON.parse(jsonquery);
@@ -402,7 +402,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                                 .replace(/!bbox!/g, 'ST_MakeEnvelope(0,0,0,0)')
                                 .replace(/!pixel_width!/g, '1')
                                 .replace(/!pixel_height!/g, '1');
-                            assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$' +
+                            assert.strictEqual(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$' +
                       expectedQuery +
                       '$windshaft$) as tablenames )' +
                       ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max' +
@@ -426,14 +426,14 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'image/png');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'image/png');
 
                         // Check X-Cache-Channel
                         var cc = res.headers['x-cache-channel'];
                         assert.ok(cc);
                         var dbname = test_database;
-                        assert.equal(cc.substring(0, dbname.length), dbname);
+                        assert.strictEqual(cc.substring(0, dbname.length), dbname);
                         if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
                             var jsonquery = cc.substring(dbname.length + 1);
                             var sentquery = JSON.parse(jsonquery);
@@ -441,7 +441,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                                 .replace('!bbox!', 'ST_MakeEnvelope(0,0,0,0)')
                                 .replace('!pixel_width!', '1')
                                 .replace('!pixel_height!', '1');
-                            assert.equal(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$' +
+                            assert.strictEqual(sentquery.q, 'WITH querytables AS ( SELECT * FROM CDB_QueryTables($windshaft$' +
                       expectedQuery +
                       '$windshaft$) as tablenames )' +
                       ' SELECT (SELECT tablenames FROM querytables), EXTRACT(EPOCH FROM max(updated_at)) as max' +
@@ -464,8 +464,8 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                         assert.utfgridEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.grid.json', 2,
                             function (err/*, similarity */) {
                                 next(err);
@@ -480,8 +480,8 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                         assert.utfgridEqualsFile(res.body, 'test/fixtures/test_multilayer_bbox.grid.json', 2, next);
                     });
                 },
@@ -533,19 +533,19 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
                         expected_token = JSON.parse(res.body).layergroupid;
                         redis_stats_client.zscore(statskey + ':global', now, next);
                     });
                 },
                 function check_global_stats_1 (err, val) {
                     assert.ifError(err);
-                    assert.equal(val, 1, 'Expected score of ' + now + ' in ' + statskey + ':global to be 1, got ' + val);
+                    assert.strictEqual(val, '1', 'Expected score of ' + now + ' in ' + statskey + ':global to be 1, got ' + val);
                     redis_stats_client.zscore(statskey + ':stat_tag:random_tag', now, this);
                 },
                 function check_tag_stats_1_do_post_2 (err, val) {
                     assert.ifError(err);
-                    assert.equal(val, 1, 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
+                    assert.strictEqual(val, '1', 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
               ' to be 1, got ' + val);
                     var next = this;
                     assert.response(server, {
@@ -554,19 +554,19 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(JSON.parse(res.body).layergroupid, expected_token);
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(JSON.parse(res.body).layergroupid, expected_token);
                         redis_stats_client.zscore(statskey + ':global', now, next);
                     });
                 },
                 function check_global_stats_2 (err, val) {
                     assert.ifError(err);
-                    assert.equal(val, 2, 'Expected score of ' + now + ' in ' + statskey + ':global to be 2, got ' + val);
+                    assert.strictEqual(val, '2', 'Expected score of ' + now + ' in ' + statskey + ':global to be 2, got ' + val);
                     redis_stats_client.zscore(statskey + ':stat_tag:' + layergroup.stat_tag, now, this);
                 },
                 function check_tag_stats_2 (err, val) {
                     assert.ifError(err);
-                    assert.equal(val, 2, 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
+                    assert.strictEqual(val, '2', 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
               ' to be 2, got ' + val);
                     return 1;
                 },
@@ -605,7 +605,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
             }, {}, function (res) {
-                assert.equal(res.statusCode, 400, res.body);
+                assert.strictEqual(res.statusCode, 400, res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.errors[0].match(/^style0/));
                 assert.ok(parsed.errors[0].match(/Unrecognized rule: polygon-fit/));
@@ -635,7 +635,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
             }, {}, function (res) {
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 var msg = parsed.errors[0];
                 assert.ok(msg.match(/bogus.*exist/), msg);
@@ -677,11 +677,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
-                        assert.equal(parsedBody.last_updated, expected_last_updated);
+                        assert.strictEqual(parsedBody.last_updated, expected_last_updated);
                         if (expected_token) {
-                            assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                            assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
                         } else {
                             expected_token = parsedBody.layergroupid.split(':')[0];
                         }
@@ -697,14 +697,14 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'image/png');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'image/png');
 
                         // Check X-Cache-Channel
                         var cc = res.headers['x-cache-channel'];
                         assert.ok(cc);
                         var dbname = test_database;
-                        assert.equal(cc.substring(0, dbname.length), dbname);
+                        assert.strictEqual(cc.substring(0, dbname.length), dbname);
                         next(err);
                     });
                 },
@@ -716,7 +716,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.statusCode, 200, res.body);
                         next(err);
                     });
                 },
@@ -728,8 +728,8 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 200, res.body);
-                        assert.equal(res.headers['content-type'], 'application/json; charset=utf-8');
+                        assert.strictEqual(res.statusCode, 200, res.body);
+                        assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                         next(err);
                     });
                 },
@@ -742,7 +742,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 403);
+                        assert.strictEqual(res.statusCode, 403);
                         var re = new RegExp('permission denied');
                         assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
                         next(err);
@@ -756,7 +756,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 403);
+                        assert.strictEqual(res.statusCode, 403);
                         var re = new RegExp('permission denied');
                         assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
                         next(err);
@@ -770,7 +770,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
-                        assert.equal(res.statusCode, 403);
+                        assert.strictEqual(res.statusCode, 403);
                         var re = new RegExp('permission denied');
                         assert.ok(res.body.match(re), 'No "permission denied" error: ' + res.body);
                         next(err);
@@ -814,11 +814,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 },
                 function check_post (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
-                    assert.equal(parsedBody.last_updated, expected_last_updated);
+                    assert.strictEqual(parsedBody.last_updated, expected_last_updated);
                     if (expected_token) {
-                        assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                        assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
                     } else {
                         expected_token = parsedBody.layergroupid.split(':')[0];
                     }
@@ -836,14 +836,14 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 },
                 function do_check0 (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
 
                     // Check X-Cache-Channel
                     var cc = res.headers['x-cache-channel'];
                     assert.ok(cc, 'Missing X-Cache-Channel');
                     var dbname = test_database;
-                    assert.equal(cc.substring(0, dbname.length), dbname);
+                    assert.strictEqual(cc.substring(0, dbname.length), dbname);
                     return null;
                 },
                 function do_restart_server (err/*, res */) {
@@ -864,14 +864,14 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 },
                 function do_check1 (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 200, res.body);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
 
                     // Check X-Cache-Channel
                     var cc = res.headers['x-cache-channel'];
                     assert.ok(cc, 'Missing X-Cache-Channel on restart');
                     var dbname = test_database;
-                    assert.equal(cc.substring(0, dbname.length), dbname);
+                    assert.strictEqual(cc.substring(0, dbname.length), dbname);
                     return null;
                 },
                 function finish (err) {
@@ -904,9 +904,9 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
             }, {}, function (res) {
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 var errmsg = parsed.errors[0];
                 assert.ok(errmsg.match(/text-face-name.*Dejagnu/), parsed.errors.toString());
                 done();
@@ -940,7 +940,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
             }, {}, function (res) {
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
                 done();
@@ -967,7 +967,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
             }, {}, function (res) {
-                assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
                 done();
@@ -999,11 +999,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                             headers: { host: 'localhost', 'Content-Type': 'application/json' },
                             data: JSON.stringify(layergroup)
                         }, {}, function (res) {
-                            assert.equal(res.statusCode, 200, res.body);
+                            assert.strictEqual(res.statusCode, 200, res.body);
                             var parsedBody = JSON.parse(res.body);
                             if (expected_token) {
-                                assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
-                                assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+                                assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                                assert.strictEqual(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                             } else {
                                 var token_components = parsedBody.layergroupid.split(':');
                                 expected_token = token_components[0];
@@ -1021,8 +1021,8 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                             headers: { host: 'localhost' },
                             encoding: 'binary'
                         }, {}, function (res) {
-                            assert.equal(res.statusCode, 200, res.body);
-                            assert.equal(res.headers['content-type'], 'image/png');
+                            assert.strictEqual(res.statusCode, 200, res.body);
+                            assert.strictEqual(res.headers['content-type'], 'image/png');
                             assert.imageBufferIsSimilarToFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png',
                                 IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err/*, similarity */) {
                                     next(err);
@@ -1069,11 +1069,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 function check_result (err, res) {
                     assert.ifError(err);
                     var next = this;
-                    assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                    assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                     var parsedBody = JSON.parse(res.body);
                     if (expected_token) {
-                        assert.equal(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
-                        assert.equal(res.headers['x-layergroup-id'], parsedBody.layergroupid);
+                        assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                        assert.strictEqual(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                     } else {
                         var token_components = parsedBody.layergroupid.split(':');
                         expected_token = token_components[0];
@@ -1095,7 +1095,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     if (err) {
                         return done(err);
                     }
-                    assert.equal(res.statusCode, 200, res.body);
+                    assert.strictEqual(res.statusCode, 200, res.body);
                     keysToDelete['user:localhost:mapviews:global'] = 5;
                     keysToDelete['map_cfg|' + expected_token] = 0;
                     done(err);
@@ -1143,7 +1143,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 },
                 function check_result (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 200, res.statusCode + ': ' + res.body);
+                    assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                     var parsedBody = JSON.parse(res.body);
                     var token_components = parsedBody.layergroupid.split(':');
                     expected_token = token_components[0];
@@ -1192,12 +1192,12 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 },
                 function check_post (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                    assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                     var parsed = JSON.parse(res.body);
                     assert.ok(parsed.errors, 'Missing "errors" in response: ' + JSON.stringify(parsed));
-                    assert.equal(parsed.errors.length, 1);
+                    assert.strictEqual(parsed.errors.length, 1);
                     var msg = parsed.errors[0];
-                    assert.equal(msg, 'Missing cartocss for layer 0 options');
+                    assert.strictEqual(msg, 'Missing cartocss for layer 0 options');
                     return null;
                 },
                 function finish (err) {
@@ -1234,10 +1234,10 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     },
                     function check_post (err, res) {
                         assert.ifError(err);
-                        assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                        assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                         var parsed = JSON.parse(res.body);
                         assert.ok(parsed.errors, 'Missing "errors" in response: ' + JSON.stringify(parsed));
-                        assert.equal(parsed.errors.length, 1);
+                        assert.strictEqual(parsed.errors.length, 1);
                         var msg = parsed.errors[0];
                         assert.ok(msg, /could not fetch source tables/, msg);
                         return null;
@@ -1276,7 +1276,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
 
             assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
                 function (res) {
-                    assert.equal(res.headers['cache-control'], 'public,max-age=86400,must-revalidate');
+                    assert.strictEqual(res.headers['cache-control'], 'public,max-age=86400,must-revalidate');
                     keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
 
@@ -1293,7 +1293,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
 
             assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
                 function (res) {
-                    assert.equal(res.headers['cache-control'], 'public,max-age=' + layergroupTtl + ',must-revalidate');
+                    assert.strictEqual(res.headers['cache-control'], 'public,max-age=' + layergroupTtl + ',must-revalidate');
                     keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
 

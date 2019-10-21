@@ -34,7 +34,7 @@ describe('multilayer error cases', function () {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }, {}, function (res) {
-            assert.equal(res.statusCode, 400, res.body);
+            assert.strictEqual(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
             assert.deepEqual(parsedBody.errors, ['POST data must be of type application/json']);
             done();
@@ -50,7 +50,7 @@ describe('multilayer error cases', function () {
                 'Content-Type': 'application/json'
             }
         }, {}, function (res) {
-            assert.equal(res.statusCode, 400, res.body);
+            assert.strictEqual(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
             assert.deepEqual(parsedBody.errors, ['Missing layers array from layergroup config']);
             done();
@@ -66,8 +66,8 @@ describe('multilayer error cases', function () {
                 'Content-Type': 'application/json'
             }
         }, {}, function (res) {
-            assert.equal(res.statusCode, 200);
-            assert.equal(
+            assert.strictEqual(res.statusCode, 200);
+            assert.strictEqual(
                 res.body,
                 '/**/ typeof test === \'function\' && ' +
                 'test({"errors":["Missing layers array from layergroup config"],' +
@@ -100,7 +100,7 @@ describe('multilayer error cases', function () {
             },
             data: JSON.stringify(layergroup)
         }, {}, function (res) {
-            assert.equal(res.statusCode, 400, res.body);
+            assert.strictEqual(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
             assert.deepEqual(parsedBody.errors, ['Missing cartocss_version for layer 0 options']);
             done();
@@ -129,11 +129,11 @@ describe('multilayer error cases', function () {
             data: JSON.stringify(layergroup)
         }, {}, function (res) {
             try {
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 // See http://github.com/CartoDB/Windshaft/issues/159
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 var error = parsed.errors[0];
                 assert.ok(error.match(/column "missing" does not exist/m), error);
                 // cannot check for error starting with style0 until a new enough mapnik
@@ -181,7 +181,7 @@ describe('multilayer error cases', function () {
         this.client.getLayergroup({ response: { status: 400 } }, function (err, parsed) {
             assert.ok(!err, err);
             assert.ok(parsed);
-            assert.equal(parsed.errors.length, 1);
+            assert.strictEqual(parsed.errors.length, 1);
             var error = parsed.errors[0];
             assert.ok(error.match(/column "missing" does not exist/m), error);
             done();
@@ -222,10 +222,10 @@ describe('multilayer error cases', function () {
             data: JSON.stringify(layergroup)
         }, {}, function (res) {
             try {
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 var error = parsed.errors[0];
                 assert.ok(error.match(/^style1: CartoCSS is empty/), error);
                 done();
@@ -265,10 +265,10 @@ describe('multilayer error cases', function () {
             data: JSON.stringify(layergroup)
         }, {}, function (res) {
             try {
-                assert.equal(res.statusCode, 400, res.statusCode + ': ' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed);
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 var error = parsed.errors[0];
                 // carto-0.9.3 used to say "Failed to parse expression",
                 // carto-0.9.5 says "not a valid keyword"
@@ -313,9 +313,9 @@ describe('multilayer error cases', function () {
             },
             data: JSON.stringify(layergroup)
         }, {}, function (res) {
-            assert.equal(res.statusCode, 400, res.body);
+            assert.strictEqual(res.statusCode, 400, res.body);
             var parsed = JSON.parse(res.body);
-            assert.equal(parsed.errors.length, 1);
+            assert.strictEqual(parsed.errors.length, 1);
             var error = parsed.errors[0];
             assert.ok(error.match(/column "address" does not exist/m), error);
             done();
@@ -421,7 +421,7 @@ describe('multilayer error cases', function () {
             function checkResponse (err, res) {
                 assert.ifError(err);
                 // FIXME: should be 404
-                assert.equal(res.statusCode, 400, res.statusCode + ':' + res.body);
+                assert.strictEqual(res.statusCode, 400, res.statusCode + ':' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.deepEqual(parsed.errors, ["Invalid or nonexistent map configuration token 'deadbeef'"]);
                 return null;
@@ -457,7 +457,7 @@ describe('multilayer error cases', function () {
             function (res) {
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.errors);
-                assert.equal(parsedBody.errors.length, 1);
+                assert.strictEqual(parsedBody.errors.length, 1);
                 assert.ok(parsedBody.errors[0].match(/^SyntaxError: Unexpected token {/));
                 done();
             }

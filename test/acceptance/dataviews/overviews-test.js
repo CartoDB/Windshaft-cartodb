@@ -385,7 +385,7 @@ describe('dataviews using tables with overviews', function () {
                 return done(err);
             }
             assert.ok(histogram);
-            assert.equal(histogram.type, 'histogram');
+            assert.strictEqual(histogram.type, 'histogram');
             assert.ok(Array.isArray(histogram.bins));
             assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
             assert(getDataviewTypeFromHeaders(headers) === 'histogram'); // Overviews logging
@@ -409,9 +409,9 @@ describe('dataviews using tables with overviews', function () {
                         return done(err);
                     }
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
                     assert.ok(Array.isArray(histogram.bins));
-                    assert.equal(histogram.bins.length, 4);
+                    assert.strictEqual(histogram.bins.length, 4);
                     testClient.drain(done);
                 });
             });
@@ -429,9 +429,9 @@ describe('dataviews using tables with overviews', function () {
                         return done(err);
                     }
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
                     assert.ok(Array.isArray(histogram.bins));
-                    assert.equal(histogram.bins.length, 0);
+                    assert.strictEqual(histogram.bins.length, 0);
                     testClient.drain(done);
                 });
             });
@@ -451,9 +451,9 @@ describe('dataviews using tables with overviews', function () {
                         return done(err);
                     }
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
                     assert.ok(Array.isArray(histogram.bins));
-                    assert.equal(histogram.bins.length, 0);
+                    assert.strictEqual(histogram.bins.length, 0);
                     testClient.drain(done);
                 });
             });

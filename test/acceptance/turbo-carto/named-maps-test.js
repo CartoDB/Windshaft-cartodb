@@ -103,7 +103,7 @@ describe('turbo-carto for named maps', function () {
                 },
                 function checkTemplate (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.statusCode, 200);
                     assert.deepEqual(JSON.parse(res.body), {
                         template_id: templateId
                     });
@@ -130,7 +130,7 @@ describe('turbo-carto for named maps', function () {
                 function checkInstanciationWithReds (err, res) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.statusCode, 200);
 
                     var parsedBody = JSON.parse(res.body);
 
@@ -162,8 +162,8 @@ describe('turbo-carto for named maps', function () {
 
                     var next = this;
 
-                    assert.equal(res.statusCode, 200);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
 
                     var fixturePath = './test/fixtures/turbo-carto-named-maps-reds.png';
                     var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
@@ -189,7 +189,7 @@ describe('turbo-carto for named maps', function () {
                 },
                 function checkInstanciationWithBlues (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.statusCode, 200);
 
                     var parsedBody = JSON.parse(res.body);
 
@@ -221,8 +221,8 @@ describe('turbo-carto for named maps', function () {
 
                     var next = this;
 
-                    assert.equal(res.statusCode, 200);
-                    assert.equal(res.headers['content-type'], 'image/png');
+                    assert.strictEqual(res.statusCode, 200);
+                    assert.strictEqual(res.headers['content-type'], 'image/png');
 
                     var fixturePath = './test/fixtures/turbo-carto-named-maps-blues.png';
                     var image = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
@@ -244,7 +244,7 @@ describe('turbo-carto for named maps', function () {
                 },
                 function checkDeleteTemplate (err, res) {
                     assert.ifError(err);
-                    assert.equal(res.statusCode, 204);
+                    assert.strictEqual(res.statusCode, 204);
                     assert.ok(!res.body);
 
                     return null;

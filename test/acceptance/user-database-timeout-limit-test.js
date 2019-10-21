@@ -459,10 +459,10 @@ describe('user database timeout limit', function () {
                         assert.ifError(err);
 
                         var tileJSON = tile.toJSON();
-                        assert.equal(Array.isArray(tileJSON), true);
-                        assert.equal(tileJSON.length, 2);
-                        assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
-                        assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+                        assert.strictEqual(Array.isArray(tileJSON), true);
+                        assert.strictEqual(tileJSON.length, 2);
+                        assert.strictEqual(tileJSON[0].name, 'errorTileSquareLayer');
+                        assert.strictEqual(tileJSON[1].name, 'errorTileStripesLayer');
 
                         done();
                     });

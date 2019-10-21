@@ -88,7 +88,7 @@ describe('template_maps_auth', function () {
         it(testScenario.desc, function (done) {
             var debugMessage = testScenario.expected ? 'should be authorized' : 'unexpectedly authorized';
             var result = templateMaps.isAuthorized(testScenario.template, testScenario.token);
-            assert.equal(result, testScenario.expected, debugMessage);
+            assert.strictEqual(result, testScenario.expected, debugMessage);
             done();
         });
     });

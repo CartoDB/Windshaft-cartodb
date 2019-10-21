@@ -146,11 +146,11 @@ function assertRateLimitRequest (status, limit, remaining, reset, retry, done) {
             assert.ifError(err);
         } else {
             assert.ok(err);
-            assert.equal(err.message, 'You are over platform\'s limits: too many requests.' +
+            assert.strictEqual(err.message, 'You are over platform\'s limits: too many requests.' +
                                       ' Please contact us to know more details');
-            assert.equal(err.http_status, 429);
-            assert.equal(err.type, 'limit');
-            assert.equal(err.subtype, 'rate-limit');
+            assert.strictEqual(err.http_status, 429);
+            assert.strictEqual(err.type, 'limit');
+            assert.strictEqual(err.subtype, 'rate-limit');
         }
 
         if (done) {
@@ -358,10 +358,10 @@ function rateLimitAndVectorTilesTest (usePostGIS) {
                     assert.ifError(err);
 
                     var tileJSON = tile.toJSON();
-                    assert.equal(Array.isArray(tileJSON), true);
-                    assert.equal(tileJSON.length, 2);
-                    assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
-                    assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+                    assert.strictEqual(Array.isArray(tileJSON), true);
+                    assert.strictEqual(tileJSON.length, 2);
+                    assert.strictEqual(tileJSON[0].name, 'errorTileSquareLayer');
+                    assert.strictEqual(tileJSON[1].name, 'errorTileStripesLayer');
 
                     done();
                 }

@@ -85,8 +85,8 @@ describe('analysis-filters-params', () => {
         testClient.getDataview('pop_max_histogram', testParams, (err, dataview) => {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.bins_count, 6);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.bins_count, 6);
 
             testClient.drain(done);
         });
@@ -101,8 +101,8 @@ describe('analysis-filters-params', () => {
         testClient.getDataview('pop_max_histogram', testParams, (err, dataview) => {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.bins_count, 24);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.bins_count, 24);
 
             testClient.drain(done);
         });
@@ -117,8 +117,8 @@ describe('analysis-filters-params', () => {
         testClient.getDataview('pop_max_histogram', testParams, (err, dataview) => {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.bins_count, 48);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.bins_count, 48);
 
             testClient.drain(done);
         });

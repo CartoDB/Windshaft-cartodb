@@ -93,7 +93,7 @@ describe('template_maps', function () {
             templateMaps.addTemplate(owner, testScenario.template, function (err, templateId, template) {
                 assert.ok(!err, 'Unexpected error adding template: ' + (err && err.message));
                 assert.ok(testScenario.template !== template, 'template instances should be different');
-                assert.equal(template.name, templateName);
+                assert.strictEqual(template.name, templateName);
                 assert.deepEqual(template.auth, testScenario.expected.auth);
                 assert.deepEqual(template.placeholders, testScenario.expected.placeholders);
 

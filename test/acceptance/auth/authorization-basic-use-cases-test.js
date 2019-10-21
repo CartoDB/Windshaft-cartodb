@@ -71,7 +71,7 @@ describe('Basic authorization use cases', function () {
 
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
@@ -94,7 +94,7 @@ describe('Basic authorization use cases', function () {
 
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.layergroupid);
-                assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
@@ -116,7 +116,7 @@ describe('Basic authorization use cases', function () {
                 assert.ifError(err);
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('errors'));
-                assert.equal(parsed.errors.length, 1);
+                assert.strictEqual(parsed.errors.length, 1);
                 assert.ok(parsed.errors[0].match(/Unauthorized/));
                 done();
             }
@@ -153,7 +153,7 @@ describe('Basic authorization use cases', function () {
 
                     var parsed = JSON.parse(res.body);
                     assert.ok(parsed.layergroupid);
-                    assert.equal(res.headers['x-layergroup-id'], parsed.layergroupid);
+                    assert.strictEqual(res.headers['x-layergroup-id'], parsed.layergroupid);
 
                     keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;

@@ -65,7 +65,7 @@ describe('mvt regressions', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));

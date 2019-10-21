@@ -79,7 +79,7 @@ describe('custom middlewares', function () {
                     return done(err);
                 }
 
-                assert.equal(res.body, 'I\'m a teapot');
+                assert.strictEqual(res.body, 'I\'m a teapot');
 
                 done();
             });
@@ -109,7 +109,7 @@ describe('custom middlewares', function () {
                     return done(err);
                 }
 
-                assert.equal(res.body, 'I\'m a teapot');
+                assert.strictEqual(res.body, 'I\'m a teapot');
 
                 done();
             });
@@ -217,7 +217,7 @@ describe('custom middlewares', function () {
                     return done(err);
                 }
 
-                assert.equal(res.body, 'I\'m a teapot');
+                assert.strictEqual(res.body, 'I\'m a teapot');
 
                 done();
             });
@@ -290,7 +290,7 @@ describe('custom middlewares', function () {
                     return done(err);
                 }
 
-                assert.equal(res.body, 'I\'m a teapot');
+                assert.strictEqual(res.body, 'I\'m a teapot');
 
                 done();
             });

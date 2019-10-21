@@ -161,10 +161,10 @@ describe('get requests with cache headers', function () {
 
             assert.ok(res.headers['x-cache-channel']);
             assert.ok(res.headers['surrogate-key']);
-            assert.equal(res.headers.vary, 'Authorization');
+            assert.strictEqual(res.headers.vary, 'Authorization');
             if (expectedCacheHeaders) {
                 validateXChannelHeaders(res.headers, expectedCacheHeaders);
-                assert.equal(res.headers['surrogate-key'], expectedCacheHeaders.surrogate_keys);
+                assert.strictEqual(res.headers['surrogate-key'], expectedCacheHeaders.surrogate_keys);
             }
 
             done();
@@ -174,7 +174,7 @@ describe('get requests with cache headers', function () {
     function validateXChannelHeaders (headers, expectedCacheHeaders) {
         var dbName = headers['x-cache-channel'].split(':')[0];
         var tables = headers['x-cache-channel'].split(':')[1].split(',').sort();
-        assert.equal(dbName, expectedCacheHeaders.x_cache_channel.db_name);
+        assert.strictEqual(dbName, expectedCacheHeaders.x_cache_channel.db_name);
         assert.deepEqual(tables, expectedCacheHeaders.x_cache_channel.tables.sort());
     }
 

@@ -21,7 +21,7 @@ function tileJsonSuite (usePostGIS) {
     });
 
     function tilejsonValidation (tilejson, shouldHaveGrid = false) {
-        assert.equal(tilejson.tilejson, '2.2.0');
+        assert.strictEqual(tilejson.tilejson, '2.2.0');
 
         assert.ok(Array.isArray(tilejson.tiles), JSON.stringify(tilejson));
         assert.ok(tilejson.tiles.length > 0);
@@ -77,7 +77,7 @@ function tileJsonSuite (usePostGIS) {
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
 
-                assert.equal(metadata.layers.length, 1);
+                assert.strictEqual(metadata.layers.length, 1);
 
                 const layer = metadata.layers[0];
                 assert.deepEqual(Object.keys(layer.tilejson), ['vector', 'raster']);
@@ -98,7 +98,7 @@ function tileJsonSuite (usePostGIS) {
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
 
-                assert.equal(metadata.layers.length, 1);
+                assert.strictEqual(metadata.layers.length, 1);
 
                 const layer = metadata.layers[0];
                 assert.deepEqual(Object.keys(layer.tilejson), ['vector']);
@@ -119,7 +119,7 @@ function tileJsonSuite (usePostGIS) {
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
 
-                assert.equal(metadata.layers.length, 1);
+                assert.strictEqual(metadata.layers.length, 1);
 
                 const layer = metadata.layers[0];
                 assert.deepEqual(Object.keys(layer.tilejson), ['raster']);
@@ -140,7 +140,7 @@ function tileJsonSuite (usePostGIS) {
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
 
-                assert.equal(metadata.layers.length, 1);
+                assert.strictEqual(metadata.layers.length, 1);
 
                 const layer = metadata.layers[0];
                 assert.deepEqual(Object.keys(layer.tilejson), ['vector', 'raster']);
@@ -160,7 +160,7 @@ function tileJsonSuite (usePostGIS) {
                 const metadata = layergroupResult.metadata;
                 assert.ok(metadata);
 
-                assert.equal(metadata.layers.length, 2);
+                assert.strictEqual(metadata.layers.length, 2);
 
                 assert.deepEqual(Object.keys(metadata.layers[0].tilejson), ['vector', 'raster']);
                 tilejsonValidation(metadata.layers[0].tilejson.vector);

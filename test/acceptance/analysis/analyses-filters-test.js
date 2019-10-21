@@ -76,8 +76,8 @@ describe('analysis-layers-dataviews', () => {
         testClient.getDataview('pop_max_histogram', params, (err, dataview) => {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.bins_start, 2008000);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.bins_start, 2008000);
 
             testClient.drain(done);
         });

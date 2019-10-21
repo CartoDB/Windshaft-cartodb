@@ -154,7 +154,7 @@ describe('analysis-layers', function () {
         testClient.getLayergroup(function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.metadata.layers.length, 1);
+            assert.strictEqual(layergroupResult.metadata.layers.length, 1);
 
             testClient.drain(done);
         });
@@ -198,7 +198,7 @@ describe('analysis-layers', function () {
                 'Missing "analyses" array metadata from: ' + JSON.stringify(layergroupResult)
             );
             var analyses = layergroupResult.metadata.analyses;
-            assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+            assert.strictEqual(analyses.length, 1, 'Invalid number of analyses in metadata');
             var nodes = analyses[0].nodes;
             var nodesIds = Object.keys(nodes);
             assert.deepEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
@@ -288,7 +288,7 @@ describe('analysis-layers', function () {
                 'Missing "analyses" array metadata from: ' + JSON.stringify(layergroupResult)
             );
             var analyses = layergroupResult.metadata.analyses;
-            assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+            assert.strictEqual(analyses.length, 1, 'Invalid number of analyses in metadata');
             var nodes = analyses[0].nodes;
 
             var nodesIds = Object.keys(nodes);
@@ -313,11 +313,11 @@ describe('analysis-layers', function () {
         testClient.getNodeStatus('HEAD', function (err, response, nodeStatus) {
             assert.ok(!err, err);
 
-            assert.equal(nodeStatus.status, 'ready');
+            assert.strictEqual(nodeStatus.status, 'ready');
 
             var headers = response.headers;
 
-            assert.equal(headers['cache-control'], 'public,max-age=5');
+            assert.strictEqual(headers['cache-control'], 'public,max-age=5');
 
             var lastModified = new Date(headers['last-modified']);
             var tenSecondsInMs = 1e5;

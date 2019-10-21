@@ -24,17 +24,17 @@ describe('stats client', function () {
 
         statsClient.socket.emit('error', 'other_error');
         assert.ok(statsClient.last_error);
-        assert.equal(statsClient.last_error.msg, 'other_error');
+        assert.strictEqual(statsClient.last_error.msg, 'other_error');
         assert.ok(!statsClient.last_error.interval);
 
         statsClient.socket.emit('error', WADUS_ERROR);
         assert.ok(statsClient.last_error);
-        assert.equal(statsClient.last_error.msg, WADUS_ERROR);
+        assert.strictEqual(statsClient.last_error.msg, WADUS_ERROR);
         assert.ok(!statsClient.last_error.interval);
 
         statsClient.socket.emit('error', WADUS_ERROR);
         assert.ok(statsClient.last_error);
-        assert.equal(statsClient.last_error.msg, WADUS_ERROR);
+        assert.strictEqual(statsClient.last_error.msg, WADUS_ERROR);
         assert.ok(statsClient.last_error.interval);
 
         done();

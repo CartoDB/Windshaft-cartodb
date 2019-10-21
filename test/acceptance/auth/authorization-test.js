@@ -71,7 +71,7 @@ describe('authorization', function () {
                 assert.ifError(err);
 
                 assert.ok(body.hasOwnProperty('errors'));
-                assert.equal(body.errors.length, 1);
+                assert.strictEqual(body.errors.length, 1);
                 assert.ok(body.errors[0].match(/permission denied/), body.errors[0]);
 
                 testClientGet.drain(done);
@@ -99,7 +99,7 @@ describe('authorization', function () {
             assert.ifError(err);
 
             assert.ok(layergroupResult.hasOwnProperty('errors'));
-            assert.equal(layergroupResult.errors.length, 1);
+            assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
 
             testClient.drain(done);
@@ -150,7 +150,7 @@ describe('authorization', function () {
         testClient.getTile(0, 0, 0, function (err, res, tile) {
             assert.ifError(err);
 
-            assert.equal(res.statusCode, 200);
+            assert.strictEqual(res.statusCode, 200);
             assert.ok(tile instanceof mapnik.Image);
 
             testClient.drain(done);
@@ -176,7 +176,7 @@ describe('authorization', function () {
             assert.ifError(err);
 
             assert.ok(layergroupResult.hasOwnProperty('errors'));
-            assert.equal(layergroupResult.errors.length, 1);
+            assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
 
             testClient.drain(done);
@@ -203,7 +203,7 @@ describe('authorization', function () {
             assert.ifError(err);
 
             assert.ok(layergroupResult.hasOwnProperty('errors'));
-            assert.equal(layergroupResult.errors.length, 1);
+            assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/Forbidden/), layergroupResult.errors[0]);
 
             testClient.drain(done);
@@ -339,9 +339,9 @@ describe('authorization', function () {
                 testClient.getNamedMapList({ response: { status: 403 } }, function (err, res, body) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 403);
+                    assert.strictEqual(res.statusCode, 403);
 
-                    assert.equal(body.errors.length, 1);
+                    assert.strictEqual(body.errors.length, 1);
                     assert.ok(body.errors[0].match(/Forbidden/), body.errors[0]);
 
                     testClient.drain(done);
@@ -356,9 +356,9 @@ describe('authorization', function () {
                 testClient.getNamedMapList({ response: { status: 403 } }, function (err, res, body) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 403);
+                    assert.strictEqual(res.statusCode, 403);
 
-                    assert.equal(body.errors.length, 1);
+                    assert.strictEqual(body.errors.length, 1);
                     assert.ok(body.errors[0].match(/Forbidden/), body.errors[0]);
 
                     testClient.drain(done);
@@ -373,9 +373,9 @@ describe('authorization', function () {
                 testClient.getNamedMapList({ response: { status: 401 } }, function (err, res, body) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 401);
+                    assert.strictEqual(res.statusCode, 401);
 
-                    assert.equal(body.errors.length, 1);
+                    assert.strictEqual(body.errors.length, 1);
                     assert.ok(body.errors[0].match(/Unauthorized/), body.errors[0]);
 
                     testClient.drain(done);
@@ -390,7 +390,7 @@ describe('authorization', function () {
                 testClient.getNamedMapList({}, function (err, res, body) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.statusCode, 200);
                     assert.ok(Array.isArray(body.template_ids));
 
                     testClient.drain(done);
@@ -429,7 +429,7 @@ describe('authorization', function () {
                 testClient.getTile(0, 0, 0, function (err, res, tile) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.statusCode, 200);
                     assert.ok(tile instanceof mapnik.Image);
 
                     testClient.drain(done);
@@ -444,9 +444,9 @@ describe('authorization', function () {
                 testClient.createTemplate({ response: { status: 403 } }, function (err, res, response) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 403);
+                    assert.strictEqual(res.statusCode, 403);
 
-                    assert.equal(response.errors.length, 1);
+                    assert.strictEqual(response.errors.length, 1);
                     assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                     testClient.drain(done);
@@ -461,9 +461,9 @@ describe('authorization', function () {
                 testClient.createTemplate({ response: { status: 403 } }, function (err, res, response) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 403);
+                    assert.strictEqual(res.statusCode, 403);
 
-                    assert.equal(response.errors.length, 1);
+                    assert.strictEqual(response.errors.length, 1);
                     assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                     testClient.drain(done);
@@ -478,9 +478,9 @@ describe('authorization', function () {
                 testClient.createTemplate({ response: { status: 401 } }, function (err, res, response) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 401);
+                    assert.strictEqual(res.statusCode, 401);
 
-                    assert.equal(response.errors.length, 1);
+                    assert.strictEqual(response.errors.length, 1);
                     assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                     testClient.drain(done);
@@ -531,7 +531,7 @@ describe('authorization', function () {
                         function (err, res) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 204);
+                            assert.strictEqual(res.statusCode, 204);
 
                             testClientDelete.drain(done);
                         }
@@ -559,9 +559,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -590,9 +590,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -621,9 +621,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 401);
+                            assert.strictEqual(res.statusCode, 401);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -676,7 +676,7 @@ describe('authorization', function () {
                         function (err, res) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 200);
+                            assert.strictEqual(res.statusCode, 200);
 
                             testClientDelete.drain(done);
                         }
@@ -704,9 +704,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientGet.drain(done);
@@ -735,9 +735,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientGet.drain(done);
@@ -766,9 +766,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 401);
+                            assert.strictEqual(res.statusCode, 401);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                             testClientGet.drain(done);
@@ -822,7 +822,7 @@ describe('authorization', function () {
                         function (err, res) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 200);
+                            assert.strictEqual(res.statusCode, 200);
 
                             testClientDelete.drain(done);
                         }
@@ -851,9 +851,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -883,9 +883,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -915,9 +915,9 @@ describe('authorization', function () {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 401);
+                            assert.strictEqual(res.statusCode, 401);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                             testClientDelete.drain(done);

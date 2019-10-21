@@ -34,8 +34,8 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getUrls(USERNAME, RESOURCE);
                 assert.ok(urls);
 
-                assert.equal(urls.http, ['http://cdn.carto.com', USERNAME, 'api/v1/map', RESOURCE].join('/'));
-                assert.equal(urls.https, ['https://cdn.ssl.carto.com', USERNAME, 'api/v1/map', RESOURCE].join('/'));
+                assert.strictEqual(urls.http, ['http://cdn.carto.com', USERNAME, 'api/v1/map', RESOURCE].join('/'));
+                assert.strictEqual(urls.https, ['https://cdn.ssl.carto.com', USERNAME, 'api/v1/map', RESOURCE].join('/'));
             });
         });
 
@@ -94,11 +94,11 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getUrls(USERNAME, RESOURCE);
                 assert.ok(urls);
 
-                assert.equal(
+                assert.strictEqual(
                     urls.http,
                     ['http://' + USERNAME + '.localhost.lan', 'api/v1/map', RESOURCE].join('/')
                 );
-                assert.equal(
+                assert.strictEqual(
                     urls.https,
                     ['https://' + USERNAME + '.ssl.localhost.lan', 'api/v1/map', RESOURCE].join('/')
                 );
@@ -169,11 +169,11 @@ describe('ResourceLocator', function () {
                 var httpSubdomain = ResourceLocator.subdomain(HTTP_SUBDOMAINS, RESOURCE);
                 var httpsSubdomain = ResourceLocator.subdomain(HTTPS_SUBDOMAINS, RESOURCE);
 
-                assert.equal(
+                assert.strictEqual(
                     urls.http,
                     ['http://' + httpSubdomain + '.cdn.carto.com', USERNAME, 'api/v1/map', RESOURCE].join('/')
                 );
-                assert.equal(
+                assert.strictEqual(
                     urls.https,
                     ['https://cdn_' + httpsSubdomain + '.ssl.cdn.carto.com', USERNAME, 'api/v1/map', RESOURCE].join('/')
                 );
@@ -250,11 +250,11 @@ describe('ResourceLocator', function () {
                 var httpSubdomain = ResourceLocator.subdomain(HTTP_SUBDOMAINS, RESOURCE);
                 var httpsSubdomain = ResourceLocator.subdomain(HTTPS_SUBDOMAINS, RESOURCE);
 
-                assert.equal(
+                assert.strictEqual(
                     urls.http,
                     ['http://' + httpSubdomain + '.cdn.carto.com', 'u', USERNAME, 'api/v1/map', RESOURCE].join('/')
                 );
-                assert.equal(
+                assert.strictEqual(
                     urls.https,
                     `https://cdn_${httpsSubdomain}.ssl.cdn.carto.com/u/${USERNAME}/api/v1/map/${RESOURCE}`
                 );

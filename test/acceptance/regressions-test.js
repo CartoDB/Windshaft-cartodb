@@ -35,8 +35,8 @@ describe('regressions', function () {
         testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(layergroupResult.errors[0], 'Missing sql for layer 0 options');
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(layergroupResult.errors[0], 'Missing sql for layer 0 options');
 
             testClient.drain(done);
         });
@@ -205,8 +205,8 @@ describe('regressions', function () {
         testClient.getDataview('country_places_count', params, (err, dataview) => {
             assert.ifError(err);
 
-            assert.equal(dataview.type, 'aggregation');
-            assert.equal(dataview.categories.length, 1);
+            assert.strictEqual(dataview.type, 'aggregation');
+            assert.strictEqual(dataview.categories.length, 1);
             assert.deepEqual(dataview.categories[0], { value: 256, category: 'CAN', agg: false });
 
             testClient.drain(done);
