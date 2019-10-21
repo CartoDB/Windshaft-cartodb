@@ -175,7 +175,7 @@ describe('get requests with cache headers', function () {
         var dbName = headers['x-cache-channel'].split(':')[0];
         var tables = headers['x-cache-channel'].split(':')[1].split(',').sort();
         assert.strictEqual(dbName, expectedCacheHeaders.x_cache_channel.db_name);
-        assert.deepEqual(tables, expectedCacheHeaders.x_cache_channel.tables.sort());
+        assert.deepStrictEqual(tables, expectedCacheHeaders.x_cache_channel.tables.sort());
     }
 
     function noCacheHeaders (done) {

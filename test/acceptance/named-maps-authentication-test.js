@@ -173,7 +173,7 @@ describe('named maps authentication', function () {
             var nonexistentName = 'nonexistent';
             getNamedTile(nonexistentName, 0, 0, 0, { status: 404 }, function (err, res) {
                 assert.ok(!err);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     JSON.parse(res.body).errors,
                     ["Template '" + nonexistentName + "' of user '" + username + "' not found"]
                 );
@@ -184,7 +184,7 @@ describe('named maps authentication', function () {
         it('should return 403 if not properly authorized', function (done) {
             getNamedTile(tokenAuthTemplateName, 0, 0, 0, { status: 403 }, function (err, res) {
                 assert.ok(!err);
-                assert.deepEqual(JSON.parse(res.body).errors, ['Unauthorized template instantiation']);
+                assert.deepStrictEqual(JSON.parse(res.body).errors, ['Unauthorized template instantiation']);
                 done();
             });
         });
@@ -241,7 +241,7 @@ describe('named maps authentication', function () {
             var nonexistentName = 'nonexistent';
             getStaticMap(nonexistentName, { status: 404 }, function (err, res) {
                 assert.ok(!err);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     JSON.parse(res.body).errors,
                     ["Template '" + nonexistentName + "' of user '" + username + "' not found"]
                 );
@@ -252,7 +252,7 @@ describe('named maps authentication', function () {
         it('should return 403 if not properly authorized', function (done) {
             getStaticMap(tokenAuthTemplateName, { status: 403 }, function (err, res) {
                 assert.ok(!err);
-                assert.deepEqual(JSON.parse(res.body).errors, ['Unauthorized template instantiation']);
+                assert.deepStrictEqual(JSON.parse(res.body).errors, ['Unauthorized template instantiation']);
                 done();
             });
         });

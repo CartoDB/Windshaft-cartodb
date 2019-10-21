@@ -373,7 +373,7 @@ describe('turbo-carto regressions', function () {
                 assert.ok(!err, err);
 
                 assert.ok(layergroup.hasOwnProperty('layergroupid'));
-                assert.deepEqual(layergroup.metadata.layers[0].meta.cartocss, scenario.expected);
+                assert.deepStrictEqual(layergroup.metadata.layers[0].meta.cartocss, scenario.expected);
 
                 done();
             });
@@ -465,7 +465,7 @@ describe('turbo-carto regressions', function () {
 
                     assert.ok(!err, err);
                     assert.strictEqual(rule.buckets.length, scenario.numBuckets);
-                    assert.deepEqual(rule.buckets, scenario.bucketResponse);
+                    assert.deepStrictEqual(rule.buckets, scenario.bucketResponse);
 
                     done();
                 });

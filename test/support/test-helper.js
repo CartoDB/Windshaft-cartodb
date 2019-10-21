@@ -72,7 +72,7 @@ function checkSurrogateKey (res, expectedKey) {
     var keys = res.headers['surrogate-key'].split(' ').reduce(createSet, {});
     var expectedKeys = expectedKey.split(' ').reduce(createSet, {});
 
-    assert.deepEqual(keys, expectedKeys);
+    assert.deepStrictEqual(keys, expectedKeys);
 }
 
 var uncaughtExceptions = [];

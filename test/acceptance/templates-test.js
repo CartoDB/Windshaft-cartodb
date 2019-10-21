@@ -140,7 +140,7 @@ describe('template_api', function () {
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsedBody = JSON.parse(res.body);
                 var expectedBody = { template_id: expected_tpl_id };
-                assert.deepEqual(parsedBody, expectedBody);
+                assert.deepStrictEqual(parsedBody, expectedBody);
 
                 keysToDelete['map_tpl|localhost'] = 0;
 
@@ -594,7 +594,7 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template'),
                     "Missing 'template' from response body: " + res.body);
-                assert.deepEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
+                assert.deepStrictEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
 
                 keysToDelete['map_tpl|localhost'] = 0;
 
@@ -639,7 +639,7 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(parsed.hasOwnProperty('template'),
                     "Missing 'template' from response body: " + res.body);
-                assert.deepEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
+                assert.deepStrictEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
                 var del_request = {
                     url: '/api/v1/map/named/' + tpl_id,
                     method: 'DELETE',
@@ -1771,7 +1771,7 @@ describe('template_api', function () {
                 if (err) {
                     throw err;
                 }
-                assert.deepEqual(JSON.parse(res.body), { template_id: expectedTemplateId });
+                assert.deepStrictEqual(JSON.parse(res.body), { template_id: expectedTemplateId });
                 var next = this;
                 assert.response(
                     server,
@@ -1887,7 +1887,7 @@ describe('template_api', function () {
                 if (err) {
                     return done(err);
                 }
-                assert.deepEqual(JSON.parse(res.body).errors,
+                assert.deepStrictEqual(JSON.parse(res.body).errors,
                     ["Invalid or nonexistent map configuration token '" + nonexistentToken + "'"]);
 
                 done();
@@ -2041,7 +2041,7 @@ describe('template_api', function () {
                     keysToDelete['map_tpl|localhost'] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
 
-                    assert.deepEqual(
+                    assert.deepStrictEqual(
                         JSON.parse(res.body),
                         scenario.expectedTile
                     );

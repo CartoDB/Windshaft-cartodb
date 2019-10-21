@@ -38,7 +38,7 @@ describe('aggregation widgets', function () {
 
             var aggregation = JSON.parse(res.body);
             assert.strictEqual(aggregation.categories.length, 6);
-            assert.deepEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
+            assert.deepStrictEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
 
             testClient.drain(done);
         });
@@ -62,7 +62,7 @@ describe('aggregation widgets', function () {
 
                     var aggregation = JSON.parse(res.body);
                     assert.strictEqual(aggregation.categories.length, 1);
-                    assert.deepEqual(aggregation.categories[0], { value: 256, category: 'CAN', agg: false });
+                    assert.deepStrictEqual(aggregation.categories[0], { value: 256, category: 'CAN', agg: false });
 
                     testClient.drain(done);
                 });

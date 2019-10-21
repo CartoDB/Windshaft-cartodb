@@ -79,10 +79,10 @@ describe('torque tiles at 0,0 point', function () {
             testClient.getTorque(mapConfig, 0, 3, tile.x, tile.y, function (err, res) {
                 assert.ok(!err, err);
                 try {
-                    assert.deepEqual(JSON.parse(res.body), tile.expects);
+                    assert.deepStrictEqual(JSON.parse(res.body), tile.expects);
                 } catch (ex) {
                     // With Proj 5.1 this bug has been fixed and the point appears in all tiles
-                    assert.deepEqual(JSON.parse(res.body), tile.expects_fixed);
+                    assert.deepStrictEqual(JSON.parse(res.body), tile.expects_fixed);
                 }
                 done();
             });

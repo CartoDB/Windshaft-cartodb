@@ -76,7 +76,7 @@ describe('histogram widgets', function () {
 
                     var histogram = JSON.parse(res.body);
                     // notice min value
-                    assert.deepEqual(
+                    assert.deepStrictEqual(
                         histogram.bins[0],
                         { bin: 0, freq: 6497, min: 0, max: 742572, avg: 113511.16823149147 }
                     );
@@ -103,7 +103,7 @@ describe('histogram widgets', function () {
 
                     var histogram = JSON.parse(res.body);
                     // notice min value
-                    assert.deepEqual(histogram.bins[0], {
+                    assert.deepStrictEqual(histogram.bins[0], {
                         bin: 0,
                         freq: 62,
                         min: 4000000,
@@ -131,7 +131,7 @@ describe('histogram widgets', function () {
 
                     var histogram = JSON.parse(res.body);
                     // notice min value
-                    assert.deepEqual(histogram.bins[0], {
+                    assert.deepStrictEqual(histogram.bins[0], {
                         bin: 0,
                         freq: 62,
                         min: 4000000,

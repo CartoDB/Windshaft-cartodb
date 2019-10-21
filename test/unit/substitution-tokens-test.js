@@ -22,15 +22,15 @@ describe('SubstitutionTokens', function () {
     ].join('\n');
 
     it('should return tokens present in sql', function () {
-        assert.deepEqual(SubstitutionTokens.tokens(sql), ['bbox', 'scale_denominator', 'pixel_width', 'pixel_height']);
+        assert.deepStrictEqual(SubstitutionTokens.tokens(sql), ['bbox', 'scale_denominator', 'pixel_width', 'pixel_height']);
     });
 
     it('should return just one token', function () {
-        assert.deepEqual(SubstitutionTokens.tokens('select !bbox! from wadus'), ['bbox']);
+        assert.deepStrictEqual(SubstitutionTokens.tokens('select !bbox! from wadus'), ['bbox']);
     });
 
     it('should not return other tokens', function () {
-        assert.deepEqual(SubstitutionTokens.tokens('select !wadus! from wadus'), []);
+        assert.deepStrictEqual(SubstitutionTokens.tokens('select !wadus! from wadus'), []);
     });
 
     it('should report sql has tokens', function () {

@@ -147,7 +147,7 @@ describe('named_layers datasources', function () {
 
                 assert.strictEqual(layers[0].type, 'cartodb');
                 assert.strictEqual(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.deepStrictEqual(datasource.getLayerDatasource(0), {});
 
                 done();
             }
@@ -162,7 +162,7 @@ describe('named_layers datasources', function () {
 
                 assert.strictEqual(layers[0].type, 'cartodb');
                 assert.strictEqual(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.deepStrictEqual(datasource.getLayerDatasource(0), {});
 
                 assert.strictEqual(layers[1].type, 'cartodb');
                 assert.strictEqual(layers[1].options.sql, wadusTemplateSql);
@@ -183,7 +183,7 @@ describe('named_layers datasources', function () {
 
                 assert.strictEqual(layers[0].type, 'cartodb');
                 assert.strictEqual(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.deepStrictEqual(datasource.getLayerDatasource(0), {});
 
                 assert.strictEqual(layers[1].type, 'mapnik');
                 assert.strictEqual(layers[1].options.sql, wadusMapnikSql);
@@ -264,7 +264,7 @@ describe('named_layers datasources', function () {
 
                 assert.strictEqual(layers[3].type, 'cartodb');
                 assert.strictEqual(layers[3].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(3), {});
+                assert.deepStrictEqual(datasource.getLayerDatasource(3), {});
 
                 assert.strictEqual(layers[4].type, 'cartodb');
                 assert.strictEqual(layers[4].options.sql, wadusTemplateSql);
@@ -274,7 +274,7 @@ describe('named_layers datasources', function () {
 
                 assert.strictEqual(layers[5].type, 'cartodb');
                 assert.strictEqual(layers[5].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(5), {});
+                assert.deepStrictEqual(datasource.getLayerDatasource(5), {});
 
                 assert.strictEqual(layers[6].type, 'mapnik');
                 assert.strictEqual(layers[6].options.sql, wadusMapnikSql);

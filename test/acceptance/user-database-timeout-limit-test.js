@@ -124,7 +124,7 @@ describe('user database timeout limit', function () {
             this.testClient.getDataview('count', params, (err, timeoutError) => {
                 assert.ifError(err);
 
-                assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                 done();
             });
@@ -157,7 +157,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
+                    assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
@@ -317,7 +317,7 @@ describe('user database timeout limit', function () {
                         this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
                             assert.ifError(err);
 
-                            assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                            assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                             done();
                         });
@@ -343,7 +343,7 @@ describe('user database timeout limit', function () {
                         this.testClient.getStaticCenter(params, (err, res, timeoutError) => {
                             assert.ifError(err);
 
-                            assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                            assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                             done();
                         });
@@ -379,7 +379,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
+                    assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
@@ -497,7 +497,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
+                    assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
@@ -563,7 +563,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                        assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });
@@ -601,7 +601,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
+                    assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
@@ -670,7 +670,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                        assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });
@@ -692,7 +692,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getTile(0, 0, 0, params, (err, res, attributes) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(attributes, DATASOURCE_TIMEOUT_ERROR);
+                        assert.deepStrictEqual(attributes, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });
@@ -732,7 +732,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
+                    assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
                             type: 'limit',
@@ -809,7 +809,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getAttributes(params, (err, res, timeoutError) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                        assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });

@@ -207,7 +207,7 @@ describe('regressions', function () {
 
             assert.strictEqual(dataview.type, 'aggregation');
             assert.strictEqual(dataview.categories.length, 1);
-            assert.deepEqual(dataview.categories[0], { value: 256, category: 'CAN', agg: false });
+            assert.deepStrictEqual(dataview.categories[0], { value: 256, category: 'CAN', agg: false });
 
             testClient.drain(done);
         });

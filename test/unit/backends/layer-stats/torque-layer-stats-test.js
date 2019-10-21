@@ -30,7 +30,7 @@ describe('torque-layer-stats', function () {
         var testSubject = new TorqueLayerStats();
         testSubject.getStats(layer, {}, function (err, result) {
             assert.ifError(err);
-            assert.deepEqual({}, result);
+            assert.deepStrictEqual({}, result);
             done();
         });
     });

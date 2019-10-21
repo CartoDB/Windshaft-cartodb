@@ -97,7 +97,7 @@ describe('named-maps widgets', function () {
             function instantiateTemplate (err, res) {
                 assert.ifError(err);
 
-                assert.deepEqual(JSON.parse(res.body), { template_id: widgetsTemplateName });
+                assert.deepStrictEqual(JSON.parse(res.body), { template_id: widgetsTemplateName });
                 var next = this;
                 assert.response(
                     server,

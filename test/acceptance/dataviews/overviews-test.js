@@ -54,7 +54,7 @@ describe('dataviews using tables without overviews', function () {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, { operation: 'count', result: 7313, nulls: 0, type: 'formula' });
+            assert.deepStrictEqual(formula_result, { operation: 'count', result: 7313, nulls: 0, type: 'formula' });
             assert(getUsesOverviewsFromHeaders(headers) === false); // Overviews logging
 
             testClient.drain(done);
@@ -70,7 +70,7 @@ describe('dataviews using tables without overviews', function () {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, { operation: 'count', result: 7253, nulls: 0, type: 'formula' });
+            assert.deepStrictEqual(formula_result, { operation: 'count', result: 7253, nulls: 0, type: 'formula' });
 
             testClient.drain(done);
         });
@@ -89,7 +89,7 @@ describe('dataviews using tables without overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, { operation: 'count', result: 256, nulls: 0, type: 'formula' });
+                    assert.deepStrictEqual(formula_result, { operation: 'count', result: 256, nulls: 0, type: 'formula' });
                     testClient.drain(done);
                 });
             });
@@ -106,7 +106,7 @@ describe('dataviews using tables without overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, { operation: 'count', result: 254, nulls: 0, type: 'formula' });
+                    assert.deepStrictEqual(formula_result, { operation: 'count', result: 254, nulls: 0, type: 'formula' });
                     testClient.drain(done);
                 });
             });
@@ -261,7 +261,7 @@ describe('dataviews using tables with overviews', function () {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
+            assert.deepStrictEqual(formula_result, {
                 operation: 'sum',
                 result: 15,
                 infinities: 0,
@@ -282,7 +282,7 @@ describe('dataviews using tables with overviews', function () {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
+            assert.deepStrictEqual(formula_result, {
                 operation: 'avg',
                 result: 3,
                 nulls: 0,
@@ -303,7 +303,7 @@ describe('dataviews using tables with overviews', function () {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
+            assert.deepStrictEqual(formula_result, {
                 operation: 'count',
                 result: 5,
                 nulls: 0,
@@ -324,7 +324,7 @@ describe('dataviews using tables with overviews', function () {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
+            assert.deepStrictEqual(formula_result, {
                 operation: 'max',
                 result: 5,
                 nulls: 0,
@@ -343,7 +343,7 @@ describe('dataviews using tables with overviews', function () {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
+            assert.deepStrictEqual(formula_result, {
                 operation: 'min',
                 result: 1,
                 nulls: 0,
@@ -365,7 +365,7 @@ describe('dataviews using tables with overviews', function () {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
+            assert.deepStrictEqual(formula_result, {
                 operation: 'sum',
                 result: 15,
                 nulls: 0,
@@ -472,7 +472,7 @@ describe('dataviews using tables with overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
+                    assert.deepStrictEqual(formula_result, {
                         operation: 'sum',
                         result: 1,
                         nulls: 0,
@@ -491,7 +491,7 @@ describe('dataviews using tables with overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
+                    assert.deepStrictEqual(formula_result, {
                         operation: 'avg',
                         result: 1,
                         nulls: 0,
@@ -511,7 +511,7 @@ describe('dataviews using tables with overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
+                    assert.deepStrictEqual(formula_result, {
                         operation: 'count',
                         result: 1,
                         infinities: 0,
@@ -531,7 +531,7 @@ describe('dataviews using tables with overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
+                    assert.deepStrictEqual(formula_result, {
                         operation: 'max',
                         result: 1,
                         nulls: 0,
@@ -550,7 +550,7 @@ describe('dataviews using tables with overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
+                    assert.deepStrictEqual(formula_result, {
                         operation: 'min',
                         result: 1,
                         nulls: 0,
@@ -575,7 +575,7 @@ describe('dataviews using tables with overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
+                    assert.deepStrictEqual(formula_result, {
                         operation: 'sum',
                         result: 1,
                         nulls: 0,
@@ -598,7 +598,7 @@ describe('dataviews using tables with overviews', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(dataview, {
+                    assert.deepStrictEqual(dataview, {
                         aggregation: 'sum',
                         count: 5,
                         nulls: 0,
@@ -624,7 +624,7 @@ describe('dataviews using tables with overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(dataview, {
+                    assert.deepStrictEqual(dataview, {
                         bin_width: 0,
                         bins_count: 1,
                         bins_start: 3,
@@ -645,7 +645,7 @@ describe('dataviews using tables with overviews', function () {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(dataview, {
+                    assert.deepStrictEqual(dataview, {
                         operation: 'sum',
                         result: 6,
                         nulls: 0,

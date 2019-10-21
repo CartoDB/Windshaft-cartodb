@@ -165,7 +165,7 @@ describe('prepare-context', function () {
                 return done(err);
             }
 
-            assert.deepEqual(config, req.query.config);
+            assert.deepStrictEqual(config, req.query.config);
             assert.strictEqual('test', req.query.api_key);
             assert.strictEqual(undefined, req.query.non_included);
             done();

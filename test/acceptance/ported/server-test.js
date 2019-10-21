@@ -68,7 +68,7 @@ describe('server', function () {
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'jsonp_test', function (err, res) {
             assert.strictEqual(res.statusCode, 200, res.body);
-            assert.deepEqual(res.headers['content-type'], 'text/javascript; charset=utf-8');
+            assert.deepStrictEqual(res.headers['content-type'], 'text/javascript; charset=utf-8');
             var didRunJsonCallback = false;
             var response = {};
             // jshint ignore:start
@@ -93,7 +93,7 @@ describe('server', function () {
                 4: { name: 'El Lacón' },
                 5: { name: 'El Pico' }
             };
-            assert.deepEqual(JSON.parse(res.body).data, expected_json);
+            assert.deepStrictEqual(JSON.parse(res.body).data, expected_json);
             done();
         });
     });
@@ -107,7 +107,7 @@ describe('server', function () {
             }
         };
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, expectedResponse, function (err, res) {
-            assert.deepEqual(JSON.parse(res.body).errors, ['Tileset has no interactivity']);
+            assert.deepStrictEqual(JSON.parse(res.body).errors, ['Tileset has no interactivity']);
             done();
         });
     });
@@ -151,12 +151,12 @@ describe('server', function () {
         var mapConfigName = testClient.singleLayerMapConfig(query, style211, null, 'name');
         testClient.getGrid(mapConfigName, 0, 3, 2, 2, function (err, res) {
             var expected_data = { 1: { name: 'west' } };
-            assert.deepEqual(JSON.parse(res.body).data, expected_data);
+            assert.deepStrictEqual(JSON.parse(res.body).data, expected_data);
 
             var mapConfigCartodbId = testClient.singleLayerMapConfig(query, style211, null, 'cartodb_id');
             testClient.getGrid(mapConfigCartodbId, 0, 3, 2, 2, function (err, res) {
-                var expected_data = { 1: { cartodb_id: '1' } };
-                assert.deepEqual(JSON.parse(res.body).data, expected_data);
+                var expected_data = { 1: { cartodb_id: 1 } };
+                assert.deepStrictEqual(JSON.parse(res.body).data, expected_data);
                 done();
             });
         });

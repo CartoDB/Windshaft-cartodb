@@ -250,7 +250,7 @@ describe('dataviews-widgets-adapter', function () {
     widgetsMapConfigs.forEach(function (mapConfig, index) {
         it('should adapt widgets ' + index, function (done) {
             dataviewsMapConfigAdapter.getMapConfig(user, mapConfig.input, params(), context(), function (err, result) {
-                assert.deepEqual(result, mapConfig.expected);
+                assert.deepStrictEqual(result, mapConfig.expected);
                 done();
             });
         });

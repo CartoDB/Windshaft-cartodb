@@ -85,7 +85,7 @@ describe('named-maps analysis', function () {
                 status: 200
             },
             function (res, err) {
-                assert.deepEqual(JSON.parse(res.body), { template_id: widgetsTemplateName });
+                assert.deepStrictEqual(JSON.parse(res.body), { template_id: widgetsTemplateName });
                 return done(err);
             }
         );
@@ -147,7 +147,7 @@ describe('named-maps analysis', function () {
                     assert.strictEqual(analyses.length, 1, 'Invalid number of analyses in metadata');
                     var nodes = analyses[0].nodes;
                     var nodesIds = Object.keys(nodes);
-                    assert.deepEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
+                    assert.deepStrictEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
                     nodesIds.forEach(function (nodeId) {
                         var node = nodes[nodeId];
                         assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
@@ -299,7 +299,7 @@ describe('named-maps analysis', function () {
                 },
                 function (res, err) {
                     assert.ifError(err);
-                    assert.deepEqual(
+                    assert.deepStrictEqual(
                         JSON.parse(res.body),
                         {
                             errors: ['Unsupported image format \"gif\"'],

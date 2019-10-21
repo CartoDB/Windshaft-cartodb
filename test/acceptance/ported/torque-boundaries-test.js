@@ -384,7 +384,7 @@ describe('torque boundary points', function () {
 
                 var parsed = JSON.parse(res.body);
 
-                assert.deepEqual(parsed, [{
+                assert.deepStrictEqual(parsed, [{
                     x__uint8: 255,
                     y__uint8: 172,
                     vals__uint8: [1],
@@ -452,7 +452,7 @@ describe('torque boundary points', function () {
 
                 var parsed = JSON.parse(res.body);
 
-                assert.deepEqual(parsed.sort(function (a, b) { return a.x__uint8 > b.x__uint8; }), [
+                assert.deepStrictEqual(parsed.sort(function (a, b) { return a.x__uint8 > b.x__uint8; }), [
                     {
                         x__uint8: 47,
                         y__uint8: 127,

@@ -610,7 +610,7 @@ describe('aggregation', function () {
                             const expected_columns = [
                                 '_cdb_feature_count', 'cartodb_id', 'first_column', 'second_column'
                             ];
-                            assert.deepEqual(columns.sort(), expected_columns.sort());
+                            assert.deepStrictEqual(columns.sort(), expected_columns.sort());
 
                             done();
                         });
@@ -779,7 +779,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: [
                             "Invalid value for 'aggregation' query param: wadus." +
                                 " Valid ones are 'true' or 'false'"
@@ -826,7 +826,7 @@ describe('aggregation', function () {
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => {
-                        assert.deepEqual(layer.meta.aggregation, { png: false, mvt: false });
+                        assert.deepStrictEqual(layer.meta.aggregation, { png: false, mvt: false });
                     });
 
                     done();
@@ -860,7 +860,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: [
                             'Unsupported geometry type: ST_Polygon.' +
                                 ' Aggregation is available only for geometry type: ST_Point'
@@ -1038,7 +1038,7 @@ describe('aggregation', function () {
                     const tileJSON = tile.toJSON();
                     // Everything's aggregated into a single feature because the only
                     // dimension is space and all points are in the same place.
-                    assert.deepEqual(tileJSON[0].features.map(f => f.properties._cdb_feature_count), [nPoints]);
+                    assert.deepStrictEqual(tileJSON[0].features.map(f => f.properties._cdb_feature_count), [nPoints]);
                     done();
                 });
             });
@@ -1080,7 +1080,7 @@ describe('aggregation', function () {
                     // with 20 different values, so we'll have an aggregated feature for each.
                     const expectedYears = Array.from({ length: 20 }, (_, k) => 2000 + k); // 2000 to 2019
                     const resultYears = tileJSON[0].features.map(f => f.properties.year).sort((a, b) => a - b);
-                    assert.deepEqual(resultYears, expectedYears);
+                    assert.deepStrictEqual(resultYears, expectedYears);
 
                     done();
                 });
@@ -1122,7 +1122,7 @@ describe('aggregation', function () {
                     const tileJSON = tile.toJSON();
                     assert.strictEqual(tileJSON[0].features.length, 3);
                     const resultQuimesters = tileJSON[0].features.map(f => f.properties.month).sort((a, b) => a - b);
-                    assert.deepEqual(resultQuimesters, [1, 2, 3]);
+                    assert.deepStrictEqual(resultQuimesters, [1, 2, 3]);
 
                     done();
                 });
@@ -1162,7 +1162,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort((a, b) => a - b);
-                    assert.deepEqual(resultMonths, [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
+                    assert.deepStrictEqual(resultMonths, [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
 
                     done();
                 });
@@ -1290,7 +1290,7 @@ describe('aggregation', function () {
                             type: 'number'
                         }
                     };
-                    assert.deepEqual(layergroup.metadata.layers[0].meta.stats.dimensions, expectedDimensions);
+                    assert.deepStrictEqual(layergroup.metadata.layers[0].meta.stats.dimensions, expectedDimensions);
                     done();
                 });
             });
@@ -1359,7 +1359,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort();
-                    assert.deepEqual(resultMonths, [
+                    assert.deepStrictEqual(resultMonths, [
                         '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06',
                         '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12'
                     ]);
@@ -1402,7 +1402,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort();
-                    assert.deepEqual(resultMonths, [
+                    assert.deepStrictEqual(resultMonths, [
                         '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06',
                         '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12',
                         '2019-01'
@@ -1447,7 +1447,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     const resultHours = tileJSON[0].features.map(f => f.properties.hour).sort();
-                    assert.deepEqual(resultHours, [
+                    assert.deepStrictEqual(resultHours, [
                         '2018-01-01T00',
                         '2018-01-01T01',
                         '2018-01-01T02',
@@ -1898,7 +1898,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: ['Invalid resolution, should be a number greather than 0'],
                         errors_with_context: [{
                             type: 'layer',
@@ -1940,7 +1940,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: ['Invalid placement. Valid values: centroid, point-grid, point-sample'],
                         errors_with_context: [{
                             type: 'layer',
@@ -1983,7 +1983,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: ['Invalid threshold, should be a number greather than 0'],
                         errors_with_context: [{
                             type: 'layer',
@@ -2031,7 +2031,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: ['Invalid column name, should be a non empty string'],
                         errors_with_context: [{
                             type: 'layer',
@@ -2079,7 +2079,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: ['Unsupported aggregation function wadus, ' +
                                     'valid ones: count, avg, sum, min, max, mode'],
                         errors_with_context: [{
@@ -2128,7 +2128,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: ['Invalid aggregated column, should be a non empty string'],
                         errors_with_context: [{
                             type: 'layer',
@@ -2771,7 +2771,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: ['Invalid filter parameter name: not_a_valid_parameter'],
                         errors_with_context: [{
                             type: 'layer',
@@ -2825,7 +2825,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: ['Invalid filtered column: value'],
                         errors_with_context: [{
                             type: 'layer',
@@ -2953,8 +2953,8 @@ describe('aggregation', function () {
                                     const feature1 = tile1Features[0];
                                     const feature2 = tile2Features[0];
                                     // features should be identical (geometry and properties)
-                                    assert.deepEqual(feature1.properties, feature2.properties);
-                                    assert.deepEqual(feature1.geometry, feature2.geometry);
+                                    assert.deepStrictEqual(feature1.properties, feature2.properties);
+                                    assert.deepStrictEqual(feature1.geometry, feature2.geometry);
                                     // and geometry should be on the border;
                                     // for the dataset and zoom 1, only point with cartodb_id=4 (0,0)
                                     assert.strictEqual(feature1.properties.cartodb_id, 4);
@@ -3102,10 +3102,10 @@ describe('aggregation', function () {
                                     const tile01Actual = tile01.features.map(f => f.properties);
                                     const tile11Actual = tile11.features.map(f => f.properties);
                                     const orderById = (a, b) => a.cartodb_id - b.cartodb_id;
-                                    assert.deepEqual(tile00Actual.sort(orderById), tile00Expected);
-                                    assert.deepEqual(tile10Actual.sort(orderById), tile10Expected);
-                                    assert.deepEqual(tile01Actual.sort(orderById), tile01Expected);
-                                    assert.deepEqual(tile11Actual.sort(orderById), tile11Expected);
+                                    assert.deepStrictEqual(tile00Actual.sort(orderById), tile00Expected);
+                                    assert.deepStrictEqual(tile10Actual.sort(orderById), tile10Expected);
+                                    assert.deepStrictEqual(tile01Actual.sort(orderById), tile01Expected);
+                                    assert.deepStrictEqual(tile11Actual.sort(orderById), tile11Expected);
 
                                     done();
                                 });
@@ -3222,7 +3222,7 @@ describe('aggregation', function () {
                         if (placement === 'point-grid') {
                             // check geometry x = 18181005.874444414, y = -18181043.94366749
                             const expectedPoint = [163.322754576802, -83.3823797469878];
-                            assert.deepEqual(tile.features[0].geometry.coordinates, expectedPoint);
+                            assert.deepStrictEqual(tile.features[0].geometry.coordinates, expectedPoint);
                         }
                         done();
                     });
@@ -3260,7 +3260,7 @@ describe('aggregation', function () {
                         if (placement === 'point-grid') {
                             // check geometry x = 18181006.023735486, y = -18181043.794376418
                             const expectedPoint = [163.322755917907, -83.3823795924354];
-                            assert.deepEqual(tile.features[0].geometry.coordinates, expectedPoint);
+                            assert.deepStrictEqual(tile.features[0].geometry.coordinates, expectedPoint);
                         }
                         done();
                     });

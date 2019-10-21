@@ -56,7 +56,7 @@ describe('dataview error cases', function () {
             this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, errObj) {
                 assert.ok(!err, err);
 
-                assert.deepEqual(errObj.errors, ['"dataviews" must be a valid JSON object: "string" type found']);
+                assert.deepStrictEqual(errObj.errors, ['"dataviews" must be a valid JSON object: "string" type found']);
 
                 done();
             });
@@ -68,7 +68,7 @@ describe('dataview error cases', function () {
             this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, errObj) {
                 assert.ok(!err, err);
 
-                assert.deepEqual(errObj.errors, ['"dataviews" must be a valid JSON object: "array" type found']);
+                assert.deepStrictEqual(errObj.errors, ['"dataviews" must be a valid JSON object: "array" type found']);
 
                 done();
             });
@@ -179,7 +179,7 @@ describe('dataview error cases', function () {
             this.testClient = new TestClient(createMapConfig(query));
             this.testClient.getDataview('aggregation_count_dataview', params, function (err, result) {
                 assert.ifError(err);
-                assert.deepEqual(result, expectedResponseBody);
+                assert.deepStrictEqual(result, expectedResponseBody);
                 done();
             });
         });
@@ -203,7 +203,7 @@ describe('dataview error cases', function () {
             this.testClient = new TestClient(createMapConfig(query));
             this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function (err, result) {
                 assert.ifError(err);
-                assert.deepEqual(result, expectedResponseBody);
+                assert.deepStrictEqual(result, expectedResponseBody);
                 done();
             });
         });

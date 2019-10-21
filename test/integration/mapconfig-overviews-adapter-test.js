@@ -94,7 +94,7 @@ describe('MapConfigOverviewsAdapter', function () {
                     }
                 }
             };
-            assert.deepEqual(layers[0].options.query_rewrite_data, expected_data);
+            assert.deepStrictEqual(layers[0].options.query_rewrite_data, expected_data);
             done();
         });
     });

@@ -55,7 +55,7 @@ describe('widgets', function () {
 
                 assert.ok(histogram.bins.length);
 
-                assert.deepEqual(histogram.bins[0], { bin: 0, freq: 179, min: 1, max: 1, avg: 1 });
+                assert.deepStrictEqual(histogram.bins[0], { bin: 0, freq: 179, min: 1, max: 1, avg: 1 });
 
                 done();
             });
@@ -71,7 +71,7 @@ describe('widgets', function () {
 
                 assert.ok(histogram.bins.length);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     histogram.bins[histogram.bins.length - 1],
                     { bin: 47, freq: 1, min: 35676000, max: 35676000, avg: 35676000 }
                 );
@@ -102,7 +102,7 @@ describe('widgets', function () {
 
                 assert.ok(histogram.bins.length);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     histogram.bins[histogram.bins.length - 1],
                     { bin: 7, min: 8829000, max: 9904000, avg: 9340914.714285715, freq: 7 }
                 );
@@ -140,7 +140,7 @@ describe('widgets', function () {
                 assert.strictEqual(histogram.type, 'histogram');
                 validateHistogramBins(histogram);
                 assert.ok(histogram.bins.length);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     histogram.bins[histogram.bins.length - 1],
                     { bin: 19, freq: 1, min: 35676000, max: 35676000, avg: 35676000 }
                 );
@@ -172,11 +172,11 @@ describe('widgets', function () {
                 validateHistogramBins(histogram);
 
                 assert.ok(histogram.bins.length);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     histogram.bins[0],
                     { bin: 0, min: 0, max: 7067423, avg: 280820.0057731959, freq: 7275 }
                 );
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     histogram.bins[histogram.bins.length - 1],
                     { bin: 4, freq: 1, min: 35676000, max: 35676000, avg: 35676000 }
                 );

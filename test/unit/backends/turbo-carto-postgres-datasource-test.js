@@ -38,7 +38,7 @@ describe('turbo-carto-postgres-datasource', function () {
                 stats: { min_val: 3, max_val: 999, avg_val: 501 },
                 strategy: undefined
             };
-            assert.deepEqual(result, expected_result);
+            assert.deepStrictEqual(result, expected_result);
             done();
         });
     });

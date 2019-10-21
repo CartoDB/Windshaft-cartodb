@@ -39,7 +39,7 @@ describe_mvt('date-wrapping', () => {
                     ];
                     const actual = JSON.parse(mvt.toGeoJSONSync(0)).features;
 
-                    assert.deepEqual(actual, expected);
+                    assert.deepStrictEqual(actual, expected);
                     done();
                 });
             });
@@ -47,7 +47,7 @@ describe_mvt('date-wrapping', () => {
             it('should return metadata with casted columns', done => {
                 testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
-                    assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
+                    assert.deepStrictEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
                     done();
                 });
             });
@@ -79,7 +79,7 @@ describe_mvt('date-wrapping', () => {
                     ];
                     const actual = JSON.parse(mvt.toGeoJSONSync(0)).features;
 
-                    assert.deepEqual(actual, expected);
+                    assert.deepStrictEqual(actual, expected);
                     done();
                 });
             });
@@ -104,8 +104,8 @@ describe_mvt('date-wrapping', () => {
             it('should return dates as numbers for every layer', done => {
                 testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
-                    assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
-                    assert.deepEqual(layergroup.metadata.layers[1].meta.dates_as_numbers, ['date']);
+                    assert.deepStrictEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
+                    assert.deepStrictEqual(layergroup.metadata.layers[1].meta.dates_as_numbers, ['date']);
                 });
 
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
@@ -140,8 +140,8 @@ describe_mvt('date-wrapping', () => {
                     const actual0 = JSON.parse(mvt.toGeoJSONSync(0)).features;
                     const actual1 = JSON.parse(mvt.toGeoJSONSync(1)).features;
 
-                    assert.deepEqual(actual0, expected0);
-                    assert.deepEqual(actual1, expected1);
+                    assert.deepStrictEqual(actual0, expected0);
+                    assert.deepStrictEqual(actual1, expected1);
                     done();
                 });
             });
@@ -162,8 +162,8 @@ describe_mvt('date-wrapping', () => {
             it('should return dates as numbers only for the layer with the "dates_as_numbers" flag enabled', done => {
                 testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
-                    assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers || [], []);
-                    assert.deepEqual(layergroup.metadata.layers[1].meta.dates_as_numbers, ['date']);
+                    assert.deepStrictEqual(layergroup.metadata.layers[0].meta.dates_as_numbers || [], []);
+                    assert.deepStrictEqual(layergroup.metadata.layers[1].meta.dates_as_numbers, ['date']);
                 });
 
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
@@ -198,8 +198,8 @@ describe_mvt('date-wrapping', () => {
                     const actual0 = JSON.parse(mvt.toGeoJSONSync(0)).features;
                     const actual1 = JSON.parse(mvt.toGeoJSONSync(1)).features;
 
-                    assert.deepEqual(actual0, expected0);
-                    assert.deepEqual(actual1, expected1);
+                    assert.deepStrictEqual(actual0, expected0);
+                    assert.deepStrictEqual(actual1, expected1);
                     done();
                 });
             });
@@ -220,8 +220,8 @@ describe_mvt('date-wrapping', () => {
             it('should return dates as dates for both layers', done => {
                 testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
-                    assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers || [], []);
-                    assert.deepEqual(layergroup.metadata.layers[1].meta.dates_as_numbers || [], []);
+                    assert.deepStrictEqual(layergroup.metadata.layers[0].meta.dates_as_numbers || [], []);
+                    assert.deepStrictEqual(layergroup.metadata.layers[1].meta.dates_as_numbers || [], []);
                 });
 
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
@@ -256,8 +256,8 @@ describe_mvt('date-wrapping', () => {
                     const actual0 = JSON.parse(mvt.toGeoJSONSync(0)).features;
                     const actual1 = JSON.parse(mvt.toGeoJSONSync(1)).features;
 
-                    assert.deepEqual(actual0, expected0);
-                    assert.deepEqual(actual1, expected1);
+                    assert.deepStrictEqual(actual0, expected0);
+                    assert.deepStrictEqual(actual1, expected1);
                     done();
                 });
             });
@@ -282,7 +282,7 @@ describe_mvt('date-wrapping', () => {
         it('should work', done => {
             testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
-                assert.deepEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
+                assert.deepStrictEqual(layergroup.metadata.layers[0].meta.dates_as_numbers, ['date']);
                 done();
             });
         });
@@ -304,7 +304,7 @@ describe_mvt('date-wrapping', () => {
                     }
                 ];
                 const actual = JSON.parse(mvt.toGeoJSONSync(0)).features;
-                assert.deepEqual(actual, expected);
+                assert.deepStrictEqual(actual, expected);
                 done();
             });
         });

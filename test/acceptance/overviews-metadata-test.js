@@ -88,7 +88,7 @@ describe('overviews metadata', function () {
                 });
                 mapStore.load(LayergroupToken.parse(expected_token).token, function (err, mapConfig) {
                     assert.ifError(err);
-                    assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
+                    assert.deepStrictEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
                     assert.strictEqual(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
                     var expected_data = {
@@ -100,7 +100,7 @@ describe('overviews metadata', function () {
                             }
                         }
                     };
-                    assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
+                    assert.deepStrictEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
                 });
 
                 next(err);
@@ -295,7 +295,7 @@ describe('overviews metadata with filters', function () {
                         unfiltered_query: 'select * from test_table_overviews',
                         filter_stats: { unfiltered_rows: 5, filtered_rows: 1 }
                     };
-                    assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
+                    assert.deepStrictEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
                 });
 
                 next(err);

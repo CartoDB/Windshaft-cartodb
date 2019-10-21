@@ -83,7 +83,7 @@ describe('analyses controller', function () {
                 return done(err);
             }
 
-            assert.deepEqual(result.errors[0], 'Unauthorized');
+            assert.deepStrictEqual(result.errors[0], 'Unauthorized');
             this.testClient.apiKey = apiKey;
             done();
         });

@@ -63,7 +63,7 @@ describe('raster', function () {
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
                 if (expected_token) {
-                    assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                    assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
                 } else {
                     expected_token = parsedBody.layergroupid;
                 }
@@ -82,7 +82,7 @@ describe('raster', function () {
             function check_response (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
-                assert.deepEqual(res.headers['content-type'], 'image/png');
+                assert.deepStrictEqual(res.headers['content-type'], 'image/png');
                 var next = this;
                 assert.imageBufferIsSimilarToFile(res.body,
                     './test/fixtures/raster_gray_rect.png',
@@ -145,7 +145,7 @@ describe('raster', function () {
                 assert.ok(!err);
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                assert.deepEqual(parsedBody.errors, ['Mapnik raster layers do not support interactivity']);
+                assert.deepStrictEqual(parsedBody.errors, ['Mapnik raster layers do not support interactivity']);
                 done();
             }
         );

@@ -36,7 +36,7 @@ describe('multilayer error cases', function () {
         }, {}, function (res) {
             assert.strictEqual(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
-            assert.deepEqual(parsedBody.errors, ['POST data must be of type application/json']);
+            assert.deepStrictEqual(parsedBody.errors, ['POST data must be of type application/json']);
             done();
         });
     });
@@ -52,7 +52,7 @@ describe('multilayer error cases', function () {
         }, {}, function (res) {
             assert.strictEqual(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
-            assert.deepEqual(parsedBody.errors, ['Missing layers array from layergroup config']);
+            assert.deepStrictEqual(parsedBody.errors, ['Missing layers array from layergroup config']);
             done();
         });
     });
@@ -102,7 +102,7 @@ describe('multilayer error cases', function () {
         }, {}, function (res) {
             assert.strictEqual(res.statusCode, 400, res.body);
             var parsedBody = JSON.parse(res.body);
-            assert.deepEqual(parsedBody.errors, ['Missing cartocss_version for layer 0 options']);
+            assert.deepStrictEqual(parsedBody.errors, ['Missing cartocss_version for layer 0 options']);
             done();
         });
     });
@@ -393,7 +393,7 @@ describe('multilayer error cases', function () {
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
 
         testClient.getGrid(mapConfig, 1, 13, 4011, 3088, defaultErrorExpectedResponse, function (err, res) {
-            assert.deepEqual(JSON.parse(res.body).errors, ["Layer '1' not found in layergroup"]);
+            assert.deepStrictEqual(JSON.parse(res.body).errors, ["Layer '1' not found in layergroup"]);
             done();
         });
     });
@@ -423,7 +423,7 @@ describe('multilayer error cases', function () {
                 // FIXME: should be 404
                 assert.strictEqual(res.statusCode, 400, res.statusCode + ':' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed.errors, ["Invalid or nonexistent map configuration token 'deadbeef'"]);
+                assert.deepStrictEqual(parsed.errors, ["Invalid or nonexistent map configuration token 'deadbeef'"]);
                 return null;
             },
             function finish (err) {

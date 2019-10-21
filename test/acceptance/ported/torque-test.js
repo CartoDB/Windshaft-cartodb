@@ -200,7 +200,7 @@ describe('torque', function () {
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
                 if (expected_token) {
-                    assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                    assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
                 } else {
                     expected_token = parsedBody.layergroupid;
                 }
@@ -276,7 +276,7 @@ describe('torque', function () {
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var tile_content = [{ x__uint8: 43, y__uint8: 43, vals__uint8: [1, 1], dates__uint16: [0, 1] }];
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(tile_content, parsed);
+                assert.deepStrictEqual(tile_content, parsed);
                 return null;
             },
             function do_get_torque0_1 (err) {
@@ -296,7 +296,7 @@ describe('torque', function () {
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var tile_content = [{ x__uint8: 43, y__uint8: 43, vals__uint8: [1, 1], dates__uint16: [0, 1] }];
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(tile_content, parsed);
+                assert.deepStrictEqual(tile_content, parsed);
                 return null;
             },
             function finish (err) {

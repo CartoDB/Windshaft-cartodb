@@ -105,7 +105,7 @@ describe('dynamic styling for named maps', function () {
             function checkTemplate (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200);
-                assert.deepEqual(JSON.parse(res.body), {
+                assert.deepStrictEqual(JSON.parse(res.body), {
                     template_id: templateId
                 });
 

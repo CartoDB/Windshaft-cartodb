@@ -127,7 +127,7 @@ describe('turbo-carto error cases', function () {
             assert.strictEqual(layergroup.errors_with_context[0].layer.type, 'mapnik');
 
             assert.strictEqual(layergroup.errors_with_context[0].layer.context.selector, '#populated_places_simple_reduced');
-            assert.deepEqual(layergroup.errors_with_context[0].layer.context.source, {
+            assert.deepStrictEqual(layergroup.errors_with_context[0].layer.context.source, {
                 start: {
                     line: 10,
                     column: 3

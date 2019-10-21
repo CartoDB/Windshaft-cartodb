@@ -64,7 +64,7 @@ describe('error-middleware', function () {
         const errorFn = errorMiddleware();
         errorFn(errors, req, res);
 
-        assert.deepEqual(res.headers, {
+        assert.deepStrictEqual(res.headers, {
             'X-Tiler-Errors': JSON.stringify(errorHeader)
         });
 
@@ -116,7 +116,7 @@ describe('error-middleware', function () {
         const errorFn = errorMiddleware();
         errorFn(errors, req, res);
 
-        assert.deepEqual(res.headers, {
+        assert.deepStrictEqual(res.headers, {
             'X-Tiler-Errors': JSON.stringify(errorHeader)
         });
 
@@ -169,7 +169,7 @@ describe('error-middleware', function () {
         const errorFn = errorMiddleware();
         errorFn(errors, req, res);
 
-        assert.deepEqual(res.headers, {
+        assert.deepStrictEqual(res.headers, {
             'X-Tiler-Errors': JSON.stringify(errorHeader)
         });
 

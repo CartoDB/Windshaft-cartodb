@@ -176,7 +176,7 @@ describe('multilayer', function () {
                     checkCORSHeaders(res);
                     var parsedBody = JSON.parse(res.body);
                     if (expected_token) {
-                        assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                        assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
                     } else {
                         expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
                     }
@@ -290,7 +290,7 @@ describe('multilayer', function () {
                     checkCORSHeaders(res);
                     var parsedBody = JSON.parse(res.body);
                     if (expected_token) {
-                        assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                        assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
                     } else {
                         expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
                     }
@@ -615,7 +615,7 @@ describe('multilayer', function () {
                 assert.strictEqual(res.statusCode, 200, res.body);
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed, { n: 40 });
+                assert.deepStrictEqual(parsed, { n: 40 });
                 return null;
             },
             function do_get_torque2 (err) {
@@ -632,8 +632,8 @@ describe('multilayer', function () {
                 assert.strictEqual(res.statusCode, 200, res.body);
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed[0].vals__uint8, [1]);
-                assert.deepEqual(parsed[0].dates__uint16, [0]);
+                assert.deepStrictEqual(parsed[0].vals__uint8, [1]);
+                assert.deepStrictEqual(parsed[0].dates__uint16, [0]);
                 assert.strictEqual(parsed[0].x__uint8, 128);
                 assert.strictEqual(parsed[0].y__uint8, 128);
                 return null;
@@ -860,7 +860,7 @@ describe('multilayer', function () {
                         assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
                         if (expected_token) {
-                            assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 3 });
+                            assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 3 });
                         } else {
                             expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
                         }
@@ -1079,7 +1079,7 @@ describe('multilayer', function () {
                         assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
                         if (expected_token) {
-                            assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 3 });
+                            assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 3 });
                         } else {
                             expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
                         }

@@ -80,7 +80,7 @@ describe('attributes', function () {
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
                 if (expected_token) {
-                    assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                    assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
                 } else {
                     expected_token = parsedBody.layergroupid;
                 }
@@ -123,7 +123,7 @@ describe('attributes', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed, { n: 6 });
+                assert.deepStrictEqual(parsed, { n: 6 });
                 return null;
             },
             function do_get_attr_1_404 (err) {
@@ -216,7 +216,7 @@ describe('attributes', function () {
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
                 if (expected_token) {
-                    assert.deepEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                    assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
                 } else {
                     expected_token = parsedBody.layergroupid;
                 }
@@ -263,7 +263,7 @@ describe('attributes', function () {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed, { n: 6 });
+                assert.deepStrictEqual(parsed, { n: 6 });
                 return null;
             },
             function finish (err) {

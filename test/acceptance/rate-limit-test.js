@@ -140,7 +140,7 @@ function assertRateLimitRequest (status, limit, remaining, reset, retry, done) {
             expectedHeaders['Retry-After'] = retry;
         }
 
-        assert.deepEqual(res.headers, expectedHeaders);
+        assert.deepStrictEqual(res.headers, expectedHeaders);
 
         if (status === 200) {
             assert.ifError(err);

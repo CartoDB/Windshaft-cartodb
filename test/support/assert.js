@@ -237,7 +237,7 @@ assert.utfgridEqualsFile = function (buffer, file_b, tolerance, callback) {
             throw new Error(celldiff.length + ' cell differences: ' + celldiff);
         }
 
-        assert.deepEqual(obtained_json.keys, expected_json.keys);
+        assert.deepStrictEqual(obtained_json.keys, expected_json.keys);
     } catch (e) { err = e; }
 
     callback(err);

@@ -40,7 +40,7 @@ describe.skip('render limits', function () {
             serverOptions: serverOptions
         };
         testClient.createLayergroup(slowQueryMapConfig, options, function (err, res) {
-            assert.deepEqual(JSON.parse(res.body), { errors: ['Render timed out'] });
+            assert.deepStrictEqual(JSON.parse(res.body), { errors: ['Render timed out'] });
             done();
         });
     });

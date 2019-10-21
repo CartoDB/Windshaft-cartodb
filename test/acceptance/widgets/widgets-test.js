@@ -55,7 +55,7 @@ describe('widget filters', function () {
                 var aggregation = JSON.parse(res.body);
 
                 // first one would be CHN if reject filter wasn't applied
-                assert.deepEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
+                assert.deepStrictEqual(aggregation.categories[0], { value: 769, category: 'USA', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
                 assert.strictEqual(aggregation.categories.reduce(function (sum, row) {
@@ -86,7 +86,7 @@ describe('widget filters', function () {
                 var aggregation = JSON.parse(res.body);
 
                 // first one would be CHN if reject filter wasn't applied
-                assert.deepEqual(aggregation.categories[0], { value: 4, category: 'IND', agg: false });
+                assert.deepStrictEqual(aggregation.categories[0], { value: 4, category: 'IND', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
                 assert.strictEqual(aggregation.categories.reduce(function (sum, row) {
@@ -117,7 +117,7 @@ describe('widget filters', function () {
                 var aggregation = JSON.parse(res.body);
 
                 // first one would be CHN if reject filter wasn't applied
-                assert.deepEqual(aggregation.categories[0], { value: 96, category: 'RUS', agg: false });
+                assert.deepStrictEqual(aggregation.categories[0], { value: 96, category: 'RUS', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
                 assert.strictEqual(aggregation.categories.reduce(function (sum, row) {
@@ -149,7 +149,7 @@ describe('widget filters', function () {
                 var aggregation = JSON.parse(res.body);
 
                 // first one would be CHN if reject filter wasn't applied
-                assert.deepEqual(aggregation.categories[0], { value: 77, category: 'TUR', agg: false });
+                assert.deepStrictEqual(aggregation.categories[0], { value: 77, category: 'TUR', agg: false });
 
                 // confirm 'CHN' was filtered out (reject)
                 assert.strictEqual(aggregation.categories.reduce(function (sum, row) {

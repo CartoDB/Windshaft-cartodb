@@ -47,12 +47,12 @@ describe('widgets', function () {
 
                 assert.strictEqual(aggregation.categories.length, 6);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     aggregation.categories[0],
                     { category: 'United States of America', value: 769, agg: false }
                 );
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     aggregation.categories[aggregation.categories.length - 1],
                     { category: 'Other', value: 4914, agg: true }
                 );
@@ -106,7 +106,7 @@ describe('widgets', function () {
                     }, {});
 
                     Object.keys(categoriesByCategory).forEach(function (category) {
-                        assert.deepEqual(categoriesByCategory[category], scenarioByCategory[category]);
+                        assert.deepStrictEqual(categoriesByCategory[category], scenarioByCategory[category]);
                     });
 
                     done();
@@ -147,12 +147,12 @@ describe('widgets', function () {
 
                 assert.strictEqual(aggregation.categories.length, 6);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     aggregation.categories[0],
                     { category: 'China', value: 374537585, agg: false }
                 );
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     aggregation.categories[aggregation.categories.length - 1],
                     { category: 'Other', value: 1412626289, agg: true }
                 );
@@ -205,7 +205,7 @@ describe('widgets', function () {
                     }, {});
 
                     Object.keys(categoriesByCategory).forEach(function (category) {
-                        assert.deepEqual(categoriesByCategory[category], scenarioByCategory[category]);
+                        assert.deepStrictEqual(categoriesByCategory[category], scenarioByCategory[category]);
                     });
 
                     done();
@@ -256,7 +256,7 @@ describe('widgets', function () {
                     assert.strictEqual(aggregation.type, 'aggregation');
 
                     assert.strictEqual(aggregation.categories.length, 1);
-                    assert.deepEqual(aggregation.categories[0], { category: '1', value: 179, agg: false });
+                    assert.deepStrictEqual(aggregation.categories[0], { category: 1, value: 179, agg: false });
 
                     done();
                 });
@@ -292,7 +292,7 @@ describe('widgets', function () {
                         assert.strictEqual(searchResult.type, 'aggregation');
 
                         assert.strictEqual(searchResult.categories.length, 2);
-                        assert.deepEqual(
+                        assert.deepStrictEqual(
                             searchResult.categories,
                             [{ category: 10, value: 515 }, { category: 1, value: 179 }]
                         );
@@ -312,7 +312,7 @@ describe('widgets', function () {
                         assert.strictEqual(searchResult.type, 'aggregation');
 
                         assert.strictEqual(searchResult.categories.length, 1);
-                        assert.deepEqual(
+                        assert.deepStrictEqual(
                             searchResult.categories,
                             [{ category: 'Argentina', value: 159 }]
                         );
@@ -331,7 +331,7 @@ describe('widgets', function () {
                         assert.strictEqual(searchResult.type, 'aggregation');
 
                         assert.strictEqual(searchResult.categories.length, 1);
-                        assert.deepEqual(
+                        assert.deepStrictEqual(
                             searchResult.categories,
                             [{ category: 'Argentina', value: 28015640 }]
                         );

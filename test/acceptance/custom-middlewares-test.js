@@ -187,7 +187,7 @@ describe('custom middlewares', function () {
 
                 const body = JSON.parse(res.body);
 
-                assert.deepEqual(body, { template_id: templateid });
+                assert.deepStrictEqual(body, { template_id: templateid });
 
                 helper.deleteRedisKeys({ 'map_tpl|localhost': 0 }, done);
             });

@@ -45,11 +45,11 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getTileUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     urls.http,
                     [`http://cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`]
                 );
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     urls.https,
                     [`https://cdn.ssl.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`]
                 );
@@ -62,11 +62,11 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
 
-                assert.deepEqual(urls.http, {
+                assert.deepStrictEqual(urls.http, {
                     urlTemplate: `http://cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
                     subdomains: []
                 });
-                assert.deepEqual(urls.https, {
+                assert.deepStrictEqual(urls.https, {
                     urlTemplate: `https://cdn.ssl.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
                     subdomains: []
                 });
@@ -111,11 +111,11 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getTileUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     urls.http,
                     [`http://${USERNAME}.localhost.lan/api/v1/map/${TILE_RESOURCE}`]
                 );
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     urls.https,
                     [`https://${USERNAME}.ssl.localhost.lan/api/v1/map/${TILE_RESOURCE}`]
                 );
@@ -128,11 +128,11 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
 
-                assert.deepEqual(urls.http, {
+                assert.deepStrictEqual(urls.http, {
                     urlTemplate: `http://${USERNAME}.localhost.lan/api/v1/map/${TILE_RESOURCE}`,
                     subdomains: []
                 });
-                assert.deepEqual(urls.https, {
+                assert.deepStrictEqual(urls.https, {
                     urlTemplate: `https://${USERNAME}.ssl.localhost.lan/api/v1/map/${TILE_RESOURCE}`,
                     subdomains: []
                 });
@@ -186,12 +186,12 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getTileUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     urls.http,
                     HTTP_SUBDOMAINS
                         .map(s => `http://${s}.cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`)
                 );
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     urls.https,
                     HTTPS_SUBDOMAINS
                         .map(s => `https://cdn_${s}.ssl.cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`)
@@ -205,11 +205,11 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
 
-                assert.deepEqual(urls.http, {
+                assert.deepStrictEqual(urls.http, {
                     urlTemplate: `http://{s}.cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
                     subdomains: HTTP_SUBDOMAINS
                 });
-                assert.deepEqual(urls.https, {
+                assert.deepStrictEqual(urls.https, {
                     urlTemplate: `https://cdn_{s}.ssl.cdn.carto.com/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
                     subdomains: HTTPS_SUBDOMAINS
                 });
@@ -267,12 +267,12 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getTileUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     urls.http,
                     HTTP_SUBDOMAINS
                         .map(s => `http://${s}.cdn.carto.com/u/${USERNAME}/api/v1/map/${TILE_RESOURCE}`)
                 );
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     urls.https,
                     HTTPS_SUBDOMAINS
                         .map(s => `https://cdn_${s}.ssl.cdn.carto.com/u/${USERNAME}/api/v1/map/${TILE_RESOURCE}`)
@@ -286,11 +286,11 @@ describe('ResourceLocator', function () {
                 var urls = resourceLocator.getTemplateUrls(USERNAME, TILE_RESOURCE);
                 assert.ok(urls);
 
-                assert.deepEqual(urls.http, {
+                assert.deepStrictEqual(urls.http, {
                     urlTemplate: `http://{s}.cdn.carto.com/u/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
                     subdomains: HTTP_SUBDOMAINS
                 });
-                assert.deepEqual(urls.https, {
+                assert.deepStrictEqual(urls.https, {
                     urlTemplate: `https://cdn_{s}.ssl.cdn.carto.com/u/${USERNAME}/api/v1/map/${TILE_RESOURCE}`,
                     subdomains: HTTPS_SUBDOMAINS
                 });

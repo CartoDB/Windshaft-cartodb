@@ -83,7 +83,7 @@ describe('overviews metadata for named maps', function () {
 
                 var next = this;
                 assert.strictEqual(res.statusCode, 200);
-                assert.deepEqual(JSON.parse(res.body), {
+                assert.deepStrictEqual(JSON.parse(res.body), {
                     template_id: templateId
                 });
                 next(null);
@@ -133,7 +133,7 @@ describe('overviews metadata for named maps', function () {
                 });
                 mapStore.load(LayergroupToken.parse(layergroupId).token, function (err, mapConfig) {
                     assert.ifError(err);
-                    assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
+                    assert.deepStrictEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
                     assert.strictEqual(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
                     var expected_data = {
@@ -145,7 +145,7 @@ describe('overviews metadata for named maps', function () {
                             }
                         }
                     };
-                    assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
+                    assert.deepStrictEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
                 });
 
                 next(err);

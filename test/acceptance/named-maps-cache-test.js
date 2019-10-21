@@ -176,7 +176,7 @@ describe('named maps provider cache', function () {
                         getNamedTile(templateId, { statusCode: 404 }, function (err, res) {
                             assert.ifError(err);
 
-                            assert.deepEqual(
+                            assert.deepStrictEqual(
                                 JSON.parse(res.body).errors,
                                 ["Template 'template_with_color_black' of user 'localhost' not found"]
                             );

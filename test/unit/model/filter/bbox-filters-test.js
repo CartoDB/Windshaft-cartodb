@@ -57,7 +57,7 @@ describe('Bounding box filter', function () {
         var bbox = [-90, -45, 90, 45];
         var bboxFilter = createFilter(bbox);
         assert.strictEqual(bboxFilter.bboxes.length, 1);
-        assert.deepEqual(bboxFilter.bboxes[0], createRef(bbox));
+        assert.deepStrictEqual(bboxFilter.bboxes[0], createRef(bbox));
     });
 
     describe('latitude', function () {
@@ -65,14 +65,14 @@ describe('Bounding box filter', function () {
             var bbox = [-180, -90, 180, 90];
             var bboxFilter = createFilter(bbox);
             assert.strictEqual(bboxFilter.bboxes.length, 1);
-            assert.deepEqual(bboxFilter.bboxes[0], MAX_EXTENT_MERCATOR_REF);
+            assert.deepStrictEqual(bboxFilter.bboxes[0], MAX_EXTENT_MERCATOR_REF);
         });
 
         it('clipping out of bounds', function () {
             var bbox = [-180, -90, 180, 90];
             var bboxFilter = createFilter(bbox);
             assert.strictEqual(bboxFilter.bboxes.length, 1);
-            assert.deepEqual(
+            assert.deepStrictEqual(
                 bboxFilter.bboxes[0],
                 createRef([-180, -BboxFilter.LATITUDE_MAX_VALUE, 180, BboxFilter.LATITUDE_MAX_VALUE])
             );
@@ -86,11 +86,11 @@ describe('Bounding box filter', function () {
 
             assert.strictEqual(bboxFilter.bboxes.length, 2, JSON.stringify([bboxFilter.bboxes, bbox]));
 
-            assert.deepEqual(
+            assert.deepStrictEqual(
                 bboxFilter.bboxes[0],
                 createRef([90, -45, 180, 45])
             );
-            assert.deepEqual(
+            assert.deepStrictEqual(
                 bboxFilter.bboxes[1],
                 createRef([-180, -45, 0, 45])
             );
@@ -102,11 +102,11 @@ describe('Bounding box filter', function () {
 
             assert.strictEqual(bboxFilter.bboxes.length, 2);
 
-            assert.deepEqual(
+            assert.deepStrictEqual(
                 bboxFilter.bboxes[0],
                 createRef([90, -45, 180, 45])
             );
-            assert.deepEqual(
+            assert.deepStrictEqual(
                 bboxFilter.bboxes[1],
                 createRef([-180, -45, 0, 45])
             );
@@ -118,11 +118,11 @@ describe('Bounding box filter', function () {
 
             assert.strictEqual(bboxFilter.bboxes.length, 2);
 
-            assert.deepEqual(
+            assert.deepStrictEqual(
                 bboxFilter.bboxes[0],
                 createRef([90, -45, 180, 45])
             );
-            assert.deepEqual(
+            assert.deepStrictEqual(
                 bboxFilter.bboxes[1],
                 createRef([-180, -45, -170, 45])
             );
@@ -136,7 +136,7 @@ describe('Bounding box filter', function () {
 
             assert.strictEqual(bboxFilter.bboxes.length, 1);
 
-            assert.deepEqual(
+            assert.deepStrictEqual(
                 bboxFilter.bboxes[0],
                 createRef([-180, -45, 180, 45])
             );

@@ -354,7 +354,7 @@ suites.forEach(({ desc, usePostGIS }) => {
                     the_geom_webmercator: { type: 'geometry' },
                     address: { type: 'string' }
                 };
-                assert.deepEqual(layergroup.metadata.layers[0].meta.stats.columns, expectedColumns);
+                assert.deepStrictEqual(layergroup.metadata.layers[0].meta.stats.columns, expectedColumns);
                 testClient.drain(done);
             });
         });
@@ -435,7 +435,7 @@ suites.forEach(({ desc, usePostGIS }) => {
                         ]
                     }
                 };
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     withSortedCategories(layergroup.metadata.layers[0].meta.stats.columns),
                     withSortedCategories(expectedColumns)
                 );
@@ -578,7 +578,7 @@ suites.forEach(({ desc, usePostGIS }) => {
                 assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
                 assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
                 const expectedCols = ['cartodb_id', 'value', 'the_geom', 'the_geom_webmercator'].sort();
-                assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
+                assert.deepStrictEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
                 testClient.drain(done);
             });
         });
@@ -629,7 +629,7 @@ suites.forEach(({ desc, usePostGIS }) => {
                 assert.strictEqual(layergroup.metadata.layers[0].meta.stats.estimatedFeatureCount, 100);
                 assert(layergroup.metadata.layers[0].meta.stats.sample.length > 0);
                 const expectedCols = ['cartodb_id', 'the_geom'].sort();
-                assert.deepEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
+                assert.deepStrictEqual(Object.keys(layergroup.metadata.layers[0].meta.stats.sample[0]).sort(), expectedCols);
                 testClient.drain(done);
             });
         });

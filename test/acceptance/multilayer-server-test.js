@@ -340,7 +340,7 @@ describe('tests from old api translated to multilayer', function () {
                 assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
 
                 var parsed = JSON.parse(res.body);
-                assert.deepEqual(parsed.errors, ['fake error message']);
+                assert.deepStrictEqual(parsed.errors, ['fake error message']);
 
                 done();
             }

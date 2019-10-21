@@ -67,7 +67,7 @@ describe('error with context', function () {
                 assert.strictEqual(err.type, 'layer');
                 assert.strictEqual(err.subtype, 'query');
                 assert.ok(err.message.indexOf(DB_ERROR_MESSAGE) >= 0);
-                assert.deepEqual(err.layer, scenario.expectedFailingLayer);
+                assert.deepStrictEqual(err.layer, scenario.expectedFailingLayer);
                 done();
             });
         });

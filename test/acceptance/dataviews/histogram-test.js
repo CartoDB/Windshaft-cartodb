@@ -968,7 +968,7 @@ describe('histogram-dataview for date column type', function() {
             _testClient.getDataview('datetime_histogram_tz', params, function (err, filteredDataview) {
                 assert.ok(!err, err);
 
-                assert.deepEqual(dataview, filteredDataview);
+                assert.deepStrictEqual(dataview, filteredDataview);
                 done();
             });
         });
@@ -1126,7 +1126,7 @@ describe('histogram-dataview for date column type', function() {
 
                 assert.notEqual(dataview.offset, dataviewWithOffset.offset);
                 dataview.offset = dataviewWithOffset.offset;
-                assert.deepEqual(dataview, dataviewWithOffset);
+                assert.deepStrictEqual(dataview, dataviewWithOffset);
                 done();
             });
         });
@@ -1152,7 +1152,7 @@ describe('histogram-dataview for date column type', function() {
             self.testClient.getDataview('minute_histogram', paramsWithFilter, function (err, filteredDataview) {
                 assert.ifError(err);
 
-                assert.deepEqual(dataview, filteredDataview);
+                assert.deepStrictEqual(dataview, filteredDataview);
 
                 self.testClient.getDataview('minute_histogram', paramsWithOffset,
                 function (err, filteredWithOffsetDataview) {
@@ -1160,7 +1160,7 @@ describe('histogram-dataview for date column type', function() {
 
                     assert.notEqual(filteredWithOffsetDataview.offset, filteredDataview.offset);
                     filteredWithOffsetDataview.offset = filteredDataview.offset;
-                    assert.deepEqual(filteredWithOffsetDataview, filteredDataview);
+                    assert.deepStrictEqual(filteredWithOffsetDataview, filteredDataview);
                     done();
                 });
             });
@@ -1208,7 +1208,7 @@ describe('histogram-dataview for date column type', function() {
         self.testClient.getDataview('minute_histogram', paramsWithDailyAgg, function (err, dataview) {
             assert.ifError(err);
 
-            assert.deepEqual(dataview, dataviewWithDailyAggFixture);
+            assert.deepStrictEqual(dataview, dataviewWithDailyAggFixture);
             done();
         });
     });
@@ -1247,7 +1247,7 @@ describe('histogram-dataview for date column type', function() {
         self.testClient.getDataview('minute_histogram', paramsWithDailyAggAndOffset, function (err, dataview) {
             assert.ifError(err);
 
-            assert.deepEqual(dataview, dataviewWithDailyAggAndOffsetFixture);
+            assert.deepStrictEqual(dataview, dataviewWithDailyAggAndOffsetFixture);
             done();
         });
     });
@@ -1394,7 +1394,7 @@ describe('histogram-dates: aggregation input value', function() {
         this.testClient.getDataview('bad_agg_value_histogram', override, function(err, dataviewError) {
             assert.ifError(err);
 
-            assert.deepEqual(dataviewError, {
+            assert.deepStrictEqual(dataviewError, {
                 errors: [
                     'Invalid aggregation value. Valid ones: auto, second, minute, ' +
                     'hour, day, week, month, quarter, year, decade, century, millennium'
@@ -1425,7 +1425,7 @@ describe('histogram-dates: aggregation input value', function() {
         this.testClient.getDataview('agg_value_histogram', override, function(err, dataviewError) {
             assert.ifError(err);
 
-            assert.deepEqual(dataviewError, {
+            assert.deepStrictEqual(dataviewError, {
                 errors: [
                     'Invalid aggregation value. Valid ones: auto, second, minute, ' +
                     'hour, day, week, month, quarter, year, decade, century, millennium'

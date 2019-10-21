@@ -80,7 +80,7 @@ function tileJsonSuite (usePostGIS) {
                 assert.strictEqual(metadata.layers.length, 1);
 
                 const layer = metadata.layers[0];
-                assert.deepEqual(Object.keys(layer.tilejson), ['vector', 'raster']);
+                assert.deepStrictEqual(Object.keys(layer.tilejson), ['vector', 'raster']);
 
                 Object.keys(layer.tilejson).forEach(k => {
                     tilejsonValidation(layer.tilejson[k]);
@@ -101,7 +101,7 @@ function tileJsonSuite (usePostGIS) {
                 assert.strictEqual(metadata.layers.length, 1);
 
                 const layer = metadata.layers[0];
-                assert.deepEqual(Object.keys(layer.tilejson), ['vector']);
+                assert.deepStrictEqual(Object.keys(layer.tilejson), ['vector']);
 
                 Object.keys(layer.tilejson).forEach(k => {
                     tilejsonValidation(layer.tilejson[k]);
@@ -122,7 +122,7 @@ function tileJsonSuite (usePostGIS) {
                 assert.strictEqual(metadata.layers.length, 1);
 
                 const layer = metadata.layers[0];
-                assert.deepEqual(Object.keys(layer.tilejson), ['raster']);
+                assert.deepStrictEqual(Object.keys(layer.tilejson), ['raster']);
 
                 Object.keys(layer.tilejson).forEach(k => {
                     tilejsonValidation(layer.tilejson[k]);
@@ -143,7 +143,7 @@ function tileJsonSuite (usePostGIS) {
                 assert.strictEqual(metadata.layers.length, 1);
 
                 const layer = metadata.layers[0];
-                assert.deepEqual(Object.keys(layer.tilejson), ['vector', 'raster']);
+                assert.deepStrictEqual(Object.keys(layer.tilejson), ['vector', 'raster']);
 
                 tilejsonValidation(layer.tilejson.vector);
                 tilejsonValidation(layer.tilejson.raster, true);
@@ -162,11 +162,11 @@ function tileJsonSuite (usePostGIS) {
 
                 assert.strictEqual(metadata.layers.length, 2);
 
-                assert.deepEqual(Object.keys(metadata.layers[0].tilejson), ['vector', 'raster']);
+                assert.deepStrictEqual(Object.keys(metadata.layers[0].tilejson), ['vector', 'raster']);
                 tilejsonValidation(metadata.layers[0].tilejson.vector);
                 tilejsonValidation(metadata.layers[0].tilejson.raster);
 
-                assert.deepEqual(Object.keys(metadata.layers[1].tilejson), ['vector', 'raster']);
+                assert.deepStrictEqual(Object.keys(metadata.layers[1].tilejson), ['vector', 'raster']);
                 tilejsonValidation(metadata.layers[1].tilejson.vector);
                 tilejsonValidation(metadata.layers[1].tilejson.raster, true);
 
@@ -185,14 +185,14 @@ function tileJsonSuite (usePostGIS) {
                 assert.ok(metadata);
 
                 const tilejson = metadata.tilejson;
-                assert.deepEqual(Object.keys(tilejson), ['vector']);
+                assert.deepStrictEqual(Object.keys(tilejson), ['vector']);
 
                 Object.keys(tilejson).forEach(k => {
                     tilejsonValidation(tilejson[k]);
                 });
 
                 const url = metadata.url;
-                assert.deepEqual(Object.keys(url), ['vector']);
+                assert.deepStrictEqual(Object.keys(url), ['vector']);
 
                 assert.ok(url.vector.urlTemplate);
                 assert.ok(url.vector.subdomains);
@@ -210,14 +210,14 @@ function tileJsonSuite (usePostGIS) {
                 assert.ok(metadata);
 
                 const tilejson = metadata.tilejson;
-                assert.deepEqual(Object.keys(tilejson), ['vector', 'raster']);
+                assert.deepStrictEqual(Object.keys(tilejson), ['vector', 'raster']);
 
                 Object.keys(tilejson).forEach(k => {
                     tilejsonValidation(tilejson[k]);
                 });
 
                 const url = metadata.url;
-                assert.deepEqual(Object.keys(url), ['vector', 'raster']);
+                assert.deepStrictEqual(Object.keys(url), ['vector', 'raster']);
 
                 assert.ok(url.vector.urlTemplate);
                 assert.ok(url.vector.subdomains);

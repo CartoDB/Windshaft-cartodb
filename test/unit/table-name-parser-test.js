@@ -30,7 +30,7 @@ describe('TableNameParser', function () {
             var table_name = test_case[0];
             var expected_result = test_case[1];
             var result = TableNameParser.parse(table_name);
-            assert.deepEqual(result, expected_result);
+            assert.deepStrictEqual(result, expected_result);
         });
         done();
     });

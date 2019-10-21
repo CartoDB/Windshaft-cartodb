@@ -187,7 +187,7 @@ describe('named_layers', function () {
                 }
 
                 var parsedBody = JSON.parse(response.body);
-                assert.deepEqual(parsedBody.errors, ["Template 'nonexistent' of user 'localhost' not found"]);
+                assert.deepStrictEqual(parsedBody.errors, ["Template 'nonexistent' of user 'localhost' not found"]);
 
                 return null;
             },
@@ -239,7 +239,7 @@ describe('named_layers', function () {
                 }
 
                 var parsedBody = JSON.parse(response.body);
-                assert.deepEqual(parsedBody.errors, ["Unauthorized 'auth_valid_template' template instantiation"]);
+                assert.deepStrictEqual(parsedBody.errors, ["Unauthorized 'auth_valid_template' template instantiation"]);
 
                 return null;
             },
@@ -345,7 +345,7 @@ describe('named_layers', function () {
                 }
 
                 var parsedBody = JSON.parse(response.body);
-                assert.deepEqual(parsedBody.errors, ['Nested named layers are not allowed']);
+                assert.deepStrictEqual(parsedBody.errors, ['Nested named layers are not allowed']);
 
                 return null;
             },

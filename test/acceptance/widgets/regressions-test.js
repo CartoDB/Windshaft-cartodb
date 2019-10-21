@@ -56,12 +56,12 @@ describe('widgets-regressions', function () {
 
                 assert.strictEqual(aggregation.categories.length, 6);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     aggregation.categories[0],
                     { category: 'China', value: 374537585, agg: false }
                 );
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     aggregation.categories[aggregation.categories.length - 1],
                     { category: 'Other', value: 1412626289, agg: true }
                 );
@@ -154,7 +154,7 @@ describe('widgets-regressions', function () {
                 assert.strictEqual(metadata.layers.length, 3);
                 assert.strictEqual(metadata.analyses.length, 2);
                 assert.strictEqual(Object.keys(metadata.dataviews).length, 4);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     Object.keys(metadata.dataviews),
                     ['wadus', 'adm0name_categories', 'adm1name_categories', 'pop_max_histogram']
                 );
@@ -203,12 +203,12 @@ describe('widgets-regressions', function () {
 
                 assert.strictEqual(aggregation.categories.length, 6);
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     aggregation.categories[0],
                     { category: 'China', value: 374537585, agg: false }
                 );
 
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     aggregation.categories[aggregation.categories.length - 1],
                     { category: 'Other', value: 1412626289, agg: true }
                 );

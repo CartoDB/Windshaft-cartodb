@@ -327,7 +327,7 @@ describe('named maps static view', function () {
 
             assert.response(server, requestOptions, expectedResponse, function (res, err) {
                 assert.ifError(err);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     JSON.parse(res.body),
                     {
                         errors: ['Unsupported image format \"gif\"'],

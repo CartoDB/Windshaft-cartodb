@@ -157,7 +157,7 @@ describe('aggregations happy cases', function () {
                 assert.strictEqual(searchResult.type, 'aggregation');
 
                 assert.strictEqual(searchResult.categories.length, 1);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     searchResult.categories,
                     widgetSearchExpects[operation]
                 );

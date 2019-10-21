@@ -124,7 +124,7 @@ describe('retina support', function () {
             },
             function (res, err) {
                 assert.ok(!err, 'Failed to request 0/0/0' + scaleFactor + '.png tile');
-                assert.deepEqual(JSON.parse(res.body).errors, ['Tile with specified resolution not found']);
+                assert.deepStrictEqual(JSON.parse(res.body).errors, ['Tile with specified resolution not found']);
 
                 done();
             }

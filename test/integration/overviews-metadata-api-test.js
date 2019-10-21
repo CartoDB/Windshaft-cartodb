@@ -27,7 +27,7 @@ describe('OverviewsMetadataBackend', function () {
         overviewsMetadataBackend.getOverviewsMetadata('localhost', query, function (err, result) {
             assert.ok(!err, err);
 
-            assert.deepEqual(result, {});
+            assert.deepStrictEqual(result, {});
 
             done();
         });
@@ -38,7 +38,7 @@ describe('OverviewsMetadataBackend', function () {
         overviewsMetadataBackend.getOverviewsMetadata('localhost', query, function (err, result) {
             assert.ok(!err, err);
 
-            assert.deepEqual(result, {
+            assert.deepStrictEqual(result, {
                 test_table_overviews: {
                     schema: 'public',
                     1: { table: '_vovw_1_test_table_overviews' },

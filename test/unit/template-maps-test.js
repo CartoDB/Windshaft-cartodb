@@ -252,7 +252,7 @@ describe('template_maps', function () {
             },
             function delTemplate (err, got_tpl) {
                 assert.ifError(err);
-                assert.deepEqual(got_tpl, _.extend({}, tpl, { auth: { method: 'open' }, placeholders: {} }));
+                assert.deepStrictEqual(got_tpl, _.extend({}, tpl, { auth: { method: 'open' }, placeholders: {} }));
                 tmap.delTemplate('me', tpl_id, this);
             },
             function finish (err) {
@@ -603,7 +603,7 @@ describe('template_maps', function () {
             templateMaps.on('update', function (_owner, _templateName, _template) {
                 assert.strictEqual(_owner, owner);
                 assert.strictEqual(_templateName, templateName);
-                assert.deepEqual(_template, templateUpdated);
+                assert.deepStrictEqual(_template, templateUpdated);
 
                 templateMaps.delTemplate(owner, templateName, done);
             });
@@ -611,7 +611,7 @@ describe('template_maps', function () {
             templateMaps.addTemplate(owner, template, function (err, templateName, _template) {
                 assert.ok(!err, err);
 
-                assert.deepEqual(_template, template);
+                assert.deepStrictEqual(_template, template);
                 templateMaps.updTemplate(owner, templateName, templateUpdated, function () {});
             });
         });
@@ -627,7 +627,7 @@ describe('template_maps', function () {
             templateMaps.addTemplate(owner, template, function (err, templateName, _template) {
                 assert.ok(!err, err);
 
-                assert.deepEqual(_template, template);
+                assert.deepStrictEqual(_template, template);
                 templateMaps.delTemplate(owner, templateName, function () {});
             });
         });
@@ -636,14 +636,14 @@ describe('template_maps', function () {
             templateMaps.on('update', function (_owner, _templateName, _template) {
                 assert.strictEqual(_owner, owner);
                 assert.strictEqual(_templateName, templateName);
-                assert.deepEqual(_template, templateUpdated);
+                assert.deepStrictEqual(_template, templateUpdated);
 
                 templateMaps.delTemplate(owner, templateName, done);
             });
 
             templateMaps.addTemplate(owner, template, function (err, templateName, _template) {
                 assert.ok(!err, err);
-                assert.deepEqual(_template, template);
+                assert.deepStrictEqual(_template, template);
 
                 templateMaps.updTemplate(owner, templateName, template, function () {
                     templateMaps.updTemplate(owner, templateName, templateUpdated, function () {});

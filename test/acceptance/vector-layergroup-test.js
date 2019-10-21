@@ -187,7 +187,7 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, INVALID_FORMAT_ERROR);
+                    assert.deepStrictEqual(body, INVALID_FORMAT_ERROR);
                     done();
                 });
             });
@@ -211,7 +211,7 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, INCOMPATIBLE_LAYERS_ERROR);
+                    assert.deepStrictEqual(body, INCOMPATIBLE_LAYERS_ERROR);
 
                     done();
                 });
