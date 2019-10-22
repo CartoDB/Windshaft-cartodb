@@ -56,15 +56,15 @@ describe('Overviews query rewriter', function () {
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
 
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 0\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 0
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -78,15 +78,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -103,21 +103,21 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM  (\
-                SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
-                UNION ALL\
-                SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
-                UNION ALL\
-                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2\
-                UNION ALL\
-                SELECT * FROM table1_ov3, _vovw_scale WHERE _vovw_z = 3\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 3\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM  (
+                SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0
+                UNION ALL
+                SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1
+                UNION ALL
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2
+                UNION ALL
+                SELECT * FROM table1_ov3, _vovw_scale WHERE _vovw_z = 3
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 3
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -133,19 +133,19 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
-                UNION ALL\
-                SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
-                UNION ALL\
-                SELECT * FROM table1_ov6, _vovw_scale WHERE _vovw_z > 1 AND _vovw_z <= 6\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 6\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0
+                UNION ALL
+                SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1
+                UNION ALL
+                SELECT * FROM table1_ov6, _vovw_scale WHERE _vovw_z > 1 AND _vovw_z <= 6
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 6
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -159,15 +159,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -181,15 +181,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
 
         assertSameSql(overviews_sql, expected_sql);
     });
@@ -205,15 +205,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -228,15 +228,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -251,15 +251,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM public.table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM public.table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -273,15 +273,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM public."table 1_ov2", _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM public."table 1", _vovw_scale WHERE _vovw_z > 2\
-              ) AS "_vovw_table 1"\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM public."table 1_ov2", _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM public."table 1", _vovw_scale WHERE _vovw_z > 2
+              ) AS "_vovw_table 1"
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -295,15 +295,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM "user-1".table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM "user-1".table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM "user-1".table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM "user-1".table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -318,15 +318,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (\
-                SELECT * FROM "user-1"."table 1_ov2", _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM "user-1"."table 1", _vovw_scale WHERE _vovw_z > 2\
-              ) AS "_vovw_table 1"\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (
+                SELECT * FROM "user-1"."table 1_ov2", _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM "user-1"."table 1", _vovw_scale WHERE _vovw_z > 2
+              ) AS "_vovw_table 1"
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -340,15 +340,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT column1, column2, column3 FROM (\
-                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT column1, column2, column3 FROM (
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -363,15 +363,15 @@ describe('Overviews query rewriter', function () {
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
 
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT column1, column2, column3 FROM (\
-                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1;\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT column1, column2, column3 FROM (
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1;
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -385,15 +385,15 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT column1,column2, column3 FROM (\
-                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT column1,column2, column3 FROM (
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z <= 2
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -433,11 +433,11 @@ describe('Overviews query rewriter', function () {
         overviews_sql = overviewsQueryRewriter.query(sql, data);
         assert.strictEqual(overviews_sql, sql);
 
-        sql = "\
-            SELECT table1.* FROM table1 \
-                   JOIN areas ON ST_Intersects(table1.the_geom, areas.the_geom) \
-                   WHERE areas.name='A' \
-              ";
+        sql = `
+            SELECT table1.* FROM table1
+                   JOIN areas ON ST_Intersects(table1.the_geom, areas.the_geom)
+                   WHERE areas.name='A'
+        `;
         overviews_sql = overviewsQueryRewriter.query(sql, data);
         assert.strictEqual(overviews_sql, sql);
 
@@ -458,19 +458,19 @@ describe('Overviews query rewriter', function () {
             }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            WITH\
-              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-              SELECT * FROM (SELECT * FROM  (\
-                SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
-                UNION ALL\
-                SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
-                UNION ALL\
-                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2\
-                UNION ALL\
-                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2\
-              ) AS _vovw_table1) AS wrapped_query WHERE 1=1\
-        ';
+        var expected_sql = `
+            WITH
+              _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+              SELECT * FROM (SELECT * FROM  (
+                SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0
+                UNION ALL
+                SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1
+                UNION ALL
+                SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2
+                UNION ALL
+                SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 2
+              ) AS _vovw_table1) AS wrapped_query WHERE 1=1
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
@@ -523,10 +523,10 @@ describe('Overviews query rewriter', function () {
     });
 
     it('generates query with filters', function () {
-        var sql = 'SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name\
-                   FROM (SELECT *\
-                   FROM (select * from table1) _analysis_category_filter\
-                   WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query';
+        var sql = `SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name
+                   FROM (SELECT *
+                   FROM (select * from table1) _analysis_category_filter
+                   WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query`;
         var data = {
             overviews: {
                 table1: {
@@ -540,30 +540,30 @@ describe('Overviews query rewriter', function () {
             unfiltered_query: 'SELECT * FROM table1'
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data);
-        var expected_sql = '\
-            SELECT * FROM (WITH\
-                _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )\
-                SELECT * FROM  (\
-                  SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0\
-                  UNION ALL\
-                  SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1\
-                  UNION ALL\
-                  SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2\
-                  UNION ALL\
-                  SELECT * FROM table1_ov3, _vovw_scale WHERE _vovw_z = 3\
-                  UNION ALL\
-                  SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 3\
-                ) AS _vovw_table1) _analysis_category_filter\
-             WHERE name IN ($escape_0$X$escape_0$)\
-        ';
+        var expected_sql = `
+            SELECT * FROM (WITH
+                _vovw_scale AS ( SELECT ZoomLevel() AS _vovw_z )
+                SELECT * FROM  (
+                  SELECT * FROM table1_ov0, _vovw_scale WHERE _vovw_z = 0
+                  UNION ALL
+                  SELECT * FROM table1_ov1, _vovw_scale WHERE _vovw_z = 1
+                  UNION ALL
+                  SELECT * FROM table1_ov2, _vovw_scale WHERE _vovw_z = 2
+                  UNION ALL
+                  SELECT * FROM table1_ov3, _vovw_scale WHERE _vovw_z = 3
+                  UNION ALL
+                  SELECT * FROM table1, _vovw_scale WHERE _vovw_z > 3
+                ) AS _vovw_table1) _analysis_category_filter
+             WHERE name IN ($escape_0$X$escape_0$)
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
     it('generates query with filters for specific zoom level', function () {
-        var sql = 'SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name\
-                   FROM (SELECT *\
-                   FROM (select * from table1) _analysis_category_filter\
-                   WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query';
+        var sql = `SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name
+                   FROM (SELECT *
+                   FROM (select * from table1) _analysis_category_filter
+                   WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query`;
         var data = {
             overviews: {
                 table1: {
@@ -578,18 +578,18 @@ describe('Overviews query rewriter', function () {
             filter_stats: { unfiltered_rows: 1000, filtered_rows: 900 }
         };
         var overviews_sql = overviewsQueryRewriter.query(sql, data, { zoom_level: 2 });
-        var expected_sql = '\
-            SELECT * FROM (SELECT * FROM table1_ov2) _analysis_category_filter\
-            WHERE name IN ($escape_0$X$escape_0$)\
-        ';
+        var expected_sql = `
+            SELECT * FROM (SELECT * FROM table1_ov2) _analysis_category_filter
+            WHERE name IN ($escape_0$X$escape_0$)
+        `;
         assertSameSql(overviews_sql, expected_sql);
     });
 
     it('does not generates query with aggressive filtering', function () {
-        var sql = 'SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name\
-                   FROM (SELECT *\
-                   FROM (select * from table1) _analysis_category_filter\
-                   WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query';
+        var sql = `SELECT ST_Transform(the_geom, 3857) the_geom_webmercator, cartodb_id, name
+                   FROM (SELECT *
+                   FROM (select * from table1) _analysis_category_filter
+                   WHERE name IN ($escape_0$X$escape_0$)) _cdb_analysis_query`;
         var data = {
             overviews: {
                 table1: {
