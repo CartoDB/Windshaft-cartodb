@@ -43,8 +43,6 @@ describe('Overviews query rewriter', function () {
         assert.strictEqual(overviews_sql, sql);
     });
 
-    // jshint multistr:true
-
     it('generates query with single overview layer for level 0', function () {
         var sql = 'SELECT * FROM table1';
         var data = {
