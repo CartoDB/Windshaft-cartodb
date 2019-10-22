@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var assert = require('../support/assert');
 var _ = require('underscore');
 var redis = require('redis');
@@ -13,7 +14,7 @@ var semver = require('semver');
 var helper = require('../support/test-helper');
 var LayergroupToken = require('../../lib/models/layergroup-token');
 
-var windshaft_fixtures = __dirname + '/../../node_modules/windshaft/test/fixtures';
+var windshaft_fixtures = path.join(__dirname, '/../../node_modules/windshaft/test/fixtures');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;

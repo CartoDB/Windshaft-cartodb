@@ -7,6 +7,7 @@ var testClient = require('./support/test-client');
 var serverOptions = require('./support/ported-server-options');
 var fs = require('fs');
 var http = require('http');
+var path = require('path');
 
 describe.skip('blend http client timeout', function () {
     var mapConfig = {
@@ -43,7 +44,7 @@ describe.skip('blend http client timeout', function () {
         // Start a server to test external resources
         slowHttpRendererResourcesServer = http.createServer(function (request, response) {
             setTimeout(function () {
-                var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
+                var filename = path.join(__dirname, '/../fixtures/http/light_nolabels-1-0-0.png');
                 fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                     response.writeHead(200);
                     response.write(file, 'binary');

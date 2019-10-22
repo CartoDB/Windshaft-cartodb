@@ -5,6 +5,7 @@ var testHelper = require('../../support/test-helper');
 var assert = require('../../support/assert');
 var _ = require('underscore');
 var fs = require('fs');
+var path = require('path');
 var cartodbServer = require('../../../lib/server');
 var ServerOptions = require('./support/ported-server-options');
 
@@ -33,7 +34,7 @@ describe('server_png8_format', function () {
     var layergroupId;
 
     before(function (done) {
-        var testPngFilesDir = __dirname + '/../../results/png';
+        var testPngFilesDir = path.join(__dirname, '/../../results/png');
         fs.readdirSync(testPngFilesDir)
             .filter(function (fileName) {
                 return /.*\.png$/.test(fileName);

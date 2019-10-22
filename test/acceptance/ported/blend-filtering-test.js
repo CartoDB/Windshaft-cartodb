@@ -5,6 +5,7 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var testClient = require('./support/test-client');
 var fs = require('fs');
+var path = require('path');
 var http = require('http');
 
 describe('blend layer filtering', function () {
@@ -15,7 +16,7 @@ describe('blend layer filtering', function () {
     before(function (done) {
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer(function (request, response) {
-            var filename = __dirname + '/../../fixtures/http/light_nolabels-1-0-0.png';
+            var filename = path.join(__dirname, '/../../fixtures/http/light_nolabels-1-0-0.png');
             fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                 response.writeHead(200);
                 response.write(file, 'binary');

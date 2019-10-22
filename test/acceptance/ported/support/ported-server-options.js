@@ -7,6 +7,7 @@ var OverviewsQueryRewriter = require('../../../../lib/utils/overviews-query-rewr
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
     zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'
 });
+var path = require('path');
 
 module.exports = _.extend({}, serverOptions, {
     grainstore: {
@@ -39,7 +40,7 @@ module.exports = _.extend({}, serverOptions, {
             whitelist: ['http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png'],
             fallbackImage: {
                 type: 'fs',
-                src: __dirname + '/../../test/fixtures/http/basemap.png'
+                src: path.join(__dirname, '/../../test/fixtures/http/basemap.png')
             }
         }
     },

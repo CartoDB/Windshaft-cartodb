@@ -3,6 +3,7 @@
 require('../../support/test-helper');
 
 var fs = require('fs');
+var path = require('path');
 
 var assert = require('../../support/assert');
 var testClient = require('./support/test-client');
@@ -47,7 +48,7 @@ describe.skip('render limits', function () {
 
     it('uses onTileErrorStrategy to handle error and modify response', function (done) {
         serverOptions.renderer.onTileErrorStrategy = function (err, tile, headers, stats, format, callback) {
-            var fixture = __dirname + '/../../fixtures/limits/fallback.png';
+            var fixture = path.join(__dirname, '/../../fixtures/limits/fallback.png');
             fs.readFile(fixture, { encoding: 'binary' }, function (err, img) {
                 callback(null, img, { 'Content-Type': 'image/png' }, {});
             });

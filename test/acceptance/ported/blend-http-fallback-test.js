@@ -6,6 +6,7 @@ var assert = require('../../support/assert');
 var testClient = require('./support/test-client');
 var fs = require('fs');
 var http = require('http');
+var path = require('path');
 
 describe('blend http fallback', function () {
     var IMG_TOLERANCE_PER_MIL = 20;
@@ -19,9 +20,9 @@ describe('blend http fallback', function () {
                 response.writeHead(404);
                 response.end();
             } else {
-                var filename = __dirname + '/../../fixtures/http/light_nolabels-1-0-0.png';
+                var filename = path.join(__dirname, '/../../fixtures/http/light_nolabels-1-0-0.png');
                 if (request.url.match(/^\/dark\//)) {
-                    filename = __dirname + '/../../fixtures/http/dark_nolabels-1-0-0.png';
+                    filename = path.join(__dirname, '/../../fixtures/http/dark_nolabels-1-0-0.png');
                 }
                 fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                     response.writeHead(200);

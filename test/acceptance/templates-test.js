@@ -15,6 +15,7 @@ var redis_stats_db = 5;
 process.env.PGPORT = '666';
 process.env.PGHOST = 'fake';
 
+var path = require('path');
 var fs = require('fs');
 var http = require('http');
 
@@ -39,7 +40,7 @@ describe('template_api', function () {
     before(function (done) {
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer(function (request, response) {
-            var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
+            var filename = path.join(__dirname, '/../fixtures/http/light_nolabels-1-0-0.png');
             fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                 response.writeHead(200);
                 response.write(file, 'binary');

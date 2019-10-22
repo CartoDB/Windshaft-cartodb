@@ -6,6 +6,7 @@ var assert = require('../../support/assert');
 var testClient = require('./support/test-client');
 var http = require('http');
 var fs = require('fs');
+var path = require('path');
 
 describe('static_maps', function () {
     var validUrlTemplate = 'http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png';
@@ -16,7 +17,7 @@ describe('static_maps', function () {
     before(function (done) {
         // Start a server to test external resources
         httpRendererResourcesServer = http.createServer(function (request, response) {
-            var filename = __dirname + '/../../fixtures/http/basemap.png';
+            var filename = path.join(__dirname, '/../../fixtures/http/basemap.png');
             fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
                 response.writeHead(200);
                 response.write(file, 'binary');

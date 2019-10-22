@@ -8,6 +8,7 @@ var PortedServerOptions = require('./support/ported-server-options');
 var http = require('http');
 var testClient = require('./support/test-client');
 var nock = require('nock');
+var path = require('path');
 
 describe('external resources', function () {
     var res_serv; // resources server
@@ -20,7 +21,7 @@ describe('external resources', function () {
         // Start a server to test external resources
         res_serv = http.createServer(function (request, response) {
             ++res_serv_status.numrequests;
-            var filename = __dirname + '/../../fixtures/markers' + request.url;
+            var filename = path.join(__dirname, '/../../fixtures/markers', request.url);
             fs.readFile(filename, 'binary', function (err, file) {
                 if (err) {
                     response.writeHead(404, { 'Content-Type': 'text/plain' });
