@@ -330,10 +330,10 @@ describe('named maps static view', function () {
                 assert.deepStrictEqual(
                     JSON.parse(res.body),
                     {
-                        errors: ['Unsupported image format \"gif\"'],
+                        errors: ['Unsupported image format "gif"'],
                         errors_with_context: [{
                             type: 'unknown',
-                            message: 'Unsupported image format \"gif\"'
+                            message: 'Unsupported image format "gif"'
                         }]
                     }
                 );

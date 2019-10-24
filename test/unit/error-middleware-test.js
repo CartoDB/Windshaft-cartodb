@@ -124,7 +124,7 @@ describe('error-middleware', function () {
     });
 
     it('should escape chars that broke logs regex', function (done) {
-        const badString = 'error: ( ) = " \" \' * $ & |';
+        const badString = 'error: ( ) = " \" \' * $ & |'; // eslint-disable-line no-useless-escape
         const escapedString = 'error                     ';
 
         const error = new Error(badString);

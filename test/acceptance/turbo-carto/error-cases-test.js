@@ -89,7 +89,7 @@ describe('turbo-carto error cases', function () {
             assert.strictEqual(layergroup.errors.length, 1);
             assert.ok(layergroup.errors[0].match(/^Failed\sto\sprocess/));
             assert.ok(layergroup.errors[0].match(/unable\sto\scompute\sramp/i));
-            assert.ok(layergroup.errors[0].match(/invalid\smethod\s\"wadusmethod\"/i));
+            assert.ok(layergroup.errors[0].match(/invalid\smethod\s"wadusmethod"/i));
 
             done();
         });

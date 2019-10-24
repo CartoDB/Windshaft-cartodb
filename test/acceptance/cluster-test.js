@@ -612,10 +612,10 @@ describe('cluster', function () {
         };
 
         const invalidColumnExpressionsError = {
-            errors: ['column \"wadus\" does not exist'],
+            errors: ['column "wadus" does not exist'],
             errors_with_context: [
                 {
-                    message: 'column \"wadus\" does not exist',
+                    message: 'column "wadus" does not exist',
                     type: 'unknown'
                 }
             ]

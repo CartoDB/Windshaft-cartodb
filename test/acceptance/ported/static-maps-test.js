@@ -141,7 +141,7 @@ describe('static_maps', function () {
             var parsedBody = JSON.parse(res.body);
             assert.ok(parsedBody.errors);
             assert.ok(parsedBody.errors.length);
-            assert.ok(parsedBody.errors[0].match(/column \"wadus\" does not exist/));
+            assert.ok(parsedBody.errors[0].match(/column "wadus" does not exist/));
             done();
         });
     });
