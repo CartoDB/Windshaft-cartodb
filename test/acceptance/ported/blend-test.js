@@ -83,6 +83,7 @@ describe('blend png renderer', function () {
         var zxy = [tileRequest.z, tileRequest.x, tileRequest.y];
         it('tile all/' + zxy.join('/') + '.png', function (done) {
             testClient.getTileLayer(plainTorqueMapConfig(testScenario.plainColor), tileRequest, function (err, res) {
+                assert.ifError(err);
                 assert.imageBufferIsSimilarToFile(res.body, blendPngFixture(zxy), IMAGE_TOLERANCE_PER_MIL,
                     function (err) {
                         assert.ok(!err);

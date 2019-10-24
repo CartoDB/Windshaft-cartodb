@@ -1,6 +1,5 @@
 'use strict';
 
-/* eslint-env mocha */
 const assert = require('assert');
 const TestClient = require('../support/test-client');
 const mapConfigFactory = require('../fixtures/test_mapconfigFactory');
@@ -23,6 +22,7 @@ describe_mvt('date-wrapping', () => {
 
             it('should return date columns casted as numbers', done => {
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
+                    assert.ifError(err);
                     const expected = [
                         {
                             type: 'Feature',
@@ -63,6 +63,7 @@ describe_mvt('date-wrapping', () => {
 
             it('should return date columns as dates', done => {
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
+                    assert.ifError(err);
                     const expected = [
                         {
                             type: 'Feature',
@@ -109,6 +110,7 @@ describe_mvt('date-wrapping', () => {
                 });
 
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
+                    assert.ifError(err);
                     const expected0 = [
                         {
                             type: 'Feature',
@@ -167,6 +169,7 @@ describe_mvt('date-wrapping', () => {
                 });
 
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
+                    assert.ifError(err);
                     const expected0 = [
                         {
                             type: 'Feature',
@@ -225,6 +228,7 @@ describe_mvt('date-wrapping', () => {
                 });
 
                 testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
+                    assert.ifError(err);
                     const expected0 = [
                         {
                             type: 'Feature',
@@ -289,6 +293,7 @@ describe_mvt('date-wrapping', () => {
 
         it('should return correct tiles', done => {
             testClient.getTile(0, 0, 0, { format: 'mvt' }, (err, res, mvt) => {
+                assert.ifError(err);
                 const expected = [
                     {
                         type: 'Feature',

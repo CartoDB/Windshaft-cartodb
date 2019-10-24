@@ -46,6 +46,10 @@ describe.skip('blend http client timeout', function () {
             setTimeout(function () {
                 var filename = path.join(__dirname, '/../fixtures/http/light_nolabels-1-0-0.png');
                 fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                    if (err) {
+                        return done(err);
+                    }
+
                     response.writeHead(200);
                     response.write(file, 'binary');
                     response.end();
@@ -67,6 +71,7 @@ describe.skip('blend http client timeout', function () {
             serverOptions: serverOptions
         };
         testClient.withLayergroup(mapConfig, options, function (err, requestTile, finish) {
+            assert.ifError(err);
             var tileUrl = '/all/0/0/0.png';
             requestTile(tileUrl, options, function (err, res) {
                 assert.ok(!err);

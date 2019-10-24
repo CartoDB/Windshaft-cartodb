@@ -142,6 +142,7 @@ describe('analysis-filters-params', () => {
         });
 
         testClient.getDataview('pop_max_histogram', testParams, (err, dataview) => {
+            assert.ifError(err);
             assert.deepStrictEqual(dataview, expectedError);
 
             testClient.drain(done);

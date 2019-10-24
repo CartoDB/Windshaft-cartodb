@@ -28,6 +28,7 @@ describe('regressions', function () {
         };
 
         testClient.getTile(writeSqlMapConfig, 0, 0, 0, expectedResponse, function (err, res) {
+            assert.ifError(err);
             var parsedBody = JSON.parse(res.body);
             assert.ok(parsedBody.errors);
             assert.strictEqual(parsedBody.errors.length, 1);

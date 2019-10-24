@@ -19,6 +19,9 @@ describe('static_maps', function () {
         httpRendererResourcesServer = http.createServer(function (request, response) {
             var filename = path.join(__dirname, '/../../fixtures/http/basemap.png');
             fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                if (err) {
+                    return done(err);
+                }
                 response.writeHead(200);
                 response.write(file, 'binary');
                 response.end();

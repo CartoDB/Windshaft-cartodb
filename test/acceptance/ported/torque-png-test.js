@@ -71,6 +71,7 @@ describe('torque png renderer', function () {
         var zxy = [z, x, y];
         it('tile ' + zxy.join('/') + '.torque.png', function (done) {
             testClient.getTileLayer(torquePngPointsMapConfig, tileRequest, function (err, res) {
+                assert.ifError(err);
                 assert.imageBufferIsSimilarToFile(res.body, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL,
                     function (err) {
                         assert.ok(!err);

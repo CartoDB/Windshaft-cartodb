@@ -220,12 +220,13 @@ describe('get requests with cache headers', function () {
             it('/api/v1/map Map instantiation', function (done) {
                 var testFn = validateCacheHeaders(done, expectedCacheHeaders);
                 withLayergroupId(mapConfig, function (err, layergroupId, res) {
-                    testFn(res);
+                    testFn(res, err);
                 });
             });
 
             it('/api/v1/map/:token/:z/:x/:y@:scale_factor?x.:format Mapnik retina tiles', function (done) {
                 withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0@2x.png', true),
@@ -236,6 +237,7 @@ describe('get requests with cache headers', function () {
 
             it('/api/v1/map/:token/:z/:x/:y@:scale_factor?x.:format Mapnik tiles', function (done) {
                 withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0.png', true),
@@ -246,6 +248,7 @@ describe('get requests with cache headers', function () {
 
             it('/api/v1/map/:token/:layer/:z/:x/:y.(:format) Per :layer rendering', function (done) {
                 withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0/0.png', true),
@@ -256,6 +259,7 @@ describe('get requests with cache headers', function () {
 
             it('/api/v1/map/:token/:layer/attributes/:fid endpoint for info windows', function (done) {
                 withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/attributes/1', true),
@@ -266,6 +270,7 @@ describe('get requests with cache headers', function () {
 
             it('/api/v1/map/static/center/:token/:z/:lat/:lng/:width/:height.:format static maps', function (done) {
                 withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/static/center/' + layergroupId + '/0/0/0/400/300.png', true),
@@ -276,6 +281,7 @@ describe('get requests with cache headers', function () {
 
             it('/api/v1/map/static/bbox/:token/:bbox/:width/:height.:format static maps', function (done) {
                 withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/static/bbox/' + layergroupId + '/-45,-45,45,45/400/300.png', true),

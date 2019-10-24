@@ -787,6 +787,10 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
         function createLayergroup (err, templateId) {
             var next = this;
 
+            if (err) {
+                return next(err);
+            }
+
             if (layergroupId) {
                 return next(null, layergroupId);
             }

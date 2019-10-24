@@ -51,19 +51,23 @@ describe('server_gettile', function () {
         var lastXwc;
         var mapConfig = testClient.defaultTableMapConfig('test_table');
         testClient.withLayergroup(mapConfig, function (err, requestTile, finish) {
+            assert.ifError(err);
             requestTile(tileUrl, function (err, res) {
+                assert.ifError(err);
                 var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                 assert.ok(xwc);
                 assert.ok(xwc > 0);
                 lastXwc = xwc;
 
                 requestTile(tileUrl, function (err, res) {
+                    assert.ifError(err);
                     var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                     assert.ok(xwc);
                     assert.ok(xwc > 0);
                     assert.ok(xwc >= lastXwc);
 
                     requestTile(tileUrl, { cache_buster: 'wadus' }, function (err, res) {
+                        assert.ifError(err);
                         var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                         assert.ok(!xwc);
 
@@ -102,11 +106,14 @@ describe('server_gettile', function () {
         }
 
         testClient.withLayergroup(mapConfig, validateLayergroup, function (err, requestTile, finish) {
+            assert.ifError(err);
             requestTile(tileUrl, function (err, res) {
+                assert.ifError(err);
                 var xwc = parseInt(res.headers['x-windshaft-cache'], 10);
                 assert.ok(!xwc);
 
                 requestTile(tileUrl, function (err, res) {
+                    assert.ifError(err);
                     assert.ok(
                         Object.prototype.hasOwnProperty.call(res.headers, 'x-windshaft-cache'),
                         'Did not hit renderer cache on second time'
@@ -155,6 +162,7 @@ describe('server_gettile', function () {
             "#test_table{point-transform: 'scale(100)';}"
         );
         testClient.withLayergroup(nonStrictMapConfig, function (err, requestTile, finish) {
+            assert.ifError(err);
             var options = {
                 statusCode: 400,
                 contentType: 'application/json; charset=utf-8'
@@ -256,6 +264,7 @@ describe('server_gettile', function () {
         };
 
         testClient.createLayergroup(mapConfig, options, function (err, res, parsedBody) {
+            assert.ifError(err);
             assert.ok(parsedBody.errors);
             // more assertions when errors is populated with better format
             done();

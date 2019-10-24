@@ -42,6 +42,9 @@ describe('template_api', function () {
         httpRendererResourcesServer = http.createServer(function (request, response) {
             var filename = path.join(__dirname, '/../fixtures/http/light_nolabels-1-0-0.png');
             fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                if (err) {
+                    return done();
+                }
                 response.writeHead(200);
                 response.write(file, 'binary');
                 response.end();

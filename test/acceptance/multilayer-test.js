@@ -231,6 +231,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         }, {}, function (res, err) { next(err, res); });
                     },
                     function do_check_create (err, res) {
+                        assert.ifError(err);
                         var parsed = JSON.parse(res.body);
                         keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                         keysToDelete['user:localhost:mapviews:global'] = 5;

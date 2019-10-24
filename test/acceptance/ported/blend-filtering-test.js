@@ -18,6 +18,10 @@ describe('blend layer filtering', function () {
         httpRendererResourcesServer = http.createServer(function (request, response) {
             var filename = path.join(__dirname, '/../../fixtures/http/light_nolabels-1-0-0.png');
             fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                if (err) {
+                    return done(err);
+                }
+
                 response.writeHead(200);
                 response.write(file, 'binary');
                 response.end();
@@ -150,6 +154,7 @@ describe('blend layer filtering', function () {
 
         it('should filter on ' + layerFilter + '/1/0/0.png', function (done) {
             testClient.getTileLayer(mapConfig, tileRequest, function (err, res) {
+                assert.ifError(err);
                 assert.imageBufferIsSimilarToFile(res.body, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL,
                     function (err) {
                         assert.ok(!err);

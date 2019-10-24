@@ -63,6 +63,7 @@ describe('CartoCSS wrap', function () {
     it('Label should be text-wrapped', function (done) {
         this.testClient = new TestClient(mapConfig);
         this.testClient.getTile(1, 0, 1, { layers: [0] }, (err, res, body) => {
+            assert.ifError(err);
             var textWrapPath = './test/fixtures/text_wrap.png';
             assert.imageIsSimilarToFile(body, textWrapPath, IMAGE_TOLERANCE, done);
         });

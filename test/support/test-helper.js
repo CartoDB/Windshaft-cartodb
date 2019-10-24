@@ -160,6 +160,7 @@ function deleteRedisKeys (keysToDelete, callback) {
         var redisClient = redis.createClient(global.environment.redis.port);
         redisClient.select(keysToDelete[k], function () {
             redisClient.del(k, function (err, deletedKeysCount) {
+                assert.ifError(err);
                 redisClient.quit();
                 assert.notStrictEqual(deletedKeysCount, 0, 'No KEYS deleted for: [db=' + keysToDelete[k] + ']' + k);
                 taskDone(k);

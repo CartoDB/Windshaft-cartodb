@@ -326,6 +326,7 @@ describe('multilayer error cases', function () {
     it('bogus sql raises 400 status code', function (done) {
         var bogusSqlMapConfig = testClient.singleLayerMapConfig('BOGUS FROM test_table');
         testClient.createLayergroup(bogusSqlMapConfig, { statusCode: 400 }, function (err, res) {
+            assert.ifError(err);
             assert.ok(/syntax error/.test(res.body), 'Unexpected error: ' + res.body);
             done();
         });
@@ -341,6 +342,7 @@ describe('multilayer error cases', function () {
             }
         };
         testClient.createLayergroup(bogusSqlMapConfig, options, function (err, res) {
+            assert.ifError(err);
             assert.ok(
                 /^\/\*\*\/ typeof test === 'function' && test\(/.test(res.body),
                 'Body start expected callback name: ' + res.body
@@ -360,6 +362,7 @@ describe('multilayer error cases', function () {
             }
         };
         testClient.createLayergroup(noGeomMapConfig, options, function (err, res) {
+            assert.ifError(err);
             assert.ok(
                 /^\/\*\*\/ typeof test === 'function' && test\(/.test(res.body),
                 'Body start expected callback name: ' + res.body
@@ -372,6 +375,7 @@ describe('multilayer error cases', function () {
     it('query with no geometry field returns 400 status', function (done) {
         var noGeometrySqlMapConfig = testClient.singleLayerMapConfig('SELECT 1');
         testClient.createLayergroup(noGeometrySqlMapConfig, { statusCode: 400 }, function (err, res) {
+            assert.ifError(err);
             assert.ok(/column.*does not exist/.test(res.body), 'Unexpected error: ' + res.body);
             done();
         });
@@ -393,6 +397,7 @@ describe('multilayer error cases', function () {
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
 
         testClient.getGrid(mapConfig, 1, 13, 4011, 3088, defaultErrorExpectedResponse, function (err, res) {
+            assert.ifError(err);
             assert.deepStrictEqual(JSON.parse(res.body).errors, ["Layer '1' not found in layergroup"]);
             done();
         });

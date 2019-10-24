@@ -41,6 +41,7 @@ describe.skip('render limits', function () {
             serverOptions: serverOptions
         };
         testClient.createLayergroup(slowQueryMapConfig, options, function (err, res) {
+            assert.ifError(err);
             assert.deepStrictEqual(JSON.parse(res.body), { errors: ['Render timed out'] });
             done();
         });
@@ -48,8 +49,10 @@ describe.skip('render limits', function () {
 
     it('uses onTileErrorStrategy to handle error and modify response', function (done) {
         serverOptions.renderer.onTileErrorStrategy = function (err, tile, headers, stats, format, callback) {
+            assert.ifError(err);
             var fixture = path.join(__dirname, '/../../fixtures/limits/fallback.png');
             fs.readFile(fixture, { encoding: 'binary' }, function (err, img) {
+                assert.ifError(err);
                 callback(null, img, { 'Content-Type': 'image/png' }, {});
             });
         };
@@ -59,6 +62,7 @@ describe.skip('render limits', function () {
             serverOptions: serverOptions
         };
         testClient.createLayergroup(slowQueryMapConfig, options, function (err, res) {
+            assert.ifError(err);
             var parsed = JSON.parse(res.body);
             assert.ok(parsed.layergroupid);
             done();
@@ -68,7 +72,9 @@ describe.skip('render limits', function () {
     it('returns a fallback tile that was modified via onTileErrorStrategy', function (done) {
         var fixtureImage = './test/fixtures/limits/fallback.png';
         serverOptions.renderer.onTileErrorStrategy = function (err, tile, headers, stats, format, callback) {
+            assert.ifError(err);
             fs.readFile(fixtureImage, { encoding: null }, function (err, img) {
+                assert.ifError(err);
                 callback(null, img, { 'Content-Type': 'image/png' }, {});
             });
         };
@@ -78,8 +84,10 @@ describe.skip('render limits', function () {
             serverOptions: serverOptions
         };
         testClient.withLayergroup(slowQueryMapConfig, options, function (err, requestTile, finish) {
+            assert.ifError(err);
             var tileUrl = '/0/0/0.png';
             requestTile(tileUrl, options, function (err, res) {
+                assert.ifError(err);
                 assert.imageBufferIsSimilarToFile(res.body, fixtureImage, IMAGE_EQUALS_TOLERANCE_PER_MIL,
                     function (err) {
                         finish(function (finishErr) {

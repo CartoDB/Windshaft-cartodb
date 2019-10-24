@@ -157,6 +157,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
+                    assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
@@ -379,6 +380,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
+                    assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
@@ -497,6 +499,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
+                    assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
@@ -601,6 +604,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
+                    assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{
@@ -732,6 +736,7 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
+                    assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
                         errors: [db_limit_error_message],
                         errors_with_context: [{

@@ -25,6 +25,9 @@ describe('blend http fallback', function () {
                     filename = path.join(__dirname, '/../../fixtures/http/dark_nolabels-1-0-0.png');
                 }
                 fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                    if (err) {
+                        return done(err);
+                    }
                     response.writeHead(200);
                     response.write(file, 'binary');
                     response.end();
@@ -106,6 +109,7 @@ describe('blend http fallback', function () {
 
         it('should fallback on http error while blending layers ' + layerFilter + '/1/0/0.png', function (done) {
             testClient.getTileLayer(mapConfig, tileRequest, function (err, res) {
+                assert.ifError(err);
                 assert.imageBufferIsSimilarToFile(res.body, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL,
                     function (err) {
                         assert.ok(!err, err);
