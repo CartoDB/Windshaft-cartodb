@@ -3,7 +3,7 @@
 var assert = require('../../support/assert');
 var step = require('step');
 
-var url = require('url');
+const { URL } = require('url');
 var queue = require('queue-async');
 
 var helper = require('../../support/test-helper');
@@ -189,7 +189,7 @@ describe('named-maps widgets', function () {
         var widgetsPaths = layergroup.metadata.layers.reduce(function (paths, layer) {
             var widgets = layer.widgets || {};
             Object.keys(widgets).forEach(function (widget) {
-                paths.push(url.parse(widgets[widget].url.http).path);
+                paths.push(new URL(widgets[widget].url.http).pathname);
             });
 
             return paths;

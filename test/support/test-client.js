@@ -2,7 +2,7 @@
 
 var qs = require('querystring');
 var step = require('step');
-var urlParser = require('url');
+const { URL } = require('url');
 var PSQL = require('cartodb-psql');
 var _ = require('underscore');
 var mapnik = require('windshaft').mapnik;
@@ -1170,7 +1170,7 @@ TestClient.prototype.getNodeStatus = function (nodeName, callback) {
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
-            url = urlParser.parse(nodes[nodeName]).path;
+            url = new URL(nodes[nodeName]).pathname;
 
             if (self.apiKey) {
                 url += '?' + qs.stringify({ api_key: self.apiKey });
