@@ -1382,12 +1382,13 @@ describe('template_api', function () {
                 ].join(' ');
                 helper.checkSurrogateKey(res, expectedSurrogateKey);
 
-                // jshint ignore:start
+                /* eslint-disable no-unused-vars, no-eval */
                 function json_test (body) {
                     keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
                 }
                 eval(res.body);
-                // jshint ignore:end
+                /* eslint-enable */
+
                 keysToDelete['map_tpl|localhost'] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
@@ -1467,12 +1468,13 @@ describe('template_api', function () {
                 ].join(' ');
                 helper.checkSurrogateKey(res, expectedSurrogateKey);
 
-                // jshint ignore:start
+                /* eslint-disable no-unused-vars, no-eval */
                 function json_test (body) {
                     keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
                 }
                 eval(res.body);
-                // jshint ignore:end
+                /* eslint-enable */
+
                 keysToDelete['map_tpl|localhost'] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 

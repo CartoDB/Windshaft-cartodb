@@ -59,14 +59,13 @@ describe('analyses controller', function () {
             assert.ok(result);
 
             let didRunJsonCallback = false;
-            // jshint ignore:start
+            /* eslint-disable no-unused-vars, no-eval */
             function jsonp_test (body) {
                 assert.ok(Array.isArray(body.catalog));
                 didRunJsonCallback = true;
             }
-
             eval(result);
-            // jshint ignore:end
+            /* eslint-enable */
 
             assert.ok(didRunJsonCallback);
 

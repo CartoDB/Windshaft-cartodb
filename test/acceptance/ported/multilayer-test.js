@@ -405,7 +405,7 @@ describe('multilayer', function () {
                 assert.strictEqual(res.statusCode, 200, res.body);
 
                 var didRunJsonCallback = false;
-                // jshint ignore:start
+                /* eslint-disable no-unused-vars, no-eval */
                 function jsonp_test (body) {
                     assert.ok(body.layergroupid);
                     expected_token = LayergroupToken.parse(body.layergroupid).token;
@@ -417,7 +417,7 @@ describe('multilayer', function () {
                     didRunJsonCallback = true;
                 }
                 eval(res.body);
-                // jshint ignore:end
+                /* eslint-enable */
                 assert.ok(didRunJsonCallback);
 
                 // TODO: check caching headers !

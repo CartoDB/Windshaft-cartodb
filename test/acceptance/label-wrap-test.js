@@ -48,12 +48,6 @@ describe('CartoCSS wrap', function () {
         ]
     };
 
-    var keysToDelete;
-
-    beforeEach(function () {
-        keysToDelete = {};
-    });
-
     afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);

@@ -72,13 +72,13 @@ describe('server', function () {
             assert.deepStrictEqual(res.headers['content-type'], 'text/javascript; charset=utf-8');
             var didRunJsonCallback = false;
             var response = {};
-            // jshint ignore:start
+            /* eslint-disable no-unused-vars, no-eval */
             function jsonp_test (body) {
                 response = body;
                 didRunJsonCallback = true;
             }
             eval(res.body);
-            // jshint ignore:end
+            /* eslint-enable */
             assert.ok(didRunJsonCallback);
             assert.utfgridEqualsFile(response, './test/fixtures/test_table_13_4011_3088.grid.json', 2, done);
         });
