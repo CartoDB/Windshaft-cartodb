@@ -10,7 +10,7 @@ var _ = require('underscore');
 
 describe('template_maps', function () {
     // configure redis pool instance to use in tests
-    var redis_pool = new RedisPool(global.environment.redis);
+    var redisPool = new RedisPool(global.environment.redis);
 
     var keysToDelete;
     beforeEach(function () {
@@ -36,7 +36,7 @@ describe('template_maps', function () {
     };
 
     it('does not accept template with unsupported version', function (done) {
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
         var tpl = {
             version: '6.6.6',
@@ -60,7 +60,7 @@ describe('template_maps', function () {
     });
 
     it('does not accept template with missing name', function (done) {
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
         var tpl = {
             version: '0.0.1',
@@ -95,7 +95,7 @@ describe('template_maps', function () {
                 }
             };
         }
-        var templateMaps = new TemplateMaps(redis_pool);
+        var templateMaps = new TemplateMaps(redisPool);
 
         var invalidNames = ['ab|', 'a b', 'a@b', '-1ab', '_x', '', ' x', 'x '];
         invalidNames.forEach(function (invalidName) {
@@ -126,7 +126,7 @@ describe('template_maps', function () {
     });
 
     it('does not accept template with invalid placeholder name', function (done) {
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
         var tpl = {
             version: '0.0.1',
@@ -155,7 +155,7 @@ describe('template_maps', function () {
     });
 
     it('does not accept template with missing placeholder default', function (done) {
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
         var tpl = {
             version: '0.0.1',
@@ -176,7 +176,7 @@ describe('template_maps', function () {
     });
 
     it('does not accept template with missing placeholder type', function (done) {
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
         var tpl = {
             version: '0.0.1',
@@ -199,7 +199,7 @@ describe('template_maps', function () {
     // See http://github.com/CartoDB/Windshaft-cartodb/issues/128
     it('does not accept template with invalid token auth (undefined tokens)',
         function (done) {
-            var tmap = new TemplateMaps(redis_pool);
+            var tmap = new TemplateMaps(redisPool);
             assert.ok(tmap);
             var tpl = {
                 version: '0.0.1',
@@ -220,10 +220,10 @@ describe('template_maps', function () {
         });
 
     it('add, get and delete a valid template', function (done) {
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
-        var expected_failure = false;
-        var tpl_id;
+        var expectedFailure = false;
+        var tplId;
         var tpl = {
             version: '0.0.1',
             name: 'first',
@@ -236,24 +236,24 @@ describe('template_maps', function () {
             },
             function addOmonimousTemplate (err, id) {
                 assert.ifError(err);
-                tpl_id = id;
-                assert.strictEqual(tpl_id, 'first');
-                expected_failure = true;
+                tplId = id;
+                assert.strictEqual(tplId, 'first');
+                expectedFailure = true;
                 // should fail, as it already exists
                 tmap.addTemplate('me', tpl, this);
             },
             function getTemplate (err) {
-                if (!expected_failure && err) {
+                if (!expectedFailure && err) {
                     throw err;
                 }
                 assert.ok(err);
                 assert.ok(err.message.match(/already exists/i), err);
-                tmap.getTemplate('me', tpl_id, this);
+                tmap.getTemplate('me', tplId, this);
             },
-            function delTemplate (err, got_tpl) {
+            function delTemplate (err, gotTpl) {
                 assert.ifError(err);
-                assert.deepStrictEqual(got_tpl, _.extend({}, tpl, { auth: { method: 'open' }, placeholders: {} }));
-                tmap.delTemplate('me', tpl_id, this);
+                assert.deepStrictEqual(gotTpl, _.extend({}, tpl, { auth: { method: 'open' }, placeholders: {} }));
+                tmap.delTemplate('me', tplId, this);
             },
             function finish (err) {
                 done(err);
@@ -262,37 +262,37 @@ describe('template_maps', function () {
     });
 
     it('add multiple templates, list them', function (done) {
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
         var tpl1 = { version: '0.0.1', name: 'first', auth: {}, layergroup: { layers: [wadusLayer] } };
-        var tpl1_id;
+        var tpl1Id;
         var tpl2 = { version: '0.0.1', name: 'second', auth: {}, layergroup: { layers: [wadusLayer] } };
-        var tpl2_id;
+        var tpl2Id;
         step(
             function addTemplate1 () {
                 tmap.addTemplate('me', tpl1, this);
             },
             function addTemplate2 (err, id) {
                 assert.ifError(err);
-                tpl1_id = id;
+                tpl1Id = id;
                 tmap.addTemplate('me', tpl2, this);
             },
             function listTemplates (err, id) {
                 assert.ifError(err);
-                tpl2_id = id;
+                tpl2Id = id;
                 tmap.listTemplates('me', this);
             },
             function checkTemplates (err, ids) {
                 assert.ifError(err);
                 assert.strictEqual(ids.length, 2);
-                assert.ok(ids.indexOf(tpl1_id) !== -1, ids.join(','));
-                assert.ok(ids.indexOf(tpl2_id) !== -1, ids.join(','));
+                assert.ok(ids.indexOf(tpl1Id) !== -1, ids.join(','));
+                assert.ok(ids.indexOf(tpl2Id) !== -1, ids.join(','));
                 return null;
             },
             function delTemplate1 (err) {
-                if (tpl1_id) {
+                if (tpl1Id) {
                     var next = this;
-                    tmap.delTemplate('me', tpl1_id, function (e) {
+                    tmap.delTemplate('me', tpl1Id, function (e) {
                         if (err || e) {
                             next(new Error(err + '; ' + e));
                         } else {
@@ -305,9 +305,9 @@ describe('template_maps', function () {
                 }
             },
             function delTemplate2 (err) {
-                if (tpl2_id) {
+                if (tpl2Id) {
                     var next = this;
-                    tmap.delTemplate('me', tpl2_id, function (e) {
+                    tmap.delTemplate('me', tpl2Id, function (e) {
                         if (err || e) {
                             next(new Error(err + '; ' + e));
                         } else {
@@ -326,9 +326,9 @@ describe('template_maps', function () {
     });
 
     it('update templates', function (done) {
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
-        var expected_failure = false;
+        var expectedFailure = false;
         var owner = 'me';
         var tpl = {
             version: '0.0.1',
@@ -336,7 +336,7 @@ describe('template_maps', function () {
             auth: { method: 'open' },
             layergroup: { layers: [wadusLayer] }
         };
-        var tpl_id;
+        var tplId;
         step(
             function addTemplate () {
                 tmap.addTemplate(owner, tpl, this);
@@ -344,46 +344,46 @@ describe('template_maps', function () {
             // Updating template name should fail
             function updateTemplateName (err, id) {
                 assert.ifError(err);
-                tpl_id = id;
-                expected_failure = true;
+                tplId = id;
+                expectedFailure = true;
                 tpl.name = 'second';
-                tmap.updTemplate(owner, tpl_id, tpl, this);
+                tmap.updTemplate(owner, tplId, tpl, this);
             },
             function updateTemplateAuth (err) {
-                if (err && !expected_failure) {
+                if (err && !expectedFailure) {
                     throw err;
                 }
-                expected_failure = false;
+                expectedFailure = false;
                 assert.ok(err);
                 tpl.name = 'first';
                 tpl.auth.method = 'token';
                 tpl.auth.valid_tokens = ['tok1'];
-                tmap.updTemplate(owner, tpl_id, tpl, this);
+                tmap.updTemplate(owner, tplId, tpl, this);
             },
             function updateTemplateWithInvalid (err) {
                 assert.ifError(err);
                 tpl.version = '999.999.999';
-                expected_failure = true;
-                tmap.updTemplate(owner, tpl_id, tpl, this);
+                expectedFailure = true;
+                tmap.updTemplate(owner, tplId, tpl, this);
             },
             function updateUnexistentTemplate (err) {
-                if (err && !expected_failure) {
+                if (err && !expectedFailure) {
                     throw err;
                 }
                 assert.ok(err);
                 assert.ok(err.message.match(/unsupported.*version/i), err);
                 tpl.version = '0.0.1';
-                expected_failure = true;
+                expectedFailure = true;
                 tmap.updTemplate(owner, 'unexistent', tpl, this);
             },
             function delTemplate (err) {
-                if (err && !expected_failure) {
+                if (err && !expectedFailure) {
                     throw err;
                 }
-                expected_failure = false;
+                expectedFailure = false;
                 assert.ok(err);
                 assert.ok(err.message.match(/cannot update name/i), err);
-                tmap.delTemplate(owner, tpl_id, this);
+                tmap.delTemplate(owner, tplId, this);
             },
             function finish (err) {
                 done(err);
@@ -393,7 +393,7 @@ describe('template_maps', function () {
 
     it('instanciate templates', function () {
     // jshint maxcomplexity:7
-        var tmap = new TemplateMaps(redis_pool);
+        var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
 
         var tpl1 = {
@@ -491,7 +491,7 @@ describe('template_maps', function () {
 
     // Can set a limit on the number of user templates
     it('can limit number of user templates', function (done) {
-        var tmap = new TemplateMaps(redis_pool, {
+        var tmap = new TemplateMaps(redisPool, {
             max_user_templates: 2
         });
         assert.ok(tmap);
@@ -596,7 +596,7 @@ describe('template_maps', function () {
         var templateUpdated = _.extend({}, template, { layergroup: { layers: [LAYER_PLAIN] } });
         var templateMaps;
         beforeEach(function () {
-            templateMaps = new TemplateMaps(redis_pool);
+            templateMaps = new TemplateMaps(redisPool);
         });
 
         it('should emit on template update', function (done) {

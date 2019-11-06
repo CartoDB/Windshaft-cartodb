@@ -17,9 +17,9 @@ const credentialsMiddleware = require('../../lib/api/middlewares/credentials');
 var windshaft = require('windshaft');
 
 describe('prepare-context', function () {
-    var test_user = _.template(global.environment.postgres_auth_user, { user_id: 1 });
-    var test_pubuser = global.environment.postgres.user;
-    var test_database = test_user + '_db';
+    var testUser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
+    var testPubuser = global.environment.postgres.user;
+    var testDatabase = testUser + '_db';
 
     let cleanUpQueryParams;
     let dbConnSetup;
@@ -89,8 +89,8 @@ describe('prepare-context', function () {
             assert.ok(!Object.prototype.hasOwnProperty.call(req.query, 'dbuser'), 'dbuser was removed from query');
             assert.ok(Object.prototype.hasOwnProperty.call(res, 'locals'), 'response has locals');
             assert.ok(!Object.prototype.hasOwnProperty.call(res.locals, 'interactivity'), 'response locals do not have interactivity');
-            assert.strictEqual(res.locals.dbname, test_database);
-            assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser (' + res.locals.dbuser + ')');
+            assert.strictEqual(res.locals.dbname, testDatabase);
+            assert.ok(res.locals.dbuser === testPubuser, 'could inject dbuser (' + res.locals.dbuser + ')');
             done();
         });
     });
@@ -120,8 +120,8 @@ describe('prepare-context', function () {
                 assert.ok(!Object.prototype.hasOwnProperty.call(req.query, 'dbuser'), 'dbuser was removed from query');
                 assert.ok(Object.prototype.hasOwnProperty.call(res, 'locals'), 'response has locals');
                 assert.ok(!Object.prototype.hasOwnProperty.call(res.locals, 'interactivity'), 'request params do not have interactivity');
-                assert.strictEqual(res.locals.dbname, test_database);
-                assert.strictEqual(res.locals.dbuser, test_user);
+                assert.strictEqual(res.locals.dbname, testDatabase);
+                assert.strictEqual(res.locals.dbuser, testUser);
 
                 req = {
                     headers: {
@@ -136,7 +136,7 @@ describe('prepare-context', function () {
 
                 dbConnSetup(prepareRequest(req), prepareResponse(res), function () {
                     // wrong key resets params to no user
-                    assert.ok(res.locals.dbuser === test_pubuser, 'could inject dbuser (' + res.locals.dbuser + ')');
+                    assert.ok(res.locals.dbuser === testPubuser, 'could inject dbuser (' + res.locals.dbuser + ')');
                     done();
                 });
             });

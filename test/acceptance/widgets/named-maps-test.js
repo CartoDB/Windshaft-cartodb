@@ -70,7 +70,7 @@ describe('named-maps widgets', function () {
             }
         };
 
-        var template_params = {};
+        var templateParams = {};
 
         step(
             function createTemplate () {
@@ -108,7 +108,7 @@ describe('named-maps widgets', function () {
                             host: username,
                             'Content-Type': 'application/json'
                         },
-                        data: JSON.stringify(template_params)
+                        data: JSON.stringify(templateParams)
                     },
                     {
                         status: 200

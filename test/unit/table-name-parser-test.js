@@ -7,7 +7,7 @@ var TableNameParser = require('../../lib/utils/table-name-parser');
 
 describe('TableNameParser', function () {
     it('parses table names with scheme and quotes', function (done) {
-        var test_cases = [
+        var testCases = [
             ['xyz', { schema: null, table: 'xyz' }],
             ['"xyz"', { schema: null, table: 'xyz' }],
             ['"xy z"', { schema: null, table: 'xy z' }],
@@ -26,11 +26,11 @@ describe('TableNameParser', function () {
             ['"a""bc"."x""yz"', { schema: 'a"bc', table: 'x"yz' }]
         ];
 
-        test_cases.forEach(function (test_case) {
-            var table_name = test_case[0];
-            var expected_result = test_case[1];
-            var result = TableNameParser.parse(table_name);
-            assert.deepStrictEqual(result, expected_result);
+        testCases.forEach(function (testCase) {
+            var tableName = testCase[0];
+            var expectedResult = testCase[1];
+            var result = TableNameParser.parse(tableName);
+            assert.deepStrictEqual(result, expectedResult);
         });
         done();
     });

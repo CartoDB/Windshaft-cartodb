@@ -34,18 +34,18 @@ function tileJsonSuite (usePostGIS) {
 
     const sql = 'SELECT * FROM populated_places_simple_reduced';
     const cartocss = TestClient.CARTOCSS.POINTS;
-    const cartocss_version = '3.0.12';
+    const cartocssVersion = '3.0.12';
 
     const RASTER_LAYER = {
         options: {
-            sql, cartocss, cartocss_version
+            sql, cartocss, cartocss_version: cartocssVersion
         }
     };
     const RASTER_INTERACTIVITY_LAYER = {
         options: {
             sql,
             cartocss,
-            cartocss_version,
+            cartocss_version: cartocssVersion,
             interactivity: ['cartodb_id']
         }
     };

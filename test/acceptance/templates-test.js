@@ -7,7 +7,7 @@ var step = require('step');
 var strftime = require('strftime');
 var QueryTables = require('cartodb-query-tables').queryTables;
 var NamedMapsCacheEntry = require('../../lib/cache/model/named-maps-entry');
-var redis_stats_db = 5;
+var redisStatsDb = 5;
 
 // Pollute the PG environment to make sure
 // configuration settings are always enforced
@@ -66,7 +66,7 @@ describe('template_api', function () {
         helper.deleteRedisKeys(keysToDelete, done);
     });
 
-    var template_acceptance1 = {
+    var templateAcceptance1 = {
         version: '0.0.1',
         name: 'acceptance1',
         auth: { method: 'open' },
@@ -113,17 +113,17 @@ describe('template_api', function () {
     }
 
     it('can add template, returning id', function (done) {
-        var expected_tpl_id = 'acceptance1';
-        var post_request_1 = {
+        var expectedTplId = 'acceptance1';
+        var postRequest1 = {
             url: '/api/v1/map/named',
             method: 'POST',
             headers: { host: 'localhost', 'Content-Type': 'application/json' },
-            data: JSON.stringify(template_acceptance1)
+            data: JSON.stringify(templateAcceptance1)
         };
         step(
             function postUnauthenticated () {
                 var next = this;
-                assert.response(server, post_request_1, {},
+                assert.response(server, postRequest1, {},
                     function (res) { next(null, res); });
             },
             function postTemplate (err, res) {
@@ -134,22 +134,22 @@ describe('template_api', function () {
                 err = parsed.errors[0];
                 assert.ok(err.match(/only.*authenticated.*user/i),
                     'Unexpected error response: ' + err);
-                post_request_1.url += '?api_key=1234';
+                postRequest1.url += '?api_key=1234';
                 var next = this;
-                assert.response(server, post_request_1, {},
+                assert.response(server, postRequest1, {},
                     function (res) { next(null, res); });
             },
             function rePostTemplate (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsedBody = JSON.parse(res.body);
-                var expectedBody = { template_id: expected_tpl_id };
+                var expectedBody = { template_id: expectedTplId };
                 assert.deepStrictEqual(parsedBody, expectedBody);
 
                 keysToDelete['map_tpl|localhost'] = 0;
 
                 var next = this;
-                assert.response(server, post_request_1, {},
+                assert.response(server, postRequest1, {},
                     function (res) { next(null, res); });
             },
             function checkFailure (err, res) {
@@ -167,23 +167,23 @@ describe('template_api', function () {
 
     // See https://github.com/CartoDB/Windshaft-cartodb/issues/128
     it("cannot create template with auth='token' and no valid tokens", function (done) {
-        var tpl_id;
+        var tplId;
         step(
             function postTemplate1 () {
                 // clone the valid one, and give it another name
-                var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
-                broken_template.name = 'broken1';
+                var brokenTemplate = JSON.parse(JSON.stringify(templateAcceptance1));
+                brokenTemplate.name = 'broken1';
                 // Set auth='token' and specify no tokens
-                broken_template.auth.method = 'token';
-                delete broken_template.auth.tokens;
-                var post_request_1 = {
+                brokenTemplate.auth.method = 'token';
+                delete brokenTemplate.auth.tokens;
+                var postRequest1 = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(broken_template)
+                    data: JSON.stringify(brokenTemplate)
                 };
                 var next = this;
-                assert.response(server, post_request_1, {},
+                assert.response(server, postRequest1, {},
                     function (res) { next(null, res); });
             },
             function checkFailure1 (err, res) {
@@ -199,19 +199,19 @@ describe('template_api', function () {
             function postTemplate2 (err) {
                 assert.ifError(err);
                 // clone the valid one and rename it
-                var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
-                broken_template.name = 'broken1';
+                var brokenTemplate = JSON.parse(JSON.stringify(templateAcceptance1));
+                brokenTemplate.name = 'broken1';
                 // Set auth='token' and specify no tokens
-                broken_template.auth.method = 'token';
-                broken_template.auth.tokens = [];
-                var post_request_1 = {
+                brokenTemplate.auth.method = 'token';
+                brokenTemplate.auth.tokens = [];
+                var postRequest1 = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(broken_template)
+                    data: JSON.stringify(brokenTemplate)
                 };
                 var next = this;
-                assert.response(server, post_request_1, {},
+                assert.response(server, postRequest1, {},
                     function (res) { next(null, res); });
             },
             function checkFailure2 (err, res) {
@@ -227,16 +227,16 @@ describe('template_api', function () {
             function postTemplateValid (err) {
                 assert.ifError(err);
                 // clone the valid one and rename it
-                var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
-                broken_template.name = 'broken1';
-                var post_request_1 = {
+                var brokenTemplate = JSON.parse(JSON.stringify(templateAcceptance1));
+                brokenTemplate.name = 'broken1';
+                var postRequest1 = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(broken_template)
+                    data: JSON.stringify(brokenTemplate)
                 };
                 var next = this;
-                assert.response(server, post_request_1, {},
+                assert.response(server, postRequest1, {},
                     function (res) { next(null, res); });
             },
             function putTemplateInvalid (err, res) {
@@ -245,21 +245,21 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
+                tplId = parsed.template_id;
                 // clone the valid one and rename it
-                var broken_template = JSON.parse(JSON.stringify(template_acceptance1));
-                broken_template.name = 'broken1';
+                var brokenTemplate = JSON.parse(JSON.stringify(templateAcceptance1));
+                brokenTemplate.name = 'broken1';
                 // Set auth='token' and specify no tokens
-                broken_template.auth.method = 'token';
-                broken_template.auth.tokens = [];
-                var put_request_1 = {
-                    url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
+                brokenTemplate.auth.method = 'token';
+                brokenTemplate.auth.tokens = [];
+                var putRequest1 = {
+                    url: '/api/v1/map/named/' + tplId + '/?api_key=1234',
                     method: 'PUT',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(broken_template)
+                    data: JSON.stringify(brokenTemplate)
                 };
                 var next = this;
-                assert.response(server, put_request_1, {},
+                assert.response(server, putRequest1, {},
                     function (res) { next(null, res); });
             },
             function deleteTemplate (err, res) {
@@ -272,13 +272,13 @@ describe('template_api', function () {
                 assert.ok(parsed.errors[0].match(re),
                     'Error for invalid authentication on PUT does not match ' +
             re + ': ' + parsed.errors);
-                var del_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
+                var delRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?api_key=1234',
                     method: 'DELETE',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, del_request, {},
+                assert.response(server, delRequest, {},
                     function (res, err) { next(err, res); });
             },
             function checkDelete (err, res) {
@@ -294,13 +294,13 @@ describe('template_api', function () {
     it('instance endpoint should return CORS headers', function (done) {
         step(function postTemplate1 () {
             var next = this;
-            var post_request = {
+            var postRequest = {
                 url: '/api/v1/map/named?api_key=1234',
                 method: 'POST',
                 headers: { host: 'localhost.localhost', 'Content-Type': 'application/json' },
-                data: JSON.stringify(template_acceptance1)
+                data: JSON.stringify(templateAcceptance1)
             };
-            assert.response(server, post_request, {}, function (res) { next(null, res); });
+            assert.response(server, postRequest, {}, function (res) { next(null, res); });
         },
         function testCORS () {
             const allowHeaders = 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, Content-Type';
@@ -329,18 +329,18 @@ describe('template_api', function () {
         });
 
         it('instance endpoint should return server metadata', function (done) {
-            var tmpl = _.clone(template_acceptance1);
+            var tmpl = _.clone(templateAcceptance1);
             tmpl.name = 'rambotemplate2';
 
             step(function postTemplate1 () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(tmpl)
                 };
-                assert.response(server, post_request, {}, function (res) {
+                assert.response(server, postRequest, {}, function (res) {
                     next(null, res);
                 });
             },
@@ -362,12 +362,12 @@ describe('template_api', function () {
             },
             function deleteTemplate (err) {
                 assert.ifError(err);
-                var del_request = {
+                var delRequest = {
                     url: '/api/v1/map/named/' + tmpl.name + '?api_key=1234',
                     method: 'DELETE',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' }
                 };
-                assert.response(server, del_request, {}, function () {
+                assert.response(server, delRequest, {}, function () {
                     done();
                 });
             }
@@ -380,13 +380,13 @@ describe('template_api', function () {
         step(
             function postTemplate1 () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_acceptance1)
+                    data: JSON.stringify(templateAcceptance1)
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function postTemplate2 (err, res) {
@@ -398,16 +398,16 @@ describe('template_api', function () {
                 tplid1 = parsed.template_id;
 
                 var next = this;
-                var backup_name = template_acceptance1.name;
-                template_acceptance1.name += '_new';
-                var post_request = {
+                var backupName = templateAcceptance1.name;
+                templateAcceptance1.name += '_new';
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_acceptance1)
+                    data: JSON.stringify(templateAcceptance1)
                 };
-                template_acceptance1.name = backup_name;
-                assert.response(server, post_request, {},
+                templateAcceptance1.name = backupName;
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function litsTemplatesUnauthenticated (err, res) {
@@ -418,12 +418,12 @@ describe('template_api', function () {
                     "Missing 'template_id' from response body: " + res.body);
                 tplid2 = parsed.template_id;
                 var next = this;
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/named',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 };
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function litsTemplates (err, res) {
@@ -435,12 +435,12 @@ describe('template_api', function () {
                 err = parsed.errors[0];
                 assert.ok(err.match(/authenticated user/), err);
                 var next = this;
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 };
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkList (err, res) {
@@ -464,17 +464,17 @@ describe('template_api', function () {
     });
 
     it('can update template', function (done) {
-        var tpl_id;
+        var tplId;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(makeTemplate())
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function putMisnamedTemplate (err, res) {
@@ -483,18 +483,18 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var backup_name = template_acceptance1.name;
-                template_acceptance1.name = 'changed_name';
-                var put_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
+                tplId = parsed.template_id;
+                var backupName = templateAcceptance1.name;
+                templateAcceptance1.name = 'changed_name';
+                var putRequest = {
+                    url: '/api/v1/map/named/' + tplId + '/?api_key=1234',
                     method: 'PUT',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_acceptance1)
+                    data: JSON.stringify(templateAcceptance1)
                 };
-                template_acceptance1.name = backup_name;
+                templateAcceptance1.name = backupName;
                 var next = this;
-                assert.response(server, put_request, {},
+                assert.response(server, putRequest, {},
                     function (res) { next(null, res); });
             },
             function putUnexistentTemplate (err, res) {
@@ -504,14 +504,14 @@ describe('template_api', function () {
                 assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/cannot update name/i),
                     'Unexpected error for invalid update: ' + parsedBody.errors);
-                var put_request = {
+                var putRequest = {
                     url: '/api/v1/map/named/unexistent/?api_key=1234',
                     method: 'PUT',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(makeTemplate())
                 };
                 var next = this;
-                assert.response(server, put_request, {},
+                assert.response(server, putRequest, {},
                     function (res) { next(null, res); });
             },
             function putValidTemplate (err, res) {
@@ -521,14 +521,14 @@ describe('template_api', function () {
                 assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/cannot update name/i),
                     'Unexpected error for invalid update: ' + parsedBody.errors);
-                var put_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
+                var putRequest = {
+                    url: '/api/v1/map/named/' + tplId + '/?api_key=1234',
                     method: 'PUT',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(makeTemplate())
                 };
                 var next = this;
-                assert.response(server, put_request, {},
+                assert.response(server, putRequest, {},
                     function (res) { next(null, res); });
             },
             function checkValidUpate (err, res) {
@@ -537,7 +537,7 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                assert.strictEqual(tpl_id, parsed.template_id);
+                assert.strictEqual(tplId, parsed.template_id);
 
                 keysToDelete['map_tpl|localhost'] = 0;
 
@@ -547,17 +547,17 @@ describe('template_api', function () {
     });
 
     it('can get a template by id', function (done) {
-        var tpl_id;
+        var tplId;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(makeTemplate())
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function getTemplateUnauthorized (err, res) {
@@ -566,14 +566,14 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var get_request = {
-                    url: '/api/v1/map/named/' + tpl_id,
+                tplId = parsed.template_id;
+                var getRequest = {
+                    url: '/api/v1/map/named/' + tplId,
                     method: 'GET',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function getTemplate (err, res) {
@@ -583,13 +583,13 @@ describe('template_api', function () {
                 assert.ok(Object.prototype.hasOwnProperty.call(parsedBody, 'errors'), res.body);
                 assert.ok(parsedBody.errors[0].match(/only.*authenticated.*user/i),
                     'Unexpected error for unauthenticated template get: ' + parsedBody.errors);
-                var get_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
+                var getRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?api_key=1234',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkReturnTemplate (err, res) {
@@ -608,17 +608,17 @@ describe('template_api', function () {
     });
 
     it('can delete a template by id', function (done) {
-        var tpl_id;
+        var tplId;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(makeTemplate())
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function getTemplate (err, res) {
@@ -627,14 +627,14 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var get_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
+                tplId = parsed.template_id;
+                var getRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?api_key=1234',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function deleteTemplateUnauthorized (err, res) {
@@ -644,13 +644,13 @@ describe('template_api', function () {
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template'),
                     "Missing 'template' from response body: " + res.body);
                 assert.deepStrictEqual(extendDefaultsTemplate(makeTemplate()), parsed.template);
-                var del_request = {
-                    url: '/api/v1/map/named/' + tpl_id,
+                var delRequest = {
+                    url: '/api/v1/map/named/' + tplId,
                     method: 'DELETE',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, del_request, {},
+                assert.response(server, delRequest, {},
                     function (res) { next(null, res); });
             },
             function deleteTemplate (err, res) {
@@ -661,26 +661,26 @@ describe('template_api', function () {
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/only.*authenticated.*user/i),
                     'Unexpected error for unauthenticated template get: ' + parsed.errors);
-                var del_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
+                var delRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?api_key=1234',
                     method: 'DELETE',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, del_request, {},
+                assert.response(server, delRequest, {},
                     function (res) { next(null, res); });
             },
             function getMissingTemplate (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 204, res.statusCode + ': ' + res.body);
                 assert.ok(!res.body, 'Unexpected body in DELETE /template response');
-                var get_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
+                var getRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?api_key=1234',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkGetFailure (err, res) {
@@ -699,7 +699,7 @@ describe('template_api', function () {
 
     it('can instanciate a template by id wadus', function (done) {
         // This map fetches data from a private table
-        var template_acceptance2 = {
+        var templateAcceptance2 = {
             version: '0.0.1',
             name: 'acceptance1',
             auth: { method: 'token', valid_tokens: ['valid1', 'valid2'] },
@@ -718,20 +718,20 @@ describe('template_api', function () {
             }
         };
 
-        var template_params = {};
+        var templateParams = {};
 
-        var tpl_id;
+        var tplId;
         var layergroupid;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_acceptance2)
+                    data: JSON.stringify(templateAcceptance2)
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateNoAuth (err, res) {
@@ -740,15 +740,15 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id,
+                tplId = parsed.template_id;
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId,
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             // See https://github.com/CartoDB/Windshaft-cartodb/issues/173
@@ -761,14 +761,14 @@ describe('template_api', function () {
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/unauthorized/i),
                     'Unexpected error for unauthorized instance : ' + parsed.errors);
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?auth_token=valid2',
                     method: 'POST',
                     headers: { host: 'foreign', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateAuth (err, res) {
@@ -777,14 +777,14 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'errors'), "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/not found/i), 'Unexpected error for forbidden instance : ' + parsed.errors);
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?auth_token=valid2',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchTileNoAuth (err, res) {
@@ -804,14 +804,14 @@ describe('template_api', function () {
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
 
                 // TODO: check value of last_updated ?
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + ':cb0/0/0/0.png',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchTileAuth (err, res) {
@@ -823,14 +823,14 @@ describe('template_api', function () {
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/permission denied/i),
                     'Unexpected error for unauthorized instance (expected /permission denied/): ' + parsed.errors);
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + '/0/0/0.png?auth_token=valid1',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkTile (err, res) {
@@ -844,14 +844,14 @@ describe('template_api', function () {
             function fetchTileForeignSignature (err) {
                 assert.ifError(err);
                 var foreignsigned = layergroupid.replace(/[^@]*@/, 'foreign@');
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + foreignsigned + '/0/0/0.png?auth_token=valid1',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkForeignSignerError (err, res) {
@@ -867,27 +867,27 @@ describe('template_api', function () {
             },
             function deleteTemplate (err) {
                 assert.ifError(err);
-                var del_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
+                var delRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?api_key=1234',
                     method: 'DELETE',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, del_request, {},
+                assert.response(server, delRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchTileDeleted (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 204,
                     'Deleting template: ' + res.statusCode + ':' + res.body);
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + '/0/0/0.png?auth_token=valid1',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkTileAvailable (err, res) {
@@ -921,20 +921,20 @@ describe('template_api', function () {
             }
         };
 
-        var template_params = {};
+        var templateParams = {};
 
-        var tpl_id;
+        var tplId;
         var layergroupid;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(template)
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateNoAuth (err, res) {
@@ -943,15 +943,15 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id,
+                tplId = parsed.template_id;
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId,
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateAuth (err, res) {
@@ -963,14 +963,14 @@ describe('template_api', function () {
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/unauthorized/i),
                     'Unexpected error for unauthorized instance : ' + parsed.errors);
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?auth_token=valid2',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchTileNoAuth (err, res) {
@@ -990,14 +990,14 @@ describe('template_api', function () {
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 // TODO: check value of last_updated ?
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + ':cb0/0/0/0/0.json.torque',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchTileAuth (err, res) {
@@ -1009,17 +1009,17 @@ describe('template_api', function () {
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/permission denied/i),
                     'Unexpected error for unauthorized instance (expected /permission denied): ' + parsed.errors);
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/0.json.torque?auth_token=valid1',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
-            function checkTile_fetchOnRestart (err, res) {
+            function checkTileFetchOnRestart (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200,
                     'Unexpected error for authorized instance: ' + res.statusCode + ' -- ' + res.body);
@@ -1031,14 +1031,14 @@ describe('template_api', function () {
                 // hack simulating restart...
                 // FIXME: we need a better way to reset cache while running tests
                 server.layergroupAffectedTablesCache.cache.reset(); // need to clean channel cache
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + ':cb1/0/0/0/1.json.torque?auth_token=valid1',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkCacheChannel (err, res) {
@@ -1054,27 +1054,27 @@ describe('template_api', function () {
             },
             function deleteTemplate (err) {
                 assert.ifError(err);
-                var del_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
+                var delRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?api_key=1234',
                     method: 'DELETE',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, del_request, {},
+                assert.response(server, delRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchTileDeleted (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 204,
                     'Deleting template: ' + res.statusCode + ':' + res.body);
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + ':cb2/0/0/0/0.json.torque?auth_token=valid1',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkTorqueTileAvailable (err, res) {
@@ -1108,20 +1108,20 @@ describe('template_api', function () {
             }
         };
 
-        var template_params = {};
+        var templateParams = {};
 
-        var tpl_id;
+        var tplId;
         var layergroupid;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(template)
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateNoAuth (err, res) {
@@ -1130,15 +1130,15 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id,
+                tplId = parsed.template_id;
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId,
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateAuth (err, res) {
@@ -1150,14 +1150,14 @@ describe('template_api', function () {
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/unauthorized/i),
                     'Unexpected error for unauthorized instance : ' + parsed.errors);
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?auth_token=valid2',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchAttributeNoAuth (err, res) {
@@ -1178,14 +1178,14 @@ describe('template_api', function () {
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 // TODO: check value of last_updated ?
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + ':cb0/0/attributes/5',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchAttributeAuth (err, res) {
@@ -1197,14 +1197,14 @@ describe('template_api', function () {
                     "Missing 'errors' from response body: " + res.body);
                 assert.ok(parsed.errors[0].match(/permission denied/i),
                     'Unexpected error for unauthorized getAttributes (expected /permission denied/): ' + parsed.errors);
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + ':cb1/0/attributes/5?auth_token=valid2',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkAttribute (err, res) {
@@ -1216,27 +1216,27 @@ describe('template_api', function () {
             },
             function deleteTemplate (err) {
                 assert.ifError(err);
-                var del_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?api_key=1234',
+                var delRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?api_key=1234',
                     method: 'DELETE',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, del_request, {},
+                assert.response(server, delRequest, {},
                     function (res) { next(null, res); });
             },
             function fetchAttrDeleted (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 204,
                     'Deleting template: ' + res.statusCode + ':' + res.body);
-                var get_request = {
+                var getRequest = {
                     url: '/api/v1/map/' + layergroupid + ':cb2/0/attributes/5?auth_token=valid2',
                     method: 'GET',
                     headers: { host: 'localhost' },
                     encoding: 'binary'
                 };
                 var next = this;
-                assert.response(server, get_request, {},
+                assert.response(server, getRequest, {},
                     function (res) { next(null, res); });
             },
             function checkLayerAttributesAvailable (err, res) {
@@ -1251,7 +1251,7 @@ describe('template_api', function () {
 
     it('can instanciate a template by id with open auth', function (done) {
         // This map fetches data from a private table
-        var template_acceptance_open = {
+        var templateAcceptanceOpen = {
             version: '0.0.1',
             name: 'acceptance_open',
             auth: { method: 'open' },
@@ -1270,19 +1270,19 @@ describe('template_api', function () {
             }
         };
 
-        var template_params = {};
+        var templateParams = {};
 
-        var tpl_id;
+        var tplId;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_acceptance_open)
+                    data: JSON.stringify(templateAcceptanceOpen)
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateNoAuth (err, res) {
@@ -1291,16 +1291,16 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id,
+                tplId = parsed.template_id;
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId,
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 helper.checkNoCache(res);
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateAuth (err, res) {
@@ -1319,7 +1319,7 @@ describe('template_api', function () {
 
     it('can instanciate a template using jsonp', function (done) {
         // This map fetches data from a private table
-        var template_acceptance_open = {
+        var templateAcceptanceOpen = {
             version: '0.0.1',
             name: 'acceptance_open_jsonp',
             auth: { method: 'open' },
@@ -1338,17 +1338,17 @@ describe('template_api', function () {
             }
         };
 
-        var tpl_id;
+        var tplId;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_acceptance_open)
+                    data: JSON.stringify(templateAcceptanceOpen)
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateNoAuth (err, res) {
@@ -1357,14 +1357,14 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '/jsonp?callback=json_test',
+                tplId = parsed.template_id;
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '/jsonp?callback=jsonTest',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function checkInstanciation (err, res) {
@@ -1378,12 +1378,12 @@ describe('template_api', function () {
                         schema_name: 'public',
                         table_name: 'test_table_private_1'
                     }]).key(),
-                    new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
+                    new NamedMapsCacheEntry('localhost', templateAcceptanceOpen.name).key()
                 ].join(' ');
                 helper.checkSurrogateKey(res, expectedSurrogateKey);
 
                 /* eslint-disable no-unused-vars, no-eval */
-                function json_test (body) {
+                function jsonTest (body) {
                     keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
                 }
                 eval(res.body);
@@ -1402,7 +1402,7 @@ describe('template_api', function () {
 
     it('can instanciate a template using jsonp with params', function (done) {
         // This map fetches data from a private table
-        var template_acceptance_open = {
+        var templateAcceptanceOpen = {
             version: '0.0.1',
             name: 'acceptance_open_jsonp_params',
             auth: { method: 'open' },
@@ -1424,17 +1424,17 @@ describe('template_api', function () {
             }
         };
 
-        var tpl_id;
+        var tplId;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_acceptance_open)
+                    data: JSON.stringify(templateAcceptanceOpen)
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instanciateNoAuth (err, res) {
@@ -1443,14 +1443,14 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '/jsonp?callback=json_test&config=' + JSON.stringify({ color: 'blue' }),
+                tplId = parsed.template_id;
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '/jsonp?callback=jsonTest&config=' + JSON.stringify({ color: 'blue' }),
                     method: 'GET',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function checkInstanciation (err, res) {
@@ -1464,12 +1464,12 @@ describe('template_api', function () {
                         schema_name: 'public',
                         table_name: 'test_table_private_1'
                     }]).key(),
-                    new NamedMapsCacheEntry('localhost', template_acceptance_open.name).key()
+                    new NamedMapsCacheEntry('localhost', templateAcceptanceOpen.name).key()
                 ].join(' ');
                 helper.checkSurrogateKey(res, expectedSurrogateKey);
 
                 /* eslint-disable no-unused-vars, no-eval */
-                function json_test (body) {
+                function jsonTest (body) {
                     keysToDelete['map_cfg|' + LayergroupToken.parse(body.layergroupid).token] = 0;
                 }
                 eval(res.body);
@@ -1505,48 +1505,48 @@ describe('template_api', function () {
             layergroup: layergroup
         };
         var statskey = 'user:localhost:mapviews';
-        var redis_stats_client = redis.createClient(global.environment.redis.port);
-        var template_id; // will be set on template post
+        var redisStatsClient = redis.createClient(global.environment.redis.port);
+        var templateId; // will be set on template post
         var now = strftime('%Y%m%d', new Date());
         var errors = [];
         step(
-            function clean_stats () {
+            function cleanStats () {
                 var next = this;
-                redis_stats_client.select(redis_stats_db, function (err) {
+                redisStatsClient.select(redisStatsDb, function (err) {
                     if (err) {
                         next(err);
                     } else {
-                        redis_stats_client.del(statskey + ':global', next);
+                        redisStatsClient.del(statskey + ':global', next);
                     }
                 });
             },
-            function do_post_tempate (err) {
+            function doPostTempate (err) {
                 assert.ifError(err);
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(template)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instantiateTemplate (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
-                template_id = JSON.parse(res.body).template_id;
-                var post_request = {
-                    url: '/api/v1/map/named/' + template_id,
+                templateId = JSON.parse(res.body).template_id;
+                var postRequest = {
+                    url: '/api/v1/map/named/' + templateId,
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify({})
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
-            function check_global_stats (err, res) {
+            function checkGlobalStats (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200,
                     'Instantiating template: ' + res.statusCode + ': ' + res.body);
@@ -1554,14 +1554,14 @@ describe('template_api', function () {
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
-                redis_stats_client.ZSCORE(statskey + ':global', now, this);
+                redisStatsClient.ZSCORE(statskey + ':global', now, this);
             },
-            function check_tag_stats (err, val) {
+            function checkTagStats (err, val) {
                 assert.ifError(err);
                 assert.strictEqual(val, '1', 'Expected score of ' + now + ' in ' + statskey + ':global to be 1, got ' + val);
-                redis_stats_client.ZSCORE(statskey + ':stat_tag:random_tag', now, this);
+                redisStatsClient.ZSCORE(statskey + ':stat_tag:random_tag', now, this);
             },
-            function check_tag_stats_value (err, val) {
+            function checkTagStatsValue (err, val) {
                 assert.ifError(err);
                 assert.equal(val, '1', 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
               ' to be 1, got ' + val);
@@ -1569,16 +1569,16 @@ describe('template_api', function () {
             },
             function deleteTemplate (err) {
                 assert.ifError(err);
-                var del_request = {
-                    url: '/api/v1/map/named/' + template_id + '?api_key=1234',
+                var delRequest = {
+                    url: '/api/v1/map/named/' + templateId + '?api_key=1234',
                     method: 'DELETE',
                     headers: { host: 'localhost' }
                 };
                 var next = this;
-                assert.response(server, del_request, {},
+                assert.response(server, delRequest, {},
                     function (res) { next(null, res); });
             },
-            function cleanup_stats (err, res) {
+            function cleanupStats (err, res) {
                 if (err) {
                     return done(err);
                 }
@@ -1597,7 +1597,7 @@ describe('template_api', function () {
 
     it('instance map token changes with templates certificate changes', function (done) {
         // This map fetches data from a private table
-        var template_acceptance2 = {
+        var templateAcceptance2 = {
             version: '0.0.1',
             name: 'acceptance2',
             auth: { method: 'token', valid_tokens: ['valid1', 'valid2'] },
@@ -1616,20 +1616,20 @@ describe('template_api', function () {
             }
         };
 
-        var template_params = {};
+        var templateParams = {};
 
-        var tpl_id;
+        var tplId;
         var layergroupid;
         step(
             function postTemplate () {
                 var next = this;
-                var post_request = {
+                var postRequest = {
                     url: '/api/v1/map/named?api_key=1234',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_acceptance2)
+                    data: JSON.stringify(templateAcceptance2)
                 };
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instance1 (err, res) {
@@ -1638,15 +1638,15 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                tpl_id = parsed.template_id;
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
+                tplId = parsed.template_id;
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?auth_token=valid2',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res, err) { next(err, res); });
             },
             function checkInstance1 (err, res) {
@@ -1657,7 +1657,7 @@ describe('template_api', function () {
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 layergroupid = parsed.layergroupid;
-                helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
+                helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', templateAcceptance2.name).key());
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
                 return null;
@@ -1665,16 +1665,16 @@ describe('template_api', function () {
             function updateTemplate (err) {
                 assert.ifError(err);
                 // clone the valid one and rename it
-                var changedTemplate = JSON.parse(JSON.stringify(template_acceptance2));
+                var changedTemplate = JSON.parse(JSON.stringify(templateAcceptance2));
                 changedTemplate.auth.method = 'open';
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '/?api_key=1234',
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '/?api_key=1234',
                     method: 'PUT',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
                     data: JSON.stringify(changedTemplate)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res) { next(null, res); });
             },
             function instance2 (err, res) {
@@ -1683,15 +1683,15 @@ describe('template_api', function () {
                 var parsed = JSON.parse(res.body);
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'template_id'),
                     "Missing 'template_id' from response body: " + res.body);
-                assert.strictEqual(tpl_id, parsed.template_id);
-                var post_request = {
-                    url: '/api/v1/map/named/' + tpl_id + '?auth_token=valid2',
+                assert.strictEqual(tplId, parsed.template_id);
+                var postRequest = {
+                    url: '/api/v1/map/named/' + tplId + '?auth_token=valid2',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: JSON.stringify(template_params)
+                    data: JSON.stringify(templateParams)
                 };
                 var next = this;
-                assert.response(server, post_request, {},
+                assert.response(server, postRequest, {},
                     function (res, err) { next(err, res); });
             },
             function checkInstance2 (err, res) {
@@ -1702,7 +1702,7 @@ describe('template_api', function () {
                 assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'layergroupid'),
                     "Missing 'layergroupid' from response body: " + res.body);
                 assert.ok(layergroupid !== parsed.layergroupid);
-                helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', template_acceptance2.name).key());
+                helper.checkSurrogateKey(res, new NamedMapsCacheEntry('localhost', templateAcceptance2.name).key());
 
                 keysToDelete['map_tpl|localhost'] = 0;
                 keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
@@ -1747,7 +1747,7 @@ describe('template_api', function () {
             }
         };
 
-        var template_params = {};
+        var templateParams = {};
 
         var expectedTemplateId = httpTemplateName;
         var layergroupid;
@@ -1788,7 +1788,7 @@ describe('template_api', function () {
                             host: username,
                             'Content-Type': 'application/json'
                         },
-                        data: JSON.stringify(template_params)
+                        data: JSON.stringify(templateParams)
                     },
                     {
                         status: 200

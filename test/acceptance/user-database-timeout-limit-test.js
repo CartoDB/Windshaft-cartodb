@@ -82,15 +82,15 @@ const createMapConfig = ({
     }
 });
 
-const db_limit_error_message = 'You are over platform\'s limits: SQL query timeout error.' +
+const dbLimitErrorMessage = 'You are over platform\'s limits: SQL query timeout error.' +
     ' Refactor your query before running again or contact CARTO support for more details.';
 
 const DATASOURCE_TIMEOUT_ERROR = {
-    errors: [db_limit_error_message],
+    errors: [dbLimitErrorMessage],
     errors_with_context: [{
         type: 'limit',
         subtype: 'datasource',
-        message: db_limit_error_message
+        message: dbLimitErrorMessage
     }]
 };
 
@@ -159,11 +159,11 @@ describe('user database timeout limit', function () {
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
-                        errors: [db_limit_error_message],
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -382,11 +382,11 @@ describe('user database timeout limit', function () {
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
-                        errors: [db_limit_error_message],
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -501,11 +501,11 @@ describe('user database timeout limit', function () {
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
-                        errors: [db_limit_error_message],
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -606,11 +606,11 @@ describe('user database timeout limit', function () {
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
-                        errors: [db_limit_error_message],
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: { id: 'torque-layer0', index: 0, type: 'torque' }
                         }]
                     });
@@ -738,11 +738,11 @@ describe('user database timeout limit', function () {
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                     assert.ifError(err);
                     assert.deepStrictEqual(timeoutError, {
-                        errors: [db_limit_error_message],
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: {
                                 id: 'layer0',
                                 index: 0,

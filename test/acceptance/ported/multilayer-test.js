@@ -20,7 +20,7 @@ describe('multilayer', function () {
     });
 
     mapnik.register_system_fonts();
-    var available_system_fonts = _.keys(mapnik.fontFiles());
+    var availableSystemFonts = _.keys(mapnik.fontFiles());
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 
@@ -47,9 +47,9 @@ describe('multilayer', function () {
                 }
             ]
         };
-        var expected_token;
+        var expectedToken;
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -59,7 +59,7 @@ describe('multilayer', function () {
                 }, {}, function (res) {
                     assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
-                    expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
+                    expectedToken = LayergroupToken.parse(parsedBody.layergroupid).token;
                     next();
                 });
             },
@@ -68,7 +68,7 @@ describe('multilayer', function () {
                     return done(err);
                 }
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -89,9 +89,9 @@ describe('multilayer', function () {
                 }
             ]
         };
-        var expected_token;
+        var expectedToken;
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -101,15 +101,15 @@ describe('multilayer', function () {
                 }, {}, function (res) {
                     assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
-                    expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
+                    expectedToken = LayergroupToken.parse(parsedBody.layergroupid).token;
                     next();
                 });
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0.png',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0.png',
                     method: 'GET',
                     encoding: 'binary',
                     headers: { host: 'localhost' }
@@ -129,7 +129,7 @@ describe('multilayer', function () {
                     return done(err);
                 }
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -160,9 +160,9 @@ describe('multilayer', function () {
             ]
         };
 
-        var expected_token;
+        var expectedToken;
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -175,19 +175,19 @@ describe('multilayer', function () {
                     // from layergroup creation via POST
                     checkCORSHeaders(res);
                     var parsedBody = JSON.parse(res.body);
-                    if (expected_token) {
-                        assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                    if (expectedToken) {
+                        assert.deepStrictEqual(parsedBody, { layergroupid: expectedToken, layercount: 2 });
                     } else {
-                        expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
+                        expectedToken = LayergroupToken.parse(parsedBody.layergroupid).token;
                     }
                     next(null, res);
                 });
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0.png',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0.png',
                     method: 'GET',
                     encoding: 'binary',
                     headers: { host: 'localhost' }
@@ -201,11 +201,11 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid0 (err) {
+            function doGetGrid0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0/0.grid.json',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0/0.grid.json',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
@@ -218,11 +218,11 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid1 (err) {
+            function doGetGrid1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token +
+                    url: '/api/v1/map/' + expectedToken +
                   '/1/0/0/0.grid.json?interactivity=cartodb_id',
                     method: 'GET',
                     headers: { host: 'localhost' }
@@ -241,7 +241,7 @@ describe('multilayer', function () {
                     return done(err);
                 }
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -272,9 +272,9 @@ describe('multilayer', function () {
             ]
         };
 
-        var expected_token;
+        var expectedToken;
         step(
-            function do_get () {
+            function doGet () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map?' + querystring.stringify({
@@ -289,19 +289,19 @@ describe('multilayer', function () {
                     // see https://github.com/CartoDB/Windshaft/issues/92
                     checkCORSHeaders(res);
                     var parsedBody = JSON.parse(res.body);
-                    if (expected_token) {
-                        assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                    if (expectedToken) {
+                        assert.deepStrictEqual(parsedBody, { layergroupid: expectedToken, layercount: 2 });
                     } else {
-                        expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
+                        expectedToken = LayergroupToken.parse(parsedBody.layergroupid).token;
                     }
                     next(null, res);
                 });
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0.png',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0.png',
                     method: 'GET',
                     encoding: 'binary',
                     headers: { host: 'localhost' }
@@ -315,11 +315,11 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid0 (err) {
+            function doGetGrid0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token +
+                    url: '/api/v1/map/' + expectedToken +
                   '/0/0/0/0.grid.json?interactivity=cartodb_id',
                     method: 'GET',
                     headers: { host: 'localhost' }
@@ -333,11 +333,11 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid1 (err) {
+            function doGetGrid1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token +
+                    url: '/api/v1/map/' + expectedToken +
                   '/1/0/0/0.grid.json?interactivity=cartodb_id',
                     method: 'GET',
                     headers: { host: 'localhost' }
@@ -356,7 +356,7 @@ describe('multilayer', function () {
                     return done(err);
                 }
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -387,28 +387,28 @@ describe('multilayer', function () {
             ]
         };
 
-        var expected_token;
+        var expectedToken;
         step(
-            function do_get_token () {
+            function doGetToken () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map?' + querystring.stringify({
                         config: JSON.stringify(layergroup),
-                        callback: 'jsonp_test'
+                        callback: 'jsonpTest'
                     }),
                     method: 'GET',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function do_check_token (err, res) {
+            function doCheckToken (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
 
                 var didRunJsonCallback = false;
                 /* eslint-disable no-unused-vars, no-eval */
-                function jsonp_test (body) {
+                function jsonpTest (body) {
                     assert.ok(body.layergroupid);
-                    expected_token = LayergroupToken.parse(body.layergroupid).token;
+                    expectedToken = LayergroupToken.parse(body.layergroupid).token;
                     assert.ok(body.metadata.layers.length === 2);
                     assert.ok(body.metadata.layers[0].type === 'mapnik');
                     assert.ok(body.metadata.layers[0].meta);
@@ -423,11 +423,11 @@ describe('multilayer', function () {
                 // TODO: check caching headers !
                 return null;
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0.png',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0.png',
                     method: 'GET',
                     encoding: 'binary',
                     headers: { host: 'localhost' }
@@ -441,11 +441,11 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid0 (err) {
+            function doGetGrid0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token +
+                    url: '/api/v1/map/' + expectedToken +
                   '/0/0/0/0.grid.json?interactivity=cartodb_id',
                     method: 'GET',
                     headers: { host: 'localhost' }
@@ -459,11 +459,11 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid1 (err) {
+            function doGetGrid1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token +
+                    url: '/api/v1/map/' + expectedToken +
                   '/1/0/0/0.grid.json?interactivity=cartodb_id',
                     method: 'GET',
                     headers: { host: 'localhost' }
@@ -482,7 +482,7 @@ describe('multilayer', function () {
                     return done(err);
                 }
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -525,9 +525,9 @@ describe('multilayer', function () {
             ]
         };
 
-        var expected_token;
+        var expectedToken;
         step(
-            function do_get () {
+            function doGet () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -538,18 +538,18 @@ describe('multilayer', function () {
                     next(err, res);
                 });
             },
-            function check_create (err, res) {
+            function checkCreate (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 var parsed = JSON.parse(res.body);
-                expected_token = LayergroupToken.parse(parsed.layergroupid).token;
+                expectedToken = LayergroupToken.parse(parsed.layergroupid).token;
                 return null;
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0.png',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0.png',
                     method: 'GET',
                     encoding: 'binary',
                     headers: { host: 'localhost' }
@@ -563,11 +563,11 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid0 (err) {
+            function doGetGrid0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token +
+                    url: '/api/v1/map/' + expectedToken +
                   '/0/0/0/0.grid.json?interactivity=cartodb_id',
                     method: 'GET',
                     headers: { host: 'localhost' }
@@ -581,11 +581,11 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid1 (err) {
+            function doGetGrid1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token +
+                    url: '/api/v1/map/' + expectedToken +
                   '/1/0/0/0.grid.json?interactivity=cartodb_id',
                     method: 'GET',
                     headers: { host: 'localhost' }
@@ -599,18 +599,18 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_attr1 (err) {
+            function doGetAttr1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/1/attributes/4',
+                    url: '/api/v1/map/' + expectedToken + '/1/attributes/4',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res, err) {
                     next(err, res);
                 });
             },
-            function do_check_attr1 (err, res) {
+            function doCheckAttr1 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
@@ -618,16 +618,16 @@ describe('multilayer', function () {
                 assert.deepStrictEqual(parsed, { n: 40 });
                 return null;
             },
-            function do_get_torque2 (err) {
+            function doGetTorque2 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/2/0/0/0.json.torque',
+                    url: '/api/v1/map/' + expectedToken + '/2/0/0/0.json.torque',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function do_check_torque2 (err, res) {
+            function doCheckTorque2 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
@@ -638,18 +638,18 @@ describe('multilayer', function () {
                 assert.strictEqual(parsed[0].y__uint8, 128);
                 return null;
             },
-            function do_get_torque1 (err) {
+            function doGetTorque1 (err) {
                 // Layer 1 is not a torque layer...
                 // See https://github.com/CartoDB/Windshaft/issues/136
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/1/0/0/0.json.torque',
+                    url: '/api/v1/map/' + expectedToken + '/1/0/0/0.json.torque',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function do_check_torque1 (err, res) {
+            function doCheckTorque1 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
@@ -664,7 +664,7 @@ describe('multilayer', function () {
                     return done(err);
                 }
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -703,7 +703,7 @@ describe('multilayer', function () {
 
         var token1, token2;
         step(
-            function do_post1 () {
+            function doPost1 () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -718,7 +718,7 @@ describe('multilayer', function () {
                     next(null);
                 });
             },
-            function do_post2 () {
+            function doPost2 () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -733,7 +733,7 @@ describe('multilayer', function () {
                     next(null);
                 });
             },
-            function do_get_tile1 (err) {
+            function doGetTile1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -751,7 +751,7 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid1 (err) {
+            function doGetGrid1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -768,7 +768,7 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_tile2 (err) {
+            function doGetTile2 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -786,7 +786,7 @@ describe('multilayer', function () {
                         });
                 });
             },
-            function do_get_grid_layer2 (err) {
+            function doGetGridLayer2 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
@@ -846,9 +846,9 @@ describe('multilayer', function () {
             ]
         };
 
-        var expected_token; // = "32994445c0a4525432fcd7013bf6524c";
+        var expectedToken; // = "32994445c0a4525432fcd7013bf6524c";
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -859,20 +859,20 @@ describe('multilayer', function () {
                     try {
                         assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
-                        if (expected_token) {
-                            assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 3 });
+                        if (expectedToken) {
+                            assert.deepStrictEqual(parsedBody, { layergroupid: expectedToken, layercount: 3 });
                         } else {
-                            expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
+                            expectedToken = LayergroupToken.parse(parsedBody.layergroupid).token;
                         }
                         next(null, res);
                     } catch (err) { next(err); }
                 });
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0.png',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0.png',
                     method: 'GET',
                     encoding: 'binary',
                     headers: { host: 'localhost' }
@@ -891,7 +891,7 @@ describe('multilayer', function () {
                     return done(err);
                 }
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -928,9 +928,9 @@ describe('multilayer', function () {
         }, {}, function (res) {
             assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var parsed = JSON.parse(res.body);
-            var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
+            var expectedToken = LayergroupToken.parse(parsed.layergroupid).token;
             var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-            keysToDelete['map_cfg|' + expected_token] = 0;
+            keysToDelete['map_cfg|' + expectedToken] = 0;
             testHelper.deleteRedisKeys(keysToDelete, done);
         });
     });
@@ -958,9 +958,9 @@ describe('multilayer', function () {
         }, {}, function (res) {
             assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
             var parsed = JSON.parse(res.body);
-            var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
+            var expectedToken = LayergroupToken.parse(parsed.layergroupid).token;
             var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-            keysToDelete['map_cfg|' + expected_token] = 0;
+            keysToDelete['map_cfg|' + expectedToken] = 0;
             testHelper.deleteRedisKeys(keysToDelete, done);
         });
     });
@@ -1010,16 +1010,16 @@ describe('multilayer', function () {
                     url: '/api/v1/map',
                     method: 'POST',
                     headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                    data: _.template(tpl, { font: available_system_fonts[0] })
+                    data: _.template(tpl, { font: availableSystemFonts[0] })
                 }, function (res) { next(null, res); });
             },
             function checkGoodFont (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
-                var expected_token = LayergroupToken.parse(parsed.layergroupid).token;
+                var expectedToken = LayergroupToken.parse(parsed.layergroupid).token;
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -1065,9 +1065,9 @@ describe('multilayer', function () {
             ]
         };
 
-        var expected_token;
+        var expectedToken;
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -1078,27 +1078,27 @@ describe('multilayer', function () {
                     try {
                         assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
-                        if (expected_token) {
-                            assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 3 });
+                        if (expectedToken) {
+                            assert.deepStrictEqual(parsedBody, { layergroupid: expectedToken, layercount: 3 });
                         } else {
-                            expected_token = LayergroupToken.parse(parsedBody.layergroupid).token;
+                            expectedToken = LayergroupToken.parse(parsedBody.layergroupid).token;
                         }
                         next(null, res);
                     } catch (err) { next(err); }
                 });
             },
-            function do_get_grid0 (err) {
+            function doGetGrid0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0/0.grid.json',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0/0.grid.json',
                     method: 'GET',
                     headers: { host: 'localhost' }
                 }, {}, function (res) {
                     next(null, res);
                 });
             },
-            function do_check_grid (err, res) {
+            function doCheckGrid (err, res) {
                 assert.ifError(err);
                 var next = this;
                 assert.strictEqual(res.statusCode, 200, res.body);
@@ -1118,7 +1118,7 @@ describe('multilayer', function () {
                     return done(err);
                 }
                 var keysToDelete = { 'user:localhost:mapviews:global': 5 };
-                keysToDelete['map_cfg|' + expected_token] = 0;
+                keysToDelete['map_cfg|' + expectedToken] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );
@@ -1142,7 +1142,7 @@ describe('multilayer', function () {
 
         var token1, token2;
         step(
-            function do_post_1 () {
+            function doPost1 () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -1151,14 +1151,14 @@ describe('multilayer', function () {
                     data: JSON.stringify(layergroup)
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_post_1 (err, res) {
+            function checkPost1 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
                 token1 = LayergroupToken.parse(parsedBody.layergroupid).token;
                 return null;
             },
-            function do_post_2 () {
+            function doPost2 () {
                 var next = this;
                 assert.response(server, {
                     url: '/database/windshaft_test2/layergroup',
@@ -1167,7 +1167,7 @@ describe('multilayer', function () {
                     data: JSON.stringify(layergroup)
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_post_2 (err, res) {
+            function checkPost2 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
@@ -1205,7 +1205,7 @@ describe('multilayer', function () {
 
         var token1;
         step(
-            function do_post_1 () {
+            function doPost1 () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -1214,14 +1214,14 @@ describe('multilayer', function () {
                     data: JSON.stringify(layergroup)
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_post_1 (err, res) {
+            function checkPost1 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsedBody = JSON.parse(res.body);
                 token1 = LayergroupToken.parse(parsedBody.layergroupid).token;
                 return null;
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {

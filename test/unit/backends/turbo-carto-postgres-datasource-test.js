@@ -34,12 +34,12 @@ describe('turbo-carto-postgres-datasource', function () {
         var method = 'equal';
         this.datasource.getRamp(column, buckets, method, function (err, result) {
             assert.ifError(err);
-            var expected_result = {
+            var expectedResult = {
                 ramp: [252, 501, 750, 999],
                 stats: { min_val: 3, max_val: 999, avg_val: 501 },
                 strategy: undefined
             };
-            assert.deepStrictEqual(result, expected_result);
+            assert.deepStrictEqual(result, expectedResult);
             done();
         });
     });

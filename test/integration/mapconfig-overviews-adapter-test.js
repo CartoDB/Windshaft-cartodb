@@ -24,18 +24,18 @@ describe('MapConfigOverviewsAdapter', function () {
     it('should not modify layers for which no overviews are available', function (done) {
         var sql = 'SELECT * FROM test_table';
         var cartocss = '#layer { marker-fill: black; }';
-        var cartocss_version = '2.3.0';
-        var layer_without_overviews = {
+        var cartocssVersion = '2.3.0';
+        var layerWithoutOverviews = {
             type: 'cartodb',
             options: {
                 sql: sql,
                 cartocss: cartocss,
-                cartocss_version: cartocss_version
+                cartocss_version: cartocssVersion
             }
         };
 
         var _mapConfig = {
-            layers: [layer_without_overviews]
+            layers: [layerWithoutOverviews]
         };
 
         var params = {};
@@ -48,7 +48,7 @@ describe('MapConfigOverviewsAdapter', function () {
             assert.strictEqual(layers[0].type, 'cartodb');
             assert.strictEqual(layers[0].options.sql, sql);
             assert.strictEqual(layers[0].options.cartocss, cartocss);
-            assert.strictEqual(layers[0].options.cartocss_version, cartocss_version);
+            assert.strictEqual(layers[0].options.cartocss_version, cartocssVersion);
             assert.strictEqual(layers[0].options.overviews, undefined);
             done();
         });
@@ -59,18 +59,18 @@ describe('MapConfigOverviewsAdapter', function () {
     it('should add overviews metadata for layers using tables with overviews', function (done) {
         var sql = 'SELECT * FROM test_table_overviews';
         var cartocss = '#layer { marker-fill: black; }';
-        var cartocss_version = '2.3.0';
-        var layer_with_overviews = {
+        var cartocssVersion = '2.3.0';
+        var layerWithOverviews = {
             type: 'cartodb',
             options: {
                 sql: sql,
                 cartocss: cartocss,
-                cartocss_version: cartocss_version
+                cartocss_version: cartocssVersion
             }
         };
 
         var _mapConfig = {
-            layers: [layer_with_overviews]
+            layers: [layerWithOverviews]
         };
 
         var params = {};
@@ -83,9 +83,9 @@ describe('MapConfigOverviewsAdapter', function () {
             assert.strictEqual(layers[0].type, 'cartodb');
             assert.strictEqual(layers[0].options.sql, sql);
             assert.strictEqual(layers[0].options.cartocss, cartocss);
-            assert.strictEqual(layers[0].options.cartocss_version, cartocss_version);
+            assert.strictEqual(layers[0].options.cartocss_version, cartocssVersion);
             assert.ok(layers[0].options.query_rewrite_data);
-            var expected_data = {
+            var expectedData = {
                 overviews: {
                     test_table_overviews: {
                         schema: 'public',
@@ -94,7 +94,7 @@ describe('MapConfigOverviewsAdapter', function () {
                     }
                 }
             };
-            assert.deepStrictEqual(layers[0].options.query_rewrite_data, expected_data);
+            assert.deepStrictEqual(layers[0].options.query_rewrite_data, expectedData);
             done();
         });
     });

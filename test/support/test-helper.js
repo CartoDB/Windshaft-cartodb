@@ -29,7 +29,7 @@ log4js.configure({ appenders: [] });
 global.logger = log4js.getLogger();
 
 // Utility function to compress & encode LZMA
-function lzma_compress_to_base64 (payload, mode, callback) {
+function lzmaCompressToBase64 (payload, mode, callback) {
     lzmaWorker.compress(payload, mode,
         function (ints) {
             ints = ints.map(function (c) { return String.fromCharCode(c + 128); }).join('');
@@ -200,7 +200,7 @@ function configureMetadata (action, params, callback) {
 
 module.exports = {
     deleteRedisKeys: deleteRedisKeys,
-    lzma_compress_to_base64: lzma_compress_to_base64,
+    lzma_compress_to_base64: lzmaCompressToBase64,
     checkNoCache: checkNoCache,
     checkSurrogateKey: checkSurrogateKey,
     checkCache: checkCache,

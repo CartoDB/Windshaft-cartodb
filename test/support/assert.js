@@ -185,10 +185,10 @@ function validateResponse (response, expected) {
 }
 
 // @param tolerance number of tolerated grid cell differences
-assert.utfgridEqualsFile = function (buffer, file_b, tolerance, callback) {
+assert.utfgridEqualsFile = function (buffer, fileB, tolerance, callback) {
     // jshint maxcomplexity:9
     fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
-    var expected_json = JSON.parse(fs.readFileSync(file_b, 'utf8'));
+    var expectedJson = JSON.parse(fs.readFileSync(fileB, 'utf8'));
 
     var err = null;
 
@@ -204,20 +204,20 @@ assert.utfgridEqualsFile = function (buffer, file_b, tolerance, callback) {
     };
 
     try {
-        var obtained_json = Object.prototype.toString() === buffer.toString() ? buffer : JSON.parse(buffer);
+        var obtainedJson = Object.prototype.toString() === buffer.toString() ? buffer : JSON.parse(buffer);
 
         // compare grid
-        var obtained_grid = obtained_json.grid;
-        var expected_grid = expected_json.grid;
-        var nrows = obtained_grid.length;
-        if (nrows !== expected_grid.length) {
+        var obtainedGrid = obtainedJson.grid;
+        var expectedGrid = expectedJson.grid;
+        var nrows = obtainedGrid.length;
+        if (nrows !== expectedGrid.length) {
             throw new Error('Obtained grid rows (' + nrows +
-                ') != expected grid rows (' + expected_grid.length + ')');
+                ') != expected grid rows (' + expectedGrid.length + ')');
         }
         var celldiff = [];
         for (var i = 0; i < nrows; ++i) {
-            var ocols = obtained_grid[i];
-            var ecols = expected_grid[i];
+            var ocols = obtainedGrid[i];
+            var ecols = expectedGrid[i];
             var ncols = ocols.length;
             if (ncols !== ecols.length) {
                 throw new Error('Obtained grid cols (' + ncols +
@@ -237,7 +237,7 @@ assert.utfgridEqualsFile = function (buffer, file_b, tolerance, callback) {
             throw new Error(celldiff.length + ' cell differences: ' + celldiff);
         }
 
-        assert.deepStrictEqual(obtained_json.keys, expected_json.keys);
+        assert.deepStrictEqual(obtainedJson.keys, expectedJson.keys);
     } catch (e) { err = e; }
 
     callback(err);

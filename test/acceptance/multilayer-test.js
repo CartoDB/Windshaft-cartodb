@@ -6,7 +6,7 @@ var _ = require('underscore');
 var redis = require('redis');
 var step = require('step');
 var strftime = require('strftime');
-var redis_stats_db = 5;
+var redisStatsDb = 5;
 
 var mapnik = require('windshaft').mapnik;
 var semver = require('semver');
@@ -14,7 +14,7 @@ var semver = require('semver');
 var helper = require('../support/test-helper');
 var LayergroupToken = require('../../lib/models/layergroup-token');
 
-var windshaft_fixtures = path.join(__dirname, '/../../node_modules/windshaft/test/fixtures');
+var windshaftFixtures = path.join(__dirname, '/../../node_modules/windshaft/test/fixtures');
 
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
@@ -24,8 +24,8 @@ var serverOptions = require('../../lib/server-options');
 
 var QueryTables = require('cartodb-query-tables').queryTables;
 
-['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function (layergroup_url) {
-    var suiteName = 'multilayer:postgres=layergroup_url=' + layergroup_url;
+['/api/v1/map', '/user/localhost/api/v1/map'].forEach(function (layergroupUrl) {
+    var suiteName = 'multilayer:postgres=layergroupUrl=' + layergroupUrl;
     describe(suiteName, function () {
         var server;
 
@@ -46,11 +46,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
 
         var cdbQueryTablesFromPostgresEnabledValue = true;
 
-        var expected_last_updated_epoch = 1234567890123; // this is hard-coded into SQLAPIEmu
-        var expected_last_updated = new Date(expected_last_updated_epoch).toISOString();
+        var expectedLastUpdatedEpoch = 1234567890123; // this is hard-coded into SQLAPIEmu
+        var expectedLastUpdated = new Date(expectedLastUpdatedEpoch).toISOString();
 
-        var test_user = _.template(global.environment.postgres_auth_user, { user_id: 1 });
-        var test_database = test_user + '_db';
+        var testUser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
+        var testDatabase = testUser + '_db';
 
         it('layergroup with 2 layers, each with its style', function (done) {
             var layergroup = {
@@ -77,29 +77,29 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
 
-            var expected_token; // = "e34dd7e235138a062f8ba7ad051aa3a7";
+            var expectedToken; // = "e34dd7e235138a062f8ba7ad051aa3a7";
             step(
-                function do_post () {
+                function doPost () {
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url,
+                        url: layergroupUrl,
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
                         assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
-                        assert.strictEqual(parsedBody.last_updated, expected_last_updated);
+                        assert.strictEqual(parsedBody.last_updated, expectedLastUpdated);
                         assert.strictEqual(res.headers['x-layergroup-id'], parsedBody.layergroupid);
-                        expected_token = parsedBody.layergroupid;
+                        expectedToken = parsedBody.layergroupid;
                         next(null, res);
                     });
                 },
-                function do_get_tile (err) {
+                function doGetTile (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + ':cb0/0/0/0.png',
+                        url: layergroupUrl + '/' + expectedToken + ':cb0/0/0/0.png',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
@@ -114,7 +114,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         // Check X-Cache-Channel
                         cc = res.headers['x-cache-channel'];
                         assert.ok(cc);
-                        var dbname = test_database;
+                        var dbname = testDatabase;
                         assert.strictEqual(cc.substring(0, dbname.length), dbname);
                         if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
                             var jsonquery = cc.substring(dbname.length + 1);
@@ -139,11 +139,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     });
                 },
                 // See https://github.com/CartoDB/Windshaft-cartodb/issues/170
-                function do_get_tile_nosignature (err) {
+                function doGetTileNoSignature (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/localhost@' + expected_token + ':cb0/0/0/0.png',
+                        url: layergroupUrl + '/localhost@' + expectedToken + ':cb0/0/0/0.png',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
@@ -155,11 +155,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         next(err);
                     });
                 },
-                function do_get_grid_layer0 (err) {
+                function doGetGridLayer0 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + '/0/0/0/0.grid.json',
+                        url: layergroupUrl + '/' + expectedToken + '/0/0/0/0.grid.json',
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
@@ -171,11 +171,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                             });
                     });
                 },
-                function do_get_grid_layer1 (err) {
+                function doGetGridLayer1 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + '/1/0/0/0.grid.json',
+                        url: layergroupUrl + '/' + expectedToken + '/1/0/0/0.grid.json',
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
@@ -188,7 +188,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     });
                 },
                 function finish (err) {
-                    keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                    keysToDelete['map_cfg|' + LayergroupToken.parse(expectedToken).token] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
                     done(err);
                 }
@@ -222,15 +222,15 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 };
 
                 step(
-                    function do_create_get () {
+                    function doCreateGet () {
                         var next = this;
                         assert.response(server, {
-                            url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                            url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
                             method: 'GET',
                             headers: { host: 'localhost' }
                         }, {}, function (res, err) { next(err, res); });
                     },
-                    function do_check_create (err, res) {
+                    function doCheckCreate (err, res) {
                         assert.ifError(err);
                         var parsed = JSON.parse(res.body);
                         keysToDelete['map_cfg|' + LayergroupToken.parse(parsed.layergroupid).token] = 0;
@@ -265,28 +265,28 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
 
-            var expected_token;
+            var expectedToken;
             step(
-                function do_create_get () {
+                function doCreateGet () {
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                        url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
                         method: 'GET',
                         headers: { host: 'localhost' }
                     }, {}, function (res, err) { next(err, res); });
                 },
-                function do_check_create (err, res) {
+                function doCheckCreate (err, res) {
                     assert.ifError(err);
                     assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
-                    expected_token = parsedBody.layergroupid.split(':')[0];
+                    expectedToken = parsedBody.layergroupid.split(':')[0];
                     helper.checkCache(res);
                     helper.checkSurrogateKey(res, new QueryTables.QueryMetadata([
                         { dbname: 'test_windshaft_cartodb_user_1_db', table_name: 'test_table', schema_name: 'public' },
                         { dbname: 'test_windshaft_cartodb_user_1_db', table_name: 'test_table_2', schema_name: 'public' }
                     ]).key().join(' '));
 
-                    keysToDelete['map_cfg|' + expected_token] = 0;
+                    keysToDelete['map_cfg|' + expectedToken] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
 
                     done();
@@ -308,7 +308,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
             assert.response(server, {
-                url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
                 method: 'GET',
                 headers: { host: 'localhost' }
             }, {}, function (res) {
@@ -333,7 +333,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
             assert.response(server, {
-                url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
+                url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify(layergroup)),
                 method: 'GET',
                 headers: { host: 'localhost' }
             }, {}, function (res) {
@@ -359,32 +359,32 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
 
-            var expected_token; //  = "6d8e4ad5458e2d25cf0eef38e38717a6";
+            var expectedToken; //  = "6d8e4ad5458e2d25cf0eef38e38717a6";
             step(
-                function do_post () {
+                function doPost () {
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url,
+                        url: layergroupUrl,
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
                         assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
-                        assert.strictEqual(parsedBody.last_updated, expected_last_updated);
-                        if (expected_token) {
-                            assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                        assert.strictEqual(parsedBody.last_updated, expectedLastUpdated);
+                        if (expectedToken) {
+                            assert.strictEqual(parsedBody.layergroupid, expectedToken + ':' + expectedLastUpdatedEpoch);
                         } else {
-                            expected_token = parsedBody.layergroupid.split(':')[0];
+                            expectedToken = parsedBody.layergroupid.split(':')[0];
                         }
                         next(null, res);
                     });
                 },
-                function do_get_tile1 (err) {
+                function doGetTile1 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + ':cb10/1/0/0.png',
+                        url: layergroupUrl + '/' + expectedToken + ':cb10/1/0/0.png',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
@@ -395,7 +395,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         // Check X-Cache-Channel
                         var cc = res.headers['x-cache-channel'];
                         assert.ok(cc);
-                        var dbname = test_database;
+                        var dbname = testDatabase;
                         assert.strictEqual(cc.substring(0, dbname.length), dbname);
                         if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
                             var jsonquery = cc.substring(dbname.length + 1);
@@ -419,11 +419,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                             });
                     });
                 },
-                function do_get_tile4 (err) {
+                function doGetTile4 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + ':cb11/4/0/0.png',
+                        url: layergroupUrl + '/' + expectedToken + ':cb11/4/0/0.png',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
@@ -434,7 +434,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         // Check X-Cache-Channel
                         var cc = res.headers['x-cache-channel'];
                         assert.ok(cc);
-                        var dbname = test_database;
+                        var dbname = testDatabase;
                         assert.strictEqual(cc.substring(0, dbname.length), dbname);
                         if (!cdbQueryTablesFromPostgresEnabledValue) { // only test if it was using the SQL API
                             var jsonquery = cc.substring(dbname.length + 1);
@@ -458,11 +458,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                             });
                     });
                 },
-                function do_get_grid1 (err) {
+                function doGetGrid1 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + '/0/1/0/0.grid.json',
+                        url: layergroupUrl + '/' + expectedToken + '/0/1/0/0.grid.json',
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
@@ -474,11 +474,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                             });
                     });
                 },
-                function do_get_grid4 (err) {
+                function doGetGrid4 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + '/0/4/0/0.grid.json',
+                        url: layergroupUrl + '/' + expectedToken + '/0/4/0/0.grid.json',
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
@@ -488,7 +488,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     });
                 },
                 function finish (err) {
-                    keysToDelete['map_cfg|' + expected_token] = 0;
+                    keysToDelete['map_cfg|' + expectedToken] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
 
                     done(err);
@@ -512,61 +512,61 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
             var statskey = 'user:localhost:mapviews';
-            var redis_stats_client = redis.createClient(global.environment.redis.port);
-            var expected_token; // will be set on first post and checked on second
+            var redisStatsClient = redis.createClient(global.environment.redis.port);
+            var expectedToken; // will be set on first post and checked on second
             var now = strftime('%Y%m%d', new Date());
             step(
-                function clean_stats () {
+                function cleanStats () {
                     var next = this;
-                    redis_stats_client.select(redis_stats_db, function (err) {
+                    redisStatsClient.select(redisStatsDb, function (err) {
                         if (err) {
                             next(err);
                         } else {
-                            redis_stats_client.del(statskey + ':global', next);
+                            redisStatsClient.del(statskey + ':global', next);
                         }
                     });
                 },
-                function do_post_1 (err) {
+                function doPost1 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url,
+                        url: layergroupUrl,
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
                         assert.strictEqual(res.statusCode, 200, res.body);
-                        expected_token = JSON.parse(res.body).layergroupid;
-                        redis_stats_client.zscore(statskey + ':global', now, next);
+                        expectedToken = JSON.parse(res.body).layergroupid;
+                        redisStatsClient.zscore(statskey + ':global', now, next);
                     });
                 },
-                function check_global_stats_1 (err, val) {
+                function checkGlobalStats1 (err, val) {
                     assert.ifError(err);
                     assert.strictEqual(val, '1', 'Expected score of ' + now + ' in ' + statskey + ':global to be 1, got ' + val);
-                    redis_stats_client.zscore(statskey + ':stat_tag:random_tag', now, this);
+                    redisStatsClient.zscore(statskey + ':stat_tag:random_tag', now, this);
                 },
-                function check_tag_stats_1_do_post_2 (err, val) {
+                function checkTagStats1DoPost2 (err, val) {
                     assert.ifError(err);
                     assert.strictEqual(val, '1', 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
               ' to be 1, got ' + val);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url,
+                        url: layergroupUrl,
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
                         assert.strictEqual(res.statusCode, 200, res.body);
-                        assert.strictEqual(JSON.parse(res.body).layergroupid, expected_token);
-                        redis_stats_client.zscore(statskey + ':global', now, next);
+                        assert.strictEqual(JSON.parse(res.body).layergroupid, expectedToken);
+                        redisStatsClient.zscore(statskey + ':global', now, next);
                     });
                 },
-                function check_global_stats_2 (err, val) {
+                function checkGlobalStats2 (err, val) {
                     assert.ifError(err);
                     assert.strictEqual(val, '2', 'Expected score of ' + now + ' in ' + statskey + ':global to be 2, got ' + val);
-                    redis_stats_client.zscore(statskey + ':stat_tag:' + layergroup.stat_tag, now, this);
+                    redisStatsClient.zscore(statskey + ':stat_tag:' + layergroup.stat_tag, now, this);
                 },
-                function check_tag_stats_2 (err, val) {
+                function checkTagStats2 (err, val) {
                     assert.ifError(err);
                     assert.strictEqual(val, '2', 'Expected score of ' + now + ' in ' + statskey + ':stat_tag:' + layergroup.stat_tag +
               ' to be 2, got ' + val);
@@ -577,8 +577,8 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         return done(err);
                     }
                     // strip epoch
-                    expected_token = expected_token.split(':')[0];
-                    keysToDelete['map_cfg|' + expected_token] = 0;
+                    expectedToken = expectedToken.split(':')[0];
+                    keysToDelete['map_cfg|' + expectedToken] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
                     keysToDelete[statskey + ':stat_tag:' + layergroup.stat_tag] = 5;
                     done();
@@ -602,7 +602,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
             assert.response(server, {
-                url: layergroup_url,
+                url: layergroupUrl,
                 method: 'POST',
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
@@ -632,7 +632,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
             assert.response(server, {
-                url: layergroup_url,
+                url: layergroupUrl,
                 method: 'POST',
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
@@ -669,32 +669,32 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
 
-            var expected_token; // = "b4ed64d93a411a59f330ab3d798e4009";
+            var expectedToken; // = "b4ed64d93a411a59f330ab3d798e4009";
             step(
-                function do_post () {
+                function doPost () {
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '?map_key=1234',
+                        url: layergroupUrl + '?map_key=1234',
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) {
                         assert.strictEqual(res.statusCode, 200, res.body);
                         var parsedBody = JSON.parse(res.body);
-                        assert.strictEqual(parsedBody.last_updated, expected_last_updated);
-                        if (expected_token) {
-                            assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                        assert.strictEqual(parsedBody.last_updated, expectedLastUpdated);
+                        if (expectedToken) {
+                            assert.strictEqual(parsedBody.layergroupid, expectedToken + ':' + expectedLastUpdatedEpoch);
                         } else {
-                            expected_token = parsedBody.layergroupid.split(':')[0];
+                            expectedToken = parsedBody.layergroupid.split(':')[0];
                         }
                         next(null, res);
                     });
                 },
-                function do_get_tile (err) {
+                function doGetTile (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + ':cb0/0/0/0.png?map_key=1234',
+                        url: layergroupUrl + '/' + expectedToken + ':cb0/0/0/0.png?map_key=1234',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
@@ -705,16 +705,16 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         // Check X-Cache-Channel
                         var cc = res.headers['x-cache-channel'];
                         assert.ok(cc);
-                        var dbname = test_database;
+                        var dbname = testDatabase;
                         assert.strictEqual(cc.substring(0, dbname.length), dbname);
                         next(err);
                     });
                 },
-                function do_get_grid_layer0 (err) {
+                function doGetGridLayer0 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + '/0/0/0/0.grid.json?map_key=1234',
+                        url: layergroupUrl + '/' + expectedToken + '/0/0/0/0.grid.json?map_key=1234',
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
@@ -722,11 +722,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         next(err);
                     });
                 },
-                function do_get_grid_layer1 (err) {
+                function doGetGridLayer1 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + '/1/0/0/0.grid.json?map_key=1234',
+                        url: layergroupUrl + '/' + expectedToken + '/1/0/0/0.grid.json?map_key=1234',
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
@@ -735,11 +735,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         next(err);
                     });
                 },
-                function do_get_tile_unauth (err) {
+                function doGetTileUnauth (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + ':cb0/0/0/0.png',
+                        url: layergroupUrl + '/' + expectedToken + ':cb0/0/0/0.png',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
@@ -750,11 +750,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         next(err);
                     });
                 },
-                function do_get_grid_layer0_unauth (err) {
+                function doGetGridLayer0Unauth (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + '/0/0/0/0.grid.json',
+                        url: layergroupUrl + '/' + expectedToken + '/0/0/0/0.grid.json',
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
@@ -764,11 +764,11 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         next(err);
                     });
                 },
-                function do_get_grid_layer1_unauth (err) {
+                function doGetGridLayer1Unauth (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + '/1/0/0/0.grid.json',
+                        url: layergroupUrl + '/' + expectedToken + '/1/0/0/0.grid.json',
                         headers: { host: 'localhost' },
                         method: 'GET'
                     }, {}, function (res) {
@@ -779,7 +779,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     });
                 },
                 function finish (err) {
-                    keysToDelete['map_cfg|' + expected_token] = 0;
+                    keysToDelete['map_cfg|' + expectedToken] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
 
                     done(err);
@@ -803,40 +803,40 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
 
-            var expected_token; // = "b4ed64d93a411a59f330ab3d798e4009";
+            var expectedToken; // = "b4ed64d93a411a59f330ab3d798e4009";
             step(
-                function do_post () {
+                function doPost () {
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '?map_key=1234',
+                        url: layergroupUrl + '?map_key=1234',
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res, err) { next(err, res); });
                 },
-                function check_post (err, res) {
+                function checkPost (err, res) {
                     assert.ifError(err);
                     assert.strictEqual(res.statusCode, 200, res.body);
                     var parsedBody = JSON.parse(res.body);
-                    assert.strictEqual(parsedBody.last_updated, expected_last_updated);
-                    if (expected_token) {
-                        assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                    assert.strictEqual(parsedBody.last_updated, expectedLastUpdated);
+                    if (expectedToken) {
+                        assert.strictEqual(parsedBody.layergroupid, expectedToken + ':' + expectedLastUpdatedEpoch);
                     } else {
-                        expected_token = parsedBody.layergroupid.split(':')[0];
+                        expectedToken = parsedBody.layergroupid.split(':')[0];
                     }
                     return null;
                 },
-                function do_get0 (err) {
+                function doGet0 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + ':cb0/0/0/0.png?map_key=1234',
+                        url: layergroupUrl + '/' + expectedToken + ':cb0/0/0/0.png?map_key=1234',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res, err) { next(err, res); });
                 },
-                function do_check0 (err, res) {
+                function doCheck0 (err, res) {
                     assert.ifError(err);
                     assert.strictEqual(res.statusCode, 200, res.body);
                     assert.strictEqual(res.headers['content-type'], 'image/png');
@@ -844,27 +844,27 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     // Check X-Cache-Channel
                     var cc = res.headers['x-cache-channel'];
                     assert.ok(cc, 'Missing X-Cache-Channel');
-                    var dbname = test_database;
+                    var dbname = testDatabase;
                     assert.strictEqual(cc.substring(0, dbname.length), dbname);
                     return null;
                 },
-                function do_restart_server (err/*, res */) {
+                function doRestartServer (err/*, res */) {
                     assert.ifError(err);
                     // hack simulating restart...
                     server = new CartodbWindshaft(serverOptions);
                     return null;
                 },
-                function do_get1 (err) {
+                function doGet1 (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + ':cb0/0/0/0.png?map_key=1234',
+                        url: layergroupUrl + '/' + expectedToken + ':cb0/0/0/0.png?map_key=1234',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res, err) { next(err, res); });
                 },
-                function do_check1 (err, res) {
+                function doCheck1 (err, res) {
                     assert.ifError(err);
                     assert.strictEqual(res.statusCode, 200, res.body);
                     assert.strictEqual(res.headers['content-type'], 'image/png');
@@ -872,12 +872,12 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     // Check X-Cache-Channel
                     var cc = res.headers['x-cache-channel'];
                     assert.ok(cc, 'Missing X-Cache-Channel on restart');
-                    var dbname = test_database;
+                    var dbname = testDatabase;
                     assert.strictEqual(cc.substring(0, dbname.length), dbname);
                     return null;
                 },
                 function finish (err) {
-                    keysToDelete['map_cfg|' + expected_token] = 0;
+                    keysToDelete['map_cfg|' + expectedToken] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
 
                     done(err);
@@ -901,7 +901,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
             };
 
             assert.response(server, {
-                url: layergroup_url,
+                url: layergroupUrl,
                 method: 'POST',
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
@@ -937,7 +937,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
             };
 
             assert.response(server, {
-                url: layergroup_url,
+                url: layergroupUrl,
                 method: 'POST',
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
@@ -964,7 +964,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
             assert.response(server, {
-                url: layergroup_url,
+                url: layergroupUrl,
                 method: 'POST',
                 headers: { host: 'localhost', 'Content-Type': 'application/json' },
                 data: JSON.stringify(layergroup)
@@ -991,41 +991,41 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         }
                     ]
                 };
-                var expected_token; // = "e34dd7e235138a062f8ba7ad051aa3a7";
+                var expectedToken; // = "e34dd7e235138a062f8ba7ad051aa3a7";
                 step(
-                    function do_post () {
+                    function doPost () {
                         var next = this;
                         assert.response(server, {
-                            url: layergroup_url,
+                            url: layergroupUrl,
                             method: 'POST',
                             headers: { host: 'localhost', 'Content-Type': 'application/json' },
                             data: JSON.stringify(layergroup)
                         }, {}, function (res) {
                             assert.strictEqual(res.statusCode, 200, res.body);
                             var parsedBody = JSON.parse(res.body);
-                            if (expected_token) {
-                                assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                            if (expectedToken) {
+                                assert.strictEqual(parsedBody.layergroupid, expectedToken + ':' + expectedLastUpdatedEpoch);
                                 assert.strictEqual(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                             } else {
-                                var token_components = parsedBody.layergroupid.split(':');
-                                expected_token = token_components[0];
-                                expected_last_updated_epoch = token_components[1];
+                                var tokenComponents = parsedBody.layergroupid.split(':');
+                                expectedToken = tokenComponents[0];
+                                expectedLastUpdatedEpoch = tokenComponents[1];
                             }
                             next(null, res);
                         });
                     },
-                    function do_get_tile (err) {
+                    function doGetTile (err) {
                         assert.ifError(err);
                         var next = this;
                         assert.response(server, {
-                            url: layergroup_url + '/' + expected_token + ':cb0/0/0/0.png',
+                            url: layergroupUrl + '/' + expectedToken + ':cb0/0/0/0.png',
                             method: 'GET',
                             headers: { host: 'localhost' },
                             encoding: 'binary'
                         }, {}, function (res) {
                             assert.strictEqual(res.statusCode, 200, res.body);
                             assert.strictEqual(res.headers['content-type'], 'image/png');
-                            assert.imageBufferIsSimilarToFile(res.body, windshaft_fixtures + '/test_default_mapnik_point.png',
+                            assert.imageBufferIsSimilarToFile(res.body, windshaftFixtures + '/test_default_mapnik_point.png',
                                 IMAGE_EQUALS_TOLERANCE_PER_MIL, function (err/*, similarity */) {
                                     next(err);
                                 }
@@ -1034,7 +1034,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     },
                     function finish (err) {
                         keysToDelete['user:localhost:mapviews:global'] = 5;
-                        keysToDelete['map_cfg|' + expected_token] = 0;
+                        keysToDelete['map_cfg|' + expectedToken] = 0;
 
                         done(err);
                     }
@@ -1057,49 +1057,49 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     }
                 ]
             };
-            var expected_token; // = "e34dd7e235138a062f8ba7ad051aa3a7";
+            var expectedToken; // = "e34dd7e235138a062f8ba7ad051aa3a7";
             step(
-                function do_post () {
+                function doPost () {
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '?api_key=1234',
+                        url: layergroupUrl + '?api_key=1234',
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res) { next(null, res); });
                 },
-                function check_result (err, res) {
+                function checkResult (err, res) {
                     assert.ifError(err);
                     var next = this;
                     assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                     var parsedBody = JSON.parse(res.body);
-                    if (expected_token) {
-                        assert.strictEqual(parsedBody.layergroupid, expected_token + ':' + expected_last_updated_epoch);
+                    if (expectedToken) {
+                        assert.strictEqual(parsedBody.layergroupid, expectedToken + ':' + expectedLastUpdatedEpoch);
                         assert.strictEqual(res.headers['x-layergroup-id'], parsedBody.layergroupid);
                     } else {
-                        var token_components = parsedBody.layergroupid.split(':');
-                        expected_token = token_components[0];
-                        expected_last_updated_epoch = token_components[1];
+                        var tokenComponents = parsedBody.layergroupid.split(':');
+                        expectedToken = tokenComponents[0];
+                        expectedLastUpdatedEpoch = tokenComponents[1];
                     }
                     next(null, res);
                 },
-                function do_get_tile (err) {
+                function doGetTile (err) {
                     assert.ifError(err);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '/' + expected_token + ':cb0/0/0/0.png?api_key=1234',
+                        url: layergroupUrl + '/' + expectedToken + ':cb0/0/0/0.png?api_key=1234',
                         method: 'GET',
                         headers: { host: 'localhost' },
                         encoding: 'binary'
                     }, {}, function (res) { next(null, res); });
                 },
-                function check_get_tile (err, res) {
+                function checkGetTile (err, res) {
                     if (err) {
                         return done(err);
                     }
                     assert.strictEqual(res.statusCode, 200, res.body);
                     keysToDelete['user:localhost:mapviews:global'] = 5;
-                    keysToDelete['map_cfg|' + expected_token] = 0;
+                    keysToDelete['map_cfg|' + expectedToken] = 0;
                     done(err);
                 }
             );
@@ -1108,14 +1108,14 @@ var QueryTables = require('cartodb-query-tables').queryTables;
         // SQL strings can be of arbitrary length, when using POST
         // See https://github.com/CartoDB/Windshaft-cartodb/issues/111
         it('sql string can be very long', function (done) {
-            var long_val = 'pretty';
+            var longVal = 'pretty';
             for (var i = 0; i < 1024; ++i) {
-                long_val += ' long';
+                longVal += ' long';
             }
-            long_val += ' string';
+            longVal += ' string';
             var sql = 'SELECT ';
             for (i = 0; i < 16; ++i) {
-                sql += "'" + long_val + "'::text as pretty_long_field_name_" + i + ', ';
+                sql += "'" + longVal + "'::text as pretty_long_field_name_" + i + ', ';
             }
             sql += 'cartodb_id, the_geom_webmercator FROM gadm4 g';
             var layergroup = {
@@ -1130,25 +1130,25 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                     }
                 ]
             };
-            var expected_token;
+            var expectedToken;
             step(
-                function do_post () {
+                function doPost () {
                     var data = JSON.stringify(layergroup);
                     assert.ok(data.length > 1024 * 64);
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url + '?api_key=1234',
+                        url: layergroupUrl + '?api_key=1234',
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: data
                     }, {}, function (res) { next(null, res); });
                 },
-                function check_result (err, res) {
+                function checkResult (err, res) {
                     assert.ifError(err);
                     assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                     var parsedBody = JSON.parse(res.body);
-                    var token_components = parsedBody.layergroupid.split(':');
-                    expected_token = token_components[0];
+                    var tokenComponents = parsedBody.layergroupid.split(':');
+                    expectedToken = tokenComponents[0];
                     return null;
                 },
                 function cleanup (err) {
@@ -1156,7 +1156,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                         return done(err);
                     }
                     keysToDelete['user:localhost:mapviews:global'] = 5;
-                    keysToDelete['map_cfg|' + expected_token] = 0;
+                    keysToDelete['map_cfg|' + expectedToken] = 0;
 
                     done(err);
                 }
@@ -1183,16 +1183,16 @@ var QueryTables = require('cartodb-query-tables').queryTables;
             };
 
             step(
-                function do_post () {
+                function doPost () {
                     var next = this;
                     assert.response(server, {
-                        url: layergroup_url,
+                        url: layergroupUrl,
                         method: 'POST',
                         headers: { host: 'localhost', 'Content-Type': 'application/json' },
                         data: JSON.stringify(layergroup)
                     }, {}, function (res, err) { next(err, res); });
                 },
-                function check_post (err, res) {
+                function checkPost (err, res) {
                     assert.ifError(err);
                     assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                     var parsed = JSON.parse(res.body);
@@ -1225,16 +1225,16 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 };
 
                 step(
-                    function do_post () {
+                    function doPost () {
                         var next = this;
                         assert.response(server, {
-                            url: layergroup_url,
+                            url: layergroupUrl,
                             method: 'POST',
                             headers: { host: 'localhost', 'Content-Type': 'application/json' },
                             data: JSON.stringify(layergroup)
                         }, {}, function (res, err) { next(err, res); });
                     },
-                    function check_post (err, res) {
+                    function checkPost (err, res) {
                         assert.ifError(err);
                         assert.strictEqual(res.statusCode, 400, res.statusCode + ': ' + res.body);
                         var parsed = JSON.parse(res.body);
@@ -1252,7 +1252,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
         }
 
         var layergroupTtlRequest = {
-            url: layergroup_url + '?config=' + encodeURIComponent(JSON.stringify({
+            url: layergroupUrl + '?config=' + encodeURIComponent(JSON.stringify({
                 version: '1.0.0',
                 layers: [
                     {
