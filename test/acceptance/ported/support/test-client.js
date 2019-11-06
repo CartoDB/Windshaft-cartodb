@@ -91,9 +91,7 @@ function createLayergroup (layergroupConfig, options, callback) {
                 global[options.callbackName] = function (layergroup) {
                     layergroupid = layergroup.layergroupid;
                 };
-                // jshint ignore:start
-                eval(res.body);
-                // jshint ignore:end
+                eval(res.body); // eslint-disable-line no-eval
                 delete global[options.callbackName];
             } else {
                 parsedBody = JSON.parse(res.body);
@@ -404,7 +402,7 @@ function getGeneric (layergroupConfig, url, expectedResponse, callback) {
 
             var img;
             if (contentType === pngContentType) {
-                img = new mapnik.Image.fromBytesSync(Buffer.from(res.body, 'binary'));
+                img = mapnik.Image.fromBytesSync(Buffer.from(res.body, 'binary'));
             }
 
             var keysToDelete = {

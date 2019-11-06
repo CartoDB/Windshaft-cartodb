@@ -91,7 +91,7 @@ describe('retina support', function () {
             function (res, err) {
                 assert.ok(!err, 'Failed to request 0/0/0' + scaleFactor + '.png tile');
 
-                var image = new mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
+                var image = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
 
                 assert.strictEqual(image.width(), imageSize);
                 assert.strictEqual(image.height(), imageSize);

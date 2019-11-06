@@ -559,7 +559,7 @@ describe('cluster', function () {
                         return (a._cdb_feature_count < b._cdb_feature_count) ||
                                (a._cdb_feature_count === b._cdb_feature_count &&
                                     (a.type < b.type ||
-                                     a.type === b.type && a.max_value < b.max_value));
+                                     (a.type === b.type && a.max_value < b.max_value)));
                     };
 
                     assert.deepStrictEqual(body.rows.sort(sort_f), expected.sort(sort_f));

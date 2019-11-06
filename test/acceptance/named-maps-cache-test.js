@@ -78,7 +78,7 @@ describe('named maps provider cache', function () {
         assert.response(server, requestOptions, expectedResponse, function (res, err) {
             var img;
             if (res.statusCode === 200) {
-                img = mapnik.Image.fromBytes(new Buffer.from(res.body, 'binary'));
+                img = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
             }
             return callback(err, res, img);
         });
