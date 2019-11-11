@@ -665,6 +665,194 @@ describe('dataviews using tables with overviews', function() {
                 });
             });
         });
+
+        describe.only('agreggation validation', function (){
+            const params = {
+                response: {
+                    status: 400,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }
+            };
+
+            function createMapConfig(options) {
+                return {
+                    version: '1.5.0',
+                    analyses: [
+                        { id: 'data-source',
+                            type: 'source',
+                            params: {
+                                query: 'select * from test_table_overviews'
+                            }
+                        },
+                        {
+                            id: 'data-source-special-float-values',
+                            type: 'source',
+                            params: {
+                                query: 'select * from test_special_float_values_table_overviews'
+                            }
+                        }
+                    ],
+                    dataviews:  {
+                        test_invalid_aggregation: {
+                            type: 'aggregation',
+                            source: {id: 'data-source'},
+                            options: options
+                        }
+                    },
+                    layers: [
+                        {
+                            type: 'mapnik',
+                            options: {
+                                sql: 'select * from test_table_overviews',
+                                cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                                cartocss_version: '2.3.0',
+                                source: { id: 'data-source' }
+                            }
+                        },
+                        {
+                            type: 'mapnik',
+                            options: {
+                                sql: 'select * from test_special_float_values_table_overviews',
+                                cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                                cartocss_version: '2.3.0',
+                                source: {
+                                    id: 'data-source-special-float-values'
+                                }
+                            }
+                        }
+                    ]
+                };
+            }
+
+            it('should fail if missing column', function (done) {
+                var options = {
+                    aggregation: "sum",
+                    aggregationColumn: "value"
+                };
+                var missingCOlumnMapConfig = createMapConfig(options);
+
+                var testClient = new TestClient(missingCOlumnMapConfig);
+                testClient.getDataview('test_invalid_aggregation', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(dataview, {
+                        errors: ["Aggregation expects 'column' in dataview options"],
+                        errors_with_context: [{
+                            type: 'unknown',
+                            message: "Aggregation expects 'column' in dataview options"
+                        }]
+                    });
+
+                    testClient.drain(done);
+                });
+            });
+
+            it('should fail if no aggregation operation', function (done) {
+                var options = {
+                    column: "value",
+                    aggregationColumn: "value"
+                };
+                var missingOperationMapConfig = createMapConfig(options);
+
+                var testClient = new TestClient(missingOperationMapConfig);
+                testClient.getDataview('test_invalid_aggregation', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(dataview, {
+                        errors: ["Aggregation expects 'aggregation' operation in dataview options"],
+                        errors_with_context: [{
+                            type: 'unknown',
+                            message: "Aggregation expects 'aggregation' operation in dataview options"
+                        }]
+                    });
+
+                    testClient.drain(done);
+                });
+            });
+
+            it('should fail if fake operation', function (done) {
+                var options = {
+                    column: "value",
+                    aggregation: "wadus",
+                    aggregationColumn: "value"
+                };
+                var wrongOperationMapConfig = createMapConfig(options);
+
+                var testClient = new TestClient(wrongOperationMapConfig);
+                testClient.getDataview('test_invalid_aggregation', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(dataview, {
+                        errors: ["Aggregation does not support 'wadus' operation"],
+                        errors_with_context: [{
+                            type: 'unknown',
+                            message: "Aggregation does not support 'wadus' operation"
+                        }]
+                    });
+
+                    testClient.drain(done);
+                });
+            });
+
+            it('should fail if invalid operation for overview', function (done) {
+                var options = {
+                    column: "value",
+                    aggregation: "avg",
+                    aggregationColumn: "value"
+                };
+                var wrongOperationMapConfig = createMapConfig(options);
+
+                var testClient = new TestClient(wrongOperationMapConfig);
+                testClient.getDataview('test_invalid_aggregation', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(dataview, {
+                        errors: ["Aggregation does not support 'avg' operation in dataview overview options"],
+                        errors_with_context: [{
+                            type: 'unknown',
+                            message: "Aggregation does not support 'avg' operation in dataview overview options"
+                        }]
+                    });
+
+                    testClient.drain(done);
+                });
+            });
+
+            it('should fail if no aggregation column when needed', function (done) {
+                var options = {
+                    column: "value",
+                    aggregation: "sum"
+                };
+                var missingOptionMapConfig = createMapConfig(options);
+
+                var testClient = new TestClient(missingOptionMapConfig);
+                testClient.getDataview('test_invalid_aggregation', params, function (err, dataview) {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    assert.deepStrictEqual(dataview, {
+                        errors: ["Aggregation 'sum' is missing some options: aggregationColumn"],
+                        errors_with_context: [{
+                            type: 'unknown',
+                            message: "Aggregation 'sum' is missing some options: aggregationColumn"
+                        }]
+                    });
+
+                    testClient.drain(done);
+                });
+            });
+        });
     });
 });
 
