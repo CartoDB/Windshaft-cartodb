@@ -731,7 +731,7 @@ describe('dataviews using tables with overviews', function() {
                     aggregation: "sum",
                     aggregationColumn: "value"
                 };
-                var missingCOlumnMapConfig = createMapConfig(options);
+                var missingColumnMapConfig = createMapConfig(options);
 
                 var testClient = new TestClient(missingCOlumnMapConfig);
                 testClient.getDataview('test_invalid_aggregation', params, function (err, dataview) {
