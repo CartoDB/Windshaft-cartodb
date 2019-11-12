@@ -666,7 +666,7 @@ describe('dataviews using tables with overviews', function() {
             });
         });
 
-        describe.only('agreggation validation', function (){
+        describe('agreggation validation', function (){
             const params = {
                 response: {
                     status: 400,
