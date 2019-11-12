@@ -685,13 +685,6 @@ describe('dataviews using tables with overviews', function() {
                             params: {
                                 query: 'select * from test_table_overviews'
                             }
-                        },
-                        {
-                            id: 'data-source-special-float-values',
-                            type: 'source',
-                            params: {
-                                query: 'select * from test_special_float_values_table_overviews'
-                            }
                         }
                     ],
                     dataviews:  {
@@ -709,17 +702,6 @@ describe('dataviews using tables with overviews', function() {
                                 cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
                                 cartocss_version: '2.3.0',
                                 source: { id: 'data-source' }
-                            }
-                        },
-                        {
-                            type: 'mapnik',
-                            options: {
-                                sql: 'select * from test_special_float_values_table_overviews',
-                                cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
-                                cartocss_version: '2.3.0',
-                                source: {
-                                    id: 'data-source-special-float-values'
-                                }
                             }
                         }
                     ]
