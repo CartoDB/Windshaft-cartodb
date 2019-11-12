@@ -14,6 +14,7 @@ Announcements:
 - Be able to set a coherent TTL in Cache-Control header to expire all resources belonging to a map simultaneously.
 - When `cache buster` in request path is `0` set header `Last-Modified` to now, it avoids stalled content in 3rd party cache providers when they add `If-Modified-Since` header into the request.
 - Adding a logger to MapStore (#1134)
+- Qualify calls to cartodb extension so having it in the search_path isn't necessary.
 
 ## 7.2.0
 Released 2019-09-30
