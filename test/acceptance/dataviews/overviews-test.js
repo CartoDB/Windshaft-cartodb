@@ -678,7 +678,7 @@ describe('dataviews using tables with overviews', function() {
 
             function createMapConfig(options) {
                 return {
-                    version: '1.5.0',
+                    version: '1.8.0',
                     analyses: [
                         { id: 'data-source',
                             type: 'source',
@@ -733,7 +733,7 @@ describe('dataviews using tables with overviews', function() {
                 };
                 var missingColumnMapConfig = createMapConfig(options);
 
-                var testClient = new TestClient(missingCOlumnMapConfig);
+                var testClient = new TestClient(missingColumnMapConfig);
                 testClient.getDataview('test_invalid_aggregation', params, function (err, dataview) {
                     if (err) {
                         return done(err);
