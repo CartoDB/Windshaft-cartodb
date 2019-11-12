@@ -15,6 +15,7 @@ Announcements:
 - When `cache buster` in request path is `0` set header `Last-Modified` to now, it avoids stalled content in 3rd party cache providers when they add `If-Modified-Since` header into the request.
 - Adding a logger to MapStore (#1134)
 - Qualify calls to cartodb extension so having it in the search_path isn't necessary.
+- Fix multiple DB login issues.
 
 ## 7.2.0
 Released 2019-09-30
