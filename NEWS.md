@@ -1,7 +1,7 @@
 # Changelog
 
 ## 8.0.0
-Released 2019-mm-dd
+Released 2019-11-13
 
 Breaking changes:
 - Schema change for "routes" in configuration file, each "router" is now an array instead of an object. See [`dd06de2`](https://github.com/CartoDB/Windshaft-cartodb/pull/1126/commits/dd06de2632661e19d64c9fbc2be0ba1a8059f54c) for more details.
