@@ -66,14 +66,14 @@ describe('server', function () {
 
     it('grid jsonp', function (done) {
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
-        testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'jsonp_test', function (err, res) {
+        testClient.getGridJsonp(mapConfig, 0, 13, 4011, 3088, 'jsonpTest', function (err, res) {
             assert.ifError(err);
             assert.strictEqual(res.statusCode, 200, res.body);
             assert.deepStrictEqual(res.headers['content-type'], 'text/javascript; charset=utf-8');
             var didRunJsonCallback = false;
             var response = {};
             /* eslint-disable no-unused-vars, no-eval */
-            function jsonp_test (body) {
+            function jsonpTest (body) {
                 response = body;
                 didRunJsonCallback = true;
             }
@@ -88,14 +88,14 @@ describe('server', function () {
         var mapConfig = testClient.singleLayerMapConfig('select * from test_table', null, null, 'name');
         testClient.getGrid(mapConfig, 0, 13, 4011, 3088, function (err, res) {
             assert.ifError(err);
-            var expected_json = {
+            var expectedJson = {
                 1: { name: 'Hawai' },
                 2: { name: 'El Estocolmo' },
                 3: { name: 'El Rey del Tallarín' },
                 4: { name: 'El Lacón' },
                 5: { name: 'El Pico' }
             };
-            assert.deepStrictEqual(JSON.parse(res.body).data, expected_json);
+            assert.deepStrictEqual(JSON.parse(res.body).data, expectedJson);
             done();
         });
     });
@@ -157,14 +157,14 @@ describe('server', function () {
         var mapConfigName = testClient.singleLayerMapConfig(query, style211, null, 'name');
         testClient.getGrid(mapConfigName, 0, 3, 2, 2, function (err, res) {
             assert.ifError(err);
-            var expected_data = { 1: { name: 'west' } };
-            assert.deepStrictEqual(JSON.parse(res.body).data, expected_data);
+            var expectedData = { 1: { name: 'west' } };
+            assert.deepStrictEqual(JSON.parse(res.body).data, expectedData);
 
             var mapConfigCartodbId = testClient.singleLayerMapConfig(query, style211, null, 'cartodb_id');
             testClient.getGrid(mapConfigCartodbId, 0, 3, 2, 2, function (err, res) {
                 assert.ifError(err);
-                var expected_data = { 1: { cartodb_id: 1 } };
-                assert.deepStrictEqual(JSON.parse(res.body).data, expected_data);
+                var expectedData = { 1: { cartodb_id: 1 } };
+                assert.deepStrictEqual(JSON.parse(res.body).data, expectedData);
                 done();
             });
         });
