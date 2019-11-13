@@ -411,7 +411,7 @@ describe('multilayer error cases', function () {
 
     it('nonexistent layergroup token error', function (done) {
         step(
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {

@@ -132,16 +132,16 @@ describe('server_gettile', function () {
         });
     });
 
-    var test_style_black_200 = '#test_table{marker-fill:black;marker-line-color:black;marker-width:5}';
-    var test_style_black_210 = '#test_table{marker-fill:black;marker-line-color:black;marker-width:10}';
+    var testStyleBlack200 = '#test_table{marker-fill:black;marker-line-color:black;marker-width:5}';
+    var testStyleBlack210 = '#test_table{marker-fill:black;marker-line-color:black;marker-width:10}';
 
     it("get'ing a tile with url specified 2.0.0 style should return an expected tile", function (done) {
-        testClient.getTile(testClient.defaultTableMapConfig('test_table', test_style_black_200, '2.0.0'),
+        testClient.getTile(testClient.defaultTableMapConfig('test_table', testStyleBlack200, '2.0.0'),
             13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
     it("get'ing a tile with url specified 2.1.0 style should return an expected tile", function (done) {
-        testClient.getTile(testClient.defaultTableMapConfig('test_table', test_style_black_210, '2.1.0'),
+        testClient.getTile(testClient.defaultTableMapConfig('test_table', testStyleBlack210, '2.1.0'),
             13, 4011, 3088, imageCompareFn('test_table_13_4011_3088_styled_black.png', done));
     });
 
@@ -156,7 +156,7 @@ describe('server_gettile', function () {
     }
 
     // See http://github.com/CartoDB/Windshaft/issues/100
-    var test_strictness = function (done) {
+    var testStrictness = function (done) {
         var nonStrictMapConfig = testClient.singleLayerMapConfig(
             "SELECT 1 as cartodb_id, 'SRID=3857;POINT(666 666)'::geometry as the_geom",
             "#test_table{point-transform: 'scale(100)';}"
@@ -172,12 +172,12 @@ describe('server_gettile', function () {
             });
         });
     };
-    var test_strict_lbl = 'unused directives are not tolerated if strict';
+    var testStrictLbl = 'unused directives are not tolerated if strict';
     if (semver.satisfies(mapnik.versions.mapnik, '2.3.x')) {
         // Strictness handling changed in 2.3.x, possibly a bug: see http://github.com/mapnik/mapnik/issues/2301
-        it.skip('[skipped due to http://github.com/mapnik/mapnik/issues/2301]' + test_strict_lbl, test_strictness);
+        it.skip('[skipped due to http://github.com/mapnik/mapnik/issues/2301]' + testStrictLbl, testStrictness);
     } else if (!semver.satisfies(mapnik.versions.mapnik, '3.0.x')) {
-        it(test_strict_lbl, test_strictness);
+        it(testStrictLbl, testStrictness);
     }
 
     if (semver.satisfies(mapnik.versions.mapnik, '2.3.x')) {

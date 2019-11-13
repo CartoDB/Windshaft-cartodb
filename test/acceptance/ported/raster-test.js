@@ -44,9 +44,9 @@ describe('raster', function () {
                 }
             ]
         };
-        var expected_token;
+        var expectedToken;
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -62,24 +62,24 @@ describe('raster', function () {
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                if (expected_token) {
-                    assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                if (expectedToken) {
+                    assert.deepStrictEqual(parsedBody, { layergroupid: expectedToken, layercount: 2 });
                 } else {
-                    expected_token = parsedBody.layergroupid;
+                    expectedToken = parsedBody.layergroupid;
                 }
                 return null;
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0.png',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0.png',
                     method: 'GET',
                     encoding: 'binary',
                     headers: { host: 'localhost' }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_response (err, res) {
+            function checkResponse (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 assert.deepStrictEqual(res.headers['content-type'], 'image/png');
@@ -101,7 +101,7 @@ describe('raster', function () {
                 var keysToDelete = {
                     'user:localhost:mapviews:global': 5
                 };
-                keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                keysToDelete['map_cfg|' + LayergroupToken.parse(expectedToken).token] = 0;
                 testHelper.deleteRedisKeys(keysToDelete, done);
             }
         );

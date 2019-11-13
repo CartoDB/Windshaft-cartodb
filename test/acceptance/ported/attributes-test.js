@@ -16,7 +16,7 @@ describe('attributes', function () {
         server.setMaxListeners(0);
     });
 
-    var test_mapconfig_1 = {
+    var testMapconfig1 = {
         version: '1.1.0',
         layers: [
             {
@@ -58,9 +58,9 @@ describe('attributes', function () {
     });
 
     it('can only be fetched from layer having an attributes spec', function (done) {
-        var expected_token;
+        var expectedToken;
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -69,7 +69,7 @@ describe('attributes', function () {
                         host: 'localhost',
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(test_mapconfig_1)
+                    data: JSON.stringify(testMapconfig1)
                 }, {}, function (res, err) { next(err, res); });
             },
             function checkPost (err, res) {
@@ -79,25 +79,25 @@ describe('attributes', function () {
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                if (expected_token) {
-                    assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                if (expectedToken) {
+                    assert.deepStrictEqual(parsedBody, { layergroupid: expectedToken, layercount: 2 });
                 } else {
-                    expected_token = parsedBody.layergroupid;
+                    expectedToken = parsedBody.layergroupid;
                 }
                 return null;
             },
-            function do_get_attr_0 (err) {
+            function doGetAttr0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/attributes/1',
+                    url: '/api/v1/map/' + expectedToken + '/0/attributes/1',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_error_0 (err, res) {
+            function checkError0 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(
                     res.statusCode,
@@ -108,36 +108,36 @@ describe('attributes', function () {
                 assert.strictEqual(parsed.errors[0], 'Layer 0 has no exposed attributes');
                 return null;
             },
-            function do_get_attr_1 (err) {
+            function doGetAttr1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/1/attributes/1',
+                    url: '/api/v1/map/' + expectedToken + '/1/attributes/1',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_attr_1 (err, res) {
+            function checkAttr1 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
                 assert.deepStrictEqual(parsed, { n: 6 });
                 return null;
             },
-            function do_get_attr_1_404 (err) {
+            function doGetAttr1404 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/1/attributes/-666',
+                    url: '/api/v1/map/' + expectedToken + '/1/attributes/-666',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_attr_1_404 (err, res) {
+            function checkAttr1404 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 404, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
@@ -147,7 +147,7 @@ describe('attributes', function () {
                 return null;
             },
             function finish (err) {
-                keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                keysToDelete['map_cfg|' + LayergroupToken.parse(expectedToken).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done(err);
@@ -158,14 +158,14 @@ describe('attributes', function () {
     // See https://github.com/CartoDB/Windshaft/issues/131
     it('are checked at map creation time', function (done) {
         // clone the mapconfig test
-        var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
+        var mapconfig = JSON.parse(JSON.stringify(testMapconfig1));
         // append unexistant attribute name
         mapconfig.layers[1].options.sql = 'SELECT * FROM test_table';
         mapconfig.layers[1].options.attributes.id = 'unexistant';
         mapconfig.layers[1].options.attributes.columns = ['cartodb_id'];
 
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -194,9 +194,9 @@ describe('attributes', function () {
     });
 
     it('can be used with jsonp', function (done) {
-        var expected_token;
+        var expectedToken;
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -205,7 +205,7 @@ describe('attributes', function () {
                         host: 'localhost',
                         'Content-Type': 'application/json'
                     },
-                    data: JSON.stringify(test_mapconfig_1)
+                    data: JSON.stringify(testMapconfig1)
                 }, {}, function (res, err) { next(err, res); });
             },
             function checkPost (err, res) {
@@ -215,18 +215,18 @@ describe('attributes', function () {
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                if (expected_token) {
-                    assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                if (expectedToken) {
+                    assert.deepStrictEqual(parsedBody, { layergroupid: expectedToken, layercount: 2 });
                 } else {
-                    expected_token = parsedBody.layergroupid;
+                    expectedToken = parsedBody.layergroupid;
                 }
                 return null;
             },
-            function do_get_attr_0 (err) {
+            function doGetAttr0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token +
+                    url: '/api/v1/map/' + expectedToken +
                         '/0/attributes/1?callback=test',
                     method: 'GET',
                     headers: {
@@ -234,7 +234,7 @@ describe('attributes', function () {
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_error_0 (err, res) {
+            function checkError0 (err, res) {
                 assert.ifError(err);
                 // jsonp errors should be returned with HTTP status 200
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
@@ -248,18 +248,18 @@ describe('attributes', function () {
                 );
                 return null;
             },
-            function do_get_attr_1 (err) {
+            function doGetAttr1 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/1/attributes/1',
+                    url: '/api/v1/map/' + expectedToken + '/1/attributes/1',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_attr_1 (err, res) {
+            function checkAttr1 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.statusCode + ': ' + res.body);
                 var parsed = JSON.parse(res.body);
@@ -267,7 +267,7 @@ describe('attributes', function () {
                 return null;
             },
             function finish (err) {
-                keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                keysToDelete['map_cfg|' + LayergroupToken.parse(expectedToken).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
 
                 done(err);
@@ -281,13 +281,13 @@ describe('attributes', function () {
     //
     it('database access is read-only', function (done) {
         // clone the mapconfig test
-        var mapconfig = JSON.parse(JSON.stringify(test_mapconfig_1));
+        var mapconfig = JSON.parse(JSON.stringify(testMapconfig1));
         mapconfig.layers[1].options.sql +=
             ", test_table_inserter(st_setsrid(st_point(0,0),4326),'write') as w";
         mapconfig.layers[1].options.attributes.columns.push('w');
 
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',

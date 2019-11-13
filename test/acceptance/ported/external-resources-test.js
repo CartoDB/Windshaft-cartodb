@@ -11,16 +11,16 @@ var nock = require('nock');
 var path = require('path');
 
 describe('external resources', function () {
-    var res_serv; // resources server
-    var res_serv_status = { numrequests: 0 }; // status of resources server
-    var res_serv_port;
+    var resServ; // resources server
+    var resServStatus = { numrequests: 0 }; // status of resources server
+    var resServPort;
 
     var IMAGE_EQUALS_TOLERANCE_PER_MIL = 25;
 
     before(function (done) {
         // Start a server to test external resources
-        res_serv = http.createServer(function (request, response) {
-            ++res_serv_status.numrequests;
+        resServ = http.createServer(function (request, response) {
+            ++resServStatus.numrequests;
             var filename = path.join(__dirname, '/../../fixtures/markers', request.url);
             fs.readFile(filename, 'binary', function (err, file) {
                 if (err) {
@@ -35,9 +35,9 @@ describe('external resources', function () {
         });
 
         const host = '127.0.0.1';
-        const markersServer = res_serv.listen(0);
+        const markersServer = resServ.listen(0);
 
-        res_serv_port = markersServer.address().port;
+        resServPort = markersServer.address().port;
 
         nock.disableNetConnect();
         nock.enableNetConnect(host);
@@ -52,7 +52,7 @@ describe('external resources', function () {
         nock.enableNetConnect();
 
         // Close the resources server
-        res_serv.close(done);
+        resServ.close(done);
     });
 
     function imageCompareFn (fixture, done) {
@@ -66,7 +66,7 @@ describe('external resources', function () {
     }
 
     it('basic external resource', function (done) {
-        var circleStyle = "#test_table_3 { marker-file: url('http://127.0.0.1:" + res_serv_port +
+        var circleStyle = "#test_table_3 { marker-file: url('http://127.0.0.1:" + resServPort +
             "/circle.svg'); marker-transform:'scale(0.2)'; }";
 
         testClient.getTile(testClient.defaultTableMapConfig('test_table_3', circleStyle), 13, 4011, 3088,
@@ -74,7 +74,7 @@ describe('external resources', function () {
     });
 
     it('different external resource', function (done) {
-        var squareStyle = "#test_table_3 { marker-file: url('http://127.0.0.1:" + res_serv_port +
+        var squareStyle = "#test_table_3 { marker-file: url('http://127.0.0.1:" + resServPort +
             "/square.svg'); marker-transform:'scale(0.2)'; }";
 
         testClient.getTile(testClient.defaultTableMapConfig('test_table_3', squareStyle), 13, 4011, 3088,
@@ -87,16 +87,16 @@ describe('external resources', function () {
             serverOptions: PortedServerOptions
         };
 
-        var externalResourceStyle = "#test_table_3{marker-file: url('http://127.0.0.1:" + res_serv_port +
+        var externalResourceStyle = "#test_table_3{marker-file: url('http://127.0.0.1:" + resServPort +
           "/square.svg'); marker-transform:'scale(0.2)'; }";
 
         var externalResourceMapConfig = testClient.defaultTableMapConfig('test_table_3', externalResourceStyle);
 
         testClient.createLayergroup(externalResourceMapConfig, options, function () {
-            var externalResourceRequestsCount = res_serv_status.numrequests;
+            var externalResourceRequestsCount = resServStatus.numrequests;
 
             testClient.createLayergroup(externalResourceMapConfig, options, function () {
-                assert.strictEqual(res_serv_status.numrequests, externalResourceRequestsCount);
+                assert.strictEqual(resServStatus.numrequests, externalResourceRequestsCount);
 
                 // reset resources cache
                 testHelper.rmdirRecursiveSync(global.environment.millstone.cache_basedir);
@@ -104,7 +104,7 @@ describe('external resources', function () {
                 externalResourceMapConfig = testClient.defaultTableMapConfig('test_table_3 ', externalResourceStyle);
 
                 testClient.createLayergroup(externalResourceMapConfig, options, function () {
-                    assert.strictEqual(res_serv_status.numrequests, externalResourceRequestsCount + 1);
+                    assert.strictEqual(resServStatus.numrequests, externalResourceRequestsCount + 1);
 
                     done();
                 });
@@ -113,7 +113,7 @@ describe('external resources', function () {
     });
 
     it('referencing unexistant external resources returns an error', function (done) {
-        var url = 'http://127.0.0.1:' + res_serv_port + '/notfound.png';
+        var url = 'http://127.0.0.1:' + resServPort + '/notfound.png';
         var style = "#test_table_3{marker-file: url('" + url + "'); marker-transform:'scale(0.2)'; }";
 
         var mapConfig = testClient.defaultTableMapConfig('test_table_3', style);
