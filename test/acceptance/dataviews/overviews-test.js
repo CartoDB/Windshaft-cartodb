@@ -658,7 +658,7 @@ describe('dataviews using tables with overviews', function () {
             });
         });
 
-        describe('agreggation validation', function (){
+        describe('agreggation validation', function () {
             const params = {
                 response: {
                     status: 400,
@@ -668,21 +668,22 @@ describe('dataviews using tables with overviews', function () {
                 }
             };
 
-            function createMapConfig(options) {
+            function createMapConfig (options) {
                 return {
                     version: '1.8.0',
                     analyses: [
-                        { id: 'data-source',
+                        {
+                            id: 'data-source',
                             type: 'source',
                             params: {
                                 query: 'select * from test_table_overviews'
                             }
                         }
                     ],
-                    dataviews:  {
+                    dataviews: {
                         test_invalid_aggregation: {
                             type: 'aggregation',
-                            source: {id: 'data-source'},
+                            source: { id: 'data-source' },
                             options: options
                         }
                     },
@@ -702,8 +703,8 @@ describe('dataviews using tables with overviews', function () {
 
             it('should fail if missing column', function (done) {
                 var options = {
-                    aggregation: "sum",
-                    aggregationColumn: "value"
+                    aggregation: 'sum',
+                    aggregationColumn: 'value'
                 };
                 var missingColumnMapConfig = createMapConfig(options);
 
@@ -727,8 +728,8 @@ describe('dataviews using tables with overviews', function () {
 
             it('should fail if no aggregation operation', function (done) {
                 var options = {
-                    column: "value",
-                    aggregationColumn: "value"
+                    column: 'value',
+                    aggregationColumn: 'value'
                 };
                 var missingOperationMapConfig = createMapConfig(options);
 
@@ -752,9 +753,9 @@ describe('dataviews using tables with overviews', function () {
 
             it('should fail if fake operation', function (done) {
                 var options = {
-                    column: "value",
-                    aggregation: "wadus",
-                    aggregationColumn: "value"
+                    column: 'value',
+                    aggregation: 'wadus',
+                    aggregationColumn: 'value'
                 };
                 var wrongOperationMapConfig = createMapConfig(options);
 
@@ -778,9 +779,9 @@ describe('dataviews using tables with overviews', function () {
 
             it('should fail if invalid operation for overview', function (done) {
                 var options = {
-                    column: "value",
-                    aggregation: "avg",
-                    aggregationColumn: "value"
+                    column: 'value',
+                    aggregation: 'avg',
+                    aggregationColumn: 'value'
                 };
                 var wrongOperationMapConfig = createMapConfig(options);
 
@@ -804,8 +805,8 @@ describe('dataviews using tables with overviews', function () {
 
             it('should fail if no aggregation column when needed', function (done) {
                 var options = {
-                    column: "value",
-                    aggregation: "sum"
+                    column: 'value',
+                    aggregation: 'sum'
                 };
                 var missingOptionMapConfig = createMapConfig(options);
 
