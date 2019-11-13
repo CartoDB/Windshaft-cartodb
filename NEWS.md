@@ -7,7 +7,7 @@ Breaking changes:
 - Schema change for "routes" in configuration file, each "router" is now an array instead of an object. See [`dd06de2`](https://github.com/CartoDB/Windshaft-cartodb/pull/1126/commits/dd06de2632661e19d64c9fbc2be0ba1a8059f54c) for more details.
 
 Announcements:
-
+- Added validation to only allow "count" and "sum" aggregations in dataview overview.
 - Added mechanism to inject custom middlewares through configuration.
 - Stop requiring unused config properties: "base_url", "base_url_mapconfig", and "base_url_templated".
 - Upgraded cartodb-query-tables to version [0.7.0](https://github.com/CartoDB/node-cartodb-query-tables/blob/0.7.0/NEWS.md#version-0.7.0).
