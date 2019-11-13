@@ -251,12 +251,12 @@ describe('torque boundary points', function () {
                 assert.ok(!err, 'Failed to create layergroup');
 
                 var parsedBody = JSON.parse(res.body);
-                var expected_token = parsedBody.layergroupid;
-                layergroupIdToDelete = expected_token;
+                var expectedToken = parsedBody.layergroupid;
+                layergroupIdToDelete = expectedToken;
 
                 var partialUrl = tileRequest.z + '/' + tileRequest.x + '/' + tileRequest.y;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/' + partialUrl + '.json.torque',
+                    url: '/api/v1/map/' + expectedToken + '/0/' + partialUrl + '.json.torque',
                     method: 'GET',
                     headers: {
                         host: 'localhost'

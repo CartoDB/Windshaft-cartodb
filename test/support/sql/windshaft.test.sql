@@ -18,14 +18,13 @@ SET default_with_oids = false;
 -- public user role
 DROP USER IF EXISTS :PUBLICUSER;
 CREATE USER :PUBLICUSER WITH PASSWORD ':PUBLICPASS';
-GRANT USAGE ON SCHEMA cartodb TO :PUBLICUSER;
-GRANT ALL ON CDB_TableMetadata TO :PUBLICUSER;
+SELECT current_setting('search_path') AS my_path \gset
+ALTER ROLE :PUBLICUSER SET search_path = :my_path, cartodb;
 
 -- db owner role
 DROP USER IF EXISTS :TESTUSER;
 CREATE USER :TESTUSER WITH PASSWORD ':TESTPASS';
-GRANT USAGE ON SCHEMA cartodb TO :TESTUSER;
-GRANT ALL ON CDB_TableMetadata TO :TESTUSER;
+ALTER ROLE :TESTUSER SET search_path = :my_path, cartodb;
 
 -- regular user role 1
 DROP USER IF EXISTS test_windshaft_regular1;

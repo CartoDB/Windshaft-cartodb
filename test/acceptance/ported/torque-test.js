@@ -52,7 +52,7 @@ describe('torque', function () {
         };
 
         step(
-            function do_post1 () {
+            function doPost1 () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -71,7 +71,7 @@ describe('torque', function () {
                     "Missing required property '-torque-frame-count' in torque layer CartoCSS");
                 return null;
             },
-            function do_post2 (err) {
+            function doPost2 (err) {
                 assert.ifError(err);
                 var next = this;
                 var css = 'Map { -torque-frame-count: 2; }';
@@ -93,7 +93,7 @@ describe('torque', function () {
                     "Missing required property '-torque-resolution' in torque layer CartoCSS");
                 return null;
             },
-            function do_post3 (err) {
+            function doPost3 (err) {
                 assert.ifError(err);
                 var next = this;
                 var css = 'Map { -torque-frame-count: 2; -torque-resolution: 3; }';
@@ -139,7 +139,7 @@ describe('torque', function () {
             ]
         };
         step(
-            function do_post1 () {
+            function doPost1 () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -181,9 +181,9 @@ describe('torque', function () {
             ]
         };
 
-        var expected_token;
+        var expectedToken;
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -199,10 +199,10 @@ describe('torque', function () {
                 // from layergroup creation via POST
                 checkCORSHeaders(res);
                 var parsedBody = JSON.parse(res.body);
-                if (expected_token) {
-                    assert.deepStrictEqual(parsedBody, { layergroupid: expected_token, layercount: 2 });
+                if (expectedToken) {
+                    assert.deepStrictEqual(parsedBody, { layergroupid: expectedToken, layercount: 2 });
                 } else {
-                    expected_token = parsedBody.layergroupid;
+                    expectedToken = parsedBody.layergroupid;
                 }
                 var meta = parsedBody.metadata;
                 assert.ok(!_.isUndefined(meta),
@@ -220,11 +220,11 @@ describe('torque', function () {
                 });
                 return null;
             },
-            function do_get_tile (err) {
+            function doGetTile (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0.png',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0.png',
                     method: 'GET',
                     encoding: 'binary',
                     headers: {
@@ -232,7 +232,7 @@ describe('torque', function () {
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_mapnik_error_1 (err, res) {
+            function checkMapnikError1 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.statusCode + (res.statusCode !== 200 ? (': ' + res.body) : ''));
                 var parsed = JSON.parse(res.body);
@@ -240,18 +240,18 @@ describe('torque', function () {
                 assert.strictEqual(parsed.errors[0], "No 'mapnik' layers in MapConfig");
                 return null;
             },
-            function do_get_grid0 (err) {
+            function doGetGrid0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0/0.grid.json',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0/0.grid.json',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_mapnik_error_2 (err, res) {
+            function checkMapnikError2 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 400, res.statusCode + (res.statusCode !== 200 ? (': ' + res.body) : ''));
                 var parsed = JSON.parse(res.body);
@@ -259,48 +259,48 @@ describe('torque', function () {
                 assert.strictEqual(parsed.errors[0], 'Unsupported format grid.json');
                 return null;
             },
-            function do_get_torque0 (err) {
+            function doGetTorque0 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0/0.json.torque',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0/0.json.torque',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_torque0_response (err, res) {
+            function checkTorque0Response (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
-                var tile_content = [{ x__uint8: 43, y__uint8: 43, vals__uint8: [1, 1], dates__uint16: [0, 1] }];
+                var tileContent = [{ x__uint8: 43, y__uint8: 43, vals__uint8: [1, 1], dates__uint16: [0, 1] }];
                 var parsed = JSON.parse(res.body);
-                assert.deepStrictEqual(tile_content, parsed);
+                assert.deepStrictEqual(tileContent, parsed);
                 return null;
             },
-            function do_get_torque0_1 (err) {
+            function doGetTorque01 (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(server, {
-                    url: '/api/v1/map/' + expected_token + '/0/0/0/0.torque.json',
+                    url: '/api/v1/map/' + expectedToken + '/0/0/0/0.torque.json',
                     method: 'GET',
                     headers: {
                         host: 'localhost'
                     }
                 }, {}, function (res, err) { next(err, res); });
             },
-            function check_torque0_response_1 (err, res) {
+            function checkTorque0Response1 (err, res) {
                 assert.ifError(err);
                 assert.strictEqual(res.statusCode, 200, res.body);
                 assert.strictEqual(res.headers['content-type'], 'application/json; charset=utf-8');
-                var tile_content = [{ x__uint8: 43, y__uint8: 43, vals__uint8: [1, 1], dates__uint16: [0, 1] }];
+                var tileContent = [{ x__uint8: 43, y__uint8: 43, vals__uint8: [1, 1], dates__uint16: [0, 1] }];
                 var parsed = JSON.parse(res.body);
-                assert.deepStrictEqual(tile_content, parsed);
+                assert.deepStrictEqual(tileContent, parsed);
                 return null;
             },
             function finish (err) {
-                keysToDelete['map_cfg|' + LayergroupToken.parse(expected_token).token] = 0;
+                keysToDelete['map_cfg|' + LayergroupToken.parse(expectedToken).token] = 0;
                 keysToDelete['user:localhost:mapviews:global'] = 5;
                 done(err);
             }
@@ -329,7 +329,7 @@ describe('torque', function () {
             ]
         };
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 assert.response(server, {
                     url: '/api/v1/map',
@@ -377,7 +377,7 @@ describe('torque', function () {
         const defautlPort = global.environment.postgres.port;
 
         step(
-            function do_post () {
+            function doPost () {
                 var next = this;
                 global.environment.postgres.port = 54777;
                 assert.response(server, {

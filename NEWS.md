@@ -1,18 +1,24 @@
 # Changelog
 
-## 8.0.0
+## 8.0.1
 Released 2019-mm-dd
+
+## 8.0.0
+Released 2019-11-13
 
 Breaking changes:
 - Schema change for "routes" in configuration file, each "router" is now an array instead of an object. See [`dd06de2`](https://github.com/CartoDB/Windshaft-cartodb/pull/1126/commits/dd06de2632661e19d64c9fbc2be0ba1a8059f54c) for more details.
 
 Announcements:
-
+- Added validation to only allow "count" and "sum" aggregations in dataview overview.
 - Added mechanism to inject custom middlewares through configuration.
 - Stop requiring unused config properties: "base_url", "base_url_mapconfig", and "base_url_templated".
 - Upgraded cartodb-query-tables to version [0.7.0](https://github.com/CartoDB/node-cartodb-query-tables/blob/0.7.0/NEWS.md#version-0.7.0).
 - Be able to set a coherent TTL in Cache-Control header to expire all resources belonging to a map simultaneously.
 - When `cache buster` in request path is `0` set header `Last-Modified` to now, it avoids stalled content in 3rd party cache providers when they add `If-Modified-Since` header into the request.
+- Adding a logger to MapStore (#1134)
+- Qualify calls to cartodb extension so having it in the search_path isn't necessary.
+- Fix multiple DB login issues.
 
 ## 7.2.0
 Released 2019-09-30
