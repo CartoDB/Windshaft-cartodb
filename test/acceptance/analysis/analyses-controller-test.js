@@ -51,7 +51,7 @@ describe('analyses controller', function () {
     });
 
     it('should support jsonp responses', function (done) {
-        this.testClient.getAnalysesCatalog({ jsonp: 'jsonp_test' }, (err, result) => {
+        this.testClient.getAnalysesCatalog({ jsonp: 'jsonpTest' }, (err, result) => {
             if (err) {
                 return done(err);
             }
@@ -60,7 +60,7 @@ describe('analyses controller', function () {
 
             let didRunJsonCallback = false;
             /* eslint-disable no-unused-vars, no-eval */
-            function jsonp_test (body) {
+            function jsonpTest (body) {
                 assert.ok(Array.isArray(body.catalog));
                 didRunJsonCallback = true;
             }

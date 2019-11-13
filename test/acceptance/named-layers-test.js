@@ -1,6 +1,6 @@
 'use strict';
 
-var test_helper = require('../support/test-helper');
+var testHelper = require('../support/test-helper');
 
 var assert = require('../support/assert');
 var CartodbWindshaft = require('../../lib/server');
@@ -110,7 +110,7 @@ describe('named_layers', function () {
     });
 
     afterEach(function (done) {
-        test_helper.deleteRedisKeys(keysToDelete, done);
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     beforeEach(function (done) {
@@ -461,7 +461,7 @@ describe('named_layers', function () {
                 if (err) {
                     throw err;
                 }
-                test_helper.checkCache(res);
+                testHelper.checkCache(res);
                 return true;
             },
             function deleteTemplate (err) {
@@ -590,7 +590,7 @@ describe('named_layers', function () {
                 if (err) {
                     throw err;
                 }
-                test_helper.checkCache(res);
+                testHelper.checkCache(res);
                 return true;
             },
             function deleteTemplate (err) {
@@ -843,7 +843,7 @@ describe('named_layers', function () {
                 if (err) {
                     throw err;
                 }
-                test_helper.checkCache(res);
+                testHelper.checkCache(res);
                 return true;
             },
             function deleteTemplate (err) {

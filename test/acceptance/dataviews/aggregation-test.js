@@ -98,9 +98,9 @@ describe('aggregations happy cases', function () {
         });
     });
 
-    var operations_and_values = { count: 9, sum: 45, avg: 5, max: 9, min: 1 };
+    var operationsAndValues = { count: 9, sum: 45, avg: 5, max: 9, min: 1 };
 
-    var query_other = [
+    var queryOther = [
         'select generate_series(1,3) as val, \'other_a\' as cat, NULL as the_geom_webmercator',
         'select generate_series(4,6) as val, \'other_b\' as cat, NULL as the_geom_webmercator',
         'select generate_series(7,9) as val, \'other_c\' as cat, NULL as the_geom_webmercator',
@@ -111,11 +111,11 @@ describe('aggregations happy cases', function () {
         'select generate_series(10,12) as val, \'category_5\' as cat, NULL as the_geom_webmercator'
     ].join(' UNION ALL ');
 
-    Object.keys(operations_and_values).forEach(function (operation) {
+    Object.keys(operationsAndValues).forEach(function (operation) {
         var description = 'should aggregate OTHER category using "' + operation + '"';
 
         it(description, function (done) {
-            this.testClient = new TestClient(aggregationOperationMapConfig(operation, query_other, 'cat', 'val'));
+            this.testClient = new TestClient(aggregationOperationMapConfig(operation, queryOther, 'cat', 'val'));
             this.testClient.getDataview('cat', { own_filter: 0 }, function (err, aggregation) {
                 assert.ifError(err);
 
@@ -126,11 +126,11 @@ describe('aggregations happy cases', function () {
                 assert.strictEqual(aggregation.count, 24);
                 assert.strictEqual(aggregation.nulls, 0);
 
-                var aggregated_categories = aggregation.categories.filter(function (category) {
+                var aggregatedCategories = aggregation.categories.filter(function (category) {
                     return category.agg === true;
                 });
-                assert.strictEqual(aggregated_categories.length, 1);
-                assert.strictEqual(aggregated_categories[0].value, operations_and_values[operation]);
+                assert.strictEqual(aggregatedCategories.length, 1);
+                assert.strictEqual(aggregatedCategories[0].value, operationsAndValues[operation]);
 
                 done();
             });
@@ -145,11 +145,11 @@ describe('aggregations happy cases', function () {
         min: [{ category: 'other_a', value: 1 }]
     };
 
-    Object.keys(operations_and_values).forEach(function (operation) {
+    Object.keys(operationsAndValues).forEach(function (operation) {
         var description = 'should search OTHER category using "' + operation + '"';
 
         it(description, function (done) {
-            this.testClient = new TestClient(aggregationOperationMapConfig(operation, query_other, 'cat', 'val'));
+            this.testClient = new TestClient(aggregationOperationMapConfig(operation, queryOther, 'cat', 'val'));
             this.testClient.widgetSearch('cat', 'other_a', function (err, res, searchResult) {
                 assert.ifError(err);
 

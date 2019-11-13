@@ -1,6 +1,6 @@
 'use strict';
 
-var test_helper = require('../support/test-helper');
+var testHelper = require('../support/test-helper');
 var RedisPool = require('redis-mpool');
 var querystring = require('querystring');
 
@@ -195,7 +195,7 @@ describe('named maps authentication', function () {
                 assert.strictEqual(img.height(), 256);
 
                 assert.ok(!err);
-                test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
+                testHelper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
                 done();
             });
         });
@@ -264,8 +264,8 @@ describe('named maps authentication', function () {
                 assert.strictEqual(img.width(), 640);
                 assert.strictEqual(img.height(), 480);
 
-                test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
-                test_helper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, done);
+                testHelper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
+                testHelper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, done);
             });
         });
     });

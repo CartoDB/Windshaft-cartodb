@@ -48,7 +48,7 @@ describe('cluster', function () {
             }]);
             const testClient = new TestClient(mapConfig);
             const zoom = 0;
-            const cartodb_id = 1;
+            const cartodbId = 1;
             const layerId = 0;
             const params = {
                 response: {
@@ -56,7 +56,7 @@ describe('cluster', function () {
                 }
             };
 
-            testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+            testClient.getClusterFeatures(zoom, cartodbId, layerId, params, (err, body) => {
                 if (err) {
                     return done(err);
                 }
@@ -90,7 +90,7 @@ describe('cluster', function () {
             }]);
             const testClient = new TestClient(mapConfig);
             const zoom = 0;
-            const cartodb_id = 1;
+            const cartodbId = 1;
             const layerId = 0;
             const params = {
                 response: {
@@ -98,7 +98,7 @@ describe('cluster', function () {
                 }
             };
 
-            testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+            testClient.getClusterFeatures(zoom, cartodbId, layerId, params, (err, body) => {
                 if (err) {
                     return done(err);
                 }
@@ -291,8 +291,8 @@ describe('cluster', function () {
             }
         ];
 
-        suite.forEach(({ zoom, cartodb_id, resolution, expected }) => {
-            const description = `should get features for z: ${zoom} cartodb_id: ${cartodb_id}, res: ${resolution}`;
+        suite.forEach(({ zoom, cartodb_id: cartodbId, resolution, expected }) => {
+            const description = `should get features for z: ${zoom} cartodb_id: ${cartodbId}, res: ${resolution}`;
             it(description, function (done) {
                 const mapConfig = createVectorMapConfig([{
                     type: 'cartodb',
@@ -308,7 +308,7 @@ describe('cluster', function () {
                 const layerId = 0;
                 const params = {};
 
-                testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+                testClient.getClusterFeatures(zoom, cartodbId, layerId, params, (err, body) => {
                     if (err) {
                         return done(err);
                     }
@@ -534,8 +534,8 @@ describe('cluster', function () {
             }
         ];
 
-        suite.forEach(({ zoom, cartodb_id, resolution, aggregation, expected }) => {
-            it(`should aggregate by type; z: ${zoom}, cartodb_id: ${cartodb_id}, res: ${resolution}`, function (done) {
+        suite.forEach(({ zoom, cartodb_id: cartodbId, resolution, aggregation, expected }) => {
+            it(`should aggregate by type; z: ${zoom}, cartodb_id: ${cartodbId}, res: ${resolution}`, function (done) {
                 const mapConfig = createVectorMapConfig([{
                     type: 'cartodb',
                     options: {
@@ -550,19 +550,19 @@ describe('cluster', function () {
                 const layerId = 0;
                 const params = { aggregation };
 
-                testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+                testClient.getClusterFeatures(zoom, cartodbId, layerId, params, (err, body) => {
                     if (err) {
                         return done(err);
                     }
 
-                    const sort_f = (a, b) => {
+                    const sortFn = (a, b) => {
                         return (a._cdb_feature_count < b._cdb_feature_count) ||
                                (a._cdb_feature_count === b._cdb_feature_count &&
                                     (a.type < b.type ||
                                      (a.type === b.type && a.max_value < b.max_value)));
                     };
 
-                    assert.deepStrictEqual(body.rows.sort(sort_f), expected.sort(sort_f));
+                    assert.deepStrictEqual(body.rows.sort(sortFn), expected.sort(sortFn));
 
                     testClient.drain(done);
                 });
@@ -807,7 +807,7 @@ describe('cluster', function () {
             }
         ];
 
-        suite.forEach(({ description, zoom, cartodb_id, resolution, aggregation, expected, status = 400 }) => {
+        suite.forEach(({ description, zoom, cartodb_id: cartodbId, resolution, aggregation, expected, status = 400 }) => {
             it(description, function (done) {
                 const mapConfig = createVectorMapConfig([{
                     type: 'cartodb',
@@ -826,7 +826,7 @@ describe('cluster', function () {
                     aggregation
                 };
 
-                testClient.getClusterFeatures(zoom, cartodb_id, layerId, params, (err, body) => {
+                testClient.getClusterFeatures(zoom, cartodbId, layerId, params, (err, body) => {
                     if (err) {
                         return done(err);
                     }

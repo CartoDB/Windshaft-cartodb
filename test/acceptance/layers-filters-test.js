@@ -17,11 +17,11 @@ describe('layers filters', function () {
         marker-fill: red;
         marker-allow-overlap: true;
     }`;
-    const cartocss_version = '3.0.12';
+    const cartocssVersion = '3.0.12';
     const options = {
         sql,
         cartocss,
-        cartocss_version
+        cartocss_version: cartocssVersion
     };
 
     const mapConfig = {

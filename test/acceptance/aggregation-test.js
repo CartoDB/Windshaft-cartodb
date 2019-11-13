@@ -607,10 +607,10 @@ describe('aggregation', function () {
                                 Object.keys(f.properties).forEach(p => columns.add(p));
                             });
                             columns = Array.from(columns);
-                            const expected_columns = [
+                            const expectedColumns = [
                                 '_cdb_feature_count', 'cartodb_id', 'first_column', 'second_column'
                             ];
-                            assert.deepStrictEqual(columns.sort(), expected_columns.sort());
+                            assert.deepStrictEqual(columns.sort(), expectedColumns.sort());
 
                             done();
                         });
@@ -3015,15 +3015,15 @@ describe('aggregation', function () {
                                     const tile11 = JSON.parse(mvt.toGeoJSONSync(0));
 
                                     // There needs to be 13 points
-                                    const count_features = (tile) =>
+                                    const countFeatures = (tile) =>
                                         tile.features.map(f => f.properties)
                                             .map(f => f._cdb_feature_count)
                                             .reduce((a, b) => a + b, 0);
 
-                                    const tile00Count = count_features(tile00);
-                                    const tile10Count = count_features(tile10);
-                                    const tile01Count = count_features(tile01);
-                                    const tile11Count = count_features(tile11);
+                                    const tile00Count = countFeatures(tile00);
+                                    const tile10Count = countFeatures(tile10);
+                                    const tile01Count = countFeatures(tile01);
+                                    const tile11Count = countFeatures(tile11);
                                     assert.strictEqual(13, tile00Count + tile10Count + tile01Count + tile11Count);
 
                                     done();

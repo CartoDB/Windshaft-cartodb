@@ -1,6 +1,6 @@
 'use strict';
 
-var test_helper = require('../support/test-helper');
+var testHelper = require('../support/test-helper');
 
 var assert = require('../support/assert');
 var CartodbWindshaft = require('../../lib/server');
@@ -24,7 +24,7 @@ describe('overviews metadata for named maps', function () {
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 
-    var overviews_layer = {
+    var overviewsLayer = {
         type: 'cartodb',
         options: {
             sql: 'SELECT * FROM test_table_overviews',
@@ -33,7 +33,7 @@ describe('overviews metadata for named maps', function () {
         }
     };
 
-    var non_overviews_layer = {
+    var nonOverviewsLayer = {
         type: 'cartodb',
         options: {
             sql: 'SELECT * FROM test_table',
@@ -49,7 +49,7 @@ describe('overviews metadata for named maps', function () {
     });
 
     afterEach(function (done) {
-        test_helper.deleteRedisKeys(keysToDelete, done);
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     var templateId = 'overviews-template-1';
@@ -60,7 +60,7 @@ describe('overviews metadata for named maps', function () {
         auth: { method: 'open' },
         layergroup: {
             version: '1.0.0',
-            layers: [overviews_layer, non_overviews_layer]
+            layers: [overviewsLayer, nonOverviewsLayer]
         }
     };
 
@@ -133,10 +133,10 @@ describe('overviews metadata for named maps', function () {
                 });
                 mapStore.load(LayergroupToken.parse(layergroupId).token, function (err, mapConfig) {
                     assert.ifError(err);
-                    assert.deepStrictEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
+                    assert.deepStrictEqual(nonOverviewsLayer, mapConfig._cfg.layers[1]);
                     assert.strictEqual(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
-                    var expected_data = {
+                    var expectedData = {
                         overviews: {
                             test_table_overviews: {
                                 schema: 'public',
@@ -145,7 +145,7 @@ describe('overviews metadata for named maps', function () {
                             }
                         }
                     };
-                    assert.deepStrictEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
+                    assert.deepStrictEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expectedData);
                 });
 
                 next(err);
@@ -240,7 +240,7 @@ describe('overviews metadata for named maps', function () {
                 auth: { method: 'open' },
                 layergroup: {
                     version: '1.0.0',
-                    layers: [non_overviews_layer]
+                    layers: [nonOverviewsLayer]
                 }
             };
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var test_helper = require('../support/test-helper');
+var testHelper = require('../support/test-helper');
 var RedisPool = require('redis-mpool');
 var querystring = require('querystring');
 
@@ -106,10 +106,10 @@ describe('named maps preview stats', function () {
             assert.strictEqual(img.width(), 640);
             assert.strictEqual(img.height(), 480);
 
-            test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, templateName).key());
+            testHelper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, templateName).key());
             var redisKeysToDelete = { 'user:localhost:mapviews:global': 5 };
             redisKeysToDelete['user:localhost:mapviews:stat_tag:' + statTag] = 5;
-            test_helper.deleteRedisKeys(redisKeysToDelete, done);
+            testHelper.deleteRedisKeys(redisKeysToDelete, done);
         });
     });
 });

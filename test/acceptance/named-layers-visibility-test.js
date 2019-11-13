@@ -1,7 +1,7 @@
 'use strict';
 
 var step = require('step');
-var test_helper = require('../support/test-helper');
+var testHelper = require('../support/test-helper');
 
 var assert = require('../support/assert');
 var CartodbWindshaft = require('../../lib/server');
@@ -80,7 +80,7 @@ describe('layers visibility for previews', function () {
     }
 
     afterEach(function (done) {
-        test_helper.deleteRedisKeys({
+        testHelper.deleteRedisKeys({
             'user:localhost:mapviews:global': 5
         }, done);
     });

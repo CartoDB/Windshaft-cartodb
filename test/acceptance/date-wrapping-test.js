@@ -6,9 +6,9 @@ const mapConfigFactory = require('../fixtures/test_mapconfigFactory');
 const serverOptions = require('../../lib/server-options');
 
 const usePgMvtRenderer = serverOptions.renderer.mvt.usePostGIS;
-const describe_mvt = !usePgMvtRenderer ? describe : describe.skip;
+const describeMvt = !usePgMvtRenderer ? describe : describe.skip;
 
-describe_mvt('date-wrapping', () => {
+describeMvt('date-wrapping', () => {
     let testClient;
 
     describe('when a map instantiation has one single layer', () => {

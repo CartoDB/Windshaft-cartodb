@@ -1482,9 +1482,9 @@ describe('histogram-dates: timestamp starts at epoch', function () {
         this.testClient.getDataview('epoch_start_histogram', override, function (err, dataview) {
             assert.ifError(err);
 
-            const { aggregation, timestamp_start } = dataview;
+            const { aggregation, timestamp_start: timestampStart } = dataview;
 
-            assert.strictEqual(timestamp_start, 0);
+            assert.strictEqual(timestampStart, 0);
             assert.strictEqual(aggregation, 'quarter');
 
             done();
