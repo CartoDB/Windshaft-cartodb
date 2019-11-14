@@ -4,9 +4,8 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('aggregations happy cases', function() {
-
-    afterEach(function(done) {
+describe('aggregations happy cases', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -14,7 +13,7 @@ describe('aggregations happy cases', function() {
         }
     });
 
-    function aggregationOperationMapConfig(operation, query, column, aggregationColumn) {
+    function aggregationOperationMapConfig (operation, query, column, aggregationColumn) {
         column = column || 'adm0name';
         aggregationColumn = aggregationColumn || 'pop_max';
         query = query || 'select * from populated_places_simple_reduced';
@@ -48,16 +47,15 @@ describe('aggregations happy cases', function() {
 
     var operations = ['count', 'sum', 'avg', 'max', 'min'];
 
-    operations.forEach(function(operation) {
-        it('should be able to use "' + operation + '" as aggregation operation', function(done) {
-
+    operations.forEach(function (operation) {
+        it('should be able to use "' + operation + '" as aggregation operation', function (done) {
             this.testClient = new TestClient(aggregationOperationMapConfig(operation));
             this.testClient.getDataview('adm0name', { own_filter: 0 }, function (err, aggregation) {
                 assert.ok(!err, err);
                 assert.ok(aggregation);
 
-                assert.equal(aggregation.type, 'aggregation');
-                assert.equal(aggregation.aggregation, operation);
+                assert.strictEqual(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.aggregation, operation);
 
                 done();
             });
@@ -81,11 +79,11 @@ describe('aggregations happy cases', function() {
                 assert.ifError(err);
 
                 assert.ok(aggregation);
-                assert.equal(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.type, 'aggregation');
                 assert.ok(aggregation.categories);
-                assert.equal(aggregation.categoriesCount, 3);
-                assert.equal(aggregation.count, 4);
-                assert.equal(aggregation.nulls, 1);
+                assert.strictEqual(aggregation.categoriesCount, 3);
+                assert.strictEqual(aggregation.count, 4);
+                assert.strictEqual(aggregation.nulls, 1);
 
                 var hasNullCategory = false;
                 aggregation.categories.forEach(function (category) {
@@ -100,9 +98,9 @@ describe('aggregations happy cases', function() {
         });
     });
 
-    var operations_and_values = {'count': 9, 'sum': 45, 'avg': 5, 'max': 9, 'min': 1};
+    var operationsAndValues = { count: 9, sum: 45, avg: 5, max: 9, min: 1 };
 
-    var query_other = [
+    var queryOther = [
         'select generate_series(1,3) as val, \'other_a\' as cat, NULL as the_geom_webmercator',
         'select generate_series(4,6) as val, \'other_b\' as cat, NULL as the_geom_webmercator',
         'select generate_series(7,9) as val, \'other_c\' as cat, NULL as the_geom_webmercator',
@@ -113,26 +111,26 @@ describe('aggregations happy cases', function() {
         'select generate_series(10,12) as val, \'category_5\' as cat, NULL as the_geom_webmercator'
     ].join(' UNION ALL ');
 
-    Object.keys(operations_and_values).forEach(function (operation) {
+    Object.keys(operationsAndValues).forEach(function (operation) {
         var description = 'should aggregate OTHER category using "' + operation + '"';
 
         it(description, function (done) {
-            this.testClient = new TestClient(aggregationOperationMapConfig(operation, query_other, 'cat', 'val'));
+            this.testClient = new TestClient(aggregationOperationMapConfig(operation, queryOther, 'cat', 'val'));
             this.testClient.getDataview('cat', { own_filter: 0 }, function (err, aggregation) {
                 assert.ifError(err);
 
                 assert.ok(aggregation);
-                assert.equal(aggregation.type, 'aggregation');
+                assert.strictEqual(aggregation.type, 'aggregation');
                 assert.ok(aggregation.categories);
-                assert.equal(aggregation.categoriesCount, 8);
-                assert.equal(aggregation.count, 24);
-                assert.equal(aggregation.nulls, 0);
+                assert.strictEqual(aggregation.categoriesCount, 8);
+                assert.strictEqual(aggregation.count, 24);
+                assert.strictEqual(aggregation.nulls, 0);
 
-                var aggregated_categories = aggregation.categories.filter( function(category) {
+                var aggregatedCategories = aggregation.categories.filter(function (category) {
                     return category.agg === true;
                 });
-                assert.equal(aggregated_categories.length, 1);
-                assert.equal(aggregated_categories[0].value, operations_and_values[operation]);
+                assert.strictEqual(aggregatedCategories.length, 1);
+                assert.strictEqual(aggregatedCategories[0].value, operationsAndValues[operation]);
 
                 done();
             });
@@ -140,26 +138,26 @@ describe('aggregations happy cases', function() {
     });
 
     var widgetSearchExpects = {
-        'count': [ { category: 'other_a', value: 3 } ],
-        'sum': [ { category: 'other_a', value: 6 } ],
-        'avg': [ { category: 'other_a', value: 2 } ],
-        'max': [ { category: 'other_a', value: 3 } ],
-        'min': [ { category: 'other_a', value: 1 } ]
+        count: [{ category: 'other_a', value: 3 }],
+        sum: [{ category: 'other_a', value: 6 }],
+        avg: [{ category: 'other_a', value: 2 }],
+        max: [{ category: 'other_a', value: 3 }],
+        min: [{ category: 'other_a', value: 1 }]
     };
 
-    Object.keys(operations_and_values).forEach(function (operation) {
+    Object.keys(operationsAndValues).forEach(function (operation) {
         var description = 'should search OTHER category using "' + operation + '"';
 
         it(description, function (done) {
-            this.testClient = new TestClient(aggregationOperationMapConfig(operation, query_other, 'cat', 'val'));
+            this.testClient = new TestClient(aggregationOperationMapConfig(operation, queryOther, 'cat', 'val'));
             this.testClient.widgetSearch('cat', 'other_a', function (err, res, searchResult) {
                 assert.ifError(err);
 
                 assert.ok(searchResult);
-                assert.equal(searchResult.type, 'aggregation');
+                assert.strictEqual(searchResult.type, 'aggregation');
 
-                assert.equal(searchResult.categories.length, 1);
-                assert.deepEqual(
+                assert.strictEqual(searchResult.categories.length, 1);
+                assert.deepStrictEqual(
                     searchResult.categories,
                     widgetSearchExpects[operation]
                 );
@@ -169,9 +167,8 @@ describe('aggregations happy cases', function() {
     });
 });
 
-describe('aggregation-dataview: special float values', function() {
-
-    afterEach(function(done) {
+describe('aggregation-dataview: special float values', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -179,7 +176,7 @@ describe('aggregation-dataview: special float values', function() {
         }
     });
 
-    function createMapConfig(layers, dataviews, analysis) {
+    function createMapConfig (layers, dataviews, analysis) {
         return {
             version: '1.5.0',
             layers: layers,
@@ -191,13 +188,13 @@ describe('aggregation-dataview: special float values', function() {
     var mapConfig = createMapConfig(
         [
             {
-                "type": "cartodb",
-                "options": {
-                    "source": {
-                        "id": "a0"
+                type: 'cartodb',
+                options: {
+                    source: {
+                        id: 'a0'
                     },
-                    "cartocss": "#points { marker-width: 10; marker-fill: red; }",
-                    "cartocss_version": "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -227,10 +224,10 @@ describe('aggregation-dataview: special float values', function() {
         },
         [
             {
-                "id": "a0",
-                "type": "source",
-                "params": {
-                    "query": [
+                id: 'a0',
+                type: 'source',
+                params: {
+                    query: [
                         'SELECT',
                         '  null::geometry the_geom_webmercator,',
                         '  CASE',
@@ -247,10 +244,10 @@ describe('aggregation-dataview: special float values', function() {
                     ].join('\n')
                 }
             }, {
-                "id": "a1",
-                "type": "source",
-                "params": {
-                    "query": [
+                id: 'a1',
+                type: 'source',
+                params: {
+                    query: [
                         'SELECT',
                         '  null::geometry the_geom_webmercator,',
                         '  CASE',
@@ -288,9 +285,9 @@ describe('aggregation-dataview: special float values', function() {
 
     var filters = [{ own_filter: 0 }, {}];
     filters.forEach(function (filter) {
-        it('should handle special float values using filter: ' + JSON.stringify(filter), function(done) {
+        it('should handle special float values using filter: ' + JSON.stringify(filter), function (done) {
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('val_aggregation', filter, function(err, dataview) {
+            this.testClient.getDataview('val_aggregation', filter, function (err, dataview) {
                 assert.ifError(err);
                 assert.ok(dataview.infinities === (250 + 250));
                 assert.ok(dataview.nans === 250);
@@ -303,9 +300,9 @@ describe('aggregation-dataview: special float values', function() {
             });
         });
 
-        it('should handle special numeric values using filter: ' + JSON.stringify(filter), function(done) {
+        it('should handle special numeric values using filter: ' + JSON.stringify(filter), function (done) {
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getDataview('sum_aggregation_numeric', filter, function(err, dataview) {
+            this.testClient.getDataview('sum_aggregation_numeric', filter, function (err, dataview) {
                 assert.ifError(err);
                 assert.ok(dataview.nans === 333);
                 assert.ok(dataview.categories.length === 2);
@@ -323,13 +320,13 @@ describe('aggregation dataview tuned by categories query param', function () {
         version: '1.5.0',
         layers: [
             {
-                type: "cartodb",
+                type: 'cartodb',
                 options: {
                     source: {
-                        "id": "a0"
+                        id: 'a0'
                     },
-                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
-                    cartocss_version: "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -348,8 +345,8 @@ describe('aggregation dataview tuned by categories query param', function () {
         },
         analyses: [
             {
-                id: "a0",
-                type: "source",
+                id: 'a0',
+                type: 'source',
                 params: {
                     query: `
                         SELECT
@@ -412,27 +409,25 @@ describe('aggregation dataview tuned by categories query param', function () {
         it(`should handle cartegories to customize aggregations: ${JSON.stringify(scenario.params)}`, function (done) {
             this.testClient.getDataview('categories', scenario.params, (err, dataview) => {
                 assert.ifError(err);
-                assert.equal(dataview.categories.length, scenario.categoriesExpected);
+                assert.strictEqual(dataview.categories.length, scenario.categoriesExpected);
                 done();
             });
         });
     });
 });
 
-
-
 describe('Count aggregation', function () {
     const mapConfig = {
         version: '1.5.0',
         layers: [
             {
-                type: "cartodb",
+                type: 'cartodb',
                 options: {
                     source: {
-                        "id": "a0"
+                        id: 'a0'
                     },
-                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
-                    cartocss_version: "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -450,8 +445,8 @@ describe('Count aggregation', function () {
         },
         analyses: [
             {
-                id: "a0",
-                type: "source",
+                id: 'a0',
+                type: 'source',
                 params: {
                     query: `
                         SELECT
@@ -475,21 +470,21 @@ describe('Count aggregation', function () {
         ]
     };
 
-    it(`should handle null values correctly when aggregationColumn isn't provided`, function (done) {
+    it('should handle null values correctly when aggregationColumn isn\'t provided', function (done) {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('categories', { own_filter: 0, categories: 0 }, (err, dataview) => {
             assert.ifError(err);
-            assert.equal(dataview.categories.length, 3);
+            assert.strictEqual(dataview.categories.length, 3);
             this.testClient.drain(done);
         });
     });
 
-    it(`should handle null values correctly when aggregationColumn is provided`, function (done) {
+    it('should handle null values correctly when aggregationColumn is provided', function (done) {
         mapConfig.dataviews.categories.options.aggregationColumn = 'val';
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('categories', { own_filter: 0, categories: 0 }, (err, dataview) => {
             assert.ifError(err);
-            assert.equal(dataview.categories.length, 3);
+            assert.strictEqual(dataview.categories.length, 3);
             this.testClient.drain(done);
         });
     });

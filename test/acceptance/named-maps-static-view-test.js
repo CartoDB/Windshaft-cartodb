@@ -10,7 +10,7 @@ var CartodbWindshaft = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 var TemplateMaps = require('../../lib/backends/template-maps');
 
-describe('named maps static view', function() {
+describe('named maps static view', function () {
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 
@@ -24,7 +24,7 @@ describe('named maps static view', function() {
     var PNG_IMAGE_TOLERANCE = 20;
     var JPG_IMAGE_TOLERANCE = 100;
 
-    function createTemplate(view, layers) {
+    function createTemplate (view, layers) {
         return {
             version: '0.0.1',
             name: templateName,
@@ -33,8 +33,8 @@ describe('named maps static view', function() {
             },
             placeholders: {
                 color: {
-                    type: "css_color",
-                    default: "#cc3300"
+                    type: 'css_color',
+                    default: '#cc3300'
                 }
             },
             view: view,
@@ -57,7 +57,7 @@ describe('named maps static view', function() {
         templateMaps.delTemplate(username, templateName, done);
     });
 
-    function getStaticMap(params, callback) {
+    function getStaticMap (params, callback) {
         if (!callback) {
             callback = params;
             params = null;
@@ -89,13 +89,13 @@ describe('named maps static view', function() {
         var server = new CartodbWindshaft(serverOptions);
 
         assert.response(server, requestOptions, expectedResponse, function (res, err) {
-            testHelper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, function() {
-                return callback(err, mapnik.Image.fromBytes(new Buffer(res.body, 'binary')));
+            testHelper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, function () {
+                return callback(err, mapnik.Image.fromBytes(Buffer.from(res.body, 'binary')));
             });
         });
     }
 
-    function previewFixture(version, format='png') {
+    function previewFixture (version, format = 'png') {
         return './test/fixtures/previews/populated_places_simple_reduced-' + version + '.' + format;
     }
 
@@ -104,14 +104,12 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            getStaticMap(function(err, img) {
+            getStaticMap(function (err, img) {
                 assert.ok(!err);
-                assert.imageIsSimilarToFile(img, previewFixture('estimated'), PNG_IMAGE_TOLERANCE,  err => {
+                assert.imageIsSimilarToFile(img, previewFixture('estimated'), PNG_IMAGE_TOLERANCE, err => {
                     if (err) {
                         assert.imageIsSimilarToFile(img, previewFixture('estimated-proj5'), PNG_IMAGE_TOLERANCE, done);
-                    }
-                    else
-                    {
+                    } else {
                         done();
                     }
                 });
@@ -131,7 +129,7 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            getStaticMap(function(err, img) {
+            getStaticMap(function (err, img) {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('zoom-center'), PNG_IMAGE_TOLERANCE, done);
             });
@@ -151,7 +149,7 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            getStaticMap(function(err, img) {
+            getStaticMap(function (err, img) {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('bounds'), PNG_IMAGE_TOLERANCE, done);
             });
@@ -176,7 +174,7 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            getStaticMap(function(err, img) {
+            getStaticMap(function (err, img) {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('zoom-center'), PNG_IMAGE_TOLERANCE, done);
             });
@@ -201,7 +199,7 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            getStaticMap({ zoom: 3 }, function(err, img) {
+            getStaticMap({ zoom: 3 }, function (err, img) {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('override-zoom'), PNG_IMAGE_TOLERANCE, done);
             });
@@ -226,7 +224,7 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            getStaticMap({ bbox: '0,45,90,45' }, function(err, img) {
+            getStaticMap({ bbox: '0,45,90,45' }, function (err, img) {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('override-bbox'), PNG_IMAGE_TOLERANCE, done);
             });
@@ -265,7 +263,7 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            getStaticMap({ layer: 0 }, function(err, img) {
+            getStaticMap({ layer: 0 }, function (err, img) {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('bounds'), PNG_IMAGE_TOLERANCE, done);
             });
@@ -284,10 +282,10 @@ describe('named maps static view', function() {
             if (err) {
                 return done(err);
             }
-            getStaticMap({ format: 'jpeg' }, function(err, img) {
+            getStaticMap({ format: 'jpeg' }, function (err, img) {
                 assert.ok(!err);
                 assert.imageIsSimilarToFile(img, previewFixture('zoom-center', 'jpeg'),
-                                            JPG_IMAGE_TOLERANCE, done, 'jpeg');
+                    JPG_IMAGE_TOLERANCE, done, 'jpeg');
             });
         });
     });
@@ -307,7 +305,6 @@ describe('named maps static view', function() {
             }
 
             var url = `/api/v1/map/static/named/${templateName}/640/480.gif`;
-
 
             var requestOptions = {
                 url: url,
@@ -330,13 +327,13 @@ describe('named maps static view', function() {
 
             assert.response(server, requestOptions, expectedResponse, function (res, err) {
                 assert.ifError(err);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     JSON.parse(res.body),
                     {
-                        errors:['Unsupported image format \"gif\"'],
-                        errors_with_context:[{
+                        errors: ['Unsupported image format "gif"'],
+                        errors_with_context: [{
                             type: 'unknown',
-                            message: 'Unsupported image format \"gif\"'
+                            message: 'Unsupported image format "gif"'
                         }]
                     }
                 );
@@ -344,5 +341,4 @@ describe('named maps static view', function() {
             });
         });
     });
-
 });

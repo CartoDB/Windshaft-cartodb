@@ -5,21 +5,19 @@ require('../support/test-helper');
 var assert = require('assert');
 var errorMiddleware = require('../../lib/api/middlewares/error-middleware');
 
-describe('error-middleware', function() {
-
-    it('different formats for postgis plugin error returns 400 as status code', function() {
-
+describe('error-middleware', function () {
+    it('different formats for postgis plugin error returns 400 as status code', function () {
         var expectedStatusCode = 400;
-        assert.equal(
-            errorMiddleware.findStatusCode("Postgis Plugin: ERROR:  column \"missing\" does not exist\n"),
+        assert.strictEqual(
+            errorMiddleware.findStatusCode('Postgis Plugin: ERROR:  column "missing" does not exist\n'),
             expectedStatusCode,
-            "Error status code for single line does not match"
+            'Error status code for single line does not match'
         );
 
-        assert.equal(
-            errorMiddleware.findStatusCode("Postgis Plugin: PSQL error:\nERROR:  column \"missing\" does not exist\n"),
+        assert.strictEqual(
+            errorMiddleware.findStatusCode('Postgis Plugin: PSQL error:\nERROR:  column "missing" does not exist\n'),
             expectedStatusCode,
-            "Error status code for multiline/PSQL does not match"
+            'Error status code for multiline/PSQL does not match'
         );
     });
 
@@ -52,7 +50,7 @@ describe('error-middleware', function() {
                 name: error.name,
                 label: error.label,
                 type: error.type,
-                subtype: error.subtype,
+                subtype: error.subtype
             },
             moreErrors: [{
                 message: error.message,
@@ -66,7 +64,7 @@ describe('error-middleware', function() {
         const errorFn = errorMiddleware();
         errorFn(errors, req, res);
 
-        assert.deepEqual(res.headers, {
+        assert.deepStrictEqual(res.headers, {
             'X-Tiler-Errors': JSON.stringify(errorHeader)
         });
 
@@ -104,7 +102,7 @@ describe('error-middleware', function() {
                 name: error.name,
                 label: error.label,
                 type: error.type,
-                subtype: error.subtype,
+                subtype: error.subtype
             },
             moreErrors: [{
                 message: error.message,
@@ -118,7 +116,7 @@ describe('error-middleware', function() {
         const errorFn = errorMiddleware();
         errorFn(errors, req, res);
 
-        assert.deepEqual(res.headers, {
+        assert.deepStrictEqual(res.headers, {
             'X-Tiler-Errors': JSON.stringify(errorHeader)
         });
 
@@ -126,7 +124,7 @@ describe('error-middleware', function() {
     });
 
     it('should escape chars that broke logs regex', function (done) {
-        const badString = 'error: ( ) = " \" \' * $ & |';
+        const badString = 'error: ( ) = " \" \' * $ & |'; // eslint-disable-line no-useless-escape
         const escapedString = 'error                     ';
 
         const error = new Error(badString);
@@ -157,7 +155,7 @@ describe('error-middleware', function() {
                 name: error.name,
                 label: escapedString,
                 type: escapedString,
-                subtype: escapedString,
+                subtype: escapedString
             },
             moreErrors: [{
                 message: escapedString,
@@ -171,7 +169,7 @@ describe('error-middleware', function() {
         const errorFn = errorMiddleware();
         errorFn(errors, req, res);
 
-        assert.deepEqual(res.headers, {
+        assert.deepStrictEqual(res.headers, {
             'X-Tiler-Errors': JSON.stringify(errorHeader)
         });
 

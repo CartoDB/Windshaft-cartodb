@@ -10,32 +10,31 @@ var cartodbRedis = require('cartodb-redis');
 
 var AnalysisBackend = require('../../lib/backends/analysis');
 
-describe('analysis-backend limits', function() {
-
+describe('analysis-backend limits', function () {
     var redisClient;
     var keysToDelete;
     var user = 'localhost';
 
-    beforeEach(function() {
+    beforeEach(function () {
         redisClient = redis.createClient(global.environment.redis.port);
         keysToDelete = {};
         var redisPool = new RedisPool(global.environment.redis);
-        this.metadataBackend = cartodbRedis({pool: redisPool});
+        this.metadataBackend = cartodbRedis({ pool: redisPool });
     });
 
-    afterEach(function(done) {
-        redisClient.quit(function() {
+    afterEach(function (done) {
+        redisClient.quit(function () {
             testHelper.deleteRedisKeys(keysToDelete, done);
         });
     });
 
-    function withAnalysesLimits(limits, callback) {
-        redisClient.SELECT(5, function(err) {
+    function withAnalysesLimits (limits, callback) {
+        redisClient.SELECT(5, function (err) {
             if (err) {
                 return callback(err);
             }
             var analysesLimitsKey = 'limits:analyses:' + user;
-            redisClient.HMSET([analysesLimitsKey].concat(limits), function(err) {
+            redisClient.HMSET([analysesLimitsKey].concat(limits), function (err) {
                 if (err) {
                     return callback(err);
                 }
@@ -45,52 +44,52 @@ describe('analysis-backend limits', function() {
         });
     }
 
-    it("should use limits from configuration", function(done) {
+    it('should use limits from configuration', function (done) {
         var analysisBackend = new AnalysisBackend(this.metadataBackend, {
             limits: {
                 moran: { timeout: 5000 },
                 kmeans: { timeout: 5000 }
             }
         });
-        analysisBackend.getAnalysesLimits(user, function(err, result) {
+        analysisBackend.getAnalysesLimits(user, function (err, result) {
             assert.ok(!err, err);
 
             assert.ok(result.analyses.moran);
-            assert.equal(result.analyses.moran.timeout, 5000);
+            assert.strictEqual(result.analyses.moran.timeout, 5000);
 
             assert.ok(result.analyses.kmeans);
-            assert.equal(result.analyses.kmeans.timeout, 5000);
+            assert.strictEqual(result.analyses.kmeans.timeout, 5000);
 
             done();
         });
     });
 
-    it("should use limits from redis", function(done) {
+    it('should use limits from redis', function (done) {
         var self = this;
         var limits = ['moran', 5000];
 
-        withAnalysesLimits(limits, function(err) {
+        withAnalysesLimits(limits, function (err) {
             if (err) {
                 return done(err);
             }
 
             var analysisBackend = new AnalysisBackend(self.metadataBackend);
-            analysisBackend.getAnalysesLimits(user, function(err, result) {
+            analysisBackend.getAnalysesLimits(user, function (err, result) {
                 assert.ok(!err, err);
 
                 assert.ok(result.analyses.moran);
-                assert.equal(result.analyses.moran.timeout, 5000);
+                assert.strictEqual(result.analyses.moran.timeout, 5000);
 
                 done();
             });
         });
     });
 
-    it("should use limits from redis and configuration, redis takes priority", function(done) {
+    it('should use limits from redis and configuration, redis takes priority', function (done) {
         var self = this;
         var limits = ['moran', 5000];
 
-        withAnalysesLimits(limits, function(err) {
+        withAnalysesLimits(limits, function (err) {
             if (err) {
                 return done(err);
             }
@@ -100,22 +99,22 @@ describe('analysis-backend limits', function() {
                     moran: { timeout: 1000 }
                 }
             });
-            analysisBackend.getAnalysesLimits(user, function(err, result) {
+            analysisBackend.getAnalysesLimits(user, function (err, result) {
                 assert.ok(!err, err);
 
                 assert.ok(result.analyses.moran);
-                assert.equal(result.analyses.moran.timeout, 5000);
+                assert.strictEqual(result.analyses.moran.timeout, 5000);
 
                 done();
             });
         });
     });
 
-    it("should use limits from redis and configuration, defaulting for values not present in redis", function(done) {
+    it('should use limits from redis and configuration, defaulting for values not present in redis', function (done) {
         var self = this;
         var limits = ['moran', 5000];
 
-        withAnalysesLimits(limits, function(err) {
+        withAnalysesLimits(limits, function (err) {
             if (err) {
                 return done(err);
             }
@@ -126,25 +125,25 @@ describe('analysis-backend limits', function() {
                     kmeans: { timeout: 1000 }
                 }
             });
-            analysisBackend.getAnalysesLimits(user, function(err, result) {
+            analysisBackend.getAnalysesLimits(user, function (err, result) {
                 assert.ok(!err, err);
 
                 assert.ok(result.analyses.moran);
-                assert.equal(result.analyses.moran.timeout, 5000);
+                assert.strictEqual(result.analyses.moran.timeout, 5000);
 
                 assert.ok(result.analyses.kmeans);
-                assert.equal(result.analyses.kmeans.timeout, 1000);
+                assert.strictEqual(result.analyses.kmeans.timeout, 1000);
 
                 done();
             });
         });
     });
 
-    it("should allow to set other limits per analysis via configuration, and keep timeout from redis", function(done) {
+    it('should allow to set other limits per analysis via configuration, and keep timeout from redis', function (done) {
         var self = this;
         var limits = ['aggregate-intersection', 5000];
 
-        withAnalysesLimits(limits, function(err) {
+        withAnalysesLimits(limits, function (err) {
             if (err) {
                 return done(err);
             }
@@ -154,16 +153,15 @@ describe('analysis-backend limits', function() {
                     'aggregate-intersection': { timeout: 10000, maxNumberOfRows: 1e5 }
                 }
             });
-            analysisBackend.getAnalysesLimits(user, function(err, result) {
+            analysisBackend.getAnalysesLimits(user, function (err, result) {
                 assert.ok(!err, err);
 
                 assert.ok(result.analyses['aggregate-intersection']);
-                assert.equal(result.analyses['aggregate-intersection'].timeout, 5000);
-                assert.equal(result.analyses['aggregate-intersection'].maxNumberOfRows, 1e5);
+                assert.strictEqual(result.analyses['aggregate-intersection'].timeout, 5000);
+                assert.strictEqual(result.analyses['aggregate-intersection'].maxNumberOfRows, 1e5);
 
                 done();
             });
         });
     });
-
 });

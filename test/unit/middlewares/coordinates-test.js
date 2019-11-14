@@ -16,11 +16,11 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(
+            assert.strictEqual(
                 err.message,
                 'Invalid zoom value (-1). It should be an integer number greather than or equal to 0'
             );
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
@@ -37,11 +37,11 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(
+            assert.strictEqual(
                 err.message,
                 'Invalid zoom value (1.1). It should be an integer number greather than or equal to 0'
             );
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
@@ -58,15 +58,14 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(
+            assert.strictEqual(
                 err.message,
                 'Invalid zoom value (0.1). It should be an integer number greather than or equal to 0'
             );
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
-
 
     it('should return error: invalid zoom paramenter (wadus)', function (done) {
         const coords = coordinates();
@@ -80,11 +79,11 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(
+            assert.strictEqual(
                 err.message,
                 'Invalid zoom value (wadus). It should be an integer number greather than or equal to 0'
             );
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
@@ -118,8 +117,8 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(err.message, `Invalid coodinate 'x' value (1.1). It should be an integer number`);
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.message, 'Invalid coodinate \'x\' value (1.1). It should be an integer number');
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
@@ -136,8 +135,8 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(err.message, `Invalid coodinate 'x' value (wadus). It should be an integer number`);
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.message, 'Invalid coodinate \'x\' value (wadus). It should be an integer number');
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
@@ -171,11 +170,11 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(
+            assert.strictEqual(
                 err.message,
-                `Invalid coodinate 'y' value (-1). It should be an integer number greather than or equal to 0`
+                'Invalid coodinate \'y\' value (-1). It should be an integer number greather than or equal to 0'
             );
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
@@ -192,11 +191,11 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(
+            assert.strictEqual(
                 err.message,
-                `Invalid coodinate 'y' value (1.1). It should be an integer number greather than or equal to 0`
+                'Invalid coodinate \'y\' value (1.1). It should be an integer number greather than or equal to 0'
             );
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
@@ -213,11 +212,11 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(
+            assert.strictEqual(
                 err.message,
-                `Invalid coodinate 'y' value (wadus). It should be an integer number greather than or equal to 0`
+                'Invalid coodinate \'y\' value (wadus). It should be an integer number greather than or equal to 0'
             );
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });
@@ -249,11 +248,11 @@ describe('coordinates middleware', function () {
         const res = {};
 
         coords(req, res, function (err) {
-            assert.equal(
+            assert.strictEqual(
                 err.message,
                 'Invalid zoom value (-1.1). It should be an integer number greather than or equal to 0'
             );
-            assert.equal(err.http_status, 400);
+            assert.strictEqual(err.http_status, 400);
             done();
         });
     });

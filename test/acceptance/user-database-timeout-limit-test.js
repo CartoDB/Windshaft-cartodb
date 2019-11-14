@@ -82,15 +82,15 @@ const createMapConfig = ({
     }
 });
 
-const db_limit_error_message = 'You are over platform\'s limits: SQL query timeout error.' +
+const dbLimitErrorMessage = 'You are over platform\'s limits: SQL query timeout error.' +
     ' Refactor your query before running again or contact CARTO support for more details.';
 
 const DATASOURCE_TIMEOUT_ERROR = {
-    errors: [db_limit_error_message],
+    errors: [dbLimitErrorMessage],
     errors_with_context: [{
         type: 'limit',
         subtype: 'datasource',
-        message: db_limit_error_message
+        message: dbLimitErrorMessage
     }]
 };
 
@@ -124,7 +124,7 @@ describe('user database timeout limit', function () {
             this.testClient.getDataview('count', params, (err, timeoutError) => {
                 assert.ifError(err);
 
-                assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                 done();
             });
@@ -157,12 +157,13 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
-                        errors: [db_limit_error_message ],
+                    assert.ifError(err);
+                    assert.deepStrictEqual(timeoutError, {
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -221,7 +222,7 @@ describe('user database timeout limit', function () {
                         const params = {
                             layergroupid: this.layergroupid,
                             format: 'png',
-                            layers: [ 0 ]
+                            layers: [0]
                         };
 
                         this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
@@ -305,7 +306,7 @@ describe('user database timeout limit', function () {
                         const params = {
                             layergroupid: this.layergroupid,
                             format: 'png',
-                            layers: [ 0 ],
+                            layers: [0],
                             response: {
                                 status: 429,
                                 headers: {
@@ -317,7 +318,7 @@ describe('user database timeout limit', function () {
                         this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
                             assert.ifError(err);
 
-                            assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                            assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                             done();
                         });
@@ -343,7 +344,7 @@ describe('user database timeout limit', function () {
                         this.testClient.getStaticCenter(params, (err, res, timeoutError) => {
                             assert.ifError(err);
 
-                            assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                            assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                             done();
                         });
@@ -379,12 +380,13 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
-                        errors: [ db_limit_error_message ],
+                    assert.ifError(err);
+                    assert.deepStrictEqual(timeoutError, {
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -397,7 +399,7 @@ describe('user database timeout limit', function () {
         describe('fetching vector tiles via mapnik renderer', () => testFetchingVectorTiles(false));
         describe('fetching vector tiles via postgis renderer', () => testFetchingVectorTiles(true));
 
-        function testFetchingVectorTiles(usePostGIS) {
+        function testFetchingVectorTiles (usePostGIS) {
             const originalUsePostGIS = serverOptions.renderer.mvt.usePostGIS;
 
             before(function () {
@@ -407,7 +409,6 @@ describe('user database timeout limit', function () {
             after(function () {
                 serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
             });
-
 
             beforeEach(function (done) {
                 const mapconfig = createMapConfig();
@@ -447,7 +448,7 @@ describe('user database timeout limit', function () {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'mvt',
-                        layers: [ 0 ],
+                        layers: [0],
                         response: {
                             status: 429,
                             headers: {
@@ -460,19 +461,17 @@ describe('user database timeout limit', function () {
                         assert.ifError(err);
 
                         var tileJSON = tile.toJSON();
-                        assert.equal(Array.isArray(tileJSON), true);
-                        assert.equal(tileJSON.length, 2);
-                        assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
-                        assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+                        assert.strictEqual(Array.isArray(tileJSON), true);
+                        assert.strictEqual(tileJSON.length, 2);
+                        assert.strictEqual(tileJSON[0].name, 'errorTileSquareLayer');
+                        assert.strictEqual(tileJSON[1].name, 'errorTileStripesLayer');
 
                         done();
                     });
-
                 });
             });
         }
     });
-
 
     describe('interactivity', function () {
         describe('while validating in layergroup creation', function () {
@@ -500,12 +499,13 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
-                        errors: [ db_limit_error_message ],
+                    assert.ifError(err);
+                    assert.deepStrictEqual(timeoutError, {
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: { id: 'layer0', index: 0, type: 'mapnik' }
                         }]
                     });
@@ -566,7 +566,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                        assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });
@@ -604,12 +604,13 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
-                        errors: [db_limit_error_message],
+                    assert.ifError(err);
+                    assert.deepStrictEqual(timeoutError, {
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: { id: 'torque-layer0', index: 0, type: 'torque' }
                         }]
                     });
@@ -661,7 +662,7 @@ describe('user database timeout limit', function () {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'torque.json',
-                        layers: [ 0 ],
+                        layers: [0],
                         response: {
                             status: 429,
                             headers: {
@@ -673,7 +674,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                        assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });
@@ -683,7 +684,7 @@ describe('user database timeout limit', function () {
                     const params = {
                         layergroupid: this.layergroupid,
                         format: 'torque.png',
-                        layers: [ 0 ],
+                        layers: [0],
                         response: {
                             status: 429,
                             headers: {
@@ -695,7 +696,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getTile(0, 0, 0, params, (err, res, attributes) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(attributes, DATASOURCE_TIMEOUT_ERROR);
+                        assert.deepStrictEqual(attributes, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });
@@ -710,7 +711,7 @@ describe('user database timeout limit', function () {
                 const mapconfig = createMapConfig({
                     attributes: {
                         id: 'cartodb_id',
-                        columns: [ 'val' ]
+                        columns: ['val']
                     }
                 });
                 this.testClient = new TestClient(mapconfig, 1234);
@@ -735,12 +736,13 @@ describe('user database timeout limit', function () {
                 };
 
                 this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
-                    assert.deepEqual(timeoutError, {
-                        errors: [db_limit_error_message],
+                    assert.ifError(err);
+                    assert.deepStrictEqual(timeoutError, {
+                        errors: [dbLimitErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
                             subtype: 'datasource',
-                            message: db_limit_error_message,
+                            message: dbLimitErrorMessage,
                             layer: {
                                 id: 'layer0',
                                 index: 0,
@@ -759,7 +761,7 @@ describe('user database timeout limit', function () {
                 const mapconfig = createMapConfig({
                     attributes: {
                         id: 'cartodb_id',
-                        columns: [ 'val' ]
+                        columns: ['val']
                     }
                 });
 
@@ -812,7 +814,7 @@ describe('user database timeout limit', function () {
                     this.testClient.getAttributes(params, (err, res, timeoutError) => {
                         assert.ifError(err);
 
-                        assert.deepEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
+                        assert.deepStrictEqual(timeoutError, DATASOURCE_TIMEOUT_ERROR);
 
                         done();
                     });

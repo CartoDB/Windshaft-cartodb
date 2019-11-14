@@ -1,6 +1,6 @@
 'use strict';
 
-var test_helper = require('../support/test-helper');
+var testHelper = require('../support/test-helper');
 var RedisPool = require('redis-mpool');
 var querystring = require('querystring');
 
@@ -11,7 +11,7 @@ var serverOptions = require('../../lib/server-options');
 var TemplateMaps = require('../../lib/backends/template-maps');
 var NamedMapsCacheEntry = require('../../lib/cache/model/named-maps-entry');
 
-describe('named maps authentication', function() {
+describe('named maps authentication', function () {
     var server;
 
     before(function () {
@@ -43,10 +43,10 @@ describe('named maps authentication', function() {
         auth: {
             method: 'open'
         },
-        "placeholders": {
-            "color": {
-                "type": "css_color",
-                "default": "#cc3300"
+        placeholders: {
+            color: {
+                type: 'css_color',
+                default: '#cc3300'
             }
         },
         layergroup: {
@@ -66,8 +66,8 @@ describe('named maps authentication', function() {
         },
         placeholders: {
             color: {
-                "type": "css_color",
-                "default": "#cc3300"
+                type: 'css_color',
+                default: '#cc3300'
             }
         },
         layergroup: {
@@ -76,7 +76,6 @@ describe('named maps authentication', function() {
             ]
         }
     };
-
 
     var namedMapLayer = {
         type: 'named',
@@ -133,9 +132,8 @@ describe('named maps authentication', function() {
         });
     });
 
-    function getNamedTile(name, z, x, y, options, callback) {
-
-        var url = '/api/v1/map/named/' + name + '/all/' + [z,x,y].join('/') + '.png';
+    function getNamedTile (name, z, x, y, options, callback) {
+        var url = '/api/v1/map/named/' + name + '/all/' + [z, x, y].join('/') + '.png';
         if (options.params) {
             url = url + '?' + querystring.stringify(options.params);
         }
@@ -163,19 +161,19 @@ describe('named maps authentication', function() {
             function (res, err) {
                 var img;
                 if (!err && res.headers['content-type'] === 'image/png') {
-                    img = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    img = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                 }
                 return callback(err, res, img);
             }
         );
     }
 
-    describe('tiles', function() {
+    describe('tiles', function () {
         it('should return a 404 error for nonexistent template name', function (done) {
             var nonexistentName = 'nonexistent';
-            getNamedTile(nonexistentName, 0, 0, 0, { status: 404 }, function(err, res) {
+            getNamedTile(nonexistentName, 0, 0, 0, { status: 404 }, function (err, res) {
                 assert.ok(!err);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     JSON.parse(res.body).errors,
                     ["Template '" + nonexistentName + "' of user '" + username + "' not found"]
                 );
@@ -183,28 +181,27 @@ describe('named maps authentication', function() {
             });
         });
 
-        it('should return 403 if not properly authorized', function(done) {
-            getNamedTile(tokenAuthTemplateName, 0, 0, 0, { status: 403 }, function(err, res) {
+        it('should return 403 if not properly authorized', function (done) {
+            getNamedTile(tokenAuthTemplateName, 0, 0, 0, { status: 403 }, function (err, res) {
                 assert.ok(!err);
-                assert.deepEqual(JSON.parse(res.body).errors, ['Unauthorized template instantiation']);
+                assert.deepStrictEqual(JSON.parse(res.body).errors, ['Unauthorized template instantiation']);
                 done();
             });
         });
 
-        it('should return 200 if properly authorized', function(done) {
-            getNamedTile(tokenAuthTemplateName, 0, 0, 0, { params: { auth_token: 'valid1' } }, function(err, res, img) {
-                assert.equal(img.width(), 256);
-                assert.equal(img.height(), 256);
+        it('should return 200 if properly authorized', function (done) {
+            getNamedTile(tokenAuthTemplateName, 0, 0, 0, { params: { auth_token: 'valid1' } }, function (err, res, img) {
+                assert.strictEqual(img.width(), 256);
+                assert.strictEqual(img.height(), 256);
 
                 assert.ok(!err);
-                test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
+                testHelper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
                 done();
             });
         });
     });
 
-    function getStaticMap(name, options, callback) {
-
+    function getStaticMap (name, options, callback) {
         var url = '/api/v1/map/static/named/' + name + '/640/480.png';
         if (options.params) {
             url = url + '?' + querystring.stringify(options.params);
@@ -233,18 +230,18 @@ describe('named maps authentication', function() {
             function (res, err) {
                 var img;
                 if (!err && res.headers['content-type'] === 'image/png') {
-                    img = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    img = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                 }
                 return callback(err, res, img);
             }
         );
     }
-    describe('static maps', function() {
+    describe('static maps', function () {
         it('should return a 404 error for nonexistent template name', function (done) {
             var nonexistentName = 'nonexistent';
-            getStaticMap(nonexistentName, { status: 404 }, function(err, res) {
+            getStaticMap(nonexistentName, { status: 404 }, function (err, res) {
                 assert.ok(!err);
-                assert.deepEqual(
+                assert.deepStrictEqual(
                     JSON.parse(res.body).errors,
                     ["Template '" + nonexistentName + "' of user '" + username + "' not found"]
                 );
@@ -252,25 +249,24 @@ describe('named maps authentication', function() {
             });
         });
 
-        it('should return 403 if not properly authorized', function(done) {
-            getStaticMap(tokenAuthTemplateName, { status: 403 }, function(err, res) {
+        it('should return 403 if not properly authorized', function (done) {
+            getStaticMap(tokenAuthTemplateName, { status: 403 }, function (err, res) {
                 assert.ok(!err);
-                assert.deepEqual(JSON.parse(res.body).errors, ['Unauthorized template instantiation']);
+                assert.deepStrictEqual(JSON.parse(res.body).errors, ['Unauthorized template instantiation']);
                 done();
             });
         });
 
-        it('should return 200 if properly authorized', function(done) {
-            getStaticMap(tokenAuthTemplateName, { params: { auth_token: 'valid1' } }, function(err, res, img) {
+        it('should return 200 if properly authorized', function (done) {
+            getStaticMap(tokenAuthTemplateName, { params: { auth_token: 'valid1' } }, function (err, res, img) {
                 assert.ok(!err);
 
-                assert.equal(img.width(), 640);
-                assert.equal(img.height(), 480);
+                assert.strictEqual(img.width(), 640);
+                assert.strictEqual(img.height(), 480);
 
-                test_helper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
-                test_helper.deleteRedisKeys({'user:localhost:mapviews:global': 5}, done);
+                testHelper.checkSurrogateKey(res, new NamedMapsCacheEntry(username, tokenAuthTemplateName).key());
+                testHelper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, done);
             });
         });
     });
-
 });

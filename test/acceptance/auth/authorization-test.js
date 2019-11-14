@@ -4,7 +4,7 @@ require('../../support/test-helper');
 
 const assert = require('../../support/assert');
 const TestClient = require('../../support/test-client');
-const  mapnik = require('windshaft').mapnik;
+const mapnik = require('windshaft').mapnik;
 
 const PERMISSION_DENIED_RESPONSE = {
     status: 403,
@@ -13,8 +13,8 @@ const PERMISSION_DENIED_RESPONSE = {
     }
 };
 
-describe('authorization', function() {
-    it('should create a layergroup with regular apikey token', function(done) {
+describe('authorization', function () {
+    it('should create a layergroup with regular apikey token', function (done) {
         const apikeyToken = 'regular1';
         const mapConfig = {
             version: '1.7.0',
@@ -38,7 +38,6 @@ describe('authorization', function() {
             testClient.drain(done);
         });
     });
-
 
     it('should fail getting a named map tile with default apikey token', function (done) {
         const apikeyTokenCreate = 'regular1';
@@ -68,12 +67,11 @@ describe('authorization', function() {
                 response: PERMISSION_DENIED_RESPONSE
             };
 
-            testClientGet.getTile(0, 0, 0, params, function(err, res, body) {
-
+            testClientGet.getTile(0, 0, 0, params, function (err, res, body) {
                 assert.ifError(err);
 
-                assert.ok(body.hasOwnProperty('errors'));
-                assert.equal(body.errors.length, 1);
+                assert.ok(Object.prototype.hasOwnProperty.call(body, 'errors'));
+                assert.strictEqual(body.errors.length, 1);
                 assert.ok(body.errors[0].match(/permission denied/), body.errors[0]);
 
                 testClientGet.drain(done);
@@ -100,8 +98,8 @@ describe('authorization', function() {
         testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) {
             assert.ifError(err);
 
-            assert.ok(layergroupResult.hasOwnProperty('errors'));
-            assert.equal(layergroupResult.errors.length, 1);
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroupResult, 'errors'));
+            assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
 
             testClient.drain(done);
@@ -152,7 +150,7 @@ describe('authorization', function() {
         testClient.getTile(0, 0, 0, function (err, res, tile) {
             assert.ifError(err);
 
-            assert.equal(res.statusCode, 200);
+            assert.strictEqual(res.statusCode, 200);
             assert.ok(tile instanceof mapnik.Image);
 
             testClient.drain(done);
@@ -172,13 +170,13 @@ describe('authorization', function() {
                 }
             ]
         };
-        const testClient = new TestClient(mapConfig); //no apikey provided, using default
+        const testClient = new TestClient(mapConfig); // no apikey provided, using default
 
-        testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) { //TODO 401
+        testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) { // TODO 401
             assert.ifError(err);
 
-            assert.ok(layergroupResult.hasOwnProperty('errors'));
-            assert.equal(layergroupResult.errors.length, 1);
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroupResult, 'errors'));
+            assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/permission denied/), layergroupResult.errors[0]);
 
             testClient.drain(done);
@@ -204,8 +202,8 @@ describe('authorization', function() {
         testClient.getLayergroup({ response: { status: 403 } }, function (err, layergroupResult) {
             assert.ifError(err);
 
-            assert.ok(layergroupResult.hasOwnProperty('errors'));
-            assert.equal(layergroupResult.errors.length, 1);
+            assert.ok(Object.prototype.hasOwnProperty.call(layergroupResult, 'errors'));
+            assert.strictEqual(layergroupResult.errors.length, 1);
             assert.ok(layergroupResult.errors[0].match(/Forbidden/), layergroupResult.errors[0]);
 
             testClient.drain(done);
@@ -305,8 +303,8 @@ describe('authorization', function() {
             ],
             analyses: [
                 {
-                    id: "HEAD1",
-                    type: "buffer",
+                    id: 'HEAD1',
+                    type: 'buffer',
                     params: {
                         source: {
                             id: 'HEAD2',
@@ -333,7 +331,6 @@ describe('authorization', function() {
 
     describe('Named maps', function () {
         describe('LIST Named maps', function () {
-
             it('should fail while listing named maps with a regular apikey token', function (done) {
                 const apikeyToken = 'regular1';
 
@@ -342,9 +339,9 @@ describe('authorization', function() {
                 testClient.getNamedMapList({ response: { status: 403 } }, function (err, res, body) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 403);
+                    assert.strictEqual(res.statusCode, 403);
 
-                    assert.equal(body.errors.length, 1);
+                    assert.strictEqual(body.errors.length, 1);
                     assert.ok(body.errors[0].match(/Forbidden/), body.errors[0]);
 
                     testClient.drain(done);
@@ -359,9 +356,9 @@ describe('authorization', function() {
                 testClient.getNamedMapList({ response: { status: 403 } }, function (err, res, body) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 403);
+                    assert.strictEqual(res.statusCode, 403);
 
-                    assert.equal(body.errors.length, 1);
+                    assert.strictEqual(body.errors.length, 1);
                     assert.ok(body.errors[0].match(/Forbidden/), body.errors[0]);
 
                     testClient.drain(done);
@@ -376,9 +373,9 @@ describe('authorization', function() {
                 testClient.getNamedMapList({ response: { status: 401 } }, function (err, res, body) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 401);
+                    assert.strictEqual(res.statusCode, 401);
 
-                    assert.equal(body.errors.length, 1);
+                    assert.strictEqual(body.errors.length, 1);
                     assert.ok(body.errors[0].match(/Unauthorized/), body.errors[0]);
 
                     testClient.drain(done);
@@ -393,7 +390,7 @@ describe('authorization', function() {
                 testClient.getNamedMapList({}, function (err, res, body) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.statusCode, 200);
                     assert.ok(Array.isArray(body.template_ids));
 
                     testClient.drain(done);
@@ -418,7 +415,7 @@ describe('authorization', function() {
                         options: {
                             sql: 'select * from test_table_localhost_regular1',
                             cartocss: TestClient.CARTOCSS.POINTS,
-                            cartocss_version: '2.3.0',
+                            cartocss_version: '2.3.0'
                         }
                     }]
                 }
@@ -432,7 +429,7 @@ describe('authorization', function() {
                 testClient.getTile(0, 0, 0, function (err, res, tile) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 200);
+                    assert.strictEqual(res.statusCode, 200);
                     assert.ok(tile instanceof mapnik.Image);
 
                     testClient.drain(done);
@@ -447,9 +444,9 @@ describe('authorization', function() {
                 testClient.createTemplate({ response: { status: 403 } }, function (err, res, response) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 403);
+                    assert.strictEqual(res.statusCode, 403);
 
-                    assert.equal(response.errors.length, 1);
+                    assert.strictEqual(response.errors.length, 1);
                     assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                     testClient.drain(done);
@@ -464,9 +461,9 @@ describe('authorization', function() {
                 testClient.createTemplate({ response: { status: 403 } }, function (err, res, response) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 403);
+                    assert.strictEqual(res.statusCode, 403);
 
-                    assert.equal(response.errors.length, 1);
+                    assert.strictEqual(response.errors.length, 1);
                     assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                     testClient.drain(done);
@@ -481,9 +478,9 @@ describe('authorization', function() {
                 testClient.createTemplate({ response: { status: 401 } }, function (err, res, response) {
                     assert.ifError(err);
 
-                    assert.equal(res.statusCode, 401);
+                    assert.strictEqual(res.statusCode, 401);
 
-                    assert.equal(response.errors.length, 1);
+                    assert.strictEqual(response.errors.length, 1);
                     assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                     testClient.drain(done);
@@ -508,7 +505,7 @@ describe('authorization', function() {
                         options: {
                             sql: 'select * from test_table_localhost_regular1',
                             cartocss: TestClient.CARTOCSS.POINTS,
-                            cartocss_version: '2.3.0',
+                            cartocss_version: '2.3.0'
                         }
                     }]
                 }
@@ -534,7 +531,7 @@ describe('authorization', function() {
                         function (err, res) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 204);
+                            assert.strictEqual(res.statusCode, 204);
 
                             testClientDelete.drain(done);
                         }
@@ -562,9 +559,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -593,9 +590,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -624,9 +621,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 401);
+                            assert.strictEqual(res.statusCode, 401);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -653,7 +650,7 @@ describe('authorization', function() {
                         options: {
                             sql: 'select * from test_table_localhost_regular1',
                             cartocss: TestClient.CARTOCSS.POINTS,
-                            cartocss_version: '2.3.0',
+                            cartocss_version: '2.3.0'
                         }
                     }]
                 }
@@ -679,7 +676,7 @@ describe('authorization', function() {
                         function (err, res) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 200);
+                            assert.strictEqual(res.statusCode, 200);
 
                             testClientDelete.drain(done);
                         }
@@ -707,9 +704,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientGet.drain(done);
@@ -738,9 +735,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientGet.drain(done);
@@ -769,9 +766,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 401);
+                            assert.strictEqual(res.statusCode, 401);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                             testClientGet.drain(done);
@@ -798,7 +795,7 @@ describe('authorization', function() {
                         options: {
                             sql: 'select * from test_table_localhost_regular1',
                             cartocss: TestClient.CARTOCSS.POINTS,
-                            cartocss_version: '2.3.0',
+                            cartocss_version: '2.3.0'
                         }
                     }]
                 }
@@ -825,7 +822,7 @@ describe('authorization', function() {
                         function (err, res) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 200);
+                            assert.strictEqual(res.statusCode, 200);
 
                             testClientDelete.drain(done);
                         }
@@ -854,9 +851,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -886,9 +883,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 403);
+                            assert.strictEqual(res.statusCode, 403);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -918,9 +915,9 @@ describe('authorization', function() {
                         function (err, res, response) {
                             assert.ifError(err);
 
-                            assert.equal(res.statusCode, 401);
+                            assert.strictEqual(res.statusCode, 401);
 
-                            assert.equal(response.errors.length, 1);
+                            assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
                             testClientDelete.drain(done);
@@ -928,7 +925,6 @@ describe('authorization', function() {
                     );
                 });
             });
-
         });
     });
 });

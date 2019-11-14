@@ -16,15 +16,15 @@ describe('named-map-provider-reporter', function () {
         const dummyCacheEntries = [
             {
                 k: 'foo:template_1',
-                v: { 'instantiation_1': 1 }
+                v: { instantiation_1: 1 }
             },
             {
                 k: 'bar:template_2',
-                v: { 'instantiation_1': 1, 'instantiation_2': 2 }
+                v: { instantiation_1: 1, instantiation_2: 2 }
             },
             {
                 k: 'buz:template_3',
-                v: { 'instantiation_1': 1, 'instantiation_2': 2, 'instantiation_3': 3 }
+                v: { instantiation_1: 1, instantiation_2: 2, instantiation_3: 3 }
             }
         ];
 

@@ -5,8 +5,7 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('multilayer stats disabled', function() {
-
+describe('multilayer stats disabled', function () {
     before(function () {
         this.layerMetadataConfig = global.environment.enabledFeatures.layerMetadata;
         this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
@@ -19,18 +18,16 @@ describe('multilayer stats disabled', function() {
         global.environment.enabledFeatures.layerStats = this.layerStatsConfig;
     });
 
-
-    function testLayerMetadataStats(testScenario) {
-
-        it(testScenario.desc, function(done) {
-            var mapConfig =  {
+    function testLayerMetadataStats (testScenario) {
+        it(testScenario.desc, function (done) {
+            var mapConfig = {
                 version: '1.3.0',
                 layers: testScenario.layers
             };
 
             var testClient = new TestClient(mapConfig);
 
-            testClient.getLayergroup(function(err, layergroup) {
+            testClient.getLayergroup(function (err, layergroup) {
                 assert.ifError(err);
                 layergroup.metadata.layers.forEach(function (layer) {
                     if (layer.type !== 'torque' && layer.type !== 'mapnik') {
@@ -41,9 +38,9 @@ describe('multilayer stats disabled', function() {
                     } else {
                         assert.ok('cartocss' in layer.meta);
                         // check torque metadata at least match in number
-                        var torqueLayers = mapConfig.layers.filter(function(layer) { return layer.type === 'torque'; });
+                        var torqueLayers = mapConfig.layers.filter(function (layer) { return layer.type === 'torque'; });
                         if (torqueLayers.length) {
-                            assert.equal(Object.keys(layergroup.metadata.torque).length, torqueLayers.length);
+                            assert.strictEqual(Object.keys(layergroup.metadata.torque).length, torqueLayers.length);
                         }
                     }
                 });
@@ -64,7 +61,7 @@ describe('multilayer stats disabled', function() {
         type: 'http',
         options: {
             urlTemplate: 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
-            subdomains: ['a','b','c']
+            subdomains: ['a', 'b', 'c']
         }
     };
 
@@ -73,12 +70,12 @@ describe('multilayer stats disabled', function() {
         options: {
             sql: "select 1 id, '1970-01-02'::date d, 'POINT(0 0)'::geometry the_geom_webmercator",
             cartocss: [
-                "Map {",
-                    "-torque-frame-count:2;",
-                    "-torque-resolution:3;",
-                    "-torque-time-attribute:d;",
-                    "-torque-aggregation-function:'count(id)';",
-                "}"
+                'Map {',
+                '-torque-frame-count:2;',
+                '-torque-resolution:3;',
+                '-torque-time-attribute:d;',
+                "-torque-aggregation-function:'count(id)';",
+                '}'
             ].join(' '),
             cartocss_version: '2.0.1'
         }
@@ -223,5 +220,4 @@ describe('multilayer stats disabled', function() {
     ];
 
     testScenarios.forEach(testLayerMetadataStats);
-
 });

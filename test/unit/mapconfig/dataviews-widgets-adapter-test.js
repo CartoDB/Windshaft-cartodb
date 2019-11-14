@@ -1,29 +1,28 @@
 'use strict';
 
-//require('../../../support/test-helper');
+// require('../../../support/test-helper');
 var assert = require('assert');
 
 var DataviewsMapConfigAdapter = require('../../../lib/models/mapconfig/adapter/dataviews-widgets-adapter');
 
-describe('dataviews-widgets-adapter', function() {
-
+describe('dataviews-widgets-adapter', function () {
     var widgetsMapConfigs = [
         {
-            "input": {
-                "version": "1.4.0",
-                "layers": [
+            input: {
+                version: '1.4.0',
+                layers: [
                     {
-                        "type": "mapnik",
-                        "options": {
-                            "sql": "select * from populated_places_simple_reduced",
-                            "cartocss": "#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }",
-                            "cartocss_version": "2.3.0",
-                            "widgets": {
-                                "country_places_count": {
-                                    "type": "aggregation",
-                                    "options": {
-                                        "column": "adm0_a3",
-                                        "aggregation": "count"
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
+                            widgets: {
+                                country_places_count: {
+                                    type: 'aggregation',
+                                    options: {
+                                        column: 'adm0_a3',
+                                        aggregation: 'count'
                                     }
                                 }
                             }
@@ -31,68 +30,68 @@ describe('dataviews-widgets-adapter', function() {
                     }
                 ]
             },
-            "expected": {
-                "version": "1.4.0",
-                "layers": [
+            expected: {
+                version: '1.4.0',
+                layers: [
                     {
-                        "type": "mapnik",
-                        "options": {
-                            "source": {
-                                "id": "cdb-layer-source-0"
+                        type: 'mapnik',
+                        options: {
+                            source: {
+                                id: 'cdb-layer-source-0'
                             },
-                            "cartocss": "#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }",
-                            "cartocss_version": "2.3.0",
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
                             // keep them for now
-                            "widgets": {
-                                "country_places_count": {
-                                    "type": "aggregation",
-                                    "options": {
-                                        "column": "adm0_a3",
-                                        "aggregation": "count"
+                            widgets: {
+                                country_places_count: {
+                                    type: 'aggregation',
+                                    options: {
+                                        column: 'adm0_a3',
+                                        aggregation: 'count'
                                     }
                                 }
                             }
                         }
                     }
                 ],
-                "analyses": [
+                analyses: [
                     {
-                        "id": "cdb-layer-source-0",
-                        "type": "source",
-                        "params": {
-                            "query": "select * from populated_places_simple_reduced"
+                        id: 'cdb-layer-source-0',
+                        type: 'source',
+                        params: {
+                            query: 'select * from populated_places_simple_reduced'
                         }
                     }
                 ],
-                "dataviews": {
-                    "country_places_count": {
-                        "source": {
-                            "id": "cdb-layer-source-0"
+                dataviews: {
+                    country_places_count: {
+                        source: {
+                            id: 'cdb-layer-source-0'
                         },
-                        "type": "aggregation",
-                        "options": {
-                            "column": "adm0_a3",
-                            "aggregation": "count"
+                        type: 'aggregation',
+                        options: {
+                            column: 'adm0_a3',
+                            aggregation: 'count'
                         }
                     }
                 }
             }
         },
         {
-            "input": {
-                "version": "1.4.0",
-                "layers": [
+            input: {
+                version: '1.4.0',
+                layers: [
                     {
-                        "type": "mapnik",
-                        "options": {
-                            "sql": "select * from populated_places_simple_reduced",
-                            "cartocss": "#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }",
-                            "cartocss_version": "2.3.0",
-                            "widgets": {
-                                "pop_max": {
-                                    "type": "histogram",
-                                    "options": {
-                                        "column": "pop_max"
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
+                            widgets: {
+                                pop_max: {
+                                    type: 'histogram',
+                                    options: {
+                                        column: 'pop_max'
                                     }
                                 }
                             }
@@ -100,73 +99,73 @@ describe('dataviews-widgets-adapter', function() {
                     }
                 ]
             },
-            "expected": {
-                "version": "1.4.0",
-                "layers": [
+            expected: {
+                version: '1.4.0',
+                layers: [
                     {
-                        "type": "mapnik",
-                        "options": {
-                            "source": {
-                                "id": "cdb-layer-source-0"
+                        type: 'mapnik',
+                        options: {
+                            source: {
+                                id: 'cdb-layer-source-0'
                             },
-                            "cartocss": "#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }",
-                            "cartocss_version": "2.3.0",
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
                             // keep them for now
-                            "widgets": {
-                                "pop_max": {
-                                    "type": "histogram",
-                                    "options": {
-                                        "column": "pop_max"
+                            widgets: {
+                                pop_max: {
+                                    type: 'histogram',
+                                    options: {
+                                        column: 'pop_max'
                                     }
                                 }
                             }
                         }
                     }
                 ],
-                "analyses": [
+                analyses: [
                     {
-                        "id": "cdb-layer-source-0",
-                        "type": "source",
-                        "params": {
-                            "query": "select * from populated_places_simple_reduced"
+                        id: 'cdb-layer-source-0',
+                        type: 'source',
+                        params: {
+                            query: 'select * from populated_places_simple_reduced'
                         }
                     }
                 ],
-                "dataviews": {
-                    "pop_max": {
-                        "source": {
-                            "id": "cdb-layer-source-0"
+                dataviews: {
+                    pop_max: {
+                        source: {
+                            id: 'cdb-layer-source-0'
                         },
-                        "type": "histogram",
-                        "options": {
-                            "column": "pop_max"
+                        type: 'histogram',
+                        options: {
+                            column: 'pop_max'
                         }
                     }
                 }
             }
         },
         {
-            "input": {
-                "version": "1.4.0",
-                "layers": [
+            input: {
+                version: '1.4.0',
+                layers: [
                     {
-                        "type": "mapnik",
-                        "options": {
-                            "sql": "select * from populated_places_simple_reduced",
-                            "cartocss": "#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }",
-                            "cartocss_version": "2.3.0",
-                            "widgets": {
-                                "country_places_count": {
-                                    "type": "aggregation",
-                                    "options": {
-                                        "column": "adm0_a3",
-                                        "aggregation": "count"
+                        type: 'mapnik',
+                        options: {
+                            sql: 'select * from populated_places_simple_reduced',
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
+                            widgets: {
+                                country_places_count: {
+                                    type: 'aggregation',
+                                    options: {
+                                        column: 'adm0_a3',
+                                        aggregation: 'count'
                                     }
                                 },
-                                "country_places_histogram": {
-                                    "type": "histogram",
-                                    "options": {
-                                        "column": "pop_max"
+                                country_places_histogram: {
+                                    type: 'histogram',
+                                    options: {
+                                        column: 'pop_max'
                                     }
                                 }
                             }
@@ -174,63 +173,63 @@ describe('dataviews-widgets-adapter', function() {
                     }
                 ]
             },
-            "expected": {
-                "version": "1.4.0",
-                "layers": [
+            expected: {
+                version: '1.4.0',
+                layers: [
                     {
-                        "type": "mapnik",
-                        "options": {
-                            "source": {
-                                "id": "cdb-layer-source-0"
+                        type: 'mapnik',
+                        options: {
+                            source: {
+                                id: 'cdb-layer-source-0'
                             },
-                            "cartocss": "#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }",
-                            "cartocss_version": "2.3.0",
+                            cartocss: '#layer { marker-fill: red; marker-width: 32; marker-allow-overlap: true; }',
+                            cartocss_version: '2.3.0',
                             // keep them for now
-                            "widgets": {
-                                "country_places_count": {
-                                    "type": "aggregation",
-                                    "options": {
-                                        "column": "adm0_a3",
-                                        "aggregation": "count"
+                            widgets: {
+                                country_places_count: {
+                                    type: 'aggregation',
+                                    options: {
+                                        column: 'adm0_a3',
+                                        aggregation: 'count'
                                     }
                                 },
-                                "country_places_histogram": {
-                                    "type": "histogram",
-                                    "options": {
-                                        "column": "pop_max"
+                                country_places_histogram: {
+                                    type: 'histogram',
+                                    options: {
+                                        column: 'pop_max'
                                     }
                                 }
                             }
                         }
                     }
                 ],
-                "analyses": [
+                analyses: [
                     {
-                        "id": "cdb-layer-source-0",
-                        "type": "source",
-                        "params": {
-                            "query": "select * from populated_places_simple_reduced"
+                        id: 'cdb-layer-source-0',
+                        type: 'source',
+                        params: {
+                            query: 'select * from populated_places_simple_reduced'
                         }
                     }
                 ],
-                "dataviews": {
-                    "country_places_count": {
-                        "source": {
-                            "id": "cdb-layer-source-0"
+                dataviews: {
+                    country_places_count: {
+                        source: {
+                            id: 'cdb-layer-source-0'
                         },
-                        "type": "aggregation",
-                        "options": {
-                            "column": "adm0_a3",
-                            "aggregation": "count"
+                        type: 'aggregation',
+                        options: {
+                            column: 'adm0_a3',
+                            aggregation: 'count'
                         }
                     },
-                    "country_places_histogram": {
-                        "source": {
-                            "id": "cdb-layer-source-0"
+                    country_places_histogram: {
+                        source: {
+                            id: 'cdb-layer-source-0'
                         },
-                        "type": "histogram",
-                        "options": {
-                            "column": "pop_max"
+                        type: 'histogram',
+                        options: {
+                            column: 'pop_max'
                         }
                     }
                 }
@@ -239,22 +238,22 @@ describe('dataviews-widgets-adapter', function() {
     ];
 
     var user = 'wadus';
-    function params() {
+    function params () {
         return {};
     }
-    function context() {
+    function context () {
         return {};
     }
 
     var dataviewsMapConfigAdapter = new DataviewsMapConfigAdapter();
 
-    widgetsMapConfigs.forEach(function(mapConfig, index) {
-        it('should adapt widgets ' + index, function(done) {
-            dataviewsMapConfigAdapter.getMapConfig(user, mapConfig.input, params(), context(), function(err, result) {
-                assert.deepEqual(result, mapConfig.expected);
+    widgetsMapConfigs.forEach(function (mapConfig, index) {
+        it('should adapt widgets ' + index, function (done) {
+            dataviewsMapConfigAdapter.getMapConfig(user, mapConfig.input, params(), context(), function (err, result) {
+                assert.ifError(err);
+                assert.deepStrictEqual(result, mapConfig.expected);
                 done();
             });
         });
     });
-
 });

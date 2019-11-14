@@ -3,7 +3,7 @@
 var assert = require('../../support/assert');
 var step = require('step');
 
-var url = require('url');
+const { URL } = require('url');
 var queue = require('queue-async');
 
 var helper = require('../../support/test-helper');
@@ -13,7 +13,7 @@ var serverOptions = require('../../../lib/server-options');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
-describe('named-maps widgets', function() {
+describe('named-maps widgets', function () {
     var server;
 
     before(function () {
@@ -27,19 +27,19 @@ describe('named-maps widgets', function() {
     var layergroup;
     var keysToDelete;
 
-    beforeEach(function(done) {
+    beforeEach(function (done) {
         keysToDelete = {};
 
-        var widgetsTemplate =  {
+        var widgetsTemplate = {
             version: '0.0.1',
             name: widgetsTemplateName,
-            layergroup:  {
+            layergroup: {
                 version: '1.5.0',
                 layers: [
                     {
                         type: 'cartodb',
                         options: {
-                            sql: "select * from populated_places_simple_reduced_private",
+                            sql: 'select * from populated_places_simple_reduced_private',
                             cartocss: '#layer { marker-fill: blue; }',
                             cartocss_version: '2.3.0',
                             widgets: {
@@ -70,11 +70,10 @@ describe('named-maps widgets', function() {
             }
         };
 
-        var template_params = {};
+        var templateParams = {};
 
         step(
-            function createTemplate()
-            {
+            function createTemplate () {
                 var next = this;
                 assert.response(
                     server,
@@ -90,15 +89,15 @@ describe('named-maps widgets', function() {
                     {
                         status: 200
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function instantiateTemplate(err, res) {
+            function instantiateTemplate (err, res) {
                 assert.ifError(err);
 
-                assert.deepEqual(JSON.parse(res.body), { template_id: widgetsTemplateName });
+                assert.deepStrictEqual(JSON.parse(res.body), { template_id: widgetsTemplateName });
                 var next = this;
                 assert.response(
                     server,
@@ -109,21 +108,21 @@ describe('named-maps widgets', function() {
                             host: username,
                             'Content-Type': 'application/json'
                         },
-                        data: JSON.stringify(template_params)
+                        data: JSON.stringify(templateParams)
                     },
                     {
                         status: 200
                     },
-                    function(res) {
+                    function (res) {
                         next(null, res);
                     }
                 );
             },
-            function finish(err, res) {
+            function finish (err, res) {
                 assert.ifError(err);
 
                 layergroup = JSON.parse(res.body);
-                assert.ok(layergroup.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from: " + res.body);
+                assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'), "Missing 'layergroupid' from: " + res.body);
                 layergroupid = layergroup.layergroupid;
 
                 keysToDelete['map_cfg|' + LayergroupToken.parse(layergroup.layergroupid).token] = 0;
@@ -132,12 +131,11 @@ describe('named-maps widgets', function() {
                 return done();
             }
         );
-
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         step(
-            function deleteTemplate(err) {
+            function deleteTemplate (err) {
                 assert.ifError(err);
                 var next = this;
                 assert.response(
@@ -152,19 +150,19 @@ describe('named-maps widgets', function() {
                     {
                         status: 204
                     },
-                    function(res, err) {
+                    function (res, err) {
                         next(err, res);
                     }
                 );
             },
-            function deleteRedisKeys(err) {
+            function deleteRedisKeys (err) {
                 assert.ifError(err);
                 helper.deleteRedisKeys(keysToDelete, done);
             }
         );
     });
 
-    function getWidget(widgetName, callback) {
+    function getWidget (widgetName, callback) {
         assert.response(
             server,
             {
@@ -177,7 +175,7 @@ describe('named-maps widgets', function() {
             {
                 status: 200
             },
-            function(res, err) {
+            function (res, err) {
                 if (err) {
                     return callback(err);
                 }
@@ -187,11 +185,11 @@ describe('named-maps widgets', function() {
         );
     }
 
-    it('should be able to retrieve widgets from all URLs', function(done) {
-        var widgetsPaths = layergroup.metadata.layers.reduce(function(paths, layer) {
+    it('should be able to retrieve widgets from all URLs', function (done) {
+        var widgetsPaths = layergroup.metadata.layers.reduce(function (paths, layer) {
             var widgets = layer.widgets || {};
-            Object.keys(widgets).forEach(function(widget) {
-                paths.push(url.parse(widgets[widget].url.http).path);
+            Object.keys(widgets).forEach(function (widget) {
+                paths.push(new URL(widgets[widget].url.http).pathname);
             });
 
             return paths;
@@ -199,8 +197,8 @@ describe('named-maps widgets', function() {
 
         var widgetsQueue = queue(widgetsPaths.length);
 
-        widgetsPaths.forEach(function(path) {
-            widgetsQueue.defer(function(path, done) {
+        widgetsPaths.forEach(function (path) {
+            widgetsQueue.defer(function (path, done) {
                 assert.response(
                     server,
                     {
@@ -213,7 +211,7 @@ describe('named-maps widgets', function() {
                     {
                         status: 200
                     },
-                    function(res, err) {
+                    function (res, err) {
                         if (err) {
                             return done(err);
                         }
@@ -224,33 +222,31 @@ describe('named-maps widgets', function() {
             }, path);
         });
 
-        widgetsQueue.awaitAll(function(err, results) {
-            assert.equal(results.length, 3);
+        widgetsQueue.awaitAll(function (err, results) {
+            assert.strictEqual(results.length, 3);
             done(err);
         });
     });
 
-
-    it("should retrieve aggregation", function(done) {
-        getWidget('country_places_count', function(err, response, aggregation) {
+    it('should retrieve aggregation', function (done) {
+        getWidget('country_places_count', function (err, response, aggregation) {
             assert.ok(!err, err);
 
-            assert.equal(aggregation.type, 'aggregation');
-            assert.equal(aggregation.max, 769);
+            assert.strictEqual(aggregation.type, 'aggregation');
+            assert.strictEqual(aggregation.max, 769);
 
             return done();
         });
     });
 
-    it("should retrieve histogram", function(done) {
-        getWidget('pop_max', function(err, response, histogram) {
+    it('should retrieve histogram', function (done) {
+        getWidget('pop_max', function (err, response, histogram) {
             assert.ok(!err, err);
 
-            assert.equal(histogram.type, 'histogram');
-            assert.equal(histogram.bin_width, 743250);
+            assert.strictEqual(histogram.type, 'histogram');
+            assert.strictEqual(histogram.bin_width, 743250);
 
             return done();
         });
     });
-
 });

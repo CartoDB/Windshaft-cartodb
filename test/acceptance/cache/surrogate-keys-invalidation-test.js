@@ -2,16 +2,15 @@
 
 var testHelper = require('../../support/test-helper');
 
-var assert      = require('../../support/assert');
-var step        = require('step');
+var assert = require('../../support/assert');
+var step = require('step');
 var FastlyPurge = require('fastly-purge');
 var _ = require('underscore');
 var NamedMapsCacheEntry = require('../../../lib/cache/model/named-maps-entry');
 var CartodbWindshaft = require('../../../lib/server');
 var nock = require('nock');
 
-describe('templates surrogate keys', function() {
-
+describe('templates surrogate keys', function () {
     var serverOptions = require('../../../lib/server-options');
 
     // Enable Varnish purge for tests
@@ -48,7 +47,7 @@ describe('templates surrogate keys', function() {
         auth: {
             method: 'open'
         },
-        layergroup:  {
+        layergroup: {
             version: '1.2.0',
             layers: [
                 {
@@ -61,12 +60,16 @@ describe('templates surrogate keys', function() {
             ]
         }
     };
-    var templateUpdated = _.extend({}, template, {layergroup: {layers: [{
-        type: 'plain',
-        options: {
-            color: 'red'
+    var templateUpdated = _.extend({}, template, {
+        layergroup: {
+            layers: [{
+                type: 'plain',
+                options: {
+                    color: 'red'
+                }
+            }]
         }
-    }]} });
+    });
     var expectedBody = { template_id: expectedTemplateId };
 
     var varnishHttpUrl = [
@@ -77,7 +80,7 @@ describe('templates surrogate keys', function() {
     var invalidationMatchHeader = '\\b' + cacheEntryKey + '\\b';
     var fastlyPurgePath = '/service/' + FAKE_FASTLY_SERVICE_ID + '/purge/' + cacheEntryKey;
 
-    after(function(done) {
+    after(function (done) {
         serverOptions.varnish_purge_enabled = false;
         serverOptions.varnish_host = varnishHost;
         serverOptions.varnish_purge_enabled = varnishPurgeEnabled;
@@ -90,7 +93,7 @@ describe('templates surrogate keys', function() {
         done();
     });
 
-    function createTemplate(callback) {
+    function createTemplate (callback) {
         var postTemplateRequest = {
             url: '/api/v1/map/named?api_key=1234',
             method: 'POST',
@@ -102,34 +105,33 @@ describe('templates surrogate keys', function() {
         };
 
         step(
-            function postTemplate() {
+            function postTemplate () {
                 var next = this;
                 assert.response(server,
                     postTemplateRequest,
                     {
                         status: 200
                     },
-                    function(res) {
+                    function (res) {
                         next(null, res);
                     }
                 );
             },
-            function rePostTemplate(err, res) {
+            function rePostTemplate (err, res) {
                 if (err) {
                     throw err;
                 }
                 var parsedBody = JSON.parse(res.body);
-                assert.deepEqual(parsedBody, expectedBody);
+                assert.deepStrictEqual(parsedBody, expectedBody);
                 return true;
             },
-            function finish(err) {
+            function finish (err) {
                 callback(err);
             }
         );
     }
 
-    it("invalidates surrogate keys on template update", function(done) {
-
+    it('invalidates surrogate keys on template update', function (done) {
         var scope = nock(varnishHttpUrl)
             .intercept('/key', 'PURGE')
             .matchHeader('Invalidation-Match', invalidationMatchHeader)
@@ -140,14 +142,14 @@ describe('templates surrogate keys', function() {
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
-                status:'ok'
+                status: 'ok'
             });
 
         step(
-            function createTemplateToUpdate() {
+            function createTemplateToUpdate () {
                 createTemplate(this);
             },
-            function putValidTemplate(err) {
+            function putValidTemplate (err) {
                 if (err) {
                     throw err;
                 }
@@ -166,36 +168,35 @@ describe('templates surrogate keys', function() {
                     {
                         status: 200
                     },
-                    function(res) {
-                        setTimeout(function() {
+                    function (res) {
+                        setTimeout(function () {
                             next(null, res);
                         }, 50);
                     }
                 );
             },
-            function checkValidUpdate(err, res) {
+            function checkValidUpdate (err, res) {
                 if (err) {
                     throw err;
                 }
                 var parsedBody = JSON.parse(res.body);
-                assert.deepEqual(parsedBody, expectedBody);
+                assert.deepStrictEqual(parsedBody, expectedBody);
 
-                assert.equal(scope.pendingMocks().length, 0);
-                assert.equal(fastlyScope.pendingMocks().length, 0);
+                assert.strictEqual(scope.pendingMocks().length, 0);
+                assert.strictEqual(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },
-            function finish(err) {
-                if ( err ) {
+            function finish (err) {
+                if (err) {
                     return done(err);
                 }
-                testHelper.deleteRedisKeys({'map_tpl|localhost': 0}, done);
+                testHelper.deleteRedisKeys({ 'map_tpl|localhost': 0 }, done);
             }
         );
     });
 
-    it("invalidates surrogate on template deletion", function(done) {
-
+    it('invalidates surrogate on template deletion', function (done) {
         var scope = nock(varnishHttpUrl)
             .intercept('/key', 'PURGE')
             .matchHeader('Invalidation-Match', invalidationMatchHeader)
@@ -206,14 +207,14 @@ describe('templates surrogate keys', function() {
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
-                status:'ok'
+                status: 'ok'
             });
 
         step(
-            function createTemplateToDelete() {
+            function createTemplateToDelete () {
                 createTemplate(this);
             },
-            function deleteValidTemplate(err) {
+            function deleteValidTemplate (err) {
                 if (err) {
                     throw err;
                 }
@@ -231,31 +232,30 @@ describe('templates surrogate keys', function() {
                     {
                         status: 204
                     },
-                    function(res) {
-                        setTimeout(function() {
+                    function (res) {
+                        setTimeout(function () {
                             next(null, res);
                         }, 50);
                     }
                 );
             },
-            function checkValidUpdate(err) {
+            function checkValidUpdate (err) {
                 if (err) {
                     throw err;
                 }
 
-                assert.equal(scope.pendingMocks().length, 0);
-                assert.equal(fastlyScope.pendingMocks().length, 0);
+                assert.strictEqual(scope.pendingMocks().length, 0);
+                assert.strictEqual(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
     });
 
-    it("should update template even if surrogate key invalidation fails", function(done) {
-
+    it('should update template even if surrogate key invalidation fails', function (done) {
         var scope = nock(varnishHttpUrl)
             .intercept('/key', 'PURGE')
             .matchHeader('Invalidation-Match', invalidationMatchHeader)
@@ -266,14 +266,14 @@ describe('templates surrogate keys', function() {
             .matchHeader('Fastly-Key', FAKE_FASTLY_API_KEY)
             .matchHeader('Accept', 'application/json')
             .reply(200, {
-                status:'ok'
+                status: 'ok'
             });
 
         step(
-            function createTemplateToUpdate() {
+            function createTemplateToUpdate () {
                 createTemplate(this);
             },
-            function putValidTemplate(err) {
+            function putValidTemplate (err) {
                 if (err) {
                     throw err;
                 }
@@ -292,32 +292,31 @@ describe('templates surrogate keys', function() {
                     {
                         status: 200
                     },
-                    function(res) {
-                        setTimeout(function() {
+                    function (res) {
+                        setTimeout(function () {
                             next(null, res);
                         }, 50);
                     }
                 );
             },
-            function checkValidUpdate(err, res) {
+            function checkValidUpdate (err, res) {
                 if (err) {
                     throw err;
                 }
                 var parsedBody = JSON.parse(res.body);
-                assert.deepEqual(parsedBody, expectedBody);
+                assert.deepStrictEqual(parsedBody, expectedBody);
 
-                assert.equal(scope.pendingMocks().length, 0);
-                assert.equal(fastlyScope.pendingMocks().length, 0);
+                assert.strictEqual(scope.pendingMocks().length, 0);
+                assert.strictEqual(fastlyScope.pendingMocks().length, 0);
 
                 return null;
             },
-            function finish(err) {
-                if ( err ) {
+            function finish (err) {
+                if (err) {
                     return done(err);
                 }
-                testHelper.deleteRedisKeys({'map_tpl|localhost': 0}, done);
+                testHelper.deleteRedisKeys({ 'map_tpl|localhost': 0 }, done);
             }
         );
     });
-
 });

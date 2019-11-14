@@ -1,13 +1,13 @@
-function getVectorMapConfig(opts) {
+function getVectorMapConfig (opts) {
     return {
         buffersize: {
             mvt: 1
         },
-        layers: _generateLayers(opts),
+        layers: _generateLayers(opts)
     };
 }
 
-function _generateLayers(opts) {
+function _generateLayers (opts) {
     const numberOfLayers = opts.numberOfLayers || 1;
     const layers = [];
     for (let index = 0; index < numberOfLayers; index++) {
@@ -17,8 +17,8 @@ function _generateLayers(opts) {
     return layers;
 }
 
-function _generateLayerConfig(opts) {
-    const additionalColumns = opts.additionalColumns ? opts.additionalColumns.join(',')+',' : '';
+function _generateLayerConfig (opts) {
+    const additionalColumns = opts.additionalColumns ? opts.additionalColumns.join(',') + ',' : '';
     return {
         type: 'mapnik',
         options: {
@@ -57,8 +57,5 @@ function _generateLayerConfig(opts) {
         }
     };
 }
-
-
-
 
 module.exports = { getVectorMapConfig };

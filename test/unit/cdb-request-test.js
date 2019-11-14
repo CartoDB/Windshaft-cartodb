@@ -5,9 +5,8 @@ var assert = require('assert');
 
 var CdbRequest = require('../../lib/models/cdb-request');
 
-describe('req2params', function() {
-
-    function createRequest(host, userParam) {
+describe('req2params', function () {
+    function createRequest (host, userParam) {
         var req = {
             params: {},
             headers: {
@@ -22,14 +21,14 @@ describe('req2params', function() {
         return req;
     }
 
-    it('extracts name from host header', function() {
+    it('extracts name from host header', function () {
         var cdbRequest = new CdbRequest();
         var user = cdbRequest.userByReq(createRequest('localhost'));
 
-        assert.equal(user, 'localhost');
+        assert.strictEqual(user, 'localhost');
     });
 
-    it('extracts name from subdomain host header in case of no config', function() {
+    it('extracts name from subdomain host header in case of no config', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
@@ -38,17 +37,17 @@ describe('req2params', function() {
 
         global.environment.user_from_host = userFromHostConfig;
 
-        assert.equal(user, 'development');
+        assert.strictEqual(user, 'development');
     });
 
-    it('considers user param before headers', function() {
+    it('considers user param before headers', function () {
         var cdbRequest = new CdbRequest();
         var user = cdbRequest.userByReq(createRequest('localhost', 'development'));
 
-        assert.equal(user, 'development');
+        assert.strictEqual(user, 'development');
     });
 
-    it('returns undefined when it cannot extract username', function() {
+    it('returns undefined when it cannot extract username', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
@@ -57,10 +56,10 @@ describe('req2params', function() {
 
         global.environment.user_from_host = userFromHostConfig;
 
-        assert.equal(user, undefined);
+        assert.strictEqual(user, undefined);
     });
 
-    it('should not fail for undefined host header', function() {
+    it('should not fail for undefined host header', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
@@ -69,10 +68,10 @@ describe('req2params', function() {
 
         global.environment.user_from_host = userFromHostConfig;
 
-        assert.equal(user, undefined);
+        assert.strictEqual(user, undefined);
     });
 
-    it('should not fail for null host header', function() {
+    it('should not fail for null host header', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
@@ -81,6 +80,6 @@ describe('req2params', function() {
 
         global.environment.user_from_host = userFromHostConfig;
 
-        assert.equal(user, undefined);
+        assert.strictEqual(user, undefined);
     });
 });

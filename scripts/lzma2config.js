@@ -6,7 +6,7 @@ if (process.argv.length !== 3) {
 var LZMA = require('lzma').LZMA;
 var lzmaWorker = new LZMA();
 var lzmaInput = decodeURIComponent(process.argv[2]);
-var lzmaBuffer = new Buffer(lzmaInput, 'base64')
+var lzmaBuffer = Buffer.from(lzmaInput, 'base64')
     .toString('binary')
     .split('')
     .map(function(c) {

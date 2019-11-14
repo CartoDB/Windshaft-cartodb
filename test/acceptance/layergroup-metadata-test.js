@@ -17,15 +17,15 @@ describe('layergroup metadata', function () {
         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
-    [1234, 'default_public', false].forEach(api_key => {
-        it(`tiles base urls ${api_key ? `with api key: ${api_key}` : 'without api key'}`, function (done) {
+    [1234, 'default_public', false].forEach(apiKey => {
+        it(`tiles base urls ${apiKey ? `with api key: ${apiKey}` : 'without api key'}`, function (done) {
             const mapConfig = {
                 version: '1.7.0',
                 layers: [
                     {
                         type: 'cartodb',
                         options: {
-                            sql: 'select * from populated_places_simple_reduced',
+                            sql: 'select * from populated_places_simple_reduced'
                         }
                     }
                 ]
@@ -33,7 +33,7 @@ describe('layergroup metadata', function () {
 
             const host = `https://localhost.localhost.lan:${global.environment.port}`;
 
-            const testClient = new TestClient(mapConfig, api_key);
+            const testClient = new TestClient(mapConfig, apiKey);
             testClient.getLayergroup((err, body) => {
                 if (err) {
                     return done(err);
@@ -42,15 +42,15 @@ describe('layergroup metadata', function () {
                 let urlLayer = `${host}/api/v1/map/${body.layergroupid}/layer0/{z}/{x}/{y}.mvt`;
                 let urlNoLayer = `${host}/api/v1/map/${body.layergroupid}/{z}/{x}/{y}.mvt`;
 
-                if (api_key) {
-                    urlLayer += `?api_key=${api_key}`;
-                    urlNoLayer += `?api_key=${api_key}`;
+                if (apiKey) {
+                    urlLayer += `?api_key=${apiKey}`;
+                    urlNoLayer += `?api_key=${apiKey}`;
                 }
 
                 assert.ok(body.layergroupid);
-                assert.equal(body.metadata.layers[0].tilejson.vector.tiles[0], urlLayer);
-                assert.equal(body.metadata.tilejson.vector.tiles[0], urlNoLayer);
-                assert.equal(body.metadata.url.vector.urlTemplate, urlNoLayer);
+                assert.strictEqual(body.metadata.layers[0].tilejson.vector.tiles[0], urlLayer);
+                assert.strictEqual(body.metadata.tilejson.vector.tiles[0], urlNoLayer);
+                assert.strictEqual(body.metadata.url.vector.urlTemplate, urlNoLayer);
 
                 testClient.drain(done);
             });

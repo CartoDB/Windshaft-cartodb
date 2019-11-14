@@ -57,10 +57,10 @@ var template = {
     auth: {
         method: 'open'
     },
-    "placeholders": {
-        "color": {
-            "type": "css_color",
-            "default": "#cc3300"
+    placeholders: {
+        color: {
+            type: 'css_color',
+            default: '#cc3300'
         }
     },
     layergroup: {
@@ -78,14 +78,14 @@ var multipleLayersTemplate = {
         method: 'token',
         valid_tokens: ['valid1', 'valid2']
     },
-    "placeholders": {
-        "polygon_color": {
-            "type": "css_color",
-            "default": "green"
+    placeholders: {
+        polygon_color: {
+            type: 'css_color',
+            default: 'green'
         },
-        "color": {
-            "type": "css_color",
-            "default": "red"
+        color: {
+            type: 'css_color',
+            default: 'red'
         }
     },
     layergroup: {
@@ -96,9 +96,9 @@ var multipleLayersTemplate = {
     }
 };
 
-describe('named_layers datasources', function() {
-    beforeEach(function(done) {
-        templateMaps.addTemplate(username, template, function(err) {
+describe('named_layers datasources', function () {
+    beforeEach(function (done) {
+        templateMaps.addTemplate(username, template, function (err) {
             if (err) {
                 return done(err);
             }
@@ -106,8 +106,8 @@ describe('named_layers datasources', function() {
         });
     });
 
-    afterEach(function(done) {
-        templateMaps.delTemplate(username, templateName, function(err) {
+    afterEach(function (done) {
+        templateMaps.delTemplate(username, templateName, function (err) {
             if (err) {
                 return done(err);
             }
@@ -115,7 +115,7 @@ describe('named_layers datasources', function() {
         });
     });
 
-    function makeNamedMapLayerConfig(layers) {
+    function makeNamedMapLayerConfig (layers) {
         return {
             version: '1.3.0',
             layers: layers
@@ -141,13 +141,13 @@ describe('named_layers datasources', function() {
         {
             desc: 'without datasource for non-named layers',
             config: makeNamedMapLayerConfig([wadusLayer]),
-            test: function(err, layers, datasource, done) {
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
-                assert.equal(layers.length, 1);
+                assert.strictEqual(layers.length, 1);
 
-                assert.equal(layers[0].type, 'cartodb');
-                assert.equal(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.strictEqual(layers[0].type, 'cartodb');
+                assert.strictEqual(layers[0].options.sql, wadusSql);
+                assert.deepStrictEqual(datasource.getLayerDatasource(0), {});
 
                 done();
             }
@@ -156,18 +156,18 @@ describe('named_layers datasources', function() {
         {
             desc: 'with datasource for the named layer but not for the normal',
             config: makeNamedMapLayerConfig([wadusLayer, simpleNamedLayer]),
-            test: function(err, layers, datasource, done) {
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
-                assert.equal(layers.length, 2);
+                assert.strictEqual(layers.length, 2);
 
-                assert.equal(layers[0].type, 'cartodb');
-                assert.equal(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.strictEqual(layers[0].type, 'cartodb');
+                assert.strictEqual(layers[0].options.sql, wadusSql);
+                assert.deepStrictEqual(datasource.getLayerDatasource(0), {});
 
-                assert.equal(layers[1].type, 'cartodb');
-                assert.equal(layers[1].options.sql, wadusTemplateSql);
+                assert.strictEqual(layers[1].type, 'cartodb');
+                assert.strictEqual(layers[1].options.sql, wadusTemplateSql);
                 var layerDatasource = datasource.getLayerDatasource(1);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 done();
@@ -177,24 +177,24 @@ describe('named_layers datasources', function() {
         {
             desc: 'with datasource for the multiple layers in the named but not for the normal',
             config: makeNamedMapLayerConfig([wadusLayer, multipleLayersNamedLayer]),
-            test: function(err, layers, datasource, done) {
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
-                assert.equal(layers.length, 3);
+                assert.strictEqual(layers.length, 3);
 
-                assert.equal(layers[0].type, 'cartodb');
-                assert.equal(layers[0].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(0), {});
+                assert.strictEqual(layers[0].type, 'cartodb');
+                assert.strictEqual(layers[0].options.sql, wadusSql);
+                assert.deepStrictEqual(datasource.getLayerDatasource(0), {});
 
-                assert.equal(layers[1].type, 'mapnik');
-                assert.equal(layers[1].options.sql, wadusMapnikSql);
+                assert.strictEqual(layers[1].type, 'mapnik');
+                assert.strictEqual(layers[1].options.sql, wadusMapnikSql);
                 var layerDatasource = datasource.getLayerDatasource(1);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
-                assert.equal(layers[2].type, 'cartodb');
-                assert.equal(layers[2].options.sql, wadusTemplateSql);
+                assert.strictEqual(layers[2].type, 'cartodb');
+                assert.strictEqual(layers[2].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(2);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 done();
@@ -204,26 +204,26 @@ describe('named_layers datasources', function() {
         {
             desc: 'all with datasource because all are named',
             config: makeNamedMapLayerConfig([multipleLayersNamedLayer, simpleNamedLayer]),
-            test: function(err, layers, datasource, done) {
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
-                assert.equal(layers.length, 3);
+                assert.strictEqual(layers.length, 3);
 
-                assert.equal(layers[0].type, 'mapnik');
-                assert.equal(layers[0].options.sql, wadusMapnikSql);
+                assert.strictEqual(layers[0].type, 'mapnik');
+                assert.strictEqual(layers[0].options.sql, wadusMapnikSql);
                 var layerDatasource = datasource.getLayerDatasource(0);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
-                assert.equal(layers[1].type, 'cartodb');
-                assert.equal(layers[1].options.sql, wadusTemplateSql);
+                assert.strictEqual(layers[1].type, 'cartodb');
+                assert.strictEqual(layers[1].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(1);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
-                assert.equal(layers[2].type, 'cartodb');
-                assert.equal(layers[2].options.sql, wadusTemplateSql);
+                assert.strictEqual(layers[2].type, 'cartodb');
+                assert.strictEqual(layers[2].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(2);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 done();
@@ -240,53 +240,52 @@ describe('named_layers datasources', function() {
                 wadusLayer,
                 multipleLayersNamedLayer
             ]),
-            test: function(err, layers, datasource, done) {
-
+            test: function (err, layers, datasource, done) {
                 assert.ok(!err);
-                assert.equal(layers.length, 8);
+                assert.strictEqual(layers.length, 8);
 
-                assert.equal(layers[0].type, 'cartodb');
-                assert.equal(layers[0].options.sql, wadusTemplateSql);
+                assert.strictEqual(layers[0].type, 'cartodb');
+                assert.strictEqual(layers[0].options.sql, wadusTemplateSql);
                 var layerDatasource = datasource.getLayerDatasource(0);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
-                assert.equal(layers[1].type, 'mapnik');
-                assert.equal(layers[1].options.sql, wadusMapnikSql);
+                assert.strictEqual(layers[1].type, 'mapnik');
+                assert.strictEqual(layers[1].options.sql, wadusMapnikSql);
                 layerDatasource = datasource.getLayerDatasource(1);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
-                assert.equal(layers[2].type, 'cartodb');
-                assert.equal(layers[2].options.sql, wadusTemplateSql);
+                assert.strictEqual(layers[2].type, 'cartodb');
+                assert.strictEqual(layers[2].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(2);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
-                assert.equal(layers[3].type, 'cartodb');
-                assert.equal(layers[3].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(3), {});
+                assert.strictEqual(layers[3].type, 'cartodb');
+                assert.strictEqual(layers[3].options.sql, wadusSql);
+                assert.deepStrictEqual(datasource.getLayerDatasource(3), {});
 
-                assert.equal(layers[4].type, 'cartodb');
-                assert.equal(layers[4].options.sql, wadusTemplateSql);
+                assert.strictEqual(layers[4].type, 'cartodb');
+                assert.strictEqual(layers[4].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(4);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
-                assert.equal(layers[5].type, 'cartodb');
-                assert.equal(layers[5].options.sql, wadusSql);
-                assert.deepEqual(datasource.getLayerDatasource(5), {});
+                assert.strictEqual(layers[5].type, 'cartodb');
+                assert.strictEqual(layers[5].options.sql, wadusSql);
+                assert.deepStrictEqual(datasource.getLayerDatasource(5), {});
 
-                assert.equal(layers[6].type, 'mapnik');
-                assert.equal(layers[6].options.sql, wadusMapnikSql);
+                assert.strictEqual(layers[6].type, 'mapnik');
+                assert.strictEqual(layers[6].options.sql, wadusMapnikSql);
                 layerDatasource = datasource.getLayerDatasource(6);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
-                assert.equal(layers[7].type, 'cartodb');
-                assert.equal(layers[7].options.sql, wadusTemplateSql);
+                assert.strictEqual(layers[7].type, 'cartodb');
+                assert.strictEqual(layers[7].options.sql, wadusTemplateSql);
                 layerDatasource = datasource.getLayerDatasource(7);
-                assert.notEqual(layerDatasource, undefined);
+                assert.notStrictEqual(layerDatasource, undefined);
                 assert.ok(layerDatasource.user);
 
                 done();
@@ -294,12 +293,12 @@ describe('named_layers datasources', function() {
         }
     ];
 
-    testScenarios.forEach(function(testScenario) {
-        it('should return a list of layers ' + testScenario.desc, function(done) {
+    testScenarios.forEach(function (testScenario) {
+        it('should return a list of layers ' + testScenario.desc, function (done) {
             var params = {};
             var context = {};
             mapConfigNamedLayersAdapter.getMapConfig(username, testScenario.config, params, context,
-                function(err, mapConfig) {
+                function (err, mapConfig) {
                     assert.ifError(err);
                     testScenario.test(err, mapConfig.layers, context.datasource, done);
                 }

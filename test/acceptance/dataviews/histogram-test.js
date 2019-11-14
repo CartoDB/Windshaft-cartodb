@@ -6,7 +6,7 @@ var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 var moment = require('moment');
 
-function createMapConfig(layers, dataviews, analysis) {
+function createMapConfig (layers, dataviews, analysis) {
     return {
         version: '1.5.0',
         layers: layers,
@@ -15,18 +15,8 @@ function createMapConfig(layers, dataviews, analysis) {
     };
 }
 
-function createMapConfig(layers, dataviews, analysis) {
-    return {
-        version: '1.5.0',
-        layers: layers,
-        dataviews: dataviews || {},
-        analyses: analysis || []
-    };
-}
-
-describe('histogram-dataview', function() {
-
-    afterEach(function(done) {
+describe('histogram-dataview', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -37,13 +27,13 @@ describe('histogram-dataview', function() {
     var mapConfig = createMapConfig(
         [
             {
-                "type": "cartodb",
-                "options": {
-                    "source": {
-                        "id": "2570e105-7b37-40d2-bdf4-1af889598745"
+                type: 'cartodb',
+                options: {
+                    source: {
+                        id: '2570e105-7b37-40d2-bdf4-1af889598745'
                     },
-                    "cartocss": "#points { marker-width: 10; marker-fill: red; }",
-                    "cartocss_version": "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -60,16 +50,16 @@ describe('histogram-dataview', function() {
         },
         [
             {
-                "id": "2570e105-7b37-40d2-bdf4-1af889598745",
-                "type": "source",
-                "params": {
-                    "query": "select null::geometry the_geom_webmercator, x from generate_series(0,1000) x"
+                id: '2570e105-7b37-40d2-bdf4-1af889598745',
+                type: 'source',
+                params: {
+                    query: 'select null::geometry the_geom_webmercator, x from generate_series(0,1000) x'
                 }
             }
         ]
     );
 
-    it('should get bins with min >= start and max <= end', function(done) {
+    it('should get bins with min >= start and max <= end', function (done) {
         var params = {
             bins: 3,
             start: 50,
@@ -77,12 +67,12 @@ describe('histogram-dataview', function() {
         };
 
         this.testClient = new TestClient(mapConfig, 1234);
-        this.testClient.getDataview('pop_max_histogram', params, function(err, dataview) {
+        this.testClient.getDataview('pop_max_histogram', params, function (err, dataview) {
             assert.ok(!err, err);
 
-            assert.ok(3 === dataview.bins_count, 'Unexpected bin count: ' + dataview.bins_count);
-            assert.ok(3 === dataview.bins.length, 'Unexpected number of bins: ' + dataview.bins.length);
-            dataview.bins.forEach(function(bin) {
+            assert.ok(dataview.bins_count === 3, 'Unexpected bin count: ' + dataview.bins_count);
+            assert.ok(dataview.bins.length === 3, 'Unexpected number of bins: ' + dataview.bins.length);
+            dataview.bins.forEach(function (bin) {
                 assert.ok(bin.min >= params.start, 'bin min < start: ' + JSON.stringify(bin));
                 assert.ok(bin.max <= params.end, 'bin max > end: ' + JSON.stringify(bin));
             });
@@ -90,19 +80,19 @@ describe('histogram-dataview', function() {
         });
     });
 
-    it('should work with min >= start and max <= end, autodetect bins', function(done) {
+    it('should work with min >= start and max <= end, autodetect bins', function (done) {
         var params = {
             start: 50,
             end: 500
         };
 
         this.testClient = new TestClient(mapConfig, 1234);
-        this.testClient.getDataview('pop_max_histogram', params, function(err, dataview) {
+        this.testClient.getDataview('pop_max_histogram', params, function (err, dataview) {
             assert.ok(!err, err);
 
-            assert.ok(6 === dataview.bins_count, 'Unexpected bin count: ' + dataview.bins_count);
-            assert.ok(6 === dataview.bins.length, 'Unexpected number of bins: ' + dataview.bins.length);
-            dataview.bins.forEach(function(bin) {
+            assert.ok(dataview.bins_count === 6, 'Unexpected bin count: ' + dataview.bins_count);
+            assert.ok(dataview.bins.length === 6, 'Unexpected number of bins: ' + dataview.bins.length);
+            dataview.bins.forEach(function (bin) {
                 assert.ok(bin.min >= params.start, 'bin min < start: ' + JSON.stringify(bin));
                 assert.ok(bin.max <= params.end, 'bin max > end: ' + JSON.stringify(bin));
             });
@@ -110,7 +100,7 @@ describe('histogram-dataview', function() {
         });
     });
 
-    it('should get bin_width right when max > min in filter', function(done) {
+    it('should get bin_width right when max > min in filter', function (done) {
         var params = {
             bins: 10,
             start: 1e3,
@@ -118,12 +108,12 @@ describe('histogram-dataview', function() {
         };
 
         this.testClient = new TestClient(mapConfig, 1234);
-        this.testClient.getDataview('pop_max_histogram', params, function(err, dataview) {
+        this.testClient.getDataview('pop_max_histogram', params, function (err, dataview) {
             assert.ok(!err, err);
 
-            assert.equal(dataview.type, 'histogram');
+            assert.strictEqual(dataview.type, 'histogram');
             assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-            dataview.bins.forEach(function(bin) {
+            dataview.bins.forEach(function (bin) {
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });
 
@@ -131,7 +121,7 @@ describe('histogram-dataview', function() {
         });
     });
 
-    it('should cast all overridable params to numbers', function(done) {
+    it('should cast all overridable params to numbers', function (done) {
         var params = {
             bins: '256 AS other, (select 256 * 2) AS bins_number--',
             start: 1e3,
@@ -140,20 +130,19 @@ describe('histogram-dataview', function() {
         };
 
         this.testClient = new TestClient(mapConfig, 1234);
-        this.testClient.getDataview('pop_max_histogram', params, function(err, res) {
+        this.testClient.getDataview('pop_max_histogram', params, function (err, res) {
             assert.ok(!err, err);
             assert.ok(res.errors);
-            assert.equal(res.errors.length, 1);
+            assert.strictEqual(res.errors.length, 1);
             assert.ok(res.errors[0].match(/Invalid number format for parameter 'bins'/));
 
             done();
         });
     });
-
 });
 
-describe('histogram-dataview for date column type', function() {
-    afterEach(function(done) {
+describe('histogram-dataview for date column type', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -164,13 +153,13 @@ describe('histogram-dataview for date column type', function() {
     var mapConfig = createMapConfig(
         [
             {
-                "type": "cartodb",
-                "options": {
-                    "source": {
-                        "id": "datetime-histogram-source-week"
+                type: 'cartodb',
+                options: {
+                    source: {
+                        id: 'datetime-histogram-source-week'
                     },
-                    "cartocss": "#points { marker-width: 10; marker-fill: red; }",
-                    "cartocss_version": "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -340,181 +329,181 @@ describe('histogram-dataview for date column type', function() {
         },
         [
             {
-                "id": "datetime-histogram-source-second",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00'::timestamp, '2007-02-15 01:00:57'::timestamp,",
-                             "'0.9 second'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-second',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'2007-02-15 01:00:00'::timestamp, '2007-02-15 01:00:57'::timestamp,",
+                        "'0.9 second'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-minute",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00'::timestamp, '2007-02-15 02:00:57'::timestamp,",
-                            "'75 second'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-minute',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'2007-02-15 01:00:00'::timestamp, '2007-02-15 02:00:57'::timestamp,",
+                        "'75 second'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-hour",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00'::timestamp, '2007-02-18 02:00:57'::timestamp,",
-                            "'47 minutes'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-hour',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'2007-02-15 01:00:00'::timestamp, '2007-02-18 02:00:57'::timestamp,",
+                        "'47 minutes'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-day",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00'::timestamp, '2007-04-18 02:00:57'::timestamp,",
-                            "'24 hours'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-day',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'2007-02-15 01:00:00'::timestamp, '2007-04-18 02:00:57'::timestamp,",
+                        "'24 hours'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-week",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00'::timestamp, '2008-04-09 01:00:00'::timestamp,",
-                            "'1 day'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-week',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'2007-02-15 01:00:00'::timestamp, '2008-04-09 01:00:00'::timestamp,",
+                        "'1 day'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-month",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00'::timestamp, '2010-04-09 01:00:00'::timestamp,",
-                            "'30 day'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-month',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'2007-02-15 01:00:00'::timestamp, '2010-04-09 01:00:00'::timestamp,",
+                        "'30 day'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-quarter",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'2007-02-15 01:00:00'::timestamp, '2020-04-09 01:00:00'::timestamp,",
-                            "'30 day'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-quarter',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'2007-02-15 01:00:00'::timestamp, '2020-04-09 01:00:00'::timestamp,",
+                        "'30 day'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-year",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'1990-02-15 01:00:00'::timestamp, '2018-04-09 01:00:00'::timestamp,",
-                            "'30 day'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-year',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'1990-02-15 01:00:00'::timestamp, '2018-04-09 01:00:00'::timestamp,",
+                        "'30 day'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-decade",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'1850-02-15 01:00:00'::timestamp, '2018-04-09 01:00:00'::timestamp,",
-                            "'30 day'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-decade',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'1850-02-15 01:00:00'::timestamp, '2018-04-09 01:00:00'::timestamp,",
+                        "'30 day'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-century",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'0650-02-15 01:00:00'::timestamp, '1918-04-09 01:00:00'::timestamp,",
-                            "'6 years'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-century',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'0650-02-15 01:00:00'::timestamp, '1918-04-09 01:00:00'::timestamp,",
+                        "'6 years'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-millennium",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
-                        "from generate_series(",
-                            "'0005-02-15 01:00:00'::timestamp, '12000-04-09 01:00:00'::timestamp,",
-                            "'72 years'::interval",
-                        ") date"
+                id: 'datetime-histogram-source-millennium',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
+                        'from generate_series(',
+                        "'0005-02-15 01:00:00'::timestamp, '12000-04-09 01:00:00'::timestamp,",
+                        "'72 years'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "datetime-histogram-source-tz",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
+                id: 'datetime-histogram-source-tz',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
                         "from generate_series('2007-02-15 01:00:00+00'::timestamptz,",
                         "'2008-04-09 01:00:00+00'::timestamptz, '1 day'::interval",
-                        ") date"
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "date-histogram-source",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date::date AS d",
-                        "from generate_series(",
-                            "'2007-02-15'::date, '2008-04-09'::date, '1 day'::interval",
-                        ") date"
+                id: 'date-histogram-source',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date::date AS d',
+                        'from generate_series(',
+                        "'2007-02-15'::date, '2008-04-09'::date, '1 day'::interval",
+                        ') date'
                     ].join(' ')
                 }
             },
             {
-                "id": "minute-histogram-source-tz",
-                "type": "source",
-                "params": {
-                    "query": [
-                        "select null::geometry the_geom_webmercator, date AS d",
+                id: 'minute-histogram-source-tz',
+                type: 'source',
+                params: {
+                    query: [
+                        'select null::geometry the_geom_webmercator, date AS d',
                         "from generate_series('2007-02-15 23:50:00+00'::timestamptz,",
                         "'2007-02-16 00:10:00+00'::timestamptz, '1 minute'::interval",
-                        ") date"
+                        ') date'
                     ].join(' ')
                 }
             }
@@ -530,26 +519,25 @@ describe('histogram-dataview for date column type', function() {
     }];
 
     dateHistogramsUseCases.forEach(function (test) {
-
         it('should create a date histogram aggregated in months (EDT) ' + test.desc, function (done) {
             var OFFSET_EDT_IN_MINUTES = -4 * 60; // EDT Eastern Daylight Time (GMT-4) in minutes
 
             this.testClient = new TestClient(mapConfig, 1234);
 
-            this.testClient.getDataview(test.dataviewId, {}, function(err, dataview) {
+            this.testClient.getDataview(test.dataviewId, {}, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 15);
+                assert.strictEqual(dataview.bins.length, 15);
 
                 var initialTimestamp = '2007-02-01T00:00:00-04:00'; // EDT midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_EDT_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
-                dataview.bins.forEach(function(bin, index) {
+                dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
                         .utcOffset(OFFSET_EDT_IN_MINUTES)
                         .add(index, 'month')
@@ -559,7 +547,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_EDT_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -576,9 +564,9 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 61);
+                assert.strictEqual(dataview.bins.length, 61);
                 dataview.bins.forEach(function (bin) {
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -596,9 +584,9 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins_count, 6);
+                assert.strictEqual(dataview.bins_count, 6);
                 dataview.bins.forEach(function (bin) {
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -616,7 +604,7 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
 
                 done();
@@ -633,16 +621,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 15);
+                assert.strictEqual(dataview.bins.length, 15);
 
                 var initialTimestamp = '2007-02-01T00:00:00+02:00'; // CEST midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_CEST_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -654,7 +642,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_CEST_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -673,16 +661,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 15);
+                assert.strictEqual(dataview.bins.length, 15);
 
                 var initialTimestamp = '2007-02-01T00:00:00Z'; // UTC midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -694,7 +682,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -714,16 +702,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('datetime_histogram_automatic_second', params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 57);
+                assert.strictEqual(dataview.bins.length, 57);
 
                 var initialTimestamp = '2007-02-15T01:00:00Z';
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -735,7 +723,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -755,16 +743,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 6);
+                assert.strictEqual(dataview.bins.length, 6);
 
                 var initialTimestamp = '2007-01-01T00:00:00Z'; // UTC midnight
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -776,7 +764,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -796,16 +784,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('datetime_histogram_automatic_decade', params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 17);
+                assert.strictEqual(dataview.bins.length, 17);
 
                 var initialTimestamp = '1850-01-01T00:00:00Z';
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -817,7 +805,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -837,16 +825,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('datetime_histogram_automatic_century', params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 14);
+                assert.strictEqual(dataview.bins.length, 14);
 
                 var initialTimestamp = '0601-01-01T00:00:00Z';
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -858,7 +846,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -878,16 +866,16 @@ describe('histogram-dataview for date column type', function() {
             this.testClient = new TestClient(mapConfig, 1234);
             this.testClient.getDataview('datetime_histogram_automatic_millennium', params, function (err, dataview) {
                 assert.ok(!err, err);
-                assert.equal(dataview.type, 'histogram');
+                assert.strictEqual(dataview.type, 'histogram');
                 assert.ok(dataview.bin_width > 0, 'Unexpected bin width: ' + dataview.bin_width);
-                assert.equal(dataview.bins.length, 12);
+                assert.strictEqual(dataview.bins.length, 12);
 
                 var initialTimestamp = '0001-01-01T00:00:00Z';
                 var binsStartInMilliseconds = dataview.bins_start * 1000;
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_UTC_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -899,7 +887,7 @@ describe('histogram-dataview for date column type', function() {
                         .utcOffset(OFFSET_UTC_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -907,9 +895,6 @@ describe('histogram-dataview for date column type', function() {
                 done();
             });
         });
-
-
-
 
         it('bins_count should be equal to bins length filtered by start and end ' + test.desc, function (done) {
             var OFFSET_UTC_IN_SECONDS = 0 * 3600; // UTC
@@ -924,10 +909,10 @@ describe('histogram-dataview for date column type', function() {
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ifError(err);
 
-                assert.equal(dataview.type, 'histogram');
-                assert.equal(dataview.bins.length, 6);
-                assert.equal(dataview.bins_count, 6);
-                assert.equal(dataview.bins_count, dataview.bins.length);
+                assert.strictEqual(dataview.type, 'histogram');
+                assert.strictEqual(dataview.bins.length, 6);
+                assert.strictEqual(dataview.bins_count, 6);
+                assert.strictEqual(dataview.bins_count, dataview.bins.length);
                 done();
             });
         });
@@ -945,9 +930,9 @@ describe('histogram-dataview for date column type', function() {
             this.testClient.getDataview(test.dataviewId, params, function (err, dataview) {
                 assert.ifError(err);
 
-                assert.equal(dataview.type, 'histogram');
-                assert.equal(dataview.bins.length, 6);
-                assert.equal(dataview.bins_count, 7);
+                assert.strictEqual(dataview.type, 'histogram');
+                assert.strictEqual(dataview.bins.length, 6);
+                assert.strictEqual(dataview.bins_count, 7);
                 assert.ok(dataview.bins_count > dataview.bins.length);
                 done();
             });
@@ -968,7 +953,7 @@ describe('histogram-dataview for date column type', function() {
             _testClient.getDataview('datetime_histogram_tz', params, function (err, filteredDataview) {
                 assert.ok(!err, err);
 
-                assert.deepEqual(dataview, filteredDataview);
+                assert.deepStrictEqual(dataview, filteredDataview);
                 done();
             });
         });
@@ -979,8 +964,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_second', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'second');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'second');
             done();
         });
     });
@@ -990,8 +975,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_minute', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'minute');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'minute');
             done();
         });
     });
@@ -1001,8 +986,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_hour', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'hour');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'hour');
             done();
         });
     });
@@ -1012,8 +997,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_day', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'day');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'day');
             done();
         });
     });
@@ -1023,8 +1008,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_week', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'week');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'week');
             done();
         });
     });
@@ -1034,8 +1019,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_month', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'month');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'month');
             done();
         });
     });
@@ -1045,8 +1030,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_quarter', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'quarter');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'quarter');
             done();
         });
     });
@@ -1056,8 +1041,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_year', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'year');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'year');
             done();
         });
     });
@@ -1067,8 +1052,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_decade', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'decade');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'decade');
             done();
         });
     });
@@ -1078,8 +1063,8 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_century', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'century');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'century');
             done();
         });
     });
@@ -1089,27 +1074,24 @@ describe('histogram-dataview for date column type', function() {
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('datetime_histogram_automatic_millennium', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'millennium');
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'millennium');
             done();
         });
     });
-
-
 
     it('should work with dates', function (done) {
         var params = {};
         this.testClient = new TestClient(mapConfig, 1234);
         this.testClient.getDataview('date_histogram', params, function (err, dataview) {
             assert.ifError(err);
-            assert.equal(dataview.type, 'histogram');
-            assert.equal(dataview.aggregation, 'year');
-            assert.equal(dataview.bins.length, 2);
-            assert.equal(dataview.bins_count, 2);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.aggregation, 'year');
+            assert.strictEqual(dataview.bins.length, 2);
+            assert.strictEqual(dataview.bins_count, 2);
             done();
         });
     });
-
 
     it('should not apply offset for a histogram aggregated by minutes', function (done) {
         var self = this;
@@ -1124,9 +1106,9 @@ describe('histogram-dataview for date column type', function() {
             self.testClient.getDataview('minute_histogram', params, function (err, dataviewWithOffset) {
                 assert.ifError(err);
 
-                assert.notEqual(dataview.offset, dataviewWithOffset.offset);
+                assert.notStrictEqual(dataview.offset, dataviewWithOffset.offset);
                 dataview.offset = dataviewWithOffset.offset;
-                assert.deepEqual(dataview, dataviewWithOffset);
+                assert.deepStrictEqual(dataview, dataviewWithOffset);
                 done();
             });
         });
@@ -1152,26 +1134,25 @@ describe('histogram-dataview for date column type', function() {
             self.testClient.getDataview('minute_histogram', paramsWithFilter, function (err, filteredDataview) {
                 assert.ifError(err);
 
-                assert.deepEqual(dataview, filteredDataview);
+                assert.deepStrictEqual(dataview, filteredDataview);
 
                 self.testClient.getDataview('minute_histogram', paramsWithOffset,
-                function (err, filteredWithOffsetDataview) {
-                    assert.ifError(err);
+                    function (err, filteredWithOffsetDataview) {
+                        assert.ifError(err);
 
-                    assert.notEqual(filteredWithOffsetDataview.offset, filteredDataview.offset);
-                    filteredWithOffsetDataview.offset = filteredDataview.offset;
-                    assert.deepEqual(filteredWithOffsetDataview, filteredDataview);
-                    done();
-                });
+                        assert.notStrictEqual(filteredWithOffsetDataview.offset, filteredDataview.offset);
+                        filteredWithOffsetDataview.offset = filteredDataview.offset;
+                        assert.deepStrictEqual(filteredWithOffsetDataview, filteredDataview);
+                        done();
+                    });
             });
         });
     });
 
-
     it('should return an histogram aggregated by days', function (done) {
         var self = this;
         var paramsWithDailyAgg = {
-            aggregation: 'day',
+            aggregation: 'day'
         };
 
         // data: from 2007-02-15 23:50:00 to 2007-02-16 00:10:00
@@ -1208,7 +1189,7 @@ describe('histogram-dataview for date column type', function() {
         self.testClient.getDataview('minute_histogram', paramsWithDailyAgg, function (err, dataview) {
             assert.ifError(err);
 
-            assert.deepEqual(dataview, dataviewWithDailyAggFixture);
+            assert.deepStrictEqual(dataview, dataviewWithDailyAggFixture);
             done();
         });
     });
@@ -1247,16 +1228,14 @@ describe('histogram-dataview for date column type', function() {
         self.testClient.getDataview('minute_histogram', paramsWithDailyAggAndOffset, function (err, dataview) {
             assert.ifError(err);
 
-            assert.deepEqual(dataview, dataviewWithDailyAggAndOffsetFixture);
+            assert.deepStrictEqual(dataview, dataviewWithDailyAggAndOffsetFixture);
             done();
         });
     });
 });
 
-
-describe('histogram-dataview: special float valuer', function() {
-
-    afterEach(function(done) {
+describe('histogram-dataview: special float valuer', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -1267,13 +1246,13 @@ describe('histogram-dataview: special float valuer', function() {
     var mapConfig = createMapConfig(
         [
             {
-                "type": "cartodb",
-                "options": {
-                    "source": {
-                        "id": "a0"
+                type: 'cartodb',
+                options: {
+                    source: {
+                        id: 'a0'
                     },
-                    "cartocss": "#points { marker-width: 10; marker-fill: red; }",
-                    "cartocss_version": "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -1290,10 +1269,10 @@ describe('histogram-dataview: special float valuer', function() {
         },
         [
             {
-                "id": "a0",
-                "type": "source",
-                "params": {
-                    "query": [
+                id: 'a0',
+                type: 'source',
+                params: {
+                    query: [
                         'SELECT',
                         '  null::geometry the_geom_webmercator,',
                         '  CASE',
@@ -1309,9 +1288,9 @@ describe('histogram-dataview: special float valuer', function() {
         ]
     );
 
-    it('should filter infinities out and count them in the summary', function(done) {
+    it('should filter infinities out and count them in the summary', function (done) {
         this.testClient = new TestClient(mapConfig, 1234);
-        this.testClient.getDataview('val_histogram', {}, function(err, dataview) {
+        this.testClient.getDataview('val_histogram', {}, function (err, dataview) {
             assert.ok(!err, err);
             assert.ok(dataview.infinities === (250 + 250));
             assert.ok(dataview.nans === 250);
@@ -1320,9 +1299,8 @@ describe('histogram-dataview: special float valuer', function() {
     });
 });
 
-describe('histogram-dates: aggregation input value', function() {
-
-    afterEach(function(done) {
+describe('histogram-dates: aggregation input value', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -1333,13 +1311,13 @@ describe('histogram-dates: aggregation input value', function() {
     var mapConfig = createMapConfig(
         [
             {
-                type: "cartodb",
+                type: 'cartodb',
                 options: {
                     source: {
-                        id: "a0"
+                        id: 'a0'
                     },
-                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
-                    cartocss_version: "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -1373,9 +1351,9 @@ describe('histogram-dates: aggregation input value', function() {
                     query: [
                         'select null::geometry the_geom_webmercator, date AS d',
                         'from generate_series(',
-                            '\'2007-02-15 01:00:00\'::timestamp,',
-                            '\'2008-04-09 01:00:00\'::timestamp,',
-                            ' \'1 day\'::interval',
+                        '\'2007-02-15 01:00:00\'::timestamp,',
+                        '\'2008-04-09 01:00:00\'::timestamp,',
+                        ' \'1 day\'::interval',
                         ') date'
                     ].join(' ')
                 }
@@ -1383,7 +1361,7 @@ describe('histogram-dates: aggregation input value', function() {
         ]
     );
 
-    it('should fail when aggregation values is not valid while instantiating the map', function(done) {
+    it('should fail when aggregation values is not valid while instantiating the map', function (done) {
         this.testClient = new TestClient(mapConfig, 1234);
         const override = {
             response: {
@@ -1391,10 +1369,10 @@ describe('histogram-dates: aggregation input value', function() {
             }
         };
 
-        this.testClient.getDataview('bad_agg_value_histogram', override, function(err, dataviewError) {
+        this.testClient.getDataview('bad_agg_value_histogram', override, function (err, dataviewError) {
             assert.ifError(err);
 
-            assert.deepEqual(dataviewError, {
+            assert.deepStrictEqual(dataviewError, {
                 errors: [
                     'Invalid aggregation value. Valid ones: auto, second, minute, ' +
                     'hour, day, week, month, quarter, year, decade, century, millennium'
@@ -1413,7 +1391,7 @@ describe('histogram-dates: aggregation input value', function() {
         });
     });
 
-    it('should fail when aggregation values is not valid while fetching dataview result', function(done) {
+    it('should fail when aggregation values is not valid while fetching dataview result', function (done) {
         this.testClient = new TestClient(mapConfig, 1234);
         const override = {
             aggregation: 'wadus',
@@ -1422,10 +1400,10 @@ describe('histogram-dates: aggregation input value', function() {
             }
         };
 
-        this.testClient.getDataview('agg_value_histogram', override, function(err, dataviewError) {
+        this.testClient.getDataview('agg_value_histogram', override, function (err, dataviewError) {
             assert.ifError(err);
 
-            assert.deepEqual(dataviewError, {
+            assert.deepStrictEqual(dataviewError, {
                 errors: [
                     'Invalid aggregation value. Valid ones: auto, second, minute, ' +
                     'hour, day, week, month, quarter, year, decade, century, millennium'
@@ -1445,9 +1423,8 @@ describe('histogram-dates: aggregation input value', function() {
     });
 });
 
-describe('histogram-dates: timestamp starts at epoch', function() {
-
-    afterEach(function(done) {
+describe('histogram-dates: timestamp starts at epoch', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -1458,13 +1435,13 @@ describe('histogram-dates: timestamp starts at epoch', function() {
     var mapConfig = createMapConfig(
         [
             {
-                type: "cartodb",
+                type: 'cartodb',
                 options: {
                     source: {
-                        id: "a0"
+                        id: 'a0'
                     },
-                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
-                    cartocss_version: "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -1488,9 +1465,9 @@ describe('histogram-dates: timestamp starts at epoch', function() {
                     query: [
                         'select null::geometry the_geom_webmercator, date AS d',
                         'from generate_series(',
-                            '\'1970-01-04 10:00:00\'::timestamp,',
-                            '\'1984-01-04 10:00:00\'::timestamp,',
-                            ' \'1 month\'::interval',
+                        '\'1970-01-04 10:00:00\'::timestamp,',
+                        '\'1984-01-04 10:00:00\'::timestamp,',
+                        ' \'1 month\'::interval',
                         ') date'
                     ].join(' ')
                 }
@@ -1498,26 +1475,25 @@ describe('histogram-dates: timestamp starts at epoch', function() {
         ]
     );
 
-    it('should work when timestamp_start is epoch (1970-01-01 = 0)', function(done) {
+    it('should work when timestamp_start is epoch (1970-01-01 = 0)', function (done) {
         this.testClient = new TestClient(mapConfig, 1234);
         const override = {};
 
-        this.testClient.getDataview('epoch_start_histogram', override, function(err, dataview) {
+        this.testClient.getDataview('epoch_start_histogram', override, function (err, dataview) {
             assert.ifError(err);
 
-            const { aggregation, timestamp_start } = dataview;
+            const { aggregation, timestamp_start: timestampStart } = dataview;
 
-            assert.equal(timestamp_start, 0);
-            assert.equal(aggregation, 'quarter');
+            assert.strictEqual(timestampStart, 0);
+            assert.strictEqual(aggregation, 'quarter');
 
             done();
         });
     });
 });
 
-describe('histogram-dates: trunc timestamp for each bin respecting user\'s timezone', function() {
-
-    afterEach(function(done) {
+describe('histogram-dates: trunc timestamp for each bin respecting user\'s timezone', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -1528,13 +1504,13 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
     var mapConfig = createMapConfig(
         [
             {
-                type: "cartodb",
+                type: 'cartodb',
                 options: {
                     source: {
-                        id: "a0"
+                        id: 'a0'
                     },
-                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
-                    cartocss_version: "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -1568,9 +1544,9 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                     query: [
                         'select null::geometry the_geom_webmercator, date AS d',
                         'from generate_series(',
-                            '\'1970-01-01 00:00:00\'::timestamp,',
-                            '\'1970-01-01 01:59:00\'::timestamp,',
-                            ' \'1 minute\'::interval',
+                        '\'1970-01-01 00:00:00\'::timestamp,',
+                        '\'1970-01-01 01:59:00\'::timestamp,',
+                        ' \'1 minute\'::interval',
                         ') date'
                     ].join(' ')
                 }
@@ -1582,9 +1558,9 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                     query: [
                         'select null::geometry the_geom_webmercator, date AS d',
                         'from generate_series(',
-                            '\'1970-01-01 00:00:00\'::timestamptz,',
-                            '\'1970-01-01 01:59:00\'::timestamptz,',
-                            ' \'1 minute\'::interval',
+                        '\'1970-01-01 00:00:00\'::timestamptz,',
+                        '\'1970-01-01 01:59:00\'::timestamptz,',
+                        ' \'1 minute\'::interval',
                         ') date'
                     ].join(' ')
                 }
@@ -1601,7 +1577,7 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
     }];
 
     dateHistogramsUseCases.forEach(function (test) {
-        it('should return histogram with two buckets ' + test.desc , function(done) {
+        it('should return histogram with two buckets ' + test.desc, function (done) {
             this.testClient = new TestClient(mapConfig, 1234);
 
             const override = {
@@ -1609,7 +1585,7 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                 offset: '-3600'
             };
 
-            this.testClient.getDataview(test.dataviewId, override, function(err, dataview) {
+            this.testClient.getDataview(test.dataviewId, override, function (err, dataview) {
                 assert.ifError(err);
 
                 var OFFSET_IN_MINUTES = -1 * 60; // GMT-01
@@ -1618,7 +1594,7 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                 var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                     .utcOffset(OFFSET_IN_MINUTES)
                     .format();
-                assert.equal(binsStartFormatted, initialTimestamp);
+                assert.strictEqual(binsStartFormatted, initialTimestamp);
 
                 dataview.bins.forEach(function (bin, index) {
                     var binTimestampExpected = moment.utc(initialTimestamp)
@@ -1630,7 +1606,7 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
                         .utcOffset(OFFSET_IN_MINUTES)
                         .format();
 
-                    assert.equal(binTimestampFormatted, binTimestampExpected);
+                    assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                     assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                     assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
                 });
@@ -1641,10 +1617,8 @@ describe('histogram-dates: trunc timestamp for each bin respecting user\'s timez
     });
 });
 
-
-describe('histogram: be able to override with aggregation for histograms instantiated w/o aggregation', function() {
-
-    afterEach(function(done) {
+describe('histogram: be able to override with aggregation for histograms instantiated w/o aggregation', function () {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         } else {
@@ -1655,13 +1629,13 @@ describe('histogram: be able to override with aggregation for histograms instant
     var mapConfig = createMapConfig(
         [
             {
-                type: "cartodb",
+                type: 'cartodb',
                 options: {
                     source: {
-                        id: "a0"
+                        id: 'a0'
                     },
-                    cartocss: "#points { marker-width: 10; marker-fill: red; }",
-                    cartocss_version: "2.3.0"
+                    cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                    cartocss_version: '2.3.0'
                 }
             }
         ],
@@ -1672,7 +1646,7 @@ describe('histogram: be able to override with aggregation for histograms instant
                 },
                 type: 'histogram',
                 options: {
-                    column: 'd',
+                    column: 'd'
                 }
             }
         },
@@ -1684,9 +1658,9 @@ describe('histogram: be able to override with aggregation for histograms instant
                     query: [
                         'select null::geometry the_geom_webmercator, date AS d',
                         'from generate_series(',
-                            '\'1970-01-01 00:00:00\'::timestamp,',
-                            '\'1970-01-01 01:59:00\'::timestamp,',
-                            ' \'1 minute\'::interval',
+                        '\'1970-01-01 00:00:00\'::timestamp,',
+                        '\'1970-01-01 01:59:00\'::timestamp,',
+                        ' \'1 minute\'::interval',
                         ') date'
                     ].join(' ')
                 }
@@ -1694,7 +1668,7 @@ describe('histogram: be able to override with aggregation for histograms instant
         ]
     );
 
-    it('should apply aggregation to the histogram', function(done) {
+    it('should apply aggregation to the histogram', function (done) {
         this.testClient = new TestClient(mapConfig, 1234);
 
         const override = {
@@ -1702,7 +1676,7 @@ describe('histogram: be able to override with aggregation for histograms instant
             offset: '-3600'
         };
 
-        this.testClient.getDataview('timezone_epoch_histogram', override, function(err, dataview) {
+        this.testClient.getDataview('timezone_epoch_histogram', override, function (err, dataview) {
             assert.ifError(err);
 
             var OFFSET_IN_MINUTES = -1 * 60; // GMT-01
@@ -1711,7 +1685,7 @@ describe('histogram: be able to override with aggregation for histograms instant
             var binsStartFormatted = moment.utc(binsStartInMilliseconds)
                 .utcOffset(OFFSET_IN_MINUTES)
                 .format();
-            assert.equal(binsStartFormatted, initialTimestamp);
+            assert.strictEqual(binsStartFormatted, initialTimestamp);
 
             dataview.bins.forEach(function (bin, index) {
                 var binTimestampExpected = moment.utc(initialTimestamp)
@@ -1723,7 +1697,7 @@ describe('histogram: be able to override with aggregation for histograms instant
                     .utcOffset(OFFSET_IN_MINUTES)
                     .format();
 
-                assert.equal(binTimestampFormatted, binTimestampExpected);
+                assert.strictEqual(binTimestampFormatted, binTimestampExpected);
                 assert.ok(bin.timestamp <= bin.min, 'bin timestamp < bin min: ' + JSON.stringify(bin));
                 assert.ok(bin.min <= bin.max, 'bin min < bin max: ' + JSON.stringify(bin));
             });

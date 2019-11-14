@@ -5,28 +5,32 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var testClient = require('./support/test-client');
 var fs = require('fs');
+var path = require('path');
 var http = require('http');
 
-describe('blend layer filtering', function() {
-
+describe('blend layer filtering', function () {
     var IMG_TOLERANCE_PER_MIL = 20;
 
     var httpRendererResourcesServer;
 
-    before(function(done) {
+    before(function (done) {
         // Start a server to test external resources
-        httpRendererResourcesServer = http.createServer( function(request, response) {
-            var filename = __dirname + '/../../fixtures/http/light_nolabels-1-0-0.png';
-            fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+        httpRendererResourcesServer = http.createServer(function (request, response) {
+            var filename = path.join(__dirname, '/../../fixtures/http/light_nolabels-1-0-0.png');
+            fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                if (err) {
+                    return done(err);
+                }
+
                 response.writeHead(200);
-                response.write(file, "binary");
+                response.write(file, 'binary');
                 response.end();
             });
         });
         httpRendererResourcesServer.listen(8033, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         httpRendererResourcesServer.close(done);
     });
 
@@ -58,7 +62,7 @@ describe('blend layer filtering', function() {
             {
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced",
+                    sql: 'SELECT * FROM populated_places_simple_reduced',
                     cartocss: [
                         'Map {',
                         '    buffer-size:0;',
@@ -93,8 +97,8 @@ describe('blend layer filtering', function() {
             {
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced " +
-                        "where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)",
+                    sql: 'SELECT * FROM populated_places_simple_reduced ' +
+                        'where the_geom && ST_MakeEnvelope(-90, 0, 90, 65)',
                     cartocss: [
                         'Map {',
                         '    buffer-size:0;',
@@ -134,11 +138,11 @@ describe('blend layer filtering', function() {
         [1, 2, 3, 4]
     ];
 
-    function blendPngFixture(layers) {
+    function blendPngFixture (layers) {
         return './test/fixtures/blend/blend-filtering-layers-' + layers.join('.') + '-zxy-1.0.0.png';
     }
 
-    filteredLayersSuite.forEach(function(filteredLayers) {
+    filteredLayersSuite.forEach(function (filteredLayers) {
         var layerFilter = filteredLayers.join(',');
         var tileRequest = {
             z: 1,
@@ -149,9 +153,10 @@ describe('blend layer filtering', function() {
         };
 
         it('should filter on ' + layerFilter + '/1/0/0.png', function (done) {
-            testClient.getTileLayer(mapConfig, tileRequest, function(err, res) {
+            testClient.getTileLayer(mapConfig, tileRequest, function (err, res) {
+                assert.ifError(err);
                 assert.imageBufferIsSimilarToFile(res.body, blendPngFixture(filteredLayers), IMG_TOLERANCE_PER_MIL,
-                    function(err) {
+                    function (err) {
                         assert.ok(!err);
                         done();
                     }

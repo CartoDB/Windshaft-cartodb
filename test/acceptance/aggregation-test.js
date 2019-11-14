@@ -24,7 +24,7 @@ const suites = [
 // The point location is spanned over a given length, by default it is 0 so
 // all points have the same location, which can be used to test aggregation dimensions
 // the default point is in tile
-function pointsWithTimeSQL(n, startTime, endTime, span = 0, x0 = 0.1, y0 = 0.1) {
+function pointsWithTimeSQL (n, startTime, endTime, span = 0, x0 = 0.1, y0 = 0.1) {
     return `
         WITH params AS (
         SELECT
@@ -51,7 +51,6 @@ function pointsWithTimeSQL(n, startTime, endTime, span = 0, x0 = 0.1, y0 = 0.1) 
 }
 
 describe('aggregation', function () {
-
     const POINTS_SQL_1 = `
     select
         x + 4 as cartodb_id,
@@ -112,15 +111,15 @@ describe('aggregation', function () {
     WITH hgrid AS (
         SELECT
             CDB_RectangleGrid (
-                ST_Expand(!bbox!, ${webmercator.getResolution({ z : 1 })} * 12),
-                ${webmercator.getResolution({ z : 1 })} * 12,
-                ${webmercator.getResolution({ z : 1 })} * 12
+                ST_Expand(!bbox!, ${webmercator.getResolution({ z: 1 })} * 12),
+                ${webmercator.getResolution({ z: 1 })} * 12,
+                ${webmercator.getResolution({ z: 1 })} * 12
             ) as cell
     )
     SELECT
         hgrid.cell as the_geom_webmercator,
         count(1) as agg_value,
-        count(1) /power( 12 * ${webmercator.getResolution({ z : 1 })}, 2 ) as agg_value_density,
+        count(1) /power( 12 * ${webmercator.getResolution({ z: 1 })}, 2 ) as agg_value_density,
         row_number() over () as cartodb_id
     FROM hgrid, (<%= sql %>) i
     WHERE ST_Intersects(i.the_geom_webmercator, hgrid.cell) GROUP BY hgrid.cell
@@ -207,7 +206,7 @@ describe('aggregation', function () {
     //
     const POINTS_SQL_GRID = (z, resolution) => `
         WITH params AS (
-            SELECT ${webmercator.getResolution({ z : z })}*${resolution} AS l -- cell size for Z, resolution
+            SELECT ${webmercator.getResolution({ z: z })}*${resolution} AS l -- cell size for Z, resolution
         )
         SELECT
             row_number() OVER () AS cartodb_id,
@@ -297,7 +296,7 @@ describe('aggregation', function () {
                 this.layerStatsConfig = global.environment.enabledFeatures.layerStats;
             });
 
-            after(function (){
+            after(function () {
                 serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
             });
 
@@ -334,7 +333,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -362,10 +361,10 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.equal(layer.meta.aggregation, undefined));
+                    body.metadata.layers.forEach(layer => assert.strictEqual(layer.meta.aggregation, undefined));
 
                     done();
                 });
@@ -398,7 +397,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -449,82 +448,42 @@ describe('aggregation', function () {
             });
 
             it('should fail if cartocss uses "value" column and it\'s not defined in the aggregation',
-            function (done) {
-                const response = {
-                    status: 400,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    }
-                };
-
-                this.mapConfig = createVectorMapConfig([
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POINTS_SQL_2,
-                            aggregation: {
-                                threshold: 1,
-                                placement: 'centroid'
-                            },
-                            cartocss: '#layer { marker-width: [value]; }',
-                            cartocss_version: '2.3.0'
+                function (done) {
+                    const response = {
+                        status: 400,
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8'
                         }
-                    }
-                ]);
+                    };
 
-                this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup({ response }, (err, body) => {
-                    if (err) {
-                        return done(err);
-                    }
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_2,
+                                aggregation: {
+                                    threshold: 1,
+                                    placement: 'centroid'
+                                },
+                                cartocss: '#layer { marker-width: [value]; }',
+                                cartocss_version: '2.3.0'
+                            }
+                        }
+                    ]);
 
-                    assert.ok(body.errors[0].match(/column "value" does not exist/));
+                    this.testClient = new TestClient(this.mapConfig);
+                    this.testClient.getLayergroup({ response }, (err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
 
-                    done();
+                        assert.ok(body.errors[0].match(/column "value" does not exist/));
+
+                        done();
+                    });
                 });
-            });
 
             it('should provide all columns in the default aggregation ',
-            function (done) {
-                const response = {
-                    status: 200,
-                    headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
-                    }
-                };
-
-                this.mapConfig = createVectorMapConfig([
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POINTS_SQL_2,
-                            aggregation: {
-                                threshold: 1
-                            },
-                            cartocss: '#layer { marker-width: [value]; }',
-                            cartocss_version: '2.3.0'
-                        }
-                    }
-                ]);
-
-                this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup({ response }, (err, body) => {
-                    if (err) {
-                        return done(err);
-                    }
-
-
-                    assert.equal(typeof body.metadata, 'object');
-                    assert.ok(Array.isArray(body.metadata.layers));
-
-                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
-                    body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
-                    done();
-                });
-            });
-
-            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it('should provide all the requested columns in non-default aggregation: ' + placement,
                 function (done) {
                     const response = {
                         status: 200,
@@ -539,19 +498,9 @@ describe('aggregation', function () {
                             options: {
                                 sql: POINTS_SQL_2,
                                 aggregation: {
-                                    placement: placement,
-                                    columns: {
-                                        'first_column': {
-                                            aggregate_function: 'sum',
-                                            aggregated_column: 'value'
-                                        }
-                                    },
-                                    dimensions: {
-                                        second_column: 'sqrt_value'
-                                    },
                                     threshold: 1
                                 },
-                                cartocss: '#layer { marker-width: [first_column]; line-width: [second_column]; }',
+                                cartocss: '#layer { marker-width: [value]; }',
                                 cartocss_version: '2.3.0'
                             }
                         }
@@ -563,8 +512,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -573,51 +521,100 @@ describe('aggregation', function () {
                     });
                 });
 
-                it('should provide only the requested columns in non-default aggregation: ' + placement,
-                function (done) {
-                    this.mapConfig = createVectorMapConfig([
-                        {
-                            type: 'cartodb',
-                            options: {
-                                sql: POINTS_SQL_2,
-                                aggregation: {
-                                    placement: placement,
-                                    columns: {
-                                        'first_column': {
-                                            aggregate_function: 'sum',
-                                            aggregated_column: 'value'
-                                        }
+            ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
+                it('should provide all the requested columns in non-default aggregation: ' + placement,
+                    function (done) {
+                        const response = {
+                            status: 200,
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8'
+                            }
+                        };
+
+                        this.mapConfig = createVectorMapConfig([
+                            {
+                                type: 'cartodb',
+                                options: {
+                                    sql: POINTS_SQL_2,
+                                    aggregation: {
+                                        placement: placement,
+                                        columns: {
+                                            first_column: {
+                                                aggregate_function: 'sum',
+                                                aggregated_column: 'value'
+                                            }
+                                        },
+                                        dimensions: {
+                                            second_column: 'sqrt_value'
+                                        },
+                                        threshold: 1
                                     },
-                                    dimensions: {
-                                        second_column: 'sqrt_value'
-                                    },
-                                    threshold: 1
+                                    cartocss: '#layer { marker-width: [first_column]; line-width: [second_column]; }',
+                                    cartocss_version: '2.3.0'
                                 }
                             }
-                        }
-                    ]);
+                        ]);
 
-                    this.testClient = new TestClient(this.mapConfig);
+                        this.testClient = new TestClient(this.mapConfig);
+                        this.testClient.getLayergroup({ response }, (err, body) => {
+                            if (err) {
+                                return done(err);
+                            }
 
-                    this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, res, mvt) {
-                        if (err) {
-                            return done(err);
-                        }
+                            assert.strictEqual(typeof body.metadata, 'object');
+                            assert.ok(Array.isArray(body.metadata.layers));
 
-                        const geojsonTile = JSON.parse(mvt.toGeoJSONSync(0));
-                        let columns = new Set();
-                        geojsonTile.features.forEach(f => {
-                            Object.keys(f.properties).forEach(p => columns.add(p));
+                            body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
+                            body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.png));
+                            done();
                         });
-                        columns = Array.from(columns);
-                        const expected_columns = [
-                            '_cdb_feature_count', 'cartodb_id', 'first_column', 'second_column'
-                        ];
-                        assert.deepEqual(columns.sort(), expected_columns.sort());
-
-                        done();
                     });
-                });
+
+                it('should provide only the requested columns in non-default aggregation: ' + placement,
+                    function (done) {
+                        this.mapConfig = createVectorMapConfig([
+                            {
+                                type: 'cartodb',
+                                options: {
+                                    sql: POINTS_SQL_2,
+                                    aggregation: {
+                                        placement: placement,
+                                        columns: {
+                                            first_column: {
+                                                aggregate_function: 'sum',
+                                                aggregated_column: 'value'
+                                            }
+                                        },
+                                        dimensions: {
+                                            second_column: 'sqrt_value'
+                                        },
+                                        threshold: 1
+                                    }
+                                }
+                            }
+                        ]);
+
+                        this.testClient = new TestClient(this.mapConfig);
+
+                        this.testClient.getTile(0, 0, 0, { format: 'mvt' }, function (err, res, mvt) {
+                            if (err) {
+                                return done(err);
+                            }
+
+                            const geojsonTile = JSON.parse(mvt.toGeoJSONSync(0));
+                            let columns = new Set();
+                            geojsonTile.features.forEach(f => {
+                                Object.keys(f.properties).forEach(p => columns.add(p));
+                            });
+                            columns = Array.from(columns);
+                            const expectedColumns = [
+                                '_cdb_feature_count', 'cartodb_id', 'first_column', 'second_column'
+                            ];
+                            assert.deepStrictEqual(columns.sort(), expectedColumns.sort());
+
+                            done();
+                        });
+                    });
             });
 
             it('should skip aggregation to create a layergroup with aggregation defined already', function (done) {
@@ -647,10 +644,10 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer => assert.equal(layer.meta.aggregation, undefined));
+                    body.metadata.layers.forEach(layer => assert.strictEqual(layer.meta.aggregation, undefined));
 
                     done();
                 });
@@ -686,11 +683,11 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, true);
-                    assert.equal(body.metadata.layers[1].meta.aggregation.mvt, false);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.mvt, true);
+                    assert.strictEqual(body.metadata.layers[1].meta.aggregation.mvt, false);
 
                     done();
                 });
@@ -716,11 +713,11 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, true);
-                    assert.equal(body.metadata.layers[0].meta.aggregation.png, true);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.mvt, true);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.png, true);
 
                     done();
                 });
@@ -746,11 +743,11 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, false);
-                    assert.equal(body.metadata.layers[0].meta.aggregation.png, false);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.mvt, false);
+                    assert.strictEqual(body.metadata.layers[0].meta.aggregation.png, false);
 
                     done();
                 });
@@ -782,12 +779,12 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: [
                             "Invalid value for 'aggregation' query param: wadus." +
                                 " Valid ones are 'true' or 'false'"
                         ],
-                        errors_with_context:[{
+                        errors_with_context: [{
                             type: 'unknown',
                             message: "Invalid value for 'aggregation' query param: wadus." +
                                 " Valid ones are 'true' or 'false'"
@@ -825,11 +822,11 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
-                    body.metadata.layers.forEach(layer =>{
-                        assert.deepEqual(layer.meta.aggregation, { png: false, mvt: false });
+                    body.metadata.layers.forEach(layer => {
+                        assert.deepStrictEqual(layer.meta.aggregation, { png: false, mvt: false });
                     });
 
                     done();
@@ -863,12 +860,12 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
+                    assert.deepStrictEqual(body, {
                         errors: [
                             'Unsupported geometry type: ST_Polygon.' +
                                 ' Aggregation is available only for geometry type: ST_Point'
                         ],
-                        errors_with_context:[{
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Unsupported geometry type: ST_Polygon.' +
                             ' Aggregation is available only for geometry type: ST_Point',
@@ -906,7 +903,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -943,38 +940,38 @@ describe('aggregation', function () {
             });
 
             it('when dimensions is provided should return a tile returning the column used as dimensions',
-            function (done) {
-                this.mapConfig = createVectorMapConfig([
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POINTS_SQL_1,
-                            aggregation: {
-                                threshold: 1,
-                                dimensions: {
-                                    value: "value"
+                function (done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    threshold: 1,
+                                    dimensions: {
+                                        value: 'value'
+                                    }
                                 }
                             }
                         }
-                    }
-                ]);
+                    ]);
 
-                this.testClient = new TestClient(this.mapConfig);
-                const options = {
-                    format: 'mvt'
-                };
-                this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
-                    if (err) {
-                        return done(err);
-                    }
+                    this.testClient = new TestClient(this.mapConfig);
+                    const options = {
+                        format: 'mvt'
+                    };
+                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                        if (err) {
+                            return done(err);
+                        }
 
-                    const tileJSON = tile.toJSON();
+                        const tileJSON = tile.toJSON();
 
-                    tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.value, 'number'));
+                        tileJSON[0].features.forEach(feature => assert.strictEqual(typeof feature.properties.value, 'number'));
 
-                    done();
+                        done();
+                    });
                 });
-            });
 
             it('time dimensions', function (done) {
                 this.mapConfig = createVectorMapConfig([
@@ -1009,7 +1006,7 @@ describe('aggregation', function () {
 
                     const tileJSON = tile.toJSON();
 
-                    tileJSON[0].features.forEach(feature => assert.equal(typeof feature.properties.dow, 'number'));
+                    tileJSON[0].features.forEach(feature => assert.strictEqual(typeof feature.properties.dow, 'number'));
 
                     done();
                 });
@@ -1024,7 +1021,7 @@ describe('aggregation', function () {
                             sql: pointsWithTimeSQL(nPoints, '2000-01-01T00:00:00+00', '2019-12-31T23:59:59+00', 0),
                             dates_as_numbers: true,
                             aggregation: {
-                                threshold: 1,
+                                threshold: 1
                             }
                         }
                     }
@@ -1041,7 +1038,7 @@ describe('aggregation', function () {
                     const tileJSON = tile.toJSON();
                     // Everything's aggregated into a single feature because the only
                     // dimension is space and all points are in the same place.
-                    assert.deepEqual(tileJSON[0].features.map(f => f.properties._cdb_feature_count), [nPoints]);
+                    assert.deepStrictEqual(tileJSON[0].features.map(f => f.properties._cdb_feature_count), [nPoints]);
                     done();
                 });
             });
@@ -1065,7 +1062,7 @@ describe('aggregation', function () {
                                     }
                                 }
 
-                            },
+                            }
                         }
                     }
                 ]);
@@ -1081,9 +1078,9 @@ describe('aggregation', function () {
                     const tileJSON = tile.toJSON();
                     // Now all features have same location, but the year is an additional dimension
                     // with 20 different values, so we'll have an aggregated feature for each.
-                    const expectedYears = Array.from({length: 20}, (_, k) => 2000 + k); // 2000 to 2019
+                    const expectedYears = Array.from({ length: 20 }, (_, k) => 2000 + k); // 2000 to 2019
                     const resultYears = tileJSON[0].features.map(f => f.properties.year).sort((a, b) => a - b);
-                    assert.deepEqual(resultYears, expectedYears);
+                    assert.deepStrictEqual(resultYears, expectedYears);
 
                     done();
                 });
@@ -1109,7 +1106,7 @@ describe('aggregation', function () {
                                     }
                                 }
 
-                            },
+                            }
                         }
                     }
                 ]);
@@ -1123,9 +1120,9 @@ describe('aggregation', function () {
                         return done(err);
                     }
                     const tileJSON = tile.toJSON();
-                    assert.equal(tileJSON[0].features.length, 3);
+                    assert.strictEqual(tileJSON[0].features.length, 3);
                     const resultQuimesters = tileJSON[0].features.map(f => f.properties.month).sort((a, b) => a - b);
-                    assert.deepEqual(resultQuimesters, [1, 2, 3]);
+                    assert.deepStrictEqual(resultQuimesters, [1, 2, 3]);
 
                     done();
                 });
@@ -1165,7 +1162,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort((a, b) => a - b);
-                    assert.deepEqual(resultMonths, [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
+                    assert.deepStrictEqual(resultMonths, [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]);
 
                     done();
                 });
@@ -1205,7 +1202,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     // In UTC all times are in the same month 2018-01
-                    assert.equal(tileJSON[0].features.length, 1);
+                    assert.strictEqual(tileJSON[0].features.length, 1);
 
                     done();
                 });
@@ -1245,7 +1242,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     // In UTC+2 some times are in a different month
-                    assert.equal(tileJSON[0].features.length, 2);
+                    assert.strictEqual(tileJSON[0].features.length, 2);
                     done();
                 });
             });
@@ -1276,20 +1273,24 @@ describe('aggregation', function () {
                 ]);
 
                 this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup(function(err, layergroup) {
+                this.testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
                     const expectedDimensions = {
                         dow:
-                        { params:
-                           { time: 'to_timestamp("date")',
-                             timezone: 'utc',
-                             units: 'dayOfWeek',
-                             count: 1 },
-                          min: 4,
-                          max: 7,
-                          type: 'number' }
+                        {
+                            params:
+                           {
+                               time: 'to_timestamp("date")',
+                               timezone: 'utc',
+                               units: 'dayOfWeek',
+                               count: 1
+                           },
+                            min: 4,
+                            max: 7,
+                            type: 'number'
+                        }
                     };
-                    assert.deepEqual(layergroup.metadata.layers[0].meta.stats.dimensions, expectedDimensions);
+                    assert.deepStrictEqual(layergroup.metadata.layers[0].meta.stats.dimensions, expectedDimensions);
                     done();
                 });
             });
@@ -1317,7 +1318,7 @@ describe('aggregation', function () {
                 ]);
 
                 this.testClient = new TestClient(this.mapConfig);
-                this.testClient.getLayergroup(function(err, layergroup) {
+                this.testClient.getLayergroup(function (err, layergroup) {
                     assert.ifError(err);
                     assert(!layergroup.metadata.layers[0].meta.stats.dimensions);
                     done();
@@ -1337,7 +1338,7 @@ describe('aggregation', function () {
                                     month: {
                                         column: 'date',
                                         group: {
-                                            units: 'month',
+                                            units: 'month'
                                         },
                                         format: 'iso'
                                     }
@@ -1358,8 +1359,8 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort();
-                    assert.deepEqual(resultMonths, [
-                        '2018-01', '2018-02', '2018-03', '2018-04', '2018-05','2018-06',
+                    assert.deepStrictEqual(resultMonths, [
+                        '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06',
                         '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12'
                     ]);
                     done();
@@ -1382,7 +1383,7 @@ describe('aggregation', function () {
                                             units: 'month',
                                             timezone: '+7200'
                                         },
-                                        format: 'iso',
+                                        format: 'iso'
                                     }
                                 }
 
@@ -1401,7 +1402,7 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     const resultMonths = tileJSON[0].features.map(f => f.properties.month).sort();
-                    assert.deepEqual(resultMonths, [
+                    assert.deepStrictEqual(resultMonths, [
                         '2018-01', '2018-02', '2018-03', '2018-04', '2018-05', '2018-06',
                         '2018-07', '2018-08', '2018-09', '2018-10', '2018-11', '2018-12',
                         '2019-01'
@@ -1427,7 +1428,7 @@ describe('aggregation', function () {
                                             units: 'hour',
                                             timezone: '+7200'
                                         },
-                                        format: 'iso',
+                                        format: 'iso'
                                     }
                                 }
 
@@ -1446,49 +1447,49 @@ describe('aggregation', function () {
                     }
                     const tileJSON = tile.toJSON();
                     const resultHours = tileJSON[0].features.map(f => f.properties.hour).sort();
-                    assert.deepEqual(resultHours, [
-                        "2018-01-01T00",
-                        "2018-01-01T01",
-                        "2018-01-01T02",
-                        "2018-01-01T03",
-                        "2018-01-01T04",
-                        "2018-01-01T05",
-                        "2018-01-01T06",
-                        "2018-01-01T07",
-                        "2018-01-01T08",
-                        "2018-01-01T09",
-                        "2018-01-01T10",
-                        "2018-01-01T11",
-                        "2018-01-01T12",
-                        "2018-01-01T13",
-                        "2018-01-01T14",
-                        "2018-01-01T15",
-                        "2018-01-01T16",
-                        "2018-01-01T17",
-                        "2018-01-01T18",
-                        "2018-01-01T19",
-                        "2018-01-01T20",
-                        "2018-01-01T21",
-                        "2018-01-01T22",
-                        "2018-01-01T23"
+                    assert.deepStrictEqual(resultHours, [
+                        '2018-01-01T00',
+                        '2018-01-01T01',
+                        '2018-01-01T02',
+                        '2018-01-01T03',
+                        '2018-01-01T04',
+                        '2018-01-01T05',
+                        '2018-01-01T06',
+                        '2018-01-01T07',
+                        '2018-01-01T08',
+                        '2018-01-01T09',
+                        '2018-01-01T10',
+                        '2018-01-01T11',
+                        '2018-01-01T12',
+                        '2018-01-01T13',
+                        '2018-01-01T14',
+                        '2018-01-01T15',
+                        '2018-01-01T16',
+                        '2018-01-01T17',
+                        '2018-01-01T18',
+                        '2018-01-01T19',
+                        '2018-01-01T20',
+                        '2018-01-01T21',
+                        '2018-01-01T22',
+                        '2018-01-01T23'
                     ]);
-                    tileJSON[0].features.forEach(f => assert.equal(f.properties._cdb_feature_count, 4));
+                    tileJSON[0].features.forEach(f => assert.strictEqual(f.properties._cdb_feature_count, 4));
                     done();
                 });
             });
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it(`dimensions should work for ${placement} placement`, function(done) {
+                it(`dimensions should work for ${placement} placement`, function (done) {
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
                             options: {
                                 sql: POINTS_SQL_1,
                                 aggregation: {
-                                    placement: placement ,
+                                    placement: placement,
                                     threshold: 1,
                                     dimensions: {
-                                        value: "value"
+                                        value: 'value'
                                     }
                                 }
                             }
@@ -1507,7 +1508,7 @@ describe('aggregation', function () {
                         const tileJSON = tile.toJSON();
 
                         tileJSON[0].features.forEach(
-                            feature => assert.equal(typeof feature.properties.value, 'number')
+                            feature => assert.strictEqual(typeof feature.properties.value, 'number')
                         );
 
                         done();
@@ -1516,17 +1517,17 @@ describe('aggregation', function () {
             });
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it(`dimensions with alias should work for ${placement} placement`, function(done) {
+                it(`dimensions with alias should work for ${placement} placement`, function (done) {
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
                             options: {
                                 sql: POINTS_SQL_1,
                                 aggregation: {
-                                    placement: placement ,
+                                    placement: placement,
                                     threshold: 1,
                                     dimensions: {
-                                        value2: "value"
+                                        value2: 'value'
                                     }
                                 }
                             }
@@ -1545,7 +1546,7 @@ describe('aggregation', function () {
                         const tileJSON = tile.toJSON();
 
                         tileJSON[0].features.forEach(
-                            feature => assert.equal(typeof feature.properties.value2, 'number')
+                            feature => assert.strictEqual(typeof feature.properties.value2, 'number')
                         );
 
                         done();
@@ -1553,8 +1554,7 @@ describe('aggregation', function () {
                 });
             });
 
-
-            it(`dimensions should trigger non-default aggregation`, function(done) {
+            it('dimensions should trigger non-default aggregation', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -1563,7 +1563,7 @@ describe('aggregation', function () {
                             aggregation: {
                                 threshold: 1,
                                 dimensions: {
-                                    value: "value"
+                                    value: 'value'
                                 }
                             }
                         }
@@ -1582,17 +1582,17 @@ describe('aggregation', function () {
                     const tileJSON = tile.toJSON();
 
                     tileJSON[0].features.forEach(
-                        feature => assert.equal(typeof feature.properties.value, 'number')
+                        feature => assert.strictEqual(typeof feature.properties.value, 'number')
                     );
                     tileJSON[0].features.forEach(
-                        feature => assert.equal(typeof feature.properties.sqrt_value, 'undefined')
+                        feature => assert.strictEqual(typeof feature.properties.sqrt_value, 'undefined')
                     );
 
                     done();
                 });
             });
 
-            it(`aggregation columns should trigger non-default aggregation`, function(done) {
+            it('aggregation columns should trigger non-default aggregation', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -1623,10 +1623,10 @@ describe('aggregation', function () {
                     const tileJSON = tile.toJSON();
 
                     tileJSON[0].features.forEach(
-                        feature => assert.equal(typeof feature.properties.value, 'number')
+                        feature => assert.strictEqual(typeof feature.properties.value, 'number')
                     );
                     tileJSON[0].features.forEach(
-                        feature => assert.equal(typeof feature.properties.sqrt_value, 'undefined')
+                        feature => assert.strictEqual(typeof feature.properties.sqrt_value, 'undefined')
                     );
 
                     done();
@@ -1634,14 +1634,14 @@ describe('aggregation', function () {
             });
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it(`aggregations with base column names should work for ${placement} placement`, function(done) {
+                it(`aggregations with base column names should work for ${placement} placement`, function (done) {
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
                             options: {
                                 sql: POINTS_SQL_1,
                                 aggregation: {
-                                    placement: placement ,
+                                    placement: placement,
                                     threshold: 1,
                                     columns: {
                                         value: {
@@ -1666,7 +1666,7 @@ describe('aggregation', function () {
                         const tileJSON = tile.toJSON();
 
                         tileJSON[0].features.forEach(
-                            feature => assert.equal(typeof feature.properties.value, 'number')
+                            feature => assert.strictEqual(typeof feature.properties.value, 'number')
                         );
 
                         done();
@@ -1702,7 +1702,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -1744,7 +1744,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -1786,7 +1786,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -1828,7 +1828,7 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.equal(typeof body.metadata, 'object');
+                    assert.strictEqual(typeof body.metadata, 'object');
                     assert.ok(Array.isArray(body.metadata.layers));
 
                     body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -1865,7 +1865,7 @@ describe('aggregation', function () {
 
                     const feature = geojsonTile.features[0];
 
-                    assert.ok(feature.properties.hasOwnProperty('value'), 'Missing value property');
+                    assert.ok(Object.prototype.hasOwnProperty.call(feature.properties, 'value'), 'Missing value property');
 
                     done();
                 });
@@ -1879,7 +1879,7 @@ describe('aggregation', function () {
                         options: {
                             sql: POINTS_SQL_1,
                             aggregation: {
-                                resolution: 'wadus',
+                                resolution: 'wadus'
                             }
                         }
                     }
@@ -1898,15 +1898,15 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [ 'Invalid resolution, should be a number greather than 0' ],
-                        errors_with_context:[{
+                    assert.deepStrictEqual(body, {
+                        errors: ['Invalid resolution, should be a number greather than 0'],
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Invalid resolution, should be a number greather than 0',
                             layer: {
-                                "id": "wadus",
-                                "index": 0,
-                                "type": "mapnik"
+                                id: 'wadus',
+                                index: 0,
+                                type: 'mapnik'
                             }
                         }]
                     });
@@ -1921,7 +1921,7 @@ describe('aggregation', function () {
                         options: {
                             sql: POINTS_SQL_1,
                             aggregation: {
-                                placement: 'wadus',
+                                placement: 'wadus'
                             }
                         }
                     }
@@ -1940,15 +1940,15 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [ 'Invalid placement. Valid values: centroid, point-grid, point-sample'],
-                        errors_with_context:[{
+                    assert.deepStrictEqual(body, {
+                        errors: ['Invalid placement. Valid values: centroid, point-grid, point-sample'],
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Invalid placement. Valid values: centroid, point-grid, point-sample',
                             layer: {
-                                id: "layer0",
+                                id: 'layer0',
                                 index: 0,
-                                type: "mapnik",
+                                type: 'mapnik'
                             }
                         }]
                     });
@@ -1964,7 +1964,7 @@ describe('aggregation', function () {
                         options: {
                             sql: POINTS_SQL_1,
                             aggregation: {
-                                threshold: 'wadus',
+                                threshold: 'wadus'
                             }
                         }
                     }
@@ -1983,15 +1983,15 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [ 'Invalid threshold, should be a number greather than 0' ],
-                        errors_with_context:[{
+                    assert.deepStrictEqual(body, {
+                        errors: ['Invalid threshold, should be a number greather than 0'],
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Invalid threshold, should be a number greather than 0',
                             layer: {
-                                "id": "layer0",
-                                "index": 0,
-                                "type": "mapnik"
+                                id: 'layer0',
+                                index: 0,
+                                type: 'mapnik'
                             }
                         }]
                     });
@@ -2007,12 +2007,12 @@ describe('aggregation', function () {
                         options: {
                             sql: POINTS_SQL_1,
                             aggregation: {
-                                columns : {
+                                columns: {
                                     '': {
                                         aggregate_function: 'count',
-                                        aggregated_column: 'value',
+                                        aggregated_column: 'value'
                                     }
-                                },
+                                }
                             }
                         }
                     }
@@ -2031,15 +2031,15 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [ 'Invalid column name, should be a non empty string' ],
-                        errors_with_context:[{
+                    assert.deepStrictEqual(body, {
+                        errors: ['Invalid column name, should be a non empty string'],
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Invalid column name, should be a non empty string',
                             layer: {
-                                "id": "layer0",
-                                "index": 0,
-                                "type": "mapnik"
+                                id: 'layer0',
+                                index: 0,
+                                type: 'mapnik'
                             }
                         }]
                     });
@@ -2055,12 +2055,12 @@ describe('aggregation', function () {
                         options: {
                             sql: POINTS_SQL_1,
                             aggregation: {
-                                columns : {
-                                    'wadus_function': {
+                                columns: {
+                                    wadus_function: {
                                         aggregate_function: 'wadus',
-                                        aggregated_column: 'value',
+                                        aggregated_column: 'value'
                                     }
-                                },
+                                }
                             }
                         }
                     }
@@ -2079,17 +2079,17 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [ 'Unsupported aggregation function wadus, ' +
-                                    'valid ones: count, avg, sum, min, max, mode' ],
-                        errors_with_context:[{
+                    assert.deepStrictEqual(body, {
+                        errors: ['Unsupported aggregation function wadus, ' +
+                                    'valid ones: count, avg, sum, min, max, mode'],
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Unsupported aggregation function wadus, ' +
                                     'valid ones: count, avg, sum, min, max, mode',
                             layer: {
-                                "id": "layer0",
-                                "index": 0,
-                                "type": "mapnik"
+                                id: 'layer0',
+                                index: 0,
+                                type: 'mapnik'
                             }
                         }]
                     });
@@ -2105,12 +2105,12 @@ describe('aggregation', function () {
                         options: {
                             sql: POINTS_SQL_1,
                             aggregation: {
-                                columns : {
-                                    'total_wadus': {
+                                columns: {
+                                    total_wadus: {
                                         aggregate_function: 'sum',
-                                        aggregated_column: '',
+                                        aggregated_column: ''
                                     }
-                                },
+                                }
                             }
                         }
                     }
@@ -2128,15 +2128,15 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [ 'Invalid aggregated column, should be a non empty string' ],
-                        errors_with_context:[{
+                    assert.deepStrictEqual(body, {
+                        errors: ['Invalid aggregated column, should be a non empty string'],
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Invalid aggregated column, should be a non empty string',
                             layer: {
-                                "id": "layer0",
-                                "index": 0,
-                                "type": "mapnik"
+                                id: 'layer0',
+                                index: 0,
+                                type: 'mapnik'
                             }
                         }]
                     });
@@ -2145,102 +2145,101 @@ describe('aggregation', function () {
                 });
             });
 
-
             it('should skip aggregation w/o failing when is Vector Only MapConfig and layer has polygons',
-            function (done) {
-                this.mapConfig = createVectorMapConfig([
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POLYGONS_SQL_1
-                        }
-                    }
-                ]);
-
-                this.testClient = new TestClient(this.mapConfig);
-
-                this.testClient.getLayergroup((err, body) => {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    assert.equal(typeof body.metadata, 'object');
-                    assert.ok(Array.isArray(body.metadata.layers));
-
-                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.mvt));
-                    body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
-
-                    const options = {
-                        format: 'mvt'
-                    };
-
-                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
-                        if (err) {
-                            return done(err);
-                        }
-
-                        const tileJSON = tile.toJSON();
-
-                        assert.equal(tileJSON[0].features.length, 7);
-
-                        done();
-                    });
-                });
-            });
-
-            it('should skip aggregation for polygons (w/o failing) and aggregate when the layer has points',
-            function (done) {
-                this.mapConfig = createVectorMapConfig([
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POLYGONS_SQL_1
-                        }
-                    },
-                    {
-                        type: 'cartodb',
-                        options: {
-                            sql: POINTS_SQL_1,
-                            aggregation: {
-                                threshold: 1
+                function (done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POLYGONS_SQL_1
                             }
                         }
-                    }
-                ]);
+                    ]);
 
-                this.testClient = new TestClient(this.mapConfig);
+                    this.testClient = new TestClient(this.mapConfig);
 
-                this.testClient.getLayergroup((err, body) => {
-                    if (err) {
-                        return done(err);
-                    }
-
-                    assert.equal(typeof body.metadata, 'object');
-                    assert.ok(Array.isArray(body.metadata.layers));
-
-                    assert.equal(body.metadata.layers[0].meta.aggregation.mvt, false);
-                    assert.equal(body.metadata.layers[1].meta.aggregation.mvt, true);
-
-                    const options = {
-                        format: 'mvt'
-                    };
-
-                    this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                    this.testClient.getLayergroup((err, body) => {
                         if (err) {
                             return done(err);
                         }
 
-                        const tileJSON = tile.toJSON();
+                        assert.strictEqual(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
 
-                        assert.equal(tileJSON[0].features.length, 7);
+                        body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.mvt));
+                        body.metadata.layers.forEach(layer => assert.ok(!layer.meta.aggregation.png));
 
-                        done();
+                        const options = {
+                            format: 'mvt'
+                        };
+
+                        this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                            if (err) {
+                                return done(err);
+                            }
+
+                            const tileJSON = tile.toJSON();
+
+                            assert.strictEqual(tileJSON[0].features.length, 7);
+
+                            done();
+                        });
                     });
                 });
-            });
+
+            it('should skip aggregation for polygons (w/o failing) and aggregate when the layer has points',
+                function (done) {
+                    this.mapConfig = createVectorMapConfig([
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POLYGONS_SQL_1
+                            }
+                        },
+                        {
+                            type: 'cartodb',
+                            options: {
+                                sql: POINTS_SQL_1,
+                                aggregation: {
+                                    threshold: 1
+                                }
+                            }
+                        }
+                    ]);
+
+                    this.testClient = new TestClient(this.mapConfig);
+
+                    this.testClient.getLayergroup((err, body) => {
+                        if (err) {
+                            return done(err);
+                        }
+
+                        assert.strictEqual(typeof body.metadata, 'object');
+                        assert.ok(Array.isArray(body.metadata.layers));
+
+                        assert.strictEqual(body.metadata.layers[0].meta.aggregation.mvt, false);
+                        assert.strictEqual(body.metadata.layers[1].meta.aggregation.mvt, true);
+
+                        const options = {
+                            format: 'mvt'
+                        };
+
+                        this.testClient.getTile(0, 0, 0, options, (err, res, tile) => {
+                            if (err) {
+                                return done(err);
+                            }
+
+                            const tileJSON = tile.toJSON();
+
+                            assert.strictEqual(tileJSON[0].features.length, 7);
+
+                            done();
+                        });
+                    });
+                });
 
             ['centroid', 'point-sample', 'point-grid', 'default'].forEach(placement => {
-                it(`cartodb_id should be present in ${placement} aggregation`, function(done) {
+                it(`cartodb_id should be present in ${placement} aggregation`, function (done) {
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
@@ -2263,7 +2262,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -2293,7 +2292,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -2330,7 +2329,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
 
                         body.metadata.layers.forEach(layer => assert.ok(layer.meta.aggregation.mvt));
@@ -2341,16 +2340,15 @@ describe('aggregation', function () {
                 });
             });
 
-
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it(`filters should work for ${placement} placement`, function(done) {
+                it(`filters should work for ${placement} placement`, function (done) {
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
                             options: {
                                 sql: POINTS_SQL_1,
                                 aggregation: {
-                                    placement: placement ,
+                                    placement: placement,
                                     threshold: 1,
                                     columns: {
                                         value: {
@@ -2389,14 +2387,14 @@ describe('aggregation', function () {
             });
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it(`multiple ORed filters should work for ${placement} placement`, function(done) {
+                it(`multiple ORed filters should work for ${placement} placement`, function (done) {
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
                             options: {
                                 sql: POINTS_SQL_1,
                                 aggregation: {
-                                    placement: placement ,
+                                    placement: placement,
                                     threshold: 1,
                                     columns: {
                                         value: {
@@ -2436,14 +2434,14 @@ describe('aggregation', function () {
             });
 
             ['centroid', 'point-sample', 'point-grid'].forEach(placement => {
-                it(`multiple ANDed filters should work for ${placement} placement`, function(done) {
+                it(`multiple ANDed filters should work for ${placement} placement`, function (done) {
                     this.mapConfig = createVectorMapConfig([
                         {
                             type: 'cartodb',
                             options: {
                                 sql: POINTS_SQL_2,
                                 aggregation: {
-                                    placement: placement ,
+                                    placement: placement,
                                     threshold: 1,
                                     columns: {
                                         value: {
@@ -2484,7 +2482,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`supports IN filters`, function(done) {
+            it('supports IN filters', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -2525,7 +2523,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`supports NOT IN filters`, function(done) {
+            it('supports NOT IN filters', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -2566,7 +2564,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`supports EQUAL filters`, function(done) {
+            it('supports EQUAL filters', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -2581,7 +2579,7 @@ describe('aggregation', function () {
                                     }
                                 },
                                 filters: {
-                                    value: [{ equal: 1}, { equal: 3}]
+                                    value: [{ equal: 1 }, { equal: 3 }]
                                 }
                             }
                         }
@@ -2607,7 +2605,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`supports NOT EQUAL filters`, function(done) {
+            it('supports NOT EQUAL filters', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -2648,7 +2646,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`supports BETWEEN filters`, function(done) {
+            it('supports BETWEEN filters', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -2692,7 +2690,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`supports RANGE filters`, function(done) {
+            it('supports RANGE filters', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -2736,7 +2734,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`invalid filters cause errors`, function(done) {
+            it('invalid filters cause errors', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -2773,15 +2771,15 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [ 'Invalid filter parameter name: not_a_valid_parameter'],
-                        errors_with_context:[{
+                    assert.deepStrictEqual(body, {
+                        errors: ['Invalid filter parameter name: not_a_valid_parameter'],
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Invalid filter parameter name: not_a_valid_parameter',
                             layer: {
-                                id: "layer0",
+                                id: 'layer0',
                                 index: 0,
-                                type: "mapnik",
+                                type: 'mapnik'
                             }
                         }]
                     });
@@ -2790,7 +2788,7 @@ describe('aggregation', function () {
                 });
             });
 
-            it(`filters on invalid columns cause errors`, function(done) {
+            it('filters on invalid columns cause errors', function (done) {
                 this.mapConfig = createVectorMapConfig([
                     {
                         type: 'cartodb',
@@ -2827,15 +2825,15 @@ describe('aggregation', function () {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, {
-                        errors: [ 'Invalid filtered column: value'],
-                        errors_with_context:[{
+                    assert.deepStrictEqual(body, {
+                        errors: ['Invalid filtered column: value'],
+                        errors_with_context: [{
                             type: 'layer',
                             message: 'Invalid filtered column: value',
                             layer: {
-                                id: "layer0",
+                                id: 'layer0',
                                 index: 0,
-                                type: "mapnik",
+                                type: 'mapnik'
                             }
                         }]
                     });
@@ -2848,7 +2846,7 @@ describe('aggregation', function () {
                 it(`for ${placement} and no points between tiles has unique ids`, function (done) {
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -2867,7 +2865,7 @@ describe('aggregation', function () {
 
                     this.testClient = new TestClient(this.mapConfig);
 
-                    this.testClient.getTile(1, 0, 1, { format: 'mvt' },  (err, res, mvt) => {
+                    this.testClient.getTile(1, 0, 1, { format: 'mvt' }, (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
@@ -2877,7 +2875,7 @@ describe('aggregation', function () {
                         assert.ok(Array.isArray(tile1.features));
                         assert.ok(tile1.features.length > 0);
 
-                        this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
+                        this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) => {
                             if (err) {
                                 return done(err);
                             }
@@ -2891,17 +2889,16 @@ describe('aggregation', function () {
                             const tile2Ids = tile2.features.map(f => f.properties.cartodb_id);
                             const repeatedIds = tile1Ids.filter(id => tile2Ids.includes(id));
 
-                            assert.equal(repeatedIds.length, 0);
+                            assert.strictEqual(repeatedIds.length, 0);
 
                             done();
                         });
-
                     });
                 });
                 it(`for ${placement} has unique ids save between tiles`, function (done) {
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -2920,7 +2917,7 @@ describe('aggregation', function () {
 
                     this.testClient = new TestClient(this.mapConfig);
 
-                    this.testClient.getTile(1, 0, 1, { format: 'mvt' },  (err, res, mvt) => {
+                    this.testClient.getTile(1, 0, 1, { format: 'mvt' }, (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
@@ -2930,7 +2927,7 @@ describe('aggregation', function () {
                         assert.ok(Array.isArray(tile1.features));
                         assert.ok(tile1.features.length > 0);
 
-                        this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) =>  {
+                        this.testClient.getTile(1, 1, 0, { format: 'mvt' }, (err, res, mvt) => {
                             if (err) {
                                 return done(err);
                             }
@@ -2951,22 +2948,21 @@ describe('aggregation', function () {
                                     const tile1Features = tile1.features.filter(f => f.properties.cartodb_id === id);
                                     const tile2Features = tile2.features.filter(f => f.properties.cartodb_id === id);
                                     // repetitions cannot occur inside a tile
-                                    assert.equal(tile1Features.length, 1);
-                                    assert.equal(tile2Features.length, 1);
+                                    assert.strictEqual(tile1Features.length, 1);
+                                    assert.strictEqual(tile2Features.length, 1);
                                     const feature1 = tile1Features[0];
                                     const feature2 = tile2Features[0];
                                     // features should be identical (geometry and properties)
-                                    assert.deepEqual(feature1.properties, feature2.properties);
-                                    assert.deepEqual(feature1.geometry, feature2.geometry);
+                                    assert.deepStrictEqual(feature1.properties, feature2.properties);
+                                    assert.deepStrictEqual(feature1.geometry, feature2.geometry);
                                     // and geometry should be on the border;
                                     // for the dataset and zoom 1, only point with cartodb_id=4 (0,0)
-                                    assert.equal(feature1.properties.cartodb_id, 4);
-                                    assert.equal(feature2.properties.cartodb_id, 4);
+                                    assert.strictEqual(feature1.properties.cartodb_id, 4);
+                                    assert.strictEqual(feature2.properties.cartodb_id, 4);
                                 });
                             }
                             done();
                         });
-
                     });
                 });
 
@@ -2976,7 +2972,7 @@ describe('aggregation', function () {
                     const query = POINTS_SQL_GRID(z, resolution);
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -2997,44 +2993,43 @@ describe('aggregation', function () {
 
                     const c = Math.pow(2, z - 1) - 1; // center tile coordinates
 
-                    this.testClient.getTile(z, c + 0, c + 0, { format: 'mvt' },  (err, res, mvt) => {
+                    this.testClient.getTile(z, c + 0, c + 0, { format: 'mvt' }, (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
                         const tile00 = JSON.parse(mvt.toGeoJSONSync(0));
-                        this.testClient.getTile(z, c + 0, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                        this.testClient.getTile(z, c + 0, c + 1, { format: 'mvt' }, (err, res, mvt) => {
                             if (err) {
                                 return done(err);
                             }
                             const tile01 = JSON.parse(mvt.toGeoJSONSync(0));
-                            this.testClient.getTile(z, c + 1, c + 0, { format: 'mvt' }, (err, res, mvt) =>  {
+                            this.testClient.getTile(z, c + 1, c + 0, { format: 'mvt' }, (err, res, mvt) => {
                                 if (err) {
                                     return done(err);
                                 }
                                 const tile10 = JSON.parse(mvt.toGeoJSONSync(0));
-                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) => {
                                     if (err) {
                                         return done(err);
                                     }
                                     const tile11 = JSON.parse(mvt.toGeoJSONSync(0));
 
                                     // There needs to be 13 points
-                                    const count_features = ((tile) =>
+                                    const countFeatures = (tile) =>
                                         tile.features.map(f => f.properties)
-                                                     .map(f => f._cdb_feature_count)
-                                                     .reduce((a,b) => a + b, 0));
+                                            .map(f => f._cdb_feature_count)
+                                            .reduce((a, b) => a + b, 0);
 
-                                    const tile00Count = count_features(tile00);
-                                    const tile10Count = count_features(tile10);
-                                    const tile01Count = count_features(tile01);
-                                    const tile11Count = count_features(tile11);
-                                    assert.equal(13, tile00Count + tile10Count + tile01Count + tile11Count);
+                                    const tile00Count = countFeatures(tile00);
+                                    const tile10Count = countFeatures(tile10);
+                                    const tile01Count = countFeatures(tile01);
+                                    const tile11Count = countFeatures(tile11);
+                                    assert.strictEqual(13, tile00Count + tile10Count + tile01Count + tile11Count);
 
                                     done();
                                 });
                             });
                         });
-
                     });
                 });
 
@@ -3048,7 +3043,7 @@ describe('aggregation', function () {
 
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 1 },
+                        buffersize: { mvt: 1 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -3069,22 +3064,22 @@ describe('aggregation', function () {
 
                     const c = Math.pow(2, z - 1) - 1; // center tile coordinates
 
-                    this.testClient.getTile(z, c, c, { format: 'mvt' },  (err, res, mvt) => {
+                    this.testClient.getTile(z, c, c, { format: 'mvt' }, (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
                         const tile00 = JSON.parse(mvt.toGeoJSONSync(0));
-                        this.testClient.getTile(z, c, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                        this.testClient.getTile(z, c, c + 1, { format: 'mvt' }, (err, res, mvt) => {
                             if (err) {
                                 return done(err);
                             }
                             const tile01 = JSON.parse(mvt.toGeoJSONSync(0));
-                            this.testClient.getTile(z, c + 1, c, { format: 'mvt' }, (err, res, mvt) =>  {
+                            this.testClient.getTile(z, c + 1, c, { format: 'mvt' }, (err, res, mvt) => {
                                 if (err) {
                                     return done(err);
                                 }
                                 const tile10 = JSON.parse(mvt.toGeoJSONSync(0));
-                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) => {
                                     if (err) {
                                         return done(err);
                                     }
@@ -3107,21 +3102,19 @@ describe('aggregation', function () {
                                     const tile01Actual = tile01.features.map(f => f.properties);
                                     const tile11Actual = tile11.features.map(f => f.properties);
                                     const orderById = (a, b) => a.cartodb_id - b.cartodb_id;
-                                    assert.deepEqual(tile00Actual.sort(orderById), tile00Expected);
-                                    assert.deepEqual(tile10Actual.sort(orderById), tile10Expected);
-                                    assert.deepEqual(tile01Actual.sort(orderById), tile01Expected);
-                                    assert.deepEqual(tile11Actual.sort(orderById), tile11Expected);
+                                    assert.deepStrictEqual(tile00Actual.sort(orderById), tile00Expected);
+                                    assert.deepStrictEqual(tile10Actual.sort(orderById), tile10Expected);
+                                    assert.deepStrictEqual(tile01Actual.sort(orderById), tile01Expected);
+                                    assert.deepStrictEqual(tile11Actual.sort(orderById), tile11Expected);
 
                                     done();
                                 });
                             });
                         });
-
                     });
                 });
 
                 it(`for ${placement} includes complete cells in buffer`, function (done) {
-
                     // use buffersize coincident with resolution, the buffer should include neighbour cells
                     const z = 2;
                     const resolution = 1;
@@ -3129,7 +3122,7 @@ describe('aggregation', function () {
 
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 1 },
+                        buffersize: { mvt: 1 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -3150,22 +3143,22 @@ describe('aggregation', function () {
 
                     const c = Math.pow(2, z - 1) - 1; // center tile coordinates
 
-                    this.testClient.getTile(z, c, c, { format: 'mvt' },  (err, res, mvt) => {
+                    this.testClient.getTile(z, c, c, { format: 'mvt' }, (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
                         const tile00 = JSON.parse(mvt.toGeoJSONSync(0));
-                        this.testClient.getTile(z, c, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                        this.testClient.getTile(z, c, c + 1, { format: 'mvt' }, (err, res, mvt) => {
                             if (err) {
                                 return done(err);
                             }
                             const tile01 = JSON.parse(mvt.toGeoJSONSync(0));
-                            this.testClient.getTile(z, c + 1, c, { format: 'mvt' }, (err, res, mvt) =>  {
+                            this.testClient.getTile(z, c + 1, c, { format: 'mvt' }, (err, res, mvt) => {
                                 if (err) {
                                     return done(err);
                                 }
                                 const tile10 = JSON.parse(mvt.toGeoJSONSync(0));
-                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) =>  {
+                                this.testClient.getTile(z, c + 1, c + 1, { format: 'mvt' }, (err, res, mvt) => {
                                     if (err) {
                                         return done(err);
                                     }
@@ -3178,14 +3171,14 @@ describe('aggregation', function () {
                                     const tile01Actual = tile01.features.map(f => f.properties);
                                     const tile11Actual = tile11.features.map(f => f.properties);
 
-                                    const allFeatures = [... tile00Actual, ...tile10Actual,
-                                                         ...tile01Actual, ...tile11Actual];
+                                    const allFeatures = [...tile00Actual, ...tile10Actual,
+                                        ...tile01Actual, ...tile11Actual];
                                     for (let i = 0; i < allFeatures.length; i++) {
                                         for (let j = i + 1; j < allFeatures.length; j++) {
                                             const c1 = allFeatures[i];
                                             const c2 = allFeatures[j];
                                             if (c1.cartodb_id === c2.cartodb_id) {
-                                                assert.equal(c1._cdb_feature_count, c2._cdb_feature_count);
+                                                assert.strictEqual(c1._cdb_feature_count, c2._cdb_feature_count);
                                             }
                                         }
                                     }
@@ -3193,7 +3186,6 @@ describe('aggregation', function () {
                                 });
                             });
                         });
-
                     });
                 });
 
@@ -3201,7 +3193,7 @@ describe('aggregation', function () {
                     // this test will fail due to !bbox! lack of accuracy if strict cell filtering is in place
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -3220,17 +3212,17 @@ describe('aggregation', function () {
 
                     this.testClient = new TestClient(this.mapConfig);
 
-                    this.testClient.getTile(20, 1000000, 1000000, { format: 'mvt' },  (err, res, mvt) => {
+                    this.testClient.getTile(20, 1000000, 1000000, { format: 'mvt' }, (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
                         const tile = JSON.parse(mvt.toGeoJSONSync(0));
-                        assert.equal(tile.features.length, 1);
-                        assert.equal(tile.features[0].properties._cdb_feature_count, 4);
+                        assert.strictEqual(tile.features.length, 1);
+                        assert.strictEqual(tile.features[0].properties._cdb_feature_count, 4);
                         if (placement === 'point-grid') {
                             // check geometry x = 18181005.874444414, y = -18181043.94366749
-                            const expectedPoint = [ 163.322754576802, -83.3823797469878 ];
-                            assert.deepEqual(tile.features[0].geometry.coordinates, expectedPoint);
+                            const expectedPoint = [163.322754576802, -83.3823797469878];
+                            assert.deepStrictEqual(tile.features[0].geometry.coordinates, expectedPoint);
                         }
                         done();
                     });
@@ -3239,7 +3231,7 @@ describe('aggregation', function () {
                 it(`for ${placement} points aggregated into correct cluster`, function (done) {
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -3258,17 +3250,17 @@ describe('aggregation', function () {
 
                     this.testClient = new TestClient(this.mapConfig);
 
-                    this.testClient.getTile(20, 1000000, 1000000, { format: 'mvt' },  (err, res, mvt) => {
+                    this.testClient.getTile(20, 1000000, 1000000, { format: 'mvt' }, (err, res, mvt) => {
                         if (err) {
                             return done(err);
                         }
                         const tile = JSON.parse(mvt.toGeoJSONSync(0));
-                        assert.equal(tile.features.length, 1);
-                        assert.equal(tile.features[0].properties._cdb_feature_count, 4);
+                        assert.strictEqual(tile.features.length, 1);
+                        assert.strictEqual(tile.features[0].properties._cdb_feature_count, 4);
                         if (placement === 'point-grid') {
                             // check geometry x = 18181006.023735486, y = -18181043.794376418
-                            const expectedPoint = [ 163.322755917907, -83.3823795924354 ];
-                            assert.deepEqual(tile.features[0].geometry.coordinates, expectedPoint);
+                            const expectedPoint = [163.322755917907, -83.3823795924354];
+                            assert.deepStrictEqual(tile.features[0].geometry.coordinates, expectedPoint);
                         }
                         done();
                     });
@@ -3280,7 +3272,7 @@ describe('aggregation', function () {
                     global.environment.enabledFeatures.layerStats = true;
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -3303,7 +3295,7 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
                         assert.ok(body.metadata.layers[0].meta.stats.estimatedFeatureCount > 0);
@@ -3316,7 +3308,7 @@ describe('aggregation', function () {
                     global.environment.enabledFeatures.layerStats = true;
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -3342,10 +3334,10 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.aggrFeatureCount, 13);
+                        assert.strictEqual(body.metadata.layers[0].meta.stats.aggrFeatureCount, 13);
 
                         done();
                     });
@@ -3355,7 +3347,7 @@ describe('aggregation', function () {
                     global.environment.enabledFeatures.layerStats = true;
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -3381,10 +3373,10 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.aggrFeatureCount, 7);
+                        assert.strictEqual(body.metadata.layers[0].meta.stats.aggrFeatureCount, 7);
 
                         done();
                     });
@@ -3394,7 +3386,7 @@ describe('aggregation', function () {
                     global.environment.enabledFeatures.layerStats = true;
                     this.mapConfig = {
                         version: '1.6.0',
-                        buffersize: { 'mvt': 0 },
+                        buffersize: { mvt: 0 },
                         layers: [
                             {
                                 type: 'cartodb',
@@ -3420,16 +3412,15 @@ describe('aggregation', function () {
                             return done(err);
                         }
 
-                        assert.equal(typeof body.metadata, 'object');
+                        assert.strictEqual(typeof body.metadata, 'object');
                         assert.ok(Array.isArray(body.metadata.layers));
                         assert.ok(body.metadata.layers[0].meta.aggregation.mvt);
-                        assert.equal(body.metadata.layers[0].meta.stats.featureCount, 14);
+                        assert.strictEqual(body.metadata.layers[0].meta.stats.featureCount, 14);
 
                         done();
                     });
                 });
             });
-
         });
     });
 });

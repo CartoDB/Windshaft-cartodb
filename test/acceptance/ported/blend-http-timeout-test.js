@@ -7,8 +7,9 @@ var testClient = require('./support/test-client');
 var serverOptions = require('./support/ported-server-options');
 var fs = require('fs');
 var http = require('http');
+var path = require('path');
 
-describe.skip('blend http client timeout', function() {
+describe.skip('blend http client timeout', function () {
     var mapConfig = {
         version: '1.3.0',
         layers: [
@@ -36,17 +37,21 @@ describe.skip('blend http client timeout', function() {
 
     var slowHttpRendererResourcesServer;
 
-    before(function(done) {
+    before(function (done) {
         oldHttpRendererTimeout = serverOptions.renderer.http.timeout;
         serverOptions.renderer.http.timeout = httpRendererTimeout;
 
         // Start a server to test external resources
-        slowHttpRendererResourcesServer = http.createServer( function(request, response) {
-            setTimeout(function() {
-                var filename = __dirname + '/../fixtures/http/light_nolabels-1-0-0.png';
-                fs.readFile(filename, {encoding: 'binary'}, function(err, file) {
+        slowHttpRendererResourcesServer = http.createServer(function (request, response) {
+            setTimeout(function () {
+                var filename = path.join(__dirname, '/../fixtures/http/light_nolabels-1-0-0.png');
+                fs.readFile(filename, { encoding: 'binary' }, function (err, file) {
+                    if (err) {
+                        return done(err);
+                    }
+
                     response.writeHead(200);
-                    response.write(file, "binary");
+                    response.write(file, 'binary');
                     response.end();
                 });
             }, httpRendererTimeout * 2);
@@ -54,30 +59,30 @@ describe.skip('blend http client timeout', function() {
         slowHttpRendererResourcesServer.listen(8033, done);
     });
 
-    after(function(done) {
+    after(function (done) {
         serverOptions.renderer.http.timeout = oldHttpRendererTimeout;
         slowHttpRendererResourcesServer.close(done);
     });
 
-    it('should fail to render when http layer times out', function(done) {
+    it('should fail to render when http layer times out', function (done) {
         var options = {
             statusCode: 400,
             contentType: 'application/json; charset=utf-8',
             serverOptions: serverOptions
         };
-        testClient.withLayergroup(mapConfig, options, function(err, requestTile, finish) {
+        testClient.withLayergroup(mapConfig, options, function (err, requestTile, finish) {
+            assert.ifError(err);
             var tileUrl = '/all/0/0/0.png';
-            requestTile(tileUrl, options, function(err, res) {
+            requestTile(tileUrl, options, function (err, res) {
                 assert.ok(!err);
                 var parsedBody = JSON.parse(res.body);
                 assert.ok(parsedBody.errors);
                 assert.ok(parsedBody.errors.length);
-                assert.equal(parsedBody.errors[0], 'Unable to fetch http tile: http://127.0.0.1:8033/light/0/0/0.png');
-                finish(function(finishErr) {
+                assert.strictEqual(parsedBody.errors[0], 'Unable to fetch http tile: http://127.0.0.1:8033/light/0/0/0.png');
+                finish(function (finishErr) {
                     done(err || finishErr);
                 });
             });
         });
     });
-
 });

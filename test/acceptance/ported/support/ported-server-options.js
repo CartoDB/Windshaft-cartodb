@@ -5,8 +5,9 @@ var serverOptions = require('../../../../lib/server-options');
 var mapnik = require('windshaft').mapnik;
 var OverviewsQueryRewriter = require('../../../../lib/utils/overviews-query-rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
-  zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'
+    zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'
 });
+var path = require('path');
 
 module.exports = _.extend({}, serverOptions, {
     grainstore: {
@@ -21,7 +22,7 @@ module.exports = _.extend({}, serverOptions, {
     },
     renderer: {
         mapnik: {
-            poolSize: 4,//require('os').cpus().length,
+            poolSize: 4, // require('os').cpus().length,
             poolMaxWaitingClients: 32,
             metatile: 1,
             bufferSize: 64,
@@ -40,7 +41,7 @@ module.exports = _.extend({}, serverOptions, {
             whitelist: ['http://127.0.0.1:8033/{s}/{z}/{x}/{y}.png'],
             fallbackImage: {
                 type: 'fs',
-                src: __dirname + '/../../test/fixtures/http/basemap.png'
+                src: path.join(__dirname, '/../../test/fixtures/http/basemap.png')
             }
         }
     },

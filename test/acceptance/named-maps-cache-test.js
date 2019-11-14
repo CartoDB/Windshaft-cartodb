@@ -8,7 +8,7 @@ var mapnik = require('windshaft').mapnik;
 var CartodbWindshaft = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
-describe('named maps provider cache', function() {
+describe('named maps provider cache', function () {
     var server;
 
     before(function () {
@@ -21,7 +21,7 @@ describe('named maps provider cache', function() {
 
     var IMAGE_TOLERANCE = 20;
 
-    function createTemplate(color) {
+    function createTemplate (color) {
         return {
             version: '0.0.1',
             name: `${templateName}_${color}`,
@@ -30,7 +30,7 @@ describe('named maps provider cache', function() {
             },
             placeholders: {
                 color: {
-                    type: "css_color",
+                    type: 'css_color',
                     default: color
                 }
             },
@@ -49,13 +49,13 @@ describe('named maps provider cache', function() {
         };
     }
 
-    function getNamedTile(templateId, options, callback) {
+    function getNamedTile (templateId, options, callback) {
         if (!callback) {
             callback = options;
             options = {};
         }
 
-        var url = '/api/v1/map/named/' + templateId + '/all/' + [0,0,0].join('/') + '.png';
+        var url = '/api/v1/map/named/' + templateId + '/all/' + [0, 0, 0].join('/') + '.png';
 
         var requestOptions = {
             url: url,
@@ -78,7 +78,7 @@ describe('named maps provider cache', function() {
         assert.response(server, requestOptions, expectedResponse, function (res, err) {
             var img;
             if (res.statusCode === 200) {
-                img = mapnik.Image.fromBytes(new Buffer.from(res.body, 'binary'));
+                img = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
             }
             return callback(err, res, img);
         });
@@ -113,18 +113,17 @@ describe('named maps provider cache', function() {
         });
     }
 
-
     function deleteTemplate (templateId, callback) {
         const deleteTemplateRequest = {
             url: `/api/v1/map/named/${templateId}?api_key=${apikey}`,
             method: 'DELETE',
             headers: {
-                host: 'localhost',
+                host: 'localhost'
             }
         };
 
         const expectedResponse = {
-            status: 204,
+            status: 204
         };
 
         assert.response(server, deleteTemplateRequest, expectedResponse, (res, err) => {
@@ -132,19 +131,19 @@ describe('named maps provider cache', function() {
         });
     }
 
-    function previewFixture(color) {
+    function previewFixture (color) {
         return './test/fixtures/provider/populated_places_simple_reduced-' + color + '.png';
     }
 
     var colors = ['black', 'red', 'green', 'blue'];
-    colors.forEach(function(color) {
+    colors.forEach(function (color) {
         it('should return an image estimating its bounds based on dataset', function (done) {
             addTemplate(createTemplate(color), function (err, res, template) {
                 if (err) {
                     return done(err);
                 }
 
-                getNamedTile(template.template_id, function(err, res, img) {
+                getNamedTile(template.template_id, function (err, res, img) {
                     assert.ok(!err);
                     assert.imageIsSimilarToFile(img, previewFixture(color), IMAGE_TOLERANCE, (err) => {
                         assert.ifError(err);
@@ -165,7 +164,7 @@ describe('named maps provider cache', function() {
         addTemplate(createTemplate(color), function (err) {
             assert.ifError(err);
 
-            getNamedTile(templateId, function(err, res, img) {
+            getNamedTile(templateId, function (err, res, img) {
                 assert.ifError(err);
 
                 assert.imageIsSimilarToFile(img, previewFixture(color), IMAGE_TOLERANCE, function (err) {
@@ -174,10 +173,10 @@ describe('named maps provider cache', function() {
                     deleteTemplate(templateId, function (err) {
                         assert.ifError(err);
 
-                        getNamedTile(templateId, { statusCode: 404 }, function(err, res) {
+                        getNamedTile(templateId, { statusCode: 404 }, function (err, res) {
                             assert.ifError(err);
 
-                            assert.deepEqual(
+                            assert.deepStrictEqual(
                                 JSON.parse(res.body).errors,
                                 ["Template 'template_with_color_black' of user 'localhost' not found"]
                             );

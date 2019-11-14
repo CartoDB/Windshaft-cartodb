@@ -10,33 +10,32 @@ var TestClient = require('../../support/test-client');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
-describe('named-maps analysis', function() {
+describe('named-maps analysis', function () {
     var server;
 
     before(function () {
         server = new CartodbWindshaft(serverOptions);
     });
 
-
     var IMAGE_TOLERANCE_PER_MIL = 20;
 
     var username = 'localhost';
     var widgetsTemplateName = 'widgets-template';
 
-    var widgetsTemplate =  {
+    var widgetsTemplate = {
         version: '0.0.1',
         name: widgetsTemplateName,
-        layergroup:  {
+        layergroup: {
             version: '1.5.0',
             layers: [
                 {
-                    "type": "cartodb",
-                    "options": {
-                        "source": {
-                            "id": "HEAD"
+                    type: 'cartodb',
+                    options: {
+                        source: {
+                            id: 'HEAD'
                         },
-                        "cartocss": '#buffer { polygon-fill: red; }',
-                        "cartocss_version": "2.3.0"
+                        cartocss: '#buffer { polygon-fill: red; }',
+                        cartocss_version: '2.3.0'
                     }
                 }
             ],
@@ -53,24 +52,24 @@ describe('named-maps analysis', function() {
             },
             analyses: [
                 {
-                    "id": "HEAD",
-                    "type": "buffer",
-                    "params": {
-                        "source": {
-                            "id": "2570e105-7b37-40d2-bdf4-1af889598745",
-                            "type": "source",
-                            "params": {
-                                "query": "select * from populated_places_simple_reduced"
+                    id: 'HEAD',
+                    type: 'buffer',
+                    params: {
+                        source: {
+                            id: '2570e105-7b37-40d2-bdf4-1af889598745',
+                            type: 'source',
+                            params: {
+                                query: 'select * from populated_places_simple_reduced'
                             }
                         },
-                        "radius": 50000
+                        radius: 50000
                     }
                 }
             ]
         }
     };
 
-    beforeEach(function createTemplate(done) {
+    beforeEach(function createTemplate (done) {
         assert.response(
             server,
             {
@@ -85,14 +84,14 @@ describe('named-maps analysis', function() {
             {
                 status: 200
             },
-            function(res, err) {
-                assert.deepEqual(JSON.parse(res.body), { template_id: widgetsTemplateName });
+            function (res, err) {
+                assert.deepStrictEqual(JSON.parse(res.body), { template_id: widgetsTemplateName });
                 return done(err);
             }
         );
     });
 
-    afterEach(function deleteTemplate(done) {
+    afterEach(function deleteTemplate (done) {
         assert.response(
             server,
             {
@@ -105,18 +104,18 @@ describe('named-maps analysis', function() {
             {
                 status: 204
             },
-            function(res, err) {
+            function (res, err) {
                 return done(err);
             }
         );
     });
 
-    describe('layergroup', function() {
+    describe('layergroup', function () {
         var layergroupid;
         var layergroup;
         var keysToDelete;
 
-        beforeEach(function(done) {
+        beforeEach(function (done) {
             keysToDelete = {};
 
             assert.response(
@@ -133,27 +132,27 @@ describe('named-maps analysis', function() {
                 {
                     status: 200
                 },
-                function(res, err) {
+                function (res, err) {
                     assert.ifError(err);
 
                     layergroup = JSON.parse(res.body);
-                    assert.ok(layergroup.hasOwnProperty('layergroupid'), "Missing 'layergroupid' from: " + res.body);
+                    assert.ok(Object.prototype.hasOwnProperty.call(layergroup, 'layergroupid'), "Missing 'layergroupid' from: " + res.body);
                     layergroupid = layergroup.layergroupid;
 
                     assert.ok(
                         Array.isArray(layergroup.metadata.analyses),
-                            'Missing "analyses" array metadata from: ' + res.body
+                        'Missing "analyses" array metadata from: ' + res.body
                     );
                     var analyses = layergroup.metadata.analyses;
-                    assert.equal(analyses.length, 1, 'Invalid number of analyses in metadata');
+                    assert.strictEqual(analyses.length, 1, 'Invalid number of analyses in metadata');
                     var nodes = analyses[0].nodes;
                     var nodesIds = Object.keys(nodes);
-                    assert.deepEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
-                    nodesIds.forEach(function(nodeId) {
+                    assert.deepStrictEqual(nodesIds, ['HEAD', '2570e105-7b37-40d2-bdf4-1af889598745']);
+                    nodesIds.forEach(function (nodeId) {
                         var node = nodes[nodeId];
-                        assert.ok(node.hasOwnProperty('url'), 'Missing "url" attribute in node');
-                        assert.ok(node.hasOwnProperty('status'), 'Missing "status" attribute in node');
-                        assert.ok(!node.hasOwnProperty('query'), 'Unexpected "query" attribute in node');
+                        assert.ok(Object.prototype.hasOwnProperty.call(node, 'url'), 'Missing "url" attribute in node');
+                        assert.ok(Object.prototype.hasOwnProperty.call(node, 'status'), 'Missing "status" attribute in node');
+                        assert.ok(!Object.prototype.hasOwnProperty.call(node, 'query'), 'Unexpected "query" attribute in node');
                     });
 
                     keysToDelete['map_cfg|' + LayergroupToken.parse(layergroup.layergroupid).token] = 0;
@@ -162,14 +161,13 @@ describe('named-maps analysis', function() {
                     return done();
                 }
             );
-
         });
 
-        afterEach(function(done) {
+        afterEach(function (done) {
             helper.deleteRedisKeys(keysToDelete, done);
         });
 
-        it('should be able to retrieve images from analysis', function(done) {
+        it('should be able to retrieve images from analysis', function (done) {
             assert.response(
                 server,
                 {
@@ -186,22 +184,21 @@ describe('named-maps analysis', function() {
                         'Content-Type': 'image/png'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return done(err);
                     }
 
                     var fixturePath = './test/fixtures/analysis/named-map-buffer.png';
-                    assert.imageBufferIsSimilarToFile(res.body, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                    assert.imageBufferIsSimilarToFile(res.body, fixturePath, IMAGE_TOLERANCE_PER_MIL, function (err) {
                         assert.ok(!err, err);
                         done();
                     });
-
                 }
             );
         });
 
-        it('should be able to retrieve dataviews from analysis', function(done) {
+        it('should be able to retrieve dataviews from analysis', function (done) {
             assert.response(
                 server,
                 {
@@ -217,21 +214,21 @@ describe('named-maps analysis', function() {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return done(err);
                     }
 
                     var dataview = JSON.parse(res.body);
-                    assert.equal(dataview.type, 'histogram');
-                    assert.equal(dataview.bins_start, 0);
+                    assert.strictEqual(dataview.type, 'histogram');
+                    assert.strictEqual(dataview.bins_start, 0);
 
                     done();
                 }
             );
         });
 
-        it('should be able to retrieve static map preview via layergroup', function(done) {
+        it('should be able to retrieve static map preview via layergroup', function (done) {
             assert.response(
                 server,
                 {
@@ -248,23 +245,22 @@ describe('named-maps analysis', function() {
                         'Content-Type': 'image/png'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     if (err) {
                         return done(err);
                     }
 
                     var fixturePath = './test/fixtures/analysis/named-map-buffer-layergroup-static-preview.png';
-                    assert.imageBufferIsSimilarToFile(res.body, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                    assert.imageBufferIsSimilarToFile(res.body, fixturePath, IMAGE_TOLERANCE_PER_MIL, function (err) {
                         assert.ok(!err, err);
                         done();
                     });
-
                 }
             );
         });
 
         it('should fail to retrieve static map preview via layergroup ' +
-           'when filtering by invalid layers', function(done) {
+           'when filtering by invalid layers', function (done) {
             assert.response(
                 server,
                 {
@@ -278,13 +274,13 @@ describe('named-maps analysis', function() {
                 {
                     status: 400
                 },
-                function(res, err) {
+                function (res, err) {
                     done(err);
                 }
             );
         });
 
-        it('should return and an error requesting unsupported image format', function(done) {
+        it('should return and an error requesting unsupported image format', function (done) {
             assert.response(
                 server,
                 {
@@ -301,37 +297,34 @@ describe('named-maps analysis', function() {
                         'Content-Type': 'application/json; charset=utf-8'
                     }
                 },
-                function(res, err) {
+                function (res, err) {
                     assert.ifError(err);
-                    assert.deepEqual(
+                    assert.deepStrictEqual(
                         JSON.parse(res.body),
                         {
-                            errors:['Unsupported image format \"gif\"'],
-                            errors_with_context:[{
+                            errors: ['Unsupported image format "gif"'],
+                            errors_with_context: [{
                                 type: 'unknown',
-                                message: 'Unsupported image format \"gif\"'
+                                message: 'Unsupported image format "gif"'
                             }]
                         }
                     );
                     done();
-
                 }
             );
         });
-
     });
 
-    describe('auto-instantiation', function() {
-        it('should be able to retrieve static map preview via fixed url', function(done) {
-            TestClient.getStaticMap(widgetsTemplateName, function(err, image) {
+    describe('auto-instantiation', function () {
+        it('should be able to retrieve static map preview via fixed url', function (done) {
+            TestClient.getStaticMap(widgetsTemplateName, function (err, image) {
                 assert.ok(!err, err);
                 var fixturePath = './test/fixtures/analysis/named-map-buffer-static-preview.png';
-                assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, function(err) {
+                assert.imageIsSimilarToFile(image, fixturePath, IMAGE_TOLERANCE_PER_MIL, function (err) {
                     assert.ok(!err, err);
                     done();
                 });
             });
         });
     });
-
 });

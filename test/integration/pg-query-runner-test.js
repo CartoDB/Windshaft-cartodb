@@ -10,37 +10,35 @@ var cartodbRedis = require('cartodb-redis');
 var PgConnection = require('../../lib/backends/pg-connection');
 var PgQueryRunner = require('../../lib/backends/pg-query-runner');
 
-
-describe('PgQueryRunner', function() {
-
+describe('PgQueryRunner', function () {
     var queryRunner;
 
-    before(function() {
+    before(function () {
         var redisPool = new RedisPool(global.environment.redis);
-        var metadataBackend = cartodbRedis({pool: redisPool});
+        var metadataBackend = cartodbRedis({ pool: redisPool });
         var pgConnection = new PgConnection(metadataBackend);
         queryRunner = new PgQueryRunner(pgConnection);
     });
 
-    it('should work for happy case', function(done) {
+    it('should work for happy case', function (done) {
         var query = 'select cartodb_id from test_table limit 3';
-        queryRunner.run('localhost', query, function(err, result) {
+        queryRunner.run('localhost', query, function (err, result) {
             assert.ok(!err, err);
 
             assert.ok(Array.isArray(result));
-            assert.equal(result.length, 3);
+            assert.strictEqual(result.length, 3);
 
             done();
         });
     });
 
-    it('should receive rows array even on error', function(done) {
+    it('should receive rows array even on error', function (done) {
         var query = 'select __error___ from test_table';
-        queryRunner.run('localhost', query, function(err, result) {
+        queryRunner.run('localhost', query, function (err, result) {
             assert.ok(err);
 
             assert.ok(Array.isArray(result));
-            assert.equal(result.length, 0);
+            assert.strictEqual(result.length, 0);
 
             done();
         });

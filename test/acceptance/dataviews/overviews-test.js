@@ -5,22 +5,22 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('dataviews using tables without overviews', function() {
-
-    var nonOverviewsMapConfig =  {
+describe('dataviews using tables without overviews', function () {
+    var nonOverviewsMapConfig = {
         version: '1.5.0',
         analyses: [
-            { id: 'data-source',
+            {
+                id: 'data-source',
                 type: 'source',
                 params: {
-                  query: 'select * from populated_places_simple_reduced'
+                    query: 'select * from populated_places_simple_reduced'
                 }
             }
         ],
-        dataviews:  {
+        dataviews: {
             country_places_count: {
                 type: 'formula',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'adm0_a3',
                     operation: 'count'
@@ -28,7 +28,7 @@ describe('dataviews using tables without overviews', function() {
             },
             country_categories: {
                 type: 'aggregation',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'adm0_a3',
                     aggregation: 'count'
@@ -48,98 +48,95 @@ describe('dataviews using tables without overviews', function() {
         ]
     };
 
-    it("should expose a formula", function(done) {
+    it('should expose a formula', function (done) {
         var testClient = new TestClient(nonOverviewsMapConfig);
-        testClient.getDataview('country_places_count', { own_filter: 0 }, function(err, formula_result, headers) {
+        testClient.getDataview('country_places_count', { own_filter: 0 }, function (err, formulaResult, headers) {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, { operation: 'count', result: 7313, nulls: 0, type: 'formula' });
-            assert(getUsesOverviewsFromHeaders(headers) === false); //Overviews logging
+            assert.deepStrictEqual(formulaResult, { operation: 'count', result: 7313, nulls: 0, type: 'formula' });
+            assert(getUsesOverviewsFromHeaders(headers) === false); // Overviews logging
 
             testClient.drain(done);
         });
     });
 
-    it("should admit a bbox", function(done) {
+    it('should admit a bbox', function (done) {
         var params = {
-            bbox: "-170,-80,170,80"
+            bbox: '-170,-80,170,80'
         };
         var testClient = new TestClient(nonOverviewsMapConfig);
-        testClient.getDataview('country_places_count', params, function(err, formula_result) {
+        testClient.getDataview('country_places_count', params, function (err, formulaResult) {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, { operation: 'count', result: 7253, nulls: 0, type: 'formula' });
+            assert.deepStrictEqual(formulaResult, { operation: 'count', result: 7253, nulls: 0, type: 'formula' });
 
             testClient.drain(done);
         });
     });
 
-    describe('filters', function() {
-
+    describe('filters', function () {
         describe('category', function () {
-
-            it("should expose a filtered formula", function (done) {
+            it('should expose a filtered formula', function (done) {
                 var params = {
                     filters: {
-                        dataviews: {country_categories: {accept: ['CAN']}}
+                        dataviews: { country_categories: { accept: ['CAN'] } }
                     }
                 };
                 var testClient = new TestClient(nonOverviewsMapConfig);
-                testClient.getDataview('country_places_count', params, function (err, formula_result) {
+                testClient.getDataview('country_places_count', params, function (err, formulaResult) {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, { operation: 'count', result: 256, nulls: 0, type: 'formula' });
+                    assert.deepStrictEqual(formulaResult, { operation: 'count', result: 256, nulls: 0, type: 'formula' });
                     testClient.drain(done);
                 });
             });
 
-            it("should expose a filtered formula and admit a bbox", function (done) {
+            it('should expose a filtered formula and admit a bbox', function (done) {
                 var params = {
                     filters: {
-                        dataviews: {country_categories: {accept: ['CAN']}}
+                        dataviews: { country_categories: { accept: ['CAN'] } }
                     },
-                    bbox: "-170,-80,170,80"
+                    bbox: '-170,-80,170,80'
                 };
                 var testClient = new TestClient(nonOverviewsMapConfig);
-                testClient.getDataview('country_places_count', params, function (err, formula_result) {
+                testClient.getDataview('country_places_count', params, function (err, formulaResult) {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, { operation: 'count', result: 254, nulls: 0, type: 'formula' });
+                    assert.deepStrictEqual(formulaResult, { operation: 'count', result: 254, nulls: 0, type: 'formula' });
                     testClient.drain(done);
                 });
             });
         });
-
     });
 });
 
-describe('dataviews using tables with overviews', function() {
-
-    var overviewsMapConfig =  {
+describe('dataviews using tables with overviews', function () {
+    var overviewsMapConfig = {
         version: '1.5.0',
         analyses: [
-            { id: 'data-source',
+            {
+                id: 'data-source',
                 type: 'source',
                 params: {
-                  query: 'select * from test_table_overviews'
+                    query: 'select * from test_table_overviews'
                 }
             },
             {
                 id: 'data-source-special-float-values',
                 type: 'source',
                 params: {
-                  query: 'select * from test_special_float_values_table_overviews'
+                    query: 'select * from test_special_float_values_table_overviews'
                 }
             }
         ],
-        dataviews:  {
+        dataviews: {
             test_sum: {
                 type: 'formula',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'value',
                     operation: 'sum'
@@ -147,11 +144,11 @@ describe('dataviews using tables with overviews', function() {
             },
             test_categories: {
                 type: 'aggregation',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'name',
                     aggregation: 'count',
-                    aggregationColumn: 'name',
+                    aggregationColumn: 'name'
                 }
             },
             test_categories_special_values: {
@@ -162,12 +159,12 @@ describe('dataviews using tables with overviews', function() {
                 options: {
                     column: 'name',
                     aggregation: 'sum',
-                    aggregationColumn: 'value',
+                    aggregationColumn: 'value'
                 }
             },
             test_histogram: {
                 type: 'histogram',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'value',
                     bins: 2
@@ -175,7 +172,7 @@ describe('dataviews using tables with overviews', function() {
             },
             test_histogram_date: {
                 type: 'histogram',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'updated_at',
                     bins: 2
@@ -193,7 +190,7 @@ describe('dataviews using tables with overviews', function() {
             },
             test_avg: {
                 type: 'formula',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'value',
                     operation: 'avg'
@@ -211,7 +208,7 @@ describe('dataviews using tables with overviews', function() {
             },
             test_count: {
                 type: 'formula',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'value',
                     operation: 'count'
@@ -219,7 +216,7 @@ describe('dataviews using tables with overviews', function() {
             },
             test_min: {
                 type: 'formula',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'value',
                     operation: 'min'
@@ -227,7 +224,7 @@ describe('dataviews using tables with overviews', function() {
             },
             test_max: {
                 type: 'formula',
-                source: {id: 'data-source'},
+                source: { id: 'data-source' },
                 options: {
                     column: 'value',
                     operation: 'max'
@@ -258,150 +255,148 @@ describe('dataviews using tables with overviews', function() {
         ]
     };
 
-    it("should expose a sum formula", function(done) {
+    it('should expose a sum formula', function (done) {
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_sum', { own_filter: 0 }, function(err, formula_result, headers) {
+        testClient.getDataview('test_sum', { own_filter: 0 }, function (err, formulaResult, headers) {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
-                "operation":"sum",
-                "result":15,
-                "infinities": 0,
-                "nans": 0,
-                "nulls":0,
-                "type":"formula"
+            assert.deepStrictEqual(formulaResult, {
+                operation: 'sum',
+                result: 15,
+                infinities: 0,
+                nans: 0,
+                nulls: 0,
+                type: 'formula'
             });
-            assert.ok(getUsesOverviewsFromHeaders(headers));  //Overviews logging
-            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
+            assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); // Overviews logging
 
             testClient.drain(done);
         });
     });
 
-    it("should expose an avg formula", function(done) {
+    it('should expose an avg formula', function (done) {
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_avg', { own_filter: 0 }, function(err, formula_result, headers) {
+        testClient.getDataview('test_avg', { own_filter: 0 }, function (err, formulaResult, headers) {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
-                "operation":"avg",
-                "result":3,
-                "nulls":0,
-                "type":"formula",
-                "infinities": 0,
-                "nans": 0
+            assert.deepStrictEqual(formulaResult, {
+                operation: 'avg',
+                result: 3,
+                nulls: 0,
+                type: 'formula',
+                infinities: 0,
+                nans: 0
             });
-            assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
-            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
+            assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); // Overviews logging
 
             testClient.drain(done);
         });
     });
 
-    it("should expose a count formula", function(done) {
+    it('should expose a count formula', function (done) {
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_count', { own_filter: 0 }, function(err, formula_result, headers) {
+        testClient.getDataview('test_count', { own_filter: 0 }, function (err, formulaResult, headers) {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
-                "operation":"count",
-                "result":5,
-                "nulls":0,
-                "type":"formula",
-                "infinities": 0,
-                "nans": 0
+            assert.deepStrictEqual(formulaResult, {
+                operation: 'count',
+                result: 5,
+                nulls: 0,
+                type: 'formula',
+                infinities: 0,
+                nans: 0
             });
-            assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
-            assert(getDataviewTypeFromHeaders(headers) === 'formula'); //Overviews logging
+            assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'formula'); // Overviews logging
 
             testClient.drain(done);
         });
     });
 
-    it("should expose a max formula", function(done) {
+    it('should expose a max formula', function (done) {
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_max', { own_filter: 0 }, function(err, formula_result) {
+        testClient.getDataview('test_max', { own_filter: 0 }, function (err, formulaResult) {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
-                "operation": "max",
-                "result": 5,
-                "nulls": 0,
-                "infinities": 0,
-                "nans": 0,
-                "type": "formula"
-            });
-
-            testClient.drain(done);
-        });
-    });
-
-    it("should expose a min formula", function(done) {
-        var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_min', { own_filter: 0 }, function(err, formula_result) {
-            if (err) {
-                return done(err);
-            }
-            assert.deepEqual(formula_result, {
-                "operation": "min",
-                "result": 1,
-                "nulls": 0,
-                "infinities": 0,
-                "nans": 0,
-                "type": "formula"
+            assert.deepStrictEqual(formulaResult, {
+                operation: 'max',
+                result: 5,
+                nulls: 0,
+                infinities: 0,
+                nans: 0,
+                type: 'formula'
             });
 
             testClient.drain(done);
         });
     });
 
-    it("should admit a bbox", function(done) {
+    it('should expose a min formula', function (done) {
+        var testClient = new TestClient(overviewsMapConfig);
+        testClient.getDataview('test_min', { own_filter: 0 }, function (err, formulaResult) {
+            if (err) {
+                return done(err);
+            }
+            assert.deepStrictEqual(formulaResult, {
+                operation: 'min',
+                result: 1,
+                nulls: 0,
+                infinities: 0,
+                nans: 0,
+                type: 'formula'
+            });
+
+            testClient.drain(done);
+        });
+    });
+
+    it('should admit a bbox', function (done) {
         var params = {
-            bbox: "-170,-80,170,80"
+            bbox: '-170,-80,170,80'
         };
         var testClient = new TestClient(overviewsMapConfig);
-        testClient.getDataview('test_sum', params, function(err, formula_result) {
+        testClient.getDataview('test_sum', params, function (err, formulaResult) {
             if (err) {
                 return done(err);
             }
-            assert.deepEqual(formula_result, {
-                "operation":"sum",
-                "result":15,
-                "nulls":0,
-                "infinities": 0,
-                "nans": 0,
-                "type":"formula"
+            assert.deepStrictEqual(formulaResult, {
+                operation: 'sum',
+                result: 15,
+                nulls: 0,
+                infinities: 0,
+                nans: 0,
+                type: 'formula'
             });
 
             testClient.drain(done);
         });
     });
 
-    it("should expose a histogram", function (done) {
+    it('should expose a histogram', function (done) {
         var testClient = new TestClient(overviewsMapConfig);
         testClient.getDataview('test_histogram', function (err, histogram, headers) {
             if (err) {
                 return done(err);
             }
             assert.ok(histogram);
-            assert.equal(histogram.type, 'histogram');
+            assert.strictEqual(histogram.type, 'histogram');
             assert.ok(Array.isArray(histogram.bins));
-            assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
-            assert(getDataviewTypeFromHeaders(headers) === 'histogram'); //Overviews logging
+            assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
+            assert(getDataviewTypeFromHeaders(headers) === 'histogram'); // Overviews logging
 
             testClient.drain(done);
         });
     });
 
-    describe('filters', function() {
-
+    describe('filters', function () {
         describe('histogram', function () {
-
-            it("should expose a filtered histogram", function (done) {
+            it('should expose a filtered histogram', function (done) {
                 var params = {
                     filters: {
                         dataviews: { test_histogram: { min: 2 } }
@@ -414,14 +409,14 @@ describe('dataviews using tables with overviews', function() {
                         return done(err);
                     }
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
                     assert.ok(Array.isArray(histogram.bins));
-                    assert.equal(histogram.bins.length, 4);
+                    assert.strictEqual(histogram.bins.length, 4);
                     testClient.drain(done);
                 });
             });
 
-            it("should expose a filtered histogram with no results", function (done) {
+            it('should expose a filtered histogram with no results', function (done) {
                 var params = {
                     filters: {
                         dataviews: { test_histogram: { max: -1 } }
@@ -434,14 +429,14 @@ describe('dataviews using tables with overviews', function() {
                         return done(err);
                     }
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
                     assert.ok(Array.isArray(histogram.bins));
-                    assert.equal(histogram.bins.length, 0);
+                    assert.strictEqual(histogram.bins.length, 0);
                     testClient.drain(done);
                 });
             });
 
-            it("should expose a filtered date histogram with no results", function (done) {
+            it('should expose a filtered date histogram with no results', function (done) {
                 // This most likely works because the overviews will pass
                 // the responsibility to the normal dataviews.
                 var params = {
@@ -456,157 +451,154 @@ describe('dataviews using tables with overviews', function() {
                         return done(err);
                     }
                     assert.ok(histogram);
-                    assert.equal(histogram.type, 'histogram');
+                    assert.strictEqual(histogram.type, 'histogram');
                     assert.ok(Array.isArray(histogram.bins));
-                    assert.equal(histogram.bins.length, 0);
+                    assert.strictEqual(histogram.bins.length, 0);
                     testClient.drain(done);
                 });
             });
         });
 
         describe('category', function () {
-
             var params = {
                 filters: {
-                    dataviews: {test_categories: {accept: ['Hawai']}}
+                    dataviews: { test_categories: { accept: ['Hawai'] } }
                 }
             };
 
-            it("should expose a filtered sum formula", function (done) {
+            it('should expose a filtered sum formula', function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_sum', params, function (err, formula_result, headers) {
+                testClient.getDataview('test_sum', params, function (err, formulaResult, headers) {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
-                        "operation":"sum",
-                        "result":1,
-                        "nulls":0,
-                        "infinities": 0,
-                        "nans": 0,
-                        "type":"formula"
+                    assert.deepStrictEqual(formulaResult, {
+                        operation: 'sum',
+                        result: 1,
+                        nulls: 0,
+                        infinities: 0,
+                        nans: 0,
+                        type: 'formula'
                     });
-                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
                     testClient.drain(done);
                 });
             });
 
-            it("should expose a filtered  avg formula", function(done) {
+            it('should expose a filtered  avg formula', function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_avg', params, function(err, formula_result, headers) {
+                testClient.getDataview('test_avg', params, function (err, formulaResult, headers) {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
-                        "operation":"avg",
-                        "result":1,
-                        "nulls":0,
-                        "infinities": 0,
-                        "nans": 0,
-                        "type":"formula"
+                    assert.deepStrictEqual(formulaResult, {
+                        operation: 'avg',
+                        result: 1,
+                        nulls: 0,
+                        infinities: 0,
+                        nans: 0,
+                        type: 'formula'
                     });
-                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
-
-                    testClient.drain(done);
-                });
-            });
-
-            it("should expose a filtered count formula", function(done) {
-                var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_count', params, function(err, formula_result, headers) {
-                    if (err) {
-                        return done(err);
-                    }
-                    assert.deepEqual(formula_result, {
-                        "operation":"count",
-                        "result":1,
-                        "infinities": 0,
-                        "nans": 0,
-                        "nulls":0,
-                        "type":"formula"
-                    });
-                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
 
                     testClient.drain(done);
                 });
             });
 
-            it("should expose a filterd max formula", function(done) {
+            it('should expose a filtered count formula', function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_max', params, function(err, formula_result) {
+                testClient.getDataview('test_count', params, function (err, formulaResult, headers) {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
-                        "operation": "max",
-                        "result": 1,
-                        "nulls": 0,
-                        "infinities": 0,
-                        "nans": 0,
-                        "type": "formula"
+                    assert.deepStrictEqual(formulaResult, {
+                        operation: 'count',
+                        result: 1,
+                        infinities: 0,
+                        nans: 0,
+                        nulls: 0,
+                        type: 'formula'
                     });
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
 
                     testClient.drain(done);
                 });
             });
 
-            it("should expose a filterd min formula", function(done) {
+            it('should expose a filterd max formula', function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_min', params, function(err, formula_result) {
+                testClient.getDataview('test_max', params, function (err, formulaResult) {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
-                        "operation": "min",
-                        "result": 1,
-                        "nulls": 0,
-                        "infinities": 0,
-                        "nans": 0,
-                        "type": "formula"
+                    assert.deepStrictEqual(formulaResult, {
+                        operation: 'max',
+                        result: 1,
+                        nulls: 0,
+                        infinities: 0,
+                        nans: 0,
+                        type: 'formula'
                     });
 
                     testClient.drain(done);
                 });
             });
 
-            it("should expose a filtered sum formula with bbox", function (done) {
+            it('should expose a filterd min formula', function (done) {
+                var testClient = new TestClient(overviewsMapConfig);
+                testClient.getDataview('test_min', params, function (err, formulaResult) {
+                    if (err) {
+                        return done(err);
+                    }
+                    assert.deepStrictEqual(formulaResult, {
+                        operation: 'min',
+                        result: 1,
+                        nulls: 0,
+                        infinities: 0,
+                        nans: 0,
+                        type: 'formula'
+                    });
+
+                    testClient.drain(done);
+                });
+            });
+
+            it('should expose a filtered sum formula with bbox', function (done) {
                 var bboxparams = {
                     filters: {
-                        dataviews: {test_categories: {accept: ['Hawai']}}
+                        dataviews: { test_categories: { accept: ['Hawai'] } }
                     },
-                    bbox: "-170,-80,170,80"
+                    bbox: '-170,-80,170,80'
                 };
                 var testClient = new TestClient(overviewsMapConfig);
-                testClient.getDataview('test_sum', bboxparams, function (err, formula_result) {
+                testClient.getDataview('test_sum', bboxparams, function (err, formulaResult) {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(formula_result, {
-                        "operation":"sum",
-                        "result":1,
-                        "nulls":0,
-                        "infinities": 0,
-                        "nans": 0,
-                        "type":"formula"
+                    assert.deepStrictEqual(formulaResult, {
+                        operation: 'sum',
+                        result: 1,
+                        nulls: 0,
+                        infinities: 0,
+                        nans: 0,
+                        type: 'formula'
                     });
                     testClient.drain(done);
                 });
             });
-
-
         });
 
         describe('aggregation special float values', function () {
             var params = {};
 
-            it("should expose an aggregation dataview filtering special float values out", function (done) {
+            it('should expose an aggregation dataview filtering special float values out', function (done) {
                 var testClient = new TestClient(overviewsMapConfig);
                 testClient.getDataview('test_categories_special_values', params, function (err, dataview, headers) {
                     if (err) {
                         return done(err);
                     }
 
-                    assert.deepEqual(dataview, {
+                    assert.deepStrictEqual(dataview, {
                         aggregation: 'sum',
                         count: 5,
                         nulls: 0,
@@ -615,12 +607,12 @@ describe('dataviews using tables with overviews', function() {
                         min: 6,
                         max: 6,
                         categoriesCount: 1,
-                        categories: [ { category: 'Hawai', value: 6, agg: false } ],
+                        categories: [{ category: 'Hawai', value: 6, agg: false }],
                         type: 'aggregation'
                     });
 
-                    assert.ok(getUsesOverviewsFromHeaders(headers)); //Overviews logging
-                    assert(getDataviewTypeFromHeaders(headers) === 'aggregation'); //Overviews logging
+                    assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
+                    assert(getDataviewTypeFromHeaders(headers) === 'aggregation'); // Overviews logging
 
                     testClient.drain(done);
                 });
@@ -632,7 +624,7 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(dataview, {
+                    assert.deepStrictEqual(dataview, {
                         bin_width: 0,
                         bins_count: 1,
                         bins_start: 3,
@@ -640,7 +632,7 @@ describe('dataviews using tables with overviews', function() {
                         infinities: 1,
                         nans: 1,
                         avg: 3,
-                        bins: [ { bin: 0, min: 3, max: 3, avg: 3, freq: 2 } ],
+                        bins: [{ bin: 0, min: 3, max: 3, avg: 3, freq: 2 }],
                         type: 'histogram'
                     });
                     testClient.drain(done);
@@ -653,7 +645,7 @@ describe('dataviews using tables with overviews', function() {
                     if (err) {
                         return done(err);
                     }
-                    assert.deepEqual(dataview, {
+                    assert.deepStrictEqual(dataview, {
                         operation: 'sum',
                         result: 6,
                         nulls: 0,
@@ -666,7 +658,7 @@ describe('dataviews using tables with overviews', function() {
             });
         });
 
-        describe('agreggation validation', function (){
+        describe('agreggation validation', function () {
             const params = {
                 response: {
                     status: 400,
@@ -676,21 +668,22 @@ describe('dataviews using tables with overviews', function() {
                 }
             };
 
-            function createMapConfig(options) {
+            function createMapConfig (options) {
                 return {
                     version: '1.8.0',
                     analyses: [
-                        { id: 'data-source',
+                        {
+                            id: 'data-source',
                             type: 'source',
                             params: {
                                 query: 'select * from test_table_overviews'
                             }
                         }
                     ],
-                    dataviews:  {
+                    dataviews: {
                         test_invalid_aggregation: {
                             type: 'aggregation',
-                            source: {id: 'data-source'},
+                            source: { id: 'data-source' },
                             options: options
                         }
                     },
@@ -710,8 +703,8 @@ describe('dataviews using tables with overviews', function() {
 
             it('should fail if missing column', function (done) {
                 var options = {
-                    aggregation: "sum",
-                    aggregationColumn: "value"
+                    aggregation: 'sum',
+                    aggregationColumn: 'value'
                 };
                 var missingColumnMapConfig = createMapConfig(options);
 
@@ -735,8 +728,8 @@ describe('dataviews using tables with overviews', function() {
 
             it('should fail if no aggregation operation', function (done) {
                 var options = {
-                    column: "value",
-                    aggregationColumn: "value"
+                    column: 'value',
+                    aggregationColumn: 'value'
                 };
                 var missingOperationMapConfig = createMapConfig(options);
 
@@ -760,9 +753,9 @@ describe('dataviews using tables with overviews', function() {
 
             it('should fail if fake operation', function (done) {
                 var options = {
-                    column: "value",
-                    aggregation: "wadus",
-                    aggregationColumn: "value"
+                    column: 'value',
+                    aggregation: 'wadus',
+                    aggregationColumn: 'value'
                 };
                 var wrongOperationMapConfig = createMapConfig(options);
 
@@ -786,9 +779,9 @@ describe('dataviews using tables with overviews', function() {
 
             it('should fail if invalid operation for overview', function (done) {
                 var options = {
-                    column: "value",
-                    aggregation: "avg",
-                    aggregationColumn: "value"
+                    column: 'value',
+                    aggregation: 'avg',
+                    aggregationColumn: 'value'
                 };
                 var wrongOperationMapConfig = createMapConfig(options);
 
@@ -812,8 +805,8 @@ describe('dataviews using tables with overviews', function() {
 
             it('should fail if no aggregation column when needed', function (done) {
                 var options = {
-                    column: "value",
-                    aggregation: "sum"
+                    column: 'value',
+                    aggregation: 'sum'
                 };
                 var missingOptionMapConfig = createMapConfig(options);
 
@@ -838,10 +831,10 @@ describe('dataviews using tables with overviews', function() {
     });
 });
 
-function getUsesOverviewsFromHeaders(headers) {
+function getUsesOverviewsFromHeaders (headers) {
     return headers && headers['x-tiler-profiler'] && JSON.parse(headers['x-tiler-profiler']).usesOverviews;
 }
 
-function getDataviewTypeFromHeaders(headers) {
+function getDataviewTypeFromHeaders (headers) {
     return headers && headers['x-tiler-profiler'] && JSON.parse(headers['x-tiler-profiler']).dataviewType;
 }

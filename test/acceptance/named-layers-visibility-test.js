@@ -1,7 +1,7 @@
 'use strict';
 
 var step = require('step');
-var test_helper = require('../support/test-helper');
+var testHelper = require('../support/test-helper');
 
 var assert = require('../support/assert');
 var CartodbWindshaft = require('../../lib/server');
@@ -13,7 +13,7 @@ var mapnik = require('windshaft').mapnik;
 
 var IMAGE_TOLERANCE = 20;
 
-describe('layers visibility for previews', function() {
+describe('layers visibility for previews', function () {
     var server;
 
     before(function () {
@@ -52,7 +52,7 @@ describe('layers visibility for previews', function() {
         };
     }
 
-    function createTemplate(scenario) {
+    function createTemplate (scenario) {
         return {
             version: '0.0.1',
             name: scenario.name,
@@ -80,12 +80,12 @@ describe('layers visibility for previews', function() {
     }
 
     afterEach(function (done) {
-        test_helper.deleteRedisKeys({
+        testHelper.deleteRedisKeys({
             'user:localhost:mapviews:global': 5
         }, done);
     });
 
-    function previewFixture(version) {
+    function previewFixture (version) {
         return './test/fixtures/previews/populated_places_simple_reduced-' + version + '.png';
     }
 
@@ -98,64 +98,64 @@ describe('layers visibility for previews', function() {
     var scenarios = [{
         name: 'preview_layers_red',
         layerPerview: {
-            '0': true,
-            '1': false,
-            'layer2': false
+            0: true,
+            1: false,
+            layer2: false
         },
         layers: threeLayerPointDistintColor
     }, {
         name: 'preview_layers_orange',
         layerPerview: {
-            '0': false,
-            '1': true,
-            'layer2': false
+            0: false,
+            1: true,
+            layer2: false
         },
         layers: threeLayerPointDistintColor
     }, {
         name: 'preview_layers_blue',
         layerPerview: {
-            '0': false,
-            '1': false,
-            'layer2': true
+            0: false,
+            1: false,
+            layer2: true
         },
         layers: threeLayerPointDistintColor
     }, {
         name: 'preview_layers_red_orange',
         layerPerview: {
-            '0': true,
-            '1': true,
-            'layer2': false
+            0: true,
+            1: true,
+            layer2: false
         },
         layers: threeLayerPointDistintColor
     }, {
         name: 'preview_layers_red_blue',
         layerPerview: {
-            '0': true,
-            '1': false,
-            'layer2': true
+            0: true,
+            1: false,
+            layer2: true
         },
         layers: threeLayerPointDistintColor
     }, {
         name: 'preview_layers_orange_blue',
         layerPerview: {
-            '0': false,
-            '1': true,
-            'layer2': true
+            0: false,
+            1: true,
+            layer2: true
         },
         layers: threeLayerPointDistintColor
     }, {
         name: 'preview_layers_red_orange_blue',
         layerPerview: {
-            '0': true,
-            '1': true,
-            'layer2': true
+            0: true,
+            1: true,
+            layer2: true
         },
         layers: threeLayerPointDistintColor
     }, {
         name: 'preview_layers_all',
         layerPerview: {},
         layers: threeLayerPointDistintColor
-    },  {
+    }, {
         name: 'preview_layers_undefined',
         layerPerview: undefined,
         layers: threeLayerPointDistintColor
@@ -195,12 +195,12 @@ describe('layers visibility for previews', function() {
                     assert.ifError(err);
 
                     var next = this;
-                    var img = mapnik.Image.fromBytes(new Buffer(res.body, 'binary'));
+                    var img = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                     var previewFixturePath = previewFixture(scenario.name);
 
                     assert.imageIsSimilarToFile(img, previewFixturePath, IMAGE_TOLERANCE, next);
                 },
-                function deleteTemplate(err) {
+                function deleteTemplate (err) {
                     assert.ifError(err);
 
                     var next = this;
@@ -213,5 +213,4 @@ describe('layers visibility for previews', function() {
             );
         });
     });
-
 });

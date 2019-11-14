@@ -53,8 +53,13 @@
     "yargs": "11.1.0"
   },
   "devDependencies": {
+    "eslint": "^6.5.1",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "istanbul": "0.4.5",
-    "jshint": "2.9.7",
     "mocha": "5.2.0",
     "moment": "2.22.1",
     "nock": "9.2.6",
@@ -63,7 +68,8 @@
     "strftime": "0.10.0"
   },
   "scripts": {
-    "lint": "jshint lib test app.js",
+    "lint:fix": "eslint --fix app.js \"lib/**/*.js\" \"test/**/*.js\"",
+    "lint": "eslint app.js \"lib/**/*.js\" \"test/**/*.js\"",
     "preinstall": "make pre-install",
     "test": "make test-all",
     "update-internal-deps": "rm -rf node_modules && npm install",

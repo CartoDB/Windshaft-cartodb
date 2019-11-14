@@ -54,7 +54,7 @@ describe('cache-control header', function () {
                     return done(err);
                 }
 
-                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                assert.strictEqual(res.headers['cache-control'], `public,max-age=${ttl}`);
                 testClient.drain(done);
             });
         });
@@ -80,8 +80,8 @@ describe('cache-control header', function () {
                 }
 
                 const cacheControl = res.headers['cache-control'];
-                const [ , maxAge ] = cacheControl.split(',');
-                const [ , value ] = maxAge.split('=');
+                const [, maxAge] = cacheControl.split(',');
+                const [, value] = maxAge.split('=');
 
                 assert.ok(Number(value) <= ttl);
 
@@ -120,8 +120,8 @@ describe('cache-control header', function () {
                 }
 
                 const cacheControl = res.headers['cache-control'];
-                const [ , maxAge ] = cacheControl.split(',');
-                const [ , value ] = maxAge.split('=');
+                const [, maxAge] = cacheControl.split(',');
+                const [, value] = maxAge.split('=');
 
                 assert.ok(Number(value) <= ttl);
 
@@ -129,7 +129,7 @@ describe('cache-control header', function () {
             });
         });
 
-        it('tile from a dynamic query which doesn\'t use a table' , function (done) {
+        it('tile from a dynamic query which doesn\'t use a table', function (done) {
             const ttl = ONE_YEAR_IN_SECONDS;
             const mapConfig = createMapConfig();
 
@@ -140,7 +140,7 @@ describe('cache-control header', function () {
                     return done(err);
                 }
 
-                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                assert.strictEqual(res.headers['cache-control'], `public,max-age=${ttl}`);
                 testClient.drain(done);
             });
         });
@@ -181,7 +181,7 @@ describe('cache-control header', function () {
                     return done(err);
                 }
 
-                assert.equal(res.headers['cache-control'], `public,max-age=${ttl}`);
+                assert.strictEqual(res.headers['cache-control'], `public,max-age=${ttl}`);
                 testClient.drain(done);
             });
         });

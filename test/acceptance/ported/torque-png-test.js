@@ -5,17 +5,17 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var testClient = require('./support/test-client');
 
-describe('torque png renderer', function() {
+describe('torque png renderer', function () {
     var IMAGE_TOLERANCE_PER_MIL = 20;
 
-    var torquePngPointsMapConfig =  {
+    var torquePngPointsMapConfig = {
         version: '1.2.0',
         layers: [
             {
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced where the_geom" +
-                        " && ST_MakeEnvelope(-90, 0, 90, 65)",
+                    sql: 'SELECT * FROM populated_places_simple_reduced where the_geom' +
+                        ' && ST_MakeEnvelope(-90, 0, 90, 65)',
                     cartocss: [
                         'Map {',
                         '    buffer-size:0;',
@@ -60,19 +60,20 @@ describe('torque png renderer', function() {
         }
     ];
 
-    function torquePngFixture(zxy) {
+    function torquePngFixture (zxy) {
         return './test/fixtures/torque/populated_places_simple_reduced-' + zxy.join('.') + '.png';
     }
 
-    tileRequests.forEach(function(tileRequest) {
-        var z = tileRequest.z,
-            x = tileRequest.x,
-            y = tileRequest.y;
+    tileRequests.forEach(function (tileRequest) {
+        var z = tileRequest.z;
+        var x = tileRequest.x;
+        var y = tileRequest.y;
         var zxy = [z, x, y];
         it('tile ' + zxy.join('/') + '.torque.png', function (done) {
-            testClient.getTileLayer(torquePngPointsMapConfig, tileRequest, function(err, res) {
+            testClient.getTileLayer(torquePngPointsMapConfig, tileRequest, function (err, res) {
+                assert.ifError(err);
                 assert.imageBufferIsSimilarToFile(res.body, torquePngFixture(zxy), IMAGE_TOLERANCE_PER_MIL,
-                    function(err) {
+                    function (err) {
                         assert.ok(!err);
                         done();
                     }
@@ -81,14 +82,13 @@ describe('torque png renderer', function() {
         });
     });
 
-
     var mapConfigTorqueOffset = {
         version: '1.3.0',
         layers: [
             {
                 type: 'torque',
                 options: {
-                    sql: "SELECT * FROM populated_places_simple_reduced",
+                    sql: 'SELECT * FROM populated_places_simple_reduced',
                     cartocss: [
                         'Map {',
                         'buffer-size:0;',
@@ -125,21 +125,19 @@ describe('torque png renderer', function() {
         ]
     };
 
-    it('torque static map with offset', function(done) {
-        var w = 600,
-            h = 400;
+    it('torque static map with offset', function (done) {
+        var w = 600;
+        var h = 400;
 
-        testClient.getStaticBbox(mapConfigTorqueOffset, -170, -87, 170, 87, w, h, function(err, res, img) {
+        testClient.getStaticBbox(mapConfigTorqueOffset, -170, -87, 170, 87, w, h, function (err, res, img) {
             if (err) {
                 return done(err);
             }
 
-            assert.equal(img.width(), w);
-            assert.equal(img.height(), h);
+            assert.strictEqual(img.width(), w);
+            assert.strictEqual(img.height(), h);
 
             done();
         });
-
     });
-
 });

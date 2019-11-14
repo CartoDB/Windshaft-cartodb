@@ -6,7 +6,6 @@ const assert = require('../support/assert');
 const TestClient = require('../support/test-client');
 const serverOptions = require('../../lib/server-options');
 
-
 const POINTS_SQL_1 = `
 select
     st_setsrid(st_makepoint(x*10, x*10), 4326) as the_geom,
@@ -44,27 +43,27 @@ function createVectorLayergroup () {
 }
 
 const INCOMPATIBLE_LAYERS_ERROR = {
-    "errors": [
-        "The `mapnik` or `cartodb` layers must be consistent:" +
-            " `cartocss` option is either present or voided in all layers. Mixing is not allowed."
+    errors: [
+        'The `mapnik` or `cartodb` layers must be consistent:' +
+            ' `cartocss` option is either present or voided in all layers. Mixing is not allowed.'
     ],
-    "errors_with_context":[
+    errors_with_context: [
         {
-            "type":"mapconfig",
-            "message": "The `mapnik` or `cartodb` layers must be consistent:"  +
-                " `cartocss` option is either present or voided in all layers. Mixing is not allowed."
+            type: 'mapconfig',
+            message: 'The `mapnik` or `cartodb` layers must be consistent:' +
+                ' `cartocss` option is either present or voided in all layers. Mixing is not allowed.'
         }
     ]
 };
 
 const INVALID_FORMAT_ERROR = {
-    "errors": [
+    errors: [
         "Unsupported format: 'cartocss' option is missing for png"
     ],
-    "errors_with_context":[
+    errors_with_context: [
         {
-            "type": "tile",
-            "message": "Unsupported format: 'cartocss' option is missing for png"
+            type: 'tile',
+            message: "Unsupported format: 'cartocss' option is missing for png"
         }
     ]
 };
@@ -90,7 +89,7 @@ suites.forEach((suite) => {
             serverOptions.renderer.mvt.usePostGIS = usePostGIS;
         });
 
-        after(function (){
+        after(function () {
             serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
         });
 
@@ -110,22 +109,22 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.equal(tile.tileSize, 4096);
-                    assert.equal(tile.z, 0);
-                    assert.equal(tile.x, 0);
-                    assert.equal(tile.y, 0);
+                    assert.strictEqual(tile.tileSize, 4096);
+                    assert.strictEqual(tile.z, 0);
+                    assert.strictEqual(tile.x, 0);
+                    assert.strictEqual(tile.y, 0);
 
                     const layer0 = JSON.parse(tile.toGeoJSONSync(0));
 
-                    assert.equal(layer0.name, 'layer0');
-                    assert.equal(layer0.features[0].type, 'Feature');
-                    assert.equal(layer0.features[0].geometry.type, 'Point');
+                    assert.strictEqual(layer0.name, 'layer0');
+                    assert.strictEqual(layer0.features[0].type, 'Feature');
+                    assert.strictEqual(layer0.features[0].geometry.type, 'Point');
 
                     const layer1 = JSON.parse(tile.toGeoJSONSync(1));
 
-                    assert.equal(layer1.name, 'layer1');
-                    assert.equal(layer1.features[0].type, 'Feature');
-                    assert.equal(layer1.features[0].geometry.type, 'Point');
+                    assert.strictEqual(layer1.name, 'layer1');
+                    assert.strictEqual(layer1.features[0].type, 'Feature');
+                    assert.strictEqual(layer1.features[0].geometry.type, 'Point');
                     done();
                 });
             });
@@ -136,16 +135,16 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.equal(tile.tileSize, 4096);
-                    assert.equal(tile.z, 0);
-                    assert.equal(tile.x, 0);
-                    assert.equal(tile.y, 0);
+                    assert.strictEqual(tile.tileSize, 4096);
+                    assert.strictEqual(tile.z, 0);
+                    assert.strictEqual(tile.x, 0);
+                    assert.strictEqual(tile.y, 0);
 
                     const layer = JSON.parse(tile.toGeoJSONSync(0));
 
-                    assert.equal(layer.name, 'layer0');
-                    assert.equal(layer.features[0].type, 'Feature');
-                    assert.equal(layer.features[0].geometry.type, 'Point');
+                    assert.strictEqual(layer.name, 'layer0');
+                    assert.strictEqual(layer.features[0].type, 'Feature');
+                    assert.strictEqual(layer.features[0].geometry.type, 'Point');
 
                     done();
                 });
@@ -157,16 +156,16 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.equal(tile.tileSize, 4096);
-                    assert.equal(tile.z, 0);
-                    assert.equal(tile.x, 0);
-                    assert.equal(tile.y, 0);
+                    assert.strictEqual(tile.tileSize, 4096);
+                    assert.strictEqual(tile.z, 0);
+                    assert.strictEqual(tile.x, 0);
+                    assert.strictEqual(tile.y, 0);
 
                     const layer = JSON.parse(tile.toGeoJSONSync(0));
 
-                    assert.equal(layer.name, 'layer1');
-                    assert.equal(layer.features[0].type, 'Feature');
-                    assert.equal(layer.features[0].geometry.type, 'Point');
+                    assert.strictEqual(layer.name, 'layer1');
+                    assert.strictEqual(layer.features[0].type, 'Feature');
+                    assert.strictEqual(layer.features[0].geometry.type, 'Point');
 
                     done();
                 });
@@ -188,7 +187,7 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, INVALID_FORMAT_ERROR);
+                    assert.deepStrictEqual(body, INVALID_FORMAT_ERROR);
                     done();
                 });
             });
@@ -201,7 +200,7 @@ suites.forEach((suite) => {
                     }
                 };
 
-                const cartocss = `#layer0 { marker-fill: red; marker-width: 10; }`;
+                const cartocss = '#layer0 { marker-fill: red; marker-width: 10; }';
                 const cartocssVersion = '2.3.0';
 
                 this.testClient.mapConfig.layers[0].options.cartocss = cartocss;
@@ -212,7 +211,7 @@ suites.forEach((suite) => {
                         return done(err);
                     }
 
-                    assert.deepEqual(body, INCOMPATIBLE_LAYERS_ERROR);
+                    assert.deepStrictEqual(body, INCOMPATIBLE_LAYERS_ERROR);
 
                     done();
                 });

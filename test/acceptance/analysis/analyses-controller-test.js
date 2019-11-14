@@ -5,7 +5,6 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-
 describe('analyses controller', function () {
     const mapConfig = {
         version: '1.5.0',
@@ -52,7 +51,7 @@ describe('analyses controller', function () {
     });
 
     it('should support jsonp responses', function (done) {
-        this.testClient.getAnalysesCatalog({ jsonp: 'jsonp_test' }, (err, result) => {
+        this.testClient.getAnalysesCatalog({ jsonp: 'jsonpTest' }, (err, result) => {
             if (err) {
                 return done(err);
             }
@@ -60,14 +59,13 @@ describe('analyses controller', function () {
             assert.ok(result);
 
             let didRunJsonCallback = false;
-            // jshint ignore:start
-            function jsonp_test(body) {
+            /* eslint-disable no-unused-vars, no-eval */
+            function jsonpTest (body) {
                 assert.ok(Array.isArray(body.catalog));
                 didRunJsonCallback = true;
             }
-
             eval(result);
-            // jshint ignore:end
+            /* eslint-enable */
 
             assert.ok(didRunJsonCallback);
 
@@ -84,7 +82,7 @@ describe('analyses controller', function () {
                 return done(err);
             }
 
-            assert.deepEqual(result.errors[0], 'Unauthorized');
+            assert.deepStrictEqual(result.errors[0], 'Unauthorized');
             this.testClient.apiKey = apiKey;
             done();
         });
@@ -102,15 +100,14 @@ describe('analyses controller', function () {
                 }
 
                 assert.ok(Array.isArray(result.catalog));
-                assert.ok(result.catalog.length >=  2); // buffer & source at least
+                assert.ok(result.catalog.length >= 2); // buffer & source at least
 
                 result.catalog
                     .filter(analysis => analysis.node_id === '0a215e1f3405381cf0ea6b3b0deb6fdcfdc2fcaa')
-                    .forEach(analysis => assert.equal(analysis.type, 'buffer'));
+                    .forEach(analysis => assert.strictEqual(analysis.type, 'buffer'));
 
                 this.testClient.drain(done);
             });
-
         });
     });
 });

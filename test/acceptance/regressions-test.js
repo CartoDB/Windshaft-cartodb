@@ -8,8 +8,7 @@ const LayergroupToken = require('../../lib/models/layergroup-token');
 const CartodbWindshaft = require('../../lib/server');
 const serverOptions = require('../../lib/server-options');
 
-describe('regressions', function() {
-
+describe('regressions', function () {
     var ERROR_RESPONSE = {
         status: 400,
         headers: {
@@ -17,15 +16,15 @@ describe('regressions', function() {
         }
     };
 
-    it('should expose a nice error when missing sql option', function(done) {
+    it('should expose a nice error when missing sql option', function (done) {
         var mapConfig = {
             version: '1.5.0',
             layers: [
                 {
-                    "type": "cartodb",
-                    "options": {
-                        "cartocss": '#polygons { polygon-fill: red; }',
-                        "cartocss_version": "2.3.0"
+                    type: 'cartodb',
+                    options: {
+                        cartocss: '#polygons { polygon-fill: red; }',
+                        cartocss_version: '2.3.0'
                     }
                 }
             ]
@@ -33,11 +32,11 @@ describe('regressions', function() {
 
         var testClient = new TestClient(mapConfig, 1234);
 
-        testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, layergroupResult) {
+        testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, layergroupResult) {
             assert.ok(!err, err);
 
-            assert.equal(layergroupResult.errors.length, 1);
-            assert.equal(layergroupResult.errors[0], 'Missing sql for layer 0 options');
+            assert.strictEqual(layergroupResult.errors.length, 1);
+            assert.strictEqual(layergroupResult.errors[0], 'Missing sql for layer 0 options');
 
             testClient.drain(done);
         });
@@ -71,7 +70,7 @@ describe('regressions', function() {
                 },
                 data: JSON.stringify(layergroup)
             },
-            function(res, err) {
+            function (res, err) {
                 if (err) {
                     return done(err);
                 }
@@ -112,7 +111,7 @@ describe('regressions', function() {
 
                 const conn = testClient.getDBConnection();
 
-                const sql = `select CDB_TableMetadataTouch('test_table_localhost_regular1'::regclass)`;
+                const sql = 'select CDB_TableMetadataTouch(\'test_table_localhost_regular1\'::regclass)';
 
                 conn.query(sql, (err) => {
                     if (err) {
@@ -129,7 +128,7 @@ describe('regressions', function() {
                         const timestampA = parseInt(cacheBusterA, 10);
                         const timestampB = parseInt(cacheBusterB, 10);
 
-                        assert.notEqual(timestampA, timestampB);
+                        assert.notStrictEqual(timestampA, timestampB);
                         assert.ok(timestampA < timestampB, `timestampA: ${timestampA} > timestampB:${timestampB}`);
 
                         testClient.drain(done);
@@ -206,9 +205,9 @@ describe('regressions', function() {
         testClient.getDataview('country_places_count', params, (err, dataview) => {
             assert.ifError(err);
 
-            assert.equal(dataview.type, 'aggregation');
-            assert.equal(dataview.categories.length, 1);
-            assert.deepEqual(dataview.categories[0], { value: 256, category: 'CAN', agg: false });
+            assert.strictEqual(dataview.type, 'aggregation');
+            assert.strictEqual(dataview.categories.length, 1);
+            assert.deepStrictEqual(dataview.categories[0], { value: 256, category: 'CAN', agg: false });
 
             testClient.drain(done);
         });

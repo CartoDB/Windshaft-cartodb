@@ -3,13 +3,13 @@
 var testHelper = require('../../support/test-helper');
 
 var assert = require('../../support/assert');
-var _             = require('underscore');
+var _ = require('underscore');
 var cartodbServer = require('../../../lib/server');
 var getLayerTypeFn = require('windshaft').model.MapConfig.prototype.getType;
 var PortedServerOptions = require('./support/ported-server-options');
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
-describe('multilayer interactivity and layers order', function() {
+describe('multilayer interactivity and layers order', function () {
     var server;
 
     before(function () {
@@ -17,13 +17,13 @@ describe('multilayer interactivity and layers order', function() {
         server.setMaxListeners(0);
     });
 
-    function layerType(layer) {
+    function layerType (layer) {
         return layer.type || 'undefined';
     }
 
-    function testInteractivityLayersOrderScenario(testScenario) {
-        it(testScenario.desc, function(done) {
-            var layergroup =  {
+    function testInteractivityLayersOrderScenario (testScenario) {
+        it(testScenario.desc, function (done) {
+            var layergroup = {
                 version: '1.3.0',
                 layers: testScenario.layers
             };
@@ -39,16 +39,16 @@ describe('multilayer interactivity and layers order', function() {
                     data: JSON.stringify(layergroup)
                 },
                 {
-                    //status: 200, don't use status here to have a more meaningful error message
+                    // status: 200, don't use status here to have a more meaningful error message
                     headers: {
                         'content-type': 'application/json; charset=utf-8'
                     }
                 },
-                function(response) {
-                    assert.equal(
+                function (response) {
+                    assert.strictEqual(
                         response.statusCode,
                         200,
-                            'Expected status code 200, got ' + response.statusCode +
+                        'Expected status code 200, got ' + response.statusCode +
                             '\n\tResponse body: ' + response.body +
                             '\n\tLayer types: ' + layergroup.layers.map(layerType).join(', ')
                     );
@@ -58,21 +58,21 @@ describe('multilayer interactivity and layers order', function() {
 
                     var layergroupId = layergroupResponse.layergroupid;
                     assert.ok(layergroupId);
-                    assert.equal(layergroupResponse.metadata.layers.length, layergroup.layers.length);
+                    assert.strictEqual(layergroupResponse.metadata.layers.length, layergroup.layers.length);
 
                     // check layers metadata at least match in number
                     var layersMetadata = layergroupResponse.metadata.layers;
-                    assert.equal(layersMetadata.length, layergroup.layers.length);
+                    assert.strictEqual(layersMetadata.length, layergroup.layers.length);
                     for (var i = 0, len = layersMetadata.length; i < len; i++) {
-                        assert.equal(
+                        assert.strictEqual(
                             getLayerTypeFn(layersMetadata[i].type),
                             getLayerTypeFn(layergroup.layers[i].type)
                         );
                     }
                     // check torque metadata at least match in number
-                    var torqueLayers = layergroup.layers.filter(function(layer) { return layer.type === 'torque'; });
+                    var torqueLayers = layergroup.layers.filter(function (layer) { return layer.type === 'torque'; });
                     if (torqueLayers.length) {
-                        assert.equal(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
+                        assert.strictEqual(Object.keys(layergroupResponse.metadata.torque).length, torqueLayers.length);
                     }
 
                     var keysToDelete = {
@@ -95,7 +95,7 @@ describe('multilayer interactivity and layers order', function() {
         type: 'http',
         options: {
             urlTemplate: 'http://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png',
-            subdomains: ['a','b','c']
+            subdomains: ['a', 'b', 'c']
         }
     };
 
@@ -104,12 +104,12 @@ describe('multilayer interactivity and layers order', function() {
         options: {
             sql: "select 1 id, '1970-01-02'::date d, 'POINT(0 0)'::geometry the_geom_webmercator",
             cartocss: [
-                "Map {",
-                    "-torque-frame-count:2;",
-                    "-torque-resolution:3;",
-                    "-torque-time-attribute:d;",
-                    "-torque-aggregation-function:'count(id)';",
-                "}"
+                'Map {',
+                '-torque-frame-count:2;',
+                '-torque-resolution:3;',
+                '-torque-time-attribute:d;',
+                "-torque-aggregation-function:'count(id)';",
+                '}'
             ].join(' '),
             cartocss_version: '2.0.1'
         }
@@ -362,5 +362,4 @@ describe('multilayer interactivity and layers order', function() {
 
     testScenarios.forEach(testInteractivityLayersOrderScenario);
     chaosScenarios.forEach(testInteractivityLayersOrderScenario);
-
 });

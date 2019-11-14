@@ -11,7 +11,6 @@ describe('error with context', function () {
         server = new CartodbWindshaft(serverOptions);
     });
 
-
     var layerOK = {
         options: {
             sql: 'select cartodb_id, ST_Translate(the_geom_webmercator, 5e6, 0) as the_geom_webmercator ' +
@@ -65,10 +64,10 @@ describe('error with context', function () {
                 assert.ok(Array.isArray(parsedBody.errors_with_context));
 
                 var err = parsedBody.errors_with_context[0];
-                assert.equal(err.type, 'layer');
-                assert.equal(err.subtype, 'query');
+                assert.strictEqual(err.type, 'layer');
+                assert.strictEqual(err.subtype, 'query');
                 assert.ok(err.message.indexOf(DB_ERROR_MESSAGE) >= 0);
-                assert.deepEqual(err.layer, scenario.expectedFailingLayer);
+                assert.deepStrictEqual(err.layer, scenario.expectedFailingLayer);
                 done();
             });
         });

@@ -5,11 +5,9 @@ require('../../support/test-helper');
 var assert = require('../../support/assert');
 var TestClient = require('../../support/test-client');
 
-describe('dataview error cases', function() {
-
-    describe('generic errors', function() {
-
-        afterEach(function(done) {
+describe('dataview error cases', function () {
+    describe('generic errors', function () {
+        afterEach(function (done) {
             if (this.testClient) {
                 this.testClient.drain(done);
             } else {
@@ -24,62 +22,62 @@ describe('dataview error cases', function() {
             }
         };
 
-        function createMapConfig(dataviews) {
+        function createMapConfig (dataviews) {
             return {
                 version: '1.5.0',
                 layers: [
                     {
-                        "type": "cartodb",
-                        "options": {
-                            "source": {
-                                "id": "HEAD"
+                        type: 'cartodb',
+                        options: {
+                            source: {
+                                id: 'HEAD'
                             },
-                            "cartocss": "#points { marker-width: 10; marker-fill: red; }",
-                            "cartocss_version": "2.3.0"
+                            cartocss: '#points { marker-width: 10; marker-fill: red; }',
+                            cartocss_version: '2.3.0'
                         }
                     }
                 ],
                 dataviews: dataviews,
                 analyses: [
                     {
-                        "id": "HEAD",
-                        "type": "source",
-                        "params": {
-                            "query": "select null::geometry the_geom_webmercator, x from generate_series(0,1000) x"
+                        id: 'HEAD',
+                        type: 'source',
+                        params: {
+                            query: 'select null::geometry the_geom_webmercator, x from generate_series(0,1000) x'
                         }
                     }
                 ]
             };
         }
 
-        it('should fail when invalid dataviews object is provided, string case', function(done) {
-            var mapConfig = createMapConfig("wadus-string");
+        it('should fail when invalid dataviews object is provided, string case', function (done) {
+            var mapConfig = createMapConfig('wadus-string');
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, errObj) {
+            this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, errObj) {
                 assert.ok(!err, err);
 
-                assert.deepEqual(errObj.errors, [ '"dataviews" must be a valid JSON object: "string" type found' ]);
+                assert.deepStrictEqual(errObj.errors, ['"dataviews" must be a valid JSON object: "string" type found']);
 
                 done();
             });
         });
 
-        it('should fail when invalid dataviews object is provided, array case', function(done) {
+        it('should fail when invalid dataviews object is provided, array case', function (done) {
             var mapConfig = createMapConfig([]);
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function(err, errObj) {
+            this.testClient.getLayergroup({ response: ERROR_RESPONSE }, function (err, errObj) {
                 assert.ok(!err, err);
 
-                assert.deepEqual(errObj.errors, [ '"dataviews" must be a valid JSON object: "array" type found' ]);
+                assert.deepStrictEqual(errObj.errors, ['"dataviews" must be a valid JSON object: "array" type found']);
 
                 done();
             });
         });
 
-        it('should work with empty but valid objects', function(done) {
+        it('should work with empty but valid objects', function (done) {
             var mapConfig = createMapConfig({});
             this.testClient = new TestClient(mapConfig, 1234);
-            this.testClient.getLayergroup(function(err, layergroup) {
+            this.testClient.getLayergroup(function (err, layergroup) {
                 assert.ok(!err, err);
 
                 assert.ok(layergroup);
@@ -90,9 +88,8 @@ describe('dataview error cases', function() {
         });
     });
 
-    describe('pg_typeof', function() {
-
-        afterEach(function(done) {
+    describe('pg_typeof', function () {
+        afterEach(function (done) {
             if (this.testClient) {
                 this.testClient.drain(done);
             } else {
@@ -100,7 +97,7 @@ describe('dataview error cases', function() {
             }
         });
 
-        function createMapConfig(query) {
+        function createMapConfig (query) {
             query = query || 'select * from populated_places_simple_reduced';
 
             return {
@@ -112,54 +109,54 @@ describe('dataview error cases', function() {
                             sql: query,
                             cartocss: '#layer0 { marker-fill: red; marker-width: 10; }',
                             cartocss_version: '2.0.1',
-                            source: { id: "a0" }
+                            source: { id: 'a0' }
                         }
                     }
                 ],
                 analyses: [{
-                    id: "a0",
-                    type: "source",
+                    id: 'a0',
+                    type: 'source',
                     params: {
                         query: query
                     }
                 }],
-                dataviews:  {
+                dataviews: {
                     aggregation_count_dataview: {
-                        type: "aggregation",
-                        source: { id: "a0" },
+                        type: 'aggregation',
+                        source: { id: 'a0' },
                         options: {
-                            column: "adm0name",
-                            aggregation: "count",
-                            aggregationColumn: "adm0name"
+                            column: 'adm0name',
+                            aggregation: 'count',
+                            aggregationColumn: 'adm0name'
                         }
                     }
                 }
             };
         }
 
-        it('should work without filters', function(done) {
+        it('should work without filters', function (done) {
             this.testClient = new TestClient(createMapConfig());
-            this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function(err) {
+            this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function (err) {
                 assert.ifError(err);
                 done();
             });
         });
 
-        it('should work with filters', function(done) {
+        it('should work with filters', function (done) {
             var params = {
                 filters: {
-                    dataviews: {aggregation_count_dataview: {accept: ['Canada']}}
+                    dataviews: { aggregation_count_dataview: { accept: ['Canada'] } }
                 }
             };
 
             this.testClient = new TestClient(createMapConfig());
-            this.testClient.getDataview('aggregation_count_dataview', params, function(err) {
+            this.testClient.getDataview('aggregation_count_dataview', params, function (err) {
                 assert.ifError(err);
                 done();
             });
         });
 
-        it('should return an error if the column used by dataview does not exist', function(done) {
+        it('should return an error if the column used by dataview does not exist', function (done) {
             const query = 'select cartodb_id, the_geom, the_geom_webmercator from populated_places_simple_reduced';
 
             const params = {
@@ -172,22 +169,22 @@ describe('dataview error cases', function() {
             };
 
             const expectedResponseBody = {
-                errors:['column "adm0name" does not exist'],
-                errors_with_context:[{
-                    type:'unknown',
-                    message:'column "adm0name" does not exist'
+                errors: ['column "adm0name" does not exist'],
+                errors_with_context: [{
+                    type: 'unknown',
+                    message: 'column "adm0name" does not exist'
                 }]
             };
 
             this.testClient = new TestClient(createMapConfig(query));
-            this.testClient.getDataview('aggregation_count_dataview', params, function(err, result) {
+            this.testClient.getDataview('aggregation_count_dataview', params, function (err, result) {
                 assert.ifError(err);
-                assert.deepEqual(result, expectedResponseBody);
+                assert.deepStrictEqual(result, expectedResponseBody);
                 done();
             });
         });
 
-        it('should not fail if query does not return rows', function(done) {
+        it('should not fail if query does not return rows', function (done) {
             const query = 'select * from populated_places_simple_reduced limit 0';
 
             const expectedResponseBody = {
@@ -204,12 +201,11 @@ describe('dataview error cases', function() {
             };
 
             this.testClient = new TestClient(createMapConfig(query));
-            this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function(err, result) {
+            this.testClient.getDataview('aggregation_count_dataview', { own_filter: 0 }, function (err, result) {
                 assert.ifError(err);
-                assert.deepEqual(result, expectedResponseBody);
+                assert.deepStrictEqual(result, expectedResponseBody);
                 done();
             });
         });
-
     });
 });

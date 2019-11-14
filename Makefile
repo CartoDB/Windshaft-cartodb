@@ -39,15 +39,15 @@ test-acceptance: config/environments/test.js
 	@echo "***tests***"
 	@$(SHELL) ./run_tests.sh ${RUNTESTFLAGS} $(TEST_SUITE_ACCEPTANCE)
 
-jshint:
-	@echo "***jshint***"
-	@./node_modules/.bin/jshint lib/ test/ app.js
+lint:
+	@echo "***eslint***"
+	@./node_modules/.bin/eslint app.js "lib/**/*.js" "test/**/*.js"
 
-test-all: test jshint
+test-all: test lint
 
 coverage:
 	@RUNTESTFLAGS=--with-coverage make test
 
 check: test
 
-.PHONY: pre-install test jshint coverage
+.PHONY: pre-install test lint coverage

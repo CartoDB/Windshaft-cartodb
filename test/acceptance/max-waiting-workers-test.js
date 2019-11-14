@@ -64,12 +64,12 @@ function getTiles ({ testClient, layergroupid, coords }) {
 
 function getTile ({ testClient, layergroupid, coord }) {
     return new Promise((resolve, reject) => {
-        const [ z, x, y ] = coord;
+        const [z, x, y] = coord;
         const params = {
             layergroupid,
             format: 'png',
             response: {
-                status: [ 200, 429 ],
+                status: [200, 429],
                 headers: {
                     'Content-Type': /^(image\/png|application\/json; charset=utf-8)$/
                 }

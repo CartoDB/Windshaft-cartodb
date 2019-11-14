@@ -100,16 +100,16 @@ describe('user render timeout limit', function () {
             this.testClient.getLayergroup({ response: expectedResponse }, (err, timeoutError) => {
                 assert.ifError(err);
 
-                assert.deepEqual(timeoutError, {
+                assert.deepStrictEqual(timeoutError, {
                     errors: [renderTimeoutErrorMessage],
                     errors_with_context: [{
                         type: 'limit',
                         subtype: 'render',
                         message: renderTimeoutErrorMessage,
                         layer: {
-                            id: "layer0",
+                            id: 'layer0',
                             index: 0,
-                            type: "mapnik"
+                            type: 'mapnik'
                         }
                     }]
                 });
@@ -166,7 +166,7 @@ describe('user render timeout limit', function () {
             });
         });
 
-        describe('with onTileErrorStrategy DISABLED', function() {
+        describe('with onTileErrorStrategy DISABLED', function () {
             var onTileErrorStrategy;
 
             beforeEach(function (done) {
@@ -210,7 +210,7 @@ describe('user render timeout limit', function () {
                 this.testClient.getTile(0, 0, 0, params, (err, res, timeoutError) => {
                     assert.ifError(err);
 
-                    assert.deepEqual(timeoutError, {
+                    assert.deepStrictEqual(timeoutError, {
                         errors: [renderTimeoutErrorMessage],
                         errors_with_context: [{
                             type: 'limit',
@@ -269,10 +269,10 @@ describe('user render timeout limit', function () {
                 assert.ifError(err);
 
                 var tileJSON = tile.toJSON();
-                assert.equal(Array.isArray(tileJSON), true);
-                assert.equal(tileJSON.length, 2);
-                assert.equal(tileJSON[0].name, 'errorTileSquareLayer');
-                assert.equal(tileJSON[1].name, 'errorTileStripesLayer');
+                assert.strictEqual(Array.isArray(tileJSON), true);
+                assert.strictEqual(tileJSON.length, 2);
+                assert.strictEqual(tileJSON[0].name, 'errorTileSquareLayer');
+                assert.strictEqual(tileJSON[1].name, 'errorTileStripesLayer');
 
                 done();
             });
@@ -318,7 +318,7 @@ describe('user render timeout limit', function () {
             this.testClient.getTile(0, 0, 0, params, (err, res, tile) => {
                 assert.ifError(err);
 
-                assert.deepEqual(tile, {
+                assert.deepStrictEqual(tile, {
                     errors: [renderTimeoutErrorMessage],
                     errors_with_context: [{
                         type: 'limit',
@@ -384,7 +384,7 @@ describe('user render timeout limit', function () {
             });
         });
 
-        describe('with onTileErrorStrategy DISABLED', function() {
+        describe('with onTileErrorStrategy DISABLED', function () {
             var onTileErrorStrategy;
 
             beforeEach(function (done) {
@@ -434,7 +434,7 @@ describe('user render timeout limit', function () {
                 this.testClient.getStaticCenter(params, function (err, res, timeoutError) {
                     assert.ifError(err);
 
-                    assert.deepEqual(timeoutError, {
+                    assert.deepStrictEqual(timeoutError, {
                         errors: [renderTimeoutErrorMessage],
                         errors_with_context: [{
                             type: 'limit',

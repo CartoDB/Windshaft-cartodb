@@ -1,6 +1,6 @@
 'use strict';
 
-var test_helper = require('../support/test-helper');
+var testHelper = require('../support/test-helper');
 
 var assert = require('../support/assert');
 var CartodbWindshaft = require('../../lib/server');
@@ -14,7 +14,7 @@ var step = require('step');
 
 var windshaft = require('windshaft');
 
-describe('overviews metadata for named maps', function() {
+describe('overviews metadata for named maps', function () {
     var server;
 
     before(function () {
@@ -24,7 +24,7 @@ describe('overviews metadata for named maps', function() {
     // configure redis pool instance to use in tests
     var redisPool = new RedisPool(global.environment.redis);
 
-    var overviews_layer = {
+    var overviewsLayer = {
         type: 'cartodb',
         options: {
             sql: 'SELECT * FROM test_table_overviews',
@@ -33,7 +33,7 @@ describe('overviews metadata for named maps', function() {
         }
     };
 
-    var non_overviews_layer = {
+    var nonOverviewsLayer = {
         type: 'cartodb',
         options: {
             sql: 'SELECT * FROM test_table',
@@ -44,12 +44,12 @@ describe('overviews metadata for named maps', function() {
 
     var keysToDelete;
 
-    beforeEach(function() {
+    beforeEach(function () {
         keysToDelete = {};
     });
 
-    afterEach(function(done) {
-        test_helper.deleteRedisKeys(keysToDelete, done);
+    afterEach(function (done) {
+        testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
     var templateId = 'overviews-template-1';
@@ -58,38 +58,37 @@ describe('overviews metadata for named maps', function() {
         version: '0.0.1',
         name: templateId,
         auth: { method: 'open' },
-        layergroup:  {
+        layergroup: {
             version: '1.0.0',
-            layers: [overviews_layer, non_overviews_layer]
+            layers: [overviewsLayer, nonOverviewsLayer]
         }
     };
 
-    it("should add overviews data to layers", function(done) {
+    it('should add overviews data to layers', function (done) {
         step(
-            function postTemplate()
-            {
-              var next = this;
+            function postTemplate () {
+                var next = this;
 
-              assert.response(server, {
-                  url: '/api/v1/map/named?api_key=1234',
-                  method: 'POST',
-                  headers: {host: 'localhost', 'Content-Type': 'application/json' },
-                  data: JSON.stringify(template)
-              }, {}, function(res, err) {
-                         next(err, res);
-              });
+                assert.response(server, {
+                    url: '/api/v1/map/named?api_key=1234',
+                    method: 'POST',
+                    headers: { host: 'localhost', 'Content-Type': 'application/json' },
+                    data: JSON.stringify(template)
+                }, {}, function (res, err) {
+                    next(err, res);
+                });
             },
-            function checkTemplate(err, res) {
+            function checkTemplate (err, res) {
                 assert.ifError(err);
 
                 var next = this;
-                assert.equal(res.statusCode, 200);
-                assert.deepEqual(JSON.parse(res.body), {
+                assert.strictEqual(res.statusCode, 200);
+                assert.deepStrictEqual(JSON.parse(res.body), {
                     template_id: templateId
                 });
                 next(null);
             },
-            function instantiateTemplate(err) {
+            function instantiateTemplate (err) {
                 assert.ifError(err);
 
                 var next = this;
@@ -101,17 +100,16 @@ describe('overviews metadata for named maps', function() {
                         'Content-Type': 'application/json'
                     }
                 }, {},
-                function(res, err) {
+                function (res, err) {
                     return next(err, res);
                 });
-
             },
-            function checkInstanciation(err, res) {
+            function checkInstanciation (err, res) {
                 assert.ifError(err);
 
                 var next = this;
 
-                assert.equal(res.statusCode, 200);
+                assert.strictEqual(res.statusCode, 200);
 
                 var parsedBody = JSON.parse(res.body);
 
@@ -124,36 +122,35 @@ describe('overviews metadata for named maps', function() {
                 next(null, parsedBody.layergroupid);
             },
 
-            function checkMapconfig(err, layergroupId)
-            {
+            function checkMapconfig (err, layergroupId) {
                 assert.ifError(err);
 
                 var next = this;
 
-                var mapStore  = new windshaft.storage.MapStore({
+                var mapStore = new windshaft.storage.MapStore({
                     pool: redisPool,
                     expire_time: 500000
                 });
-                mapStore.load(LayergroupToken.parse(layergroupId).token, function(err, mapConfig) {
+                mapStore.load(LayergroupToken.parse(layergroupId).token, function (err, mapConfig) {
                     assert.ifError(err);
-                    assert.deepEqual(non_overviews_layer, mapConfig._cfg.layers[1]);
-                    assert.equal(mapConfig._cfg.layers[0].type, 'cartodb');
+                    assert.deepStrictEqual(nonOverviewsLayer, mapConfig._cfg.layers[1]);
+                    assert.strictEqual(mapConfig._cfg.layers[0].type, 'cartodb');
                     assert.ok(mapConfig._cfg.layers[0].options.query_rewrite_data);
-                    var expected_data = {
+                    var expectedData = {
                         overviews: {
                             test_table_overviews: {
-                                  schema: 'public',
-                                  1: { table: '_vovw_1_test_table_overviews' },
-                                  2: { table: '_vovw_2_test_table_overviews' }
-                              }
-                          }
-                      };
-                    assert.deepEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expected_data);
+                                schema: 'public',
+                                1: { table: '_vovw_1_test_table_overviews' },
+                                2: { table: '_vovw_2_test_table_overviews' }
+                            }
+                        }
+                    };
+                    assert.deepStrictEqual(mapConfig._cfg.layers[0].options.query_rewrite_data, expectedData);
                 });
 
                 next(err);
             },
-            function deleteTemplate(err) {
+            function deleteTemplate (err) {
                 assert.ifError(err);
 
                 var next = this;
@@ -166,23 +163,23 @@ describe('overviews metadata for named maps', function() {
                     next(err, res);
                 });
             },
-            function checkDeleteTemplate(err, res) {
+            function checkDeleteTemplate (err, res) {
                 assert.ifError(err);
-                assert.equal(res.statusCode, 204);
+                assert.strictEqual(res.statusCode, 204);
                 assert.ok(!res.body);
 
                 return null;
             },
-            function finish(err) {
+            function finish (err) {
                 done(err);
             }
         );
     });
 
-    describe('Overviews Flags', function() {
-        it("Overviews used", function (done) {
+    describe('Overviews Flags', function () {
+        it('Overviews used', function (done) {
             step(
-                function postTemplate() {
+                function postTemplate () {
                     var next = this;
 
                     assert.response(server, {
@@ -194,7 +191,7 @@ describe('overviews metadata for named maps', function() {
                         next(err, res);
                     });
                 },
-                function instantiateTemplate(err) {
+                function instantiateTemplate (err) {
                     assert.ifError(err);
 
                     var next = this;
@@ -206,12 +203,11 @@ describe('overviews metadata for named maps', function() {
                             'Content-Type': 'application/json'
                         }
                     }, {},
-                        function (res, err) {
-                            return next(err, res);
-                        });
-
+                    function (res, err) {
+                        return next(err, res);
+                    });
                 },
-                function checkFlags(err, res) {
+                function checkFlags (err, res) {
                     assert.ifError(err);
 
                     var next = this;
@@ -224,19 +220,18 @@ describe('overviews metadata for named maps', function() {
                     const headers = JSON.parse(res.headers['x-tiler-profiler']);
 
                     assert.ok(headers.overviewsAddedToMapconfig);
-                    assert.equal(headers.mapType, 'named');
+                    assert.strictEqual(headers.mapType, 'named');
 
                     next();
                 },
 
-                function finish(err) {
+                function finish (err) {
                     done(err);
                 }
             );
         });
 
-        it("Overviews NOT used", function (done) {
-
+        it('Overviews NOT used', function (done) {
             const nonOverviewsTemplateId = 'non-overviews-template';
 
             var nonOverviewsTemplate = {
@@ -245,12 +240,12 @@ describe('overviews metadata for named maps', function() {
                 auth: { method: 'open' },
                 layergroup: {
                     version: '1.0.0',
-                    layers: [non_overviews_layer]
+                    layers: [nonOverviewsLayer]
                 }
             };
 
             step(
-                function postTemplate() {
+                function postTemplate () {
                     var next = this;
 
                     assert.response(server, {
@@ -262,7 +257,7 @@ describe('overviews metadata for named maps', function() {
                         next(err, res);
                     });
                 },
-                function instantiateTemplate(err) {
+                function instantiateTemplate (err) {
                     assert.ifError(err);
 
                     var next = this;
@@ -274,12 +269,11 @@ describe('overviews metadata for named maps', function() {
                             'Content-Type': 'application/json'
                         }
                     }, {},
-                        function (res, err) {
-                            return next(err, res);
-                        });
-
+                    function (res, err) {
+                        return next(err, res);
+                    });
                 },
-                function checkFlags(err, res) {
+                function checkFlags (err, res) {
                     assert.ifError(err);
 
                     var next = this;
@@ -291,13 +285,13 @@ describe('overviews metadata for named maps', function() {
 
                     const headers = JSON.parse(res.headers['x-tiler-profiler']);
 
-                    assert.equal(headers.overviewsAddedToMapconfig, false);
-                    assert.equal(headers.mapType, 'named');
+                    assert.strictEqual(headers.overviewsAddedToMapconfig, false);
+                    assert.strictEqual(headers.mapType, 'named');
 
                     next();
                 },
 
-                function finish(err) {
+                function finish (err) {
                     done(err);
                 }
             );

@@ -23,8 +23,8 @@ var assert = module.exports = exports = require('assert');
  * @param {function} callback Will call to home with null in case there is no error, otherwise with the error itself
  * @see FUZZY in http://www.imagemagick.org/script/command-line-options.php#metric
  */
-assert.imageBufferIsSimilarToFile = function(buffer, referenceImageRelativeFilePath, tolerance, callback) {
-    callback = callback || function(err) { assert.ifError(err); };
+assert.imageBufferIsSimilarToFile = function (buffer, referenceImageRelativeFilePath, tolerance, callback) {
+    callback = callback || function (err) { assert.ifError(err); };
 
     var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
     var referenceImageBuffer = fs.readFileSync(referenceImageFilePath, { encoding: null });
@@ -32,21 +32,21 @@ assert.imageBufferIsSimilarToFile = function(buffer, referenceImageRelativeFileP
     assert.imageBuffersAreSimilar(buffer, referenceImageBuffer, tolerance, callback);
 };
 
-assert.imageBuffersAreSimilar = function(bufferA, bufferB, tolerance, callback) {
-    var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferA) ? bufferA : new Buffer(bufferA, 'binary'));
-    var referenceImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferB) ? bufferB : new Buffer(bufferB, 'binary'));
+assert.imageBuffersAreSimilar = function (bufferA, bufferB, tolerance, callback) {
+    var testImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferA) ? bufferA : Buffer.from(bufferA, 'binary'));
+    var referenceImage = mapnik.Image.fromBytes(Buffer.isBuffer(bufferB) ? bufferB : Buffer.from(bufferB, 'binary'));
 
     imagesAreSimilar(testImage, referenceImage, tolerance, callback);
 };
 
-assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath, tolerance, callback, format='png') {
-    callback = callback || function(err) { assert.ifError(err); };
+assert.imageIsSimilarToFile = function (testImage, referenceImageRelativeFilePath, tolerance, callback, format = 'png') {
+    callback = callback || function (err) { assert.ifError(err); };
 
     var referenceImageFilePath = path.resolve(referenceImageRelativeFilePath);
 
-    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath,  { encoding: null }));
+    var referenceImage = mapnik.Image.fromBytes(fs.readFileSync(referenceImageFilePath, { encoding: null }));
 
-    imagesAreSimilar(testImage, referenceImage, tolerance, function(err) {
+    imagesAreSimilar(testImage, referenceImage, tolerance, function (err) {
         if (err) {
             var testImageFilePath = randomImagePath(format);
             testImage.save(testImageFilePath, format);
@@ -55,7 +55,7 @@ assert.imageIsSimilarToFile = function(testImage, referenceImageRelativeFilePath
     }, format);
 };
 
-function imagesAreSimilar(testImage, referenceImage, tolerance, callback, format='png') {
+function imagesAreSimilar (testImage, referenceImage, tolerance, callback, format = 'png') {
     if (testImage.width() !== referenceImage.width() || testImage.height() !== referenceImage.height()) {
         return callback(new Error('Images are not the same size'));
     }
@@ -79,18 +79,18 @@ function imagesAreSimilar(testImage, referenceImage, tolerance, callback, format
     }
 }
 
-function randomImagePath(format='png') {
+function randomImagePath (format = 'png') {
     return path.resolve('test/results/' + format + '/image-test-' + Date.now() + '.' + format);
 }
 
-assert.response = function(server, req, res, callback) {
+assert.response = function (server, req, res, callback) {
     if (!callback) {
         callback = res;
         res = {};
     }
 
-    var port = 0, // let the OS to choose a free port
-        host = '127.0.0.1';
+    var port = 0; // let the OS to choose a free port
+    var host = '127.0.0.1';
 
     var listener = server.listen(port, host);
     listener.on('error', callback);
@@ -111,7 +111,7 @@ assert.response = function(server, req, res, callback) {
             requestParams.body = req.body || req.data;
         }
 
-        request(requestParams, function assert$response$requestHandler(error, response, body) {
+        request(requestParams, function assert$response$requestHandler (error, response, body) {
             listener.close(function () {
                 if (error) {
                     return callback(null, error);
@@ -125,11 +125,11 @@ assert.response = function(server, req, res, callback) {
     });
 };
 
-function validateResponseBody(response, expected) {
+function validateResponseBody (response, expected) {
     if (expected.body) {
-        var eql = expected.body instanceof RegExp ?
-            expected.body.test(response.body) :
-            expected.body === response.body;
+        var eql = expected.body instanceof RegExp
+            ? expected.body.test(response.body)
+            : expected.body === response.body;
         if (!eql) {
             return new Error(colorize(
                 '[red]{Invalid response body.}\n' +
@@ -140,7 +140,7 @@ function validateResponseBody(response, expected) {
     }
 }
 
-function validateResponseStatus(response, expected) {
+function validateResponseStatus (response, expected) {
     var status = expected.status || expected.statusCode;
     const message = colorize('[red]{Invalid response status code.}\n' +
                     '     Expected: [green]{' + status + '}\n' +
@@ -157,15 +157,15 @@ function validateResponseStatus(response, expected) {
     }
 }
 
-function validateResponseHeaders(response, expected) {
+function validateResponseHeaders (response, expected) {
     // Assert response headers
     if (expected.headers) {
         var keys = Object.keys(expected.headers);
         for (var i = 0, len = keys.length; i < len; ++i) {
-            var name = keys[i],
-                actual = response.headers[name.toLowerCase()],
-                expectedHeader = expected.headers[name],
-                headerEql = expectedHeader instanceof RegExp ? expectedHeader.test(actual) : expectedHeader === actual;
+            var name = keys[i];
+            var actual = response.headers[name.toLowerCase()];
+            var expectedHeader = expected.headers[name];
+            var headerEql = expectedHeader instanceof RegExp ? expectedHeader.test(actual) : expectedHeader === actual;
             if (!headerEql) {
                 return new Error(colorize(
                     'Invalid response header [bold]{' + name + '}.\n' +
@@ -177,7 +177,7 @@ function validateResponseHeaders(response, expected) {
     }
 }
 
-function validateResponse(response, expected) {
+function validateResponse (response, expected) {
     // Assert response body
     return validateResponseBody(response, expected) ||
         validateResponseStatus(response, expected) ||
@@ -185,64 +185,63 @@ function validateResponse(response, expected) {
 }
 
 // @param tolerance number of tolerated grid cell differences
-assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
+assert.utfgridEqualsFile = function (buffer, fileB, tolerance, callback) {
     // jshint maxcomplexity:9
     fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
-    var expected_json = JSON.parse(fs.readFileSync(file_b, 'utf8'));
+    var expectedJson = JSON.parse(fs.readFileSync(fileB, 'utf8'));
 
     var err = null;
 
-    var Celldiff = function(x, y, ev, ov) {
+    var Celldiff = function (x, y, ev, ov) {
         this.x = x;
         this.y = y;
         this.ev = ev;
         this.ov = ov;
     };
 
-    Celldiff.prototype.toString = function() {
+    Celldiff.prototype.toString = function () {
         return '(' + this.x + ',' + this.y + ')["' + this.ev + '" != "' + this.ov + '"]';
     };
 
     try {
-        var obtained_json = Object.prototype.toString() === buffer.toString() ? buffer : JSON.parse(buffer);
+        var obtainedJson = Object.prototype.toString() === buffer.toString() ? buffer : JSON.parse(buffer);
 
         // compare grid
-        var obtained_grid = obtained_json.grid;
-        var expected_grid = expected_json.grid;
-        var nrows = obtained_grid.length;
-        if (nrows !== expected_grid.length) {
-            throw new Error( "Obtained grid rows (" + nrows +
-                ") != expected grid rows (" + expected_grid.length + ")" );
+        var obtainedGrid = obtainedJson.grid;
+        var expectedGrid = expectedJson.grid;
+        var nrows = obtainedGrid.length;
+        if (nrows !== expectedGrid.length) {
+            throw new Error('Obtained grid rows (' + nrows +
+                ') != expected grid rows (' + expectedGrid.length + ')');
         }
         var celldiff = [];
-        for (var i=0; i<nrows; ++i) {
-            var ocols = obtained_grid[i];
-            var ecols = expected_grid[i];
+        for (var i = 0; i < nrows; ++i) {
+            var ocols = obtainedGrid[i];
+            var ecols = expectedGrid[i];
             var ncols = ocols.length;
-            if ( ncols !== ecols.length ) {
-                throw new Error( "Obtained grid cols (" + ncols +
-                    ") != expected grid cols (" + ecols.length +
-                    ") on row " + i );
+            if (ncols !== ecols.length) {
+                throw new Error('Obtained grid cols (' + ncols +
+                    ') != expected grid cols (' + ecols.length +
+                    ') on row ' + i);
             }
-            for (var j=0; j<ncols; ++j) {
+            for (var j = 0; j < ncols; ++j) {
                 var ocell = ocols[j];
                 var ecell = ecols[j];
-                if ( ocell !== ecell ) {
+                if (ocell !== ecell) {
                     celldiff.push(new Celldiff(i, j, ecell, ocell));
                 }
             }
         }
 
-        if ( celldiff.length > tolerance ) {
-            throw new Error( celldiff.length + " cell differences: " + celldiff );
+        if (celldiff.length > tolerance) {
+            throw new Error(celldiff.length + ' cell differences: ' + celldiff);
         }
 
-        assert.deepEqual(obtained_json.keys, expected_json.keys);
+        assert.deepStrictEqual(obtainedJson.keys, expectedJson.keys);
     } catch (e) { err = e; }
 
     callback(err);
 };
-
 
 /**
  * Colorize the given string using ansi-escape sequences.
@@ -251,9 +250,9 @@ assert.utfgridEqualsFile = function(buffer, file_b, tolerance, callback) {
  * @param {String} str
  * @return {String}
  */
-function colorize(str) {
+function colorize (str) {
     var colors = { bold: 1, red: 31, green: 32, yellow: 33 };
-    return str.replace(/\[(\w+)\]\{([^]*?)\}/g, function(_, color, str) {
+    return str.replace(/\[(\w+)\]\{([^]*?)\}/g, function (_, color, str) {
         return '\x1B[' + colors[color] + 'm' + str + '\x1B[0m';
     });
 }

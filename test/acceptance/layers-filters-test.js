@@ -3,7 +3,7 @@
 require('../support/test-helper');
 var TestClient = require('../support/test-client');
 
-describe('layers filters', function() {
+describe('layers filters', function () {
     const type = 'mapnik';
     const sql = 'select * from populated_places_simple_reduced';
     const cartocss = `#points {
@@ -17,11 +17,11 @@ describe('layers filters', function() {
         marker-fill: red;
         marker-allow-overlap: true;
     }`;
-    const cartocss_version = '3.0.12';
+    const cartocssVersion = '3.0.12';
     const options = {
         sql,
         cartocss,
-        cartocss_version
+        cartocss_version: cartocssVersion
     };
 
     const mapConfig = {
@@ -40,7 +40,7 @@ describe('layers filters', function() {
         ]
     };
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         if (this.testClient) {
             this.testClient.drain(done);
         }
@@ -52,5 +52,4 @@ describe('layers filters', function() {
             this.testClient.getTile(0, 0, 0, { layers: layer }, done);
         });
     });
-
 });

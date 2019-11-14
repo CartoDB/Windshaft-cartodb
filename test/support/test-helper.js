@@ -9,7 +9,7 @@
 
 var assert = require('assert');
 var fs = require('fs');
-var LZMA  = require('lzma').LZMA;
+var LZMA = require('lzma').LZMA;
 
 var lzmaWorker = new LZMA();
 
@@ -18,7 +18,7 @@ var log4js = require('log4js');
 const setICUEnvVariable = require('../../lib/utils/icu-data-env-setter');
 
 // set environment specific variables
-global.environment  = require('../../config/environments/test');
+global.environment = require('../../config/environments/test');
 global.environment.name = 'test';
 process.env.NODE_ENV = 'test';
 
@@ -28,82 +28,78 @@ setICUEnvVariable();
 log4js.configure({ appenders: [] });
 global.logger = log4js.getLogger();
 
-
 // Utility function to compress & encode LZMA
-function lzma_compress_to_base64(payload, mode, callback) {
-  lzmaWorker.compress(payload, mode,
-    function(ints) {
-      ints = ints.map(function(c) { return String.fromCharCode(c + 128); }).join('');
-      var base64 = new Buffer(ints, 'binary').toString('base64');
-      callback(null, base64);
-    },
-    function(/*percent*/) {
-      //console.log("Compressing: " + percent + "%");
-    }
-  );
+function lzmaCompressToBase64 (payload, mode, callback) {
+    lzmaWorker.compress(payload, mode,
+        function (ints) {
+            ints = ints.map(function (c) { return String.fromCharCode(c + 128); }).join('');
+            var base64 = Buffer.from(ints, 'binary').toString('base64');
+            callback(null, base64);
+        },
+        function (/* percent */) {
+            // console.log("Compressing: " + percent + "%");
+        }
+    );
 }
 
 // Check that the response headers do not request caching
 // Throws on failure
-function checkNoCache(res) {
-  assert.ok(!res.headers.hasOwnProperty('x-cache-channel'));
-  assert.ok(!res.headers.hasOwnProperty('surrogate-key'));
-  assert.ok(!res.headers.hasOwnProperty('cache-control')); // is this correct ?
-  assert.ok(!res.headers.hasOwnProperty('last-modified')); // is this correct ?
+function checkNoCache (res) {
+    assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'x-cache-channel'));
+    assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'surrogate-key'));
+    assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'cache-control')); // is this correct ?
+    assert.ok(!Object.prototype.hasOwnProperty.call(res.headers, 'last-modified')); // is this correct ?
 }
-
 
 /**
  * Check that the response headers do not request caching
  * @see checkNoCache
  * @param res
  */
-function checkCache(res) {
-    assert.ok(res.headers.hasOwnProperty('x-cache-channel'));
-    assert.ok(res.headers.hasOwnProperty('cache-control'));
-    assert.ok(res.headers.hasOwnProperty('last-modified'));
+function checkCache (res) {
+    assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'x-cache-channel'));
+    assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'cache-control'));
+    assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'last-modified'));
 }
 
-function checkSurrogateKey(res, expectedKey) {
-    assert.ok(res.headers.hasOwnProperty('surrogate-key'));
+function checkSurrogateKey (res, expectedKey) {
+    assert.ok(Object.prototype.hasOwnProperty.call(res.headers, 'surrogate-key'));
 
-    function createSet(keys, key) {
+    function createSet (keys, key) {
         keys[key] = true;
         return keys;
     }
     var keys = res.headers['surrogate-key'].split(' ').reduce(createSet, {});
     var expectedKeys = expectedKey.split(' ').reduce(createSet, {});
 
-    assert.deepEqual(keys, expectedKeys);
+    assert.deepStrictEqual(keys, expectedKeys);
 }
 
 var uncaughtExceptions = [];
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', function (err) {
     uncaughtExceptions.push(err);
 });
-beforeEach(function() {
+beforeEach(function () {
     uncaughtExceptions = [];
 });
-//global afterEach to capture uncaught exceptions
-afterEach(function() {
-    assert.equal(
+// global afterEach to capture uncaught exceptions
+afterEach(function () {
+    assert.strictEqual(
         uncaughtExceptions.length,
         0,
         'uncaughtException:\n\n' + uncaughtExceptions.map(err => err.stack).join('\n\n'));
 });
 
-
 var redisClient;
 
-beforeEach(function() {
+beforeEach(function () {
     if (!redisClient) {
         redisClient = redis.createClient(global.environment.redis.port);
     }
 });
 
-//global afterEach to capture test suites that leave keys in redis
-afterEach(function(done) {
-
+// global afterEach to capture test suites that leave keys in redis
+afterEach(function (done) {
     var expectedKeys = {
         'rails:test_windshaft_cartodb_user_1_db:test_table_private_1': true,
         'rails:test_windshaft_cartodb_user_1_db:my_table': true,
@@ -115,56 +111,56 @@ afterEach(function(done) {
         'api_keys:cartodb250user:4321': true,
         'api_keys:cartodb250user:default_public': true,
         'api_keys:localhost:regular1': true,
-        'api_keys:localhost:regular2': true,
+        'api_keys:localhost:regular2': true
     };
-    var databasesTasks = { 0: 'users', 5: 'meta'};
+    var databasesTasks = { 0: 'users', 5: 'meta' };
 
     var keysFound = [];
-    function taskDone(err, db, keys) {
+    function taskDone (err, db, keys) {
         if (err) {
             return done(err);
         }
 
         delete databasesTasks[db];
-        keys.forEach(function(k) {
+        keys.forEach(function (k) {
             if (!expectedKeys[k]) {
-                keysFound.push('[db='+db+']'+k);
+                keysFound.push('[db=' + db + ']' + k);
             }
         });
 
         if (Object.keys(databasesTasks).length === 0) {
-            assert.equal(keysFound.length, 0, 'Unexpected keys found in redis: ' + keysFound.join(', '));
+            assert.strictEqual(keysFound.length, 0, 'Unexpected keys found in redis: ' + keysFound.join(', '));
             done();
         }
     }
 
-    Object.keys(databasesTasks).forEach(function(db) {
-        redisClient.select(db, function() {
+    Object.keys(databasesTasks).forEach(function (db) {
+        redisClient.select(db, function () {
             // Check that we start with an empty redis db
-            redisClient.keys("*", function(err, keys) {
+            redisClient.keys('*', function (err, keys) {
                 return taskDone(err, db, keys);
             });
         });
     });
 });
 
-function deleteRedisKeys(keysToDelete, callback) {
-
+function deleteRedisKeys (keysToDelete, callback) {
     if (Object.keys(keysToDelete).length === 0) {
         return callback();
     }
 
-    function taskDone(k) {
+    function taskDone (k) {
         delete keysToDelete[k];
         if (Object.keys(keysToDelete).length === 0) {
             callback();
         }
     }
 
-    Object.keys(keysToDelete).forEach(function(k) {
+    Object.keys(keysToDelete).forEach(function (k) {
         var redisClient = redis.createClient(global.environment.redis.port);
-        redisClient.select(keysToDelete[k], function() {
-            redisClient.del(k, function(err, deletedKeysCount) {
+        redisClient.select(keysToDelete[k], function () {
+            redisClient.del(k, function (err, deletedKeysCount) {
+                assert.ifError(err);
                 redisClient.quit();
                 assert.notStrictEqual(deletedKeysCount, 0, 'No KEYS deleted for: [db=' + keysToDelete[k] + ']' + k);
                 taskDone(k);
@@ -173,21 +169,20 @@ function deleteRedisKeys(keysToDelete, callback) {
     });
 }
 
-function rmdirRecursiveSync(dirname) {
+function rmdirRecursiveSync (dirname) {
     var files = fs.readdirSync(dirname);
-    for (var i=0; i<files.length; ++i) {
-        var f = dirname + "/" + files[i];
+    for (var i = 0; i < files.length; ++i) {
+        var f = dirname + '/' + files[i];
         var s = fs.lstatSync(f);
-        if ( s.isFile() ) {
+        if (s.isFile()) {
             fs.unlinkSync(f);
-        }
-        else {
+        } else {
             rmdirRecursiveSync(f);
         }
     }
 }
 
-function configureMetadata(action, params, callback) {
+function configureMetadata (action, params, callback) {
     redisClient.SELECT(5, function (err) {
         if (err) {
             return callback(err);
@@ -204,11 +199,11 @@ function configureMetadata(action, params, callback) {
 }
 
 module.exports = {
-  deleteRedisKeys: deleteRedisKeys,
-  lzma_compress_to_base64: lzma_compress_to_base64,
-  checkNoCache: checkNoCache,
-  checkSurrogateKey: checkSurrogateKey,
-  checkCache: checkCache,
-  rmdirRecursiveSync: rmdirRecursiveSync,
-  configureMetadata
+    deleteRedisKeys: deleteRedisKeys,
+    lzma_compress_to_base64: lzmaCompressToBase64,
+    checkNoCache: checkNoCache,
+    checkSurrogateKey: checkSurrogateKey,
+    checkCache: checkCache,
+    rmdirRecursiveSync: rmdirRecursiveSync,
+    configureMetadata
 };

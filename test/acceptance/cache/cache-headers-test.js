@@ -10,7 +10,7 @@ var serverOptions = require('../../../lib/server-options');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
-describe('get requests with cache headers', function() {
+describe('get requests with cache headers', function () {
     var server;
 
     before(function () {
@@ -18,13 +18,12 @@ describe('get requests with cache headers', function() {
         server.setMaxListeners(0);
     });
 
-
     var keysToDelete;
-    beforeEach(function() {
+    beforeEach(function () {
         keysToDelete = {};
     });
 
-    afterEach(function(done) {
+    afterEach(function (done) {
         testHelper.deleteRedisKeys(keysToDelete, done);
     });
 
@@ -34,28 +33,28 @@ describe('get requests with cache headers', function() {
 
     var mapConfigs = [
         {
-            "description": "cache headers should be present",
-            "cache_headers": {
-                "x_cache_channel": {
-                    "db_name": "test_windshaft_cartodb_user_1_db",
-                    "tables": ["public.test_table"]
+            description: 'cache headers should be present',
+            cache_headers: {
+                x_cache_channel: {
+                    db_name: 'test_windshaft_cartodb_user_1_db',
+                    tables: ['public.test_table']
                 },
-                "surrogate_keys": "t:77pJnX"
+                surrogate_keys: 't:77pJnX'
             },
-            "data":
+            data:
                 {
                     version: '1.5.0',
                     layers: [
                         {
                             options: {
                                 source: {
-                                    id: "2570e105-7b37-40d2-bdf4-1af889598745"
+                                    id: '2570e105-7b37-40d2-bdf4-1af889598745'
                                 },
                                 sql: 'select * from test_table limit 2',
                                 cartocss: '#layer { marker-fill:red; }',
                                 cartocss_version: '2.3.0',
                                 attributes: {
-                                    id:'cartodb_id',
+                                    id: 'cartodb_id',
                                     columns: [
                                         'name',
                                         'address'
@@ -66,39 +65,39 @@ describe('get requests with cache headers', function() {
                     ],
                     analyses: [
                         {
-                            "id": "2570e105-7b37-40d2-bdf4-1af889598745",
-                            "type": "source",
-                            "params": {
-                                "query": "select * from test_table limit 2"
+                            id: '2570e105-7b37-40d2-bdf4-1af889598745',
+                            type: 'source',
+                            params: {
+                                query: 'select * from test_table limit 2'
                             }
                         }
                     ]
-                },
+                }
         },
         {
-            "description": "cache headers should be present and be composed with source table name",
-            "cache_headers": {
-                "x_cache_channel": {
-                    "db_name": "test_windshaft_cartodb_user_1_db",
-                    "tables": ["public.analysis_2f13a3dbd7_9eb239903a1afd8a69130d1ece0fc8b38de8592d",
-                               "public.test_table"]
+            description: 'cache headers should be present and be composed with source table name',
+            cache_headers: {
+                x_cache_channel: {
+                    db_name: 'test_windshaft_cartodb_user_1_db',
+                    tables: ['public.analysis_2f13a3dbd7_9eb239903a1afd8a69130d1ece0fc8b38de8592d',
+                        'public.test_table']
                 },
-                "surrogate_keys": "t:77pJnX t:iL4eth"
+                surrogate_keys: 't:77pJnX t:iL4eth'
             },
-            "data":
+            data:
             {
                 version: '1.5.0',
                 layers: [
                     {
                         options: {
                             source: {
-                                id: "2570e105-7b37-40d2-bdf4-1af889598745"
+                                id: '2570e105-7b37-40d2-bdf4-1af889598745'
                             },
                             sql: 'select * from test_table limit 2',
                             cartocss: '#layer { marker-fill:red; }',
                             cartocss_version: '2.3.0',
                             attributes: {
-                                id:'cartodb_id',
+                                id: 'cartodb_id',
                                 columns: [
                                     'name',
                                     'address'
@@ -109,23 +108,23 @@ describe('get requests with cache headers', function() {
                 ],
                 analyses: [
                     {
-                        "id": "2570e105-7b37-40d2-bdf4-1af889598745",
-                        "type": "buffer",
-                        "params": {
-                            "source": {
-                                "type": "source",
-                                "params": {
-                                    "query": "select * from test_table limit 2"
+                        id: '2570e105-7b37-40d2-bdf4-1af889598745',
+                        type: 'buffer',
+                        params: {
+                            source: {
+                                type: 'source',
+                                params: {
+                                    query: 'select * from test_table limit 2'
                                 }
                             },
-                            "radius": 50000
+                            radius: 50000
                         }
                     }
                 ]
             }
         }];
 
-    var layergroupRequest = function(mapConfig) {
+    var layergroupRequest = function (mapConfig) {
         return {
             url: '/api/v1/map?api_key=1234&config=' + encodeURIComponent(JSON.stringify(mapConfig)),
             method: 'GET',
@@ -135,12 +134,12 @@ describe('get requests with cache headers', function() {
         };
     };
 
-    function getRequest(url, addApiKey, callbackName) {
+    function getRequest (url, addApiKey, callbackName) {
         var params = {};
-        if (!!addApiKey) {
+        if (addApiKey) {
             params.api_key = '1234';
         }
-        if (!!callbackName) {
+        if (callbackName) {
             params.callback = callbackName;
         }
 
@@ -154,33 +153,33 @@ describe('get requests with cache headers', function() {
         };
     }
 
-    function validateCacheHeaders(done, expectedCacheHeaders) {
-        return function(res, err) {
+    function validateCacheHeaders (done, expectedCacheHeaders) {
+        return function (res, err) {
             if (err) {
                 return done(err);
             }
 
             assert.ok(res.headers['x-cache-channel']);
             assert.ok(res.headers['surrogate-key']);
-            assert.equal(res.headers.vary, 'Authorization');
+            assert.strictEqual(res.headers.vary, 'Authorization');
             if (expectedCacheHeaders) {
                 validateXChannelHeaders(res.headers, expectedCacheHeaders);
-                assert.equal(res.headers['surrogate-key'], expectedCacheHeaders.surrogate_keys);
+                assert.strictEqual(res.headers['surrogate-key'], expectedCacheHeaders.surrogate_keys);
             }
 
             done();
         };
     }
 
-    function validateXChannelHeaders(headers, expectedCacheHeaders) {
+    function validateXChannelHeaders (headers, expectedCacheHeaders) {
         var dbName = headers['x-cache-channel'].split(':')[0];
         var tables = headers['x-cache-channel'].split(':')[1].split(',').sort();
-        assert.equal(dbName, expectedCacheHeaders.x_cache_channel.db_name);
-        assert.deepEqual(tables, expectedCacheHeaders.x_cache_channel.tables.sort());
+        assert.strictEqual(dbName, expectedCacheHeaders.x_cache_channel.db_name);
+        assert.deepStrictEqual(tables, expectedCacheHeaders.x_cache_channel.tables.sort());
     }
 
-    function noCacheHeaders(done) {
-        return function(res, err) {
+    function noCacheHeaders (done) {
+        return function (res, err) {
             if (err) {
                 return done(err);
             }
@@ -197,12 +196,12 @@ describe('get requests with cache headers', function() {
         };
     }
 
-    function withLayergroupId(mapConfig, callback) {
+    function withLayergroupId (mapConfig, callback) {
         assert.response(
             server,
             layergroupRequest(mapConfig),
             statusOkResponse,
-            function(res, err) {
+            function (res, err) {
                 if (err) {
                     return callback(err);
                 }
@@ -214,19 +213,20 @@ describe('get requests with cache headers', function() {
         );
     }
 
-    mapConfigs.forEach(function(mapConfigData) {
-        describe(mapConfigData.description, function() {
+    mapConfigs.forEach(function (mapConfigData) {
+        describe(mapConfigData.description, function () {
             var mapConfig = mapConfigData.data;
             var expectedCacheHeaders = mapConfigData.cache_headers;
-            it('/api/v1/map Map instantiation', function(done) {
+            it('/api/v1/map Map instantiation', function (done) {
                 var testFn = validateCacheHeaders(done, expectedCacheHeaders);
-                withLayergroupId(mapConfig, function(err, layergroupId, res) {
-                    testFn(res);
+                withLayergroupId(mapConfig, function (err, layergroupId, res) {
+                    testFn(res, err);
                 });
             });
 
-            it ('/api/v1/map/:token/:z/:x/:y@:scale_factor?x.:format Mapnik retina tiles', function(done) {
-                withLayergroupId(mapConfig, function(err, layergroupId) {
+            it('/api/v1/map/:token/:z/:x/:y@:scale_factor?x.:format Mapnik retina tiles', function (done) {
+                withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0@2x.png', true),
@@ -235,8 +235,9 @@ describe('get requests with cache headers', function() {
                 });
             });
 
-            it ('/api/v1/map/:token/:z/:x/:y@:scale_factor?x.:format Mapnik tiles', function(done) {
-                withLayergroupId(mapConfig, function(err, layergroupId) {
+            it('/api/v1/map/:token/:z/:x/:y@:scale_factor?x.:format Mapnik tiles', function (done) {
+                withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0.png', true),
@@ -245,8 +246,9 @@ describe('get requests with cache headers', function() {
                 });
             });
 
-            it ('/api/v1/map/:token/:layer/:z/:x/:y.(:format) Per :layer rendering', function(done) {
-                withLayergroupId(mapConfig, function(err, layergroupId) {
+            it('/api/v1/map/:token/:layer/:z/:x/:y.(:format) Per :layer rendering', function (done) {
+                withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/0/0/0.png', true),
@@ -255,8 +257,9 @@ describe('get requests with cache headers', function() {
                 });
             });
 
-            it ('/api/v1/map/:token/:layer/attributes/:fid endpoint for info windows', function(done) {
-                withLayergroupId(mapConfig, function(err, layergroupId) {
+            it('/api/v1/map/:token/:layer/attributes/:fid endpoint for info windows', function (done) {
+                withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/' + layergroupId + '/0/attributes/1', true),
@@ -265,8 +268,9 @@ describe('get requests with cache headers', function() {
                 });
             });
 
-            it ('/api/v1/map/static/center/:token/:z/:lat/:lng/:width/:height.:format static maps', function(done) {
-                withLayergroupId(mapConfig, function(err, layergroupId) {
+            it('/api/v1/map/static/center/:token/:z/:lat/:lng/:width/:height.:format static maps', function (done) {
+                withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/static/center/' + layergroupId + '/0/0/0/400/300.png', true),
@@ -275,8 +279,9 @@ describe('get requests with cache headers', function() {
                 });
             });
 
-            it ('/api/v1/map/static/bbox/:token/:bbox/:width/:height.:format static maps', function(done) {
-                withLayergroupId(mapConfig, function(err, layergroupId) {
+            it('/api/v1/map/static/bbox/:token/:bbox/:width/:height.:format static maps', function (done) {
+                withLayergroupId(mapConfig, function (err, layergroupId) {
+                    assert.ifError(err);
                     assert.response(
                         server,
                         getRequest('/api/v1/map/static/bbox/' + layergroupId + '/-45,-45,45,45/400/300.png', true),
@@ -287,9 +292,8 @@ describe('get requests with cache headers', function() {
         });
     });
 
-    describe('cache headers should NOT be present', function() {
-
-        it('/', function(done) {
+    describe('cache headers should NOT be present', function () {
+        it('/', function (done) {
             assert.response(
                 server,
                 getRequest('/'),
@@ -298,7 +302,7 @@ describe('get requests with cache headers', function() {
             );
         });
 
-        it('/version', function(done) {
+        it('/version', function (done) {
             assert.response(
                 server,
                 getRequest('/version'),
@@ -307,7 +311,7 @@ describe('get requests with cache headers', function() {
             );
         });
 
-        it('/health', function(done) {
+        it('/health', function (done) {
             assert.response(
                 server,
                 getRequest('/health'),
@@ -316,7 +320,7 @@ describe('get requests with cache headers', function() {
             );
         });
 
-        it('/api/v1/map/named list named maps', function(done) {
+        it('/api/v1/map/named list named maps', function (done) {
             assert.response(
                 server,
                 getRequest('/api/v1/map/named', true),
@@ -325,18 +329,17 @@ describe('get requests with cache headers', function() {
             );
         });
 
-        describe('with named maps', function() {
-
+        describe('with named maps', function () {
             var templateName = 'x_cache';
 
-            beforeEach(function(done) {
-                var template =  {
+            beforeEach(function (done) {
+                var template = {
                     version: '0.0.1',
                     name: templateName,
                     auth: {
                         method: 'open'
                     },
-                    layergroup:  mapConfigs[0].data
+                    layergroup: mapConfigs[0].data
                 };
 
                 var namedMapRequest = {
@@ -353,13 +356,13 @@ describe('get requests with cache headers', function() {
                     server,
                     namedMapRequest,
                     statusOkResponse,
-                    function(res, err) {
+                    function (res, err) {
                         done(err);
                     }
                 );
             });
 
-            afterEach(function(done) {
+            afterEach(function (done) {
                 assert.response(
                     server,
                     {
@@ -372,14 +375,13 @@ describe('get requests with cache headers', function() {
                     {
                         status: 204
                     },
-                    function(res, err) {
+                    function (res, err) {
                         done(err);
                     }
                 );
             });
 
-
-            it('/api/v1/map/named/:template_id Named map retrieval', function(done) {
+            it('/api/v1/map/named/:template_id Named map retrieval', function (done) {
                 assert.response(
                     server,
                     getRequest('/api/v1/map/named/' + templateName, true),
@@ -388,7 +390,7 @@ describe('get requests with cache headers', function() {
                 );
             });
 
-            it('/api/v1/map/named/:template_id/jsonp Named map retrieval', function(done) {
+            it('/api/v1/map/named/:template_id/jsonp Named map retrieval', function (done) {
                 assert.response(
                     server,
                     getRequest('/api/v1/map/named/' + templateName, true, 'cb'),
