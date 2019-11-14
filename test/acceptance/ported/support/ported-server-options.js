@@ -16,7 +16,8 @@ module.exports = _.extend({}, serverOptions, {
         },
         cachedir: global.environment.millstone.cache_basedir,
         mapnik_version: global.environment.mapnik_version || mapnik.versions.mapnik,
-        gc_prob: 0 // run the garbage collector at each invocation
+        gc_prob: 0, // run the garbage collector at each invocation
+        default_layergroup_ttl: global.environment.mapConfigTTL || 7200
     },
     renderer: {
         mapnik: {
