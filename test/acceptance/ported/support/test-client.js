@@ -467,17 +467,17 @@ function withLayergroup (layergroupConfig, options, callback) {
                     return `${signer ? `:${signer}@` : ''}`;
                 };
 
-                const cacheTpl = function ({ cache_buster, cacheBuster }) {
-                    return `${cache_buster ? `:${cache_buster}` : `:${cacheBuster}`}`;
+                const cacheTpl = function ({ cacheBuster }) {
+                    return `${cacheBuster ? `:${cacheBuster}` : ''}`;
                 };
 
-                const urlTpl = function ({ layergroupid, cache_buster = null, tile }) {
-                    const { signer, token, cacheBuster } = LayergroupToken.parse(layergroupid);
+                const urlTpl = function ({ layergroupid, cacheBuster, tile }) {
+                    const { signer, token, cacheBuster: cb } = LayergroupToken.parse(layergroupid);
                     const base = '/api/v1/map/';
-                    return `${base}${signerTpl({ signer })}${token}${cacheTpl({ cache_buster, cacheBuster })}${tile}`;
+                    return `${base}${signerTpl({ signer })}${token}${cacheTpl({ cacheBuster: (cacheBuster || cb) })}${tile}`;
                 };
 
-                const finalUrl = urlTpl({ layergroupid, cache_buster: options.cache_buster, tile: layergroupUrl });
+                const finalUrl = urlTpl({ layergroupid, cacheBuster: options.cache_buster, tile: layergroupUrl });
 
                 var request = {
                     url: finalUrl,
