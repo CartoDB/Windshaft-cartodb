@@ -71,7 +71,9 @@
     "lint:fix": "eslint --fix app.js \"lib/**/*.js\" \"test/**/*.js\"",
     "lint": "eslint app.js \"lib/**/*.js\" \"test/**/*.js\"",
     "preinstall": "make pre-install",
-    "test": "make test-all",
+    "pretest": "NODE_ENV=test node test setup",
+    "test": "mocha -t 5000 --exit --recursive test/acceptance test/integration test/unit",
+    "posttest": "NODE_ENV=test node test teardown",
     "update-internal-deps": "rm -rf node_modules && npm install",
     "docker-test": "./docker-test.sh",
     "docker-bash": "./docker-bash.sh"
