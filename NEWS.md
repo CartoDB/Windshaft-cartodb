@@ -5,6 +5,7 @@ Released 2019-mm-dd
 
 Announcements:
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style.
+- Upgrade `camshaft` to [`0.65.0`](https://github.com/CartoDB/camshaft/blob/9e8e5cd09dbfc6886c40f3f4a356fb7f235e82be/CHANGELOG.md#0650): Use quoted identifiers for column names.
 
 ## 8.0.0
 Released 2019-11-13
