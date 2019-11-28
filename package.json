@@ -78,7 +78,8 @@
     "posttest": "npm run test:teardown",
     "test:teardown": "NODE_ENV=test node test teardown",
     "update-internal-deps": "rm -rf node_modules && npm install",
-    "ci:test": "docker run -e \"NODEJS_VERSION=$NODE_VERSION\" -v `pwd`:/srv $DOCKER_IMAGE bash run_tests_docker.sh && docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v",
+    "pretest:ci": "cp config/environments/test.js.example config/environments/test.js",
+    "test:ci": "docker run -e \"NODEJS_VERSION=$NODE_VERSION\" -v `pwd`:/srv $DOCKER_IMAGE bash run_tests_docker.sh && docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v",
     "docker:bash": "docker run -it -v `pwd`:/srv $DOCKER_IMAGE bash"
   },
   "engines": {
