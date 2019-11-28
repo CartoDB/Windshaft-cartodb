@@ -59,10 +59,10 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "istanbul": "0.4.5",
     "mocha": "5.2.0",
     "moment": "2.22.1",
     "nock": "9.2.6",
+    "nyc": "^14.1.1",
     "redis": "2.8.0",
     "step": "1.0.0",
     "strftime": "0.10.0"
@@ -77,7 +77,7 @@
     "test": "NODE_ENV=test mocha -t 5000 --exit --recursive test/acceptance test/integration test/unit",
     "posttest": "npm run test:teardown",
     "test:teardown": "NODE_ENV=test node test teardown",
-    "update-internal-deps": "rm -rf node_modules && npm install",
+    "test:coverage": "npm run test:setup && nyc --reporter=lcov mocha -t 5000 --exit --recursive test/acceptance test/integration test/unit && npm run test:teardown",
     "pretest:ci": "cp config/environments/test.js.example config/environments/test.js",
     "test:ci": "docker run -e \"NODEJS_VERSION=$NODE_VERSION\" -v `pwd`:/srv $DOCKER_IMAGE bash docker/scripts/test-setup.sh && docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v",
     "docker:bash": "docker run -it -v `pwd`:/srv $DOCKER_IMAGE bash"
