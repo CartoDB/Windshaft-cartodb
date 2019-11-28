@@ -86,26 +86,70 @@ async function populateDatabase () {
 }
 
 async function populateRedis () {
-    await exec(`redis-cli -p ${REDIS_PORT} -n 5 HMSET rails:users:localhost id ${TEST_USER_ID} database_name "${TEST_DB}" database_host localhost map_key 1234`);
-    await exec(`redis-cli -p ${REDIS_PORT} -n 5 HMSET rails:users:cartodb250user id ${TEST_USER_ID} database_name "${TEST_DB}" database_host "localhost" database_password "${TEST_PASSWORD}" map_key 4321`);
-    await exec(`redis-cli -p ${REDIS_PORT} -n 0 HSET rails:${TEST_DB}:my_table infowindow "this, that, the other"`);
-    await exec(`redis-cli -p ${REDIS_PORT} -n 0 HSET rails:${TEST_DB}:test_table_private_1 privacy "0"`);
-    // API keys
-    // User localhost
-    // API Key Master
-    await exec(`redis-cli -p ${REDIS_PORT} -n 5 HMSET api_keys:localhost:1234 user "localhost" type "master" grants_sql "true" grants_maps "true" database_role "${TEST_USER}" database_password "${TEST_PASSWORD}"`);
-    // API Key Default public
-    await exec(`redis-cli -p ${REDIS_PORT} -n 5 HMSET api_keys:localhost:default_public user "localhost" type "default" grants_sql "true" grants_maps "true" database_role "test_windshaft_publicuser" database_password "public"`);
-    // API Key Regular
-    await exec(`redis-cli -p ${REDIS_PORT} -n 5 HMSET api_keys:localhost:regular1 user "localhost" type "regular" grants_sql "true" grants_maps "true" database_role "test_windshaft_regular1" database_password "regular1"`);
-    // API Key Regular 2 no Maps API access, only to check grants permissions to the API
-    await exec(`redis-cli -p ${REDIS_PORT} -n 5 HMSET api_keys:localhost:regular2 user "localhost" type "regular" grants_sql "true" grants_maps "false" database_role "test_windshaft_publicuser" database_password "public"`);
+    const commands = `
+        HMSET rails:users:localhost \
+            id ${TEST_USER_ID} \
+            database_name "${TEST_DB}" \
+            database_host localhost \
+            map_key 1234
 
-    // User cartodb250user
-    // API Key Master
-    await exec(`redis-cli -p ${REDIS_PORT} -n 5 HMSET api_keys:cartodb250user:4321 user "localhost" type "master" grants_sql "true" grants_maps "true" database_role "${TEST_USER}" database_password "${TEST_PASSWORD}"`);
-    // API Key Default
-    await exec(`cat <<EOF | redis-cli -p ${REDIS_PORT} -n 5 HMSET api_keys:cartodb250user:default_public user "localhost" type "default" grants_sql "true" grants_maps "true" database_role "test_windshaft_publicuser" database_password "public"`);
+        HMSET rails:users:cartodb250user \
+            id ${TEST_USER_ID} \
+            database_name "${TEST_DB}" \
+            database_host "localhost" \
+            database_password "${TEST_PASSWORD}" \
+            map_key 4321
+
+        HMSET api_keys:localhost:1234 \
+            user "localhost" \
+            type "master" \
+            grants_sql "true" \
+            grants_maps "true" \
+            database_role "${TEST_USER}" \
+            database_password "${TEST_PASSWORD}"
+
+        HMSET api_keys:localhost:default_public \
+            user "localhost" \
+            type "default" \
+            grants_sql "true" \
+            grants_maps "true" \
+            database_role "test_windshaft_publicuser" \
+            database_password "public"
+
+        HMSET api_keys:localhost:regular1 \
+            user "localhost" \
+            type "regular" \
+            grants_sql "true" \
+            grants_maps "true" \
+            database_role "test_windshaft_regular1" \
+            database_password "regular1"
+
+        HMSET api_keys:localhost:regular2 \
+            user "localhost" \
+            type "regular" \
+            grants_sql "true" \
+            grants_maps "false" \
+            database_role "test_windshaft_publicuser" \
+            database_password "public"
+
+        HMSET api_keys:cartodb250user:4321 \
+            user "localhost" \
+            type "master" \
+            grants_sql "true" \
+            grants_maps "true" \
+            database_role "${TEST_USER}" \
+            database_password "${TEST_PASSWORD}"
+
+        HMSET api_keys:cartodb250user:default_public \
+            user "localhost" \
+            type "default" \
+            grants_sql "true" \
+            grants_maps "true" \
+            database_role "test_windshaft_publicuser" \
+            database_password "public"
+    `;
+
+    await exec(`echo "${commands}" | redis-cli -p ${REDIS_PORT} -n 5`);
 }
 
 async function main (args) {
