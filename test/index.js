@@ -65,24 +65,22 @@ async function populateDatabase () {
         'ported/populated_places_simple_reduced',
         'cdb_analysis_check',
         'cdb_invalidate_varnish'
-    ];
+    ].map(filename => `${__dirname}/support/sql/${filename}.sql`);
 
-    for (const filename of filenames) {
-        const populateDatabaseCmd = `
-            cat ${__dirname}/support/sql/${filename}.sql |
-            sed -e "s/:PUBLICUSER/${PUBLIC_USER}/g" |
-            sed -e "s/:PUBLICPASS/${PUBLIC_USER_PASSWORD}/g" |
-            sed -e "s/:TESTUSER/${TEST_USER}/g" |
-            sed -e "s/:TESTPASS/${TEST_PASSWORD}/g" |
-            PGOPTIONS='--client-min-messages=WARNING' psql -q -v ON_ERROR_STOP=1 ${TEST_DB}
-        `;
+    const populateDatabaseCmd = `
+        cat ${filenames.join(' ')} |
+        sed -e "s/:PUBLICUSER/${PUBLIC_USER}/g" |
+        sed -e "s/:PUBLICPASS/${PUBLIC_USER_PASSWORD}/g" |
+        sed -e "s/:TESTUSER/${TEST_USER}/g" |
+        sed -e "s/:TESTPASS/${TEST_PASSWORD}/g" |
+        PGOPTIONS='--client-min-messages=WARNING' psql -q -v ON_ERROR_STOP=1 ${TEST_DB}
+    `;
 
-        await exec(populateDatabaseCmd, {
-            env: {
-                PGUSER: 'postgres'
-            }
-        });
-    }
+    await exec(populateDatabaseCmd, {
+        env: {
+            PGUSER: 'postgres'
+        }
+    });
 }
 
 async function populateRedis () {
