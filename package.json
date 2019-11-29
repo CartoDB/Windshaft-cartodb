@@ -2,9 +2,17 @@
   "private": true,
   "name": "windshaft-cartodb",
   "version": "8.0.1",
-  "description": "A map tile server for CartoDB",
+  "description": "CARTO Maps API tiler",
   "keywords": [
-    "cartodb"
+    "carto",
+    "tiler",
+    "maps",
+    "anonymous maps",
+    "named maps",
+    "static maps",
+    "smart aggregations",
+    "analysis",
+    "dataviews"
   ],
   "url": "https://github.com/CartoDB/Windshaft-cartodb",
   "license": "BSD-3-Clause",
