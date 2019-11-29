@@ -11,7 +11,7 @@ This is the [`CARTO Maps API`](http://docs.cartodb.com/cartodb-platform/maps-api
 
 ## Build
 
-### Requirements
+Requirements:
 
 * Node 10.x
 * npm 6.x
@@ -22,9 +22,10 @@ This is the [`CARTO Maps API`](http://docs.cartodb.com/cartodb-platform/maps-api
 * libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 * C++11 (to build internal dependencies if needed)
 
-### Optional
+Optional:
 
 * [`Varnish`](http://www.varnish-cache.org)
+* [`Statsd`](https://github.com/statsd/statsd)
 
 ### PostGIS setup
 
