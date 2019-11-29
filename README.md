@@ -13,12 +13,11 @@ This is the [`CARTO Maps API`](http://docs.cartodb.com/cartodb-platform/maps-api
 
 Requirements:
 
-* Node 10.x
-* npm 6.x
-* PostgreSQL >= 10.0
-* PostGIS >= 2.4
-* CARTO Postgres Extension >= 0.24.1
-* Redis >= 4
+* [`Node 10.x (npm 6.x)`](https://nodejs.org/dist/latest-v10.x/)
+* [`PostgreSQL >= 10.0`](https://www.postgresql.org/download/)
+* [`PostGIS >= 2.4`](https://postgis.net/install/)
+* [`CARTO Postgres Extension >= 0.24.1`](https://github.com/CartoDB/cartodb-postgresql)
+* [`Redis >= 4`](https://redis.io/download)
 * libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
 * C++11 (to build internal dependencies if needed)
 
