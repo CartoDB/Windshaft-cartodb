@@ -40,7 +40,7 @@ $ psql -d template_postgis -c 'CREATE EXTENSION postgis;'
 To fetch and build all node-based dependencies, run:
 
 ```shell
-$ npm ci
+$ npm install
 ```
 
 ### Run
