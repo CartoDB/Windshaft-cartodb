@@ -77,7 +77,7 @@ You can find an overview, guides, full reference, and support in [`CARTO's devel
 * We love pull requests from everyone, see [contributing to Open Source on GitHub](https://guides.github.com/activities/contributing-to-open-source/#contributing).
 * You'll need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here](https://carto.com/contributions).
 
-## Developing with a custom windshaft version
+## Developing with a custom `Windshaft` version
 
 If you plan or want to use a custom / not released yet version of windshaft (or any other dependency) the best option is to use `npm link`. You can read more about it at `npm-link`: [symlink a package folder](https://docs.npmjs.com/cli/link.html).
 
