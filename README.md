@@ -18,8 +18,8 @@ Requirements:
 * [`PostGIS >= 2.4`](https://postgis.net/install/)
 * [`CARTO Postgres Extension >= 0.24.1`](https://github.com/CartoDB/cartodb-postgresql)
 * [`Redis >= 4`](https://redis.io/download)
-* libcairo2-dev, libpango1.0-dev, libjpeg8-dev and libgif-dev for server side canvas support
-* C++11 (to build internal dependencies if needed)
+* `libcairo2-dev`, `libpango1.0-dev`, `libjpeg8-dev` and `libgif-dev` for server side canvas support
+* `C++11` to build internal dependencies. When there's no pre-built binaries for your OS/architecture distribution.
 
 Optional:
 
