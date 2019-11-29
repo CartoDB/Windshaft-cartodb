@@ -79,9 +79,9 @@ We love pull requests from everyone, see [Contributing to Open Source on GitHub]
 If you plan or want to use a custom / not released yet version of windshaft (or any other dependency) the best option is to use `npm link`. You can read more about it at [npm-link: Symlink a package folder](https://docs.npmjs.com/cli/link.html).
 
 ```shell
-$ cd /path/to/windshaft/directory/
-/path/to/windshaft/directory$ npm install
-/path/to/windshaft/directory/$ npm link
-$ cd /path/to/windshaft-cartodb/directory/
-/path/to/windshaft-cartodb/directory$ npm link windshaft
+$ cd /path/to/Windshaft
+$ npm install
+$ npm link
+$ cd /path/to/Windshaft-cartodb
+$ npm link windshaft
 ```
