@@ -1,6 +1,6 @@
 # Windshaft-CartoDB [![Build Status](https://travis-ci.org/CartoDB/Windshaft-cartodb.svg?branch=master)](https://travis-ci.org/CartoDB/Windshaft-cartodb)
 
-The [`CARTO Maps API`](http://docs.cartodb.com/cartodb-platform/maps-api.html) tiler. It extends [`Windshaft`](https://github.com/CartoDB/Windshaft) and exposes a complete web service with extra functionality:
+The [`CARTO Maps API`](http://docs.cartodb.com/cartodb-platform/maps-api.html) tiler. It extends [`Windshaft`](https://github.com/CartoDB/Windshaft) and exposes a web service with extra functionality:
 
 * Instantiate [`Anonymous Maps`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/03-anonymous-maps.md) through CARTO's map configuration ([`MapConfig`](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-specification.md)).
 * Create [`Named Maps`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/04-named-maps.md) based on customizable templates.
