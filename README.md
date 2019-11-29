@@ -1,6 +1,4 @@
-# Windshaft-CartoDB
-
-[![Build Status](https://travis-ci.org/CartoDB/Windshaft-cartodb.svg?branch=master)](https://travis-ci.org/CartoDB/Windshaft-cartodb)
+# Windshaft-CartoDB [![Build Status](https://travis-ci.org/CartoDB/Windshaft-cartodb.svg?branch=master)](https://travis-ci.org/CartoDB/Windshaft-cartodb)
 
 This is the [`CARTO Maps API`](http://docs.cartodb.com/cartodb-platform/maps-api.html) tiler. It extends [`Windshaft`](https://github.com/CartoDB/Windshaft) and exposes a complete web service with extra functionality:
 
@@ -76,3 +74,11 @@ $ npm link
 $ cd /path/to/Windshaft-cartodb
 $ npm link windshaft
 ```
+
+## Versioning
+
+We follow [`SemVer`](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/Windshaft-cartodb/cartonik/tags).
+
+## License
+
+This project is licensed under the BSD 3-clause "New" or "Revised" License - see the [LICENSE](LICENSE) file for details.
