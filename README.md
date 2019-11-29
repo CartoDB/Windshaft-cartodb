@@ -59,19 +59,11 @@ Where `<env>` is the name of a configuration file under `./config/environments/`
 
 The [docs directory](https://github.com/CartoDB/Windshaft-cartodb/tree/master/docs) contains different documentation resources, from higher level to more detailed ones: the [Maps API](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/Map-API.md) document defines the endpoints and their expected parameters and outputs.
 
-### Examples
-
-[CartoDB's Map Gallery](https://carto.com/platform/solutions-visualization/) showcases several examples of visualisations built on top of this.
-
 ## Contributing
 
-The issue tracker: [`Github`](https://github.com/CartoDB/Windshaft-cartodb/issues).
-
-We love pull requests from everyone, see [contributing to Open Source on GitHub](https://guides.github.com/activities/contributing-to-open-source/#contributing).
-
-### Submitting Contributions
-
-* You will need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here](https://carto.com/contributions).
+* The issue tracker: [`Github`](https://github.com/CartoDB/Windshaft-cartodb/issues).
+* We love pull requests from everyone, see [contributing to Open Source on GitHub](https://guides.github.com/activities/contributing-to-open-source/#contributing).
+* You'll need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here](https://carto.com/contributions).
 
 ### Developing with a custom windshaft version
 
