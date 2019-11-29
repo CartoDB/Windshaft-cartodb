@@ -9,7 +9,7 @@ This is the [`CARTO Maps API`](http://docs.cartodb.com/cartodb-platform/maps-api
 * Build advanced maps with enriched data through [`Analyses Extension`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/09-MapConfig-analyses-extension.md).
 * Fetch tabular data from analysis nodes with [`Dataviews`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/10-MapConfig-dataviews-extension.md)
 
-## Install
+## Build
 
 ### Requirements
 
@@ -35,7 +35,7 @@ $ createdb --owner postgres --template template0 template_postgis
 $ psql -d template_postgis -c 'CREATE EXTENSION postgis;'
 ```
 
-### Build
+### Install
 
 To fetch and build all node-based dependencies, run:
 
@@ -63,7 +63,7 @@ The [docs directory](https://github.com/CartoDB/Windshaft-cartodb/tree/master/do
 * We love pull requests from everyone, see [contributing to Open Source on GitHub](https://guides.github.com/activities/contributing-to-open-source/#contributing).
 * You'll need to sign a Contributor License Agreement (CLA) before making a submission. [Learn more here](https://carto.com/contributions).
 
-### Developing with a custom windshaft version
+## Developing with a custom windshaft version
 
 If you plan or want to use a custom / not released yet version of windshaft (or any other dependency) the best option is to use `npm link`. You can read more about it at `npm-link`: [symlink a package folder](https://docs.npmjs.com/cli/link.html).
 
