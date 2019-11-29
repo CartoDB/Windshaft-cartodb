@@ -58,6 +58,8 @@ Where `<env>` is the name of a configuration file under `./config/environments/`
 
 The [docs directory](https://github.com/CartoDB/Windshaft-cartodb/tree/master/docs) contains different documentation resources, from higher level to more detailed ones: the [Maps API](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/Map-API.md) document defines the endpoints and their expected parameters and outputs.
 
+You can find an overview, guides, full reference, and support in [`CARTO's developer center`](https://carto.com/developers/maps-api/).
+
 ## Contributing
 
 * The issue tracker: [`Github`](https://github.com/CartoDB/Windshaft-cartodb/issues).
