@@ -85,7 +85,7 @@
     "test": "NODE_ENV=test mocha -t 5000 --exit --recursive test/acceptance test/integration test/unit",
     "posttest": "npm run test:teardown",
     "test:teardown": "NODE_ENV=test node test teardown",
-    "test:coverage": "npm run test:setup && nyc --reporter=lcov mocha -t 5000 --exit --recursive test/acceptance test/integration test/unit && npm run test:teardown",
+    "cover": "npm run test:setup && nyc --reporter=lcov mocha -t 5000 --exit --recursive test/acceptance test/integration test/unit && npm run test:teardown",
     "pretest:ci": "cp config/environments/test.js.example config/environments/test.js",
     "test:ci": "docker run -e \"NODEJS_VERSION=$NODE_VERSION\" -v `pwd`:/srv $DOCKER_IMAGE bash docker/scripts/test-setup.sh && docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v",
     "docker:bash": "docker run -it -v `pwd`:/srv $DOCKER_IMAGE bash"
