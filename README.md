@@ -4,7 +4,7 @@
 
 This is the [CARTO Maps API](http://docs.cartodb.com/cartodb-platform/maps-api.html) tiler. It extends [Windshaft](https://github.com/CartoDB/Windshaft) and exposes a complete web service with extra functionality:
 
-* Intantiate [`Anonymous Maps`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/03-anonymous-maps.md) defined through CARTO's map configuration ([MapConfig](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-specification.md)).
+* Intantiate [`Anonymous Maps`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/03-anonymous-maps.md) through CARTO's map configuration ([MapConfig](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-specification.md)).
 * Create [`Named Maps`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/04-named-maps.md) based on customizables templates.
 * Get map previews through [`Static Maps`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/05-static-maps-API.md) API.
 * Render maps with large amount of data faster using [`Tile Aggregation`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/06-tile-aggregation.md).
