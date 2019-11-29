@@ -65,6 +65,8 @@ $ npm test
 $ npm run cover
 ```
 
+Open `./coverage/lcov-report/index.html`.
+
 ## Documentation
 
 You can find an overview, guides, full reference, and support in [`CARTO's developer center`](https://carto.com/developers/maps-api/). The [docs directory](https://github.com/CartoDB/Windshaft-cartodb/tree/master/docs) contains different documentation resources, from higher level to more detailed ones.
