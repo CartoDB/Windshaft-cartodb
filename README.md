@@ -74,18 +74,25 @@ We provide docker images just for testing and continuous integration purposes:
 * [`nodejs-xenial-pg1121`](https://hub.docker.com/r/carto/nodejs-xenial-pg1121/tags)
 * [`nodejs-xenial-pg101`](https://hub.docker.com/r/carto/nodejs-xenial-pg101/tags)
 
-And useful `npm` scripts:
+You can find instructions to install Docker, download, and update images [here](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docker/reference.md).
 
-* Run test in a docker image with a specific Node.js version:
+### Useful `npm` scripts
+
+Run test in a docker image with a specific Node.js version:
 
 ```shell
-$ DOCKER_IMAGE=carto/nodejs-xenial-pg1121:latest NODE_VERSION=10.15.1 npm run test:docker
+$ DOCKER_IMAGE=<docker-image-tag> NODE_VERSION=<nodejs-version> npm run test:docker
 ```
 
-* In case you need to debug:
+Where:
+
+* `<docker-image-tag>`: the tag of required docker image, e.g. `carto/nodejs-xenial-pg1121:latest`
+* `<nodejs-version>`: the Node.js version, e.g. `10.15.1`
+
+In case you need to debug:
 
 ```shell
-$ DOCKER_IMAGE=carto/nodejs-xenial-pg1121:latest npm run docker:bash
+$ DOCKER_IMAGE=<docker-image-tag> npm run docker:bash
 ```
 
 ## Documentation
