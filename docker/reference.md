@@ -20,7 +20,7 @@ docker pull carto/IMAGE
 
 ## Update image
 
-* Edit the docker image file with your desired changes
+* Edit the docker image file
 * Build image:
   * `docker build -t carto/IMAGE -f docker/DOCKER_FILE docker/`
 
