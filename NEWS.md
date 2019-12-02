@@ -5,7 +5,7 @@ Released 2019-mm-dd
 
 Announcements:
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style.
-- Upgrade `camshaft` to [`0.65.0`](https://github.com/CartoDB/camshaft/blob/9e8e5cd09dbfc6886c40f3f4a356fb7f235e82be/CHANGELOG.md#0650): Use quoted identifiers for column names.
+- Upgrade `camshaft` to [`0.65.1`](https://github.com/CartoDB/camshaft/blob/a2836c15fd2830f8364a222eeafdb4dc2f41b580/CHANGELOG.md#0651): Use quoted identifiers for column names and enforce the usage of the cartodb schema when using cartodb extension functions and tables.
 - Stop using two different tools for package management, testing, and any other developer workflow.
   - Removes Makefile and related bash scripts
   - Use npm scripts as the only tool for testing, CI and linting.
@@ -17,6 +17,7 @@ Announcements:
   - Added missing sections.
 - Remove deprecated coverage tool istanbul, using nyc instead.
 - Removed unused dockerfiles
+- Use cartodb schema when using cartodb extension functions and tables.
 
 ## 8.0.0
 Released 2019-11-13
