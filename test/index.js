@@ -34,19 +34,19 @@ async function stopRedis () {
 
 async function dropDatabase () {
     await exec(`dropdb --if-exists ${TEST_DB}`, {
-        env: Object.assign ({ PGUSER: 'postgres' }, process.env)
+        env: Object.assign({ PGUSER: 'postgres' }, process.env)
     });
 }
 
 async function createDatabase () {
     await exec(`createdb -T template_postgis -EUTF8 "${TEST_DB}"`, {
-        env: Object.assign ({ PGUSER: 'postgres' }, process.env)
+        env: Object.assign({ PGUSER: 'postgres' }, process.env)
     });
 }
 
 async function createDatabaseExtension () {
     await exec(`psql -c "CREATE EXTENSION IF NOT EXISTS cartodb CASCADE;" ${TEST_DB}`, {
-        env: Object.assign ({ PGUSER: 'postgres' }, process.env)
+        env: Object.assign({ PGUSER: 'postgres' }, process.env)
     });
 }
 
@@ -71,7 +71,7 @@ async function populateDatabase () {
     `;
 
     await exec(populateDatabaseCmd, {
-        env: Object.assign ({ PGUSER: 'postgres' }, process.env)
+        env: Object.assign({ PGUSER: 'postgres' }, process.env)
     });
 }
 
