@@ -1,11 +1,22 @@
 # Changelog
 
-## 8.0.1
+## 8.1.0
 Released 2019-mm-dd
 
 Announcements:
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style.
 - Upgrade `camshaft` to [`0.65.0`](https://github.com/CartoDB/camshaft/blob/9e8e5cd09dbfc6886c40f3f4a356fb7f235e82be/CHANGELOG.md#0650): Use quoted identifiers for column names.
+- Stop using two different tools for package management, testing, and any other developer workflow.
+  - Removes Makefile and related bash scripts
+  - Use npm scripts as the only tool for testing, CI and linting.
+  - Simplified CI configuration.
+- Improved documentation:
+  - Centralized several documents into README.md
+  - Remove outdated sections
+  - Update old sections
+  - Added missing sections.
+- Remove deprecated coverage tool istanbul, using nyc instead.
+- Removed unused dockerfiles
 
 ## 8.0.0
 Released 2019-11-13

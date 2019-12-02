@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "8.0.1",
+  "version": "8.1.0",
   "description": "CARTO Maps API tiler",
   "keywords": [
     "carto",
