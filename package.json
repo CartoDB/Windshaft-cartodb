@@ -1,10 +1,18 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "8.0.1",
-  "description": "A map tile server for CartoDB",
+  "version": "8.1.0",
+  "description": "CARTO Maps API tiler",
   "keywords": [
-    "cartodb"
+    "carto",
+    "tiler",
+    "maps",
+    "anonymous maps",
+    "named maps",
+    "static maps",
+    "smart aggregations",
+    "analysis",
+    "dataviews"
   ],
   "url": "https://github.com/CartoDB/Windshaft-cartodb",
   "license": "BSD-3-Clause",
@@ -59,10 +67,10 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "istanbul": "0.4.5",
     "mocha": "5.2.0",
     "moment": "2.22.1",
     "nock": "9.2.6",
+    "nyc": "^14.1.1",
     "redis": "2.8.0",
     "step": "1.0.0",
     "strftime": "0.10.0"
@@ -70,11 +78,22 @@
   "scripts": {
     "lint:fix": "eslint --fix app.js \"lib/**/*.js\" \"test/**/*.js\"",
     "lint": "eslint app.js \"lib/**/*.js\" \"test/**/*.js\"",
-    "preinstall": "make pre-install",
-    "test": "make test-all",
-    "update-internal-deps": "rm -rf node_modules && npm install",
-    "docker-test": "./docker-test.sh",
-    "docker-bash": "./docker-bash.sh"
+    "preinstall": "scripts/darwin-pre-install.sh",
+    "pretest:setup": "npm run lint",
+    "test:setup": "NODE_ENV=test node test setup",
+    "pretest": "npm run test:setup",
+    "test": "npm run test:all",
+    "test:all": "npm run test:unit && npm run test:integration && npm run test:acceptance",
+    "test:acceptance": "NODE_ENV=test mocha -t 5000 --exit --recursive test/acceptance",
+    "test:integration": "NODE_ENV=test mocha --exit --recursive test/integration",
+    "test:unit": "NODE_ENV=test mocha --exit --recursive test/unit",
+    "posttest": "npm run test:teardown",
+    "test:teardown": "NODE_ENV=test node test teardown",
+    "precover": "npm run test:setup",
+    "cover": "NODE_ENV=test nyc --reporter=lcov npm run test:all",
+    "postcover": "npm run test:teardown",
+    "test:docker": "docker run -e \"NODEJS_VERSION=$NODE_VERSION\" -v `pwd`:/srv $DOCKER_IMAGE bash docker/scripts/test-setup.sh && docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v",
+    "docker:bash": "docker run -it -v `pwd`:/srv $DOCKER_IMAGE bash"
   },
   "engines": {
     "node": "^10.15.1",

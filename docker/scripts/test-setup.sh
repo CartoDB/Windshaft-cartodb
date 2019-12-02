@@ -8,15 +8,7 @@ source /src/nodejs-install.sh
 git clone https://github.com/CartoDB/cartodb-postgresql.git
 cd cartodb-postgresql && make && make install && cd ..
 
-echo "Node.js version: "
-node -v
+cp config/environments/test.js.example config/environments/test.js
 
-echo "npm version: "
-npm -v
-
-echo "Clean install: "
 npm ci
-npm ls
-
-# run tests
 npm test

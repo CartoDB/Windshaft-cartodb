@@ -11,3 +11,4 @@ redis.pid
 *.log
 coverage/
 .DS_Store
+.nyc_output
