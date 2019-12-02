@@ -485,7 +485,7 @@ TestClient.prototype.getDataview = function (dataviewName, params, callback) {
                 urlParams.own_filter = params.own_filter;
             }
 
-            ['bbox', 'bins', 'start', 'end', 'aggregation', 'offset', 'categories'].forEach(function (extraParam) {
+            ['bbox', 'circle', 'bins', 'start', 'end', 'aggregation', 'offset', 'categories'].forEach(function (extraParam) {
                 if (Object.prototype.hasOwnProperty.call(params, extraParam)) {
                     urlParams[extraParam] = params[extraParam];
                 }

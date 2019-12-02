@@ -77,8 +77,7 @@ describe('circle filter', function () {
 
     const scenarios = [
         {
-            params: {
-            },
+            params: JSON.stringify({}),
             expected: {
                 type: 'aggregation',
                 aggregation: 'sum',
@@ -99,27 +98,24 @@ describe('circle filter', function () {
         },
         {
             params: {
-                circle: {
+                circle: JSON.stringify({
                     lat: 0,
                     lng: 0,
                     radius: 5000
-                }
+                })
             },
             expected: {
                 type: 'aggregation',
                 aggregation: 'sum',
-                count: 21,
+                count: 1,
                 nulls: 0,
                 nans: 0,
                 infinities: 0,
-                min: 5,
-                max: 40,
-                categoriesCount: 4,
+                min: 1,
+                max: 1,
+                categoriesCount: 1,
                 categories: [
-                    { category: 'category_4', value: 40, agg: false },
-                    { category: 'category_3', value: 9, agg: false },
-                    { category: 'category_2', value: 6, agg: false },
-                    { category: 'category_1', value: 5, agg: false }
+                    { category: 'category_1', value: 1, agg: false }
                 ]
             }
         }
