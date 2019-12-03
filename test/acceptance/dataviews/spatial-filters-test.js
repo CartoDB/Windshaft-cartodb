@@ -5,7 +5,7 @@ require('../../support/test-helper');
 const assert = require('../../support/assert');
 const TestClient = require('../../support/test-client');
 
-describe('circle filter', function () {
+describe('spatial filters', function () {
     const mapConfig = {
         version: '1.8.0',
         layers: [
@@ -115,6 +115,49 @@ describe('circle filter', function () {
                 max: 1,
                 categoriesCount: 1,
                 categories: [
+                    { category: 'category_1', value: 1, agg: false }
+                ]
+            }
+        },
+        {
+            params: {
+                polygon: JSON.stringify({
+                    type: 'Polygon',
+                    coordinates: [
+                        [
+                            [
+                                -9.312286,
+                                37.907367
+                            ],
+                            [
+                                11.969604,
+                                6.487254
+                            ],
+                            [
+                                -32.217407,
+                                6.957781
+                            ],
+                            [
+                                -9.312286,
+                                37.907367
+                            ]
+                        ]
+                    ]
+                })
+            },
+            expected: {
+                type: 'aggregation',
+                aggregation: 'sum',
+                count: 3,
+                nulls: 0,
+                nans: 0,
+                infinities: 0,
+                min: 1,
+                max: 4,
+                categoriesCount: 3,
+                categories: [
+                    { category: 'category_4', value: 4, agg: false },
+                    { category: 'category_2', value: 2, agg: false },
                     { category: 'category_1', value: 1, agg: false }
                 ]
             }
