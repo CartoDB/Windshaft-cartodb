@@ -31,6 +31,16 @@ describe('spatial filters', function () {
                     aggregation: 'sum',
                     aggregationColumn: 'val'
                 }
+            },
+            counter: {
+                type: 'formula',
+                source: {
+                    id: 'a0'
+                },
+                options: {
+                    column: 'val',
+                    operation: 'count'
+                }
             }
         },
         analyses: [
@@ -77,6 +87,7 @@ describe('spatial filters', function () {
 
     const scenarios = [
         {
+            dataview: 'categories',
             params: JSON.stringify({}),
             expected: {
                 type: 'aggregation',
@@ -97,6 +108,7 @@ describe('spatial filters', function () {
             }
         },
         {
+            dataview: 'categories',
             params: {
                 circle: JSON.stringify({
                     lat: 0,
@@ -120,6 +132,7 @@ describe('spatial filters', function () {
             }
         },
         {
+            dataview: 'categories',
             params: {
                 polygon: JSON.stringify({
                     type: 'Polygon',
@@ -161,12 +174,28 @@ describe('spatial filters', function () {
                     { category: 'category_1', value: 1, agg: false }
                 ]
             }
+        },
+        {
+            dataview: 'counter',
+            params: {
+                circle: JSON.stringify({
+                    lat: 0,
+                    lng: 0,
+                    radius: 50000
+                })
+            },
+            expected: {
+                nulls: 0,
+                operation: 'count',
+                result: 1,
+                type: 'formula'
+            }
         }
     ];
 
     scenarios.forEach(function (scenario) {
         it(`should get aggregation dataview with params: ${JSON.stringify(scenario.params)}`, function (done) {
-            this.testClient.getDataview('categories', scenario.params, (err, dataview) => {
+            this.testClient.getDataview(scenario.dataview, scenario.params, (err, dataview) => {
                 assert.ifError(err);
                 assert.deepStrictEqual(dataview, scenario.expected);
                 done();
