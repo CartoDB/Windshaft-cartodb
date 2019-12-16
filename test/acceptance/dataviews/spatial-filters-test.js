@@ -130,6 +130,91 @@ describe('spatial filters', function () {
                     { category: 'category_1', value: 1, agg: false }
                 ]
             }
+        }, {
+            dataview: 'categories',
+            params: {
+                circle: JSON.stringify({
+                    lng: 0,
+                    radius: 5000
+                }),
+                response: {
+                    status: 400
+                }
+            },
+            expected: {
+                errors: [
+                    'Missing parameter for Circle Filter, expected: "lng", "lat", and "radius"'
+                ],
+                errors_with_context: [
+                    {
+                        type: 'filter',
+                        message: 'Missing parameter for Circle Filter, expected: "lng", "lat", and "radius"'
+                    }
+                ]
+            }
+        }, {
+            dataview: 'categories',
+            params: {
+                circle: JSON.stringify({
+                    lat: 0,
+                    radius: 5000
+                }),
+                response: {
+                    status: 400
+                }
+            },
+            expected: {
+                errors: [
+                    'Missing parameter for Circle Filter, expected: "lng", "lat", and "radius"'
+                ],
+                errors_with_context: [
+                    {
+                        type: 'filter',
+                        message: 'Missing parameter for Circle Filter, expected: "lng", "lat", and "radius"'
+                    }
+                ]
+            }
+        }, {
+            dataview: 'categories',
+            params: {
+                circle: JSON.stringify({
+                    lng: 0,
+                    lat: 0
+                }),
+                response: {
+                    status: 400
+                }
+            },
+            expected: {
+                errors: [
+                    'Missing parameter for Circle Filter, expected: "lng", "lat", and "radius"'
+                ],
+                errors_with_context: [
+                    {
+                        type: 'filter',
+                        message: 'Missing parameter for Circle Filter, expected: "lng", "lat", and "radius"'
+                    }
+                ]
+            }
+        }, {
+            dataview: 'categories',
+            params: {
+                circle: 'wadus',
+                response: {
+                    status: 400
+                }
+            },
+            expected: {
+                errors: [
+                    'Invalid circle parameter. Expected a valid JSON'
+                ],
+                errors_with_context: [
+                    {
+                        type: 'filter',
+                        message: 'Invalid circle parameter. Expected a valid JSON'
+                    }
+                ]
+            }
         },
         {
             dataview: 'categories',
@@ -172,6 +257,69 @@ describe('spatial filters', function () {
                     { category: 'category_4', value: 4, agg: false },
                     { category: 'category_2', value: 2, agg: false },
                     { category: 'category_1', value: 1, agg: false }
+                ]
+            }
+        }, {
+            dataview: 'categories',
+            params: {
+                polygon: 'wadus',
+                response: {
+                    status: 400
+                }
+            },
+            expected: {
+                errors: [
+                    'Invalid polygon parameter. Expected a valid GeoJSON'
+                ],
+                errors_with_context: [
+                    {
+                        type: 'filter',
+                        message: 'Invalid polygon parameter. Expected a valid GeoJSON'
+                    }
+                ]
+            }
+        }, {
+            dataview: 'categories',
+            params: {
+                polygon: JSON.stringify({
+                    type: 'Point',
+                    coordinates: [30, 10]
+                }),
+                response: {
+                    status: 400
+                }
+            },
+            expected: {
+                errors: [
+                    'Invalid type of geometry. Valid ones: "Polygon"'
+                ],
+                errors_with_context: [
+                    {
+                        type: 'filter',
+                        message: 'Invalid type of geometry. Valid ones: "Polygon"'
+                    }
+                ]
+            }
+        }, {
+            dataview: 'categories',
+            params: {
+                polygon: JSON.stringify({
+                    type: 'Polygon',
+                    coordinates: [[[]]]
+                }),
+                response: {
+                    status: 400
+                }
+            },
+            expected: {
+                errors: [
+                    'Too few ordinates in GeoJSON'
+                ],
+                errors_with_context: [
+                    {
+                        type: 'unknown',
+                        message: 'Too few ordinates in GeoJSON'
+                    }
                 ]
             }
         },
