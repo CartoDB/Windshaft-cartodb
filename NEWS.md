@@ -18,6 +18,7 @@ Announcements:
 - Remove deprecated coverage tool istanbul, using nyc instead.
 - Removed unused dockerfiles
 - Use cartodb schema when using cartodb extension functions and tables.
+- Implemented circle and polygon dataview filters.
 
 ## 8.0.0
 Released 2019-11-13
