@@ -1,6 +1,6 @@
 # Windshaft-CartoDB [![Build Status](https://travis-ci.org/CartoDB/Windshaft-cartodb.svg?branch=master)](https://travis-ci.org/CartoDB/Windshaft-cartodb)
 
-The [`CARTO Maps API`](http://docs.cartodb.com/cartodb-platform/maps-api.html) tiler. It extends [`Windshaft`](https://github.com/CartoDB/Windshaft) and exposes a web service with extra functionality:
+The [`CARTO Maps API`](https://carto.com/developers/maps-api/) tiler. It extends [`Windshaft`](https://github.com/CartoDB/Windshaft) and exposes a web service with extra functionality:
 
 * Instantiate [`Anonymous Maps`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/03-anonymous-maps.md) through CARTO's map configuration ([`MapConfig`](https://github.com/CartoDB/Windshaft/blob/master/doc/MapConfig-specification.md)).
 * Create [`Named Maps`](https://github.com/CartoDB/Windshaft-cartodb/blob/master/docs/guides/04-named-maps.md) based on customizable templates.
@@ -45,7 +45,7 @@ $ npm install
 
 ### Run
 
-Create the `./config/environments/<env>.js` file (there are `.example` files to start from). Look at `./lib/cartodb/server-options.js` for more on config.
+Create the `./config/environments/<env>.js` file (there are `.example` files to start from). Look at `./lib/server-options.js` for more on config.
 
 ```shell
 $ node app.js <env>
@@ -119,7 +119,7 @@ $ npm link windshaft
 
 ## Versioning
 
-We follow [`SemVer`](http://semver.org/) for versioning. For available versions, see the [tags on this repository](https://github.com/Windshaft-cartodb/cartonik/tags).
+We follow [`SemVer`](http://semver.org/) for versioning. For available versions, see the [tags on this repository](https://github.com/CartoDB/Windshaft-cartodb/tags).
 
 ## License
 

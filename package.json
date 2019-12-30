@@ -20,17 +20,19 @@
     "type": "git",
     "url": "git://github.com/CartoDB/Windshaft-cartodb.git"
   },
-  "author": "Vizzuality <contact@vizzuality.com> (http://vizzuality.com)",
+  "author": "CARTO (https://carto.com)",
   "contributors": [
     "Simon Tokumine <simon@vizzuality.com>",
     "Javi Santana <jsantana@vizzuality.com>",
+    "Raúl Ochoa <rochoa@carto.com>",
     "Sandro Santilli <strk@vizzuality.com>",
     "Carlos Matallín <matallo@carto.com>",
-    "Daniel Garcia Aubert <dgaubert@carto.com>",
+    "Daniel García Aubert <dgaubert@carto.com>",
     "Mario de Frutos <mario.defrutos@carto.com>",
     "Ivan Malagon <ivan@carto.com>",
     "Simon Martin <simon@carto.com>"
   ],
+  "main": "app.js",
   "dependencies": {
     "@carto/fqdn-sync": "0.2.2",
     "basic-auth": "2.0.0",

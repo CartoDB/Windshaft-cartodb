@@ -1,4 +1,4 @@
-How to release:
+# How to release
 
 1. Test (npm test), fix if broken before proceeding.
 2. Ensure proper version in `package.json` and `package-lock.json`.
@@ -8,7 +8,7 @@ How to release:
 6. Run `git tag -a Major.Minor.Patch`. Use NEWS section as content.
 7. Stub NEWS/package for next version.
 
-Versions:
+## Version:
 
 * Bugfix releases increment Patch component of version.
 * Feature releases increment Minor and set Patch to zero.
