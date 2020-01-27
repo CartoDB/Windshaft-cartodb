@@ -1,7 +1,7 @@
 # Changelog
 
 ## 8.1.0
-Released 2019-mm-dd
+Released 2019-01-27
 
 Announcements:
 - Removed `jshint` as linter in favour of `eslint` to check syntax, find problems, and enforce code style.
