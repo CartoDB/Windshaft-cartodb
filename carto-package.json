@@ -11,7 +11,7 @@
             "redis": ">=4.0.0",
             "postgresql": ">=10.0.0",
             "postgis": ">=2.4.4.5",
-            "carto_postgresql_ext": ">=0.24.1"
+            "carto_postgresql_ext": ">=0.35.0"
         }
     }
 }
