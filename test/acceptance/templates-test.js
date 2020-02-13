@@ -303,7 +303,8 @@ describe('template_api', function () {
             assert.response(server, postRequest, {}, function (res) { next(null, res); });
         },
         function testCORS () {
-            const allowHeaders = 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, Content-Type';
+            const allowHeaders = 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, ' +
+                                    'Carto-Source-Lib, Carto-Source-Context, Carto-Source-Context-Id, Content-Type';
             assert.response(server, {
                 url: '/api/v1/map/named/acceptance1',
                 method: 'OPTIONS'
