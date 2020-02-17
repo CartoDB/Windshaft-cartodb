@@ -28,7 +28,7 @@ describe('multilayer', function () {
         assert.strictEqual(
             res.headers['access-control-allow-headers'],
             'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, ' +
-            'Carto-Source-Lib, Carto-Source-Context, Carto-Source-Context-Id'
+            'Carto-Event, Carto-Event-Source, Carto-Event-Group-Id'
         );
         assert.strictEqual(res.headers['access-control-allow-origin'], '*');
     }
@@ -1034,7 +1034,7 @@ describe('multilayer', function () {
 
     it('geting options on layergroup should return CORS headers', function (done) {
         const allowHeaders = 'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, ' +
-                                'Carto-Source-Lib, Carto-Source-Context, Carto-Source-Context-Id, Content-Type';
+                                'Carto-Event, Carto-Event-Source, Carto-Event-Group-Id, Content-Type';
         assert.response(server, {
             url: '/api/v1/map',
             method: 'OPTIONS'
