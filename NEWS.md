@@ -1,7 +1,7 @@
 # Changelog
 
 ## 8.1.1
-Released 2020-mm-dd
+Released 2020-02-17
 
 Announcements:
 - Upgrade camshaft to [`0.65.2`](https://github.com/CartoDB/camshaft/blob/69c9447c9fccf00a70a67d713d1ce777775a17ff/CHANGELOG.md#0652): Fixes uncatched errors problem (#1117)
