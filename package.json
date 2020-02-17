@@ -37,7 +37,7 @@
     "@carto/fqdn-sync": "0.2.2",
     "basic-auth": "2.0.0",
     "body-parser": "1.18.3",
-    "camshaft": "^0.65.1",
+    "camshaft": "^0.65.2",
     "cartodb-psql": "0.14.0",
     "cartodb-query-tables": "^0.7.0",
     "cartodb-redis": "2.1.0",
