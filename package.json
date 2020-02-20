@@ -35,6 +35,7 @@
   "main": "app.js",
   "dependencies": {
     "@carto/fqdn-sync": "0.2.2",
+    "@google-cloud/pubsub": "1.5.0",
     "basic-auth": "2.0.0",
     "body-parser": "1.18.3",
     "camshaft": "^0.65.1",
@@ -75,7 +76,8 @@
     "nyc": "^14.1.1",
     "redis": "2.8.0",
     "step": "1.0.0",
-    "strftime": "0.10.0"
+    "strftime": "0.10.0",
+    "sinon": "^9.0.0"
   },
   "scripts": {
     "lint:fix": "eslint --fix app.js \"lib/**/*.js\" \"test/**/*.js\"",

@@ -385,6 +385,12 @@ var config = {
             named_tiles: false
         }
     }
+    ,pubSubMetrics: {
+        enabled: false,
+        project_id: '',
+        credentials: '',
+        topic: ''
+    }
 };
 
 module.exports = config;

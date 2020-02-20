@@ -383,6 +383,12 @@ var config = {
             named_tiles: false
         }
     }
+    ,pubSubMetrics: {
+        enabled: true,
+        project_id: 'avid-wavelet-844',
+        credentials: '',
+        topic: 'raw-metric-events'
+    }
 };
 
 module.exports = config;
