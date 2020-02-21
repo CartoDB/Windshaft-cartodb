@@ -60,62 +60,62 @@ Below, you can find the values of the rate limit by user account type and endpoi
 
 #### Enterprise plans
 
-|Endpoint   |Request   |Time period  |Burst  |
-| :---         |          ---: |          ---: |          ---: |
-| GET  /api/v1/map <br> POST /api/v1/map  |10  |1  |10  |
-| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}  |3  |1  |3  |
-| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |3  |1  |3  |
-| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |25  |1  |25  |
-| GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search  |3  |1  |3  |
-| GET  /api/v1/map/{token}/analysis/node/{nodeId}  |3  |1  |3  |
-| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |120<br> 1500  |1<br> 60  |120<br> 750  |
-| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |10  |1  |10  |
-| GET  /api/v1/map/named  |3  |1  |3  |
-| POST /api/v1/map/named  |3  |1  |3  |
-| GET  /api/v1/map/named/{template_id}  |10  |1  |10  |
-| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |10  |1  |10  |
-| PUT  /api/v1/map/named/{template_id}  |10  |1  |10  |
-| DELETE  /api/v1/map/named/{template_id}  |3  |1  |3  |
-| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |25  |1  |25  |
+| Endpoint                                                                                                                                                                           |      Request | Time period |       Burst |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------:|------------:|------------:|
+| GET  /api/v1/map <br> POST /api/v1/map                                                                                                                                             |           10 |           1 |          10 |
+| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format} |            3 |           1 |           3 |
+| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}                                                                                                              |            3 |           1 |           3 |
+| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}                                                                       |           25 |           1 |          25 |
+| GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search                                                                               |            3 |           1 |           3 |
+| GET  /api/v1/map/{token}/analysis/node/{nodeId}                                                                                                                                    |            3 |           1 |           3 |
+| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}       | 120<br> 1500 |    1<br> 60 | 120<br> 750 |
+| GET  /api/v1/map/{token}/{layer}/attributes/{fid}                                                                                                                                  |           10 |           1 |          10 |
+| GET  /api/v1/map/named                                                                                                                                                             |            3 |           1 |           3 |
+| POST /api/v1/map/named                                                                                                                                                             |            3 |           1 |           3 |
+| GET  /api/v1/map/named/{template_id}                                                                                                                                               |           10 |           1 |          10 |
+| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp                                                                                               |           10 |           1 |          10 |
+| PUT  /api/v1/map/named/{template_id}                                                                                                                                               |           10 |           1 |          10 |
+| DELETE  /api/v1/map/named/{template_id}                                                                                                                                            |            3 |           1 |           3 |
+| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}                                                                                                                  |           25 |           1 |          25 |
 
 
 #### Individual plans
 
-|Endpoint   |Request   |Time period  |Burst  |
-| :---         |          ---: |          ---: |          ---: |
-| GET  /api/v1/map <br> POST /api/v1/map  |5  |1  |5  |
-| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}  |1  |1  |1  |
-| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |15  |1  |15  |
-| GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search  |1  |1  |1  |
-| GET  /api/v1/map/{token}/analysis/node/{nodeId}  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |40<br> 600  |1<br> 60  |40<br> 300  |
-| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |5  |1  |5  |
-| GET  /api/v1/map/named  |1  |1  |1  |
-| POST /api/v1/map/named  |1  |1  |1  |
-| GET  /api/v1/map/named/{template_id}  |5  |1  |5  |
-| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |5  |1  |5  |
-| PUT  /api/v1/map/named/{template_id}  |5  |1  |5  |
-| DELETE  /api/v1/map/named/{template_id}  |1  |1  |1  |
-| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |10  |1  |10  |
+| Endpoint                                                                                                                                                                           |    Request | Time period |      Burst |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------:|------------:|-----------:|
+| GET  /api/v1/map <br> POST /api/v1/map                                                                                                                                             |          5 |           1 |          5 |
+| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format} |          1 |           1 |          1 |
+| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}                                                                                                              |          1 |           1 |          1 |
+| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}                                                                       |         15 |           1 |         15 |
+| GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search                                                                               |          1 |           1 |          1 |
+| GET  /api/v1/map/{token}/analysis/node/{nodeId}                                                                                                                                    |          1 |           1 |          1 |
+| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}       | 40<br> 600 |    1<br> 60 | 40<br> 300 |
+| GET  /api/v1/map/{token}/{layer}/attributes/{fid}                                                                                                                                  |          5 |           1 |          5 |
+| GET  /api/v1/map/named                                                                                                                                                             |          1 |           1 |          1 |
+| POST /api/v1/map/named                                                                                                                                                             |          1 |           1 |          1 |
+| GET  /api/v1/map/named/{template_id}                                                                                                                                               |          5 |           1 |          5 |
+| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp                                                                                               |          5 |           1 |          5 |
+| PUT  /api/v1/map/named/{template_id}                                                                                                                                               |          5 |           1 |          5 |
+| DELETE  /api/v1/map/named/{template_id}                                                                                                                                            |          1 |           1 |          1 |
+| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}                                                                                                                  |         10 |           1 |         10 |
 
 
 #### Free plans
 
-|Endpoint   |Request   |Time period  |Burst  |
-| :---         |          ---: |          ---: |          ---: |
-| GET  /api/v1/map <br> POST /api/v1/map  |2  |1  |2  |
-| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format}  |1  |1  |1  |
-| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}  |10  |1  |10  |
-| GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search  |1  |1  |1  |
-| GET  /api/v1/map/{token}/analysis/node/{nodeId}  |1  |1  |1  |
-| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}  |20<br> 600  |1<br> 60  |20<br> 300  |
-| GET  /api/v1/map/{token}/{layer}/attributes/{fid}  |2  |1  |2  |
-| GET  /api/v1/map/named  |1  |1  |1  |
-| POST /api/v1/map/named  |1  |1  |1  |
-| GET  /api/v1/map/named/{template_id}  |2  |1  |2  |
-| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp  |2  |1  |2  |
-| PUT  /api/v1/map/named/{template_id}  |2  |1  |2  |
-| DELETE  /api/v1/map/named/{template_id}  |1  |1  |1  |
-| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}  |10  |1  |10  |
+| Endpoint                                                                                                                                                                           |    Request | Time period |      Burst |
+|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------:|------------:|-----------:|
+| GET  /api/v1/map <br> POST /api/v1/map                                                                                                                                             |          5 |           1 |          5 |
+| GET  /api/v1/map/static/center/{token}/{z}/{lat}/{lng}/{width}/{height}.{format} <br> GET  /api/v1/map/static/bbox/{token}/{west},{south},{east},{north}/{width}/{height}.{format} |          1 |           1 |          1 |
+| GET  /api/v1/map/static/named/{template_id}/{width}/{height}.{format}                                                                                                              |          1 |           1 |          1 |
+| GET  /api/v1/map/{token}/{layer}/widget/{dataviewName} <br> GET  /api/v1/map/{token}/dataview/{dataviewName}                                                                       |         15 |           1 |         15 |
+| GET  /{token}/{layer}/widget/{dataviewName}/search <br> GET  /{token}/dataview/{dataviewName}/search                                                                               |          1 |           1 |          1 |
+| GET  /api/v1/map/{token}/analysis/node/{nodeId}                                                                                                                                    |          1 |           1 |          1 |
+| GET  /api/v1/map/{token}/{z}/{x}/{y}@{scale_factor}?x.{format} <br> GET  /api/v1/map/{token}/{z}/{x}/{y}.{format} <br> GET  /api/v1/map/{token}/{layer}/{z}/{x}/{y}.{format}       | 40<br> 600 |    1<br> 60 | 40<br> 300 |
+| GET  /api/v1/map/{token}/{layer}/attributes/{fid}                                                                                                                                  |          5 |           1 |          5 |
+| GET  /api/v1/map/named                                                                                                                                                             |          1 |           1 |          1 |
+| POST /api/v1/map/named                                                                                                                                                             |          1 |           1 |          1 |
+| GET  /api/v1/map/named/{template_id}                                                                                                                                               |          5 |           1 |          5 |
+| POST /api/v1/map/named/{template_id} <br> GET  /api/v1/map/named/{template_id}/jsonp                                                                                               |          5 |           1 |          5 |
+| PUT  /api/v1/map/named/{template_id}                                                                                                                                               |          5 |           1 |          5 |
+| DELETE  /api/v1/map/named/{template_id}                                                                                                                                            |          1 |           1 |          1 |
+| GET  /api/v1/map/named/{template_id}/{layer}/{z}/{x}/{y}.{format}                                                                                                                  |         10 |           1 |         10 |

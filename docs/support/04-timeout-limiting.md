@@ -27,6 +27,6 @@ You are able to avoid common issues that trigger timeout limits following these 
 
 Below, you can find the values of the timeout limit by user account type.
 
-|Enterprise plans  |Individual plans  |Free plans  |
-| ---  | ---  | ---  |
-| 25 seconds  | 15 seconds  | 5 seconds  |
+| Enterprise plans | Individual plans | Free plans |
+|------------------|------------------|------------|
+| 25 seconds       | 15 seconds       | 15 seconds |
