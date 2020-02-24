@@ -23,10 +23,11 @@ const MAPNIK_SUPPORTED_FORMATS = {
     mvt: true
 };
 
-function TestClient (config, apiKey) {
+function TestClient (config, apiKey, extraHeaders) {
     this.mapConfig = isMapConfig(config) ? config : null;
     this.template = isTemplate(config) ? config : null;
     this.apiKey = apiKey;
+    this.extraHeaders = extraHeaders || {};
     this.keysToDelete = {};
     this.server = new CartodbWindshaft(serverOptions);
 }
@@ -146,6 +147,8 @@ TestClient.prototype.getWidget = function (widgetName, params, callback) {
         url += '?' + qs.stringify({ filters: JSON.stringify(params.filters) });
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
+
     step(
         function createLayergroup () {
             var next = this;
@@ -153,10 +156,7 @@ TestClient.prototype.getWidget = function (widgetName, params, callback) {
                 {
                     url: url,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(self.mapConfig)
                 },
                 {
@@ -208,14 +208,13 @@ TestClient.prototype.getWidget = function (widgetName, params, callback) {
             });
 
             url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName + '?' + qs.stringify(urlParams);
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
 
             assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
-                    headers: {
-                        host: 'localhost'
-                    }
+                    headers
                 },
                 {
                     status: 200,
@@ -258,14 +257,13 @@ TestClient.prototype.widgetSearch = function (widgetName, userQuery, params, cal
     step(
         function createLayergroup () {
             var next = this;
+            const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
+
             assert.response(self.server,
                 {
                     url: url,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(self.mapConfig)
                 },
                 {
@@ -315,14 +313,13 @@ TestClient.prototype.widgetSearch = function (widgetName, userQuery, params, cal
                 urlParams.bbox = params.bbox;
             }
             url = '/api/v1/map/' + layergroupId + '/0/widget/' + widgetName + '/search?' + qs.stringify(urlParams);
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
 
             assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
-                    headers: {
-                        host: 'localhost'
-                    }
+                    headers
                 },
                 {
                     status: 200,
@@ -367,10 +364,11 @@ TestClient.prototype.getDataview = function (dataviewName, params, callback) {
 
     var url = '/api/v1/map';
     var urlNamed = url + '/named';
-
     if (Object.keys(extraParams).length > 0) {
         url += '?' + qs.stringify(extraParams);
     }
+
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
 
     var expectedResponse = params.response || {
         status: 200,
@@ -397,10 +395,7 @@ TestClient.prototype.getDataview = function (dataviewName, params, callback) {
                 {
                     url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(self.template)
                 },
                 {
@@ -437,15 +432,13 @@ TestClient.prototype.getDataview = function (dataviewName, params, callback) {
             var path = templateId
                 ? urlNamed + '/' + templateId + '?' + qs.stringify(queryParams)
                 : url;
+            const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
 
             assert.response(self.server,
                 {
                     url: path,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(data)
                 },
                 {
@@ -495,14 +488,13 @@ TestClient.prototype.getDataview = function (dataviewName, params, callback) {
                 urlParams.api_key = self.apiKey;
             }
             url = '/api/v1/map/' + layergroupId + '/dataview/' + dataviewName + '?' + qs.stringify(urlParams);
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
 
             assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
-                    headers: {
-                        host: 'localhost'
-                    }
+                    headers
                 },
                 expectedResponse,
                 function (res, err) {
@@ -543,6 +535,8 @@ TestClient.prototype.getFeatureAttributes = function (featureId, layerId, params
         url += '?' + qs.stringify(extraParams);
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
+
     var expectedResponse = params.response || {
         status: 200,
         headers: {
@@ -557,10 +551,7 @@ TestClient.prototype.getFeatureAttributes = function (featureId, layerId, params
                 {
                     url: url,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(self.mapConfig)
                 },
                 {
@@ -591,14 +582,13 @@ TestClient.prototype.getFeatureAttributes = function (featureId, layerId, params
             var next = this;
 
             url = '/api/v1/map/' + layergroupId + '/' + layerId + '/attributes/' + featureId;
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
 
             assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
-                    headers: {
-                        host: 'localhost'
-                    }
+                    headers
                 },
                 expectedResponse,
                 function (res, err) {
@@ -643,6 +633,8 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
         url += '?' + qs.stringify(extraParams);
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
+
     var expectedResponse = params.response || {
         status: 200,
         headers: {
@@ -657,10 +649,7 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
                 {
                     url: url,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(self.mapConfig)
                 },
                 {
@@ -696,14 +685,13 @@ TestClient.prototype.getClusterFeatures = function (zoom, clusterId, layerId, pa
             }
 
             url = `/api/v1/map/${layergroupId}/${layerId}/${zoom}/cluster/${clusterId}?${queryParams}`;
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
 
             assert.response(self.server,
                 {
                     url: url,
                     method: 'GET',
-                    headers: {
-                        host: 'localhost'
-                    }
+                    headers
                 },
                 expectedResponse,
                 function (res, err) {
@@ -735,6 +723,7 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
 
     var url = '/api/v1/map';
     var urlNamed = url + '/named';
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
 
     if (this.apiKey) {
         url += '?' + qs.stringify({ api_key: this.apiKey });
@@ -764,10 +753,7 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
                 {
                     url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(self.template)
                 },
                 {
@@ -811,14 +797,13 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
                 ? urlNamed + '/' + templateId + '?' + qs.stringify(queryParams)
                 : url;
 
+            const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
+
             assert.response(self.server,
                 {
                     url: path,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(data)
                 },
                 {
@@ -843,14 +828,12 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
             self.keysToDelete['user:localhost:mapviews:global'] = 5;
 
             url = `/api/v1/map/${layergroupidTemplate(layergroupId, params)}/`;
-
             var layers = params.layers;
 
             if (layers !== undefined) {
                 layers = Array.isArray(layers) ? layers : [layers];
                 url += layers.join(',') + '/';
             }
-
             var format = params.format || 'png';
 
             if (layers === undefined && !MAPNIK_SUPPORTED_FORMATS[format]) {
@@ -859,6 +842,8 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
 
             url += [z, x, y].join('/');
             url += '.' + format;
+
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
 
             const queryParams = {};
 
@@ -873,9 +858,7 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
             var request = {
                 url: url,
                 method: 'GET',
-                headers: {
-                    host: 'localhost'
-                }
+                headers
             };
 
             var expectedResponse = Object.assign({}, {
@@ -970,6 +953,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
     }
 
     var url = '/api/v1/map';
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
 
     const queryParams = {};
 
@@ -989,10 +973,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
         {
             url: url,
             method: 'POST',
-            headers: {
-                host: 'localhost',
-                'Content-Type': 'application/json'
-            },
+            headers,
             data: JSON.stringify(self.mapConfig)
         },
         params.response,
@@ -1022,10 +1003,11 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
     const { layergroupid, zoom, lat, lng, width, height, format } = params;
 
     var url = '/api/v1/map/';
-
     if (this.apiKey) {
         url += '?' + qs.stringify({ api_key: this.apiKey });
     }
+
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
 
     step(
         function createLayergroup () {
@@ -1042,10 +1024,7 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 {
                     url: path,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(data)
                 },
                 {
@@ -1076,13 +1055,13 @@ TestClient.prototype.getStaticCenter = function (params, callback) {
                 url += '?' + qs.stringify({ api_key: self.apiKey });
             }
 
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
+
             var request = {
                 url: url,
                 encoding: 'binary',
                 method: 'GET',
-                headers: {
-                    host: 'localhost'
-                }
+                headers
             };
 
             var expectedResponse = Object.assign({}, {
@@ -1126,6 +1105,8 @@ TestClient.prototype.getNodeStatus = function (nodeName, callback) {
         url += '?' + qs.stringify({ api_key: this.apiKey });
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, this.extraHeaders);
+
     var nodes = {};
     step(
         function createLayergroup () {
@@ -1134,10 +1115,7 @@ TestClient.prototype.getNodeStatus = function (nodeName, callback) {
                 {
                     url: url,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(self.mapConfig)
                 },
                 {
@@ -1176,12 +1154,12 @@ TestClient.prototype.getNodeStatus = function (nodeName, callback) {
                 url += '?' + qs.stringify({ api_key: self.apiKey });
             }
 
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
+
             var request = {
                 url: url,
                 method: 'GET',
-                headers: {
-                    host: 'localhost'
-                }
+                headers
             };
 
             var expectedResponse = {
@@ -1219,6 +1197,8 @@ TestClient.prototype.getAttributes = function (params, callback) {
         url += '?' + qs.stringify({ api_key: this.apiKey });
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, this.extraHeaders);
+
     var layergroupid;
 
     if (params.layergroupid) {
@@ -1237,10 +1217,7 @@ TestClient.prototype.getAttributes = function (params, callback) {
                 {
                     url: url,
                     method: 'POST',
-                    headers: {
-                        host: 'localhost',
-                        'Content-Type': 'application/json'
-                    },
+                    headers,
                     data: JSON.stringify(self.mapConfig)
                 },
                 {
@@ -1271,12 +1248,12 @@ TestClient.prototype.getAttributes = function (params, callback) {
                 url += '?' + qs.stringify({ api_key: self.apiKey });
             }
 
+            const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
+
             var request = {
                 url: url,
                 method: 'GET',
-                headers: {
-                    host: 'localhost'
-                }
+                headers
             };
 
             var expectedResponse = params.response || {
@@ -1318,12 +1295,12 @@ module.exports.getStaticMap = function getStaticMap (templateName, params, callb
         url += '?' + qs.stringify(params);
     }
 
+    const headers = Object.assign({ host: 'localhost' }, self.extraHeaders);
+
     var requestOptions = {
         url: url,
         method: 'GET',
-        headers: {
-            host: 'localhost'
-        },
+        headers,
         encoding: 'binary'
     };
 
@@ -1417,14 +1394,13 @@ TestClient.prototype.getAnalysesCatalog = function (params, callback) {
         url += '&' + qs.stringify({ callback: params.jsonp });
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, this.extraHeaders);
+
     assert.response(this.server,
         {
             url: url,
             method: 'GET',
-            headers: {
-                host: 'localhost',
-                'Content-Type': 'application/json'
-            }
+            headers
         },
         {
             status: params.status || 200,
@@ -1447,13 +1423,12 @@ TestClient.prototype.getAnalysesCatalog = function (params, callback) {
 };
 
 TestClient.prototype.getNamedMapList = function (params, callback) {
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, this.extraHeaders);
+
     const request = {
         url: `/api/v1/map/named?${qs.stringify({ api_key: this.apiKey })}`,
         method: 'GET',
-        headers: {
-            host: 'localhost',
-            'Content-Type': 'application/json'
-        }
+        headers
     };
 
     let expectedResponse = {
@@ -1483,13 +1458,12 @@ TestClient.prototype.getNamedTile = function (name, z, x, y, format, options, ca
         return callback(new Error('apiKey param is mandatory to create a new template'));
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, this.extraHeaders);
+
     const createTemplateRequest = {
         url: `/api/v1/map/named?${qs.stringify({ api_key: this.apiKey })}`,
         method: 'POST',
-        headers: {
-            host: 'localhost',
-            'Content-Type': 'application/json'
-        },
+        headers,
         data: JSON.stringify(this.template)
     };
 
@@ -1508,12 +1482,11 @@ TestClient.prototype.getNamedTile = function (name, z, x, y, format, options, ca
         const templateId = JSON.parse(res.body).template_id;
         const queryParams = params ? `?${qs.stringify(params)}` : '';
         const url = `/api/v1/map/named/${templateId}/all/${[z, x, y].join('/')}.${format}${queryParams}`;
+        const headers = Object.assign({ host: 'localhost' }, this.extraHeaders);
         const namedTileRequest = {
             url,
             method: 'GET',
-            headers: {
-                host: 'localhost'
-            },
+            headers,
             encoding: 'binary'
         };
 
@@ -1565,13 +1538,12 @@ TestClient.prototype.createTemplate = function (params, callback) {
         return callback(new Error('apiKey param is mandatory to create a new template'));
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, this.extraHeaders);
+
     const createTemplateRequest = {
         url: `/api/v1/map/named?${qs.stringify({ api_key: this.apiKey })}`,
         method: 'POST',
-        headers: {
-            host: 'localhost',
-            'Content-Type': 'application/json'
-        },
+        headers,
         data: JSON.stringify(this.template)
     };
 
@@ -1606,12 +1578,12 @@ TestClient.prototype.deleteTemplate = function (params, callback) {
         return callback(new Error('apiKey param is mandatory to create a new template'));
     }
 
+    const headers = Object.assign({ host: 'localhost' }, this.extraHeaders);
+
     const deleteTemplateRequest = {
         url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
         method: 'DELETE',
-        headers: {
-            host: 'localhost'
-        }
+        headers
     };
 
     let deleteTemplateResponse = {
@@ -1643,13 +1615,12 @@ TestClient.prototype.updateTemplate = function (params, callback) {
         return callback(new Error('apiKey param is mandatory to create a new template'));
     }
 
+    const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json; charset=utf-8' }, this.extraHeaders);
+
     const updateTemplateRequest = {
         url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
         method: 'PUT',
-        headers: {
-            host: 'localhost',
-            'Content-Type': 'application/json; charset=utf-8'
-        },
+        headers,
         data: JSON.stringify(params.templateData)
     };
 
@@ -1684,12 +1655,12 @@ TestClient.prototype.getTemplate = function (params, callback) {
         return callback(new Error('apiKey param is mandatory to create a new template'));
     }
 
+    const headers = Object.assign({ host: 'localhost' }, this.extraHeaders);
+
     const getTemplateRequest = {
         url: `/api/v1/map/named/${params.templateId}?${qs.stringify({ api_key: this.apiKey })}`,
         method: 'GET',
-        headers: {
-            host: 'localhost'
-        }
+        headers
     };
 
     let getTemplateResponse = {
