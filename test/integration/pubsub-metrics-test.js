@@ -12,6 +12,15 @@ const metricsHeaders = {
     'Carto-Event-Group-Id': '1'
 };
 
+const tooLongField = 'If you are sending a text this long in a header you kind of deserve the worst, honestly. I mean ' +
+    'this is not a header, it is almost a novel, and you do not see any Novel cookie here, right?';
+
+const badHeaders = {
+    'Carto-Event': tooLongField,
+    'Carto-Event-Source': 'test',
+    'Carto-Event-Group-Id': 1
+};
+
 const mapConfig = {
     version: '1.7.0',
     layers: [
@@ -102,6 +111,25 @@ describe('pubsub metrics middleware', function () {
 
             assert.strictEqual(typeof body.metadata, 'object');
             assert(fakeTopic.publish.notCalled);
+            return done();
+        });
+    });
+
+    it('should normalized headers type and length', function (done) {
+        global.environment.pubSubMetrics.enabled = true;
+        const eventAttributes = buildEventAttributes(200);
+        const maxLength = 100;
+        const eventName = tooLongField.substr(0, maxLength);
+
+        testClient = new TestClient(mapConfig, 1234, badHeaders);
+
+        testClient.getLayergroup((err, body) => {
+            if (err) {
+                return done(err);
+            }
+
+            assert.strictEqual(typeof body.metadata, 'object');
+            assert(fakeTopic.publish.calledOnceWith(Buffer.from(eventName), eventAttributes));
             return done();
         });
     });
