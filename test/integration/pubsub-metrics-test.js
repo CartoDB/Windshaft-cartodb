@@ -12,7 +12,7 @@ const metricsHeaders = {
     'Carto-Event-Group-Id': '1'
 };
 
-const tooLongField = 'If you are sending a text this long in a header you kind of deserve the worst, honestly. I mean ' +
+const tooLongField = '    If you are sending a text this long in a header you kind of deserve the worst, honestly. I mean ' +
     'this is not a header, it is almost a novel, and you do not see any Novel cookie here, right?';
 
 const badHeaders = {
@@ -119,7 +119,7 @@ describe('pubsub metrics middleware', function () {
         global.environment.pubSubMetrics.enabled = true;
         const eventAttributes = buildEventAttributes(200);
         const maxLength = 100;
-        const eventName = tooLongField.substr(0, maxLength);
+        const eventName = tooLongField.trim().substr(0, maxLength);
 
         testClient = new TestClient(mapConfig, 1234, badHeaders);
 
