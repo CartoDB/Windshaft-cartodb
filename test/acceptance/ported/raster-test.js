@@ -19,7 +19,8 @@ describe('raster', function () {
     function checkCORSHeaders (res) {
         assert.strictEqual(
             res.headers['access-control-allow-headers'],
-            'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization'
+            'X-Requested-With, X-Prototype-Version, X-CSRF-Token, Authorization, ' +
+            'Carto-Event, Carto-Event-Source, Carto-Event-Group-Id'
         );
         assert.strictEqual(res.headers['access-control-allow-origin'], '*');
     }
