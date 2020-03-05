@@ -1,5 +1,13 @@
 # Changelog
 
+## 8.1.2
+Released 2020-mm-dd
+
+Announcements:
+- Upgrade camshaft to [`0.65.3`](https://github.com/CartoDB/camshaft/blob/0.65.3/CHANGELOG.md#0653):
+  - Fix noisy message logs while checking analyses' limits.
+  - Fix CI setup, explicit use of PGPORT while creating the PostgreSQL cluster.
+
 ## 8.1.1
 Released 2020-02-17
 
