@@ -60,7 +60,7 @@
     "step-profiler": "0.3.0",
     "turbo-carto": "0.21.2",
     "underscore": "1.6.0",
-    "windshaft": "5.6.4",
+    "windshaft": "github:cartodb/windshaft#get-tile-promises",
     "yargs": "11.1.0"
   },
   "devDependencies": {
