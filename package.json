@@ -76,9 +76,9 @@
     "nock": "9.2.6",
     "nyc": "^14.1.1",
     "redis": "2.8.0",
+    "sinon": "^9.0.0",
     "step": "1.0.0",
-    "strftime": "0.10.0",
-    "sinon": "^9.0.0"
+    "strftime": "0.10.0"
   },
   "scripts": {
     "lint:fix": "eslint --fix app.js \"lib/**/*.js\" \"test/**/*.js\"",
