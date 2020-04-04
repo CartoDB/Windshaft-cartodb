@@ -8,13 +8,12 @@ var cartodbRedis = require('cartodb-redis');
 var PgConnection = require('../../lib/backends/pg-connection');
 var AuthBackend = require('../../lib/backends/auth');
 var TemplateMaps = require('../../lib/backends/template-maps');
+const MapStore = require('../support/map-store');
 
 const cleanUpQueryParamsMiddleware = require('../../lib/api/middlewares/clean-up-query-params');
 const authorizeMiddleware = require('../../lib/api/middlewares/authorize');
 const dbConnSetupMiddleware = require('../../lib/api/middlewares/db-conn-setup');
 const credentialsMiddleware = require('../../lib/api/middlewares/credentials');
-
-var windshaft = require('windshaft');
 
 describe('prepare-context', function () {
     var testUser = _.template(global.environment.postgres_auth_user, { user_id: 1 });
@@ -28,7 +27,7 @@ describe('prepare-context', function () {
 
     before(function () {
         var redisPool = new RedisPool(global.environment.redis);
-        var mapStore = new windshaft.storage.MapStore();
+        var mapStore = new MapStore(redisPool);
         var metadataBackend = cartodbRedis({ pool: redisPool });
         var pgConnection = new PgConnection(metadataBackend);
         var templateMaps = new TemplateMaps(redisPool);
