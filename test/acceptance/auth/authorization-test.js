@@ -4,7 +4,7 @@ require('../../support/test-helper');
 
 const assert = require('../../support/assert');
 const TestClient = require('../../support/test-client');
-const mapnik = require('windshaft').mapnik;
+const mapnik = require('@carto/mapnik');
 
 const PERMISSION_DENIED_RESPONSE = {
     status: 403,

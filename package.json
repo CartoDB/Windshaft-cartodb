@@ -64,6 +64,7 @@
     "yargs": "11.1.0"
   },
   "devDependencies": {
+    "@carto/mapnik": "^3.6.2-carto.16",
     "eslint": "^6.5.1",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",

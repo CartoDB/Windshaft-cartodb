@@ -6,7 +6,7 @@ const request = require('request');
 const assert = require('assert');
 const Server = require('../../lib/server');
 const serverOptions = require('../../lib/server-options');
-const { mapnik } = require('windshaft');
+const mapnik = require('@carto/mapnik');
 const helper = require('../support/test-helper');
 
 const namedTileUrlTemplate = (ctx) => {

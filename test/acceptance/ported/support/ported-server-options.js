@@ -2,7 +2,7 @@
 
 var _ = require('underscore');
 var serverOptions = require('../../../../lib/server-options');
-var mapnik = require('windshaft').mapnik;
+const mapnik = require('@carto/mapnik');
 var OverviewsQueryRewriter = require('../../../../lib/utils/overviews-query-rewriter');
 var overviewsQueryRewriter = new OverviewsQueryRewriter({
     zoom_level: 'CDB_ZoomFromScale(!scale_denominator!)'

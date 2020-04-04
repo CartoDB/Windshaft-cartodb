@@ -6,7 +6,7 @@ var fs = require('fs');
 var assert = require('../support/assert');
 var TestClient = require('../support/test-client');
 var serverOptions = require('../../lib/server-options');
-var mapnik = require('windshaft').mapnik;
+const mapnik = require('@carto/mapnik');
 var IMAGE_TOLERANCE_PER_MIL = 5;
 
 var CARTOCSS_LABELS = [
