@@ -5,7 +5,7 @@ var step = require('step');
 const { URL } = require('url');
 var PSQL = require('cartodb-psql');
 var _ = require('underscore');
-var mapnik = require('windshaft').mapnik;
+const mapnik = require('@carto/mapnik');
 
 var LayergroupToken = require('../../lib/models/layergroup-token');
 
@@ -821,7 +821,6 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
             );
         },
         function getTileResult (err, layergroupId) {
-            // jshint maxcomplexity:13
             assert.ifError(err);
 
             self.keysToDelete['map_cfg|' + LayergroupToken.parse(layergroupId).token] = 0;
@@ -931,7 +930,6 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
 };
 
 TestClient.prototype.getLayergroup = function (params, callback) {
-    // jshint maxcomplexity: 7
     var self = this;
 
     if (!callback) {

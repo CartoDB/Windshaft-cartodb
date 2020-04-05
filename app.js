@@ -6,12 +6,11 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('underscore');
 var semver = require('semver');
+// TODO: research it it's still needed
 const setICUEnvVariable = require('./lib/utils/icu-data-env-setter');
 
-// jshint undef:false
 var log = console.log.bind(console);
 var logError = console.error.bind(console);
-// jshint undef:true
 
 var nodejsVersion = process.versions.node;
 const { engines } = require('./package.json');

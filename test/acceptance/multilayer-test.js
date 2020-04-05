@@ -8,7 +8,7 @@ var step = require('step');
 var strftime = require('strftime');
 var redisStatsDb = 5;
 
-var mapnik = require('windshaft').mapnik;
+const mapnik = require('@carto/mapnik');
 var semver = require('semver');
 
 var helper = require('../support/test-helper');

@@ -39,23 +39,6 @@ describe('server', function () {
             }
         );
     });
-
-    it('get call to server returns 200', function (done) {
-        assert.response(server, {
-            url: '/version',
-            method: 'GET'
-        }, {
-            status: 200
-        }, function (res) {
-            var parsed = JSON.parse(res.body);
-            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'windshaft_cartodb'), "No 'windshaft_cartodb' version in " + parsed);
-            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'windshaft'), "No 'windshaft' version in " + parsed);
-            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'grainstore'), "No 'grainstore' version in " + parsed);
-            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'node_mapnik'), "No 'node_mapnik' version in " + parsed);
-            assert.ok(Object.prototype.hasOwnProperty.call(parsed, 'mapnik'), "No 'mapnik' version in " + parsed);
-            done();
-        });
-    });
 });
 
 describe('server old_api', function () {

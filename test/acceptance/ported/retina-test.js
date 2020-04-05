@@ -3,7 +3,7 @@
 var testHelper = require('../../support/test-helper');
 
 var assert = require('../../support/assert');
-var mapnik = require('windshaft').mapnik;
+const mapnik = require('@carto/mapnik');
 var cartodbServer = require('../../../lib/server');
 var ServerOptions = require('./support/ported-server-options');
 

@@ -12,7 +12,7 @@ var RedisPool = require('redis-mpool');
 
 var step = require('step');
 
-var windshaft = require('windshaft');
+const MapStore = require('../support/map-store');
 
 describe('overviews metadata', function () {
     var server;
@@ -82,10 +82,8 @@ describe('overviews metadata', function () {
                 assert.ifError(err);
                 var next = this;
 
-                var mapStore = new windshaft.storage.MapStore({
-                    pool: redisPool,
-                    expire_time: 500000
-                });
+                const mapStore = new MapStore(redisPool);
+
                 mapStore.load(LayergroupToken.parse(expectedToken).token, function (err, mapConfig) {
                     assert.ifError(err);
                     assert.deepStrictEqual(nonOverviewsLayer, mapConfig._cfg.layers[1]);
@@ -275,10 +273,8 @@ describe('overviews metadata with filters', function () {
                 assert.ifError(err);
                 var next = this;
 
-                var mapStore = new windshaft.storage.MapStore({
-                    pool: redisPool,
-                    expire_time: 500000
-                });
+                const mapStore = new MapStore(redisPool);
+
                 mapStore.load(LayergroupToken.parse(expectedToken).token, function (err, mapConfig) {
                     assert.ifError(err);
                     assert.strictEqual(mapConfig._cfg.layers[0].type, 'cartodb');

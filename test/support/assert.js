@@ -7,7 +7,7 @@ var fs = require('fs');
 var path = require('path');
 var util = require('util');
 
-var mapnik = require('windshaft').mapnik;
+const mapnik = require('@carto/mapnik');
 
 var request = require('request');
 
@@ -95,7 +95,6 @@ assert.response = function (server, req, res, callback) {
     var listener = server.listen(port, host);
     listener.on('error', callback);
     listener.on('listening', function onServerListening () {
-        // jshint maxcomplexity:9
         const { address: host, port } = listener.address();
         const address = `${host}:${port}`;
 
@@ -186,7 +185,6 @@ function validateResponse (response, expected) {
 
 // @param tolerance number of tolerated grid cell differences
 assert.utfgridEqualsFile = function (buffer, fileB, tolerance, callback) {
-    // jshint maxcomplexity:9
     fs.writeFileSync('/tmp/grid.json', buffer, 'binary'); // <-- to debug/update
     var expectedJson = JSON.parse(fs.readFileSync(fileB, 'utf8'));
 

@@ -392,7 +392,6 @@ describe('template_maps', function () {
     });
 
     it('instanciate templates', function () {
-    // jshint maxcomplexity:7
         var tmap = new TemplateMaps(redisPool);
         assert.ok(tmap);
 

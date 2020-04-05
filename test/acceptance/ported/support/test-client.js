@@ -7,7 +7,7 @@ var step = require('step');
 var assert = require('../../../support/assert');
 var _ = require('underscore');
 var querystring = require('querystring');
-var mapnik = require('windshaft').mapnik;
+const mapnik = require('@carto/mapnik');
 var CartodbServer = require('../../../../lib/server');
 var PortedServerOptions = require('./ported-server-options');
 

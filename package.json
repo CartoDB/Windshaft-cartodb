@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "windshaft-cartodb",
-  "version": "8.1.2",
+  "version": "9.0.0",
   "description": "CARTO Maps API tiler",
   "keywords": [
     "carto",
@@ -60,10 +60,11 @@
     "step-profiler": "0.3.0",
     "turbo-carto": "0.21.2",
     "underscore": "1.6.0",
-    "windshaft": "5.6.4",
+    "windshaft": "^6.0.0",
     "yargs": "11.1.0"
   },
   "devDependencies": {
+    "@carto/mapnik": "^3.6.2-carto.16",
     "eslint": "^6.5.1",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
@@ -75,9 +76,9 @@
     "nock": "9.2.6",
     "nyc": "^14.1.1",
     "redis": "2.8.0",
+    "sinon": "^9.0.0",
     "step": "1.0.0",
-    "strftime": "0.10.0",
-    "sinon": "^9.0.0"
+    "strftime": "0.10.0"
   },
   "scripts": {
     "lint:fix": "eslint --fix app.js \"lib/**/*.js\" \"test/**/*.js\"",
