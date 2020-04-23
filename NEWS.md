@@ -21,6 +21,9 @@ Announcements:
 - Remove `bootstrapFonts` at process startup (now done in `windshaft@6.0.0`)
 - Stop checking the installed version of some dependencies while testing
 
+Bug Fixes:
+- Parsing date column in numeric histograms (#1160)
+
 ## 8.1.1
 Released 2020-02-17
 

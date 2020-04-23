@@ -325,6 +325,15 @@ describe('histogram-dataview for date column type', function () {
                     column: 'd',
                     aggregation: 'minute'
                 }
+            },
+            date_histogram_no_agg: {
+                options: {
+                    column: 'd'
+                },
+                source: {
+                    id: 'minute-histogram-source-tz'
+                },
+                type: 'histogram'
             }
         },
         [
@@ -1229,6 +1238,21 @@ describe('histogram-dataview for date column type', function () {
             assert.ifError(err);
 
             assert.deepStrictEqual(dataview, dataviewWithDailyAggAndOffsetFixture);
+            done();
+        });
+    });
+
+    it('should work with dates without aggregation', function (done) {
+        var params = {
+            start: 1171583400,
+            end: 1171584600
+        };
+        this.testClient = new TestClient(mapConfig, 1234);
+        this.testClient.getDataview('date_histogram_no_agg', params, function (err, dataview) {
+            assert.ifError(err);
+            assert.strictEqual(dataview.type, 'histogram');
+            assert.strictEqual(dataview.bins.length, 6);
+            assert.strictEqual(dataview.bins_count, 6);
             done();
         });
     });
