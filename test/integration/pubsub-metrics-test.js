@@ -1,166 +1,156 @@
 'use strict';
 
-const sinon = require('sinon');
 const assert = require('assert');
-const redis = require('redis');
 const TestClient = require('../support/test-client');
 const PubSubMetricsBackend = require('../../lib/backends/pubsub-metrics');
 
-const metricsHeaders = {
-    'Carto-Event': 'test-event',
-    'Carto-Event-Source': 'test',
-    'Carto-Event-Group-Id': '1'
-};
-
-const tooLongField = '    If you are sending a text this long in a header you kind of deserve the worst, honestly. I mean ' +
-    'this is not a header, it is almost a novel, and you do not see any Novel cookie here, right?';
-
-const badHeaders = {
-    'Carto-Event': tooLongField,
-    'Carto-Event-Source': 'test',
-    'Carto-Event-Group-Id': 1
-};
-
 const mapConfig = {
-    version: '1.7.0',
+    version: '1.8.0',
     layers: [
         {
             options: {
-                sql: 'select * FROM test_table_localhost_regular1',
+                sql: TestClient.SQL.ONE_POINT,
                 cartocss: TestClient.CARTOCSS.POINTS,
                 cartocss_version: '2.3.0'
             }
         }
     ]
 };
+const apikey = 1234;
 
-function buildEventAttributes (statusCode) {
-    return {
-        event_source: 'test',
-        user_id: '1',
-        event_group_id: '1',
-        response_code: statusCode.toString(),
-        source_domain: 'localhost',
-        event_time: new Date().toISOString(),
-        event_version: '1'
-    };
-}
-
-const fakeTopic = {
-    name: 'test-topic',
-    publish: sinon.stub().returns(Promise.resolve())
-};
-
-const fakePubSub = {
-    topic: () => fakeTopic
-};
-
-describe.skip('pubsub metrics middleware', function () {
-    let redisClient;
-    let testClient;
-    let clock;
-
-    before(function () {
-        redisClient = redis.createClient(global.environment.redis.port);
-        clock = sinon.useFakeTimers();
-        sinon.stub(PubSubMetricsBackend, 'createPubSub').returns(fakePubSub);
+describe('pubsub metrics middleware', function () {
+    beforeEach(function () {
+        this.originalPubSubMetricsBackendSendMethod = PubSubMetricsBackend.prototype.send;
+        this.pubSubMetricsBackendSendMethodCalled = false;
+        PubSubMetricsBackend.prototype.send = (event, attributes) => {
+            this.pubSubMetricsBackendSendMethodCalled = true;
+            this.pubSubMetricsBackendSendMethodCalledWith = { event, attributes };
+            return Promise.resolve();
+        };
     });
 
-    after(function () {
-        clock.restore();
-        PubSubMetricsBackend.createPubSub.restore();
-        global.environment.pubSubMetrics.enabled = false;
-    });
-
-    afterEach(function (done) {
-        fakeTopic.publish.resetHistory();
-
-        redisClient.SELECT(0, () => {
-            redisClient.del('user:localhost:mapviews:global');
-
-            redisClient.SELECT(5, () => {
-                redisClient.del('user:localhost:mapviews:global');
-                done();
-            });
-        });
+    afterEach(function () {
+        PubSubMetricsBackend.prototype.send = this.originalPubSubMetricsBackendSendMethod;
     });
 
     it('should not send event if not enabled', function (done) {
-        global.environment.pubSubMetrics.enabled = false;
-        testClient = new TestClient(mapConfig, 1234, metricsHeaders);
+        const extraHeaders = {
+            'Carto-Event': 'test-event',
+            'Carto-Event-Source': 'test',
+            'Carto-Event-Group-Id': '1'
+        };
+        const overrideServerOptions = { pubSubMetrics: { enabled: false } };
+        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
         testClient.getLayergroup((err, body) => {
             if (err) {
                 return done(err);
             }
 
-            assert.strictEqual(typeof body.metadata, 'object');
-            assert(fakeTopic.publish.notCalled);
-            return done();
+            assert.strictEqual(typeof body.layergroupid, 'string');
+            assert.ok(!this.pubSubMetricsBackendSendMethodCalled);
+
+            return testClient.drain(done);
         });
     });
 
     it('should not send event if headers not present', function (done) {
-        global.environment.pubSubMetrics.enabled = true;
-        testClient = new TestClient(mapConfig, 1234);
+        const extraHeaders = {};
+        const overrideServerOptions = { pubSubMetrics: { enabled: false } };
+        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
         testClient.getLayergroup((err, body) => {
             if (err) {
                 return done(err);
             }
 
-            assert.strictEqual(typeof body.metadata, 'object');
-            assert(fakeTopic.publish.notCalled);
-            return done();
-        });
-    });
+            assert.strictEqual(typeof body.layergroupid, 'string');
+            assert.ok(!this.pubSubMetricsBackendSendMethodCalled);
 
-    it('should normalized headers type and length', function (done) {
-        global.environment.pubSubMetrics.enabled = true;
-        const eventAttributes = buildEventAttributes(200);
-        const maxLength = 100;
-        const eventName = tooLongField.trim().substr(0, maxLength);
-
-        testClient = new TestClient(mapConfig, 1234, badHeaders);
-
-        testClient.getLayergroup((err, body) => {
-            if (err) {
-                return done(err);
-            }
-
-            assert.strictEqual(typeof body.metadata, 'object');
-            assert(fakeTopic.publish.calledOnceWith(Buffer.from(eventName), eventAttributes));
-            return done();
+            return testClient.drain(done);
         });
     });
 
     it('should send event for map requests', function (done) {
-        global.environment.pubSubMetrics.enabled = true;
-        const eventAttributes = buildEventAttributes(200);
-        testClient = new TestClient(mapConfig, 1234, metricsHeaders);
+        const expectedEvent = 'event-test';
+        const expectedEventSource = 'event-source-test';
+        const expectedEventGroupId = '1';
+        const extraHeaders = {
+            'Carto-Event': expectedEvent,
+            'Carto-Event-Source': expectedEventSource,
+            'Carto-Event-Group-Id': expectedEventGroupId
+        };
+        const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
+        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
         testClient.getLayergroup((err, body) => {
             if (err) {
                 return done(err);
             }
 
-            assert.strictEqual(typeof body.metadata, 'object');
-            assert(fakeTopic.publish.calledOnceWith(Buffer.from('test-event'), eventAttributes));
-            return done();
+            assert.strictEqual(typeof body.layergroupid, 'string');
+            assert.ok(this.pubSubMetricsBackendSendMethodCalled);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+
+            return testClient.drain(done);
+        });
+    });
+
+    it('should normalized headers type and length', function (done) {
+        const eventLong = 'If you are sending a text this long in a header you kind of deserve the worst, honestly. I mean this is not a header, it is almost a novel, and you do not see any Novel cookie here, right?';
+        const expectedEvent = eventLong.trim().substr(0, 100);
+        const expectedEventGroupId = '1';
+        const expectedEventSource = 'test';
+        const extraHeaders = {
+            'Carto-Event': eventLong,
+            'Carto-Event-Source': 'test',
+            'Carto-Event-Group-Id': 1
+        };
+        const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
+        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        testClient.getLayergroup((err, body) => {
+            if (err) {
+                return done(err);
+            }
+
+            assert.strictEqual(typeof body.layergroupid, 'string');
+            assert.ok(this.pubSubMetricsBackendSendMethodCalled);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+
+            return testClient.drain(done);
         });
     });
 
     it('should send event when error', function (done) {
-        global.environment.pubSubMetrics.enabled = true;
-        const eventAttributes = buildEventAttributes(400);
-        eventAttributes.user_id = undefined;
+        const expectedEvent = 'event-test';
+        const expectedEventSource = 'event-source-test';
+        const expectedEventGroupId = '1';
+        const extraHeaders = {
+            'Carto-Event': expectedEvent,
+            'Carto-Event-Source': expectedEventSource,
+            'Carto-Event-Group-Id': expectedEventGroupId
+        };
+        const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
+        const emptyMapConfig = {};
+        const testClient = new TestClient(emptyMapConfig, apikey, extraHeaders, overrideServerOptions);
+        const params = { response: { status: 400 } };
 
-        testClient = new TestClient({}, 1234, metricsHeaders);
+        testClient.getLayergroup(params, (err, body) => {
+            if (err) {
+                return done(err);
+            }
 
-        testClient.getLayergroup(() => {
-            assert(fakeTopic.publish.calledOnceWith(Buffer.from('test-event'), eventAttributes));
-            assert(fakeTopic.publish.calledOnce);
-            return done();
+            assert.ok(this.pubSubMetricsBackendSendMethodCalled);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+
+            return testClient.drain(done);
         });
     });
 });

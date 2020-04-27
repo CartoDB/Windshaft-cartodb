@@ -23,13 +23,14 @@ const MAPNIK_SUPPORTED_FORMATS = {
     mvt: true
 };
 
-function TestClient (config, apiKey, extraHeaders) {
+function TestClient (config, apiKey, extraHeaders = {}, overrideServerOptions = {}) {
     this.mapConfig = isMapConfig(config) ? config : null;
     this.template = isTemplate(config) ? config : null;
     this.apiKey = apiKey;
-    this.extraHeaders = extraHeaders || {};
+    this.extraHeaders = extraHeaders;
     this.keysToDelete = {};
-    this.server = new CartodbWindshaft(serverOptions);
+    this.serverOptions = Object.assign({}, serverOptions, overrideServerOptions);
+    this.server = new CartodbWindshaft(this.serverOptions);
 }
 
 module.exports = TestClient;
