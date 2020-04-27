@@ -55,7 +55,7 @@ const fakePubSub = {
     topic: () => fakeTopic
 };
 
-describe('pubsub metrics middleware', function () {
+describe.skip('pubsub metrics middleware', function () {
     let redisClient;
     let testClient;
     let clock;
