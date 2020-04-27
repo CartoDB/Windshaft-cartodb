@@ -3,7 +3,7 @@
 const assert = require('assert');
 const TestClient = require('../support/test-client');
 const PubSubMetricsBackend = require('../../lib/backends/pubsub-metrics');
-
+const apikey = 1234;
 const mapConfig = {
     version: '1.8.0',
     layers: [
@@ -16,7 +16,23 @@ const mapConfig = {
         }
     ]
 };
-const apikey = 1234;
+const template = {
+    version: '0.0.1',
+    name: 'metrics-template',
+    layergroup: {
+        version: '1.8.0',
+        layers: [
+            {
+                type: 'cartodb',
+                options: {
+                    sql: TestClient.SQL.ONE_POINT,
+                    cartocss: TestClient.CARTOCSS.POINTS,
+                    cartocss_version: '2.3.0'
+                }
+            }
+        ]
+    }
+};
 
 describe('pubsub metrics middleware', function () {
     beforeEach(function () {
@@ -75,6 +91,7 @@ describe('pubsub metrics middleware', function () {
         const expectedEvent = 'event-test';
         const expectedEventSource = 'event-source-test';
         const expectedEventGroupId = '1';
+        const expectedResponseCode = '200';
         const extraHeaders = {
             'Carto-Event': expectedEvent,
             'Carto-Event-Source': expectedEventSource,
@@ -93,6 +110,7 @@ describe('pubsub metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
 
             return testClient.drain(done);
         });
@@ -103,6 +121,7 @@ describe('pubsub metrics middleware', function () {
         const expectedEvent = eventLong.trim().substr(0, 100);
         const expectedEventGroupId = '1';
         const expectedEventSource = 'test';
+        const expectedResponseCode = '200';
         const extraHeaders = {
             'Carto-Event': eventLong,
             'Carto-Event-Source': 'test',
@@ -121,6 +140,7 @@ describe('pubsub metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
 
             return testClient.drain(done);
         });
@@ -130,6 +150,7 @@ describe('pubsub metrics middleware', function () {
         const expectedEvent = 'event-test';
         const expectedEventSource = 'event-source-test';
         const expectedEventGroupId = '1';
+        const expectedResponseCode = '400';
         const extraHeaders = {
             'Carto-Event': expectedEvent,
             'Carto-Event-Source': expectedEventSource,
@@ -149,6 +170,100 @@ describe('pubsub metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
+
+            return testClient.drain(done);
+        });
+    });
+
+    it('should send event for tile requests', function (done) {
+        const expectedEvent = 'event-tile-test';
+        const expectedEventSource = 'event-source-tile-test';
+        const expectedEventGroupId = '12345';
+        const expectedResponseCode = '200';
+        const extraHeaders = {
+            'Carto-Event': expectedEvent,
+            'Carto-Event-Source': expectedEventSource,
+            'Carto-Event-Group-Id': expectedEventGroupId
+        };
+        const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
+        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        testClient.getTile(0, 0, 0, (err, res, tile) => {
+            if (err) {
+                return done(err);
+            }
+
+            assert.ok(this.pubSubMetricsBackendSendMethodCalled);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
+
+            return testClient.drain(done);
+        });
+    });
+
+    it('should send event for errored tile requests', function (done) {
+        const expectedEvent = 'event-tile-test';
+        const expectedEventSource = 'event-source-tile-test';
+        const expectedEventGroupId = '12345';
+        const expectedResponseCode = '400';
+        const extraHeaders = {
+            'Carto-Event': expectedEvent,
+            'Carto-Event-Source': expectedEventSource,
+            'Carto-Event-Group-Id': expectedEventGroupId
+        };
+        const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
+        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        const params = {
+            response: {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }
+        };
+
+        testClient.getTile(0, 0, 2, params, (err, res, tile) => {
+            if (err) {
+                return done(err);
+            }
+
+            assert.ok(this.pubSubMetricsBackendSendMethodCalled);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
+
+            return testClient.drain(done);
+        });
+    });
+
+    it('should send event for named map tile requests', function (done) {
+        const expectedEvent = 'event-named-map-tile-test';
+        const expectedEventSource = 'event-source-named-map-tile-test';
+        const expectedEventGroupId = '1';
+        const expectedResponseCode = '200';
+        const extraHeaders = {
+            'Carto-Event': expectedEvent,
+            'Carto-Event-Source': expectedEventSource,
+            'Carto-Event-Group-Id': expectedEventGroupId
+        };
+        const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
+        const testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
+
+        testClient.getTile(0, 0, 0, (err, body) => {
+            if (err) {
+                return done(err);
+            }
+
+            assert.ok(this.pubSubMetricsBackendSendMethodCalled);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
 
             return testClient.drain(done);
         });
