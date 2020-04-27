@@ -23,7 +23,7 @@ const eventAttributes = {
     event_version: '1'
 };
 
-describe('pubsub metrics backend', function () {
+describe.skip('pubsub metrics backend', function () {
     it('should not send event if not enabled', function () {
         const pubSubMetricsService = new PubSubMetricsBackend(fakePubSub, false);
 
