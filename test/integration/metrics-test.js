@@ -122,9 +122,9 @@ describe('metrics middleware', function () {
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
@@ -162,9 +162,9 @@ describe('metrics middleware', function () {
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
@@ -210,9 +210,9 @@ describe('metrics middleware', function () {
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
@@ -244,7 +244,7 @@ describe('metrics middleware', function () {
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
@@ -284,7 +284,7 @@ describe('metrics middleware', function () {
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
@@ -321,9 +321,9 @@ describe('metrics middleware', function () {
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
@@ -384,9 +384,9 @@ describe('metrics middleware', function () {
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
@@ -422,7 +422,7 @@ describe('metrics middleware', function () {
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
@@ -457,9 +457,9 @@ describe('metrics middleware', function () {
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
@@ -505,9 +505,9 @@ describe('metrics middleware', function () {
             }
 
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
