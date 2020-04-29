@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const TestClient = require('../support/test-client');
-const PubSubMetricsBackend = require('../../lib/backends/pubsub-metrics');
+const MetricsBackend = require('../../lib/backends/metrics');
 const apikey = 1234;
 const mapConfig = {
     version: '1.8.0',
@@ -37,11 +37,11 @@ function templateBuilder ({ name }) {
     };
 };
 
-describe('pubsub metrics middleware', function () {
+describe('metrics middleware', function () {
     beforeEach(function () {
-        this.originalPubSubMetricsBackendSendMethod = PubSubMetricsBackend.prototype.send;
+        this.originalMetricsBackendSendMethod = MetricsBackend.prototype.send;
         this.pubSubMetricsBackendSendMethodCalled = false;
-        PubSubMetricsBackend.prototype.send = (event, attributes) => {
+        MetricsBackend.prototype.send = (event, attributes) => {
             this.pubSubMetricsBackendSendMethodCalled = true;
             this.pubSubMetricsBackendSendMethodCalledWith = { event, attributes };
             return Promise.resolve();
@@ -49,7 +49,7 @@ describe('pubsub metrics middleware', function () {
     });
 
     afterEach(function () {
-        PubSubMetricsBackend.prototype.send = this.originalPubSubMetricsBackendSendMethod;
+        MetricsBackend.prototype.send = this.originalMetricsBackendSendMethod;
     });
 
     it('should not send event if not enabled', function (done) {
