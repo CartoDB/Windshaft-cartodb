@@ -77,6 +77,8 @@ async function populateDatabase () {
 
 async function populateRedis () {
     const commands = `
+        FLUSHALL
+
         HMSET rails:users:localhost \
             id ${TEST_USER_ID} \
             database_name "${TEST_DB}" \

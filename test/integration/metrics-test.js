@@ -3,6 +3,7 @@
 const assert = require('assert');
 const TestClient = require('../support/test-client');
 const MetricsBackend = require('../../lib/backends/metrics');
+const LayergroupToken = require('../../lib/models/layergroup-token');
 const apikey = 1234;
 const mapConfig = {
     version: '1.8.0',
@@ -48,8 +49,9 @@ describe('metrics middleware', function () {
         };
     });
 
-    afterEach(function () {
+    afterEach(function (done) {
         MetricsBackend.prototype.send = this.originalMetricsBackendSendMethod;
+        return this.testClient.drain(done);
     });
 
     it('should not send event if not enabled', function (done) {
@@ -59,9 +61,10 @@ describe('metrics middleware', function () {
             'Carto-Event-Group-Id': '1'
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: false } };
-        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
-        testClient.getLayergroup((err, body) => {
+        this.testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient.getLayergroup((err, body) => {
             if (err) {
                 return done(err);
             }
@@ -69,16 +72,17 @@ describe('metrics middleware', function () {
             assert.strictEqual(typeof body.layergroupid, 'string');
             assert.ok(!this.pubSubMetricsBackendSendMethodCalled);
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
     it('should not send event if headers not present', function (done) {
         const extraHeaders = {};
         const overrideServerOptions = { pubSubMetrics: { enabled: false } };
-        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
-        testClient.getLayergroup((err, body) => {
+        this.testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient.getLayergroup((err, body) => {
             if (err) {
                 return done(err);
             }
@@ -86,7 +90,7 @@ describe('metrics middleware', function () {
             assert.strictEqual(typeof body.layergroupid, 'string');
             assert.ok(!this.pubSubMetricsBackendSendMethodCalled);
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -103,14 +107,18 @@ describe('metrics middleware', function () {
             'Carto-Event-Group-Id': expectedEventGroupId
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
-        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
-        testClient.getLayergroup((err, body) => {
+        this.testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient.getLayergroup((err, body) => {
             if (err) {
                 return done(err);
             }
 
             assert.strictEqual(typeof body.layergroupid, 'string');
+
+            const { token, cacheBuster } = LayergroupToken.parse(body.layergroupid);
+
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
@@ -118,8 +126,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, cacheBuster);
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -137,14 +147,18 @@ describe('metrics middleware', function () {
             'Carto-Event-Group-Id': 1
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
-        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
-        testClient.getLayergroup((err, body) => {
+        this.testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient.getLayergroup((err, body) => {
             if (err) {
                 return done(err);
             }
 
             assert.strictEqual(typeof body.layergroupid, 'string');
+
+            const { token, cacheBuster } = LayergroupToken.parse(body.layergroupid);
+
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
@@ -152,8 +166,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, cacheBuster);
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -181,10 +197,12 @@ describe('metrics middleware', function () {
                 }
             ]
         };
-        const testClient = new TestClient(mapConfigMissingCartoCSS, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient = new TestClient(mapConfigMissingCartoCSS, apikey, extraHeaders, overrideServerOptions);
+
         const params = { response: { status: 400 } };
 
-        testClient.getLayergroup(params, (err, body) => {
+        this.testClient.getLayergroup(params, (err, body) => {
             if (err) {
                 return done(err);
             }
@@ -196,8 +214,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -212,9 +232,10 @@ describe('metrics middleware', function () {
             'Carto-Event-Group-Id': expectedEventGroupId
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
-        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
-        testClient.getTile(0, 0, 0, (err, res, tile) => {
+        this.testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient.getTile(0, 0, 0, (err, res, tile) => {
             if (err) {
                 return done(err);
             }
@@ -224,8 +245,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -240,7 +263,8 @@ describe('metrics middleware', function () {
             'Carto-Event-Group-Id': expectedEventGroupId
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
-        const testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient = new TestClient(mapConfig, apikey, extraHeaders, overrideServerOptions);
 
         const params = {
             response: {
@@ -251,7 +275,7 @@ describe('metrics middleware', function () {
             }
         };
 
-        testClient.getTile(0, 0, 2, params, (err, res, tile) => {
+        this.testClient.getTile(0, 0, 2, params, (err, res, tile) => {
             if (err) {
                 return done(err);
             }
@@ -261,8 +285,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -280,14 +306,18 @@ describe('metrics middleware', function () {
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
         const template = templateBuilder({ name: 'map' });
-        const testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
 
-        testClient.getLayergroup((err, body) => {
+        this.testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient.getLayergroup((err, body) => {
             if (err) {
                 return done(err);
             }
 
             assert.strictEqual(typeof body.layergroupid, 'string');
+
+            const { token, cacheBuster } = LayergroupToken.parse(body.layergroupid);
+
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
@@ -295,8 +325,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, cacheBuster);
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -330,7 +362,7 @@ describe('metrics middleware', function () {
             }
         };
 
-        const testClient = new TestClient(templateMissingCartoCSS, apikey, extraHeaders, overrideServerOptions);
+        this.testClient = new TestClient(templateMissingCartoCSS, apikey, extraHeaders, overrideServerOptions);
 
         const params = {
             response: {
@@ -340,7 +372,8 @@ describe('metrics middleware', function () {
                 }
             }
         };
-        testClient.getLayergroup(params, (err, body) => {
+
+        this.testClient.getLayergroup(params, (err, body) => {
             if (err) {
                 return done(err);
             }
@@ -352,8 +385,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -369,9 +404,10 @@ describe('metrics middleware', function () {
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
         const template = templateBuilder({ name: 'tile' });
-        const testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
 
-        testClient.getTile(0, 0, 0, (err, body) => {
+        this.testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient.getTile(0, 0, 0, (err, body) => {
             if (err) {
                 return done(err);
             }
@@ -381,8 +417,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -400,9 +438,10 @@ describe('metrics middleware', function () {
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
         const template = templateBuilder({ name: 'preview' });
-        const testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
 
-        testClient.getPreview(640, 480, {}, (err, res, body) => {
+        this.testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient.getPreview(640, 480, {}, (err, res, body) => {
             if (err) {
                 return done(err);
             }
@@ -414,8 +453,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
 
-            return testClient.drain(done);
+            return done();
         });
     });
 
@@ -433,7 +474,9 @@ describe('metrics middleware', function () {
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
         const template = templateBuilder({ name: 'preview-errored' });
-        const testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
+
+        this.testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
+
         const widthTooLarge = 8193;
         const params = {
             response: {
@@ -444,7 +487,7 @@ describe('metrics middleware', function () {
             }
         };
 
-        testClient.getPreview(widthTooLarge, 480, params, (err, res, body) => {
+        this.testClient.getPreview(widthTooLarge, 480, params, (err, res, body) => {
             if (err) {
                 return done(err);
             }
@@ -455,8 +498,10 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
 
-            return testClient.drain(done);
+            return done();
         });
     });
 });
