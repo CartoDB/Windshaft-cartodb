@@ -1055,6 +1055,9 @@ TestClient.prototype.getLayergroup = function (params, callback) {
                             self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
                             self.keysToDelete['user:localhost:mapviews:global'] = 5;
                         }
+                        if (res.statusCode === 200 && self.template && self.template.layergroup && self.template.layergroup.stat_tag) {
+                            self.keysToDelete[`user:localhost:mapviews:stat_tag:${self.template.layergroup.stat_tag}`] = 5;
+                        }
                     }
                     if (err) {
                         return callback(err);
@@ -1792,6 +1795,9 @@ TestClient.prototype.getPreview = function (width, height, params = {}, callback
             switch (res.headers['content-type']) {
             case 'image/png':
                 this.keysToDelete['user:localhost:mapviews:global'] = 5;
+                if (this.template.layergroup && this.template.layergroup.stat_tag) {
+                    this.keysToDelete[`user:localhost:mapviews:stat_tag:${this.template.layergroup.stat_tag}`] = 5;
+                }
                 body = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                 break;
             case 'application/json; charset=utf-8':

@@ -23,6 +23,7 @@ function templateBuilder ({ name }) {
         version: '0.0.1',
         name: `metrics-template-${name}`,
         layergroup: {
+            stat_tag: `stat-tag-${name}`,
             version: '1.8.0',
             layers: [
                 {
@@ -328,6 +329,7 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, cacheBuster);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, templateHash);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
         });
@@ -346,10 +348,11 @@ describe('metrics middleware', function () {
             'Carto-Event-Group-Id': expectedEventGroupId
         };
         const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
-        const templateMissingCartoCSS = {
+        const templateMissingCartoCSSVersion = {
             version: '0.0.1',
-            name: 'metrics-template',
+            name: 'metrics-template-missing-cartocss-version',
             layergroup: {
+                stat_tag: 'stat-tag-missing-cartocss-version',
                 version: '1.8.0',
                 layers: [
                     {
@@ -363,7 +366,7 @@ describe('metrics middleware', function () {
             }
         };
 
-        this.testClient = new TestClient(templateMissingCartoCSS, apikey, extraHeaders, overrideServerOptions);
+        this.testClient = new TestClient(templateMissingCartoCSSVersion, apikey, extraHeaders, overrideServerOptions);
 
         const params = {
             response: {
@@ -390,6 +393,7 @@ describe('metrics middleware', function () {
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
             // TODO: uncomment this
             // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, templateMissingCartoCSSVersion.layergroup.stat_tag);
 
             return done();
         });
@@ -423,6 +427,7 @@ describe('metrics middleware', function () {
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
         });
@@ -461,6 +466,7 @@ describe('metrics middleware', function () {
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
             // TODO: uncomment this
             // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
         });
@@ -508,6 +514,7 @@ describe('metrics middleware', function () {
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
             // TODO: uncomment this
             // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
         });
