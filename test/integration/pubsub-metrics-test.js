@@ -418,4 +418,45 @@ describe('pubsub metrics middleware', function () {
             return testClient.drain(done);
         });
     });
+
+    it('should send event for errored static named map requests', function (done) {
+        const expectedEvent = 'map_view';
+        const expectedMetricsEvent = 'event-test';
+        const expectedEventSource = 'event-source-test';
+        const expectedEventGroupId = '1';
+        const expectedResponseCode = '400';
+        const expectedMapType = 'static';
+        const extraHeaders = {
+            'Carto-Event': expectedMetricsEvent,
+            'Carto-Event-Source': expectedEventSource,
+            'Carto-Event-Group-Id': expectedEventGroupId
+        };
+        const overrideServerOptions = { pubSubMetrics: { enabled: true, topic: 'topic-test' } };
+        const template = templateBuilder({ name: 'preview-errored' });
+        const testClient = new TestClient(template, apikey, extraHeaders, overrideServerOptions);
+        const widthTooLarge = 8193;
+        const params = {
+            response: {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }
+        };
+
+        testClient.getPreview(widthTooLarge, 480, params, (err, res, body) => {
+            if (err) {
+                return done(err);
+            }
+
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.metrics_event, expectedMetricsEvent);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_group_id, expectedEventGroupId);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
+
+            return testClient.drain(done);
+        });
+    });
 });

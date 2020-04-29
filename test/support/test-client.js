@@ -1788,11 +1788,10 @@ TestClient.prototype.getPreview = function (width, height, params = {}, callback
                 return callback(err);
             }
 
-            this.keysToDelete['user:localhost:mapviews:global'] = 5;
-
             let body;
             switch (res.headers['content-type']) {
             case 'image/png':
+                this.keysToDelete['user:localhost:mapviews:global'] = 5;
                 body = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
                 break;
             case 'application/json; charset=utf-8':
