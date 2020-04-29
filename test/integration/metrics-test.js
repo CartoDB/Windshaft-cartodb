@@ -316,7 +316,7 @@ describe('metrics middleware', function () {
 
             assert.strictEqual(typeof body.layergroupid, 'string');
 
-            const { token, cacheBuster } = LayergroupToken.parse(body.layergroupid);
+            const { token, cacheBuster, templateHash } = LayergroupToken.parse(body.layergroupid);
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
@@ -327,6 +327,7 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, cacheBuster);
+            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, templateHash);
 
             return done();
         });
@@ -387,6 +388,8 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+            // TODO: uncomment this
+            // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
 
             return done();
         });
@@ -419,6 +422,7 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
 
             return done();
         });
@@ -455,6 +459,8 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+            // TODO: uncomment this
+            // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
 
             return done();
         });
@@ -500,6 +506,8 @@ describe('metrics middleware', function () {
             assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
             assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+            // TODO: uncomment this
+            // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
 
             return done();
         });
