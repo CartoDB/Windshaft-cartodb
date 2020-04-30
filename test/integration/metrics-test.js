@@ -39,7 +39,7 @@ function templateBuilder ({ name }) {
     };
 };
 
-describe('metrics middleware', function () {
+describe('metrics', function () {
     beforeEach(function () {
         this.originalMetricsBackendSendMethod = MetricsBackend.prototype.send;
         this.pubSubMetricsBackendSendMethodCalled = false;
@@ -121,14 +121,17 @@ describe('metrics middleware', function () {
             const { token, cacheBuster } = LayergroupToken.parse(body.layergroupid);
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, cacheBuster);
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.client_event, expectedMetricsEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(attributes.map_type, expectedMapType);
+            assert.strictEqual(attributes.map_id, token);
+            assert.strictEqual(attributes.cache_buster, cacheBuster);
 
             return done();
         });
@@ -161,14 +164,17 @@ describe('metrics middleware', function () {
             const { token, cacheBuster } = LayergroupToken.parse(body.layergroupid);
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, cacheBuster);
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.client_event, expectedMetricsEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(attributes.map_type, expectedMapType);
+            assert.strictEqual(attributes.map_id, token);
+            assert.strictEqual(attributes.cache_buster, cacheBuster);
 
             return done();
         });
@@ -209,14 +215,17 @@ describe('metrics middleware', function () {
             }
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.client_event, expectedMetricsEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(attributes.map_type, expectedMapType);
+            assert.strictEqual(typeof attributes.map_id, 'string');
+            assert.strictEqual(typeof attributes.cache_buster, 'string');
 
             return done();
         });
@@ -242,12 +251,15 @@ describe('metrics middleware', function () {
             }
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(typeof attributes.map_id, 'string');
+            assert.strictEqual(typeof attributes.cache_buster, 'string');
 
             return done();
         });
@@ -282,12 +294,15 @@ describe('metrics middleware', function () {
             }
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(typeof attributes.map_id, 'string');
+            assert.strictEqual(typeof attributes.cache_buster, 'string');
 
             return done();
         });
@@ -320,16 +335,19 @@ describe('metrics middleware', function () {
             const { token, cacheBuster, templateHash } = LayergroupToken.parse(body.layergroupid);
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, token);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, cacheBuster);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, templateHash);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, template.layergroup.stat_tag);
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.client_event, expectedMetricsEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(attributes.map_type, expectedMapType);
+            assert.strictEqual(attributes.map_id, token);
+            assert.strictEqual(attributes.cache_buster, cacheBuster);
+            assert.strictEqual(attributes.template_hash, templateHash);
+            assert.strictEqual(attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
         });
@@ -383,17 +401,20 @@ describe('metrics middleware', function () {
             }
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.client_event, expectedMetricsEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(attributes.map_type, expectedMapType);
+            assert.strictEqual(typeof attributes.map_id, 'string');
+            assert.strictEqual(typeof attributes.cache_buster, 'string');
             // TODO: uncomment this
-            // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, templateMissingCartoCSSVersion.layergroup.stat_tag);
+            // assert.strictEqual(typeof attributes.template_hash, 'string');
+            assert.strictEqual(attributes.stat_tag, templateMissingCartoCSSVersion.layergroup.stat_tag);
 
             return done();
         });
@@ -420,14 +441,17 @@ describe('metrics middleware', function () {
             }
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, template.layergroup.stat_tag);
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(typeof attributes.map_id, 'string');
+            assert.strictEqual(typeof attributes.cache_buster, 'string');
+            assert.strictEqual(typeof attributes.template_hash, 'string');
+            assert.strictEqual(attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
         });
@@ -456,17 +480,20 @@ describe('metrics middleware', function () {
             }
 
             assert.ok(this.pubSubMetricsBackendSendMethodCalled);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.client_event, expectedMetricsEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(attributes.map_type, expectedMapType);
+            assert.strictEqual(typeof attributes.map_id, 'string');
+            assert.strictEqual(typeof attributes.cache_buster, 'string');
             // TODO: uncomment this
-            // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, template.layergroup.stat_tag);
+            // assert.strictEqual(typeof attributes.template_hash, 'string');
+            assert.strictEqual(attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
         });
@@ -504,17 +531,21 @@ describe('metrics middleware', function () {
                 return done(err);
             }
 
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.event, expectedEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event, expectedMetricsEvent);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.event_source, expectedEventSource);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.client_event_group_id, expectedEventGroupId);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.response_code, expectedResponseCode);
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_type, expectedMapType);
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.map_id, 'string');
-            assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.cache_buster, 'string');
+            assert.ok(this.pubSubMetricsBackendSendMethodCalled);
+
+            const { event, attributes } = this.pubSubMetricsBackendSendMethodCalledWith;
+
+            assert.strictEqual(event, expectedEvent);
+            assert.strictEqual(attributes.client_event, expectedMetricsEvent);
+            assert.strictEqual(attributes.event_source, expectedEventSource);
+            assert.strictEqual(attributes.client_event_group_id, expectedEventGroupId);
+            assert.strictEqual(attributes.response_code, expectedResponseCode);
+            assert.strictEqual(attributes.map_type, expectedMapType);
+            assert.strictEqual(typeof attributes.map_id, 'string');
+            assert.strictEqual(typeof attributes.cache_buster, 'string');
             // TODO: uncomment this
-            // assert.strictEqual(typeof this.pubSubMetricsBackendSendMethodCalledWith.attributes.template_hash, 'string');
-            assert.strictEqual(this.pubSubMetricsBackendSendMethodCalledWith.attributes.stat_tag, template.layergroup.stat_tag);
+            // assert.strictEqual(typeof attributes.template_hash, 'string');
+            assert.strictEqual(attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
         });
