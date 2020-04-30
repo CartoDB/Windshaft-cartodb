@@ -412,8 +412,7 @@ describe('metrics', function () {
             assert.strictEqual(attributes.map_type, expectedMapType);
             assert.strictEqual(typeof attributes.map_id, 'string');
             assert.strictEqual(typeof attributes.cache_buster, 'string');
-            // TODO: uncomment this
-            // assert.strictEqual(typeof attributes.template_hash, 'string');
+            assert.strictEqual(typeof attributes.template_hash, 'string');
             assert.strictEqual(attributes.stat_tag, templateMissingCartoCSSVersion.layergroup.stat_tag);
 
             return done();
@@ -491,8 +490,7 @@ describe('metrics', function () {
             assert.strictEqual(attributes.map_type, expectedMapType);
             assert.strictEqual(typeof attributes.map_id, 'string');
             assert.strictEqual(typeof attributes.cache_buster, 'string');
-            // TODO: uncomment this
-            // assert.strictEqual(typeof attributes.template_hash, 'string');
+            assert.strictEqual(typeof attributes.template_hash, 'string');
             assert.strictEqual(attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
@@ -543,8 +541,7 @@ describe('metrics', function () {
             assert.strictEqual(attributes.map_type, expectedMapType);
             assert.strictEqual(typeof attributes.map_id, 'string');
             assert.strictEqual(typeof attributes.cache_buster, 'string');
-            // TODO: uncomment this
-            // assert.strictEqual(typeof attributes.template_hash, 'string');
+            assert.strictEqual(typeof attributes.template_hash, 'string');
             assert.strictEqual(attributes.stat_tag, template.layergroup.stat_tag);
 
             return done();
