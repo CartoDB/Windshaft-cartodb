@@ -20,6 +20,7 @@ Announcements:
 - Rename NamedMapProviderReporter by NamedMapProviderCacheReporter
 - Remove `bootstrapFonts` at process startup (now done in `windshaft@6.0.0`)
 - Stop checking the installed version of some dependencies while testing
+- Send metrics about `map views` (#1162)
 
 Bug Fixes:
 - Parsing date column in numeric histograms (#1160)

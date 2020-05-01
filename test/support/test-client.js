@@ -23,13 +23,14 @@ const MAPNIK_SUPPORTED_FORMATS = {
     mvt: true
 };
 
-function TestClient (config, apiKey, extraHeaders) {
+function TestClient (config, apiKey, extraHeaders = {}, overrideServerOptions = {}) {
     this.mapConfig = isMapConfig(config) ? config : null;
     this.template = isTemplate(config) ? config : null;
     this.apiKey = apiKey;
-    this.extraHeaders = extraHeaders || {};
+    this.extraHeaders = extraHeaders;
     this.keysToDelete = {};
-    this.server = new CartodbWindshaft(serverOptions);
+    this.serverOptions = Object.assign({}, serverOptions, overrideServerOptions);
+    this.server = new CartodbWindshaft(this.serverOptions);
 }
 
 module.exports = TestClient;
@@ -941,16 +942,8 @@ TestClient.prototype.getLayergroup = function (params, callback) {
         params = {};
     }
 
-    if (!params.response) {
-        params.response = {
-            status: 200,
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-            }
-        };
-    }
-
-    var url = '/api/v1/map';
+    let url = '/api/v1/map';
+    const urlNamed = url + '/named';
     const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
 
     const queryParams = {};
@@ -967,30 +960,112 @@ TestClient.prototype.getLayergroup = function (params, callback) {
         url += '?' + qs.stringify(queryParams);
     }
 
-    assert.response(self.server,
-        {
-            url: url,
-            method: 'POST',
-            headers,
-            data: JSON.stringify(self.mapConfig)
-        },
-        params.response,
-        function (res, err) {
-            var parsedBody;
-            // If there is a response, we are still interested in catching the created keys
-            // to be able to delete them on the .drain() method.
-            if (res) {
-                parsedBody = JSON.parse(res.body);
-                if (parsedBody.layergroupid) {
-                    self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
-                    self.keysToDelete['user:localhost:mapviews:global'] = 5;
-                }
-            }
-            if (err) {
-                return callback(err);
+    var layergroupId;
+
+    if (params.layergroupid) {
+        layergroupId = params.layergroupid;
+    }
+
+    step(
+        function createTemplate () {
+            var next = this;
+
+            if (!self.template) {
+                return next();
             }
 
-            return callback(null, parsedBody);
+            if (!self.apiKey) {
+                return next(new Error('apiKey param is mandatory to create a new template'));
+            }
+
+            params.placeholders = params.placeholders || {};
+
+            assert.response(self.server,
+                {
+                    url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
+                    method: 'POST',
+                    headers,
+                    data: JSON.stringify(self.template)
+                },
+                {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                },
+                function (res, err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    return next(null, JSON.parse(res.body).template_id);
+                }
+            );
+        },
+        function createLayergroup (err, templateId) {
+            var next = this;
+
+            if (err) {
+                return next(err);
+            }
+
+            if (layergroupId) {
+                return next(null, layergroupId);
+            }
+
+            const data = templateId ? params.placeholders : self.mapConfig;
+
+            if (!params.response) {
+                params.response = {
+                    status: 200,
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                };
+            }
+
+            const queryParams = {};
+
+            if (self.apiKey) {
+                queryParams.api_key = self.apiKey;
+            }
+
+            if (params.aggregation !== undefined) {
+                queryParams.aggregation = params.aggregation;
+            }
+
+            const path = templateId
+                ? urlNamed + '/' + templateId + '?' + qs.stringify(queryParams)
+                : url;
+
+            assert.response(self.server,
+                {
+                    url: path,
+                    method: 'POST',
+                    headers,
+                    data: JSON.stringify(data)
+                },
+                params.response,
+                function (res, err) {
+                    var parsedBody;
+                    // If there is a response, we are still interested in catching the created keys
+                    // to be able to delete them on the .drain() method.
+                    if (res) {
+                        parsedBody = JSON.parse(res.body);
+                        if (parsedBody.layergroupid) {
+                            self.keysToDelete['map_cfg|' + LayergroupToken.parse(parsedBody.layergroupid).token] = 0;
+                            self.keysToDelete['user:localhost:mapviews:global'] = 5;
+                        }
+                        if (res.statusCode === 200 && self.template && self.template.layergroup && self.template.layergroup.stat_tag) {
+                            self.keysToDelete[`user:localhost:mapviews:stat_tag:${self.template.layergroup.stat_tag}`] = 5;
+                        }
+                    }
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    return callback(null, parsedBody);
+                }
+            );
         }
     );
 };
@@ -1684,5 +1759,56 @@ TestClient.prototype.getTemplate = function (params, callback) {
         }
 
         return callback(err, res, body);
+    });
+};
+
+TestClient.prototype.getPreview = function (width, height, params = {}, callback) {
+    this.createTemplate({}, (err, res, template) => {
+        if (err) {
+            return callback(err);
+        }
+
+        params = Object.assign({ api_key: this.apiKey }, params);
+        const url = `/api/v1/map/static/named/${template.template_id}/${width}/${height}.png?${qs.stringify(params)}`;
+        const headers = Object.assign({ host: 'localhost' }, this.extraHeaders);
+
+        const requestOptions = {
+            url: url,
+            method: 'GET',
+            headers,
+            encoding: 'binary'
+        };
+
+        const expectedResponse = Object.assign({
+            status: 200,
+            headers: {
+                'Content-Type': 'image/png'
+            }
+        }, params.response || {});
+
+        assert.response(this.server, requestOptions, expectedResponse, (res, err) => {
+            if (err) {
+                return callback(err);
+            }
+
+            let body;
+            switch (res.headers['content-type']) {
+            case 'image/png':
+                this.keysToDelete['user:localhost:mapviews:global'] = 5;
+                if (this.template.layergroup && this.template.layergroup.stat_tag) {
+                    this.keysToDelete[`user:localhost:mapviews:stat_tag:${this.template.layergroup.stat_tag}`] = 5;
+                }
+                body = mapnik.Image.fromBytes(Buffer.from(res.body, 'binary'));
+                break;
+            case 'application/json; charset=utf-8':
+                body = JSON.parse(res.body);
+                break;
+            default:
+                body = res.body;
+                break;
+            }
+
+            return callback(null, res, body);
+        });
     });
 };
