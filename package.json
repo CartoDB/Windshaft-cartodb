@@ -41,7 +41,7 @@
     "camshaft": "^0.65.3",
     "cartodb-psql": "0.14.0",
     "cartodb-query-tables": "^0.7.0",
-    "cartodb-redis": "2.1.0",
+    "cartodb-redis": "^3.0.0",
     "debug": "3.1.0",
     "dot": "1.1.2",
     "express": "4.16.3",
@@ -54,13 +54,13 @@
     "node-statsd": "0.1.1",
     "on-headers": "1.0.1",
     "queue-async": "1.1.0",
-    "redis-mpool": "0.7.0",
+    "redis-mpool": "^0.8.0",
     "request": "2.87.0",
     "semver": "5.5.0",
     "step-profiler": "0.3.0",
     "turbo-carto": "0.21.2",
     "underscore": "1.6.0",
-    "windshaft": "^6.0.0",
+    "windshaft": "^7.0.0",
     "yargs": "11.1.0"
   },
   "devDependencies": {
@@ -94,7 +94,7 @@
     "docker:bash": "docker run -it -v `pwd`:/srv $DOCKER_IMAGE bash"
   },
   "engines": {
-    "node": "^10.15.1",
-    "npm": "^6.4.1"
+    "node": "^12.16.3",
+    "npm": "^6.14.4"
   }
 }

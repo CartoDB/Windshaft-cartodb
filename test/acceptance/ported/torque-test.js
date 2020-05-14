@@ -69,7 +69,7 @@ describe('torque', function () {
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
                 assert.strictEqual(error,
-                    "Missing required property '-torque-frame-count' in torque layer CartoCSS");
+                    "TorqueRenderer: Missing required property '-torque-frame-count' in torque layer CartoCSS");
                 return null;
             },
             function doPost2 (err) {
@@ -91,7 +91,7 @@ describe('torque', function () {
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
                 assert.strictEqual(error,
-                    "Missing required property '-torque-resolution' in torque layer CartoCSS");
+                    "TorqueRenderer: Missing required property '-torque-resolution' in torque layer CartoCSS");
                 return null;
             },
             function doPost3 (err) {
@@ -113,7 +113,7 @@ describe('torque', function () {
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
                 assert.strictEqual(error,
-                    "Missing required property '-torque-aggregation-function' in torque layer CartoCSS");
+                    "TorqueRenderer: Missing required property '-torque-aggregation-function' in torque layer CartoCSS");
                 return null;
             },
             function finish (err) {
@@ -447,7 +447,7 @@ describe('torque', function () {
                 assert.ok(parsed.errors, parsed);
                 var error = parsed.errors[0];
                 assert.strictEqual(error,
-                    "Unexpected type for property '-torque-aggregation-function', expected string");
+                    "TorqueRenderer: Unexpected type for property '-torque-aggregation-function', expected string");
                 done();
                 return null;
             }
