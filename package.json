@@ -46,7 +46,7 @@
     "dot": "1.1.2",
     "express": "4.16.3",
     "fastly-purge": "1.0.1",
-    "gc-stats": "1.2.1",
+    "gc-stats": "^1.4.0",
     "glob": "7.1.2",
     "log4js": "github:cartodb/log4js-node#cdb",
     "lru-cache": "4.1.3",
