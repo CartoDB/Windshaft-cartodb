@@ -269,13 +269,7 @@ describe('torque boundary points', function () {
                     var parsed = JSON.parse(res.body);
                     /* Order the JSON first by descending x__uint8 and ascending
                      * y__uint8 */
-                    parsed.sort(function (a, b) {
-                        if (a.x__uint8 === b.x__uint8) {
-                            return (a.y__uint8 > b.y__uint8);
-                        }
-                        return (a.x__uint8 < b.x__uint8);
-                    });
-
+                    parsed.sort((a, b) => a.x__uint8 - b.x__uint8 === 0 ? a.y__uint8 - b.y__uint8 : b.x__uint8 - a.x__uint8);
                     var i = 0;
                     tileRequest.expects.forEach(function (expected) {
                         assert.strictEqual(
@@ -451,18 +445,18 @@ describe('torque boundary points', function () {
                 assert.ok(!err, 'Failed to request torque.json');
 
                 var parsed = JSON.parse(res.body);
-
-                assert.deepStrictEqual(parsed.sort(function (a, b) { return a.x__uint8 > b.x__uint8; }), [
-                    {
-                        x__uint8: 47,
-                        y__uint8: 127,
-                        vals__uint8: [2],
-                        dates__uint16: [0]
-                    },
+                parsed.sort((a, b) => a.x__uint8 - b.x__uint8 === 0 ? a.y__uint8 - b.y__uint8 : b.x__uint8 - a.x__uint8);
+                assert.deepStrictEqual(parsed, [
                     {
                         x__uint8: 48,
                         y__uint8: 127,
                         vals__uint8: [1],
+                        dates__uint16: [0]
+                    },
+                    {
+                        x__uint8: 47,
+                        y__uint8: 127,
+                        vals__uint8: [2],
                         dates__uint16: [0]
                     }
                 ]);
