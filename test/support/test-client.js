@@ -942,23 +942,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
         params = {};
     }
 
-    let url = '/api/v1/map';
-    const urlNamed = url + '/named';
     const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
-
-    const queryParams = {};
-
-    if (self.apiKey) {
-        queryParams.api_key = self.apiKey;
-    }
-
-    if (params.aggregation !== undefined) {
-        queryParams.aggregation = params.aggregation;
-    }
-
-    if (Object.keys(queryParams).length) {
-        url += '?' + qs.stringify(queryParams);
-    }
 
     var layergroupId;
 
@@ -982,7 +966,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
 
             assert.response(self.server,
                 {
-                    url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
+                    url: `/api/v1/map/named?${qs.stringify({ api_key: self.apiKey })}`,
                     method: 'POST',
                     headers,
                     data: JSON.stringify(self.template)
@@ -1023,9 +1007,10 @@ TestClient.prototype.getLayergroup = function (params, callback) {
                 };
             }
 
+            const url = '/api/v1/map';
             const queryParams = {};
 
-            if (self.apiKey) {
+            if (self.apiKey !== undefined) {
                 queryParams.api_key = self.apiKey;
             }
 
@@ -1038,8 +1023,8 @@ TestClient.prototype.getLayergroup = function (params, callback) {
             }
 
             const path = templateId
-                ? `${urlNamed}/${templateId}?${qs.stringify(queryParams)}`
-                : `${url}?${qs.stringify(queryParams)}`;
+                ? `${url}/named/${templateId}${Object.keys(queryParams).length ? `?${qs.stringify(queryParams)}` : ''}`
+                : `${url}${Object.keys(queryParams).length ? `?${qs.stringify(queryParams)}` : ''}`;
 
             assert.response(self.server,
                 {
