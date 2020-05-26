@@ -1033,9 +1033,13 @@ TestClient.prototype.getLayergroup = function (params, callback) {
                 queryParams.aggregation = params.aggregation;
             }
 
+            if (params.client !== undefined) {
+                queryParams.client = params.client;
+            }
+
             const path = templateId
-                ? urlNamed + '/' + templateId + '?' + qs.stringify(queryParams)
-                : url;
+                ? `${urlNamed}/${templateId}?${qs.stringify(queryParams)}`
+                : `${url}?${qs.stringify(queryParams)}`;
 
             assert.response(self.server,
                 {
@@ -1058,12 +1062,15 @@ TestClient.prototype.getLayergroup = function (params, callback) {
                         if (res.statusCode === 200 && self.template && self.template.layergroup && self.template.layergroup.stat_tag) {
                             self.keysToDelete[`user:localhost:mapviews:stat_tag:${self.template.layergroup.stat_tag}`] = 5;
                         }
+                        if (res.statusCode === 200 && self.mapConfig && self.mapConfig.stat_tag) {
+                            self.keysToDelete[`user:localhost:mapviews:stat_tag:${self.mapConfig.stat_tag}`] = 5;
+                        }
                     }
                     if (err) {
                         return callback(err);
                     }
 
-                    return callback(null, parsedBody);
+                    return callback(null, parsedBody, res);
                 }
             );
         }
