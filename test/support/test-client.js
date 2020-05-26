@@ -1022,9 +1022,10 @@ TestClient.prototype.getLayergroup = function (params, callback) {
                 queryParams.client = params.client;
             }
 
+            const query = Object.keys(queryParams).length ? `?${qs.stringify(queryParams)}` : '';
             const path = templateId
-                ? `${url}/named/${templateId}${Object.keys(queryParams).length ? `?${qs.stringify(queryParams)}` : ''}`
-                : `${url}${Object.keys(queryParams).length ? `?${qs.stringify(queryParams)}` : ''}`;
+                ? `${url}/named/${templateId}${query}`
+                : `${url}${query}`;
 
             assert.response(self.server,
                 {
