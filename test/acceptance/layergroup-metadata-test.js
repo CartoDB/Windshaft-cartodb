@@ -17,7 +17,7 @@ describe('layergroup metadata', function () {
         serverOptions.renderer.mvt.usePostGIS = originalUsePostGIS;
     });
 
-    [1234, 'default_public', false].forEach(apiKey => {
+    [1234, 'default_public', undefined].forEach(apiKey => {
         it(`tiles base urls ${apiKey ? `with api key: ${apiKey}` : 'without api key'}`, function (done) {
             const mapConfig = {
                 version: '1.7.0',
