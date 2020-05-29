@@ -31,16 +31,4 @@ describe('PgQueryRunner', function () {
             done();
         });
     });
-
-    it('should receive rows array even on error', function (done) {
-        var query = 'select __error___ from test_table';
-        queryRunner.run('localhost', query, function (err, result) {
-            assert.ok(err);
-
-            assert.ok(Array.isArray(result));
-            assert.strictEqual(result.length, 0);
-
-            done();
-        });
-    });
 });
