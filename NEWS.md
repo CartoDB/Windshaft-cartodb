@@ -24,6 +24,7 @@ Announcements:
 - Remove `bootstrapFonts` at process startup (now done in `windshaft@6.0.0`)
 - Stop checking the installed version of some dependencies while testing
 - Send metrics about `map views` (#1162)
+- Add custom headers in responses to allow to other components to be able to get insights about user activity.
 
 Bug Fixes:
 - Parsing date column in numeric histograms (#1160)
