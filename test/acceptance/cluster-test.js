@@ -16,6 +16,7 @@ const POINTS_SQL_1 = `
             ELSE 'odd'
         END AS type
     from generate_series(-3, 3) x
+    order by cartodb_id asc
 `;
 
 const defaultLayers = [{
@@ -62,14 +63,14 @@ describe('cluster', function () {
                 }
 
                 assert.deepStrictEqual(body, {
-                    errors: ['Map f697fb370c6479559ae2f66d684e8227 has no aggregation defined for layer 0'],
+                    errors: ['Map f105928729b4d3f67ae3578a163778c9 has no aggregation defined for layer 0'],
                     errors_with_context: [
                         {
                             layer: {
                                 index: '0',
                                 type: 'cartodb'
                             },
-                            message: 'Map f697fb370c6479559ae2f66d684e8227 has no aggregation defined for layer 0',
+                            message: 'Map f105928729b4d3f67ae3578a163778c9 has no aggregation defined for layer 0',
                             subtype: 'aggregation',
                             type: 'layer'
                         }
@@ -104,14 +105,14 @@ describe('cluster', function () {
                 }
 
                 assert.deepStrictEqual(body, {
-                    errors: ['Map 7521bcd1029c401289dd651ce91d5d9d has no aggregation defined for layer 0'],
+                    errors: ['Map 9d19316644f831332b44de7b3158aa77 has no aggregation defined for layer 0'],
                     errors_with_context: [
                         {
                             layer: {
                                 index: '0',
                                 type: 'cartodb'
                             },
-                            message: 'Map 7521bcd1029c401289dd651ce91d5d9d has no aggregation defined for layer 0',
+                            message: 'Map 9d19316644f831332b44de7b3158aa77 has no aggregation defined for layer 0',
                             subtype: 'aggregation',
                             type: 'layer'
                         }

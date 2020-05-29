@@ -942,23 +942,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
         params = {};
     }
 
-    let url = '/api/v1/map';
-    const urlNamed = url + '/named';
     const headers = Object.assign({ host: 'localhost', 'Content-Type': 'application/json' }, self.extraHeaders);
-
-    const queryParams = {};
-
-    if (self.apiKey) {
-        queryParams.api_key = self.apiKey;
-    }
-
-    if (params.aggregation !== undefined) {
-        queryParams.aggregation = params.aggregation;
-    }
-
-    if (Object.keys(queryParams).length) {
-        url += '?' + qs.stringify(queryParams);
-    }
 
     var layergroupId;
 
@@ -982,7 +966,7 @@ TestClient.prototype.getLayergroup = function (params, callback) {
 
             assert.response(self.server,
                 {
-                    url: urlNamed + '?' + qs.stringify({ api_key: self.apiKey }),
+                    url: `/api/v1/map/named?${qs.stringify({ api_key: self.apiKey })}`,
                     method: 'POST',
                     headers,
                     data: JSON.stringify(self.template)
@@ -1023,9 +1007,10 @@ TestClient.prototype.getLayergroup = function (params, callback) {
                 };
             }
 
+            const url = '/api/v1/map';
             const queryParams = {};
 
-            if (self.apiKey) {
+            if (self.apiKey !== undefined) {
                 queryParams.api_key = self.apiKey;
             }
 
@@ -1033,9 +1018,14 @@ TestClient.prototype.getLayergroup = function (params, callback) {
                 queryParams.aggregation = params.aggregation;
             }
 
+            if (params.client !== undefined) {
+                queryParams.client = params.client;
+            }
+
+            const query = Object.keys(queryParams).length ? `?${qs.stringify(queryParams)}` : '';
             const path = templateId
-                ? urlNamed + '/' + templateId + '?' + qs.stringify(queryParams)
-                : url;
+                ? `${url}/named/${templateId}${query}`
+                : `${url}${query}`;
 
             assert.response(self.server,
                 {
@@ -1058,12 +1048,15 @@ TestClient.prototype.getLayergroup = function (params, callback) {
                         if (res.statusCode === 200 && self.template && self.template.layergroup && self.template.layergroup.stat_tag) {
                             self.keysToDelete[`user:localhost:mapviews:stat_tag:${self.template.layergroup.stat_tag}`] = 5;
                         }
+                        if (res.statusCode === 200 && self.mapConfig && self.mapConfig.stat_tag) {
+                            self.keysToDelete[`user:localhost:mapviews:stat_tag:${self.mapConfig.stat_tag}`] = 5;
+                        }
                     }
                     if (err) {
                         return callback(err);
                     }
 
-                    return callback(null, parsedBody);
+                    return callback(null, parsedBody, res);
                 }
             );
         }

@@ -5,12 +5,15 @@ Released 2020-mm-dd
 
 Breaking changes:
 - Remove `/version` endpoint
+- Drop support for Node.js < 12
 
 Announcements:
-- Upgrade camshaft to [`0.65.3`](https://github.com/CartoDB/camshaft/blob/0.65.3/CHANGELOG.md#0653):
+- Support Node.js 12
+- Upgrade `windshaft` to version [`7.0.0`](https://github.com/CartoDB/Windshaft/releases/tag/7.0.0)
+- Upgrade `camshaft` to version [`0.65.3`](https://github.com/CartoDB/camshaft/blob/0.65.3/CHANGELOG.md#0653):
   - Fix noisy message logs while checking analyses' limits
   - Fix CI setup, explicit use of PGPORT while creating the PostgreSQL cluster
-- Upgrades major windshaft release version [`windshaft@6.0.0`](https://github.com/CartoDB/Windshaft/releases/tag/6.0.0)
+- Upgrade `cartodb-redis` to version [`3.0.0`](https://github.com/CartoDB/node-cartodb-redis/releases/tag/3.0.0)
 - Fix test where `http-fallback-image` renderer was failing quietly
 - Fix stat `named map providers` cache count
 - Use new signature for `onTileErrorStrategy`. Required by `windshaft@6.0.0`
@@ -21,9 +24,11 @@ Announcements:
 - Remove `bootstrapFonts` at process startup (now done in `windshaft@6.0.0`)
 - Stop checking the installed version of some dependencies while testing
 - Send metrics about `map views` (#1162)
+- Add custom headers in responses to allow to other components to be able to get insights about user activity.
 
 Bug Fixes:
 - Parsing date column in numeric histograms (#1160)
+- Use `Array.prototype.sort()`'s callback properly while testing. It should return a number not a boolean.
 
 ## 8.1.1
 Released 2020-02-17
