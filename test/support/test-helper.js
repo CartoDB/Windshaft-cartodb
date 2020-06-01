@@ -14,7 +14,7 @@ var LZMA = require('lzma').LZMA;
 var lzmaWorker = new LZMA();
 
 var redis = require('redis');
-var log4js = require('log4js');
+const pino = require('pino');
 const setICUEnvVariable = require('../../lib/utils/icu-data-env-setter');
 
 // set environment specific variables
@@ -24,9 +24,7 @@ process.env.NODE_ENV = 'test';
 
 setICUEnvVariable();
 
-// don't output logs in test environment to reduce noise
-log4js.configure({ appenders: [] });
-global.logger = log4js.getLogger();
+global.logger = pino({ base: null, level: process.env.NODE_ENV === 'test' ? 'fatal' : 'info' }, pino.destination({ sync: false }));
 
 // Utility function to compress & encode LZMA
 function lzmaCompressToBase64 (payload, mode, callback) {

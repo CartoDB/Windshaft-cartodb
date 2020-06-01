@@ -67,9 +67,9 @@ var config = {
         http: 'http://{{=it.cdn_url}}/{{=it.user}}/api/v1/map',
         https: 'https://{{=it.cdn_url}}/{{=it.user}}/api/v1/map'
     }
-
-    // Maximum number of connections for one process
-    // 128 is a good value with a limit of 1024 open file descriptors
+    // Specify the maximum length of the queue of pending connections for the HTTP server.
+    // The actual length will be determined by the OS through sysctl settings such as tcp_max_syn_backlog and somaxconn on Linux.
+    // The default value of this parameter is 511 (not 512).
     ,maxConnections:128
     // Maximum number of templates per user. Unlimited by default.
     ,maxUserTemplates:1024
@@ -82,12 +82,6 @@ var config = {
     ,socket_timeout: 600000
     ,enable_cors: true
     ,cache_enabled: true
-    ,log_format: ':req[X-Real-IP] :method :req[Host]:url :status :response-time ms -> :res[Content-Type] (:res[X-Tiler-Profiler]) (:res[X-Tiler-Errors])'
-    // If log_filename is given logs will be written
-    // there, in append mode. Otherwise stdout is used (default).
-    // Log file will be re-opened on receiving the HUP signal
-    ,log_filename: 'logs/node-windshaft.log'
-    ,log_windshaft: true
     // Templated database username for authorized user
     // Supported labels: 'user_id' (read from redis)
     ,postgres_auth_user: 'cartodb_staging_user_<%= user_id %>'
@@ -261,12 +255,6 @@ var config = {
             endpoint: 'http://127.0.0.1:8080/api/v2/sql/job',
             // the template to use for adding the host header in the batch api requests
             hostHeaderTemplate: '{{=it.username}}.localhost.lan'
-        },
-        logger: {
-            // If filename is given logs comming from analysis client  will be written
-            // there, in append mode. Otherwise 'log_filename' is used. Otherwise stdout is used (default).
-            // Log file will be re-opened on receiving the HUP signal
-            filename: 'logs/node-windshaft-analysis.log'
         },
         // Define max execution time in ms for analyses or tags
         // If analysis or tag are not found in redis this values will be used as default.

@@ -1,28 +1,27 @@
 'use strict';
 
-var http = require('http');
-var https = require('https');
-var path = require('path');
-var fs = require('fs');
-var _ = require('underscore');
-var semver = require('semver');
+const http = require('http');
+const https = require('https');
+const path = require('path');
+const fs = require('fs');
+const semver = require('semver');
+const pino = require('pino');
+
 // TODO: research it it's still needed
 const setICUEnvVariable = require('./lib/utils/icu-data-env-setter');
 
-var log = console.log.bind(console);
-var logError = console.error.bind(console);
+global.logger = pino({ base: null, level: process.env.NODE_ENV === 'test' ? 'fatal' : 'info' }, pino.destination({ sync: false }));
 
-var nodejsVersion = process.versions.node;
 const { engines } = require('./package.json');
-if (!semver.satisfies(nodejsVersion, engines.node)) {
-    logError(`Node version ${nodejsVersion} is not supported, please use Node.js ${engines.node}.`);
+if (!semver.satisfies(process.versions.node, engines.node)) {
+    global.logger.fatal(new Error(`Node version ${process.versions.node} is not supported, please use Node.js ${engines.node}.`));
     process.exit(1);
 }
 
 // This function should be called before the require('yargs').
 setICUEnvVariable();
 
-var argv = require('yargs')
+const argv = require('yargs')
     .usage('Usage: node $0 <environment> [options]')
     .help('h')
     .example(
@@ -35,27 +34,26 @@ var argv = require('yargs')
     .describe('c', 'Load configuration from path')
     .argv;
 
-var environmentArg = argv._[0] || process.env.NODE_ENV || 'development';
-var configurationFile = path.resolve(argv.config || './config/environments/' + environmentArg + '.js');
+const environmentArg = argv._[0] || process.env.NODE_ENV || 'development';
+const configurationFile = path.resolve(argv.config || `./config/environments/${environmentArg}.js`);
+
 if (!fs.existsSync(configurationFile)) {
-    logError('Configuration file "%s" does not exist', configurationFile);
+    global.logger.fatal(new Error(`Configuration file ${configurationFile} does not exist`));
     process.exit(1);
 }
 
 global.environment = require(configurationFile);
-var ENVIRONMENT = argv._[0] || process.env.NODE_ENV || global.environment.environment;
+const ENVIRONMENT = argv._[0] || process.env.NODE_ENV || global.environment.environment;
 process.env.NODE_ENV = ENVIRONMENT;
 
-var availableEnvironments = {
+const availableEnvironments = {
     production: true,
     staging: true,
     development: true
 };
 
-// sanity check
 if (!availableEnvironments[ENVIRONMENT]) {
-    logError('node app.js [environment]');
-    logError('environments: %s', Object.keys(availableEnvironments).join(', '));
+    global.logger.fatal(new Error(`Invalid environment argument, valid ones: ${Object.keys(availableEnvironments).join(', ')}`));
     process.exit(1);
 }
 
@@ -66,65 +64,37 @@ if (global.environment.uv_threadpool_size) {
 
 // set global HTTP and HTTPS agent default configurations
 // ref https://nodejs.org/api/http.html#http_new_agent_options
-var agentOptions = _.defaults(global.environment.httpAgent || {}, {
+const agentOptions = Object.assign({
     keepAlive: false,
     keepAliveMsecs: 1000,
     maxSockets: Infinity,
     maxFreeSockets: 256
-});
+}, global.environment.httpAgent || {});
+
 http.globalAgent = new http.Agent(agentOptions);
 https.globalAgent = new https.Agent(agentOptions);
 
-global.log4js = require('log4js');
-var log4jsConfig = {
-    appenders: [],
-    replaceConsole: true
-};
-
-if (global.environment.log_filename) {
-    var logFilename = path.resolve(global.environment.log_filename);
-    var logDirectory = path.dirname(logFilename);
-    if (!fs.existsSync(logDirectory)) {
-        logError('Log filename directory does not exist: ' + logDirectory);
-        process.exit(1);
-    }
-    log('Logs will be written to ' + logFilename);
-    log4jsConfig.appenders.push(
-        { type: 'file', absolute: true, filename: logFilename }
-    );
-} else {
-    log4jsConfig.appenders.push(
-        { type: 'console', layout: { type: 'basic' } }
-    );
-}
-
-global.log4js.configure(log4jsConfig);
-global.logger = global.log4js.getLogger();
-
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-var cartodbWindshaft = require('./lib/server');
-var serverOptions = require('./lib/server-options');
+const cartodbWindshaft = require('./lib/server');
+const serverOptions = require('./lib/server-options');
 
-var server = cartodbWindshaft(serverOptions);
+const server = cartodbWindshaft(serverOptions);
 
-// Maximum number of connections for one process
-// 128 is a good number if you have up to 1024 filedescriptors
-// 4 is good if you have max 32 filedescriptors
-// 1 is good if you have max 16 filedescriptors
-var backlog = global.environment.maxConnections || 128;
+// Specify the maximum length of the queue of pending connections for the HTTP server.
+// The actual length will be determined by the OS through sysctl settings such as tcp_max_syn_backlog and somaxconn on Linux.
+// The default value of this parameter is 511 (not 512).
+// See: https://nodejs.org/docs/latest/api/net.html#net_server_listen
+const backlog = global.environment.maxConnections || 128;
 
-var listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, backlog);
-
-var version = require('./package').version;
+const listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, backlog);
+const version = require('./package').version;
 
 listener.on('listening', function () {
-    log('Using Node.js %s', process.version);
-    log('Using configuration file "%s"', configurationFile);
-    log(
-        'Windshaft tileserver %s started on %s:%s PID=%d (%s)',
-        version, serverOptions.bind.host, serverOptions.bind.port, process.pid, ENVIRONMENT
-    );
+    global.logger.info(`Using Node.js ${process.version}`);
+    global.logger.info(`Using configuration file ${configurationFile}`);
+    const { address, port } = listener.address();
+    global.logger.info(`Windshaft tileserver ${version} started on ${address}:${port} PID=${process.pid} (${ENVIRONMENT})`);
 });
 
 function getCPUUsage (oldUsage) {
@@ -159,22 +129,14 @@ setInterval(function cpuUsageMetrics () {
     });
 
     previousCPUUsage = CPUUsage;
-}, 5000);
+}, 5000).unref();
 
 setInterval(function () {
     var memoryUsage = process.memoryUsage();
     Object.keys(memoryUsage).forEach(function (k) {
         global.statsClient.gauge('windshaft.memory.' + k, memoryUsage[k]);
     });
-}, 5000);
-
-process.on('SIGHUP', function () {
-    global.log4js.clearAndShutdownAppenders(function () {
-        global.log4js.configure(log4jsConfig);
-        global.logger = global.log4js.getLogger();
-        log('Log files reloaded');
-    });
-});
+}, 5000).unref();
 
 if (global.gc) {
     var gcInterval = Number.isFinite(global.environment.gc_interval)
@@ -184,7 +146,7 @@ if (global.gc) {
     if (gcInterval > 0) {
         setInterval(function gcForcedCycle () {
             global.gc();
-        }, gcInterval);
+        }, gcInterval).unref();
     }
 }
 
@@ -227,41 +189,36 @@ function getGCTypeValue (type) {
     return value;
 }
 
-addHandlers(listener, global.logger, 45000);
+const exitProcess = pino.final(global.logger, (err, logger, listener, signal, killTimeout) => {
+    scheduleForcedExit(killTimeout, logger);
 
-function addHandlers (listener, logger, killTimeout) {
-    process.on('uncaughtException', exitProcess(listener, logger, killTimeout));
-    process.on('unhandledRejection', exitProcess(listener, logger, killTimeout));
-    process.on('ENOMEM', exitProcess(listener, logger, killTimeout));
-    process.on('SIGINT', exitProcess(listener, logger, killTimeout));
-    process.on('SIGTERM', exitProcess(listener, logger, killTimeout));
+    logger.info(`Process has received signal: ${signal}`);
+
+    let code = 0;
+
+    if (err) {
+        code = 1;
+        logger.fatal(err);
+    }
+
+    logger.info(`Process is going to exit with code: ${code}`);
+    listener.close(() => process.exit(code));
+});
+
+function addHandlers (listener, killTimeout) {
+    process.on('uncaughtException', (err) => exitProcess(err, listener, 'uncaughtException', killTimeout));
+    process.on('unhandledRejection', (err) => exitProcess(err, listener, 'unhandledRejection', killTimeout));
+    process.on('ENOMEM', (err) => exitProcess(err, listener, 'ENOMEM', killTimeout));
+    process.on('SIGINT', () => exitProcess(null, listener, 'SIGINT', killTimeout));
+    process.on('SIGTERM', () => exitProcess(null, listener, 'SIGINT', killTimeout));
 }
 
-function exitProcess (listener, logger, killTimeout) {
-    return function exitProcessFn (signal) {
-        scheduleForcedExit(killTimeout, logger);
-
-        let code = 0;
-
-        if (!['SIGINT', 'SIGTERM'].includes(signal)) {
-            const err = signal instanceof Error ? signal : new Error(signal);
-            signal = undefined;
-            code = 1;
-
-            logger.fatal(err);
-        } else {
-            logger.info(`Process has received signal: ${signal}`);
-        }
-
-        logger.info(`Process is going to exit with code: ${code}`);
-        listener.close(() => global.log4js.shutdown(() => process.exit(code)));
-    };
-}
+addHandlers(listener, 45000);
 
 function scheduleForcedExit (killTimeout, logger) {
     // Schedule exit if there is still ongoing work to deal with
     const killTimer = setTimeout(() => {
-        logger.info('Process didn\'t close on time. Force exit');
+        global.logger.info('Process didn\'t close on time. Force exit');
         process.exit(1);
     }, killTimeout);
 
