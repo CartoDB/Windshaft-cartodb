@@ -3,20 +3,10 @@
 const http = require('http');
 const https = require('https');
 const path = require('path');
-const fs = require('fs');
 const semver = require('semver');
-const pino = require('pino');
 
 // TODO: research it it's still needed
 const setICUEnvVariable = require('./lib/utils/icu-data-env-setter');
-
-global.logger = pino({ base: null, level: process.env.NODE_ENV === 'test' ? 'fatal' : 'info' }, pino.destination({ sync: false }));
-
-const { engines } = require('./package.json');
-if (!semver.satisfies(process.versions.node, engines.node)) {
-    global.logger.fatal(new Error(`Node version ${process.versions.node} is not supported, please use Node.js ${engines.node}.`));
-    process.exit(1);
-}
 
 // This function should be called before the require('yargs').
 setICUEnvVariable();
@@ -37,27 +27,9 @@ const argv = require('yargs')
 const environmentArg = argv._[0] || process.env.NODE_ENV || 'development';
 const configurationFile = path.resolve(argv.config || `./config/environments/${environmentArg}.js`);
 
-if (!fs.existsSync(configurationFile)) {
-    global.logger.fatal(new Error(`Configuration file ${configurationFile} does not exist`));
-    process.exit(1);
-}
-
 global.environment = require(configurationFile);
-const ENVIRONMENT = argv._[0] || process.env.NODE_ENV || global.environment.environment;
-process.env.NODE_ENV = ENVIRONMENT;
+process.env.NODE_ENV = argv._[0] || process.env.NODE_ENV || global.environment.environment;
 
-const availableEnvironments = {
-    production: true,
-    staging: true,
-    development: true
-};
-
-if (!availableEnvironments[ENVIRONMENT]) {
-    global.logger.fatal(new Error(`Invalid environment argument, valid ones: ${Object.keys(availableEnvironments).join(', ')}`));
-    process.exit(1);
-}
-
-process.env.NODE_ENV = ENVIRONMENT;
 if (global.environment.uv_threadpool_size) {
     process.env.UV_THREADPOOL_SIZE = global.environment.uv_threadpool_size;
 }
@@ -76,10 +48,28 @@ https.globalAgent = new https.Agent(agentOptions);
 
 // Include cartodb_windshaft only _after_ the "global" variable is set
 // See https://github.com/Vizzuality/Windshaft-cartodb/issues/28
-const cartodbWindshaft = require('./lib/server');
+const createServer = require('./lib/server');
 const serverOptions = require('./lib/server-options');
+const { logger } = serverOptions;
 
-const server = cartodbWindshaft(serverOptions);
+const availableEnvironments = {
+    production: true,
+    staging: true,
+    development: true
+};
+
+if (!availableEnvironments[process.env.NODE_ENV]) {
+    logger.fatal(new Error(`Invalid environment argument, valid ones: ${Object.keys(availableEnvironments).join(', ')}`));
+    process.exit(1);
+}
+
+const { engines } = require('./package.json');
+if (!semver.satisfies(process.versions.node, engines.node)) {
+    logger.fatal(new Error(`Node version ${process.versions.node} is not supported, please use Node.js ${engines.node}.`));
+    process.exit(1);
+}
+
+const server = createServer(serverOptions);
 
 // Specify the maximum length of the queue of pending connections for the HTTP server.
 // The actual length will be determined by the OS through sysctl settings such as tcp_max_syn_backlog and somaxconn on Linux.
@@ -91,10 +81,10 @@ const listener = server.listen(serverOptions.bind.port, serverOptions.bind.host,
 const version = require('./package').version;
 
 listener.on('listening', function () {
-    global.logger.info(`Using Node.js ${process.version}`);
-    global.logger.info(`Using configuration file ${configurationFile}`);
+    logger.info(`Using Node.js ${process.version}`);
+    logger.info(`Using configuration file ${configurationFile}`);
     const { address, port } = listener.address();
-    global.logger.info(`Windshaft tileserver ${version} started on ${address}:${port} PID=${process.pid} (${ENVIRONMENT})`);
+    logger.info(`Windshaft tileserver ${version} started on ${address}:${port} PID=${process.pid} (${process.env.NODE_ENV})`);
 });
 
 function getCPUUsage (oldUsage) {
@@ -189,19 +179,19 @@ function getGCTypeValue (type) {
     return value;
 }
 
-const exitProcess = pino.final(global.logger, (err, logger, listener, signal, killTimeout) => {
-    scheduleForcedExit(killTimeout, logger);
+const exitProcess = logger.finish((err, finalLogger, listener, signal, killTimeout) => {
+    scheduleForcedExit(killTimeout, finalLogger);
 
-    logger.info(`Process has received signal: ${signal}`);
+    finalLogger.info(`Process has received signal: ${signal}`);
 
     let code = 0;
 
     if (err) {
         code = 1;
-        logger.fatal(err);
+        finalLogger.fatal(err);
     }
 
-    logger.info(`Process is going to exit with code: ${code}`);
+    finalLogger.info(`Process is going to exit with code: ${code}`);
     listener.close(() => process.exit(code));
 });
 
@@ -215,10 +205,10 @@ function addHandlers (listener, killTimeout) {
 
 addHandlers(listener, 45000);
 
-function scheduleForcedExit (killTimeout, logger) {
+function scheduleForcedExit (killTimeout, finalLogger) {
     // Schedule exit if there is still ongoing work to deal with
     const killTimer = setTimeout(() => {
-        global.logger.info('Process didn\'t close on time. Force exit');
+        finalLogger.info('Process didn\'t close on time. Force exit');
         process.exit(1);
     }, killTimeout);
 

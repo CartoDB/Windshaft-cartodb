@@ -1,12 +1,5 @@
 'use strict';
 
-/**
- * User: simon
- * Date: 30/08/2011
- * Time: 13:52
- * Desc: Loads test specific variables
- */
-
 var assert = require('assert');
 var fs = require('fs');
 var LZMA = require('lzma').LZMA;
@@ -14,7 +7,6 @@ var LZMA = require('lzma').LZMA;
 var lzmaWorker = new LZMA();
 
 var redis = require('redis');
-const pino = require('pino');
 const setICUEnvVariable = require('../../lib/utils/icu-data-env-setter');
 
 // set environment specific variables
@@ -23,8 +15,6 @@ global.environment.name = 'test';
 process.env.NODE_ENV = 'test';
 
 setICUEnvVariable();
-
-global.logger = pino({ base: null, level: process.env.NODE_ENV === 'test' ? 'fatal' : 'info' }, pino.destination({ sync: false }));
 
 // Utility function to compress & encode LZMA
 function lzmaCompressToBase64 (payload, mode, callback) {
