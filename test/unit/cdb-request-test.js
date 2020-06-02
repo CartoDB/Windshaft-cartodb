@@ -4,6 +4,7 @@ require('../support/test-helper');
 var assert = require('assert');
 
 var CdbRequest = require('../../lib/models/cdb-request');
+const { logger } = require('../../lib/server-options');
 
 describe('req2params', function () {
     function createRequest (host, userParam) {
@@ -22,7 +23,7 @@ describe('req2params', function () {
     }
 
     it('extracts name from host header', function () {
-        var cdbRequest = new CdbRequest();
+        var cdbRequest = new CdbRequest({ logger });
         var user = cdbRequest.userByReq(createRequest('localhost'));
 
         assert.strictEqual(user, 'localhost');
@@ -32,7 +33,7 @@ describe('req2params', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
-        var cdbRequest = new CdbRequest();
+        var cdbRequest = new CdbRequest({ logger });
         var user = cdbRequest.userByReq(createRequest('development.localhost.lan'));
 
         global.environment.user_from_host = userFromHostConfig;
@@ -41,7 +42,7 @@ describe('req2params', function () {
     });
 
     it('considers user param before headers', function () {
-        var cdbRequest = new CdbRequest();
+        var cdbRequest = new CdbRequest({ logger });
         var user = cdbRequest.userByReq(createRequest('localhost', 'development'));
 
         assert.strictEqual(user, 'development');
@@ -51,7 +52,7 @@ describe('req2params', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
-        var cdbRequest = new CdbRequest();
+        var cdbRequest = new CdbRequest({ logger });
         var user = cdbRequest.userByReq(createRequest('localhost'));
 
         global.environment.user_from_host = userFromHostConfig;
@@ -63,7 +64,7 @@ describe('req2params', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
-        var cdbRequest = new CdbRequest();
+        var cdbRequest = new CdbRequest({ logger });
         var user = cdbRequest.userByReq(createRequest(undefined));
 
         global.environment.user_from_host = userFromHostConfig;
@@ -75,7 +76,7 @@ describe('req2params', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
-        var cdbRequest = new CdbRequest();
+        var cdbRequest = new CdbRequest({ logger });
         var user = cdbRequest.userByReq(createRequest(null));
 
         global.environment.user_from_host = userFromHostConfig;
