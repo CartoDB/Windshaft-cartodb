@@ -5,7 +5,7 @@ var assert = require('../support/assert');
 const helper = require('../support/test-helper');
 var TestClient = require('../support/test-client');
 const LayergroupToken = require('../../lib/models/layergroup-token');
-const CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 const serverOptions = require('../../lib/server-options');
 
 describe('regressions', function () {
@@ -44,7 +44,7 @@ describe('regressions', function () {
 
     // See: https://github.com/CartoDB/Windshaft-cartodb/pull/956
     it('"/user/localhost/api/v1/map" should create an anonymous map', function (done) {
-        const server = new CartodbWindshaft(serverOptions);
+        const server = createServer(serverOptions);
         const layergroup = {
             version: '1.7.0',
             layers: [

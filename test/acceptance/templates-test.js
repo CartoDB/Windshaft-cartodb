@@ -21,7 +21,7 @@ var http = require('http');
 
 var helper = require('../support/test-helper');
 
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 var LayergroupToken = require('../../lib/models/layergroup-token');
@@ -30,7 +30,7 @@ describe('template_api', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
         server.setMaxListeners(0);
         // FIXME: we need a better way to reset cache while running tests
         server.layergroupAffectedTablesCache.cache.reset();

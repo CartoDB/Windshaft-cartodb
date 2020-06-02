@@ -6,7 +6,7 @@ var RedisPool = require('redis-mpool');
 
 var assert = require('../support/assert');
 const mapnik = require('@carto/mapnik');
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 var TemplateMaps = require('../../lib/backends/template-maps');
 
@@ -86,7 +86,7 @@ describe('named maps static view', function () {
         };
 
         // this could be removed once named maps are invalidated, otherwise you hits the cache
-        var server = new CartodbWindshaft(serverOptions);
+        var server = createServer(serverOptions);
 
         assert.response(server, requestOptions, expectedResponse, function (res, err) {
             testHelper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, function () {
@@ -323,7 +323,7 @@ describe('named maps static view', function () {
             };
 
             // this could be removed once named maps are invalidated, otherwise you hits the cache
-            var server = new CartodbWindshaft(serverOptions);
+            var server = createServer(serverOptions);
 
             assert.response(server, requestOptions, expectedResponse, function (res, err) {
                 assert.ifError(err);

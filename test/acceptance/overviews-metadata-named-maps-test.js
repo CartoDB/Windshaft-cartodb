@@ -3,7 +3,7 @@
 var testHelper = require('../support/test-helper');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 var LayergroupToken = require('../../lib/models/layergroup-token');
@@ -18,7 +18,7 @@ describe('overviews metadata for named maps', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     // configure redis pool instance to use in tests

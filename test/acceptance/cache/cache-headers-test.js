@@ -5,7 +5,7 @@ var testHelper = require('../../support/test-helper');
 var assert = require('../../support/assert');
 var qs = require('querystring');
 
-var CartodbWindshaft = require('../../../lib/server');
+const createServer = require('../../../lib/server');
 var serverOptions = require('../../../lib/server-options');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
@@ -14,7 +14,7 @@ describe('get requests with cache headers', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
         server.setMaxListeners(0);
     });
 

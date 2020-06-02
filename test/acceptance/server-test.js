@@ -6,14 +6,14 @@ var assert = require('../support/assert');
 var querystring = require('querystring');
 var step = require('step');
 
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 describe('server', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
         server.setMaxListeners(0);
     });
 
@@ -45,7 +45,7 @@ describe('server old_api', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
         server.setMaxListeners(0);
     });
 
