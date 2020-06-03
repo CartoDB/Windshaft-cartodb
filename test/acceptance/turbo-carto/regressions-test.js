@@ -67,7 +67,7 @@ describe('turbo-carto regressions', function () {
         });
     });
 
-    it('should fail for private tables', function (done) {
+    it.only('should fail for private tables', function (done) {
         var cartocss = [
             '#private_table {',
             '  marker-placement: point;',
