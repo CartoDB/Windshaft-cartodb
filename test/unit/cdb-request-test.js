@@ -4,9 +4,8 @@ require('../support/test-helper');
 var assert = require('assert');
 
 var CdbRequest = require('../../lib/models/cdb-request');
-const { logger } = require('../../lib/server-options');
 
-describe('req2params', function () {
+describe('username in host header (CdbRequest)', function () {
     function createRequest (host, userParam) {
         var req = {
             params: {},
@@ -23,7 +22,7 @@ describe('req2params', function () {
     }
 
     it('extracts name from host header', function () {
-        var cdbRequest = new CdbRequest({ logger });
+        var cdbRequest = new CdbRequest();
         var user = cdbRequest.userByReq(createRequest('localhost'));
 
         assert.strictEqual(user, 'localhost');
@@ -33,7 +32,7 @@ describe('req2params', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
-        var cdbRequest = new CdbRequest({ logger });
+        var cdbRequest = new CdbRequest();
         var user = cdbRequest.userByReq(createRequest('development.localhost.lan'));
 
         global.environment.user_from_host = userFromHostConfig;
@@ -42,45 +41,39 @@ describe('req2params', function () {
     });
 
     it('considers user param before headers', function () {
-        var cdbRequest = new CdbRequest({ logger });
+        var cdbRequest = new CdbRequest();
         var user = cdbRequest.userByReq(createRequest('localhost', 'development'));
 
         assert.strictEqual(user, 'development');
     });
 
-    it('returns undefined when it cannot extract username', function () {
+    it('returns throw when it cannot extract username', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
-        var cdbRequest = new CdbRequest({ logger });
-        var user = cdbRequest.userByReq(createRequest('localhost'));
+        var cdbRequest = new CdbRequest();
+        assert.throws(() => cdbRequest.userByReq(createRequest('localhost')));
 
         global.environment.user_from_host = userFromHostConfig;
-
-        assert.strictEqual(user, undefined);
     });
 
-    it('should not fail for undefined host header', function () {
+    it('should throw for undefined host header', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
-        var cdbRequest = new CdbRequest({ logger });
-        var user = cdbRequest.userByReq(createRequest(undefined));
+        var cdbRequest = new CdbRequest();
+        assert.throws(() => cdbRequest.userByReq(createRequest(undefined)));
 
         global.environment.user_from_host = userFromHostConfig;
-
-        assert.strictEqual(user, undefined);
     });
 
-    it('should not fail for null host header', function () {
+    it('should throw for null host header', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
-        var cdbRequest = new CdbRequest({ logger });
-        var user = cdbRequest.userByReq(createRequest(null));
+        var cdbRequest = new CdbRequest();
+        assert.throws(() => cdbRequest.userByReq(createRequest(null)));
 
         global.environment.user_from_host = userFromHostConfig;
-
-        assert.strictEqual(user, undefined);
     });
 });
