@@ -19,7 +19,7 @@ var windshaftFixtures = path.join(__dirname, '/../../node_modules/windshaft/test
 var IMAGE_EQUALS_TOLERANCE_PER_MIL = 20;
 var IMAGE_EQUALS_HIGHER_TOLERANCE_PER_MIL = 25;
 
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 var QueryTables = require('cartodb-query-tables').queryTables;
@@ -30,7 +30,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
         var server;
 
         before(function () {
-            server = new CartodbWindshaft(serverOptions);
+            server = createServer(serverOptions);
             server.setMaxListeners(0);
         });
 
@@ -851,7 +851,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 function doRestartServer (err/*, res */) {
                     assert.ifError(err);
                     // hack simulating restart...
-                    server = new CartodbWindshaft(serverOptions);
+                    server = createServer(serverOptions);
                     return null;
                 },
                 function doGet1 (err) {
@@ -1274,7 +1274,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
         it('cache control for layergroup default value', function (done) {
             global.environment.varnish.layergroupTtl = null;
 
-            var server = new CartodbWindshaft(serverOptions);
+            var server = createServer(serverOptions);
 
             assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
                 function (res) {
@@ -1291,7 +1291,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
             var layergroupTtl = 300;
             global.environment.varnish.layergroupTtl = layergroupTtl;
 
-            var server = new CartodbWindshaft(serverOptions);
+            var server = createServer(serverOptions);
 
             assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
                 function (res) {

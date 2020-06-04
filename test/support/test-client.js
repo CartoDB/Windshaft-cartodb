@@ -12,7 +12,7 @@ var LayergroupToken = require('../../lib/models/layergroup-token');
 var assert = require('./assert');
 var helper = require('./test-helper');
 
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 serverOptions.analysis.batch.inlineExecution = true;
 
@@ -30,7 +30,7 @@ function TestClient (config, apiKey, extraHeaders = {}, overrideServerOptions = 
     this.extraHeaders = extraHeaders;
     this.keysToDelete = {};
     this.serverOptions = Object.assign({}, serverOptions, overrideServerOptions);
-    this.server = new CartodbWindshaft(this.serverOptions);
+    this.server = createServer(this.serverOptions);
 }
 
 module.exports = TestClient;
@@ -1348,7 +1348,7 @@ TestClient.prototype.drain = function (callback) {
 module.exports.getStaticMap = function getStaticMap (templateName, params, callback) {
     var self = this;
 
-    self.server = new CartodbWindshaft(serverOptions);
+    self.server = createServer(serverOptions);
 
     if (!callback) {
         callback = params;
@@ -1378,7 +1378,7 @@ module.exports.getStaticMap = function getStaticMap (templateName, params, callb
     };
 
     // this could be removed once named maps are invalidated, otherwise you hits the cache
-    var server = new CartodbWindshaft(serverOptions);
+    var server = createServer(serverOptions);
 
     assert.response(server, requestOptions, expectedResponse, function (res, err) {
         helper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, function () {

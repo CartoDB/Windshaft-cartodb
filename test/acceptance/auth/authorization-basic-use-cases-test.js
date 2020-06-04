@@ -2,7 +2,7 @@
 
 const assert = require('../../support/assert');
 const testHelper = require('../../support/test-helper');
-const CartodbWindshaft = require('../../../lib/server');
+const createServer = require('../../../lib/server');
 const serverOptions = require('../../../lib/server-options');
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 
@@ -47,7 +47,7 @@ describe('Basic authorization use cases', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     beforeEach(function () {

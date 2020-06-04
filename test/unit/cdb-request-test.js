@@ -5,7 +5,7 @@ var assert = require('assert');
 
 var CdbRequest = require('../../lib/models/cdb-request');
 
-describe('req2params', function () {
+describe('username in host header (CdbRequest)', function () {
     function createRequest (host, userParam) {
         var req = {
             params: {},
@@ -47,39 +47,33 @@ describe('req2params', function () {
         assert.strictEqual(user, 'development');
     });
 
-    it('returns undefined when it cannot extract username', function () {
+    it('returns throw when it cannot extract username', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
         var cdbRequest = new CdbRequest();
-        var user = cdbRequest.userByReq(createRequest('localhost'));
+        assert.throws(() => cdbRequest.userByReq(createRequest('localhost')));
 
         global.environment.user_from_host = userFromHostConfig;
-
-        assert.strictEqual(user, undefined);
     });
 
-    it('should not fail for undefined host header', function () {
+    it('should throw for undefined host header', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
         var cdbRequest = new CdbRequest();
-        var user = cdbRequest.userByReq(createRequest(undefined));
+        assert.throws(() => cdbRequest.userByReq(createRequest(undefined)));
 
         global.environment.user_from_host = userFromHostConfig;
-
-        assert.strictEqual(user, undefined);
     });
 
-    it('should not fail for null host header', function () {
+    it('should throw for null host header', function () {
         var userFromHostConfig = global.environment.user_from_host;
         global.environment.user_from_host = null;
 
         var cdbRequest = new CdbRequest();
-        var user = cdbRequest.userByReq(createRequest(null));
+        assert.throws(() => cdbRequest.userByReq(createRequest(null)));
 
         global.environment.user_from_host = userFromHostConfig;
-
-        assert.strictEqual(user, undefined);
     });
 });

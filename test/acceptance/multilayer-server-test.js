@@ -10,14 +10,14 @@ var LayergroupToken = require('../../lib/models/layergroup-token');
 
 var PgQueryRunner = require('../../lib/backends/pg-query-runner');
 var QueryTables = require('cartodb-query-tables').queryTables;
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 describe('tests from old api translated to multilayer', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
         server.setMaxListeners(0);
     });
 

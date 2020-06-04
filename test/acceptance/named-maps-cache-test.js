@@ -5,14 +5,14 @@ require('../support/test-helper');
 const helper = require('../support/test-helper');
 var assert = require('../support/assert');
 const mapnik = require('@carto/mapnik');
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 describe('named maps provider cache', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     var username = 'localhost';

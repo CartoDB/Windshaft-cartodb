@@ -4,7 +4,7 @@ var step = require('step');
 var testHelper = require('../support/test-helper');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 var RedisPool = require('redis-mpool');
@@ -17,7 +17,7 @@ describe('layers visibility for previews', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     // configure redis pool instance to use in tests

@@ -4,7 +4,7 @@ var assert = require('../../support/assert');
 var step = require('step');
 var LayergroupToken = require('../../../lib/models/layergroup-token');
 var testHelper = require('../../support/test-helper');
-var CartodbWindshaft = require('../../../lib/server');
+const createServer = require('../../../lib/server');
 var serverOptions = require('../../../lib/server-options');
 const mapnik = require('@carto/mapnik');
 var IMAGE_TOLERANCE_PER_MIL = 10;
@@ -13,7 +13,7 @@ describe('turbo-carto for named maps', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     var keysToDelete;

@@ -55,7 +55,6 @@ describe('dataviews using tables without overviews', function () {
                 return done(err);
             }
             assert.deepStrictEqual(formulaResult, { operation: 'count', result: 7313, nulls: 0, type: 'formula' });
-            assert(getUsesOverviewsFromHeaders(headers) === false); // Overviews logging
 
             testClient.drain(done);
         });
@@ -269,8 +268,6 @@ describe('dataviews using tables with overviews', function () {
                 nulls: 0,
                 type: 'formula'
             });
-            assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
-            assert(getDataviewTypeFromHeaders(headers) === 'formula'); // Overviews logging
 
             testClient.drain(done);
         });
@@ -290,8 +287,6 @@ describe('dataviews using tables with overviews', function () {
                 infinities: 0,
                 nans: 0
             });
-            assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
-            assert(getDataviewTypeFromHeaders(headers) === 'formula'); // Overviews logging
 
             testClient.drain(done);
         });
@@ -311,8 +306,6 @@ describe('dataviews using tables with overviews', function () {
                 infinities: 0,
                 nans: 0
             });
-            assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
-            assert(getDataviewTypeFromHeaders(headers) === 'formula'); // Overviews logging
 
             testClient.drain(done);
         });
@@ -387,8 +380,6 @@ describe('dataviews using tables with overviews', function () {
             assert.ok(histogram);
             assert.strictEqual(histogram.type, 'histogram');
             assert.ok(Array.isArray(histogram.bins));
-            assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
-            assert(getDataviewTypeFromHeaders(headers) === 'histogram'); // Overviews logging
 
             testClient.drain(done);
         });
@@ -480,7 +471,7 @@ describe('dataviews using tables with overviews', function () {
                         nans: 0,
                         type: 'formula'
                     });
-                    assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
+
                     testClient.drain(done);
                 });
             });
@@ -499,7 +490,6 @@ describe('dataviews using tables with overviews', function () {
                         nans: 0,
                         type: 'formula'
                     });
-                    assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
 
                     testClient.drain(done);
                 });
@@ -519,7 +509,6 @@ describe('dataviews using tables with overviews', function () {
                         nulls: 0,
                         type: 'formula'
                     });
-                    assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
 
                     testClient.drain(done);
                 });
@@ -610,9 +599,6 @@ describe('dataviews using tables with overviews', function () {
                         categories: [{ category: 'Hawai', value: 6, agg: false }],
                         type: 'aggregation'
                     });
-
-                    assert.ok(getUsesOverviewsFromHeaders(headers)); // Overviews logging
-                    assert(getDataviewTypeFromHeaders(headers) === 'aggregation'); // Overviews logging
 
                     testClient.drain(done);
                 });
@@ -830,11 +816,3 @@ describe('dataviews using tables with overviews', function () {
         });
     });
 });
-
-function getUsesOverviewsFromHeaders (headers) {
-    return headers && headers['x-tiler-profiler'] && JSON.parse(headers['x-tiler-profiler']).usesOverviews;
-}
-
-function getDataviewTypeFromHeaders (headers) {
-    return headers && headers['x-tiler-profiler'] && JSON.parse(headers['x-tiler-profiler']).dataviewType;
-}

@@ -8,7 +8,7 @@ var queue = require('queue-async');
 
 var helper = require('../../support/test-helper');
 
-var CartodbWindshaft = require('../../../lib/server');
+const createServer = require('../../../lib/server');
 var serverOptions = require('../../../lib/server-options');
 
 var LayergroupToken = require('../../../lib/models/layergroup-token');
@@ -17,7 +17,7 @@ describe('named-maps widgets', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     var username = 'localhost';

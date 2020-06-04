@@ -4,14 +4,14 @@ var assert = require('../support/assert');
 var step = require('step');
 var LayergroupToken = require('../../lib/models/layergroup-token');
 var testHelper = require('../support/test-helper');
-var CartodbWindshaft = require('../../lib/server');
+var createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 describe('dynamic styling for named maps', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     var keysToDelete;

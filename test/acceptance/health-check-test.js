@@ -5,7 +5,7 @@ require('../support/test-helper');
 var fs = require('fs');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 describe('health checks', function () {
@@ -41,7 +41,7 @@ describe('health checks', function () {
     };
 
     it('returns 200 and ok=true with enabled configuration', function (done) {
-        var server = new CartodbWindshaft(serverOptions);
+        var server = createServer(serverOptions);
 
         assert.response(server, healthCheckRequest, RESPONSE_OK, function (res, err) {
             assert.ok(!err);
@@ -62,7 +62,7 @@ describe('health checks', function () {
         fs.readFile = function (filename, callback) {
             callback(null, errorMessage);
         };
-        var server = new CartodbWindshaft(serverOptions);
+        var server = createServer(serverOptions);
 
         assert.response(server, healthCheckRequest, RESPONSE_FAIL, function (res, err) {
             fs.readFile = readFileFn;
@@ -82,7 +82,7 @@ describe('health checks', function () {
         fs.readFile = function (filename, callback) {
             callback(null, '');
         };
-        var server = new CartodbWindshaft(serverOptions);
+        var server = createServer(serverOptions);
 
         assert.response(server, healthCheckRequest, RESPONSE_FAIL, function (res, err) {
             fs.readFile = readFileFn;
@@ -100,7 +100,7 @@ describe('health checks', function () {
     it('not err if disabled file does not exist', function (done) {
         global.environment.disabled_file = '/tmp/ftreftrgtrccre';
 
-        var server = new CartodbWindshaft(serverOptions);
+        var server = createServer(serverOptions);
 
         assert.response(server, healthCheckRequest, RESPONSE_OK, function (res, err) {
             assert.ok(!err);

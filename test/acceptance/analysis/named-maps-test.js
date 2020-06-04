@@ -4,7 +4,7 @@ var assert = require('../../support/assert');
 
 var helper = require('../../support/test-helper');
 
-var CartodbWindshaft = require('../../../lib/server');
+const createServer = require('../../../lib/server');
 var serverOptions = require('../../../lib/server-options');
 var TestClient = require('../../support/test-client');
 
@@ -14,7 +14,7 @@ describe('named-maps analysis', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     var IMAGE_TOLERANCE_PER_MIL = 20;
