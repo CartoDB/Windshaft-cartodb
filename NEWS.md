@@ -1,7 +1,7 @@
 # Changelog
 
 ## 9.0.0
-Released 2020-mm-dd
+Released 2020-06-05
 
 Breaking changes:
 - Remove `/version` endpoint
