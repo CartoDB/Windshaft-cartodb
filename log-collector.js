@@ -2,8 +2,9 @@
 
 const split = require('split2');
 const assingDeep = require('assign-deep');
-const logs = new Map();
 const { Transform } = require('readable-stream');
+const DEV_ENVS = ['test', 'development'];
+const logs = new Map();
 
 const LEVELS = {
     10: 'trace',
@@ -21,8 +22,15 @@ function logTransport () {
 
             try {
                 entry = JSON.parse(chunk);
-            } catch (error) {
-                // this.push(chunk + '\n');
+                const { level, time } = entry;
+
+                if (level === undefined && time === undefined) {
+                    throw new Error('Entry log is not a valid');
+                }
+            } catch (e) {
+                if (DEV_ENVS.includes(process.env.NODE_ENV)) {
+                    this.push(chunk + '\n');
+                }
                 return callback();
             }
 
@@ -51,7 +59,7 @@ function logTransport () {
                 }
 
                 let error;
-                if (Object.prototype.hasOwnProperty.call(accEntry, 'error') && Object.prototype.hasOwnProperty.call(entry, 'error')) {
+                if (hasProperty(accEntry, 'error') && hasProperty(entry, 'error')) {
                     logs.set(id, assingDeep({}, accEntry, entry, { error: accEntry.error.concat(entry.error) }));
                 } else {
                     logs.set(id, assingDeep({}, accEntry, entry));
@@ -63,6 +71,10 @@ function logTransport () {
             callback();
         }
     })
+}
+
+function hasProperty(obj, prop) {
+    return Object.prototype.hasOwnProperty.call(obj, prop)
 }
 
 process.stdin
