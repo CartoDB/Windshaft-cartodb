@@ -1,6 +1,6 @@
 'use strict'
 
-const express = require('express');
+const http = require('http');
 const { Counter, Histogram, register } = require('prom-client');
 const split = require('split2');
 const { Transform } = require('stream');
@@ -109,11 +109,10 @@ module.exports = function metricsCollector () {
 }
 
 const port = process.env.PORT || 9144;
-const app = express();
 
-app.get('/metrics', (req, res) => {
-    res.set('Content-Type', register.contentType);
-    res.end(register.metrics());
-});
-
-app.listen(port);
+http
+    .createServer((req, res) => {
+        res.writeHead(200, { 'Content-Type': register.contentType });
+        res.end(register.metrics());
+    })
+    .listen(port);
