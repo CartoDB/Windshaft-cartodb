@@ -50,7 +50,7 @@ const userResponseTimeHistogram = new Histogram({
     labelNames: ['user']
 });
 
-module.exports = function updateMetrics () {
+module.exports = function metricsCollector () {
     return new Transform({
         transform (chunk, enc, callback) {
             let entry;
