@@ -1,5 +1,13 @@
 # Changelog
 
+## 9.0.1
+Released 2020-mm-dd
+
+Bug Fixes:
+- While instantiating a map, set the `cache buster` equal to `0` when there are no affected tables in the MapConfig. Thus `layergroupid` has the same structure always:
+  - `${map_id}:${cache_buster}` for anonymous map
+  - `${user}@${template_hash}@${map_id}:${cache_buster}` for named map
+
 ## 9.0.0
 Released 2020-06-05
 
