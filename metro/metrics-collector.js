@@ -72,7 +72,7 @@ module.exports = function metricsCollector () {
             const { request, response, stats } = entry;
 
             if (request === undefined || response === undefined || stats === undefined) {
-                this.push(chunk + '\n');
+                this.push(chunk);
                 return callback();
             }
 
@@ -80,7 +80,7 @@ module.exports = function metricsCollector () {
             const { 'carto-user': user } = headers;
 
             if (statusCode === undefined || headers === undefined || user === undefined) {
-                this.push(chunk + '\n');
+                this.push(chunk);
                 return callback();
             }
 

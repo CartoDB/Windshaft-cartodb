@@ -25,7 +25,7 @@ module.exports = function logCollector () {
                 const { level, time } = entry;
 
                 if (level === undefined && time === undefined) {
-                    throw new Error('Entry log is not a valid');
+                    throw new Error('Entry log is not valid');
                 }
             } catch (e) {
                 if (DEV_ENVS.includes(process.env.NODE_ENV)) {
