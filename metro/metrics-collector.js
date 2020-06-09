@@ -115,4 +115,5 @@ http
         res.writeHead(200, { 'Content-Type': register.contentType });
         res.end(register.metrics());
     })
-    .listen(port);
+    .listen(port)
+    .unref();
