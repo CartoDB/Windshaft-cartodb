@@ -44,12 +44,7 @@ module.exports = function logCollector () {
 
             if (end === true) {
                 const accEntry = logs.get(id);
-                // rename level => levelname to avoid type clashing in ES
-                accEntry.levelname = LEVELS[accEntry.level];
-                delete accEntry.level;
-                accEntry.errors = accEntry.error;
-                delete accEntry.error;
-
+                accEntry.level = LEVELS[accEntry.level];
                 accEntry.time = entry.time;
                 this.push(`${JSON.stringify(accEntry)}\n`);
                 logs.delete(id);
