@@ -53,6 +53,7 @@
     "lzma": "2.3.2",
     "node-statsd": "0.1.1",
     "pino": "^6.3.1",
+    "prom-client": "^12.0.0",
     "queue-async": "1.1.0",
     "redis-mpool": "^0.8.0",
     "request": "2.87.0",
