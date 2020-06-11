@@ -2,7 +2,7 @@
 
 const split = require('split2');
 const assingDeep = require('assign-deep');
-const { Transform } = require('readable-stream');
+const { Transform } = require('stream');
 const DEV_ENVS = ['test', 'development'];
 const logs = new Map();
 
@@ -15,9 +15,9 @@ const LEVELS = {
     60: 'fatal'
 }
 
-function logTransport () {
+module.exports = function logCollector () {
     return new Transform({
-        transform: function transform (chunk, enc, callback) {
+        transform (chunk, enc, callback) {
             let entry;
 
             try {
@@ -25,7 +25,7 @@ function logTransport () {
                 const { level, time } = entry;
 
                 if (level === undefined && time === undefined) {
-                    throw new Error('Entry log is not a valid');
+                    throw new Error('Entry log is not valid');
                 }
             } catch (e) {
                 if (DEV_ENVS.includes(process.env.NODE_ENV)) {
@@ -76,8 +76,3 @@ function logTransport () {
 function hasProperty(obj, prop) {
     return Object.prototype.hasOwnProperty.call(obj, prop)
 }
-
-process.stdin
-    .pipe(split())
-    .pipe(logTransport())
-    .pipe(process.stdout);
