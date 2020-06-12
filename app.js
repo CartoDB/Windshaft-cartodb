@@ -78,13 +78,11 @@ const server = createServer(serverOptions);
 const backlog = global.environment.maxConnections || 128;
 
 const listener = server.listen(serverOptions.bind.port, serverOptions.bind.host, backlog);
-const version = require('./package').version;
+const { version, name } = require('./package');
 
 listener.on('listening', function () {
-    logger.info(`Using Node.js ${process.version}`);
-    logger.info(`Using configuration file ${configurationFile}`);
     const { address, port } = listener.address();
-    logger.info(`Windshaft tileserver ${version} started on ${address}:${port} PID=${process.pid} (${process.env.NODE_ENV})`);
+    logger.info({ 'Node.js': process.version, pid: process.pid, environment: process.env.NODE_ENV, [name]: version, address, port, config: configurationFile }, `${name} initialized successfully`);
 });
 
 function getCPUUsage (oldUsage) {
