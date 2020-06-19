@@ -79,20 +79,22 @@ module.exports = function metricsCollector () {
             const { statusCode, headers } = response;
             const { 'carto-user': user } = headers;
 
-            if (statusCode === undefined || headers === undefined || user === undefined) {
-                this.push(chunk);
-                return callback();
-            }
-
             requestCounter.inc();
-            userRequestCounter.labels(user, `${statusCode}`).inc();
+
+            if (statusCode !== undefined && user !== undefined) {
+                userRequestCounter.labels(user, `${statusCode}`).inc();
+            }
 
             if (statusCode >= 200 && statusCode < 400) {
                 requestOkCounter.inc();
-                userRequestOkCounter.labels(user, `${statusCode}`).inc();
-            } else {
+                if (user !== undefined) {
+                   userRequestOkCounter.labels(user, `${statusCode}`).inc();
+                }
+            } else if (statusCode >= 400) {
                 requestErrorCounter.inc();
-                userRequestErrorCounter.labels(user, `${statusCode}`).inc();
+                if (user !== undefined) {
+                    userRequestErrorCounter.labels(user, `${statusCode}`).inc();
+                }
             }
 
             const { response: responseTime } = stats;
