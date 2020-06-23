@@ -3,7 +3,7 @@
 var testHelper = require('../support/test-helper');
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 var LayergroupToken = require('../../lib/models/layergroup-token');
@@ -18,7 +18,7 @@ describe('overviews metadata', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     // configure redis pool instance to use in tests
@@ -110,90 +110,13 @@ describe('overviews metadata', function () {
             }
         );
     });
-
-    describe('Overviews Flags', function () {
-        it('Overviews used', function (done) {
-            var layergroup = {
-                version: '1.0.0',
-                layers: [overviewsLayer, nonOverviewsLayer]
-            };
-
-            var layergroupUrl = '/api/v1/map';
-
-            var expectedToken;
-            step(
-                function doPost () {
-                    var next = this;
-                    assert.response(server, {
-                        url: layergroupUrl,
-                        method: 'POST',
-                        headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                        data: JSON.stringify(layergroup)
-                    }, {}, function (res) {
-                        assert.strictEqual(res.statusCode, 200, res.body);
-
-                        const headers = JSON.parse(res.headers['x-tiler-profiler']);
-
-                        assert.ok(headers.overviewsAddedToMapconfig);
-                        assert.strictEqual(headers.mapType, 'anonymous');
-
-                        const parsedBody = JSON.parse(res.body);
-                        expectedToken = parsedBody.layergroupid;
-                        next();
-                    });
-                },
-                function finish (err) {
-                    keysToDelete['map_cfg|' + LayergroupToken.parse(expectedToken).token] = 0;
-                    keysToDelete['user:localhost:mapviews:global'] = 5;
-                    done(err);
-                }
-            );
-        });
-        it('Overviews NOT used', function (done) {
-            var layergroup = {
-                version: '1.0.0',
-                layers: [nonOverviewsLayer]
-            };
-
-            var layergroupUrl = '/api/v1/map';
-
-            var expectedToken;
-            step(
-                function doPost () {
-                    var next = this;
-                    assert.response(server, {
-                        url: layergroupUrl,
-                        method: 'POST',
-                        headers: { host: 'localhost', 'Content-Type': 'application/json' },
-                        data: JSON.stringify(layergroup)
-                    }, {}, function (res) {
-                        assert.strictEqual(res.statusCode, 200, res.body);
-
-                        const headers = JSON.parse(res.headers['x-tiler-profiler']);
-
-                        assert.strictEqual(headers.overviewsAddedToMapconfig, false);
-                        assert.strictEqual(headers.mapType, 'anonymous');
-
-                        const parsedBody = JSON.parse(res.body);
-                        expectedToken = parsedBody.layergroupid;
-                        next();
-                    });
-                },
-                function finish (err) {
-                    keysToDelete['map_cfg|' + LayergroupToken.parse(expectedToken).token] = 0;
-                    keysToDelete['user:localhost:mapviews:global'] = 5;
-                    done(err);
-                }
-            );
-        });
-    });
 });
 
 describe('overviews metadata with filters', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     // configure redis pool instance to use in tests

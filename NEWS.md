@@ -1,7 +1,21 @@
 # Changelog
 
-## 9.0.1
+## 10.0.0
 Released 2020-mm-dd
+
+Breaking changes:
+- Log system revamp:
+  - Logs to stdout, disabled while testing
+  - Upgrade `camshaft` to version [`0.66.0`](https://github.com/CartoDB/camshaft/releases/tag/0.66.0)
+  - Use header `X-Request-Id`, or create a new `uuid` when no present, to identyfy log entries
+  - Be able to set log level from env variable `LOG_LEVEL`, useful while testing: `LOG_LEVEL=info npm test`; even more human-readable: `LOG_LEVEL=info npm t | ./node_modules/.bin/pino-pretty`
+  - Stop responding with `X-Tiler-Errors` header. Now errors are properly logged and will end up in ELK as usual.
+  - Stop responding with `X-Tiler-Profiler` header. Now profiling stats are properly logged and will end up in ELK as usual.
+  - Be able to reduce the footprint in the final log file depending on the environment
+  - Be able to pass the logger to the analysis creation (camshaft) while instantiating a named map with analysis.
+  - Be able to tag requests with labels as an easier way to provide business metrics
+  - Metro: Add log-collector utility (`metro`), it will be moved to its own repository. Attaching it here fro development purposes. Try it with the following command `LOG_LEVEL=info npm t | node metro`
+  - Metro: Creates `metrics-collector.js` a stream to update Prometheus' counters and histograms and exposes them via Express' app (`:9145/metrics`). Use the ones defined in `grok_exporter`
 
 Bug Fixes:
 - While instantiating a map, set the `cache buster` equal to `0` when there are no affected tables in the MapConfig. Thus `layergroupid` has the same structure always:

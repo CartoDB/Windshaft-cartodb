@@ -7,7 +7,7 @@ var step = require('step');
 var FastlyPurge = require('fastly-purge');
 var _ = require('underscore');
 var NamedMapsCacheEntry = require('../../../lib/cache/model/named-maps-entry');
-var CartodbWindshaft = require('../../../lib/server');
+const createServer = require('../../../lib/server');
 var nock = require('nock');
 
 describe('templates surrogate keys', function () {
@@ -33,7 +33,7 @@ describe('templates surrogate keys', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
         nock.disableNetConnect();
         nock.enableNetConnect(/(127.0.0.1|cartocdn.com)/);
     });

@@ -6,7 +6,7 @@ var querystring = require('querystring');
 
 var assert = require('../support/assert');
 const mapnik = require('@carto/mapnik');
-var CartodbWindshaft = require('../../lib/server');
+const createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 var TemplateMaps = require('../../lib/backends/template-maps');
 var NamedMapsCacheEntry = require('../../lib/cache/model/named-maps-entry');
@@ -15,7 +15,7 @@ describe('named maps authentication', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     // configure redis pool instance to use in tests

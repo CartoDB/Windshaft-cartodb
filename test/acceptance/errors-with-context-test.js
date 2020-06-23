@@ -1,14 +1,14 @@
 'use strict';
 
 var assert = require('../support/assert');
-var CartodbWindshaft = require('../../lib/server');
+var createServer = require('../../lib/server');
 var serverOptions = require('../../lib/server-options');
 
 describe('error with context', function () {
     var server;
 
     before(function () {
-        server = new CartodbWindshaft(serverOptions);
+        server = createServer(serverOptions);
     });
 
     var layerOK = {
