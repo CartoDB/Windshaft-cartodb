@@ -512,7 +512,7 @@ var QueryTables = require('cartodb-query-tables').queryTables;
                 ]
             };
             var statskey = 'user:localhost:mapviews';
-            var redisStatsClient = redis.createClient(global.environment.redis.port);
+            var redisStatsClient = redis.createClient(global.environment.redis.port, global.environment.redis.host);
             var expectedToken; // will be set on first post and checked on second
             var now = strftime('%Y%m%d', new Date());
             step(

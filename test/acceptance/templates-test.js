@@ -1506,7 +1506,7 @@ describe('template_api', function () {
             layergroup: layergroup
         };
         var statskey = 'user:localhost:mapviews';
-        var redisStatsClient = redis.createClient(global.environment.redis.port);
+        var redisStatsClient = redis.createClient(global.environment.redis.port, global.environment.redis.host);
         var templateId; // will be set on template post
         var now = strftime('%Y%m%d', new Date());
         var errors = [];
