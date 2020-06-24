@@ -30,7 +30,7 @@ describe('TemplateMaps limits', function () {
         };
     }
 
-    var redisClient = redis.createClient(global.environment.redis.port);
+    var redisClient = redis.createClient(global.environment.redis.port, global.environment.redis.host);
     var redisPool = new RedisPool(global.environment.redis);
 
     afterEach(function (done) {

@@ -82,7 +82,7 @@ var redisClient;
 
 beforeEach(function () {
     if (!redisClient) {
-        redisClient = redis.createClient(global.environment.redis.port);
+        redisClient = redis.createClient(global.environment.redis.port, global.environment.redis.host);
     }
 });
 
@@ -145,7 +145,7 @@ function deleteRedisKeys (keysToDelete, callback) {
     }
 
     Object.keys(keysToDelete).forEach(function (k) {
-        var redisClient = redis.createClient(global.environment.redis.port);
+        var redisClient = redis.createClient(global.environment.redis.port, global.environment.redis.host);
         redisClient.select(keysToDelete[k], function () {
             redisClient.del(k, function (err, deletedKeysCount) {
                 assert.ifError(err);

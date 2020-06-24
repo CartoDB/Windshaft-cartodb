@@ -10,7 +10,9 @@ if (!process.env.NODE_ENV) {
 }
 
 const environment = require(`../config/environments/${process.env.NODE_ENV}.js`);
+const REDIS_HOST = environment.redis.host;
 const REDIS_PORT = environment.redis.port;
+const DB_HOST = environment.postgres.host;
 const REDIS_CELL_PATH = path.resolve(
     process.platform === 'darwin'
         ? './test/support/libredis_cell.dylib'
@@ -24,28 +26,34 @@ const PUBLIC_USER = environment.postgres.user;
 const PUBLIC_USER_PASSWORD = environment.postgres.password;
 const TEST_DB = `${TEST_USER}_db`;
 
+const REDIS_SERVER_IS_LOCAL = (['127.0.0.1', 'localhost'].includes(REDIS_HOST));
+
 async function startRedis () {
-    await exec(`redis-server --port ${REDIS_PORT} --loadmodule ${REDIS_CELL_PATH} --logfile ${__dirname}/redis-server.log --daemonize yes`);
+    if (REDIS_SERVER_IS_LOCAL) {
+        await exec(`redis-server --port ${REDIS_PORT} --loadmodule ${REDIS_CELL_PATH} --logfile ${__dirname}/redis-server.log --daemonize yes`);
+    }
 }
 
 async function stopRedis () {
-    await exec(`redis-cli -p ${REDIS_PORT} shutdown`);
+    if (REDIS_SERVER_IS_LOCAL) {
+        await exec(`redis-cli -p ${REDIS_PORT} shutdown`);
+    }
 }
 
 async function dropDatabase () {
-    await exec(`dropdb --if-exists ${TEST_DB}`, {
+    await exec(`dropdb -h ${DB_HOST} --if-exists ${TEST_DB}`, {
         env: Object.assign({ PGUSER: 'postgres' }, process.env)
     });
 }
 
 async function createDatabase () {
-    await exec(`createdb -T template_postgis -EUTF8 "${TEST_DB}"`, {
+    await exec(`createdb -h ${DB_HOST} -T template_postgis -EUTF8 "${TEST_DB}"`, {
         env: Object.assign({ PGUSER: 'postgres' }, process.env)
     });
 }
 
 async function createDatabaseExtension () {
-    await exec(`psql -c "CREATE EXTENSION IF NOT EXISTS cartodb CASCADE;" ${TEST_DB}`, {
+    await exec(`psql -h ${DB_HOST} -c "CREATE EXTENSION IF NOT EXISTS cartodb CASCADE;" ${TEST_DB}`, {
         env: Object.assign({ PGUSER: 'postgres' }, process.env)
     });
 }
@@ -67,7 +75,7 @@ async function populateDatabase () {
         sed -e "s/:PUBLICPASS/${PUBLIC_USER_PASSWORD}/g" |
         sed -e "s/:TESTUSER/${TEST_USER}/g" |
         sed -e "s/:TESTPASS/${TEST_PASSWORD}/g" |
-        PGOPTIONS='--client-min-messages=WARNING' psql -q -v ON_ERROR_STOP=1 ${TEST_DB}
+        PGOPTIONS='--client-min-messages=WARNING' psql -h ${DB_HOST} -q -v ON_ERROR_STOP=1 ${TEST_DB}
     `;
 
     await exec(populateDatabaseCmd, {
@@ -82,13 +90,13 @@ async function populateRedis () {
         HMSET rails:users:localhost \
             id ${TEST_USER_ID} \
             database_name "${TEST_DB}" \
-            database_host localhost \
+            database_host ${DB_HOST} \
             map_key 1234
 
         HMSET rails:users:cartodb250user \
             id ${TEST_USER_ID} \
             database_name "${TEST_DB}" \
-            database_host "localhost" \
+            database_host "${DB_HOST}" \
             database_password "${TEST_PASSWORD}" \
             map_key 4321
 
@@ -141,7 +149,7 @@ async function populateRedis () {
             database_password "public"
     `;
 
-    await exec(`echo "${commands}" | redis-cli -p ${REDIS_PORT} -n 5`);
+    await exec(`echo "${commands}" | redis-cli -h ${REDIS_HOST} -p ${REDIS_PORT} -n 5`);
 }
 
 async function main (args) {
