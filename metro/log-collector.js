@@ -16,7 +16,7 @@ const LEVELS = {
     40: 'warn',
     50: 'error',
     60: 'fatal'
-}
+};
 
 module.exports = function logCollector () {
     const stream = new Transform({
@@ -58,10 +58,9 @@ module.exports = function logCollector () {
                 }
 
                 if (accEntry.level > entry.level) {
-                    delete entry.level
+                    delete entry.level;
                 }
 
-                let error;
                 if (hasProperty(accEntry, 'error') && hasProperty(entry, 'error')) {
                     logs.set(id, assingDeep({}, accEntry, entry, { error: accEntry.error.concat(entry.error) }));
                 } else {
@@ -99,8 +98,8 @@ module.exports = function logCollector () {
     });
 
     return stream;
-}
+};
 
-function hasProperty(obj, prop) {
-    return Object.prototype.hasOwnProperty.call(obj, prop)
+function hasProperty (obj, prop) {
+    return Object.prototype.hasOwnProperty.call(obj, prop);
 }

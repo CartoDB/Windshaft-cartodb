@@ -4,7 +4,7 @@ const split = require('split2');
 const logCollector = require('./log-collector');
 const metricsCollector = require('./metrics-collector');
 
-const streams = [process.stdin, split(), logCollector(), metricsCollector(), process.stdout]
+const streams = [process.stdin, split(), logCollector(), metricsCollector(), process.stdout];
 
 pipeline('pipe', streams);
 
