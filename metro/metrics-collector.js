@@ -1,67 +1,81 @@
-'use strict'
+'use strict';
 
 const http = require('http');
 const { Counter, Histogram, register } = require('prom-client');
-const split = require('split2');
-const { Transform } = require('stream');
+const flatten = require('flat');
+const { Transform, PassThrough } = require('stream');
 const DEV_ENVS = ['test', 'development'];
 
-const requestCounter = new Counter({
-    name: 'maps_api_requests_total',
-    help: 'MAPS API requests total'
-});
+const factory = {
+    counter: Counter,
+    histogram: Histogram
+};
 
-const requestOkCounter = new Counter({
-    name: 'maps_api_requests_ok_total',
-    help: 'MAPS API requests ok total'
-});
+module.exports = class MetricsCollector {
+    constructor ({ port = 0, definitions } = {}) {
+        this._port = port;
+        this._definitions = definitions;
+        this._server = null;
+        this._stream = createTransformStream(this._definitions);
+    }
 
-const requestErrorCounter = new Counter({
-    name: 'maps_api_requests_errors_total',
-    help: 'MAPS API requests errors total'
-});
+    get stream () {
+        return this._stream;
+    }
 
-const responseTimeHistogram = new Histogram({
-    name: 'maps_api_response_time_total',
-    help: 'MAPS API response time total'
-});
+    start () {
+        return new Promise((resolve, reject) => {
+            this._server = http.createServer((req, res) => {
+                res.writeHead(200, { 'Content-Type': register.contentType });
+                res.end(register.metrics());
+            });
 
-const userRequestCounter = new Counter({
-    name: 'maps_api_requests',
-    help: 'MAPS API requests per user',
-    labelNames: ['user', 'http_code']
-});
+            this._server.once('error', err => reject(err));
+            this._server.once('listening', () => resolve());
+            this._server.listen(this._port);
+        });
+    }
 
-const userRequestOkCounter = new Counter({
-    name: 'maps_api_requests_ok',
-    help: 'MAPS API requests per user with success HTTP code',
-    labelNames: ['user', 'http_code']
-});
+    stop () {
+        return new Promise((resolve) => {
+            register.clear();
+            if (!this._server) {
+                return resolve();
+            }
 
-const userRequestErrorCounter = new Counter({
-    name: 'maps_api_requests_errors',
-    help: 'MAPS API requests per user with error HTTP code',
-    labelNames: ['user', 'http_code']
-});
+            this._server.once('close', () => {
+                this._server = null;
+                resolve();
+            });
 
-const userResponseTimeHistogram = new Histogram({
-    name: 'maps_api_response_time',
-    help: 'MAPS API response time total',
-    labelNames: ['user']
-});
+            this._server.close();
+        });
+    };
+};
 
-module.exports = function metricsCollector () {
+function createTransformStream (definitions) {
+    if (typeof definitions !== 'object') {
+        return new PassThrough();
+    }
+
+    const metrics = [];
+
+    for (const { type, options, valuePath, labelPaths, shouldMeasure, measure } of definitions) {
+        metrics.push({
+            instance: new factory[type](options),
+            valuePath,
+            labelPaths,
+            shouldMeasure: eval(shouldMeasure), // eslint-disable-line no-eval
+            measure: eval(measure) // eslint-disable-line no-eval
+        });
+    }
+
     return new Transform({
         transform (chunk, enc, callback) {
             let entry;
 
             try {
                 entry = JSON.parse(chunk);
-                const { level, time } = entry;
-
-                if (level === undefined && time === undefined) {
-                    throw new Error('Entry log is not valid');
-                }
             } catch (e) {
                 if (DEV_ENVS.includes(process.env.NODE_ENV)) {
                     this.push(chunk);
@@ -69,53 +83,19 @@ module.exports = function metricsCollector () {
                 return callback();
             }
 
-            const { request, response, stats } = entry;
+            const flatEntry = flatten(entry);
 
-            if (request === undefined || response === undefined || stats === undefined) {
-                this.push(chunk);
-                return callback();
-            }
+            for (const metric of metrics) {
+                const value = flatEntry[metric.valuePath];
+                const labels = Array.isArray(metric.labelPaths) && metric.labelPaths.map(path => flatEntry[path]);
 
-            const { statusCode, headers } = response;
-            const { 'carto-user': user } = headers;
-
-            requestCounter.inc();
-
-            if (statusCode !== undefined && user !== undefined) {
-                userRequestCounter.labels(user, `${statusCode}`).inc();
-            }
-
-            if (statusCode >= 200 && statusCode < 400) {
-                requestOkCounter.inc();
-                if (user !== undefined) {
-                   userRequestOkCounter.labels(user, `${statusCode}`).inc();
+                if (metric.shouldMeasure({ labels, value })) {
+                    metric.measure({ metric: metric.instance, labels, value });
                 }
-            } else if (statusCode >= 400) {
-                requestErrorCounter.inc();
-                if (user !== undefined) {
-                    userRequestErrorCounter.labels(user, `${statusCode}`).inc();
-                }
-            }
-
-            const { response: responseTime } = stats;
-
-            if (Number.isFinite(responseTime)) {
-                responseTimeHistogram.observe(responseTime);
-                userResponseTimeHistogram.labels(user).observe(responseTime);
             }
 
             this.push(chunk);
             callback();
         }
-    })
+    });
 }
-
-const port = process.env.PORT || 9145;
-
-http
-    .createServer((req, res) => {
-        res.writeHead(200, { 'Content-Type': register.contentType });
-        res.end(register.metrics());
-    })
-    .listen(port)
-    .unref();

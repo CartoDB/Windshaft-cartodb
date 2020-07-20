@@ -1,29 +1,40 @@
 'use strict';
 
-const split = require('split2');
-const logCollector = require('./log-collector');
-const metricsCollector = require('./metrics-collector');
+const metro = require('./metro');
+const path = require('path');
+const fs = require('fs');
 
-const streams = [process.stdin, split(), logCollector(), metricsCollector(), process.stdout];
+const { CONFIG_PATH = path.resolve(__dirname, './config.json') } = process.env;
+const existsConfigFile = fs.existsSync(CONFIG_PATH);
 
-pipeline('pipe', streams);
+if (!existsConfigFile) {
+    exit(4)(new Error(`Wrong path for CONFIG_PATH env variable: ${CONFIG_PATH} no such file`));
+}
 
-process.on('SIGINT', exitProcess(0));
-process.on('SIGTERM', exitProcess(0));
-process.on('uncaughtException', exitProcess(1));
-process.on('unhandledRejection', exitProcess(1));
+let config;
 
-function pipeline (action, streams) {
-    for (let index = 0; index < streams.length - 1; index++) {
-        const source = streams[index];
-        const destination = streams[index + 1];
-        source[action](destination);
+if (existsConfigFile) {
+    config = fs.readFileSync(CONFIG_PATH);
+    try {
+        config = JSON.parse(config);
+    } catch (e) {
+        exit(5)(new Error('Wrong config format: invalid JSON'));
     }
 }
 
-function exitProcess (code = 0) {
-    return function exitProcess (signal) {
-        pipeline('unpipe', streams);
+metro({ metrics: config && config.metrics })
+    .then(exit(0))
+    .catch(exit(1));
+
+process.on('uncaughtException', exit(2));
+process.on('unhandledRejection', exit(3));
+
+function exit (code = 1) {
+    return function (err) {
+        if (err) {
+            console.error(err);
+        }
+
         process.exit(code);
     };
 }
