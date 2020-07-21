@@ -78,7 +78,7 @@ function createTransformStream (definitions) {
                 entry = JSON.parse(chunk);
             } catch (e) {
                 if (DEV_ENVS.includes(process.env.NODE_ENV)) {
-                    this.push(chunk);
+                    this.push(chunk + '\n');
                 }
                 return callback();
             }
@@ -94,8 +94,9 @@ function createTransformStream (definitions) {
                 }
             }
 
-            this.push(chunk);
-            callback();
+            this.push(`${JSON.stringify(entry)}\n`);
+
+            return callback();
         }
     });
 }
