@@ -198,7 +198,7 @@ function addHandlers (listener, killTimeout) {
     process.on('unhandledRejection', (err) => exitProcess(err, listener, 'unhandledRejection', killTimeout));
     process.on('ENOMEM', (err) => exitProcess(err, listener, 'ENOMEM', killTimeout));
     process.on('SIGINT', () => exitProcess(null, listener, 'SIGINT', killTimeout));
-    process.on('SIGTERM', () => exitProcess(null, listener, 'SIGINT', killTimeout));
+    process.on('SIGTERM', () => exitProcess(null, listener, 'SIGTERM', killTimeout));
 }
 
 addHandlers(listener, 45000);

@@ -1,0 +1,94 @@
+{
+    "metrics": {
+        "port": 9145,
+        "definitions": [
+            {
+                "type": "counter",
+                "options": {
+                    "name": "maps_api_requests_total",
+                    "help": "MAPS API requests total"
+                },
+                "valuePath": "server_response.statusCode",
+                "shouldMeasure": "({ value }) => Number.isFinite(value)",
+                "measure": "({ metric }) => metric.inc()"
+            },
+            {
+                "type": "counter",
+                "options": {
+                    "name": "maps_api_requests_ok_total",
+                    "help": "MAPS API requests ok total"
+                },
+                "valuePath": "server_response.statusCode",
+                "shouldMeasure": "({ value }) => value >= 200 && value < 400",
+                "measure": "({ metric }) => metric.inc()"
+            },
+            {
+                "type": "counter",
+                "options": {
+                    "name": "maps_api_requests_errors_total",
+                    "help": "MAPS API requests errors total"
+                },
+                "valuePath": "server_response.statusCode",
+                "shouldMeasure": "({ value }) => value >= 400",
+                "measure": "({ metric }) => metric.inc()"
+            },
+            {
+                "type": "histogram",
+                "options": {
+                    "name": "maps_api_response_time_total",
+                    "help": "MAPS API response time total"
+                },
+                "valuePath": "stats.response",
+                "shouldMeasure": "({ value }) => Number.isFinite(value)",
+                "measure": "({ metric, value }) => metric.observe(value)"
+            },
+            {
+                "type": "counter",
+                "options": {
+                    "name": "maps_api_requests",
+                    "help": "MAPS API requests per user",
+                    "labelNames": ["user", "http_code"]
+                },
+                "labelPaths": ["cdb-user", "server_response.statusCode"],
+                "shouldMeasure": "({ labels }) => labels.every((label) => label !== undefined)",
+                "measure": "({ metric, labels }) => metric.labels(...labels).inc()"
+            },
+            {
+                "type": "counter",
+                "options": {
+                    "name": "maps_api_requests_ok",
+                    "help": "MAPS API requests per user with success HTTP code",
+                    "labelNames": ["user", "http_code"]
+                },
+                "labelPaths": ["cdb-user", "server_response.statusCode"],
+                "valuePath": "server_response.statusCode",
+                "shouldMeasure": "({ labels, value }) => labels.every((label) => label !== undefined) && value >= 200 && value < 400",
+                "measure": "({ metric, labels }) => metric.labels(...labels).inc()"
+            },
+            {
+                "type": "counter",
+                "options": {
+                    "name": "maps_api_requests_errors",
+                    "help": "MAPS API requests per user with error HTTP code",
+                    "labelNames": ["user", "http_code"]
+                },
+                "labelPaths": ["cdb-user", "server_response.statusCode"],
+                "valuePath": "server_response.statusCode",
+                "shouldMeasure": "({ labels, value }) => labels.every((label) => label !== undefined) && value >= 400",
+                "measure": "({ metric, labels }) => metric.labels(...labels).inc()"
+            },
+            {
+                "type": "histogram",
+                "options": {
+                    "name": "maps_api_response_time",
+                    "help": "MAPS API response time total",
+                    "labelNames": ["user"]
+                },
+                "labelPaths": ["cdb-user"],
+                "valuePath": "stats.response",
+                "shouldMeasure": "({ labels, value }) => labels.every((label) => label !== undefined) && Number.isFinite(value)",
+                "measure": "({ metric, labels, value }) => metric.labels(...labels).observe(value)"
+            }
+        ]
+    }
+}
