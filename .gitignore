@@ -12,3 +12,6 @@ redis.pid
 coverage/
 .DS_Store
 .nyc_output
+Dockerfile*
+build_resources/
+.dockerignore
