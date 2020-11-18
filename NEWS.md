@@ -6,7 +6,7 @@ Released 2020-mm-dd
 Breaking changes:
 - Log system revamp:
   - Logs to stdout, disabled while testing
-  - Upgrade `camshaft` to version [`0.67.1`](https://github.com/CartoDB/camshaft/releases/tag/0.67.1)
+  - Upgrade `camshaft` to version [`0.67.2`](https://github.com/CartoDB/camshaft/releases/tag/0.67.2)
   - Use header `X-Request-Id`, or create a new `uuid` when no present, to identyfy log entries
   - Be able to set log level from env variable `LOG_LEVEL`, useful while testing: `LOG_LEVEL=info npm test`; even more human-readable: `LOG_LEVEL=info npm t | ./node_modules/.bin/pino-pretty`
   - Stop responding with `X-Tiler-Errors` header. Now errors are properly logged and will end up in ELK as usual.
