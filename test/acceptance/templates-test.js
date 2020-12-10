@@ -13,7 +13,7 @@ var redisStatsDb = 5;
 // configuration settings are always enforced
 // See https://github.com/CartoDB/Windshaft-cartodb/issues/174
 process.env.PGPORT = '666';
-process.env.PGHOST = 'fake';
+process.env.CARTO_POSTGRES_HOST = 'fake';
 
 var path = require('path');
 var fs = require('fs');
