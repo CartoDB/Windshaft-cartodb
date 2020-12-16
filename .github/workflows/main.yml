@@ -18,18 +18,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
 
     - name: Build image
       # we tag with "latest" but we don't push it on purpose. We use it as a base for the testing image
       run: |
           echo ${GITHUB_SHA::7}
           echo ${GITHUB_REF##*/}
-          docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/}--${GITHUB_SHA::7} .
+          docker build -f private/Dockerfile -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/}--${GITHUB_SHA::7} .
           
     - name: Build testing image
       # here it uses the lastest from prev step to add the needed parts on top
       run: |
-          docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft-test:latest -f Dockerfile.test .
+          docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft-test:latest -f private/Dockerfile.test .
 
     - name: Setup gcloud authentication
       uses: google-github-actions/setup-gcloud@master
@@ -45,7 +47,7 @@ jobs:
          docker pull gcr.io/cartodb-on-gcp-main-artifacts/redis:latest
     
     - name: Run tests inside container
-      run: docker-compose -f ci/docker-compose.yml run windshaft-tests
+      run: docker-compose -f private/ci/docker-compose.yml run windshaft-tests
 
     - name: Upload image
       run: |
