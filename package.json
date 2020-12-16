@@ -77,6 +77,7 @@
     "mocha": "^7.2.0",
     "moment": "2.22.1",
     "nock": "9.2.6",
+    "nodemon": "^2.0.6",
     "nyc": "^14.1.1",
     "pino-pretty": "^4.0.0",
     "redis": "2.8.0",
@@ -94,8 +95,7 @@
     "posttest": "npm run test:teardown",
     "test:teardown": "NODE_ENV=test node test teardown",
     "cover": "nyc --reporter=lcov npm test",
-    "test:docker": "docker run -e \"NODEJS_VERSION=$NODE_VERSION\" -v `pwd`:/srv $DOCKER_IMAGE bash docker/scripts/test-setup.sh && docker ps --filter status=dead --filter status=exited -aq | xargs docker rm -v",
-    "docker:bash": "docker run -it -v `pwd`:/srv $DOCKER_IMAGE bash"
+    "dev": "NODE_ENV=development nodemon app.js"
   },
   "engines": {
     "node": "^12.16.3",

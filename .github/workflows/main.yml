@@ -1,0 +1,55 @@
+name: continuous integration
+on: 
+  pull_request:
+    paths-ignore:
+      - 'LICENSE'
+      - 'README**'
+      - 'HOW_TO_RELEASE**'
+      - 'LOGGING**'
+    
+env:
+  GCLOUD_VERSION: '306.0.0'
+  ARTIFACTS_PROJECT_ID: cartodb-on-gcp-main-artifacts
+
+jobs:
+  build-node:
+    runs-on: ubuntu-18.04
+    timeout-minutes: 10
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build image
+      # we tag with "latest" but we don't push it on purpose. We use it as a base for the testing image
+      run: |
+          echo ${GITHUB_SHA::7}
+          echo ${GITHUB_REF##*/}
+          docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/}--${GITHUB_SHA::7} .
+          
+    - name: Build testing image
+      # here it uses the lastest from prev step to add the needed parts on top
+      run: |
+          docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft-test:latest -f Dockerfile.test .
+
+    - name: Setup gcloud authentication
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        version: ${{env.GCLOUD_VERSION}}
+        service_account_key: ${{ secrets.ARTIFACTS_GCLOUD_ACCOUNT_BASE64 }}
+
+    - name: Configure docker and pull images
+    # we pull images manually, as if done in next step using docker-compose it fails because missing openssl
+      run: |
+         gcloud auth configure-docker
+         docker pull gcr.io/cartodb-on-gcp-main-artifacts/postgres:latest
+         docker pull gcr.io/cartodb-on-gcp-main-artifacts/redis:latest
+    
+    - name: Run tests inside container
+      run: docker-compose -f ci/docker-compose.yml run windshaft-tests
+
+    - name: Upload image
+      run: |
+          docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/}
+          docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7}
+          docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/}--${GITHUB_SHA::7}
+    

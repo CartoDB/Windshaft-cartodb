@@ -25,7 +25,12 @@ const argv = require('yargs')
     .argv;
 
 const environmentArg = argv._[0] || process.env.NODE_ENV || 'development';
-const configurationFile = path.resolve(argv.config || `./config/environments/${environmentArg}.js`);
+let configFileName = environmentArg;
+if (process.env.CARTO_WINDSHAFT_ENV_BASED_CONF) {
+    // we override the file with the one with env vars
+    configFileName = 'config';
+}
+const configurationFile = path.resolve(argv.config || `./config/environments/${configFileName}.js`);
 
 global.environment = require(configurationFile);
 process.env.NODE_ENV = argv._[0] || process.env.NODE_ENV || global.environment.environment;

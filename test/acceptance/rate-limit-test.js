@@ -164,7 +164,11 @@ describe('rate limit', function () {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.anonymous = true;
 
-        redisClient = redis.createClient(global.environment.redis.port);
+        redisClient = redis.createClient(
+            {
+                port: global.environment.redis.port,
+                host: global.environment.redis.host
+            });
         testClient = new TestClient(createMapConfig(), 1234);
     });
 
@@ -226,7 +230,11 @@ describe('rate limit middleware', function () {
         });
         rateLimit = rateLimitMiddleware(userLimitsApi, RATE_LIMIT_ENDPOINTS_GROUPS.ANONYMOUS);
 
-        redisClient = redis.createClient(global.environment.redis.port);
+        redisClient = redis.createClient(
+            {
+                port: global.environment.redis.port,
+                host: global.environment.redis.host
+            });
         testClient = new TestClient(createMapConfig(), 1234);
 
         const count = 1;
@@ -290,7 +298,11 @@ function rateLimitAndVectorTilesTest (usePostGIS) {
         global.environment.enabledFeatures.rateLimitsEnabled = true;
         global.environment.enabledFeatures.rateLimitsByEndpoint.tile = true;
 
-        redisClient = redis.createClient(global.environment.redis.port);
+        redisClient = redis.createClient(
+            {
+                port: global.environment.redis.port,
+                host: global.environment.redis.host
+            });
         const count = 1;
         const period = 1;
         const burst = 0;

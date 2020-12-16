@@ -16,7 +16,11 @@ describe('analysis-backend limits', function () {
     var user = 'localhost';
 
     beforeEach(function () {
-        redisClient = redis.createClient(global.environment.redis.port);
+        redisClient = redis.createClient(
+            {
+                port: global.environment.redis.port,
+                host: global.environment.redis.host
+            });
         keysToDelete = {};
         var redisPool = new RedisPool(global.environment.redis);
         this.metadataBackend = cartodbRedis({ pool: redisPool });

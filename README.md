@@ -13,8 +13,8 @@ The [`CARTO Maps API`](https://carto.com/developers/maps-api/) tiler. It extends
 
 Requirements:
 
-* [`Node 10.x (npm 6.x)`](https://nodejs.org/dist/latest-v10.x/)
-* [`PostgreSQL >= 10.0`](https://www.postgresql.org/download/)
+* [`Node 12.x `](https://nodejs.org/dist/latest-v10.x/)
+* [`PostgreSQL >= 11.0`](https://www.postgresql.org/download/)
 * [`PostGIS >= 2.4`](https://postgis.net/install/)
 * [`CARTO Postgres Extension >= 0.24.1`](https://github.com/CartoDB/cartodb-postgresql)
 * [`Redis >= 4`](https://redis.io/download)
@@ -45,7 +45,11 @@ $ npm install
 
 ### Run
 
-Create the `./config/environments/<env>.js` file (there are `.example` files to start from). Look at `./lib/server-options.js` for more on config.
+You can inject the configuration through environment variables at run time. Check the file `./config/environments/config.js` to see the ones you have available.
+
+While the migration to the new environment based configuration, you can still use the old method of copying a config file. To enabled the one with environment variables you need to pass `CARTO_WINDSHAFT_ENV_BASED_CONF=true`. You can use the docker image to run it.
+
+Old way:
 
 ```shell
 $ node app.js <env>
@@ -55,9 +59,25 @@ Where `<env>` is the name of a configuration file under `./config/environments/`
 
 ### Test
 
+You can easily run the tests against the dependencies from the `dev-env`. To do so, you need to build the test docker image:
+
 ```shell
-$ npm test
+$ docker-compose build
 ```
+
+Then you can run the tests like:
+
+```shell
+$ docker-compose run windshaft-tests
+```
+
+It will mount your code inside a volume. In case you want to play and run `npm test` or something else you can do:
+
+```shell
+$ docker-compose run --entrypoint bash windshaft-tests
+```
+
+So you will have a bash shell inside the test container, with the code from your host.
 
 ### Coverage
 

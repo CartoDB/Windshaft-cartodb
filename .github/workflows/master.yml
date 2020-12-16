@@ -1,0 +1,40 @@
+# in this workflow we don't run the tests. Only build image, tag (also latests) and upload. The tests are not run because they are run
+# on each pull request, and there is a branch protection that forces to have branch up to date before merging, so tests are always run 
+# with the latest code
+
+name: master build image
+on:
+  push:
+    branches:
+      - master
+
+env:
+  GCLOUD_VERSION: '306.0.0'
+  ARTIFACTS_PROJECT_ID: cartodb-on-gcp-main-artifacts
+
+jobs:
+  build-node:
+    runs-on: ubuntu-18.04
+    timeout-minutes: 5
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build image
+      run: |
+          echo ${GITHUB_SHA::7}
+          echo ${GITHUB_REF##*/}
+          docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} .
+          
+    - name: Setup gcloud authentication
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        version: ${{env.GCLOUD_VERSION}}
+        service_account_key: ${{ secrets.ARTIFACTS_GCLOUD_ACCOUNT_BASE64 }}
+
+    - name: Upload image
+      run: |
+          docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/}
+          docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7}
+          docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest
+    
