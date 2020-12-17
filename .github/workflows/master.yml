@@ -13,18 +13,21 @@ env:
   ARTIFACTS_PROJECT_ID: cartodb-on-gcp-main-artifacts
 
 jobs:
-  build-node:
+  build-master:
     runs-on: ubuntu-18.04
     timeout-minutes: 5
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: true
+        token: ${{ secrets.CARTOFANTE_PERSONAL_TOKEN }}
 
     - name: Build image
       run: |
           echo ${GITHUB_SHA::7}
           echo ${GITHUB_REF##*/}
-          docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} .
+          docker build -f private/Dockerfile -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} .
           
     - name: Setup gcloud authentication
       uses: google-github-actions/setup-gcloud@master
