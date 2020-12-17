@@ -20,6 +20,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
+        token: ${{ secrets.CARTOFANTE_PERSONAL_TOKEN }}
 
     - name: Build image
       # we tag with "latest" but we don't push it on purpose. We use it as a base for the testing image
