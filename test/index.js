@@ -27,14 +27,6 @@ const PUBLIC_USER = environment.postgres.user;
 const PUBLIC_USER_PASSWORD = environment.postgres.password;
 const TEST_DB = `${TEST_USER}_db`;
 
-async function startRedis () {
-    // await exec(`redis-server --port ${REDIS_PORT} --loadmodule ${REDIS_CELL_PATH} --logfile ${__dirname}/redis-server.log --daemonize yes`);
-}
-
-async function stopRedis () {
-    // await exec(`redis-cli -p ${REDIS_PORT} shutdown`);
-}
-
 async function dropDatabase () {
     await exec(`dropdb --if-exists ${TEST_DB}`, {
         env: Object.assign({ PGUSER: 'postgres', PGHOST: PGHOST, PGPORT: PGPORT }, process.env)
@@ -153,7 +145,6 @@ async function main (args) {
     try {
         switch (args[0]) {
         case 'setup':
-            await startRedis();
             await populateRedis();
             await dropDatabase();
             await createDatabase();
@@ -161,7 +152,6 @@ async function main (args) {
             await populateDatabase();
             break;
         case 'teardown':
-            await stopRedis();
             break;
         default:
             throw new Error('Missing "mode" argument. Valid ones: "setup" or "teardown"');
