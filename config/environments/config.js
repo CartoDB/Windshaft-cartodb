@@ -1,5 +1,5 @@
 var config = {
-    environment: process.env.NODE_ENV,
+    environment: process.env.CARTO_WINDSHAFT_NODE_ENV,
     port: 8181,
     host: null, // null on purpouse so it listens to whatever address docker assigns
     // Size of the threadpool which can be used to run user code and get notified in the loop thread

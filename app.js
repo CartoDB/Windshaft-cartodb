@@ -64,7 +64,7 @@ const availableEnvironments = {
 };
 
 if (!availableEnvironments[process.env.NODE_ENV]) {
-    logger.fatal(new Error(`Invalid environment argument, valid ones: ${Object.keys(availableEnvironments).join(', ')}`));
+    logger.fatal(new Error(`Invalid environment ${process.env.NODE_ENV} argument, valid ones: ${Object.keys(availableEnvironments).join(', ')}`));
     process.exit(1);
 }
 
