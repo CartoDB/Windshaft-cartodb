@@ -8,7 +8,7 @@ var serverOptions = require('../../../lib/server-options');
 
 describe('windshaft', function () {
     it('should have valid global environment', function () {
-        assert.strictEqual(global.environment.name, 'test');
+        assert.strictEqual(global.environment.environment, 'test');
     });
 
     it('can instantiate a Windshaft object (configured express instance)', function () {

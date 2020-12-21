@@ -10,8 +10,14 @@ var redis = require('redis');
 const setICUEnvVariable = require('../../lib/utils/icu-data-env-setter');
 
 // set environment specific variables
-global.environment = require('../../config/environments/test');
-global.environment.name = 'test';
+
+let configFileName = process.env.NODE_ENV;
+if (process.env.CARTO_WINDSHAFT_ENV_BASED_CONF) {
+    // we override the file with the one with env vars
+    configFileName = 'config';
+}
+
+global.environment = require(`../../config/environments/${configFileName}.js`);
 process.env.NODE_ENV = 'test';
 
 setICUEnvVariable();
@@ -82,7 +88,11 @@ var redisClient;
 
 beforeEach(function () {
     if (!redisClient) {
-        redisClient = redis.createClient(global.environment.redis.port);
+        redisClient = redis.createClient(
+            {
+                port: global.environment.redis.port,
+                host: global.environment.redis.host
+            });
     }
 });
 
@@ -145,7 +155,11 @@ function deleteRedisKeys (keysToDelete, callback) {
     }
 
     Object.keys(keysToDelete).forEach(function (k) {
-        var redisClient = redis.createClient(global.environment.redis.port);
+        var redisClient = redis.createClient(
+            {
+                port: global.environment.redis.port,
+                host: global.environment.redis.host
+            });
         redisClient.select(keysToDelete[k], function () {
             redisClient.del(k, function (err, deletedKeysCount) {
                 assert.ifError(err);
