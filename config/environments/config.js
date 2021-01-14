@@ -65,7 +65,7 @@ var config = {
     //  3. {{=it.port}}: will use the `port` from this very same configuration file.
     resources_url_templates: {
         http: process.env.CARTO_WINDSHAFT_RESOURCE_URL_TEMPLATE_HTTP || 'http://{{=it.cdn_url}}/{{=it.user}}/api/v1/map',
-        https: process.env.CARTO_WINDSHAFT_RESOURCE_URL_TEMPLATE_HTTPS ||'https://{{=it.cdn_url}}/{{=it.user}}/api/v1/map'
+        https: process.env.CARTO_WINDSHAFT_RESOURCE_URL_TEMPLATE_HTTPS || 'https://{{=it.cdn_url}}/{{=it.user}}/api/v1/map'
     },
     // Specify the maximum length of the queue of pending connections for the HTTP server.
     // The actual length will be determined by the OS through sysctl settings such as tcp_max_syn_backlog and somaxconn on Linux.
