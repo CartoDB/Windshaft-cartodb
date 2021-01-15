@@ -328,8 +328,8 @@ var config = {
     useProfiler: false,
     serverMetadata: {
         cdn_url: {
-            http: process.env.CARTO_WINDSHAFT_SERVER_CDN_URL_HTTP || 'api.cartocdn.com',
-            https: process.env.CARTO_WINDSHAFT_SERVER_CDN_URL_HTTPS || 'cartocdn.global.ssl.fastly.net'
+            http: process.env.CARTO_WINDSHAFT_SERVER_CDN_URL_HTTP === 'undefined' ? undefined : process.env.CARTO_WINDSHAFT_SERVER_CDN_URL_HTTP || 'api.cartocdn.com',
+            https: process.env.CARTO_WINDSHAFT_SERVER_CDN_URL_HTTPS === 'undefined' ? undefined : process.env.CARTO_WINDSHAFT_SERVER_CDN_URL_HTTPS || 'cartocdn.global.ssl.fastly.net'
         }
     },
     // Settings for the health check available at /health
