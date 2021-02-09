@@ -27,7 +27,8 @@ jobs:
       run: |
           echo ${GITHUB_SHA::7}
           echo ${GITHUB_REF##*/}
-          docker build -f private/Dockerfile -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} .
+          docker pull gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest 
+          docker build -f private/Dockerfile --label="org.opencontainers.image.created=$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${GITHUB_SHA} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_REF##*/} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} --cache-from gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest .
           
     - name: Setup gcloud authentication
       uses: google-github-actions/setup-gcloud@master
