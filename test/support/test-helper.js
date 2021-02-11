@@ -69,77 +69,48 @@ function checkSurrogateKey (res, expectedKey) {
     assert.deepStrictEqual(keys, expectedKeys);
 }
 
-var uncaughtExceptions = [];
-process.on('uncaughtException', function (err) {
-    uncaughtExceptions.push(err);
-});
-beforeEach(function () {
-    uncaughtExceptions = [];
-});
-// global afterEach to capture uncaught exceptions
-afterEach(function () {
-    assert.strictEqual(
-        uncaughtExceptions.length,
-        0,
-        'uncaughtException:\n\n' + uncaughtExceptions.map(err => err.stack).join('\n\n'));
-});
+const expectedKeys = { 0: [], 5: [] };
 
-var redisClient;
+before(async () => {
+    const { host, port } = global.environment.redis;
+    const client = redis.createClient({ host, port });
 
-beforeEach(function () {
-    if (!redisClient) {
-        redisClient = redis.createClient(
-            {
-                port: global.environment.redis.port,
-                host: global.environment.redis.host
-            });
+    for (const db of Object.keys(expectedKeys)) {
+        await new Promise((resolve, reject) => client.select(db, (err) => err ? reject(err) : resolve()));
+        const keys = await new Promise((resolve, reject) => client.keys('*', (err, keys) => err ? reject(err) : resolve(keys)));
+        expectedKeys[db].push(...keys);
     }
+
+    await new Promise((resolve, reject) => client.quit((err) => err ? reject(err) : resolve()));
 });
 
-// global afterEach to capture test suites that leave keys in redis
-afterEach(function (done) {
-    var expectedKeys = {
-        'rails:test_windshaft_cartodb_user_1_db:test_table_private_1': true,
-        'rails:test_windshaft_cartodb_user_1_db:my_table': true,
-        'rails:users:localhost:map_key': true,
-        'rails:users:cartodb250user': true,
-        'rails:users:localhost': true,
-        'api_keys:localhost:1234': true,
-        'api_keys:localhost:default_public': true,
-        'api_keys:cartodb250user:4321': true,
-        'api_keys:cartodb250user:default_public': true,
-        'api_keys:localhost:regular1': true,
-        'api_keys:localhost:regular2': true
-    };
-    var databasesTasks = { 0: 'users', 5: 'meta' };
+afterEach(async () => {
+    const { host, port } = global.environment.redis;
+    const client = redis.createClient({ host, port });
 
-    var keysFound = [];
-    function taskDone (err, db, keys) {
-        if (err) {
-            return done(err);
-        }
+    const foundKeys = { 0: [], 5: [] };
+    for (const db of Object.keys(expectedKeys)) {
+        await new Promise((resolve, reject) => client.select(db, (err) => err ? reject(err) : resolve()));
+        const keys = await new Promise((resolve, reject) => client.keys('*', (err, keys) => err ? reject(err) : resolve(keys)));
+        foundKeys[db].push(...keys);
+    }
 
-        delete databasesTasks[db];
-        keys.forEach(function (k) {
-            if (!expectedKeys[k]) {
-                keysFound.push('[db=' + db + ']' + k);
-            }
-        });
+    const unexpectedKeys = { 0: [], 5: [] };
+    for (const db of Object.keys(expectedKeys)) {
+        unexpectedKeys[db] = foundKeys[db].filter(key => !expectedKeys[db].includes(key));
+        unexpectedKeys[db] = foundKeys[db].filter(key => !expectedKeys[db].includes(key));
+    }
 
-        if (Object.keys(databasesTasks).length === 0) {
-            assert.strictEqual(keysFound.length, 0, 'Unexpected keys found in redis: ' + keysFound.join(', '));
-            done();
+    for (const db of Object.keys(unexpectedKeys)) {
+        if (unexpectedKeys[db].length > 0) {
+            await new Promise((resolve, reject) => client.select(db, (err) => err ? reject(err) : resolve()));
+            await new Promise((resolve, reject) => client.del(unexpectedKeys[db], (err, keys) => err ? reject(err) : resolve(keys)));
         }
     }
 
-    Object.keys(databasesTasks).forEach(function (db) {
-        redisClient.select(db, function () {
-            // Check that we start with an empty redis db
-            redisClient.keys('*', function (err, keys) {
-                return taskDone(err, db, keys);
-            });
-        });
-    });
+    await new Promise((resolve, reject) => client.quit((err) => err ? reject(err) : resolve()));
+
+    assert.deepStrictEqual(unexpectedKeys, { 0: [], 5: [] }, 'Unexpected keys in Redis found');
 });
 
 function deleteRedisKeys (keysToDelete, callback) {
@@ -155,15 +126,13 @@ function deleteRedisKeys (keysToDelete, callback) {
     }
 
     Object.keys(keysToDelete).forEach(function (k) {
-        var redisClient = redis.createClient(
-            {
-                port: global.environment.redis.port,
-                host: global.environment.redis.host
-            });
-        redisClient.select(keysToDelete[k], function () {
-            redisClient.del(k, function (err, deletedKeysCount) {
+        const { host, port } = global.environment.redis;
+        const client = redis.createClient({ host, port });
+
+        client.select(keysToDelete[k], function () {
+            client.del(k, function (err, deletedKeysCount) {
                 assert.ifError(err);
-                redisClient.quit();
+                client.quit();
                 assert.notStrictEqual(deletedKeysCount, 0, 'No KEYS deleted for: [db=' + keysToDelete[k] + ']' + k);
                 taskDone(k);
             });
@@ -185,12 +154,15 @@ function rmdirRecursiveSync (dirname) {
 }
 
 function configureMetadata (action, params, callback) {
-    redisClient.SELECT(5, function (err) {
+    const { host, port } = global.environment.redis;
+    const client = redis.createClient({ host, port });
+
+    client.SELECT(5, function (err) {
         if (err) {
             return callback(err);
         }
 
-        redisClient[action](params, function (err) {
+        client[action](params, function (err) {
             if (err) {
                 return callback(err);
             }

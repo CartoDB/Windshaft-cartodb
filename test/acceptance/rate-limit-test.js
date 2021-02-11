@@ -122,7 +122,7 @@ function assertGetLayergroupRequest (status, limit, remaining, reset, retry, don
     testClient.getLayergroup({ response }, err => {
         assert.ifError(err);
         if (done) {
-            setTimeout(done, 1000);
+            setTimeout(() => testClient.drain(done), 1000);
         }
     });
 }
@@ -375,7 +375,7 @@ function rateLimitAndVectorTilesTest (usePostGIS) {
                     assert.strictEqual(tileJSON[0].name, 'errorTileSquareLayer');
                     assert.strictEqual(tileJSON[1].name, 'errorTileStripesLayer');
 
-                    done();
+                    testClient.drain(done);
                 }
             );
         });

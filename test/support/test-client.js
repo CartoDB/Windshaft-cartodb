@@ -778,6 +778,10 @@ TestClient.prototype.getTile = function (z, x, y, params, callback) {
                 return next(err);
             }
 
+            if (templateId) {
+                self.keysToDelete['map_tpl|localhost'] = 0;
+            }
+
             if (layergroupId) {
                 return next(null, layergroupId);
             }
@@ -994,6 +998,10 @@ TestClient.prototype.getLayergroup = function (params, callback) {
 
             if (layergroupId) {
                 return next(null, layergroupId);
+            }
+
+            if (templateId) {
+                self.keysToDelete['map_tpl|localhost'] = 0;
             }
 
             const data = templateId ? params.placeholders : self.mapConfig;
@@ -1633,6 +1641,10 @@ TestClient.prototype.createTemplate = function (params, callback) {
         default:
             body = res.body;
             break;
+        }
+
+        if (body.template_id) {
+            this.keysToDelete['map_tpl|localhost'] = 0;
         }
 
         return callback(err, res, body);
