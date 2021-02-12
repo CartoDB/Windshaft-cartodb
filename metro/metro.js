@@ -4,6 +4,7 @@ const util = require('util');
 const stream = require('stream');
 const pipeline = util.promisify(stream.pipeline);
 const split = require('split2');
+const logCollector = require('./log-collector');
 const MetricsCollector = require('./metrics-collector');
 
 module.exports = async function metro ({ input = process.stdin, output = process.stdout, metrics = {} } = {}) {
@@ -12,7 +13,7 @@ module.exports = async function metro ({ input = process.stdin, output = process
 
     try {
         await metricsCollector.start();
-        await pipeline(input, split(), metricsStream, output);
+        await pipeline(input, split(), logCollector(), metricsStream, output);
     } finally {
         await metricsCollector.stop();
     }

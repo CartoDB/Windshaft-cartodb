@@ -322,10 +322,7 @@ var config = {
         // the service that will get surrogate key invalidation
         serviceId: 'wadus_service_id'
     },
-    // If useProfiler is true every response will be served with an
-    // X-Tiler-Profile header containing elapsed timing for various
-    // steps taken for producing the response.
-    useProfiler: false,
+    useProfiler: true,
     serverMetadata: {
         cdn_url: {
             http: process.env.CARTO_WINDSHAFT_SERVER_CDN_URL_HTTP === 'undefined' ? undefined : process.env.CARTO_WINDSHAFT_SERVER_CDN_URL_HTTP || 'api.cartocdn.com',
