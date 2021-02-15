@@ -61,12 +61,8 @@ module.exports = function logCollector () {
                     delete entry.levelname;
                 }
 
-                if (hasProperty(entry, 'exception')) {
-                    if (hasProperty(accEntry, 'exception')) {
-                        logs.set(id, assingDeep({}, accEntry, entry, { exception: accEntry.exception.concat(entry.exception) }));
-                    } else {
-                        logs.set(id, assingDeep({}, accEntry, entry, { exception: [entry.exception] }));
-                    }
+                if (hasProperty(accEntry, 'exception') && hasProperty(entry, 'exception')) {
+                    logs.set(id, assingDeep({}, accEntry, entry, { exception: accEntry.exception.concat(entry.exception) }));
                 } else {
                     logs.set(id, assingDeep({}, accEntry, entry));
                 }
