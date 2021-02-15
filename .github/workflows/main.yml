@@ -53,6 +53,8 @@ jobs:
 
     - name: Upload image
       run: |
+          echo ${BRANCH_NAME}
+          echo ${GITHUB_SHA::7}
           docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${BRANCH_NAME}
           docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7}
           docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${BRANCH_NAME}--${GITHUB_SHA::7}
