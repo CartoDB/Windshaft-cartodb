@@ -25,7 +25,7 @@ jobs:
     - name: Build image
       # we tag with "latest" but we don't push it on purpose. We use it as a base for the testing image
       run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}
           BRANCH_NAME=${BRANCH_NAME//\//-}
           echo "Building windshaft image from branch: ${BRANCH_NAME}, commit: ${GITHUB_SHA::7}..."
           docker build -f private/Dockerfile --label="org.opencontainers.image.created=$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${GITHUB_SHA} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:latest -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${BRANCH_NAME} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7} -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${BRANCH_NAME}--${GITHUB_SHA::7} .
@@ -53,7 +53,7 @@ jobs:
 
     - name: Upload image
       run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${GITHUB_HEAD_REF#refs/heads/}
           BRANCH_NAME=${BRANCH_NAME//\//-}
           docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${BRANCH_NAME}
           docker push gcr.io/$ARTIFACTS_PROJECT_ID/windshaft:${GITHUB_SHA::7}
