@@ -564,7 +564,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
-                            testClientDelete.drain(done);
+                            testClientCreate.drain(() => testClientDelete.drain(done));
                         }
                     );
                 });
@@ -595,7 +595,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
-                            testClientDelete.drain(done);
+                            testClientCreate.drain(() => testClientDelete.drain(done));
                         }
                     );
                 });
@@ -626,7 +626,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
-                            testClientDelete.drain(done);
+                            testClientCreate.drain(() => testClientDelete.drain(done));
                         }
                     );
                 });
@@ -678,7 +678,7 @@ describe('authorization', function () {
 
                             assert.strictEqual(res.statusCode, 200);
 
-                            testClientDelete.drain(done);
+                            testClientCreate.drain(() => testClientDelete.drain(done));
                         }
                     );
                 });
@@ -709,7 +709,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
-                            testClientGet.drain(done);
+                            testClientCreate.drain(() => testClientGet.drain(done));
                         }
                     );
                 });
@@ -740,7 +740,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
-                            testClientGet.drain(done);
+                            testClientCreate.drain(() => testClientGet.drain(done));
                         }
                     );
                 });
@@ -771,7 +771,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
-                            testClientGet.drain(done);
+                            testClientCreate.drain(() => testClientGet.drain(done));
                         }
                     );
                 });
@@ -824,7 +824,7 @@ describe('authorization', function () {
 
                             assert.strictEqual(res.statusCode, 200);
 
-                            testClientDelete.drain(done);
+                            testClientCreate.drain(() => testClientDelete.drain(done));
                         }
                     );
                 });
@@ -856,7 +856,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
-                            testClientDelete.drain(done);
+                            testClientCreate.drain(() => testClientDelete.drain(done));
                         }
                     );
                 });
@@ -888,7 +888,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Forbidden/), response.errors[0]);
 
-                            testClientDelete.drain(done);
+                            testClientCreate.drain(() => testClientDelete.drain(done));
                         }
                     );
                 });
@@ -920,7 +920,7 @@ describe('authorization', function () {
                             assert.strictEqual(response.errors.length, 1);
                             assert.ok(response.errors[0].match(/Unauthorized/), response.errors[0]);
 
-                            testClientDelete.drain(done);
+                            testClientCreate.drain(() => testClientDelete.drain(done));
                         }
                     );
                 });

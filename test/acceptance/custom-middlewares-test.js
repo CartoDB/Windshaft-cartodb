@@ -324,7 +324,10 @@ describe('custom middlewares', function () {
 
                 assert.ok(body.layergroupid);
 
-                helper.deleteRedisKeys({ 'user:localhost:mapviews:global': 5 }, done);
+                helper.deleteRedisKeys({
+                    'map_cfg|a0d153491ca52b52c056a1514d5e031c': 0,
+                    'user:localhost:mapviews:global': 5
+                }, done);
             });
         });
     });

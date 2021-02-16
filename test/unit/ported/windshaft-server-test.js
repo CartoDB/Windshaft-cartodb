@@ -16,14 +16,6 @@ describe('windshaft', function () {
         assert.ok(ws);
     });
 
-    it('can spawn a new server on the global listen port', function (done) {
-        var ws = cartodbServer(serverOptions);
-        var server = ws.listen(global.environment.port, function () {
-            assert.ok(ws);
-            server.close(done); /* allow proper tear down */
-        });
-    });
-
     it('throws exception if incorrect options passed in', function () {
         assert.throws(
             function () {
