@@ -1276,13 +1276,13 @@ var QueryTables = require('cartodb-query-tables').queryTables;
         };
 
         it('cache control for layergroup default value', function (done) {
-            global.environment.varnish.layergroupTtl = null;
+            global.environment.varnish.layergroupTtl = undefined;
 
             var server = createServer(serverOptions);
 
             assert.response(server, layergroupTtlRequest, layergroupTtlResponseExpectation,
                 function (res) {
-                    assert.strictEqual(res.headers['cache-control'], 'public,max-age=86400,must-revalidate');
+                    assert.strictEqual(res.headers['cache-control'], 'public,max-age=31536000,must-revalidate');
                     keysToDelete['map_cfg|' + LayergroupToken.parse(JSON.parse(res.body).layergroupid).token] = 0;
                     keysToDelete['user:localhost:mapviews:global'] = 5;
 
