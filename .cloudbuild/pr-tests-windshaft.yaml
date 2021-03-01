@@ -1,0 +1,167 @@
+steps:
+
+# Cancel previous job on the same branch
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: /bin/bash
+  args:
+  - '-c'
+  - 'gcloud builds list --ongoing --filter="buildTriggerId=19215594-3f3e-4f4b-a5ae-d2f6b00af733 AND substitutions.BRANCH_NAME=${BRANCH_NAME} AND id!=${BUILD_ID}" --format="get(ID)" > jobs_to_cancel'
+
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: /bin/bash
+  args:
+  - '-c'
+  - 'gcloud builds cancel $(cat jobs_to_cancel | xargs) || true'
+
+# Decrypt github key
+- name: gcr.io/cloud-builders/gcloud
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=.cloudbuild/.id_github_cartofante.enc
+  - --plaintext-file=/root/.ssh/id_rsa
+  - --location=global
+  - --keyring=keyring-github-ci
+  - --key=github-key
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Set up git with key and domain
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    chmod 600 /root/.ssh/id_rsa
+    cat <<EOF >/root/.ssh/config
+    Hostname github.com
+    IdentityFile /root/.ssh/id_rsa
+    EOF
+    mv .cloudbuild/known_hosts /root/.ssh/known_hosts
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Clean working directory
+- name: alpine
+  args: ['sh', '-c', 'rm -rf .* | true && rm -rf *']
+
+# Checkout repo with submodules
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'sh'
+  args: ['-c', 'git clone git@github.com:CartoDB/windshaft-cartodb -b "${BRANCH_NAME}" --depth 1 --recursive .']
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Checkout repo with submodules
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'sh'
+  args: ['-c', 'git clone git@github.com:CartoDB/docker-dev-env --depth 1']
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
+# Prepare windshaft files
+- name: ubuntu
+  entrypoint: /bin/bash
+  args: 
+      - -cx
+      - |
+        cp private/Dockerfile .
+
+# Prepare dev-env files
+- name: ubuntu
+  entrypoint: /bin/bash
+  args: 
+      - -cx
+      - |
+        cp -r docker-dev-env/* . 
+        cp -f docker-dev-env/.env.sample .env
+        sed -i 's@'"$_DOCKER_IMAGE_TO_REPLACE":latest'@'"$_DOCKER_IMAGE_TO_REPLACE":"$_BRANCH_TAG"'@' .env
+        cat .env | grep 'IMAGE'
+
+# Pull images in background
+- name: 'docker/compose:1.22.0'
+  entrypoint: /bin/sh
+  args: 
+      - -cx
+      - |
+        docker-compose pull &
+
+# Build image
+- name: gcr.io/cloud-builders/docker
+  entrypoint: /bin/bash
+  args:
+    - -cx
+    - |
+      docker pull gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
+      if [ $? -ne 0 ]
+      then
+        docker pull gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest
+        docker tag gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
+      fi
+
+      echo "Building windshaft image from branch: ${_BRANCH_TAG}..."
+      docker build --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} .
+
+# Build Windshaft tests image
+- name: gcr.io/cloud-builders/docker
+  entrypoint: /bin/bash
+  args:
+    - -cx
+    - |
+      docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft-test:latest -f private/Dockerfile.test .
+
+# Run Windshaft CI tests
+- name: 'docker/compose:1.22.0'
+  entrypoint: /bin/sh 
+  args:
+      - -cx
+      - |
+        docker-compose -f private/ci/docker-compose.yml run windshaft-tests
+
+## docker-dev-env tests ##
+# Check compose config
+- name: 'docker/compose:1.22.0'
+  args: ['config']
+
+# Init dev-env
+- name: 'docker/compose:1.22.0'
+  entrypoint: /bin/sh
+  args: ['scripts/init.sh']
+
+# Check services are up
+- name: 'docker/compose:1.22.0'
+  entrypoint: /bin/sh
+  args: 
+      - -cx
+      - |
+        docker-compose -f docker-compose.yml -f docker-compose.test.yml run --rm test-networking
+
+# Check db
+- name: 'docker/compose:1.22.0'
+  entrypoint: /bin/sh
+  args: 
+      - -cx
+      - |
+        docker-compose -f docker-compose.yml -f docker-compose.test.yml run --rm test-db
+
+# Push image
+- name: gcr.io/cloud-builders/docker
+  entrypoint: /bin/bash
+  args:
+    - -cx
+    - |
+      echo 'Pushing windshaft image...'
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA}
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA}
+
+timeout: 1800s
+options:
+  machineType: 'E2_HIGHCPU_8'
+substitutions:
+  _BRANCH_TAG: ${BRANCH_NAME//\//-}
+  _DOCKER_IMAGE_TO_REPLACE: gcr.io/cartodb-on-gcp-main-artifacts/windshaft
