@@ -55,6 +55,14 @@ steps:
   - name: 'ssh'
     path: /root/.ssh
 
+# Prepare windshaft files
+- name: ubuntu
+  entrypoint: /bin/bash
+  args: 
+      - -cx
+      - |
+        cp private/Dockerfile .
+
 # Build and push image
 - name: gcr.io/cloud-builders/docker
   entrypoint: /bin/bash
