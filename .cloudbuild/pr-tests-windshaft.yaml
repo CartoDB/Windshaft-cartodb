@@ -112,7 +112,7 @@ steps:
   args:
     - -cx
     - |
-      docker build -t gcr.io/$ARTIFACTS_PROJECT_ID/windshaft-test:latest -f private/Dockerfile.test .
+      docker build -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-test:latest -f private/Dockerfile.test .
 
 # Run Windshaft CI tests
 - name: 'docker/compose:1.22.0'
