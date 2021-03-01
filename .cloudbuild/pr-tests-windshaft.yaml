@@ -120,7 +120,7 @@ steps:
   args:
       - -cx
       - |
-        docker-compose -f private/ci/docker-compose.yml run windshaft-tests
+        docker-compose -f private/ci/docker-compose.yml run --rm windshaft-tests
 
 ## docker-dev-env tests ##
 # Check compose config
