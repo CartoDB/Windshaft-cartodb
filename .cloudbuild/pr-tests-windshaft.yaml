@@ -105,7 +105,8 @@ steps:
 
       echo "Building windshaft image from branch: ${_BRANCH_TAG}..."
       docker build --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} .
-
+      docker build --build-arg ONPREM_BUILD=true --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
+      
 # Build Windshaft tests image
 - name: gcr.io/cloud-builders/docker
   entrypoint: /bin/bash
@@ -158,6 +159,12 @@ steps:
       docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
       docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA}
       docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA}
+
+      echo 'Pushing windshaft-onprem image...'
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA}
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA}
+
 
 timeout: 1800s
 options:
