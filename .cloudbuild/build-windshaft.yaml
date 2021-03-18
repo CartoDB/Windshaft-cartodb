@@ -55,14 +55,6 @@ steps:
   - name: 'ssh'
     path: /root/.ssh
 
-# Prepare windshaft files
-- name: ubuntu
-  entrypoint: /bin/bash
-  args: 
-      - -cx
-      - |
-        cp private/Dockerfile .
-
 # Build and push image
 - name: gcr.io/cloud-builders/docker
   entrypoint: /bin/bash
@@ -77,8 +69,8 @@ steps:
       fi
 
       echo "Building windshaft image from branch: ${_BRANCH_TAG}..."
-      docker build --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} .
-      docker build --build-arg ONPREM_BUILD=true --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
+      docker build -f private/Dockerfile --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} .
+      docker build -f private/Dockerfile.onprem --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:latest -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
 
       echo 'Pushing windshaft image to the registry...'
       docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA}
@@ -93,9 +85,7 @@ steps:
       if [ 'master' == "${_BRANCH_TAG}" ]
       then
         echo 'Pushing latest tag...'
-        docker tag gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest
         docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest
-        docker tag gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA} gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:latest
         docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:latest
       fi
 
