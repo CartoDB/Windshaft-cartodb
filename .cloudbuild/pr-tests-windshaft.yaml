@@ -137,7 +137,7 @@ steps:
           --env CARTO_DOMAIN=localhost.lan \
           --network host \
           --env-file .env \
-          gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:master \
+          gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
           all dev
 
 # Push image
