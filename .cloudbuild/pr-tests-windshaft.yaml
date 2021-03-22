@@ -75,7 +75,7 @@ steps:
         cat .env | grep 'IMAGE'
 
 # Pull images in background
-- name: 'docker/compose:1.22.0'
+- name: 'docker/compose:1.28.0'
   entrypoint: /bin/sh
   args: 
       - -cx
@@ -108,7 +108,7 @@ steps:
       docker build -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-test:latest -f private/Dockerfile.test .
 
 # Run Windshaft CI tests
-- name: 'docker/compose:1.22.0'
+- name: 'docker/compose:1.28.0'
   entrypoint: /bin/sh 
   args:
       - -cx
@@ -118,7 +118,7 @@ steps:
 ## docker-dev-env tests ##
 
 # Init dev-env
-- name: 'docker/compose:1.22.0'
+- name: 'docker/compose:1.28.0'
   env:
     - 'COMPOSE_PROJECT_NAME=carto'
   entrypoint: /bin/sh
@@ -135,9 +135,9 @@ steps:
       docker run --rm --name tavern-tester \
           --env CARTO_USER=carto \
           --env CARTO_DOMAIN=localhost.lan \
-          --network carto_default \
+          --network host \
           --env-file .env \
-          gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
+          gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:master \
           all dev
 
 # Push image
