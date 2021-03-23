@@ -119,22 +119,19 @@ steps:
 
 # Init dev-env
 - name: 'docker/compose:1.28.0'
-  env:
-    - 'COMPOSE_PROJECT_NAME=carto'
   entrypoint: /bin/sh
   args: ['scripts/init.sh']
 
 # Run db & networking tests
 - name: gcr.io/cloud-builders/docker
-  env:
-    - 'COMPOSE_PROJECT_NAME=carto'
   entrypoint: /bin/bash
   args:
     - -cx
     - |
+      source .env
       docker run --rm --name tavern-tester \
-          --env CARTO_USER=carto \
-          --env CARTO_DOMAIN=localhost.lan \
+          --env CARTO_USER=${USER_USERNAME:-carto} \
+          --env CARTO_DOMAIN=${CARTO_DOMAIN:-localhost.lan} \
           --network host \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
