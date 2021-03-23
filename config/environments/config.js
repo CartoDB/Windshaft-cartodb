@@ -43,7 +43,7 @@ var config = {
                 paths: [
                     '/map/named'
                 ],
-                middlewares: [] // Optional
+                middlewares: process.env.CARTO_WINDSHAFT_NAMEDMAPROUTING_MIDDLEWARES || ''
             }]
         }]
     },
