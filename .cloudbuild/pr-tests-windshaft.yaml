@@ -63,14 +63,6 @@ steps:
   - name: 'ssh'
     path: /root/.ssh
 
-# Prepare windshaft files
-- name: ubuntu
-  entrypoint: /bin/bash
-  args: 
-      - -cx
-      - |
-        cp private/Dockerfile .
-
 # Prepare dev-env files
 - name: ubuntu
   entrypoint: /bin/bash
@@ -83,7 +75,7 @@ steps:
         cat .env | grep 'IMAGE'
 
 # Pull images in background
-- name: 'docker/compose:1.22.0'
+- name: 'docker/compose:1.28.0'
   entrypoint: /bin/sh
   args: 
       - -cx
@@ -104,8 +96,9 @@ steps:
       fi
 
       echo "Building windshaft image from branch: ${_BRANCH_TAG}..."
-      docker build --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} .
-
+      docker build -f private/Dockerfile --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} .
+      docker build -f private/Dockerfile.onprem --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
+      
 # Build Windshaft tests image
 - name: gcr.io/cloud-builders/docker
   entrypoint: /bin/bash
@@ -115,7 +108,7 @@ steps:
       docker build -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-test:latest -f private/Dockerfile.test .
 
 # Run Windshaft CI tests
-- name: 'docker/compose:1.22.0'
+- name: 'docker/compose:1.28.0'
   entrypoint: /bin/sh 
   args:
       - -cx
@@ -123,30 +116,26 @@ steps:
         docker-compose -f private/ci/docker-compose.yml run --rm windshaft-tests
 
 ## docker-dev-env tests ##
-# Check compose config
-- name: 'docker/compose:1.22.0'
-  args: ['config']
 
 # Init dev-env
-- name: 'docker/compose:1.22.0'
+- name: 'docker/compose:1.28.0'
   entrypoint: /bin/sh
   args: ['scripts/init.sh']
 
-# Check services are up
-- name: 'docker/compose:1.22.0'
-  entrypoint: /bin/sh
-  args: 
-      - -cx
-      - |
-        docker-compose -f docker-compose.yml -f docker-compose.test.yml run --rm test-networking
-
-# Check db
-- name: 'docker/compose:1.22.0'
-  entrypoint: /bin/sh
-  args: 
-      - -cx
-      - |
-        docker-compose -f docker-compose.yml -f docker-compose.test.yml run --rm test-db
+# Run db & networking tests
+- name: gcr.io/cloud-builders/docker
+  entrypoint: /bin/bash
+  args:
+    - -cx
+    - |
+      source .env
+      docker run --rm --name tavern-tester \
+          --env CARTO_USER=${USER_USERNAME:-carto} \
+          --env CARTO_DOMAIN=${CARTO_DOMAIN:-localhost.lan} \
+          --network host \
+          --env-file .env \
+          gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
+          all dev
 
 # Push image
 - name: gcr.io/cloud-builders/docker
@@ -158,6 +147,11 @@ steps:
       docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
       docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA}
       docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA}
+
+      echo 'Pushing windshaft-onprem image...'
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA}
+      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA}
 
 timeout: 1800s
 options:

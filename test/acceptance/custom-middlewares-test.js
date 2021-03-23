@@ -22,13 +22,7 @@ describe('custom middlewares', function () {
                             '/api/v1',
                             '/user/:user/api/v1'
                         ],
-                        middlewares: [
-                            function teapot () {
-                                return function teapotMiddleware (req, res) {
-                                    res.status(418).send('I\'m a teapot');
-                                };
-                            }
-                        ],
+                        middlewares: '../../test/support/middlewares/teapot-headers.js,../../test/support/middlewares/teapot-response.js',
                         // Base url for the Detached Maps API
                         // "/api/v1/map" is the new API,
                         map: [{
@@ -79,6 +73,8 @@ describe('custom middlewares', function () {
                     return done(err);
                 }
 
+                assert.strictEqual(res.headers['x-what-am-i'], 'I\'m a teapot');
+                assert.strictEqual(res.headers['x-again-what-am-i'], 'I\'m a teapot');
                 assert.strictEqual(res.body, 'I\'m a teapot');
 
                 done();
@@ -109,6 +105,8 @@ describe('custom middlewares', function () {
                     return done(err);
                 }
 
+                assert.strictEqual(res.headers['x-what-am-i'], 'I\'m a teapot');
+                assert.strictEqual(res.headers['x-again-what-am-i'], 'I\'m a teapot');
                 assert.strictEqual(res.body, 'I\'m a teapot');
 
                 done();
@@ -131,16 +129,7 @@ describe('custom middlewares', function () {
                             paths: [
                                 '/map'
                             ],
-                            middlewares: [
-                                function teapot () {
-                                    return function teapotMiddleware (req, res, next) {
-                                        if (req.path === '/') {
-                                            return res.status(418).send('I\'m a teapot');
-                                        }
-                                        next();
-                                    };
-                                }
-                            ]
+                            middlewares: '../../../test/support/middlewares/teapot-conditional-response.js'
                         }],
                         // Base url for the Templated Maps API
                         // "/api/v1/map/named" is the new API,
@@ -246,13 +235,7 @@ describe('custom middlewares', function () {
                             paths: [
                                 '/map/named'
                             ],
-                            middlewares: [
-                                function teapot () {
-                                    return function teapotMiddleware (req, res) {
-                                        res.status(418).send('I\'m a teapot');
-                                    };
-                                }
-                            ]
+                            middlewares: '../../../test/support/middlewares/teapot-response.js'
                         }]
                     }]
                 }

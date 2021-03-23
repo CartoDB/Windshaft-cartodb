@@ -25,22 +25,17 @@ var config = {
                 '/api/v1',
                 '/user/:user/api/v1'
             ],
-            // Optional: attach middlewares at the begining of the router
-            // to perform custom operations.
-            middlewares: [
-                function noop () {
-                    return function noopMiddleware (req, res, next) {
-                        next();
-                    };
-                }
-            ],
+            // This must be a **comma-separated string** with the list of paths to the middlewares. Pe:
+            //     CARTO_WINDSHAFT_PREROUTING_MIDDLEWARES=/usr/src/lib/mw1.js,/usr/src/lib/mw2.js
+            // Note: The list order is kept when loading the middlewares!
+            middlewares: process.env.CARTO_WINDSHAFT_PREROUTING_MIDDLEWARES || '',
             // Base url for the Detached Maps API
             // "/api/v1/map" is the new API,
             map: [{
                 paths: [
                     '/map'
                 ],
-                middlewares: [] // Optional
+                middlewares: process.env.CARTO_WINDSHAFT_MAPROUTING_MIDDLEWARES || ''
             }],
             // Base url for the Templated Maps API
             // "/api/v1/map/named" is the new API,
@@ -48,7 +43,7 @@ var config = {
                 paths: [
                     '/map/named'
                 ],
-                middlewares: [] // Optional
+                middlewares: process.env.CARTO_WINDSHAFT_NAMEDMAPROUTING_MIDDLEWARES || ''
             }]
         }]
     },
