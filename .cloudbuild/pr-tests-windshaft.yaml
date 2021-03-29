@@ -209,20 +209,10 @@ steps:
   args: 
       - -x
       - |
-        if [ -z "$(cat /workspace/dev_tests_result)" ]
-        then
-           echo '[PASSED] Development environment tests'
-        else
-           echo '[FAILED] Development environment tests'
-           cat /workspace/dev_tests_output
-        fi
-        if [ -z "$(cat /workspace/onprem_tests_result)" ]
-        then
-           echo '[PASSED] Onpremises tests'
-        else
-           echo '[FAILED] Onpremises tests'
-           cat /workspace/onprem_tests_output
-        fi
+        echo '[INFO] Development environment tests results:'
+        cat /workspace/dev_tests_output
+        echo '[INFO] Onprem tests results:'
+        cat /workspace/onprem_tests_output
         if [ -z "$(cat /workspace/dev_tests_result)" ] && [ -z "$(cat /workspace/onprem_tests_result)" ]
         then
           exit 0
