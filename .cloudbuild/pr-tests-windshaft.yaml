@@ -80,6 +80,7 @@ steps:
       - |
         cp .env.sample .env
         echo 'CARTO_BUILDER_SERVER=rails' >> .env
+        echo 'CARTO_DOMAIN=localhost.lan' >> .env
         sed -i 's@'"$_DOCKER_IMAGE_NAME":latest'@'"$_DOCKER_IMAGE_NAME":"$SHORT_SHA"'@' .env
         cat .env | grep 'IMAGE'
 
@@ -140,24 +141,20 @@ steps:
     - -cx
     - |
       source .env
-      docker run --rm --name tavern-tester \
-          --env CARTO_USER=${USER_USERNAME:-carto} \
-          --env CARTO_DOMAIN=${CARTO_DOMAIN:-localhost.lan} \
+      docker run --rm --name tavern-tester-dev \
+          --env "CARTO_USER=$${USER_USERNAME}"  \
+          --env "CARTO_DOMAIN=$${CARTO_DOMAIN}" \
           --network host \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all dev  > /workspace/dev_tests_output 2>&1
+          all dev >> /workspace/dev_tests_output 2>&1
       echo "$?" > /workspace/dev_tests_result
       cat /workspace/dev_tests_output
 
 # Stop dev services and volumes
 - name: 'docker/compose:1.28.0'
-  entrypoint: /bin/sh
   dir: /workspace/docker-dev-env
-  args: 
-      - -cx
-      - |
-        docker-compose down -v
+  args: ['down', '-v']
 
 ## Onprem tests
 # Change nginx host port to 8443: 443 is bussy inside Cloud Build host
@@ -196,13 +193,13 @@ steps:
       - |
         source .env
         source ci/.env.ci
-        docker run --rm --name tavern-tester \
+        docker run --rm --name tavern-tester-onprem \
           --env "CARTO_USER=$${USER_USERNAME}"  \
           --env "CARTO_DOMAIN=$${CARTO_DOMAIN}" \
           --network "$${COMPOSE_PROJECT_NAME}_default" \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all onprem > /workspace/onprem_tests_output 2>&1
+          all onprem >> /workspace/onprem_tests_output 2>&1
         echo "$?" > /workspace/onprem_tests_result
         cat /workspace/onprem_tests_output
 
@@ -210,7 +207,7 @@ steps:
 - name: ubuntu
   entrypoint: /bin/bash
   args: 
-      - -e
+      - -x
       - |
         if [ -z "$(cat /workspace/dev_tests_result)" ]
         then
