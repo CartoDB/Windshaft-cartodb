@@ -146,7 +146,7 @@ steps:
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
           all dev  > /workspace/dev_tests_output
-      echo "$?" > /workspace/dev_tests_result
+      echo "$?" > /workspace/dev_tests_result 2>&1
       cat /workspace/dev_tests_output
 
 # Stop dev services and volumes
@@ -201,7 +201,7 @@ steps:
           --network "$${COMPOSE_PROJECT_NAME}_default" \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all onprem > /workspace/onprem_tests_output
+          all onprem > /workspace/onprem_tests_output 2>&1
         echo "$?" > /workspace/onprem_tests_result
         cat > /workspace/onprem_tests_output
 
