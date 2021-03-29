@@ -79,6 +79,7 @@ steps:
       - -cx
       - |
         cp .env.sample .env
+        echo 'CARTO_BUILDER_SERVER=rails' >> .env
         sed -i 's@'"$_DOCKER_IMAGE_NAME":latest'@'"$_DOCKER_IMAGE_NAME":"$SHORT_SHA"'@' .env
         cat .env | grep 'IMAGE'
 
