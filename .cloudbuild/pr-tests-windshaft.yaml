@@ -78,6 +78,7 @@ steps:
   args: 
       - -cx
       - |
+        cp .env.sample .env
         sed -i 's@'"$_DOCKER_IMAGE_NAME":latest'@'"$_DOCKER_IMAGE_NAME":"$SHORT_SHA"'@' .env
         cat .env | grep 'IMAGE'
 
@@ -144,7 +145,9 @@ steps:
           --network host \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all dev
+          all dev  > /workspace/dev_tests_output
+      echo "$?" > /workspace/dev_tests_result
+      cat /workspace/dev_tests_output
 
 # Stop dev services and volumes
 - name: 'docker/compose:1.28.0'
@@ -198,7 +201,36 @@ steps:
           --network "$${COMPOSE_PROJECT_NAME}_default" \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all onprem
+          all onprem > /workspace/onprem_tests_output
+        echo "$?" > /workspace/onprem_tests_result
+        cat > /workspace/onprem_tests_output
+
+# Handle exit code
+- name: ubuntu
+  entrypoint: /bin/bash
+  args: 
+      - -e
+      - |
+        if [ -z "$(cat /workspace/dev_tests_result)" ]
+        then
+           echo '[PASSED] Development environment tests'
+        else
+           echo '[FAILED] Development environment tests'
+           cat /workspace/dev_tests_output
+        fi
+        if [ -z "$(cat /workspace/onprem_tests_result)" ]
+        then
+           echo '[PASSED] Onpremises tests'
+        else
+           echo '[FAILED] Onpremises tests'
+           cat /workspace/onprem_tests_output
+        fi
+        if [ -z "$(cat /workspace/dev_tests_result)" ] && [ -z "$(cat /workspace/onprem_tests_result)" ]
+        then
+          exit 0
+        else
+          exit 1
+        fi
 
 timeout: 1800s
 options:
