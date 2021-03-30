@@ -99,15 +99,15 @@ steps:
   args:
     - -cx
     - |
-      docker pull gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
+      docker pull ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG}
       if [ $? -ne 0 ]
       then
-        docker pull gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest
+        docker pull ${_DOCKER_IMAGE_NAME}:latest
       fi
 
       echo "Building windshaft image from branch: ${_BRANCH_TAG}..."
-      docker build -f private/Dockerfile --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest .
-      docker build -f private/Dockerfile.onprem --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
+      docker build -f private/Dockerfile --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t ${_DOCKER_IMAGE_NAME}:latest -t ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG} -t ${_DOCKER_IMAGE_NAME}:${SHORT_SHA} -t ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG}--${SHORT_SHA} --cache-from ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG} --cache-from ${_DOCKER_IMAGE_NAME}:latest .
+      docker build -f private/Dockerfile.onprem --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t ${_DOCKER_IMAGE_NAME}-onprem:${_BRANCH_TAG} -t ${_DOCKER_IMAGE_NAME}-onprem:${SHORT_SHA} -t ${_DOCKER_IMAGE_NAME}-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
       
 # Build Windshaft tests image
 - name: gcr.io/cloud-builders/docker
@@ -115,7 +115,7 @@ steps:
   args:
     - -cx
     - |
-      docker build -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-test:latest -f private/Dockerfile.test .
+      docker build -t ${_DOCKER_IMAGE_NAME}-test:latest -f private/Dockerfile.test .
 
 # Run Windshaft CI tests
 - name: 'docker/compose:1.28.0'
@@ -221,7 +221,11 @@ steps:
           exit 1
         fi
 
-timeout: 1800s
+timeout: 1200s
+images:
+    - ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG}--${SHORT_SHA} 
+    - ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG} 
+    - ${_DOCKER_IMAGE_NAME}:${SHORT_SHA}
 options:
   machineType: 'E2_HIGHCPU_8'
 substitutions:
