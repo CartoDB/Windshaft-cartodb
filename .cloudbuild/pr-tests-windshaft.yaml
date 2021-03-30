@@ -147,9 +147,8 @@ steps:
           --network host \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all dev >> /workspace/dev_tests_output 2>&1
-      echo "$?" > /workspace/dev_tests_result
-      cat /workspace/dev_tests_output
+          all dev
+      echo $? >> /workspace/dev_result
 
 # Stop dev services and volumes
 - name: 'docker/compose:1.28.0'
@@ -199,9 +198,8 @@ steps:
           --network "$${COMPOSE_PROJECT_NAME}_default" \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all onprem >> /workspace/onprem_tests_output 2>&1
-        echo "$?" > /workspace/onprem_tests_result
-        cat /workspace/onprem_tests_output
+          all onprem
+        echo $? >> /workspace/onprem_result
 
 # Handle exit code
 - name: ubuntu
@@ -209,14 +207,17 @@ steps:
   args: 
       - -x
       - |
-        echo '[INFO] Development environment tests results:'
-        cat /workspace/dev_tests_output
-        echo '[INFO] Onprem tests results:'
-        cat /workspace/onprem_tests_output
-        if [ -z "$(cat /workspace/dev_tests_result)" ] && [ -z "$(cat /workspace/onprem_tests_result)" ]
-        then
+        if [ "$(cat /workspace/dev_result)" -eq 0 ] && [ "$(cat /workspace/onprem_result)" -eq 0 ];then
+          [PASSED] All tests passed
           exit 0
+        elif [ "$(cat /workspace/dev_result)" -ne 0 ];then
+          [FAILED] Development environment tests failed
+          exit 1
+        elif [ "$(cat /workspace/onprem_result)" -ne 0 ];then
+          [FAILED] Onprem tests failed
+          exit 1  
         else
+          [FAILED] All tests failed
           exit 1
         fi
 
