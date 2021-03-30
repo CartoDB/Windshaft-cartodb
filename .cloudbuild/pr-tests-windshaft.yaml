@@ -148,7 +148,7 @@ steps:
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
           all dev
-      echo $? >> /workspace/dev_result
+      echo $? >> dev_result
 
 # Stop dev services and volumes
 - name: 'docker/compose:1.28.0'
@@ -199,7 +199,7 @@ steps:
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
           all onprem
-        echo $? >> /workspace/onprem_result
+        echo $? >> onprem_result
 
 # Handle exit code
 - name: ubuntu
@@ -207,13 +207,13 @@ steps:
   args: 
       - -x
       - |
-        if [ "$(cat /workspace/dev_result)" -eq 0 ] && [ "$(cat /workspace/onprem_result)" -eq 0 ];then
+        if [ "$(cat /workspace/docker-dev-env/dev_result)" -eq 0 ] && [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -eq 0 ];then
           [PASSED] All tests passed
           exit 0
-        elif [ "$(cat /workspace/dev_result)" -ne 0 ];then
+        elif [ "$(cat /workspace/docker-dev-env/dev_result)" -ne 0 ];then
           [FAILED] Development environment tests failed
           exit 1
-        elif [ "$(cat /workspace/onprem_result)" -ne 0 ];then
+        elif [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -ne 0 ];then
           [FAILED] Onprem tests failed
           exit 1  
         else
@@ -221,7 +221,7 @@ steps:
           exit 1
         fi
 
-timeout: 1200s
+timeout: 1800s
 images:
     - ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG}--${SHORT_SHA} 
     - ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG} 
