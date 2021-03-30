@@ -203,21 +203,22 @@ steps:
 
 # Handle exit code
 - name: ubuntu
-  entrypoint: /bin/bash
+  entrypoint: bash
+  dir: /workspace
   args: 
-      - -x
+      - -cx
       - |
         if [ "$(cat /workspace/docker-dev-env/dev_result)" -eq 0 ] && [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -eq 0 ];then
-          [PASSED] All tests passed
+          echo '[PASSED] All tests passed'
           exit 0
         elif [ "$(cat /workspace/docker-dev-env/dev_result)" -ne 0 ];then
-          [FAILED] Development environment tests failed
+          echo '[FAILED] Development environment tests failed'
           exit 1
         elif [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -ne 0 ];then
-          [FAILED] Onprem tests failed
+          echo '[FAILED] Onprem tests failed'
           exit 1  
         else
-          [FAILED] All tests failed
+          echo '[FAILED] All tests failed'
           exit 1
         fi
 
