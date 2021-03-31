@@ -50,7 +50,7 @@ steps:
 # Checkout repo with submodules
 - name: 'gcr.io/cloud-builders/git'
   entrypoint: 'sh'
-  args: ['-c', 'git clone git@github.com:CartoDB/windshaft-cartodb -b "${BRANCH_NAME}" --depth 1 --recursive .']
+  args: ['-c', 'git clone git@github.com:CartoDB/${_REPO} -b "${BRANCH_NAME}" --depth 1 --recursive .']
   volumes:
   - name: 'ssh'
     path: /root/.ssh
@@ -63,20 +63,31 @@ steps:
   - name: 'ssh'
     path: /root/.ssh
 
+# Checkout repo with submodules
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'sh'
+  args: ['-c', 'git clone git@github.com:CartoDB/dockerize-onpremises --depth 1']
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
 # Prepare dev-env files
 - name: ubuntu
   entrypoint: /bin/bash
+  dir: /workspace/docker-dev-env
   args: 
       - -cx
       - |
-        cp -r docker-dev-env/* . 
-        cp -f docker-dev-env/.env.sample .env
-        sed -i 's@'"$_DOCKER_IMAGE_TO_REPLACE":latest'@'"$_DOCKER_IMAGE_TO_REPLACE":"$_BRANCH_TAG"'@' .env
+        cp .env.sample .env
+        echo 'CARTO_BUILDER_SERVER=rails' >> .env
+        echo 'CARTO_DOMAIN=localhost.lan' >> .env
+        sed -i 's@'"$_DOCKER_IMAGE_NAME":latest'@'"$_DOCKER_IMAGE_NAME":"$SHORT_SHA"'@' .env
         cat .env | grep 'IMAGE'
 
 # Pull images in background
 - name: 'docker/compose:1.28.0'
   entrypoint: /bin/sh
+  dir: /workspace/docker-dev-env
   args: 
       - -cx
       - |
@@ -88,16 +99,15 @@ steps:
   args:
     - -cx
     - |
-      docker pull gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
+      docker pull ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG}
       if [ $? -ne 0 ]
       then
-        docker pull gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest
-        docker tag gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
+        docker pull ${_DOCKER_IMAGE_NAME}:latest
       fi
 
       echo "Building windshaft image from branch: ${_BRANCH_TAG}..."
-      docker build -f private/Dockerfile --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} .
-      docker build -f private/Dockerfile.onprem --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
+      docker build -f private/Dockerfile --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t ${_DOCKER_IMAGE_NAME}:latest -t ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG} -t ${_DOCKER_IMAGE_NAME}:${SHORT_SHA} -t ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG}--${SHORT_SHA} --cache-from ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG} --cache-from ${_DOCKER_IMAGE_NAME}:latest .
+      docker build -f private/Dockerfile.onprem --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t ${_DOCKER_IMAGE_NAME}-onprem:${_BRANCH_TAG} -t ${_DOCKER_IMAGE_NAME}-onprem:${SHORT_SHA} -t ${_DOCKER_IMAGE_NAME}-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
       
 # Build Windshaft tests image
 - name: gcr.io/cloud-builders/docker
@@ -105,11 +115,11 @@ steps:
   args:
     - -cx
     - |
-      docker build -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-test:latest -f private/Dockerfile.test .
+      docker build -t ${_DOCKER_IMAGE_NAME}-test:latest -f private/Dockerfile.test .
 
 # Run Windshaft CI tests
 - name: 'docker/compose:1.28.0'
-  entrypoint: /bin/sh 
+  entrypoint: /bin/sh
   args:
       - -cx
       - |
@@ -120,42 +130,106 @@ steps:
 # Init dev-env
 - name: 'docker/compose:1.28.0'
   entrypoint: /bin/sh
+  dir: /workspace/docker-dev-env
   args: ['scripts/init.sh']
 
-# Run db & networking tests
+# Run dev tests
 - name: gcr.io/cloud-builders/docker
   entrypoint: /bin/bash
+  dir: /workspace/docker-dev-env
   args:
     - -cx
     - |
       source .env
-      docker run --rm --name tavern-tester \
-          --env CARTO_USER=${USER_USERNAME:-carto} \
-          --env CARTO_DOMAIN=${CARTO_DOMAIN:-localhost.lan} \
+      docker run --rm --name tavern-tester-dev \
+          --env "CARTO_USER=$${USER_USERNAME}"  \
+          --env "CARTO_DOMAIN=$${CARTO_DOMAIN}" \
           --network host \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
           all dev
+      echo $? >> dev_result
 
-# Push image
+# Stop dev services and volumes
+- name: 'docker/compose:1.28.0'
+  dir: /workspace/docker-dev-env
+  args: ['down', '-v']
+
+## Onprem tests
+# Change nginx host port to 8443: 443 is bussy inside Cloud Build host
+- name: ubuntu
+  entrypoint: /bin/bash
+  dir: /workspace/dockerize-onpremises
+  args: 
+      - -cx
+      - |
+        sed -i 's@'"$_DOCKER_IMAGE_NAME":latest'@'"$_DOCKER_IMAGE_NAME":"$SHORT_SHA"'@' .env
+        cat .env | grep 'IMAGE'
+        sed -i 's/443:443/8443:443/g' docker-compose.yml
+
+# Init onprem
+- name: 'docker/compose:1.28.2'
+  entrypoint: /bin/sh
+  dir: /workspace/dockerize-onpremises
+  args: ['ci/init.sh']
+
+# Install license
 - name: gcr.io/cloud-builders/docker
   entrypoint: /bin/bash
-  args:
-    - -cx
+  dir: /workspace/dockerize-onpremises
+  args: 
+    - -cex
     - |
-      echo 'Pushing windshaft image...'
-      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
-      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA}
-      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA}
+      mkdir -p license && cp -f ci/test_license/dockerize-onpremises-tests-license.lic license/carto.lic
+      ./script/license.sh
 
-      echo 'Pushing windshaft-onprem image...'
-      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}
-      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA}
-      docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA}
+# Run onprem tests
+- name: gcr.io/cloud-builders/docker
+  entrypoint: /bin/bash
+  dir: /workspace/dockerize-onpremises
+  args: 
+      - -cx
+      - |
+        source .env
+        source ci/.env.ci
+        docker run --rm --name tavern-tester-onprem \
+          --env "CARTO_USER=$${USER_USERNAME}"  \
+          --env "CARTO_DOMAIN=$${CARTO_DOMAIN}" \
+          --network "$${COMPOSE_PROJECT_NAME}_default" \
+          --env-file .env \
+          gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
+          all onprem
+        echo $? >> onprem_result
+
+# Handle exit code
+- name: ubuntu
+  entrypoint: bash
+  dir: /workspace
+  args: 
+      - -cx
+      - |
+        if [ "$(cat /workspace/docker-dev-env/dev_result)" -eq 0 ] && [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -eq 0 ];then
+          echo '[PASSED] All tests passed'
+          exit 0
+        elif [ "$(cat /workspace/docker-dev-env/dev_result)" -ne 0 ];then
+          echo '[FAILED] Development environment tests failed'
+          exit 1
+        elif [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -ne 0 ];then
+          echo '[FAILED] Onprem tests failed'
+          exit 1  
+        else
+          echo '[FAILED] All tests failed'
+          exit 1
+        fi
 
 timeout: 1800s
+images:
+    - ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG}--${SHORT_SHA} 
+    - ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG} 
+    - ${_DOCKER_IMAGE_NAME}:${SHORT_SHA}
 options:
   machineType: 'E2_HIGHCPU_8'
 substitutions:
   _BRANCH_TAG: ${BRANCH_NAME//\//-}
-  _DOCKER_IMAGE_TO_REPLACE: gcr.io/cartodb-on-gcp-main-artifacts/windshaft
+  _DOCKER_IMAGE_NAME: gcr.io/cartodb-on-gcp-main-artifacts/windshaft
+  _REPO: windshaft-cartodb

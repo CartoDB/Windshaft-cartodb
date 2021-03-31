@@ -65,11 +65,10 @@ steps:
       if [ ! -z "$?" ]
       then
         docker pull gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest
-        docker tag gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}
       fi
 
       echo "Building windshaft image from branch: ${_BRANCH_TAG}..."
-      docker build -f private/Dockerfile --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} .
+      docker build -f private/Dockerfile --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG}--${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${SHORT_SHA} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${_BRANCH_TAG} --cache-from gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest .
       docker build -f private/Dockerfile.onprem --label="org.opencontainers.image.created=$$(date --rfc-3339=seconds)" --label=org.opencontainers.image.revision=${COMMIT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:latest -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${SHORT_SHA} -t gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${_BRANCH_TAG}--${SHORT_SHA} .
 
       echo 'Pushing windshaft image to the registry...'
@@ -87,6 +86,13 @@ steps:
         echo 'Pushing latest tag...'
         docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:latest
         docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:latest
+      fi
+
+      if [ "${TAG_NAME}" ]
+      then
+        echo 'Pushing latest tag...'
+        docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft:${TAG_NAME}
+        docker push gcr.io/cartodb-on-gcp-main-artifacts/windshaft-onprem:${TAG_NAME}
       fi
 
 timeout: 300s
