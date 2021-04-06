@@ -147,8 +147,9 @@ steps:
           --network host \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all dev
+          all dev > dev_output 2>&1
       echo $? >> dev_result
+      cat dev_output
 
 # Stop dev services and volumes
 - name: 'docker/compose:1.28.0'
@@ -198,8 +199,9 @@ steps:
           --network "$${COMPOSE_PROJECT_NAME}_default" \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all onprem
+          all onprem > onprem_output 2>&1
         echo $? >> onprem_result
+        cat onprem_output
 
 # Handle exit code
 - name: ubuntu
@@ -213,12 +215,16 @@ steps:
           exit 0
         elif [ "$(cat /workspace/docker-dev-env/dev_result)" -ne 0 ];then
           echo '[FAILED] Development environment tests failed'
+          cat /workspace/docker-dev-env/dev_output
           exit 1
         elif [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -ne 0 ];then
           echo '[FAILED] Onprem tests failed'
+          cat /workspace/dockerize-onpremises/onprem_output
           exit 1  
         else
           echo '[FAILED] All tests failed'
+          cat /workspace/docker-dev-env/dev_output
+          cat /workspace/dockerize-onpremises/onprem_output
           exit 1
         fi
 
