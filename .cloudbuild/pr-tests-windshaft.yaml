@@ -147,8 +147,29 @@ steps:
           --network host \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all dev
+          all dev > dev_output 2>&1
       echo $? >> dev_result
+      cat dev_output
+
+# Copy dev compose logs
+- name: 'docker/compose:1.28.2'
+  entrypoint: /bin/sh
+  dir: /workspace/docker-dev-env
+  args:
+    - -c
+    - |
+      docker-compose logs --no-color > dev_docker_compose_logs
+      echo "Logs will be available during 14 days at gs://${_REPO}-ci-tmp-logs/${BUILD_ID}/"
+
+# Upload dev logs to gcs
+- name: gcr.io/cloud-builders/gsutil
+  entrypoint: /bin/sh
+  dir: /workspace/docker-dev-env
+  args: 
+    - -c 
+    - |
+      gsutil -m cp dev_output gs://${_REPO}-ci-tmp-logs/test_logs_${BUILD_ID}/
+      gsutil -m cp dev_docker_compose_logs gs://${_REPO}-ci-tmp-logs/test_logs_${BUILD_ID}/
 
 # Stop dev services and volumes
 - name: 'docker/compose:1.28.0'
@@ -198,8 +219,29 @@ steps:
           --network "$${COMPOSE_PROJECT_NAME}_default" \
           --env-file .env \
           gcr.io/cartodb-on-gcp-main-artifacts/tavern-tester:latest \
-          all onprem
+          all onprem > onprem_output 2>&1
         echo $? >> onprem_result
+        cat onprem_output
+
+# Copy onprem compose logs
+- name: 'docker/compose:1.28.2'
+  entrypoint: /bin/sh
+  dir: /workspace/dockerize-onpremises
+  args:
+    - -c
+    - |
+      docker-compose -f docker-compose.yml -f ci/docker-compose.ci.yml logs --no-color > onprem_docker_compose_logs
+      echo "Logs will be available during 14 days at gs://${_REPO}-ci-tmp-logs/test_logs_${BUILD_ID}/"
+
+# Upload onprem logs to gcs
+- name: gcr.io/cloud-builders/gsutil
+  entrypoint: /bin/sh
+  dir: /workspace/dockerize-onpremises
+  args: 
+    - -c 
+    - |
+      gsutil -m cp onprem_output gs://${_REPO}-ci-tmp-logs/test_logs_${BUILD_ID}/
+      gsutil -m cp onprem_docker_compose_logs gs://${_REPO}-ci-tmp-logs/test_logs_${BUILD_ID}/
 
 # Handle exit code
 - name: ubuntu
@@ -208,17 +250,22 @@ steps:
   args: 
       - -cx
       - |
+        echo "[LOGS] Tests & compose logs are at https://console.cloud.google.com/storage/browser/${_REPO}-ci-tmp-logs/test_logs_${BUILD_ID}"
         if [ "$(cat /workspace/docker-dev-env/dev_result)" -eq 0 ] && [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -eq 0 ];then
           echo '[PASSED] All tests passed'
           exit 0
         elif [ "$(cat /workspace/docker-dev-env/dev_result)" -ne 0 ];then
           echo '[FAILED] Development environment tests failed'
+          cat /workspace/docker-dev-env/dev_output
           exit 1
         elif [ "$(cat /workspace/dockerize-onpremises/onprem_result)" -ne 0 ];then
           echo '[FAILED] Onprem tests failed'
+          cat /workspace/dockerize-onpremises/onprem_output
           exit 1  
         else
           echo '[FAILED] All tests failed'
+          cat /workspace/docker-dev-env/dev_output
+          cat /workspace/dockerize-onpremises/onprem_output
           exit 1
         fi
 
