@@ -193,6 +193,8 @@ steps:
   entrypoint: /bin/sh
   dir: /workspace/dockerize-onpremises
   args: ['ci/init.sh']
+  env: &onprem-vars
+    - 'COMPOSE_FILE=docker-compose.yml:ci/docker-compose.ci.yml'
 
 # Install license
 - name: gcr.io/cloud-builders/docker
