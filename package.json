@@ -61,7 +61,7 @@
     "split2": "^3.1.1",
     "step-profiler": "0.3.0",
     "turbo-carto": "0.21.2",
-    "underscore": "1.6.0",
+    "underscore": "1.12.1",
     "uuid": "^8.1.0",
     "windshaft": "^7.0.1",
     "yargs": "^15.3.1"
