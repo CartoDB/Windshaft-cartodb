@@ -81,7 +81,7 @@
     "nyc": "^14.1.1",
     "pg": "github:cartodb/node-postgres#6.4.2-cdb2",
     "pino-pretty": "^4.0.0",
-    "redis": "^3.0.2",
+    "redis": "^3.1.1",
     "step": "1.0.0",
     "strftime": "0.10.0"
   },
