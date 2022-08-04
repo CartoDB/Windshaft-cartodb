@@ -271,7 +271,7 @@ steps:
           exit 1
         fi
 
-timeout: 1800s
+timeout: 2700s
 images:
     - ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG}--${SHORT_SHA} 
     - ${_DOCKER_IMAGE_NAME}:${_BRANCH_TAG} 
